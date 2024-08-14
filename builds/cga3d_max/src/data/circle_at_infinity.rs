@@ -6,21 +6,21 @@ use crate::simd::*;
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub union CircleAtInfinity {
     groups: CircleAtInfinityGroups,
-    /// e321, e415, e425, e435, e235, e315, e125, 0
+    /// e415, e425, e435, e321, e235, e315, e125, 0
     elements: [f32; 8],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct CircleAtInfinityGroups {
-    /// e321, e415, e425, e435
+    /// e415, e425, e435, e321
     g0: Simd32x4,
     /// e235, e315, e125
     g1: Simd32x3,
 }
 impl CircleAtInfinity {
     #[allow(clippy::too_many_arguments)]
-    pub const fn from_elements(e321: f32, e415: f32, e425: f32, e435: f32, e235: f32, e315: f32, e125: f32) -> Self {
+    pub const fn from_elements(e415: f32, e425: f32, e435: f32, e321: f32, e235: f32, e315: f32, e125: f32) -> Self {
         Self {
-            elements: [e321, e415, e425, e435, e235, e315, e125, 0.0],
+            elements: [e415, e425, e435, e321, e235, e315, e125, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x4, g1: Simd32x3) -> Self {
@@ -77,10 +77,10 @@ impl std::fmt::Debug for CircleAtInfinity {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
             .debug_struct("CircleAtInfinity")
-            .field("e321", &self[0])
-            .field("e415", &self[1])
-            .field("e425", &self[2])
-            .field("e435", &self[3])
+            .field("e415", &self[0])
+            .field("e425", &self[1])
+            .field("e435", &self[2])
+            .field("e321", &self[3])
             .field("e235", &self[4])
             .field("e315", &self[5])
             .field("e125", &self[6])
@@ -151,27 +151,27 @@ impl std::hash::Hash for CircleAtInfinity {
     }
 }
 
-impl std::ops::Index<crate::elements::e321> for CircleAtInfinity {
-    type Output = f32;
-    fn index(&self, _: crate::elements::e321) -> &Self::Output {
-        &self[0]
-    }
-}
 impl std::ops::Index<crate::elements::e415> for CircleAtInfinity {
     type Output = f32;
     fn index(&self, _: crate::elements::e415) -> &Self::Output {
-        &self[1]
+        &self[0]
     }
 }
 impl std::ops::Index<crate::elements::e425> for CircleAtInfinity {
     type Output = f32;
     fn index(&self, _: crate::elements::e425) -> &Self::Output {
-        &self[2]
+        &self[1]
     }
 }
 impl std::ops::Index<crate::elements::e435> for CircleAtInfinity {
     type Output = f32;
     fn index(&self, _: crate::elements::e435) -> &Self::Output {
+        &self[2]
+    }
+}
+impl std::ops::Index<crate::elements::e321> for CircleAtInfinity {
+    type Output = f32;
+    fn index(&self, _: crate::elements::e321) -> &Self::Output {
         &self[3]
     }
 }
@@ -193,23 +193,23 @@ impl std::ops::Index<crate::elements::e125> for CircleAtInfinity {
         &self[6]
     }
 }
-impl std::ops::IndexMut<crate::elements::e321> for CircleAtInfinity {
-    fn index_mut(&self, _: crate::elements::e321) -> &mut Self::Output {
-        &mut self[0]
-    }
-}
 impl std::ops::IndexMut<crate::elements::e415> for CircleAtInfinity {
     fn index_mut(&self, _: crate::elements::e415) -> &mut Self::Output {
-        &mut self[1]
+        &mut self[0]
     }
 }
 impl std::ops::IndexMut<crate::elements::e425> for CircleAtInfinity {
     fn index_mut(&self, _: crate::elements::e425) -> &mut Self::Output {
-        &mut self[2]
+        &mut self[1]
     }
 }
 impl std::ops::IndexMut<crate::elements::e435> for CircleAtInfinity {
     fn index_mut(&self, _: crate::elements::e435) -> &mut Self::Output {
+        &mut self[2]
+    }
+}
+impl std::ops::IndexMut<crate::elements::e321> for CircleAtInfinity {
+    fn index_mut(&self, _: crate::elements::e321) -> &mut Self::Output {
         &mut self[3]
     }
 }

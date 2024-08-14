@@ -5,46 +5,46 @@ use crate::simd::*;
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub union RoundPoint {
     groups: RoundPointGroups,
-    /// e1, e2, e3, 0, e4, e5, 0, 0
+    /// e1, e2, e3, e4, e5, 0, 0, 0
     elements: [f32; 8],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct RoundPointGroups {
-    /// e1, e2, e3
-    g0: Simd32x3,
-    /// e4, e5
-    g1: Simd32x2,
+    /// e1, e2, e3, e4
+    g0: Simd32x4,
+    /// e5
+    g1: f32,
 }
 impl RoundPoint {
     #[allow(clippy::too_many_arguments)]
     pub const fn from_elements(e1: f32, e2: f32, e3: f32, e4: f32, e5: f32) -> Self {
         Self {
-            elements: [e1, e2, e3, 0.0, e4, e5, 0.0, 0.0],
+            elements: [e1, e2, e3, e4, e5, 0.0, 0.0, 0.0],
         }
     }
-    pub const fn from_groups(g0: Simd32x3, g1: Simd32x2) -> Self {
+    pub const fn from_groups(g0: Simd32x4, g1: f32) -> Self {
         Self {
             groups: RoundPointGroups { g0, g1 },
         }
     }
     #[inline(always)]
-    pub fn group0(&self) -> Simd32x3 {
+    pub fn group0(&self) -> Simd32x4 {
         unsafe { self.groups.g0 }
     }
     #[inline(always)]
-    pub fn group0_mut(&mut self) -> &mut Simd32x3 {
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
         unsafe { &mut self.groups.g0 }
     }
     #[inline(always)]
-    pub fn group1(&self) -> Simd32x2 {
+    pub fn group1(&self) -> f32 {
         unsafe { self.groups.g1 }
     }
     #[inline(always)]
-    pub fn group1_mut(&mut self) -> &mut Simd32x2 {
+    pub fn group1_mut(&mut self) -> &mut f32 {
         unsafe { &mut self.groups.g1 }
     }
 }
-const ROUND_POINT_INDEX_REMAP: [usize; 5] = [0, 1, 2, 4, 5];
+const ROUND_POINT_INDEX_REMAP: [usize; 5] = [0, 1, 2, 3, 4];
 impl std::ops::Index<usize> for RoundPoint {
     type Output = f32;
     fn index(&self, index: usize) -> &Self::Output {
@@ -58,13 +58,13 @@ impl std::ops::IndexMut<usize> for RoundPoint {
 }
 impl From<RoundPoint> for [f32; 5] {
     fn from(vector: RoundPoint) -> Self {
-        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[4], vector.elements[5]] }
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3], vector.elements[4]] }
     }
 }
 impl From<[f32; 5]> for RoundPoint {
     fn from(array: [f32; 5]) -> Self {
         Self {
-            elements: [array[0], array[1], array[2], 0.0, array[1], array[2], 0.0, 0.0],
+            elements: [array[0], array[1], array[2], array[3], array[1], 0.0, 0.0, 0.0],
         }
     }
 }

@@ -191,21 +191,21 @@ impl TryFrom<Circle> for AntiFlector {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = circle[4];
+        let el = circle[3];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = circle[5];
+        let el = circle[4];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = circle[6];
+        let el = circle[5];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e435: ");
@@ -296,21 +296,21 @@ impl TryFrom<CircleAtInfinity> for AntiFlector {
         use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
-        let el = circle_at_infinity[1];
+        let el = circle_at_infinity[0];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = circle_at_infinity[2];
+        let el = circle_at_infinity[1];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = circle_at_infinity[3];
+        let el = circle_at_infinity[2];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e435: ");
@@ -637,21 +637,21 @@ impl TryFrom<MultiVector> for AntiFlector {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[18];
+        let el = multi_vector[17];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[19];
+        let el = multi_vector[18];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[20];
+        let el = multi_vector[19];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e435: ");

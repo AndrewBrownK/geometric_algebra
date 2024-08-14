@@ -6,46 +6,46 @@ use crate::simd::*;
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub union DipoleAtInfinity {
     groups: DipoleAtInfinityGroups,
-    /// e23, e31, e12, 0, e15, e25, e35, e45
+    /// e23, e31, e12, e45, e15, e25, e35, 0
     elements: [f32; 8],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct DipoleAtInfinityGroups {
-    /// e23, e31, e12
-    g0: Simd32x3,
-    /// e15, e25, e35, e45
-    g1: Simd32x4,
+    /// e23, e31, e12, e45
+    g0: Simd32x4,
+    /// e15, e25, e35
+    g1: Simd32x3,
 }
 impl DipoleAtInfinity {
     #[allow(clippy::too_many_arguments)]
-    pub const fn from_elements(e23: f32, e31: f32, e12: f32, e15: f32, e25: f32, e35: f32, e45: f32) -> Self {
+    pub const fn from_elements(e23: f32, e31: f32, e12: f32, e45: f32, e15: f32, e25: f32, e35: f32) -> Self {
         Self {
-            elements: [e23, e31, e12, 0.0, e15, e25, e35, e45],
+            elements: [e23, e31, e12, e45, e15, e25, e35, 0.0],
         }
     }
-    pub const fn from_groups(g0: Simd32x3, g1: Simd32x4) -> Self {
+    pub const fn from_groups(g0: Simd32x4, g1: Simd32x3) -> Self {
         Self {
             groups: DipoleAtInfinityGroups { g0, g1 },
         }
     }
     #[inline(always)]
-    pub fn group0(&self) -> Simd32x3 {
+    pub fn group0(&self) -> Simd32x4 {
         unsafe { self.groups.g0 }
     }
     #[inline(always)]
-    pub fn group0_mut(&mut self) -> &mut Simd32x3 {
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
         unsafe { &mut self.groups.g0 }
     }
     #[inline(always)]
-    pub fn group1(&self) -> Simd32x4 {
+    pub fn group1(&self) -> Simd32x3 {
         unsafe { self.groups.g1 }
     }
     #[inline(always)]
-    pub fn group1_mut(&mut self) -> &mut Simd32x4 {
+    pub fn group1_mut(&mut self) -> &mut Simd32x3 {
         unsafe { &mut self.groups.g1 }
     }
 }
-const DIPOLE_AT_INFINITY_INDEX_REMAP: [usize; 7] = [0, 1, 2, 4, 5, 6, 7];
+const DIPOLE_AT_INFINITY_INDEX_REMAP: [usize; 7] = [0, 1, 2, 3, 4, 5, 6];
 impl std::ops::Index<usize> for DipoleAtInfinity {
     type Output = f32;
     fn index(&self, index: usize) -> &Self::Output {
@@ -61,7 +61,7 @@ impl From<DipoleAtInfinity> for [f32; 7] {
     fn from(vector: DipoleAtInfinity) -> Self {
         unsafe {
             [
-                vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[4], vector.elements[5], vector.elements[6], vector.elements[7],
+                vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3], vector.elements[4], vector.elements[5], vector.elements[6],
             ]
         }
     }
@@ -69,7 +69,7 @@ impl From<DipoleAtInfinity> for [f32; 7] {
 impl From<[f32; 7]> for DipoleAtInfinity {
     fn from(array: [f32; 7]) -> Self {
         Self {
-            elements: [array[0], array[1], array[2], 0.0, array[1], array[2], array[3], array[4]],
+            elements: [array[0], array[1], array[2], array[3], array[1], array[2], array[3], 0.0],
         }
     }
 }
@@ -80,10 +80,10 @@ impl std::fmt::Debug for DipoleAtInfinity {
             .field("e23", &self[0])
             .field("e31", &self[1])
             .field("e12", &self[2])
-            .field("e15", &self[3])
-            .field("e25", &self[4])
-            .field("e35", &self[5])
-            .field("e45", &self[6])
+            .field("e45", &self[3])
+            .field("e15", &self[4])
+            .field("e25", &self[5])
+            .field("e35", &self[6])
             .finish()
     }
 }
@@ -169,27 +169,27 @@ impl std::ops::Index<crate::elements::e12> for DipoleAtInfinity {
         &self[2]
     }
 }
+impl std::ops::Index<crate::elements::e45> for DipoleAtInfinity {
+    type Output = f32;
+    fn index(&self, _: crate::elements::e45) -> &Self::Output {
+        &self[3]
+    }
+}
 impl std::ops::Index<crate::elements::e15> for DipoleAtInfinity {
     type Output = f32;
     fn index(&self, _: crate::elements::e15) -> &Self::Output {
-        &self[3]
+        &self[4]
     }
 }
 impl std::ops::Index<crate::elements::e25> for DipoleAtInfinity {
     type Output = f32;
     fn index(&self, _: crate::elements::e25) -> &Self::Output {
-        &self[4]
+        &self[5]
     }
 }
 impl std::ops::Index<crate::elements::e35> for DipoleAtInfinity {
     type Output = f32;
     fn index(&self, _: crate::elements::e35) -> &Self::Output {
-        &self[5]
-    }
-}
-impl std::ops::Index<crate::elements::e45> for DipoleAtInfinity {
-    type Output = f32;
-    fn index(&self, _: crate::elements::e45) -> &Self::Output {
         &self[6]
     }
 }
@@ -208,23 +208,23 @@ impl std::ops::IndexMut<crate::elements::e12> for DipoleAtInfinity {
         &mut self[2]
     }
 }
+impl std::ops::IndexMut<crate::elements::e45> for DipoleAtInfinity {
+    fn index_mut(&self, _: crate::elements::e45) -> &mut Self::Output {
+        &mut self[3]
+    }
+}
 impl std::ops::IndexMut<crate::elements::e15> for DipoleAtInfinity {
     fn index_mut(&self, _: crate::elements::e15) -> &mut Self::Output {
-        &mut self[3]
+        &mut self[4]
     }
 }
 impl std::ops::IndexMut<crate::elements::e25> for DipoleAtInfinity {
     fn index_mut(&self, _: crate::elements::e25) -> &mut Self::Output {
-        &mut self[4]
+        &mut self[5]
     }
 }
 impl std::ops::IndexMut<crate::elements::e35> for DipoleAtInfinity {
     fn index_mut(&self, _: crate::elements::e35) -> &mut Self::Output {
-        &mut self[5]
-    }
-}
-impl std::ops::IndexMut<crate::elements::e45> for DipoleAtInfinity {
-    fn index_mut(&self, _: crate::elements::e45) -> &mut Self::Output {
         &mut self[6]
     }
 }

@@ -154,7 +154,7 @@ impl TryFrom<Dipole> for AntiLine {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = dipole[9];
+        let el = dipole[6];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e45: ");
@@ -203,7 +203,7 @@ impl TryFrom<DipoleAligningOrigin> for AntiLine {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = dipole_aligning_origin[6];
+        let el = dipole_aligning_origin[3];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e45: ");
@@ -231,7 +231,7 @@ impl TryFrom<DipoleAtInfinity> for AntiLine {
         use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
-        let el = dipole_at_infinity[6];
+        let el = dipole_at_infinity[3];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e45: ");
@@ -535,28 +535,28 @@ impl TryFrom<MultiVector> for AntiLine {
         let el = multi_vector[17];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e321: ");
+            error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[18];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e415: ");
+            error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[19];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e425: ");
+            error_string.push_str("e435: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[20];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e435: ");
+            error_string.push_str("e321: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }

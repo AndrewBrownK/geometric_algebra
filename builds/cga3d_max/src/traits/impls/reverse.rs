@@ -99,10 +99,10 @@ impl Reverse for AntiSphereOnOrigin {
 impl Reverse for Circle {
     fn reverse(self) -> Self {
         return Circle::from_groups(
-            // e423, e431, e412, e321
-            (self.group0() * Simd32x4::from(-1.0)),
-            // e415, e425, e435
-            (self.group1() * Simd32x3::from(-1.0)),
+            // e423, e431, e412
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            (self.group1() * Simd32x4::from(-1.0)),
             // e235, e315, e125
             (self.group2() * Simd32x3::from(-1.0)),
         );
@@ -123,7 +123,7 @@ impl Reverse for CircleAligningOrigin {
 impl Reverse for CircleAtInfinity {
     fn reverse(self) -> Self {
         return CircleAtInfinity::from_groups(
-            // e321, e415, e425, e435
+            // e415, e425, e435, e321
             (self.group0() * Simd32x4::from(-1.0)),
             // e235, e315, e125
             (self.group1() * Simd32x3::from(-1.0)),
@@ -165,30 +165,30 @@ impl Reverse for Dipole {
         return Dipole::from_groups(
             // e41, e42, e43
             (self.group0() * Simd32x3::from(-1.0)),
-            // e23, e31, e12
-            (self.group1() * Simd32x3::from(-1.0)),
-            // e15, e25, e35, e45
-            (self.group2() * Simd32x4::from(-1.0)),
+            // e23, e31, e12, e45
+            (self.group1() * Simd32x4::from(-1.0)),
+            // e15, e25, e35
+            (self.group2() * Simd32x3::from(-1.0)),
         );
     }
 }
 impl Reverse for DipoleAligningOrigin {
     fn reverse(self) -> Self {
         return DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
-            // e15, e25, e35, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            // e41, e42, e43, e45
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e15, e25, e35
+            (self.group1() * Simd32x3::from(-1.0)),
         );
     }
 }
 impl Reverse for DipoleAtInfinity {
     fn reverse(self) -> Self {
         return DipoleAtInfinity::from_groups(
-            // e23, e31, e12
-            (self.group0() * Simd32x3::from(-1.0)),
-            // e15, e25, e35, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            // e23, e31, e12, e45
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e15, e25, e35
+            (self.group1() * Simd32x3::from(-1.0)),
         );
     }
 }
@@ -338,7 +338,7 @@ impl Reverse for MultiVector {
             (self.group4() * Simd32x3::from(-1.0)),
             // e23, e31, e12
             (self.group5() * Simd32x3::from(-1.0)),
-            // e321, e415, e425, e435
+            // e415, e425, e435, e321
             (self.group6() * Simd32x4::from(-1.0)),
             // e423, e431, e412
             (self.group7() * Simd32x3::from(-1.0)),

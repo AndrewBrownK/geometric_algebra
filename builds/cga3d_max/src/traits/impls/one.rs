@@ -33,7 +33,7 @@ impl One for MultiVector {
             Simd32x3::from(0.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
-            // e321, e415, e425, e435
+            // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),

@@ -56,7 +56,7 @@ impl TryFrom<Circle> for CircleOnOrigin {
         use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
-        let el = circle[3];
+        let el = circle[6];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e321: ");
@@ -147,7 +147,7 @@ impl TryFrom<CircleAtInfinity> for CircleOnOrigin {
         use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
-        let el = circle_at_infinity[0];
+        let el = circle_at_infinity[3];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e321: ");
@@ -532,7 +532,7 @@ impl TryFrom<MultiVector> for CircleOnOrigin {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[17];
+        let el = multi_vector[20];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e321: ");

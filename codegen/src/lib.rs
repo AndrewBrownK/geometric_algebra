@@ -45,13 +45,7 @@ mod build_scripts {
 
 const SIMD_SRC: &'static str = include_str!("simd.rs");
 
-// fn main() {
-//     let result: std::io::Result<()> = try {
-//         // TODO create 2d and 4d variants
-//
-//         build_scripts::rga3d::script()?;
-//         build_scripts::cga3d::script()?;
-//         build_scripts::cga3d_min::script()?;
-//     };
-//     result.expect("Must build successfully");
-// }
+pub use emit2::rust::Rust;
+pub mod elements {
+    pub use crate::algebra2::basis::elements::*;
+}

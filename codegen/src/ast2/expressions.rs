@@ -2769,6 +2769,8 @@ impl Vec4Expr {
     pub(crate) fn simplify(&mut self) {
         self.simplify_nuanced(false);
     }
+
+    // TODO see impl Dual for Circle
     fn simplify_nuanced(&mut self, insides_already_done: bool) {
         match self {
             Vec4Expr::Variable(_) => {}

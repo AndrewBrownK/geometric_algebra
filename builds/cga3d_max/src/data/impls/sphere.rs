@@ -1,19 +1,14 @@
 impl From<Horizon> for Sphere {
     fn from(horizon: Horizon) -> Self {
         use crate::elements::*;
-        return Sphere::from_groups(/* e4235, e4315, e4125 */ Simd32x3::from(0.0), /* e1234, e3215 */ Simd32x2::from([0.0, horizon[e3215]]));
+        return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from([0.0, 0.0, 0.0, horizon[e3215]]), /* e1234 */ 0.0);
     }
 }
 
 impl From<NullSphereAtOrigin> for Sphere {
     fn from(null_sphere_at_origin: NullSphereAtOrigin) -> Self {
         use crate::elements::*;
-        return Sphere::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from(0.0),
-            // e1234, e3215
-            Simd32x2::from([null_sphere_at_origin[e1234], 0.0]),
-        );
+        return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(0.0), /* e1234 */ null_sphere_at_origin[e1234]);
     }
 }
 
@@ -21,10 +16,10 @@ impl From<Plane> for Sphere {
     fn from(plane: Plane) -> Self {
         use crate::elements::*;
         return Sphere::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from([plane[e4235], plane[e4315], plane[e4125]]),
-            // e1234, e3215
-            Simd32x2::from([0.0, plane[e3215]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([plane[e4235], plane[e4315], plane[e4125], plane[e3215]]),
+            // e1234
+            0.0,
         );
     }
 }
@@ -33,10 +28,10 @@ impl From<PlaneOnOrigin> for Sphere {
     fn from(plane_on_origin: PlaneOnOrigin) -> Self {
         use crate::elements::*;
         return Sphere::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from([plane_on_origin[e4235], plane_on_origin[e4315], plane_on_origin[e4125]]),
-            // e1234, e3215
-            Simd32x2::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([plane_on_origin[e4235], plane_on_origin[e4315], plane_on_origin[e4125], 0.0]),
+            // e1234
+            0.0,
         );
     }
 }
@@ -45,10 +40,10 @@ impl From<SphereAtOrigin> for Sphere {
     fn from(sphere_at_origin: SphereAtOrigin) -> Self {
         use crate::elements::*;
         return Sphere::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from(0.0),
-            // e1234, e3215
-            Simd32x2::from([sphere_at_origin[e1234], sphere_at_origin[e3215]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([0.0, 0.0, 0.0, sphere_at_origin[e3215]]),
+            // e1234
+            sphere_at_origin[e1234],
         );
     }
 }
@@ -57,10 +52,10 @@ impl From<SphereOnOrigin> for Sphere {
     fn from(sphere_on_origin: SphereOnOrigin) -> Self {
         use crate::elements::*;
         return Sphere::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from([sphere_on_origin[e4235], sphere_on_origin[e4315], sphere_on_origin[e4125]]),
-            // e1234, e3215
-            Simd32x2::from([sphere_on_origin[e1234], 0.0]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([sphere_on_origin[e4235], sphere_on_origin[e4315], sphere_on_origin[e4125], 0.0]),
+            // e1234
+            sphere_on_origin[e1234],
         );
     }
 }
@@ -85,10 +80,10 @@ impl TryFrom<AntiDualNum> for Sphere {
             return Err(error);
         }
         return Ok(Sphere::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from(0.0),
-            // e1234, e3215
-            Simd32x2::from([0.0, anti_dual_num[e3215]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([0.0, 0.0, 0.0, anti_dual_num[e3215]]),
+            // e1234
+            0.0,
         ));
     }
 }
@@ -155,10 +150,10 @@ impl TryFrom<AntiMotor> for Sphere {
             return Err(error);
         }
         return Ok(Sphere::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from(0.0),
-            // e1234, e3215
-            Simd32x2::from([0.0, anti_motor[e3215]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([0.0, 0.0, 0.0, anti_motor[e3215]]),
+            // e1234
+            0.0,
         ));
     }
 }
@@ -204,10 +199,10 @@ impl TryFrom<Flector> for Sphere {
             return Err(error);
         }
         return Ok(Sphere::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from([flector[e4235], flector[e4315], flector[e4125]]),
-            // e1234, e3215
-            Simd32x2::from([0.0, flector[e3215]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([flector[e4235], flector[e4315], flector[e4125], flector[e3215]]),
+            // e1234
+            0.0,
         ));
     }
 }
@@ -246,10 +241,10 @@ impl TryFrom<FlectorAtInfinity> for Sphere {
             return Err(error);
         }
         return Ok(Sphere::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from(0.0),
-            // e1234, e3215
-            Simd32x2::from([0.0, flector_at_infinity[e3215]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([0.0, 0.0, 0.0, flector_at_infinity[e3215]]),
+            // e1234
+            0.0,
         ));
     }
 }
@@ -274,10 +269,10 @@ impl TryFrom<FlectorOnOrigin> for Sphere {
             return Err(error);
         }
         return Ok(Sphere::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from([flector_on_origin[e4235], flector_on_origin[e4315], flector_on_origin[e4125]]),
-            // e1234, e3215
-            Simd32x2::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([flector_on_origin[e4235], flector_on_origin[e4315], flector_on_origin[e4125], 0.0]),
+            // e1234
+            0.0,
         ));
     }
 }
@@ -410,28 +405,28 @@ impl TryFrom<MultiVector> for Sphere {
         let el = multi_vector[17];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e321: ");
+            error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[18];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e415: ");
+            error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[19];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e425: ");
+            error_string.push_str("e435: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[20];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e435: ");
+            error_string.push_str("e321: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -484,10 +479,10 @@ impl TryFrom<MultiVector> for Sphere {
             return Err(error);
         }
         return Ok(Sphere::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from([multi_vector[e4235], multi_vector[e4315], multi_vector[e4125]]),
-            // e1234, e3215
-            Simd32x2::from([multi_vector[e1234], multi_vector[e3215]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([multi_vector[e4235], multi_vector[e4315], multi_vector[e4125], multi_vector[e3215]]),
+            // e1234
+            multi_vector[e1234],
         ));
     }
 }

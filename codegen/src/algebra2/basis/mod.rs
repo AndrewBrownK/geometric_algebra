@@ -1040,7 +1040,7 @@ fn test_metric() {
 }
 
 #[allow(non_upper_case_globals, dead_code)]
-pub mod elements {
+pub(crate) mod elements {
     use crate::algebra2::basis::*;
 
     // List a bunch of generated elements

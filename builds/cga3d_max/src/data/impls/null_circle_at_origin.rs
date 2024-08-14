@@ -34,28 +34,28 @@ impl TryFrom<Circle> for NullCircleAtOrigin {
         let el = circle[3];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e321: ");
+            error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = circle[4];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e415: ");
+            error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = circle[5];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e425: ");
+            error_string.push_str("e435: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = circle[6];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e435: ");
+            error_string.push_str("e321: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -410,28 +410,28 @@ impl TryFrom<MultiVector> for NullCircleAtOrigin {
         let el = multi_vector[17];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e321: ");
+            error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[18];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e415: ");
+            error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[19];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e425: ");
+            error_string.push_str("e435: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[20];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e435: ");
+            error_string.push_str("e321: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }

@@ -394,7 +394,7 @@ macro_rules! multi_vec {
     // grouped using tuples
     ($mv_name:ident<$anti_scalar:ident> => $( ($($basis_element:ident),+ $(,)?)),+ $(,)?) => {
         {
-            use $crate::algebra2::basis::elements::*;
+            use $crate::elements::*;
             let name: &'static str = stringify!($mv_name);
             let groups: $crate::utility::ConstVec<
                 $crate::algebra2::multivector::BasisElementGroup,
@@ -411,7 +411,7 @@ macro_rules! multi_vec {
     // grouped using arrays
     ($mv_name:ident<$anti_scalar:ident> => $( [$($basis_element:ident),+ $(,)?]),+ $(,)?) => {
         {
-            use $crate::algebra2::basis::elements::*;
+            use $crate::elements::*;
             let name: &'static str = stringify!($mv_name);
             let groups: $crate::utility::ConstVec<
                 $crate::algebra2::multivector::BasisElementGroup,
@@ -430,7 +430,7 @@ macro_rules! multi_vec {
         {
             // Allocations are not allowed in static/const, but can't be bothered to make a
             // compatible version when specifying groups is fine instead.
-            use $crate::algebra2::basis::elements::*;
+            use $crate::elements::*;
             let name: &'static str = stringify!($mv_name);
             let elements: std::vec::Vec<$crate::algebra2::basis::BasisElement> = vec![
                 $($basis_element),+,
@@ -441,7 +441,7 @@ macro_rules! multi_vec {
     // Elegant and sparse
     ($mv_name:ident<$anti_scalar:ident> as $( $($basis_element:ident),+ $(,)?)|+ ) => {
         {
-            use $crate::algebra2::basis::elements::*;
+            use $crate::elements::*;
             let name: &'static str = stringify!($mv_name);
             let groups: $crate::utility::ConstVec<
                 $crate::algebra2::multivector::BasisElementGroup,
@@ -463,7 +463,7 @@ macro_rules! multi_vecs {
     ($anti_scalar:ident; $( $mv_name:ident => $( ($($basis_element:ident),+ $(,)?)),+ $(,)? );+ $(;)?) => {
         $(
         pub static $mv_name: $crate::algebra2::multivector::MultiVec<{$anti_scalar}> = {
-            use $crate::algebra2::basis::elements::*;
+            use $crate::elements::*;
             let name: &'static str = stringify!($mv_name);
             let groups: $crate::utility::ConstVec<
                 $crate::algebra2::multivector::BasisElementGroup,
@@ -487,7 +487,7 @@ macro_rules! multi_vecs {
     ($anti_scalar:ident; $( $mv_name:ident => $( [$($basis_element:ident),+ $(,)?]),+ $(,)? );+ $(;)?) => {
         $(
         pub static $mv_name: $crate::algebra2::multivector::MultiVec<{$anti_scalar}> = {
-            use $crate::algebra2::basis::elements::*;
+            use $crate::elements::*;
             let name: &'static str = stringify!($mv_name);
             let groups: $crate::utility::ConstVec<
                 $crate::algebra2::multivector::BasisElementGroup,
@@ -511,7 +511,7 @@ macro_rules! multi_vecs {
     ($anti_scalar:ident; $( $mv_name:ident as $( $($basis_element:ident),+ $(,)?)|+ );+ $(;)?) => {
         $(
         pub static $mv_name: $crate::algebra2::multivector::MultiVec<{$anti_scalar}> = {
-            use $crate::algebra2::basis::elements::*;
+            use $crate::elements::*;
             let name: &'static str = stringify!($mv_name);
             let groups: $crate::utility::ConstVec<
                 $crate::algebra2::multivector::BasisElementGroup,

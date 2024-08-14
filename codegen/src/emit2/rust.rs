@@ -246,6 +246,7 @@ postgres-types = "0.2.7""#
             }
         }
 
+        // TODO separate independent progress bar for rustfmt
         let multi_progress = Arc::new(indicatif::MultiProgress::new());
         let mut join_set: JoinSet<anyhow::Result<()>> = JoinSet::new();
         let (tx, mut rx) = tokio::sync::mpsc::unbounded_channel::<PathBuf>();

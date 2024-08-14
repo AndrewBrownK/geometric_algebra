@@ -2,10 +2,10 @@ impl From<DipoleAtOrigin> for DipoleAligningOrigin {
     fn from(dipole_at_origin: DipoleAtOrigin) -> Self {
         use crate::elements::*;
         return DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from([dipole_at_origin[e41], dipole_at_origin[e42], dipole_at_origin[e43]]),
-            // e15, e25, e35, e45
-            Simd32x4::from([dipole_at_origin[e15], dipole_at_origin[e25], dipole_at_origin[e35], 0.0]),
+            // e41, e42, e43, e45
+            Simd32x4::from([dipole_at_origin[e41], dipole_at_origin[e42], dipole_at_origin[e43], 0.0]),
+            // e15, e25, e35
+            Simd32x3::from([dipole_at_origin[e15], dipole_at_origin[e25], dipole_at_origin[e35]]),
         );
     }
 }
@@ -14,10 +14,10 @@ impl From<DipoleOnOrigin> for DipoleAligningOrigin {
     fn from(dipole_on_origin: DipoleOnOrigin) -> Self {
         use crate::elements::*;
         return DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from([dipole_on_origin[e41], dipole_on_origin[e42], dipole_on_origin[e43]]),
-            // e15, e25, e35, e45
-            Simd32x4::from([0.0, 0.0, 0.0, dipole_on_origin[e45]]),
+            // e41, e42, e43, e45
+            Simd32x4::from([dipole_on_origin[e41], dipole_on_origin[e42], dipole_on_origin[e43], dipole_on_origin[e45]]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
         );
     }
 }
@@ -26,10 +26,10 @@ impl From<FlatOrigin> for DipoleAligningOrigin {
     fn from(flat_origin: FlatOrigin) -> Self {
         use crate::elements::*;
         return DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e15, e25, e35, e45
+            // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, flat_origin[e45]]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
         );
     }
 }
@@ -38,10 +38,10 @@ impl From<FlatPoint> for DipoleAligningOrigin {
     fn from(flat_point: FlatPoint) -> Self {
         use crate::elements::*;
         return DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e15, e25, e35, e45
-            Simd32x4::from([flat_point[e15], flat_point[e25], flat_point[e35], flat_point[e45]]),
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, flat_point[e45]]),
+            // e15, e25, e35
+            Simd32x3::from([flat_point[e15], flat_point[e25], flat_point[e35]]),
         );
     }
 }
@@ -50,10 +50,10 @@ impl From<FlatPointAtInfinity> for DipoleAligningOrigin {
     fn from(flat_point_at_infinity: FlatPointAtInfinity) -> Self {
         use crate::elements::*;
         return DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e15, e25, e35, e45
-            Simd32x4::from([flat_point_at_infinity[e15], flat_point_at_infinity[e25], flat_point_at_infinity[e35], 0.0]),
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from([flat_point_at_infinity[e15], flat_point_at_infinity[e25], flat_point_at_infinity[e35]]),
         );
     }
 }
@@ -62,10 +62,10 @@ impl From<NullDipoleAtOrigin> for DipoleAligningOrigin {
     fn from(null_dipole_at_origin: NullDipoleAtOrigin) -> Self {
         use crate::elements::*;
         return DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from([null_dipole_at_origin[e41], null_dipole_at_origin[e42], null_dipole_at_origin[e43]]),
-            // e15, e25, e35, e45
-            Simd32x4::from(0.0),
+            // e41, e42, e43, e45
+            Simd32x4::from([null_dipole_at_origin[e41], null_dipole_at_origin[e42], null_dipole_at_origin[e43], 0.0]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
         );
     }
 }
@@ -104,10 +104,10 @@ impl TryFrom<AntiCircleOnOrigin> for DipoleAligningOrigin {
             return Err(error);
         }
         return Ok(DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from([anti_circle_on_origin[e41], anti_circle_on_origin[e42], anti_circle_on_origin[e43]]),
-            // e15, e25, e35, e45
-            Simd32x4::from(0.0),
+            // e41, e42, e43, e45
+            Simd32x4::from([anti_circle_on_origin[e41], anti_circle_on_origin[e42], anti_circle_on_origin[e43], 0.0]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
         ));
     }
 }
@@ -146,10 +146,10 @@ impl TryFrom<AntiLine> for DipoleAligningOrigin {
             return Err(error);
         }
         return Ok(DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e15, e25, e35, e45
-            Simd32x4::from([anti_line[e15], anti_line[e25], anti_line[e35], 0.0]),
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from([anti_line[e15], anti_line[e25], anti_line[e35]]),
         ));
     }
 }
@@ -202,10 +202,10 @@ impl TryFrom<AntiMotor> for DipoleAligningOrigin {
             return Err(error);
         }
         return Ok(DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e15, e25, e35, e45
-            Simd32x4::from([anti_motor[e15], anti_motor[e25], anti_motor[e35], 0.0]),
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from([anti_motor[e15], anti_motor[e25], anti_motor[e35]]),
         ));
     }
 }
@@ -244,10 +244,10 @@ impl TryFrom<Dipole> for DipoleAligningOrigin {
             return Err(error);
         }
         return Ok(DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from([dipole[e41], dipole[e42], dipole[e43]]),
-            // e15, e25, e35, e45
-            Simd32x4::from([dipole[e15], dipole[e25], dipole[e35], dipole[e45]]),
+            // e41, e42, e43, e45
+            Simd32x4::from([dipole[e41], dipole[e42], dipole[e43], dipole[e45]]),
+            // e15, e25, e35
+            Simd32x3::from([dipole[e15], dipole[e25], dipole[e35]]),
         ));
     }
 }
@@ -286,10 +286,10 @@ impl TryFrom<DipoleAtInfinity> for DipoleAligningOrigin {
             return Err(error);
         }
         return Ok(DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e15, e25, e35, e45
-            Simd32x4::from([dipole_at_infinity[e15], dipole_at_infinity[e25], dipole_at_infinity[e35], dipole_at_infinity[e45]]),
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, dipole_at_infinity[e45]]),
+            // e15, e25, e35
+            Simd32x3::from([dipole_at_infinity[e15], dipole_at_infinity[e25], dipole_at_infinity[e35]]),
         ));
     }
 }
@@ -328,10 +328,10 @@ impl TryFrom<DipoleOrthogonalOrigin> for DipoleAligningOrigin {
             return Err(error);
         }
         return Ok(DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from([dipole_orthogonal_origin[e41], dipole_orthogonal_origin[e42], dipole_orthogonal_origin[e43]]),
-            // e15, e25, e35, e45
-            Simd32x4::from([dipole_orthogonal_origin[e15], dipole_orthogonal_origin[e25], dipole_orthogonal_origin[e35], 0.0]),
+            // e41, e42, e43, e45
+            Simd32x4::from([dipole_orthogonal_origin[e41], dipole_orthogonal_origin[e42], dipole_orthogonal_origin[e43], 0.0]),
+            // e15, e25, e35
+            Simd32x3::from([dipole_orthogonal_origin[e15], dipole_orthogonal_origin[e25], dipole_orthogonal_origin[e35]]),
         ));
     }
 }
@@ -377,10 +377,10 @@ impl TryFrom<Flector> for DipoleAligningOrigin {
             return Err(error);
         }
         return Ok(DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e15, e25, e35, e45
-            Simd32x4::from([flector[e15], flector[e25], flector[e35], flector[e45]]),
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, flector[e45]]),
+            // e15, e25, e35
+            Simd32x3::from([flector[e15], flector[e25], flector[e35]]),
         ));
     }
 }
@@ -405,10 +405,10 @@ impl TryFrom<FlectorAtInfinity> for DipoleAligningOrigin {
             return Err(error);
         }
         return Ok(DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e15, e25, e35, e45
-            Simd32x4::from([flector_at_infinity[e15], flector_at_infinity[e25], flector_at_infinity[e35], 0.0]),
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from([flector_at_infinity[e15], flector_at_infinity[e25], flector_at_infinity[e35]]),
         ));
     }
 }
@@ -447,10 +447,10 @@ impl TryFrom<FlectorOnOrigin> for DipoleAligningOrigin {
             return Err(error);
         }
         return Ok(DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e15, e25, e35, e45
+            // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, flector_on_origin[e45]]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
         ));
     }
 }
@@ -534,28 +534,28 @@ impl TryFrom<MultiVector> for DipoleAligningOrigin {
         let el = multi_vector[17];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e321: ");
+            error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[18];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e415: ");
+            error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[19];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e425: ");
+            error_string.push_str("e435: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[20];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e435: ");
+            error_string.push_str("e321: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -643,10 +643,10 @@ impl TryFrom<MultiVector> for DipoleAligningOrigin {
             return Err(error);
         }
         return Ok(DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from([multi_vector[e41], multi_vector[e42], multi_vector[e43]]),
-            // e15, e25, e35, e45
-            Simd32x4::from([multi_vector[e15], multi_vector[e25], multi_vector[e35], multi_vector[e45]]),
+            // e41, e42, e43, e45
+            Simd32x4::from([multi_vector[e41], multi_vector[e42], multi_vector[e43], multi_vector[e45]]),
+            // e15, e25, e35
+            Simd32x3::from([multi_vector[e15], multi_vector[e25], multi_vector[e35]]),
         ));
     }
 }

@@ -2,10 +2,10 @@ impl From<AntiPlane> for RoundPoint {
     fn from(anti_plane: AntiPlane) -> Self {
         use crate::elements::*;
         return RoundPoint::from_groups(
-            // e1, e2, e3
-            Simd32x3::from([anti_plane[e1], anti_plane[e2], anti_plane[e3]]),
-            // e4, e5
-            Simd32x2::from([0.0, anti_plane[e5]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([anti_plane[e1], anti_plane[e2], anti_plane[e3], 0.0]),
+            // e5
+            anti_plane[e5],
         );
     }
 }
@@ -14,10 +14,10 @@ impl From<AntiPlaneOnOrigin> for RoundPoint {
     fn from(anti_plane_on_origin: AntiPlaneOnOrigin) -> Self {
         use crate::elements::*;
         return RoundPoint::from_groups(
-            // e1, e2, e3
-            Simd32x3::from([anti_plane_on_origin[e1], anti_plane_on_origin[e2], anti_plane_on_origin[e3]]),
-            // e4, e5
-            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from([anti_plane_on_origin[e1], anti_plane_on_origin[e2], anti_plane_on_origin[e3], 0.0]),
+            // e5
+            0.0,
         );
     }
 }
@@ -26,10 +26,10 @@ impl From<AntiSphereOnOrigin> for RoundPoint {
     fn from(anti_sphere_on_origin: AntiSphereOnOrigin) -> Self {
         use crate::elements::*;
         return RoundPoint::from_groups(
-            // e1, e2, e3
-            Simd32x3::from([anti_sphere_on_origin[e1], anti_sphere_on_origin[e2], anti_sphere_on_origin[e3]]),
-            // e4, e5
-            Simd32x2::from([anti_sphere_on_origin[e4], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from([anti_sphere_on_origin[e1], anti_sphere_on_origin[e2], anti_sphere_on_origin[e3], anti_sphere_on_origin[e4]]),
+            // e5
+            0.0,
         );
     }
 }
@@ -37,14 +37,14 @@ impl From<AntiSphereOnOrigin> for RoundPoint {
 impl From<Infinity> for RoundPoint {
     fn from(infinity: Infinity) -> Self {
         use crate::elements::*;
-        return RoundPoint::from_groups(/* e1, e2, e3 */ Simd32x3::from(0.0), /* e4, e5 */ Simd32x2::from([0.0, infinity[e5]]));
+        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(0.0), /* e5 */ infinity[e5]);
     }
 }
 
 impl From<Origin> for RoundPoint {
     fn from(origin: Origin) -> Self {
         use crate::elements::*;
-        return RoundPoint::from_groups(/* e1, e2, e3 */ Simd32x3::from(0.0), /* e4, e5 */ Simd32x2::from([origin[e4], 0.0]));
+        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, origin[e4]]), /* e5 */ 0.0);
     }
 }
 
@@ -52,10 +52,10 @@ impl From<RoundPointAtOrigin> for RoundPoint {
     fn from(round_point_at_origin: RoundPointAtOrigin) -> Self {
         use crate::elements::*;
         return RoundPoint::from_groups(
-            // e1, e2, e3
-            Simd32x3::from(0.0),
-            // e4, e5
-            Simd32x2::from([round_point_at_origin[e4], round_point_at_origin[e5]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, round_point_at_origin[e4]]),
+            // e5
+            round_point_at_origin[e5],
         );
     }
 }
@@ -101,10 +101,10 @@ impl TryFrom<AntiFlector> for RoundPoint {
             return Err(error);
         }
         return Ok(RoundPoint::from_groups(
-            // e1, e2, e3
-            Simd32x3::from([anti_flector[e1], anti_flector[e2], anti_flector[e3]]),
-            // e4, e5
-            Simd32x2::from([0.0, anti_flector[e5]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([anti_flector[e1], anti_flector[e2], anti_flector[e3], 0.0]),
+            // e5
+            anti_flector[e5],
         ));
     }
 }
@@ -129,10 +129,10 @@ impl TryFrom<AntiFlectorOnOrigin> for RoundPoint {
             return Err(error);
         }
         return Ok(RoundPoint::from_groups(
-            // e1, e2, e3
-            Simd32x3::from([anti_flector_on_origin[e1], anti_flector_on_origin[e2], anti_flector_on_origin[e3]]),
-            // e4, e5
-            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from([anti_flector_on_origin[e1], anti_flector_on_origin[e2], anti_flector_on_origin[e3], 0.0]),
+            // e5
+            0.0,
         ));
     }
 }
@@ -156,12 +156,7 @@ impl TryFrom<DualNum> for RoundPoint {
             error.push('}');
             return Err(error);
         }
-        return Ok(RoundPoint::from_groups(
-            // e1, e2, e3
-            Simd32x3::from(0.0),
-            // e4, e5
-            Simd32x2::from([0.0, dual_num[e5]]),
-        ));
+        return Ok(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(0.0), /* e5 */ dual_num[e5]));
     }
 }
 
@@ -226,7 +221,7 @@ impl TryFrom<Motor> for RoundPoint {
             error.push('}');
             return Err(error);
         }
-        return Ok(RoundPoint::from_groups(/* e1, e2, e3 */ Simd32x3::from(0.0), /* e4, e5 */ Simd32x2::from([0.0, motor[e5]])));
+        return Ok(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(0.0), /* e5 */ motor[e5]));
     }
 }
 
@@ -263,12 +258,7 @@ impl TryFrom<MotorAtInfinity> for RoundPoint {
             error.push('}');
             return Err(error);
         }
-        return Ok(RoundPoint::from_groups(
-            // e1, e2, e3
-            Simd32x3::from(0.0),
-            // e4, e5
-            Simd32x2::from([0.0, motor_at_infinity[e5]]),
-        ));
+        return Ok(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(0.0), /* e5 */ motor_at_infinity[e5]));
     }
 }
 
@@ -365,28 +355,28 @@ impl TryFrom<MultiVector> for RoundPoint {
         let el = multi_vector[17];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e321: ");
+            error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[18];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e415: ");
+            error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[19];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e425: ");
+            error_string.push_str("e435: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[20];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e435: ");
+            error_string.push_str("e321: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -474,10 +464,10 @@ impl TryFrom<MultiVector> for RoundPoint {
             return Err(error);
         }
         return Ok(RoundPoint::from_groups(
-            // e1, e2, e3
-            Simd32x3::from([multi_vector[e1], multi_vector[e2], multi_vector[e3]]),
-            // e4, e5
-            Simd32x2::from([multi_vector[e4], multi_vector[e5]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([multi_vector[e1], multi_vector[e2], multi_vector[e3], multi_vector[e4]]),
+            // e5
+            multi_vector[e5],
         ));
     }
 }

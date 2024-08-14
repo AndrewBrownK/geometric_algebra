@@ -126,28 +126,28 @@ impl TryFrom<MultiVector> for NullSphereAtOrigin {
         let el = multi_vector[17];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e321: ");
+            error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[18];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e415: ");
+            error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[19];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e425: ");
+            error_string.push_str("e435: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[20];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e435: ");
+            error_string.push_str("e321: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -258,7 +258,7 @@ impl TryFrom<Sphere> for NullSphereAtOrigin {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = sphere[4];
+        let el = sphere[3];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e3215: ");
@@ -281,7 +281,7 @@ impl TryFrom<SphereAtOrigin> for NullSphereAtOrigin {
         use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
-        let el = sphere_at_origin[1];
+        let el = sphere_at_origin[0];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e3215: ");

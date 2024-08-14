@@ -6,19 +6,19 @@ use crate::simd::*;
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub union SphereAtOrigin {
     groups: SphereAtOriginGroups,
-    /// e1234, e3215, 0, 0
+    /// e3215, e1234, 0, 0
     elements: [f32; 4],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct SphereAtOriginGroups {
-    /// e1234, e3215
+    /// e3215, e1234
     g0: Simd32x2,
 }
 impl SphereAtOrigin {
     #[allow(clippy::too_many_arguments)]
-    pub const fn from_elements(e1234: f32, e3215: f32) -> Self {
+    pub const fn from_elements(e3215: f32, e1234: f32) -> Self {
         Self {
-            elements: [e1234, e3215, 0.0, 0.0],
+            elements: [e3215, e1234, 0.0, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x2) -> Self {
@@ -61,7 +61,7 @@ impl From<[f32; 2]> for SphereAtOrigin {
 }
 impl std::fmt::Debug for SphereAtOrigin {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter.debug_struct("SphereAtOrigin").field("e1234", &self[0]).field("e3215", &self[1]).finish()
+        formatter.debug_struct("SphereAtOrigin").field("e3215", &self[0]).field("e1234", &self[1]).finish()
     }
 }
 
@@ -128,25 +128,25 @@ impl std::hash::Hash for SphereAtOrigin {
     }
 }
 
-impl std::ops::Index<crate::elements::e1234> for SphereAtOrigin {
-    type Output = f32;
-    fn index(&self, _: crate::elements::e1234) -> &Self::Output {
-        &self[0]
-    }
-}
 impl std::ops::Index<crate::elements::e3215> for SphereAtOrigin {
     type Output = f32;
     fn index(&self, _: crate::elements::e3215) -> &Self::Output {
-        &self[1]
+        &self[0]
     }
 }
-impl std::ops::IndexMut<crate::elements::e1234> for SphereAtOrigin {
-    fn index_mut(&self, _: crate::elements::e1234) -> &mut Self::Output {
-        &mut self[0]
+impl std::ops::Index<crate::elements::e1234> for SphereAtOrigin {
+    type Output = f32;
+    fn index(&self, _: crate::elements::e1234) -> &Self::Output {
+        &self[1]
     }
 }
 impl std::ops::IndexMut<crate::elements::e3215> for SphereAtOrigin {
     fn index_mut(&self, _: crate::elements::e3215) -> &mut Self::Output {
+        &mut self[0]
+    }
+}
+impl std::ops::IndexMut<crate::elements::e1234> for SphereAtOrigin {
+    fn index_mut(&self, _: crate::elements::e1234) -> &mut Self::Output {
         &mut self[1]
     }
 }

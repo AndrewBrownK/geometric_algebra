@@ -84,21 +84,21 @@ impl TryFrom<Dipole> for DipoleOnOrigin {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = dipole[6];
+        let el = dipole[7];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e15: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = dipole[7];
+        let el = dipole[8];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e25: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = dipole[8];
+        let el = dipole[9];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e35: ");
@@ -124,21 +124,21 @@ impl TryFrom<DipoleAligningOrigin> for DipoleOnOrigin {
         use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
-        let el = dipole_aligning_origin[3];
+        let el = dipole_aligning_origin[4];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e15: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = dipole_aligning_origin[4];
+        let el = dipole_aligning_origin[5];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e25: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = dipole_aligning_origin[5];
+        let el = dipole_aligning_origin[6];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e35: ");
@@ -187,21 +187,21 @@ impl TryFrom<DipoleAtInfinity> for DipoleOnOrigin {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = dipole_at_infinity[3];
+        let el = dipole_at_infinity[4];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e15: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = dipole_at_infinity[4];
+        let el = dipole_at_infinity[5];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e25: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = dipole_at_infinity[5];
+        let el = dipole_at_infinity[6];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e35: ");
@@ -560,28 +560,28 @@ impl TryFrom<MultiVector> for DipoleOnOrigin {
         let el = multi_vector[17];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e321: ");
+            error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[18];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e415: ");
+            error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[19];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e425: ");
+            error_string.push_str("e435: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[20];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e435: ");
+            error_string.push_str("e321: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }

@@ -133,11 +133,11 @@ impl AntiDual for Circle {
     fn anti_dual(self) -> Self::Output {
         return Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-            // e23, e31, e12
-            self.group1(),
-            // e15, e25, e35, e45
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group0()[3] * -1.0)]),
+            self.group0(),
+            // e23, e31, e12, e45
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] * -1.0)]),
+            // e15, e25, e35
+            self.group2(),
         );
     }
 }
@@ -151,10 +151,10 @@ impl AntiDual for CircleAtInfinity {
     type Output = DipoleAtInfinity;
     fn anti_dual(self) -> Self::Output {
         return DipoleAtInfinity::from_groups(
-            // e23, e31, e12
-            Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
-            // e15, e25, e35, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group0()[0] * -1.0)]),
+            // e23, e31, e12, e45
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
+            // e15, e25, e35
+            self.group1(),
         );
     }
 }
@@ -174,10 +174,10 @@ impl AntiDual for CircleOrthogonalOrigin {
     type Output = DipoleAligningOrigin;
     fn anti_dual(self) -> Self::Output {
         return DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-            // e15, e25, e35, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group0()[3] * -1.0)]),
+            // e41, e42, e43, e45
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
+            // e15, e25, e35
+            self.group1(),
         );
     }
 }
@@ -185,12 +185,12 @@ impl AntiDual for Dipole {
     type Output = Circle;
     fn anti_dual(self) -> Self::Output {
         return Circle::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group2()[3]]),
-            // e415, e425, e435
-            (self.group1() * Simd32x3::from(-1.0)),
+            // e423, e431, e412
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
             // e235, e315, e125
-            (Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(-1.0)),
+            (self.group2() * Simd32x3::from(-1.0)),
         );
     }
 }
@@ -199,9 +199,9 @@ impl AntiDual for DipoleAligningOrigin {
     fn anti_dual(self) -> Self::Output {
         return CircleOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
             // e235, e315, e125
-            (Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(-1.0)),
+            (self.group1() * Simd32x3::from(-1.0)),
         );
     }
 }
@@ -209,10 +209,10 @@ impl AntiDual for DipoleAtInfinity {
     type Output = CircleAtInfinity;
     fn anti_dual(self) -> Self::Output {
         return CircleAtInfinity::from_groups(
-            // e321, e415, e425, e435
-            Simd32x4::from([self.group1()[3], (self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0)]),
+            // e415, e425, e435, e321
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
             // e235, e315, e125
-            (Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(-1.0)),
+            (self.group1() * Simd32x3::from(-1.0)),
         );
     }
 }
@@ -377,13 +377,13 @@ impl AntiDual for MultiVector {
             // e5
             self[e45],
             // e41, e42, e43, e45
-            Simd32x4::from([self.group7()[0], self.group7()[1], self.group7()[2], (self.group6()[0] * -1.0)]),
+            Simd32x4::from([self.group7()[0], self.group7()[1], self.group7()[2], (self.group6()[3] * -1.0)]),
             // e15, e25, e35
             self.group8(),
             // e23, e31, e12
-            Simd32x3::from([self.group6()[1], self.group6()[2], self.group6()[3]]),
-            // e321, e415, e425, e435
-            Simd32x4::from([self.group3()[3], (self.group5()[0] * -1.0), (self.group5()[1] * -1.0), (self.group5()[2] * -1.0)]),
+            Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]),
+            // e415, e425, e435, e321
+            Simd32x4::from([(self.group5()[0] * -1.0), (self.group5()[1] * -1.0), (self.group5()[2] * -1.0), self.group3()[3]]),
             // e423, e431, e412
             (Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]) * Simd32x3::from(-1.0)),
             // e235, e315, e125
@@ -438,13 +438,19 @@ impl AntiDual for PlaneOnOrigin {
 impl AntiDual for RoundPoint {
     type Output = Sphere;
     fn anti_dual(self) -> Self::Output {
-        return Sphere::from_groups(/* e4235, e4315, e4125 */ self.group0(), /* e1234, e3215 */ (self.group1() * Simd32x2::from(-1.0)));
+        use crate::elements::*;
+        return Sphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self[e2] * -1.0)]),
+            // e1234
+            (self.group0()[3] * -1.0),
+        );
     }
 }
 impl AntiDual for RoundPointAtOrigin {
     type Output = SphereAtOrigin;
     fn anti_dual(self) -> Self::Output {
-        return SphereAtOrigin::from_groups(/* e1234, e3215 */ (self.group0() * Simd32x2::from(-1.0)));
+        return SphereAtOrigin::from_groups(/* e3215, e1234 */ (swizzle!(self.group0(), 1, 0) * Simd32x2::from(-1.0)));
     }
 }
 impl AntiDual for Scalar {
@@ -456,13 +462,19 @@ impl AntiDual for Scalar {
 impl AntiDual for Sphere {
     type Output = RoundPoint;
     fn anti_dual(self) -> Self::Output {
-        return RoundPoint::from_groups(/* e1, e2, e3 */ (self.group0() * Simd32x3::from(-1.0)), /* e4, e5 */ self.group1());
+        use crate::elements::*;
+        return RoundPoint::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self[e4315]]),
+            // e5
+            self.group0()[3],
+        );
     }
 }
 impl AntiDual for SphereAtOrigin {
-    type Output = SphereAtOrigin;
+    type Output = RoundPointAtOrigin;
     fn anti_dual(self) -> Self::Output {
-        return self;
+        return RoundPointAtOrigin::from_groups(/* e4, e5 */ Simd32x2::from([self.group0()[1], self.group0()[0]]));
     }
 }
 impl AntiDual for SphereOnOrigin {

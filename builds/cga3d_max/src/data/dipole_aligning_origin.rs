@@ -6,46 +6,46 @@ use crate::simd::*;
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub union DipoleAligningOrigin {
     groups: DipoleAligningOriginGroups,
-    /// e41, e42, e43, 0, e15, e25, e35, e45
+    /// e41, e42, e43, e45, e15, e25, e35, 0
     elements: [f32; 8],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct DipoleAligningOriginGroups {
-    /// e41, e42, e43
-    g0: Simd32x3,
-    /// e15, e25, e35, e45
-    g1: Simd32x4,
+    /// e41, e42, e43, e45
+    g0: Simd32x4,
+    /// e15, e25, e35
+    g1: Simd32x3,
 }
 impl DipoleAligningOrigin {
     #[allow(clippy::too_many_arguments)]
-    pub const fn from_elements(e41: f32, e42: f32, e43: f32, e15: f32, e25: f32, e35: f32, e45: f32) -> Self {
+    pub const fn from_elements(e41: f32, e42: f32, e43: f32, e45: f32, e15: f32, e25: f32, e35: f32) -> Self {
         Self {
-            elements: [e41, e42, e43, 0.0, e15, e25, e35, e45],
+            elements: [e41, e42, e43, e45, e15, e25, e35, 0.0],
         }
     }
-    pub const fn from_groups(g0: Simd32x3, g1: Simd32x4) -> Self {
+    pub const fn from_groups(g0: Simd32x4, g1: Simd32x3) -> Self {
         Self {
             groups: DipoleAligningOriginGroups { g0, g1 },
         }
     }
     #[inline(always)]
-    pub fn group0(&self) -> Simd32x3 {
+    pub fn group0(&self) -> Simd32x4 {
         unsafe { self.groups.g0 }
     }
     #[inline(always)]
-    pub fn group0_mut(&mut self) -> &mut Simd32x3 {
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
         unsafe { &mut self.groups.g0 }
     }
     #[inline(always)]
-    pub fn group1(&self) -> Simd32x4 {
+    pub fn group1(&self) -> Simd32x3 {
         unsafe { self.groups.g1 }
     }
     #[inline(always)]
-    pub fn group1_mut(&mut self) -> &mut Simd32x4 {
+    pub fn group1_mut(&mut self) -> &mut Simd32x3 {
         unsafe { &mut self.groups.g1 }
     }
 }
-const DIPOLE_ALIGNING_ORIGIN_INDEX_REMAP: [usize; 7] = [0, 1, 2, 4, 5, 6, 7];
+const DIPOLE_ALIGNING_ORIGIN_INDEX_REMAP: [usize; 7] = [0, 1, 2, 3, 4, 5, 6];
 impl std::ops::Index<usize> for DipoleAligningOrigin {
     type Output = f32;
     fn index(&self, index: usize) -> &Self::Output {
@@ -61,7 +61,7 @@ impl From<DipoleAligningOrigin> for [f32; 7] {
     fn from(vector: DipoleAligningOrigin) -> Self {
         unsafe {
             [
-                vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[4], vector.elements[5], vector.elements[6], vector.elements[7],
+                vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3], vector.elements[4], vector.elements[5], vector.elements[6],
             ]
         }
     }
@@ -69,7 +69,7 @@ impl From<DipoleAligningOrigin> for [f32; 7] {
 impl From<[f32; 7]> for DipoleAligningOrigin {
     fn from(array: [f32; 7]) -> Self {
         Self {
-            elements: [array[0], array[1], array[2], 0.0, array[1], array[2], array[3], array[4]],
+            elements: [array[0], array[1], array[2], array[3], array[1], array[2], array[3], 0.0],
         }
     }
 }
@@ -80,10 +80,10 @@ impl std::fmt::Debug for DipoleAligningOrigin {
             .field("e41", &self[0])
             .field("e42", &self[1])
             .field("e43", &self[2])
-            .field("e15", &self[3])
-            .field("e25", &self[4])
-            .field("e35", &self[5])
-            .field("e45", &self[6])
+            .field("e45", &self[3])
+            .field("e15", &self[4])
+            .field("e25", &self[5])
+            .field("e35", &self[6])
             .finish()
     }
 }
@@ -169,27 +169,27 @@ impl std::ops::Index<crate::elements::e43> for DipoleAligningOrigin {
         &self[2]
     }
 }
+impl std::ops::Index<crate::elements::e45> for DipoleAligningOrigin {
+    type Output = f32;
+    fn index(&self, _: crate::elements::e45) -> &Self::Output {
+        &self[3]
+    }
+}
 impl std::ops::Index<crate::elements::e15> for DipoleAligningOrigin {
     type Output = f32;
     fn index(&self, _: crate::elements::e15) -> &Self::Output {
-        &self[3]
+        &self[4]
     }
 }
 impl std::ops::Index<crate::elements::e25> for DipoleAligningOrigin {
     type Output = f32;
     fn index(&self, _: crate::elements::e25) -> &Self::Output {
-        &self[4]
+        &self[5]
     }
 }
 impl std::ops::Index<crate::elements::e35> for DipoleAligningOrigin {
     type Output = f32;
     fn index(&self, _: crate::elements::e35) -> &Self::Output {
-        &self[5]
-    }
-}
-impl std::ops::Index<crate::elements::e45> for DipoleAligningOrigin {
-    type Output = f32;
-    fn index(&self, _: crate::elements::e45) -> &Self::Output {
         &self[6]
     }
 }
@@ -208,23 +208,23 @@ impl std::ops::IndexMut<crate::elements::e43> for DipoleAligningOrigin {
         &mut self[2]
     }
 }
+impl std::ops::IndexMut<crate::elements::e45> for DipoleAligningOrigin {
+    fn index_mut(&self, _: crate::elements::e45) -> &mut Self::Output {
+        &mut self[3]
+    }
+}
 impl std::ops::IndexMut<crate::elements::e15> for DipoleAligningOrigin {
     fn index_mut(&self, _: crate::elements::e15) -> &mut Self::Output {
-        &mut self[3]
+        &mut self[4]
     }
 }
 impl std::ops::IndexMut<crate::elements::e25> for DipoleAligningOrigin {
     fn index_mut(&self, _: crate::elements::e25) -> &mut Self::Output {
-        &mut self[4]
+        &mut self[5]
     }
 }
 impl std::ops::IndexMut<crate::elements::e35> for DipoleAligningOrigin {
     fn index_mut(&self, _: crate::elements::e35) -> &mut Self::Output {
-        &mut self[5]
-    }
-}
-impl std::ops::IndexMut<crate::elements::e45> for DipoleAligningOrigin {
-    fn index_mut(&self, _: crate::elements::e45) -> &mut Self::Output {
         &mut self[6]
     }
 }

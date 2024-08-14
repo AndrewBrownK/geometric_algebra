@@ -6,7 +6,7 @@
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
-use codegen::algebra2::basis::elements::e12345;
+use codegen::elements::e12345;
 use codegen::algebra2::multivector::{DeclareMultiVecs, MultiVecRepository};
 
 codegen::multi_vecs! { e12345;
@@ -26,10 +26,10 @@ codegen::multi_vecs! { e12345;
     Plane      as e4235, e4315, e4125, e3215;
 
     // Uniform Grade Round Objects
-    RoundPoint as e1, e2, e3, | e4, e5;
-    Dipole     as e41, e42, e43 | e23, e31, e12 | e15, e25, e35, e45;
-    Circle     as e423, e431, e412, e321 | e415, e425, e435 | e235, e315, e125;
-    Sphere     as e4235, e4315, e4125 | e1234, e3215;
+    RoundPoint as e1, e2, e3, e4 | e5;
+    Dipole     as e41, e42, e43 | e23, e31, e12, e45 | e15, e25, e35;
+    Circle     as e423, e431, e412 | e415, e425, e435, e321 | e235, e315, e125;
+    Sphere     as e4235, e4315, e4125, e3215 | e1234;
 
     // Versors
     Motor      as e415, e425, e435, e12345 | e235, e315, e125, e5;
@@ -38,13 +38,14 @@ codegen::multi_vecs! { e12345;
     // TODO more versors, non-flat versors
 }
 
+#[test]
+fn lazy_compile_button() {
+    // hi
+}
+
 /// Lengyel styled CGA of 5 dimensions representing 3 dimensions
-pub fn main() {
-    use codegen::emit2::rust::Rust;
-    use codegen::{ga, operators, register_all};
-
-
-    let cga3d = ga! { e12345;
+fn main() {
+    let cga3d = codegen::ga! { e12345;
         1 => e1, e2, e3, eP;
         -1 => eM;
         where
@@ -52,7 +53,7 @@ pub fn main() {
         e5 => eP + eM;
     };
     let repo = generate_variants(base_documentation(register_multi_vecs(cga3d)));
-    let traits = register_all! { repo;
+    let traits = codegen::register_all! { repo;
         // specialized::Plane_BulkExpansion_Plane
         // |
         Zero One AntiOne Unit
@@ -63,7 +64,7 @@ pub fn main() {
         // TODO do CGA expansion/contraction, not naive flat ones
         // BulkExpansion BulkContraction WeightExpansion WeightContraction
     };
-    operators! { traits;
+    codegen::operators! { traits;
         infix => Div;
 
         binary
@@ -76,7 +77,7 @@ pub fn main() {
     let traits = traits.finish();
 
     let file_path = PathBuf::from("builds/cga3d_max/");
-    let mut rust = Rust::new(true).all_features();
+    let mut rust = codegen::Rust::new(true).all_features();
     rust.sql = false;
 
     let rt = tokio::runtime::Runtime::new().expect("tokio works");
@@ -111,9 +112,8 @@ fn base_documentation(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMult
 }
 
 fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVecRepository<e12345>> {
-    use codegen::variants;
     use codegen::algebra2::basis::filter::{allow_all_signatures, SigFilter, signatures_containing};
-    use codegen::algebra2::basis::elements::*;
+    use codegen::elements::*;
 
     let origin = signatures_containing(e4);
     let infinity = signatures_containing(e5);
@@ -125,7 +125,7 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVec
     let tangent_null_cone = origin.any_match() ^ infinity.any_match();
     let intersects_null_cone = origin.any_match() & infinity.any_match();
 
-    variants! { declarations;
+    codegen::variants! { declarations;
 
         #docs("This variant of {type} has a radius of zero and is centered on the Origin.")
         Null{type}AtOrigin => (origin & !infinity)  where is_not_flat => tangent_null_cone;
@@ -161,7 +161,7 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVec
 }
 
 pub mod specialized {
-    use codegen::algebra2::basis::elements::e12345;
+    use codegen::elements::e12345;
     use codegen::ast2::datatype::MultiVector;
     use codegen::ast2::impls::{Specialize_22, Specialized_22};
     use codegen::build_scripts2::common_traits::BulkExpansion;
