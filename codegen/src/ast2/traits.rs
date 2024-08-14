@@ -1122,6 +1122,10 @@ impl TraitImplRegistry {
         }
         v
     }
+
+    pub fn finish(self) -> Arc<Self> {
+        Arc::new(self)
+    }
 }
 
 pub(crate) fn progress_style() -> indicatif::ProgressStyle {
@@ -1390,7 +1394,7 @@ macro_rules! register_all {
             use $crate::ast2::traits::{Register10, Register11, Register21, Register22};
             let rt = tokio::runtime::Runtime::new().expect("Tokio should work");
 
-            let multi_progress = Arc::new(indicatif::MultiProgress::new());
+            let multi_progress = std::sync::Arc::new(indicatif::MultiProgress::new());
             let _: () = rt.block_on(async {
 
                 let mut js = tokio::task::JoinSet::new();

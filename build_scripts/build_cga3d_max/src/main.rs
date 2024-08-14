@@ -3,18 +3,14 @@
 #![feature(const_trait_impl)]
 #![feature(effects)]
 
-use codegen::algebra2::basis::elements::e12345;
-use codegen::algebra2::basis::filter::{allow_all_signatures, signatures_containing, SigFilter};
-use codegen::algebra2::multivector::{DeclareMultiVecs, MultiVecRepository};
-use codegen::ast2::datatype::MultiVector;
-use codegen::ast2::impls::{Specialize_22, Specialized_22};
-use codegen::build_scripts2::common_traits::BulkExpansion;
-use codegen::emit2::rust::Rust;
-use codegen::{ga, multi_vecs, operators, register_all, variants};
-use semver::Version;
-use std::env;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
+
+use semver::Version;
+
+use codegen::algebra2::basis::elements::e12345;
+use codegen::algebra2::multivector::{DeclareMultiVecs, MultiVecRepository};
+use codegen::multi_vecs;
 
 multi_vecs! { e12345;
 
@@ -47,6 +43,10 @@ multi_vecs! { e12345;
 
 /// Lengyel styled CGA of 5 dimensions representing 3 dimensions
 pub fn main() {
+    use codegen::emit2::rust::Rust;
+    use codegen::{ga, operators, register_all};
+
+
     let cga3d = ga! { e12345;
         1 => e1, e2, e3, eP;
         -1 => eM;
@@ -56,8 +56,8 @@ pub fn main() {
     };
     let repo = generate_variants(base_documentation(register_multi_vecs(cga3d)));
     let traits = register_all! { repo;
-        Plane_BulkExpansion_Plane
-        |
+        // specialized::Plane_BulkExpansion_Plane
+        // |
         Zero One AntiOne Unit
         Grade AntiGrade Into TryInto
         Dual AntiDual Reverse AntiReverse
@@ -76,6 +76,7 @@ pub fn main() {
         unary
         Not => Dual;
     }
+    let traits = traits.finish();
 
     let file_path = PathBuf::from("builds/cga3d_max/");
     let mut rust = Rust::new(true).all_features();
@@ -93,7 +94,7 @@ pub fn main() {
             &[],
         )
         .await?;
-        rust.write_src(file_path.join(Path::new("src")), repo, Arc::new(traits)).await
+        rust.write_src(file_path.join(Path::new("src")), repo, traits).await
     });
     if let Err(e) = e {
         panic!("Errors: {e:?}");
@@ -114,6 +115,8 @@ fn base_documentation(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMult
 }
 
 fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVecRepository<e12345>> {
+    use codegen::variants;
+    use codegen::algebra2::basis::filter::{allow_all_signatures, SigFilter, signatures_containing};
     use codegen::algebra2::basis::elements::*;
 
     let origin = signatures_containing(e4);
@@ -161,9 +164,18 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVec
     declarations.finished()
 }
 
-pub static Plane_BulkExpansion_Plane: Specialized_22<e12345, MultiVector> = BulkExpansion.specialize(&Plane, &Plane, &|mut b, slf, other| {
-    Box::pin(async move {
-        // TODO actually implement
-        b.return_expr(slf)
-    })
-});
+pub mod specialized {
+    use codegen::algebra2::basis::elements::e12345;
+    use codegen::ast2::datatype::MultiVector;
+    use codegen::ast2::impls::{Specialize_22, Specialized_22};
+    use codegen::build_scripts2::common_traits::BulkExpansion;
+
+    use crate::Plane;
+
+    pub static Plane_BulkExpansion_Plane: Specialized_22<e12345, MultiVector> = BulkExpansion.specialize(&Plane, &Plane, &|mut b, slf, other| {
+        Box::pin(async move {
+            // TODO actually implement
+            b.return_expr(slf)
+        })
+    });
+}

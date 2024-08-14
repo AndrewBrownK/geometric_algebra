@@ -118,7 +118,6 @@
 ./builds/cga3d_max/src/traits/anti_reverse.rs
 ./builds/cga3d_max/src/traits/anti_sandwich.rs
 ./builds/cga3d_max/src/traits/anti_wedge.rs
-./builds/cga3d_max/src/traits/bulk_expansion.rs
 ./builds/cga3d_max/src/traits/dual.rs
 ./builds/cga3d_max/src/traits/geometric_anti_product.rs
 ./builds/cga3d_max/src/traits/geometric_product.rs
@@ -129,7 +128,6 @@
 ./builds/cga3d_max/src/traits/impls/anti_reverse.rs
 ./builds/cga3d_max/src/traits/impls/anti_sandwich.rs
 ./builds/cga3d_max/src/traits/impls/anti_wedge.rs
-./builds/cga3d_max/src/traits/impls/bulk_expansion.rs
 ./builds/cga3d_max/src/traits/impls/dual.rs
 ./builds/cga3d_max/src/traits/impls/geometric_anti_product.rs
 ./builds/cga3d_max/src/traits/impls/geometric_product.rs
