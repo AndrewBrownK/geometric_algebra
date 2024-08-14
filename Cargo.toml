@@ -7,9 +7,9 @@ members = [
     "rga3d",
     "cga3d",
     "cga3d_min",
-    "libraries/cga3d_max",
+    "libraries/cga3d_faceted",
 
-    "build_scripts/build_cga3d_max",
+    "build_scripts/cga3d_faceted",
 
     "examples/compile_to_spirv",
     "examples/hello_circle_wgsl",

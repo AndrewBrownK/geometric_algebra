@@ -76,7 +76,7 @@ fn main() {
     }
     let traits = traits.finish();
 
-    let file_path = PathBuf::from("builds/cga3d_max/");
+    let file_path = PathBuf::from("libraries/cga3d_faceted/");
     let mut rust = codegen::Rust::new(true).all_features();
     rust.sql = false;
 
@@ -84,7 +84,7 @@ fn main() {
     let e = rt.block_on(async move {
         rust.write_crate(
             file_path.clone(),
-            "cga3d_max",
+            "cga3d_faceted",
             1, 0, 0, "",
             "Latest generated test case",
             "https://github.com/AndrewBrownK/projective_ga/",
