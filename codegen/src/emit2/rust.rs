@@ -460,11 +460,11 @@ postgres-types = "0.2.7""#
                 sort_trait_impls(&mut impls, deps_set)?;
                 pb.inc(1);
 
-                writeln!(&mut file,  "// Note on Operative Statistics: ")?;
-                writeln!(&mut file,  "// Operative Statistics are not a precise predictor of performance or performance comparisons. ")?;
-                writeln!(&mut file,  "// This is due to varying hardware capabilities and compiler optimizations. ")?;
-                writeln!(&mut file,  "// As always, where performance is a concern, there is no substitute for ")?;
-                writeln!(&mut file,  "// real measurements on real work-loads on real hardware.")?;
+                writeln!(&mut file, "// Note on Operative Statistics: ")?;
+                writeln!(&mut file, "// Operative Statistics are not a precise predictor of performance or performance comparisons. ")?;
+                writeln!(&mut file, "// This is due to varying hardware capabilities and compiler optimizations. ")?;
+                writeln!(&mut file, "// As always, where performance is a concern, there is no substitute for ")?;
+                writeln!(&mut file, "// real measurements on real work-loads on real hardware.")?;
                 writeln!(&mut file, "// Disclaimer aside, enjoy the fun information =)")?;
 
                 // writeln!(&mut file, "use crate::data::*;")?;
@@ -481,7 +481,7 @@ postgres-types = "0.2.7""#
                 }
                 tx3.send(file_path)?;
                 pb.inc(1);
-                pb.finish();
+                pb.finish_and_clear();
                 Ok(())
             });
         }
@@ -787,34 +787,6 @@ postgres-types = "0.2.7""#
                 if len > 1 {
                     write!(w, ")")?;
                 }
-            }
-            FloatExpr::Divide(v) => {
-                if v.is_empty() {
-                    bail!("Attempted to write an empty division that should have been simplified");
-                }
-                if v.len() > 1 {
-                    write!(w, "(")?;
-                }
-                for (i, e) in v.iter().enumerate() {
-                    if i > 0 {
-                        write!(w, " / ")?;
-                    }
-                    // This recursion is unlikely to cause a stack overflow,
-                    // because expression simplification flattens out associative operations.
-                    // TODO but division is not associative, so I should reconsider if
-                    //  FloatExpr::Divide should contain a Vec to begin with
-                    self.write_float(w, e)?;
-                }
-                if v.len() > 1 {
-                    write!(w, ")")?;
-                }
-            }
-            FloatExpr::Pow(a, b) => {
-                write!(w, "f32::pow(")?;
-                self.write_float(w, a.as_ref())?;
-                write!(w, ", ")?;
-                self.write_float(w, b.as_ref())?;
-                write!(w, ")")?;
             }
         }
         Ok(())

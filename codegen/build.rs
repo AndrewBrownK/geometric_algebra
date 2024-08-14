@@ -7,7 +7,6 @@ fn main() {
     generate_multi_bases();
 }
 
-// TODO 65k constants is NOTHING compared to what we're generating here, don't worry about it.
 
 /// Code-gen for code-gen for code-gen.... kind of absurd
 /// Speaking of absurd
@@ -15,8 +14,8 @@ fn main() {
 /// Well I thought it would be sooo coooool to make basis element bitflags
 /// In an 8 dimensional algebra, there are 256 elements (including scalar)
 /// But in a 16 dimensional algebra, there are 65,534 elements
-/// So while pre-generating combined bases is certainly cool, maybe it is dubious to call
-/// 65k constants "convenient" if it is slowing down your IDE or the compiler.
+/// So while pre-generating combined bases is certainly cool,
+/// maybe it is dubious to call 65k constants "convenient".
 /// So yet again, this is another great situation for feature flags. But we can't just
 /// put the flag on 65k constants, that's still a lot to digest.
 /// So instead, we'll make sure the feature completely changes the file, so it is actually
