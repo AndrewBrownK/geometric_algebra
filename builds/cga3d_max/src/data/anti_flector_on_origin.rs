@@ -2,10 +2,10 @@ use crate::data::*;
 use crate::simd::*;
 
 /// AntiFlectorOnOrigin.
-/// This variant of MultiVector is the Dual to FlectorOnOrigin. It is common for
+/// This variant of VersorEvenOrthogonalOrigin is the Dual to FlectorOnOrigin. It is common for
 /// objects of this type to not intersect the null cone, which also prevents them from
 /// projecting onto the horosphere in the usual manner. When this happens, this
-/// object has behavioral and operative similarity to a MultiVector,
+/// object has behavioral and operative similarity to a VersorEvenOrthogonalOrigin,
 /// but an imaginary radius, and a spacial presence in the shape of a
 /// FlectorOnOrigin with a real radius.
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]

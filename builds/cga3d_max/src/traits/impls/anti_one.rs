@@ -44,10 +44,58 @@ impl AntiOne for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
+        );
+    }
+}
+impl AntiOne for VersorEven {
+    fn anti_one() -> Self {
+        return VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e235, e315, e125, e5
+            Simd32x4::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl AntiOne for VersorEvenAligningOrigin {
+    fn anti_one() -> Self {
+        return VersorEvenAligningOrigin::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            // e415, e425, e435, e4
+            Simd32x4::from(0.0),
+            // e235, e315, e125, e5
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl AntiOne for VersorEvenAtInfinity {
+    fn anti_one() -> Self {
+        return VersorEvenAtInfinity::from_groups(
+            // e12345, e1, e2, e3
+            Simd32x4::from([1.0, 0.0, 0.0, 0.0]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e235, e315, e125, e5
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl AntiOne for VersorEvenOnOrigin {
+    fn anti_one() -> Self {
+        return VersorEvenOnOrigin::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            // e415, e425, e435, e4
+            Simd32x4::from(0.0),
         );
     }
 }

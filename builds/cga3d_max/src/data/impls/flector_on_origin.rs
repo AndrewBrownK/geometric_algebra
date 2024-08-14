@@ -525,7 +525,7 @@ impl TryFrom<MultiVector> for FlectorOnOrigin {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[30];
+        let el = multi_vector[27];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e1234: ");
@@ -634,6 +634,312 @@ impl TryFrom<SphereOnOrigin> for FlectorOnOrigin {
             sphere_on_origin[e4235],
             sphere_on_origin[e4315],
             sphere_on_origin[e4125],
+        ])));
+    }
+}
+
+impl TryFrom<VersorOdd> for FlectorOnOrigin {
+    type Error = String;
+    fn try_from(versor_odd: VersorOdd) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_odd[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e41: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e42: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e43: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[4];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e23: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[5];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e31: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[6];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e12: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[8];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e15: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[9];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e25: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[10];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e35: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[11];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[15];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3215: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorOdd do not fit into FlectorOnOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(FlectorOnOrigin::from_groups(
+            // e45, e4235, e4315, e4125
+            Simd32x4::from([versor_odd[e45], versor_odd[e4235], versor_odd[e4315], versor_odd[e4125]]),
+        ));
+    }
+}
+
+impl TryFrom<VersorOddAligningOrigin> for FlectorOnOrigin {
+    type Error = String;
+    fn try_from(versor_odd_aligning_origin: VersorOddAligningOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_odd_aligning_origin[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e41: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e42: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e43: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[4];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e15: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[5];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e25: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[6];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e35: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[11];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3215: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorOddAligningOrigin do not fit into FlectorOnOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([
+            versor_odd_aligning_origin[e45],
+            versor_odd_aligning_origin[e4235],
+            versor_odd_aligning_origin[e4315],
+            versor_odd_aligning_origin[e4125],
+        ])));
+    }
+}
+
+impl TryFrom<VersorOddAtInfinity> for FlectorOnOrigin {
+    type Error = String;
+    fn try_from(versor_odd_at_infinity: VersorOddAtInfinity) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_odd_at_infinity[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e15: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e25: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e35: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[4];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e23: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[5];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e31: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[6];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e12: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[11];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3215: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorOddAtInfinity do not fit into FlectorOnOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([
+            versor_odd_at_infinity[e45],
+            versor_odd_at_infinity[e4235],
+            versor_odd_at_infinity[e4315],
+            versor_odd_at_infinity[e4125],
+        ])));
+    }
+}
+
+impl TryFrom<VersorOddOnOrigin> for FlectorOnOrigin {
+    type Error = String;
+    fn try_from(versor_odd_on_origin: VersorOddOnOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_odd_on_origin[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e41: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_on_origin[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e42: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_on_origin[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e43: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_on_origin[4];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorOddOnOrigin do not fit into FlectorOnOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([
+            versor_odd_on_origin[e45],
+            versor_odd_on_origin[e4235],
+            versor_odd_on_origin[e4315],
+            versor_odd_on_origin[e4125],
         ])));
     }
 }

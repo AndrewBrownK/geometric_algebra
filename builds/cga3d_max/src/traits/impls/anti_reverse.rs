@@ -96,6 +96,21 @@ impl AntiReverse for AntiSphereOnOrigin {
         return self;
     }
 }
+impl AntiReverse for AntiVersorEvenOnOrigin {
+    fn anti_reverse(self) -> Self {
+        return AntiVersorEvenOnOrigin::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e23, e31, e12, e1234
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+        );
+    }
+}
+impl AntiReverse for AntiVersorOddOnOrigin {
+    fn anti_reverse(self) -> Self {
+        return AntiVersorOddOnOrigin::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(-1.0)), /* e4, e1, e2, e3 */ self.group1());
+    }
+}
 impl AntiReverse for Circle {
     fn anti_reverse(self) -> Self {
         return Circle::from_groups(
@@ -344,7 +359,7 @@ impl AntiReverse for MultiVector {
             (self.group7() * Simd32x3::from(-1.0)),
             // e235, e315, e125
             (self.group8() * Simd32x3::from(-1.0)),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
             self[e45],
@@ -364,6 +379,22 @@ impl AntiReverse for NullDipoleAtOrigin {
 impl AntiReverse for NullSphereAtOrigin {
     fn anti_reverse(self) -> Self {
         return self;
+    }
+}
+impl AntiReverse for NullVersorEvenAtOrigin {
+    fn anti_reverse(self) -> Self {
+        return NullVersorEvenAtOrigin::from_groups(
+            // e423, e431, e412, e4
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+        );
+    }
+}
+impl AntiReverse for NullVersorOddAtOrigin {
+    fn anti_reverse(self) -> Self {
+        return NullVersorOddAtOrigin::from_groups(
+            // e41, e42, e43, e1234
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+        );
     }
 }
 impl AntiReverse for Origin {
@@ -409,5 +440,145 @@ impl AntiReverse for SphereAtOrigin {
 impl AntiReverse for SphereOnOrigin {
     fn anti_reverse(self) -> Self {
         return self;
+    }
+}
+impl AntiReverse for VersorEven {
+    fn anti_reverse(self) -> Self {
+        return VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e415, e425, e435, e321
+            (self.group1() * Simd32x4::from(-1.0)),
+            // e235, e315, e125, e5
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            // e1, e2, e3, e4
+            self.group3(),
+        );
+    }
+}
+impl AntiReverse for VersorEvenAligningOrigin {
+    fn anti_reverse(self) -> Self {
+        return VersorEvenAligningOrigin::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e415, e425, e435, e4
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+        );
+    }
+}
+impl AntiReverse for VersorEvenAtInfinity {
+    fn anti_reverse(self) -> Self {
+        return VersorEvenAtInfinity::from_groups(
+            // e12345, e1, e2, e3
+            self.group0(),
+            // e415, e425, e435, e321
+            (self.group1() * Simd32x4::from(-1.0)),
+            // e235, e315, e125, e5
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+        );
+    }
+}
+impl AntiReverse for VersorEvenAtOrigin {
+    fn anti_reverse(self) -> Self {
+        return VersorEvenAtOrigin::from_groups(
+            // e423, e431, e412, e4
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+        );
+    }
+}
+impl AntiReverse for VersorEvenOnOrigin {
+    fn anti_reverse(self) -> Self {
+        return VersorEvenOnOrigin::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e415, e425, e435, e4
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+        );
+    }
+}
+impl AntiReverse for VersorEvenOrthogonalOrigin {
+    fn anti_reverse(self) -> Self {
+        return VersorEvenOrthogonalOrigin::from_groups(
+            // e423, e431, e412, e321
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e235, e315, e125, e5
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            // e1, e2, e3, e4
+            self.group2(),
+        );
+    }
+}
+impl AntiReverse for VersorOdd {
+    fn anti_reverse(self) -> Self {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e23, e31, e12, e45
+            (self.group1() * Simd32x4::from(-1.0)),
+            // e15, e25, e35, e1234
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            // e4235, e4315, e4125, e3215
+            self.group3(),
+        );
+    }
+}
+impl AntiReverse for VersorOddAligningOrigin {
+    fn anti_reverse(self) -> Self {
+        return VersorOddAligningOrigin::from_groups(
+            // e41, e42, e43, e45
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e15, e25, e35, e1234
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            // e4235, e4315, e4125, e3215
+            self.group2(),
+        );
+    }
+}
+impl AntiReverse for VersorOddAtInfinity {
+    fn anti_reverse(self) -> Self {
+        return VersorOddAtInfinity::from_groups(
+            // scalar, e15, e25, e35
+            Simd32x4::from([self.group0()[0], (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), (self.group0()[3] * -1.0)]),
+            // e23, e31, e12, e45
+            (self.group1() * Simd32x4::from(-1.0)),
+            // e4235, e4315, e4125, e3215
+            self.group2(),
+        );
+    }
+}
+impl AntiReverse for VersorOddAtOrigin {
+    fn anti_reverse(self) -> Self {
+        return VersorOddAtOrigin::from_groups(
+            // e41, e42, e43, e3215
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+        );
+    }
+}
+impl AntiReverse for VersorOddOnOrigin {
+    fn anti_reverse(self) -> Self {
+        return VersorOddOnOrigin::from_groups(
+            // e41, e42, e43, e45
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e1234, e4235, e4315, e4125
+            self.group1(),
+        );
+    }
+}
+impl AntiReverse for VersorOddOrthogonalOrigin {
+    fn anti_reverse(self) -> Self {
+        return VersorOddOrthogonalOrigin::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e23, e31, e12, e3215
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+        );
     }
 }

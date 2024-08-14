@@ -149,6 +149,43 @@ impl TryFrom<AntiMotorOnOrigin> for DipoleOrthogonalOrigin {
     }
 }
 
+impl TryFrom<AntiVersorEvenOnOrigin> for DipoleOrthogonalOrigin {
+    type Error = String;
+    fn try_from(anti_versor_even_on_origin: AntiVersorEvenOnOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = anti_versor_even_on_origin[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_versor_even_on_origin[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from AntiVersorEvenOnOrigin do not fit into DipoleOrthogonalOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(DipoleOrthogonalOrigin::from_groups(
+            // e41, e42, e43
+            Simd32x3::from([anti_versor_even_on_origin[e41], anti_versor_even_on_origin[e42], anti_versor_even_on_origin[e43]]),
+            // e23, e31, e12
+            Simd32x3::from([anti_versor_even_on_origin[e23], anti_versor_even_on_origin[e31], anti_versor_even_on_origin[e12]]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+        ));
+    }
+}
+
 impl TryFrom<Dipole> for DipoleOrthogonalOrigin {
     type Error = String;
     fn try_from(dipole: Dipole) -> Result<Self, Self::Error> {
@@ -522,28 +559,28 @@ impl TryFrom<MultiVector> for DipoleOrthogonalOrigin {
         let el = multi_vector[27];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4235: ");
+            error_string.push_str("e1234: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[28];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4315: ");
+            error_string.push_str("e4235: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[29];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4125: ");
+            error_string.push_str("e4315: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[30];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e1234: ");
+            error_string.push_str("e4125: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -567,6 +604,377 @@ impl TryFrom<MultiVector> for DipoleOrthogonalOrigin {
             Simd32x3::from([multi_vector[e23], multi_vector[e31], multi_vector[e12]]),
             // e15, e25, e35
             Simd32x3::from([multi_vector[e15], multi_vector[e25], multi_vector[e35]]),
+        ));
+    }
+}
+
+impl TryFrom<NullVersorOddAtOrigin> for DipoleOrthogonalOrigin {
+    type Error = String;
+    fn try_from(null_versor_odd_at_origin: NullVersorOddAtOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = null_versor_odd_at_origin[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from NullVersorOddAtOrigin do not fit into DipoleOrthogonalOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(DipoleOrthogonalOrigin::from_groups(
+            // e41, e42, e43
+            Simd32x3::from([null_versor_odd_at_origin[e41], null_versor_odd_at_origin[e42], null_versor_odd_at_origin[e43]]),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+        ));
+    }
+}
+
+impl TryFrom<VersorOdd> for DipoleOrthogonalOrigin {
+    type Error = String;
+    fn try_from(versor_odd: VersorOdd) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_odd[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e45: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[11];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[12];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4235: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[13];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4315: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[14];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4125: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[15];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3215: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorOdd do not fit into DipoleOrthogonalOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(DipoleOrthogonalOrigin::from_groups(
+            // e41, e42, e43
+            Simd32x3::from([versor_odd[e41], versor_odd[e42], versor_odd[e43]]),
+            // e23, e31, e12
+            Simd32x3::from([versor_odd[e23], versor_odd[e31], versor_odd[e12]]),
+            // e15, e25, e35
+            Simd32x3::from([versor_odd[e15], versor_odd[e25], versor_odd[e35]]),
+        ));
+    }
+}
+
+impl TryFrom<VersorOddAligningOrigin> for DipoleOrthogonalOrigin {
+    type Error = String;
+    fn try_from(versor_odd_aligning_origin: VersorOddAligningOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_odd_aligning_origin[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e45: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[8];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4235: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[9];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4315: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[10];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4125: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[11];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3215: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorOddAligningOrigin do not fit into DipoleOrthogonalOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(DipoleOrthogonalOrigin::from_groups(
+            // e41, e42, e43
+            Simd32x3::from([versor_odd_aligning_origin[e41], versor_odd_aligning_origin[e42], versor_odd_aligning_origin[e43]]),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from([versor_odd_aligning_origin[e15], versor_odd_aligning_origin[e25], versor_odd_aligning_origin[e35]]),
+        ));
+    }
+}
+
+impl TryFrom<VersorOddAtInfinity> for DipoleOrthogonalOrigin {
+    type Error = String;
+    fn try_from(versor_odd_at_infinity: VersorOddAtInfinity) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_odd_at_infinity[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e45: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[8];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4235: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[9];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4315: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[10];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4125: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[11];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3215: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorOddAtInfinity do not fit into DipoleOrthogonalOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(DipoleOrthogonalOrigin::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from([versor_odd_at_infinity[e23], versor_odd_at_infinity[e31], versor_odd_at_infinity[e12]]),
+            // e15, e25, e35
+            Simd32x3::from([versor_odd_at_infinity[e15], versor_odd_at_infinity[e25], versor_odd_at_infinity[e35]]),
+        ));
+    }
+}
+
+impl TryFrom<VersorOddAtOrigin> for DipoleOrthogonalOrigin {
+    type Error = String;
+    fn try_from(versor_odd_at_origin: VersorOddAtOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_odd_at_origin[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3215: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_origin[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorOddAtOrigin do not fit into DipoleOrthogonalOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(DipoleOrthogonalOrigin::from_groups(
+            // e41, e42, e43
+            Simd32x3::from([versor_odd_at_origin[e41], versor_odd_at_origin[e42], versor_odd_at_origin[e43]]),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from([versor_odd_at_origin[e15], versor_odd_at_origin[e25], versor_odd_at_origin[e35]]),
+        ));
+    }
+}
+
+impl TryFrom<VersorOddOnOrigin> for DipoleOrthogonalOrigin {
+    type Error = String;
+    fn try_from(versor_odd_on_origin: VersorOddOnOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_odd_on_origin[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e45: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_on_origin[4];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_on_origin[5];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4235: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_on_origin[6];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4315: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_on_origin[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4125: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorOddOnOrigin do not fit into DipoleOrthogonalOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(DipoleOrthogonalOrigin::from_groups(
+            // e41, e42, e43
+            Simd32x3::from([versor_odd_on_origin[e41], versor_odd_on_origin[e42], versor_odd_on_origin[e43]]),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+        ));
+    }
+}
+
+impl TryFrom<VersorOddOrthogonalOrigin> for DipoleOrthogonalOrigin {
+    type Error = String;
+    fn try_from(versor_odd_orthogonal_origin: VersorOddOrthogonalOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_odd_orthogonal_origin[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_orthogonal_origin[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3215: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_orthogonal_origin[11];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorOddOrthogonalOrigin do not fit into DipoleOrthogonalOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(DipoleOrthogonalOrigin::from_groups(
+            // e41, e42, e43
+            Simd32x3::from([versor_odd_orthogonal_origin[e41], versor_odd_orthogonal_origin[e42], versor_odd_orthogonal_origin[e43]]),
+            // e23, e31, e12
+            Simd32x3::from([versor_odd_orthogonal_origin[e23], versor_odd_orthogonal_origin[e31], versor_odd_orthogonal_origin[e12]]),
+            // e15, e25, e35
+            Simd32x3::from([versor_odd_orthogonal_origin[e15], versor_odd_orthogonal_origin[e25], versor_odd_orthogonal_origin[e35]]),
         ));
     }
 }

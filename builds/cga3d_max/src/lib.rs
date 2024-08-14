@@ -1,6 +1,6 @@
 pub mod data;
-pub mod simd;
 pub mod traits;
+pub mod simd;
 #[allow(non_camel_case_types)]
 pub mod elements {
     pub struct scalar;

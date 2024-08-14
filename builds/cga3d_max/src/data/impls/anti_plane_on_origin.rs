@@ -129,6 +129,61 @@ impl TryFrom<AntiSphereOnOrigin> for AntiPlaneOnOrigin {
     }
 }
 
+impl TryFrom<AntiVersorOddOnOrigin> for AntiPlaneOnOrigin {
+    type Error = String;
+    fn try_from(anti_versor_odd_on_origin: AntiVersorOddOnOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = anti_versor_odd_on_origin[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e423: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_versor_odd_on_origin[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e431: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_versor_odd_on_origin[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e412: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_versor_odd_on_origin[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e321: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_versor_odd_on_origin[4];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from AntiVersorOddOnOrigin do not fit into AntiPlaneOnOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ Simd32x3::from([
+            anti_versor_odd_on_origin[e1],
+            anti_versor_odd_on_origin[e2],
+            anti_versor_odd_on_origin[e3],
+        ])));
+    }
+}
+
 impl TryFrom<MultiVector> for AntiPlaneOnOrigin {
     type Error = String;
     fn try_from(multi_vector: MultiVector) -> Result<Self, Self::Error> {
@@ -306,28 +361,28 @@ impl TryFrom<MultiVector> for AntiPlaneOnOrigin {
         let el = multi_vector[27];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4235: ");
+            error_string.push_str("e1234: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[28];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4315: ");
+            error_string.push_str("e4235: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[29];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4125: ");
+            error_string.push_str("e4315: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[30];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e1234: ");
+            error_string.push_str("e4125: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -381,5 +436,281 @@ impl TryFrom<RoundPoint> for AntiPlaneOnOrigin {
             // e1, e2, e3
             Simd32x3::from([round_point[e1], round_point[e2], round_point[e3]]),
         ));
+    }
+}
+
+impl TryFrom<VersorEven> for AntiPlaneOnOrigin {
+    type Error = String;
+    fn try_from(versor_even: VersorEven) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_even[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e423: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e431: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e412: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e12345: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even[4];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e415: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even[5];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e425: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even[6];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e435: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e321: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even[8];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e235: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even[9];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e315: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even[10];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e125: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even[11];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e5: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even[15];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorEven do not fit into AntiPlaneOnOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(AntiPlaneOnOrigin::from_groups(
+            // e1, e2, e3
+            Simd32x3::from([versor_even[e1], versor_even[e2], versor_even[e3]]),
+        ));
+    }
+}
+
+impl TryFrom<VersorEvenAtInfinity> for AntiPlaneOnOrigin {
+    type Error = String;
+    fn try_from(versor_even_at_infinity: VersorEvenAtInfinity) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_even_at_infinity[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e12345: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_at_infinity[4];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e415: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_at_infinity[5];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e425: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_at_infinity[6];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e435: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_at_infinity[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e321: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_at_infinity[8];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e235: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_at_infinity[9];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e315: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_at_infinity[10];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e125: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_at_infinity[11];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e5: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorEvenAtInfinity do not fit into AntiPlaneOnOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ Simd32x3::from([
+            versor_even_at_infinity[e1],
+            versor_even_at_infinity[e2],
+            versor_even_at_infinity[e3],
+        ])));
+    }
+}
+
+impl TryFrom<VersorEvenOrthogonalOrigin> for AntiPlaneOnOrigin {
+    type Error = String;
+    fn try_from(versor_even_orthogonal_origin: VersorEvenOrthogonalOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_even_orthogonal_origin[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e423: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_orthogonal_origin[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e431: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_orthogonal_origin[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e412: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_orthogonal_origin[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e321: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_orthogonal_origin[4];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e235: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_orthogonal_origin[5];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e315: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_orthogonal_origin[6];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e125: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_orthogonal_origin[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e5: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_even_orthogonal_origin[11];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorEvenOrthogonalOrigin do not fit into AntiPlaneOnOrigin { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ Simd32x3::from([
+            versor_even_orthogonal_origin[e1],
+            versor_even_orthogonal_origin[e2],
+            versor_even_orthogonal_origin[e3],
+        ])));
     }
 }

@@ -5,7 +5,7 @@ use crate::simd::*;
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub union MultiVector {
     groups: MultiVectorGroups,
-    /// scalar, e12345, 0, 0, e1, e2, e3, e4, e5, 0, 0, 0, e41, e42, e43, e45, e15, e25, e35, 0, e23, e31, e12, 0, e415, e425, e435, e321, e423, e431, e412, 0, e235, e315, e125, 0, e4235, e4315, e4125, e1234, e3215, 0, 0, 0
+    /// scalar, e12345, 0, 0, e1, e2, e3, e4, e5, 0, 0, 0, e41, e42, e43, e45, e15, e25, e35, 0, e23, e31, e12, 0, e415, e425, e435, e321, e423, e431, e412, 0, e235, e315, e125, 0, e1234, e4235, e4315, e4125, e3215, 0, 0, 0
     elements: [f32; 44],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
@@ -28,7 +28,7 @@ pub struct MultiVectorGroups {
     g7: Simd32x3,
     /// e235, e315, e125
     g8: Simd32x3,
-    /// e4235, e4315, e4125, e1234
+    /// e1234, e4235, e4315, e4125
     g9: Simd32x4,
     /// e3215
     g10: f32,
@@ -63,16 +63,16 @@ impl MultiVector {
         e235: f32,
         e315: f32,
         e125: f32,
+        e1234: f32,
         e4235: f32,
         e4315: f32,
         e4125: f32,
-        e1234: f32,
         e3215: f32,
     ) -> Self {
         Self {
             elements: [
                 scalar, e12345, 0.0, 0.0, e1, e2, e3, e4, e5, 0.0, 0.0, 0.0, e41, e42, e43, e45, e15, e25, e35, 0.0, e23, e31, e12, 0.0, e415, e425, e435, e321, e423, e431, e412,
-                0.0, e235, e315, e125, 0.0, e4235, e4315, e4125, e1234, e3215, 0.0, 0.0, 0.0,
+                0.0, e235, e315, e125, 0.0, e1234, e4235, e4315, e4125, e3215, 0.0, 0.0, 0.0,
             ],
         }
     }
@@ -261,10 +261,10 @@ impl std::fmt::Debug for MultiVector {
             .field("e235", &self[24])
             .field("e315", &self[25])
             .field("e125", &self[26])
-            .field("e4235", &self[27])
-            .field("e4315", &self[28])
-            .field("e4125", &self[29])
-            .field("e1234", &self[30])
+            .field("e1234", &self[27])
+            .field("e4235", &self[28])
+            .field("e4315", &self[29])
+            .field("e4125", &self[30])
             .field("e3215", &self[31])
             .finish()
     }
@@ -495,27 +495,27 @@ impl std::ops::Index<crate::elements::e125> for MultiVector {
         &self[26]
     }
 }
+impl std::ops::Index<crate::elements::e1234> for MultiVector {
+    type Output = f32;
+    fn index(&self, _: crate::elements::e1234) -> &Self::Output {
+        &self[27]
+    }
+}
 impl std::ops::Index<crate::elements::e4235> for MultiVector {
     type Output = f32;
     fn index(&self, _: crate::elements::e4235) -> &Self::Output {
-        &self[27]
+        &self[28]
     }
 }
 impl std::ops::Index<crate::elements::e4315> for MultiVector {
     type Output = f32;
     fn index(&self, _: crate::elements::e4315) -> &Self::Output {
-        &self[28]
+        &self[29]
     }
 }
 impl std::ops::Index<crate::elements::e4125> for MultiVector {
     type Output = f32;
     fn index(&self, _: crate::elements::e4125) -> &Self::Output {
-        &self[29]
-    }
-}
-impl std::ops::Index<crate::elements::e1234> for MultiVector {
-    type Output = f32;
-    fn index(&self, _: crate::elements::e1234) -> &Self::Output {
         &self[30]
     }
 }
@@ -660,23 +660,23 @@ impl std::ops::IndexMut<crate::elements::e125> for MultiVector {
         &mut self[26]
     }
 }
+impl std::ops::IndexMut<crate::elements::e1234> for MultiVector {
+    fn index_mut(&self, _: crate::elements::e1234) -> &mut Self::Output {
+        &mut self[27]
+    }
+}
 impl std::ops::IndexMut<crate::elements::e4235> for MultiVector {
     fn index_mut(&self, _: crate::elements::e4235) -> &mut Self::Output {
-        &mut self[27]
+        &mut self[28]
     }
 }
 impl std::ops::IndexMut<crate::elements::e4315> for MultiVector {
     fn index_mut(&self, _: crate::elements::e4315) -> &mut Self::Output {
-        &mut self[28]
+        &mut self[29]
     }
 }
 impl std::ops::IndexMut<crate::elements::e4125> for MultiVector {
     fn index_mut(&self, _: crate::elements::e4125) -> &mut Self::Output {
-        &mut self[29]
-    }
-}
-impl std::ops::IndexMut<crate::elements::e1234> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e1234) -> &mut Self::Output {
         &mut self[30]
     }
 }

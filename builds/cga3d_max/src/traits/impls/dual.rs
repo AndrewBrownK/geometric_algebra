@@ -128,6 +128,28 @@ impl Dual for AntiSphereOnOrigin {
         );
     }
 }
+impl Dual for AntiVersorEvenOnOrigin {
+    type Output = VersorEvenOnOrigin;
+    fn dual(self) -> Self::Output {
+        return VersorEvenOnOrigin::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e415, e425, e435, e4
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+        );
+    }
+}
+impl Dual for AntiVersorOddOnOrigin {
+    type Output = VersorOddOnOrigin;
+    fn dual(self) -> Self::Output {
+        return VersorOddOnOrigin::from_groups(
+            // e41, e42, e43, e45
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([(self.group1()[0] * -1.0), self.group1()[1], self.group1()[2], self.group1()[3]]),
+        );
+    }
+}
 impl Dual for Circle {
     type Output = Dipole;
     fn dual(self) -> Self::Output {
@@ -373,7 +395,7 @@ impl Dual for MultiVector {
             // scalar, e12345
             Simd32x2::from([(self.group0()[1] * -1.0), self.group0()[0]]),
             // e1, e2, e3, e4
-            Simd32x4::from([(self.group9()[0] * -1.0), (self.group9()[1] * -1.0), (self.group9()[2] * -1.0), self.group9()[3]]),
+            Simd32x4::from([(self.group9()[1] * -1.0), (self.group9()[2] * -1.0), (self.group9()[3] * -1.0), self.group9()[0]]),
             // e5
             self[e45],
             // e41, e42, e43, e45
@@ -388,8 +410,8 @@ impl Dual for MultiVector {
             (Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]) * Simd32x3::from(-1.0)),
             // e235, e315, e125
             (self.group4() * Simd32x3::from(-1.0)),
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] * -1.0)]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([(self.group1()[3] * -1.0), self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e3215
             (self[e1] * -1.0),
         );
@@ -411,6 +433,24 @@ impl Dual for NullSphereAtOrigin {
     type Output = NullSphereAtOrigin;
     fn dual(self) -> Self::Output {
         return self;
+    }
+}
+impl Dual for NullVersorEvenAtOrigin {
+    type Output = NullVersorOddAtOrigin;
+    fn dual(self) -> Self::Output {
+        return NullVersorOddAtOrigin::from_groups(
+            // e41, e42, e43, e1234
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
+        );
+    }
+}
+impl Dual for NullVersorOddAtOrigin {
+    type Output = NullVersorEvenAtOrigin;
+    fn dual(self) -> Self::Output {
+        return NullVersorEvenAtOrigin::from_groups(
+            // e423, e431, e412, e4
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+        );
     }
 }
 impl Dual for Origin {
@@ -483,6 +523,158 @@ impl Dual for SphereOnOrigin {
         return AntiSphereOnOrigin::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+        );
+    }
+}
+impl Dual for VersorEven {
+    type Output = VersorOdd;
+    fn dual(self) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
+            // e23, e31, e12, e45
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] * -1.0)]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group3()[3] * -1.0)]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group2()[3] * -1.0)]),
+        );
+    }
+}
+impl Dual for VersorEvenAligningOrigin {
+    type Output = VersorOddOrthogonalOrigin;
+    fn dual(self) -> Self::Output {
+        return VersorOddOrthogonalOrigin::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
+            // e23, e31, e12, e3215
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group2()[3] * -1.0)]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group1()[3] * -1.0)]),
+        );
+    }
+}
+impl Dual for VersorEvenAtInfinity {
+    type Output = VersorOddAtInfinity;
+    fn dual(self) -> Self::Output {
+        return VersorOddAtInfinity::from_groups(
+            // scalar, e15, e25, e35
+            Simd32x4::from([(self.group0()[0] * -1.0), self.group2()[0], self.group2()[1], self.group2()[2]]),
+            // e23, e31, e12, e45
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] * -1.0)]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[3], (self.group2()[3] * -1.0)]),
+        );
+    }
+}
+impl Dual for VersorEvenAtOrigin {
+    type Output = VersorOddAtOrigin;
+    fn dual(self) -> Self::Output {
+        return VersorOddAtOrigin::from_groups(
+            // e41, e42, e43, e3215
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group1()[3] * -1.0)]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group0()[3] * -1.0)]),
+        );
+    }
+}
+impl Dual for VersorEvenOnOrigin {
+    type Output = AntiVersorEvenOnOrigin;
+    fn dual(self) -> Self::Output {
+        return AntiVersorEvenOnOrigin::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
+            // e23, e31, e12, e1234
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] * -1.0)]),
+        );
+    }
+}
+impl Dual for VersorEvenOrthogonalOrigin {
+    type Output = VersorOddAligningOrigin;
+    fn dual(self) -> Self::Output {
+        return VersorOddAligningOrigin::from_groups(
+            // e41, e42, e43, e45
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group2()[3] * -1.0)]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group1()[3] * -1.0)]),
+        );
+    }
+}
+impl Dual for VersorOdd {
+    type Output = VersorEven;
+    fn dual(self) -> Self::Output {
+        return VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e415, e425, e435, e321
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group3()[3]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([(self.group3()[0] * -1.0), (self.group3()[1] * -1.0), (self.group3()[2] * -1.0), self.group2()[3]]),
+        );
+    }
+}
+impl Dual for VersorOddAligningOrigin {
+    type Output = VersorEvenOrthogonalOrigin;
+    fn dual(self) -> Self::Output {
+        return VersorEvenOrthogonalOrigin::from_groups(
+            // e423, e431, e412, e321
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group2()[3]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group1()[3]]),
+        );
+    }
+}
+impl Dual for VersorOddAtInfinity {
+    type Output = VersorEvenAtInfinity;
+    fn dual(self) -> Self::Output {
+        return VersorEvenAtInfinity::from_groups(
+            // e12345, e1, e2, e3
+            Simd32x4::from([self.group0()[0], (self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0)]),
+            // e415, e425, e435, e321
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([(self.group0()[1] * -1.0), (self.group0()[2] * -1.0), (self.group0()[3] * -1.0), self.group2()[3]]),
+        );
+    }
+}
+impl Dual for VersorOddAtOrigin {
+    type Output = VersorEvenAtOrigin;
+    fn dual(self) -> Self::Output {
+        return VersorEvenAtOrigin::from_groups(
+            // e423, e431, e412, e4
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group1()[3]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group0()[3]]),
+        );
+    }
+}
+impl Dual for VersorOddOnOrigin {
+    type Output = AntiVersorOddOnOrigin;
+    fn dual(self) -> Self::Output {
+        return AntiVersorOddOnOrigin::from_groups(
+            // e423, e431, e412, e321
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e4, e1, e2, e3
+            Simd32x4::from([self.group1()[0], (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), (self.group1()[3] * -1.0)]),
+        );
+    }
+}
+impl Dual for VersorOddOrthogonalOrigin {
+    type Output = VersorEvenAligningOrigin;
+    fn dual(self) -> Self::Output {
+        return VersorEvenAligningOrigin::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e415, e425, e435, e4
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group2()[3]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group1()[3]]),
         );
     }
 }

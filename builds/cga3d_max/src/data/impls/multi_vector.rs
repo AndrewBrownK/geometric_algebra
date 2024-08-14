@@ -20,7 +20,7 @@ impl From<AntiCircleOnOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -50,7 +50,7 @@ impl From<AntiDipoleOnOrigin> for MultiVector {
             Simd32x3::from([anti_dipole_on_origin[e423], anti_dipole_on_origin[e431], anti_dipole_on_origin[e412]]),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -80,7 +80,7 @@ impl From<AntiDualNum> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             anti_dual_num[e3215],
@@ -110,7 +110,7 @@ impl From<AntiFlatOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -140,7 +140,7 @@ impl From<AntiFlatPoint> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from([anti_flat_point[e235], anti_flat_point[e315], anti_flat_point[e125]]),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -170,7 +170,7 @@ impl From<AntiFlector> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from([anti_flector[e235], anti_flector[e315], anti_flector[e125]]),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -200,7 +200,7 @@ impl From<AntiFlectorOnOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -230,7 +230,7 @@ impl From<AntiLine> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -260,7 +260,7 @@ impl From<AntiLineOnOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -290,7 +290,7 @@ impl From<AntiMotor> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             anti_motor[e3215],
@@ -320,7 +320,7 @@ impl From<AntiMotorOnOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -350,7 +350,7 @@ impl From<AntiPlane> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -380,7 +380,7 @@ impl From<AntiPlaneOnOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -410,7 +410,7 @@ impl From<AntiScalar> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -440,7 +440,72 @@ impl From<AntiSphereOnOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+    }
+}
+
+impl From<AntiVersorEvenOnOrigin> for MultiVector {
+    fn from(anti_versor_even_on_origin: AntiVersorEvenOnOrigin) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([anti_versor_even_on_origin[scalar], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from([anti_versor_even_on_origin[e41], anti_versor_even_on_origin[e42], anti_versor_even_on_origin[e43], 0.0]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from([anti_versor_even_on_origin[e23], anti_versor_even_on_origin[e31], anti_versor_even_on_origin[e12]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([anti_versor_even_on_origin[e1234], 0.0, 0.0, 0.0]),
+            // e3215
+            0.0,
+        );
+    }
+}
+
+impl From<AntiVersorOddOnOrigin> for MultiVector {
+    fn from(anti_versor_odd_on_origin: AntiVersorOddOnOrigin) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                anti_versor_odd_on_origin[e1],
+                anti_versor_odd_on_origin[e2],
+                anti_versor_odd_on_origin[e3],
+                anti_versor_odd_on_origin[e4],
+            ]),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, anti_versor_odd_on_origin[e321]]),
+            // e423, e431, e412
+            Simd32x3::from([anti_versor_odd_on_origin[e423], anti_versor_odd_on_origin[e431], anti_versor_odd_on_origin[e412]]),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -470,7 +535,7 @@ impl From<Circle> for MultiVector {
             Simd32x3::from([circle[e423], circle[e431], circle[e412]]),
             // e235, e315, e125
             Simd32x3::from([circle[e235], circle[e315], circle[e125]]),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -500,7 +565,7 @@ impl From<CircleAligningOrigin> for MultiVector {
             Simd32x3::from([circle_aligning_origin[e423], circle_aligning_origin[e431], circle_aligning_origin[e412]]),
             // e235, e315, e125
             Simd32x3::from([circle_aligning_origin[e235], circle_aligning_origin[e315], circle_aligning_origin[e125]]),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -530,7 +595,7 @@ impl From<CircleAtInfinity> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from([circle_at_infinity[e235], circle_at_infinity[e315], circle_at_infinity[e125]]),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -560,7 +625,7 @@ impl From<CircleAtOrigin> for MultiVector {
             Simd32x3::from([circle_at_origin[e423], circle_at_origin[e431], circle_at_origin[e412]]),
             // e235, e315, e125
             Simd32x3::from([circle_at_origin[e235], circle_at_origin[e315], circle_at_origin[e125]]),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -590,7 +655,7 @@ impl From<CircleOnOrigin> for MultiVector {
             Simd32x3::from([circle_on_origin[e423], circle_on_origin[e431], circle_on_origin[e412]]),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -620,7 +685,7 @@ impl From<CircleOrthogonalOrigin> for MultiVector {
             Simd32x3::from([circle_orthogonal_origin[e423], circle_orthogonal_origin[e431], circle_orthogonal_origin[e412]]),
             // e235, e315, e125
             Simd32x3::from([circle_orthogonal_origin[e235], circle_orthogonal_origin[e315], circle_orthogonal_origin[e125]]),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -650,7 +715,7 @@ impl From<Dipole> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -680,7 +745,7 @@ impl From<DipoleAligningOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -710,7 +775,7 @@ impl From<DipoleAtInfinity> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -740,7 +805,7 @@ impl From<DipoleAtOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -770,7 +835,7 @@ impl From<DipoleOnOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -800,7 +865,7 @@ impl From<DipoleOrthogonalOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -830,7 +895,7 @@ impl From<DualNum> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -860,7 +925,7 @@ impl From<FlatOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -890,7 +955,7 @@ impl From<FlatPoint> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -920,7 +985,7 @@ impl From<FlatPointAtInfinity> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -950,8 +1015,8 @@ impl From<Flector> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from([flector[e4235], flector[e4315], flector[e4125], 0.0]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([0.0, flector[e4235], flector[e4315], flector[e4125]]),
             // e3215
             flector[e3215],
         );
@@ -980,7 +1045,7 @@ impl From<FlectorAtInfinity> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             flector_at_infinity[e3215],
@@ -1010,8 +1075,8 @@ impl From<FlectorOnOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from([flector_on_origin[e4235], flector_on_origin[e4315], flector_on_origin[e4125], 0.0]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([0.0, flector_on_origin[e4235], flector_on_origin[e4315], flector_on_origin[e4125]]),
             // e3215
             0.0,
         );
@@ -1040,7 +1105,7 @@ impl From<Horizon> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             horizon[e3215],
@@ -1070,7 +1135,7 @@ impl From<Infinity> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -1100,7 +1165,7 @@ impl From<Line> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from([line[e235], line[e315], line[e125]]),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -1130,7 +1195,7 @@ impl From<LineAtInfinity> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from([line_at_infinity[e235], line_at_infinity[e315], line_at_infinity[e125]]),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -1160,7 +1225,7 @@ impl From<LineOnOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -1190,7 +1255,7 @@ impl From<Motor> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from([motor[e235], motor[e315], motor[e125]]),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -1220,7 +1285,7 @@ impl From<MotorAtInfinity> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from([motor_at_infinity[e235], motor_at_infinity[e315], motor_at_infinity[e125]]),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -1250,7 +1315,7 @@ impl From<MotorOnOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -1280,7 +1345,7 @@ impl From<NullCircleAtOrigin> for MultiVector {
             Simd32x3::from([null_circle_at_origin[e423], null_circle_at_origin[e431], null_circle_at_origin[e412]]),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -1310,7 +1375,7 @@ impl From<NullDipoleAtOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -1340,8 +1405,68 @@ impl From<NullSphereAtOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, null_sphere_at_origin[e1234]]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([null_sphere_at_origin[e1234], 0.0, 0.0, 0.0]),
+            // e3215
+            0.0,
+        );
+    }
+}
+
+impl From<NullVersorEvenAtOrigin> for MultiVector {
+    fn from(null_versor_even_at_origin: NullVersorEvenAtOrigin) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, null_versor_even_at_origin[e4]]),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from([null_versor_even_at_origin[e423], null_versor_even_at_origin[e431], null_versor_even_at_origin[e412]]),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+    }
+}
+
+impl From<NullVersorOddAtOrigin> for MultiVector {
+    fn from(null_versor_odd_at_origin: NullVersorOddAtOrigin) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from([null_versor_odd_at_origin[e41], null_versor_odd_at_origin[e42], null_versor_odd_at_origin[e43], 0.0]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([null_versor_odd_at_origin[e1234], 0.0, 0.0, 0.0]),
             // e3215
             0.0,
         );
@@ -1370,7 +1495,7 @@ impl From<Origin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -1400,8 +1525,8 @@ impl From<Plane> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from([plane[e4235], plane[e4315], plane[e4125], 0.0]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([0.0, plane[e4235], plane[e4315], plane[e4125]]),
             // e3215
             plane[e3215],
         );
@@ -1430,8 +1555,8 @@ impl From<PlaneOnOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from([plane_on_origin[e4235], plane_on_origin[e4315], plane_on_origin[e4125], 0.0]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([0.0, plane_on_origin[e4235], plane_on_origin[e4315], plane_on_origin[e4125]]),
             // e3215
             0.0,
         );
@@ -1460,7 +1585,7 @@ impl From<RoundPoint> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -1490,7 +1615,7 @@ impl From<RoundPointAtOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -1520,7 +1645,7 @@ impl From<Scalar> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
+            // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
             0.0,
@@ -1550,8 +1675,8 @@ impl From<Sphere> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from([sphere[e4235], sphere[e4315], sphere[e4125], sphere[e1234]]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([sphere[e1234], sphere[e4235], sphere[e4315], sphere[e4125]]),
             // e3215
             sphere[e3215],
         );
@@ -1580,8 +1705,8 @@ impl From<SphereAtOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, sphere_at_origin[e1234]]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([sphere_at_origin[e1234], 0.0, 0.0, 0.0]),
             // e3215
             sphere_at_origin[e3215],
         );
@@ -1610,10 +1735,390 @@ impl From<SphereOnOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from([sphere_on_origin[e4235], sphere_on_origin[e4315], sphere_on_origin[e4125], sphere_on_origin[e1234]]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([sphere_on_origin[e1234], sphere_on_origin[e4235], sphere_on_origin[e4315], sphere_on_origin[e4125]]),
             // e3215
             0.0,
+        );
+    }
+}
+
+impl From<VersorEven> for MultiVector {
+    fn from(versor_even: VersorEven) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, versor_even[e12345]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([versor_even[e1], versor_even[e2], versor_even[e3], versor_even[e4]]),
+            // e5
+            versor_even[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([versor_even[e415], versor_even[e425], versor_even[e435], versor_even[e321]]),
+            // e423, e431, e412
+            Simd32x3::from([versor_even[e423], versor_even[e431], versor_even[e412]]),
+            // e235, e315, e125
+            Simd32x3::from([versor_even[e235], versor_even[e315], versor_even[e125]]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+    }
+}
+
+impl From<VersorEvenAligningOrigin> for MultiVector {
+    fn from(versor_even_aligning_origin: VersorEvenAligningOrigin) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, versor_even_aligning_origin[e12345]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, versor_even_aligning_origin[e4]]),
+            // e5
+            versor_even_aligning_origin[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([versor_even_aligning_origin[e415], versor_even_aligning_origin[e425], versor_even_aligning_origin[e435], 0.0]),
+            // e423, e431, e412
+            Simd32x3::from([versor_even_aligning_origin[e423], versor_even_aligning_origin[e431], versor_even_aligning_origin[e412]]),
+            // e235, e315, e125
+            Simd32x3::from([versor_even_aligning_origin[e235], versor_even_aligning_origin[e315], versor_even_aligning_origin[e125]]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+    }
+}
+
+impl From<VersorEvenAtInfinity> for MultiVector {
+    fn from(versor_even_at_infinity: VersorEvenAtInfinity) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, versor_even_at_infinity[e12345]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([versor_even_at_infinity[e1], versor_even_at_infinity[e2], versor_even_at_infinity[e3], 0.0]),
+            // e5
+            versor_even_at_infinity[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                versor_even_at_infinity[e415],
+                versor_even_at_infinity[e425],
+                versor_even_at_infinity[e435],
+                versor_even_at_infinity[e321],
+            ]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from([versor_even_at_infinity[e235], versor_even_at_infinity[e315], versor_even_at_infinity[e125]]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+    }
+}
+
+impl From<VersorEvenAtOrigin> for MultiVector {
+    fn from(versor_even_at_origin: VersorEvenAtOrigin) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, versor_even_at_origin[e4]]),
+            // e5
+            versor_even_at_origin[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from([versor_even_at_origin[e423], versor_even_at_origin[e431], versor_even_at_origin[e412]]),
+            // e235, e315, e125
+            Simd32x3::from([versor_even_at_origin[e235], versor_even_at_origin[e315], versor_even_at_origin[e125]]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+    }
+}
+
+impl From<VersorEvenOnOrigin> for MultiVector {
+    fn from(versor_even_on_origin: VersorEvenOnOrigin) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, versor_even_on_origin[e12345]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, versor_even_on_origin[e4]]),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([versor_even_on_origin[e415], versor_even_on_origin[e425], versor_even_on_origin[e435], 0.0]),
+            // e423, e431, e412
+            Simd32x3::from([versor_even_on_origin[e423], versor_even_on_origin[e431], versor_even_on_origin[e412]]),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+    }
+}
+
+impl From<VersorEvenOrthogonalOrigin> for MultiVector {
+    fn from(versor_even_orthogonal_origin: VersorEvenOrthogonalOrigin) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                versor_even_orthogonal_origin[e1],
+                versor_even_orthogonal_origin[e2],
+                versor_even_orthogonal_origin[e3],
+                versor_even_orthogonal_origin[e4],
+            ]),
+            // e5
+            versor_even_orthogonal_origin[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, versor_even_orthogonal_origin[e321]]),
+            // e423, e431, e412
+            Simd32x3::from([versor_even_orthogonal_origin[e423], versor_even_orthogonal_origin[e431], versor_even_orthogonal_origin[e412]]),
+            // e235, e315, e125
+            Simd32x3::from([versor_even_orthogonal_origin[e235], versor_even_orthogonal_origin[e315], versor_even_orthogonal_origin[e125]]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+    }
+}
+
+impl From<VersorOdd> for MultiVector {
+    fn from(versor_odd: VersorOdd) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([versor_odd[scalar], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from([versor_odd[e41], versor_odd[e42], versor_odd[e43], versor_odd[e45]]),
+            // e15, e25, e35
+            Simd32x3::from([versor_odd[e15], versor_odd[e25], versor_odd[e35]]),
+            // e23, e31, e12
+            Simd32x3::from([versor_odd[e23], versor_odd[e31], versor_odd[e12]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([versor_odd[e1234], versor_odd[e4235], versor_odd[e4315], versor_odd[e4125]]),
+            // e3215
+            versor_odd[e3215],
+        );
+    }
+}
+
+impl From<VersorOddAligningOrigin> for MultiVector {
+    fn from(versor_odd_aligning_origin: VersorOddAligningOrigin) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from([
+                versor_odd_aligning_origin[e41],
+                versor_odd_aligning_origin[e42],
+                versor_odd_aligning_origin[e43],
+                versor_odd_aligning_origin[e45],
+            ]),
+            // e15, e25, e35
+            Simd32x3::from([versor_odd_aligning_origin[e15], versor_odd_aligning_origin[e25], versor_odd_aligning_origin[e35]]),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([
+                versor_odd_aligning_origin[e1234],
+                versor_odd_aligning_origin[e4235],
+                versor_odd_aligning_origin[e4315],
+                versor_odd_aligning_origin[e4125],
+            ]),
+            // e3215
+            versor_odd_aligning_origin[e3215],
+        );
+    }
+}
+
+impl From<VersorOddAtInfinity> for MultiVector {
+    fn from(versor_odd_at_infinity: VersorOddAtInfinity) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([versor_odd_at_infinity[scalar], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, versor_odd_at_infinity[e45]]),
+            // e15, e25, e35
+            Simd32x3::from([versor_odd_at_infinity[e15], versor_odd_at_infinity[e25], versor_odd_at_infinity[e35]]),
+            // e23, e31, e12
+            Simd32x3::from([versor_odd_at_infinity[e23], versor_odd_at_infinity[e31], versor_odd_at_infinity[e12]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([0.0, versor_odd_at_infinity[e4235], versor_odd_at_infinity[e4315], versor_odd_at_infinity[e4125]]),
+            // e3215
+            versor_odd_at_infinity[e3215],
+        );
+    }
+}
+
+impl From<VersorOddAtOrigin> for MultiVector {
+    fn from(versor_odd_at_origin: VersorOddAtOrigin) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from([versor_odd_at_origin[e41], versor_odd_at_origin[e42], versor_odd_at_origin[e43], 0.0]),
+            // e15, e25, e35
+            Simd32x3::from([versor_odd_at_origin[e15], versor_odd_at_origin[e25], versor_odd_at_origin[e35]]),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([versor_odd_at_origin[e1234], 0.0, 0.0, 0.0]),
+            // e3215
+            versor_odd_at_origin[e3215],
+        );
+    }
+}
+
+impl From<VersorOddOnOrigin> for MultiVector {
+    fn from(versor_odd_on_origin: VersorOddOnOrigin) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from([versor_odd_on_origin[e41], versor_odd_on_origin[e42], versor_odd_on_origin[e43], versor_odd_on_origin[e45]]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([versor_odd_on_origin[e1234], versor_odd_on_origin[e4235], versor_odd_on_origin[e4315], versor_odd_on_origin[e4125]]),
+            // e3215
+            0.0,
+        );
+    }
+}
+
+impl From<VersorOddOrthogonalOrigin> for MultiVector {
+    fn from(versor_odd_orthogonal_origin: VersorOddOrthogonalOrigin) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([versor_odd_orthogonal_origin[scalar], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from([versor_odd_orthogonal_origin[e41], versor_odd_orthogonal_origin[e42], versor_odd_orthogonal_origin[e43], 0.0]),
+            // e15, e25, e35
+            Simd32x3::from([versor_odd_orthogonal_origin[e15], versor_odd_orthogonal_origin[e25], versor_odd_orthogonal_origin[e35]]),
+            // e23, e31, e12
+            Simd32x3::from([versor_odd_orthogonal_origin[e23], versor_odd_orthogonal_origin[e31], versor_odd_orthogonal_origin[e12]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([versor_odd_orthogonal_origin[e1234], 0.0, 0.0, 0.0]),
+            // e3215
+            versor_odd_orthogonal_origin[e3215],
         );
     }
 }

@@ -127,6 +127,62 @@ impl TryFrom<AntiMotorOnOrigin> for AntiLine {
     }
 }
 
+impl TryFrom<AntiVersorEvenOnOrigin> for AntiLine {
+    type Error = String;
+    fn try_from(anti_versor_even_on_origin: AntiVersorEvenOnOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = anti_versor_even_on_origin[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e41: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_versor_even_on_origin[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e42: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_versor_even_on_origin[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e43: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_versor_even_on_origin[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_versor_even_on_origin[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from AntiVersorEvenOnOrigin do not fit into AntiLine { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(AntiLine::from_groups(
+            // e23, e31, e12
+            Simd32x3::from([anti_versor_even_on_origin[e23], anti_versor_even_on_origin[e31], anti_versor_even_on_origin[e12]]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+        ));
+    }
+}
+
 impl TryFrom<Dipole> for AntiLine {
     type Error = String;
     fn try_from(dipole: Dipole) -> Result<Self, Self::Error> {
@@ -605,28 +661,28 @@ impl TryFrom<MultiVector> for AntiLine {
         let el = multi_vector[27];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4235: ");
+            error_string.push_str("e1234: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[28];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4315: ");
+            error_string.push_str("e4235: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[29];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4125: ");
+            error_string.push_str("e4315: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[30];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e1234: ");
+            error_string.push_str("e4125: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -648,6 +704,363 @@ impl TryFrom<MultiVector> for AntiLine {
             Simd32x3::from([multi_vector[e23], multi_vector[e31], multi_vector[e12]]),
             // e15, e25, e35
             Simd32x3::from([multi_vector[e15], multi_vector[e25], multi_vector[e35]]),
+        ));
+    }
+}
+
+impl TryFrom<VersorOdd> for AntiLine {
+    type Error = String;
+    fn try_from(versor_odd: VersorOdd) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_odd[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e41: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e42: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e43: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e45: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[11];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[12];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4235: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[13];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4315: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[14];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4125: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd[15];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3215: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorOdd do not fit into AntiLine { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(AntiLine::from_groups(
+            // e23, e31, e12
+            Simd32x3::from([versor_odd[e23], versor_odd[e31], versor_odd[e12]]),
+            // e15, e25, e35
+            Simd32x3::from([versor_odd[e15], versor_odd[e25], versor_odd[e35]]),
+        ));
+    }
+}
+
+impl TryFrom<VersorOddAligningOrigin> for AntiLine {
+    type Error = String;
+    fn try_from(versor_odd_aligning_origin: VersorOddAligningOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_odd_aligning_origin[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e41: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e42: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e43: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e45: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[8];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4235: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[9];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4315: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[10];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4125: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_aligning_origin[11];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3215: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorOddAligningOrigin do not fit into AntiLine { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(AntiLine::from_groups(
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from([versor_odd_aligning_origin[e15], versor_odd_aligning_origin[e25], versor_odd_aligning_origin[e35]]),
+        ));
+    }
+}
+
+impl TryFrom<VersorOddAtInfinity> for AntiLine {
+    type Error = String;
+    fn try_from(versor_odd_at_infinity: VersorOddAtInfinity) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_odd_at_infinity[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e45: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[8];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4235: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[9];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4315: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[10];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4125: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_infinity[11];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3215: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorOddAtInfinity do not fit into AntiLine { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(AntiLine::from_groups(
+            // e23, e31, e12
+            Simd32x3::from([versor_odd_at_infinity[e23], versor_odd_at_infinity[e31], versor_odd_at_infinity[e12]]),
+            // e15, e25, e35
+            Simd32x3::from([versor_odd_at_infinity[e15], versor_odd_at_infinity[e25], versor_odd_at_infinity[e35]]),
+        ));
+    }
+}
+
+impl TryFrom<VersorOddAtOrigin> for AntiLine {
+    type Error = String;
+    fn try_from(versor_odd_at_origin: VersorOddAtOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_odd_at_origin[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e41: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_origin[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e42: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_origin[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e43: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_origin[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3215: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_at_origin[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorOddAtOrigin do not fit into AntiLine { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(AntiLine::from_groups(
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from([versor_odd_at_origin[e15], versor_odd_at_origin[e25], versor_odd_at_origin[e35]]),
+        ));
+    }
+}
+
+impl TryFrom<VersorOddOrthogonalOrigin> for AntiLine {
+    type Error = String;
+    fn try_from(versor_odd_orthogonal_origin: VersorOddOrthogonalOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_odd_orthogonal_origin[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e41: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_orthogonal_origin[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e42: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_orthogonal_origin[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e43: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_orthogonal_origin[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_orthogonal_origin[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3215: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_odd_orthogonal_origin[11];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorOddOrthogonalOrigin do not fit into AntiLine { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(AntiLine::from_groups(
+            // e23, e31, e12
+            Simd32x3::from([versor_odd_orthogonal_origin[e23], versor_odd_orthogonal_origin[e31], versor_odd_orthogonal_origin[e12]]),
+            // e15, e25, e35
+            Simd32x3::from([versor_odd_orthogonal_origin[e15], versor_odd_orthogonal_origin[e25], versor_odd_orthogonal_origin[e35]]),
         ));
     }
 }

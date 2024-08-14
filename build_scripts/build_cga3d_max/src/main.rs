@@ -34,8 +34,8 @@ codegen::multi_vecs! { e12345;
     // Versors
     Motor      as e415, e425, e435, e12345 | e235, e315, e125, e5;
     Flector    as e15, e25, e35, e45 | e4235, e4315, e4125, e3215;
-
-    // TODO more versors, non-flat versors
+    VersorOdd  as e41, e42, e43, scalar | e23, e31, e12, e45 | e15, e25, e35, e1234 | e4235, e4315, e4125, e3215;
+    VersorEven as e423, e431, e412, e12345 | e415, e425, e435, e321 | e235, e315, e125, e5 | e1, e2, e3, e4;
 }
 
 #[test]
