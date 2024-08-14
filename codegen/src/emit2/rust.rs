@@ -99,7 +99,7 @@ impl Rust {
         &self,
         crate_folder: P,
         algebra_name: &str,
-        version: semver::Version,
+        version_major: usize, version_minor: usize, version_patch: usize, version_pre: &str,
         description: &str,
         repository: &str,
         authors: &[&str],
@@ -108,10 +108,7 @@ impl Rust {
         fs::create_dir_all(&crate_folder)?;
         let file_path = crate_folder.join(Path::new("Cargo.toml"));
         let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
-        let major = version.major;
-        let minor = version.minor;
-        let patch = version.patch;
-        let mut pre = version.pre.as_str().to_string();
+        let mut pre = version_pre.to_string();
         if !pre.is_empty() {
             pre = format!("-{pre}");
         }
@@ -131,7 +128,7 @@ impl Rust {
             &mut file,
             r#"[package]
 name = "{algebra_name}"
-version = "{major}.{minor}.{patch}{pre}"
+version = "{version_major}.{version_minor}.{version_patch}{pre}"
 authors = ["Andrew Brown <Andrew.Brown.UNL@gmail.com>", "Alexander Meißner <AlexanderMeissner@gmx.net>"{additional_authors}]
 description = "{description}"
 repository = "{repository}"

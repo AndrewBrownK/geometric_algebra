@@ -6,13 +6,10 @@
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
-use semver::Version;
-
 use codegen::algebra2::basis::elements::e12345;
 use codegen::algebra2::multivector::{DeclareMultiVecs, MultiVecRepository};
-use codegen::multi_vecs;
 
-multi_vecs! { e12345;
+codegen::multi_vecs! { e12345;
 
     // Special Objects
     Scalar     as scalar;
@@ -84,11 +81,10 @@ pub fn main() {
 
     let rt = tokio::runtime::Runtime::new().expect("tokio works");
     let e = rt.block_on(async move {
-        let version = Version::new(1, 0, 0);
         rust.write_crate(
             file_path.clone(),
             "cga3d_max",
-            version,
+            1, 0, 0, "",
             "Latest generated test case",
             "https://github.com/AndrewBrownK/projective_ga/",
             &[],

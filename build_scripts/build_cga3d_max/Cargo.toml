@@ -7,6 +7,5 @@ publish = false
 
 [dependencies]
 codegen = { path = "../../codegen" }
-semver = "1.0.23"
 indicatif = "0.17.8"
 tokio = { version = "1.37.0", features = ["rt", "rt-multi-thread", "io-std", "io-util", "sync", "signal", "fs", "parking_lot"] }
