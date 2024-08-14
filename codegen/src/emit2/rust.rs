@@ -246,10 +246,9 @@ postgres-types = "0.2.7""#
             }
         }
 
-        // TODO separate independent progress bar for rustfmt
         let multi_progress = Arc::new(indicatif::MultiProgress::new());
         let mut join_set: JoinSet<anyhow::Result<()>> = JoinSet::new();
-        let (tx, mut rx) = tokio::sync::mpsc::unbounded_channel::<PathBuf>();
+        let (started_file, mut rx) = tokio::sync::mpsc::unbounded_channel::<PathBuf>();
         join_set.spawn(async move {
             let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
             let mut paths = vec![];
@@ -270,10 +269,39 @@ postgres-types = "0.2.7""#
             Ok(())
         });
 
+
         let qty_mvs = mvs.len() as u64;
         let data_pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_mvs).with_finish(ProgressFinish::AndLeave)));
         data_pb.set_style(progress_style());
         data_pb.set_message("Rust - Data Definitions");
+
+        let qty_defs = defs.len() as u64;
+        let trait_pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_defs).with_finish(ProgressFinish::AndLeave)));
+        trait_pb.set_style(progress_style());
+        trait_pb.set_message("Rust - Trait Definitions");
+
+        let qty_impls = impls.len() as u64;
+        let impls_pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_impls)));
+        impls_pb.set_style(progress_style());
+        impls_pb.set_message("Rust - Distributing Trait Implementations");
+
+        let qty_files = qty_mvs + qty_defs + 4; // traits.rs, data.rs, lib.rs, simd.rs
+        let fmt_pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_files).with_finish(ProgressFinish::AndLeave)));
+        fmt_pb.set_style(progress_style());
+        fmt_pb.set_message("Rust - rustfmt");
+
+
+        let (finished_file, mut rx) = tokio::sync::mpsc::unbounded_channel::<PathBuf>();
+        let fmt_pb2 = fmt_pb.clone();
+        join_set.spawn(async move {
+            while let Some(p) = rx.recv().await {
+                Self::format_file(p).await?;
+                fmt_pb2.inc(1);
+            }
+            fmt_pb2.finish();
+            Ok(())
+        });
+
 
         let mut data_mods: BTreeMap<String, Vec<_>> = BTreeMap::new();
         for multi_vec in mvs.iter() {
@@ -283,7 +311,8 @@ postgres-types = "0.2.7""#
             let lsc = TraitKey::new(n).as_lower_snake();
             let folder_data = folder_data.clone();
             let doc = mv_docs.get(&n.to_string()).cloned();
-            let tx2 = tx.clone();
+            let tx2 = started_file.clone();
+            let tx3 = finished_file.clone();
 
             let pb2 = data_pb.clone();
             join_set.spawn(async move {
@@ -294,7 +323,7 @@ postgres-types = "0.2.7""#
                 writeln!(&mut file, "use crate::simd::*;")?;
                 self.declare_multi_vector(&mut file, multi_vec, doc)?;
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
-                self.format_file(&file_path).await?;
+                tx3.send(file_path)?;
                 pb2.inc(1);
                 Ok(())
             });
@@ -340,11 +369,6 @@ postgres-types = "0.2.7""#
             }
         }
 
-        let qty_defs = defs.len() as u64;
-        let trait_pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_defs).with_finish(ProgressFinish::AndLeave)));
-        trait_pb.set_style(progress_style());
-        trait_pb.set_message("Rust - Trait Definitions");
-
         let mut trait_mods: BTreeMap<String, Vec<_>> = BTreeMap::new();
         for td in defs.iter() {
             let td = td.clone();
@@ -358,7 +382,8 @@ postgres-types = "0.2.7""#
                 "Into" | "TryInto" => continue,
                 _ => {}
             }
-            let tx2 = tx.clone();
+            let tx2 = started_file.clone();
+            let tx3 = finished_file.clone();
             let pb2 = trait_pb.clone();
             join_set.spawn(async move {
                 let file_path = folder_traits.join(Path::new(lsc.as_str())).with_extension("rs");
@@ -369,18 +394,13 @@ postgres-types = "0.2.7""#
                 writeln!(&mut file, "use crate::simd::*;")?;
                 self.declare_trait_def(&mut file, td)?;
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
-                self.format_file(&file_path).await?;
+                tx3.send(file_path)?;
                 pb2.inc(1);
                 Ok(())
             });
         }
 
         let mut impl_files: HashMap<String, (Vec<Arc<RawTraitImplementation>>, Vec<TraitKey>)> = HashMap::new();
-
-        let qty_impls = impls.len() as u64;
-        let pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_impls)));
-        pb.set_style(progress_style());
-        pb.set_message("Rust - Distributing Trait Implementations");
 
         for i in impls {
             let k = i.definition.names.trait_key;
@@ -403,13 +423,15 @@ postgres-types = "0.2.7""#
                 t_deps.sort();
                 (vec![i], t_deps)
             });
-            pb.inc(1);
+            impls_pb.inc(1);
         }
-        pb.finish();
+        impls_pb.finish();
+        fmt_pb.inc_length(impl_files.len() as u64);
 
         for (file_path, (mut impls, deps)) in impl_files {
             let src_folder = src_folder.clone();
-            let tx2 = tx.clone();
+            let tx2 = started_file.clone();
+            let tx3 = finished_file.clone();
             let multi_progress = multi_progress.clone();
             join_set.spawn(async move {
                 let file_path = src_folder.join(Path::new(file_path.as_str())).with_extension("rs");
@@ -449,7 +471,7 @@ postgres-types = "0.2.7""#
                     }?;
                     pb.inc(1);
                 }
-                self.format_file(&file_path).await?;
+                tx3.send(file_path)?;
                 pb.inc(1);
                 pb.finish();
                 Ok(())
@@ -457,7 +479,8 @@ postgres-types = "0.2.7""#
         }
 
         let src_folder2 = src_folder.clone();
-        let tx2 = tx.clone();
+        let tx2 = started_file.clone();
+        let tx3 = finished_file.clone();
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("data.rs"));
             tx2.send(file_path.clone())?;
@@ -477,12 +500,13 @@ postgres-types = "0.2.7""#
                 writeln!(&mut file, "mod {lsc};")?;
                 writeln!(&mut file, "pub use {lsc}::{n};")?;
             }
-            self.format_file(&file_path).await?;
+            tx3.send(file_path)?;
             Ok(())
         });
 
         let src_folder2 = src_folder.clone();
-        let tx2 = tx.clone();
+        let tx2 = started_file.clone();
+        let tx3 = finished_file.clone();
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("traits.rs"));
             tx2.send(file_path.clone())?;
@@ -537,12 +561,13 @@ postgres-types = "0.2.7""#
                     }
                 }
             }
-            self.format_file(&file_path).await?;
+            tx3.send(file_path)?;
             Ok(())
         });
 
         let src_folder2 = src_folder.clone();
-        let tx2 = tx.clone();
+        let tx2 = started_file.clone();
+        let tx3 = finished_file.clone();
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("lib.rs"));
             tx2.send(file_path.clone())?;
@@ -558,23 +583,25 @@ postgres-types = "0.2.7""#
                 writeln!(&mut file, "    pub struct {el};")?;
             }
             writeln!(&mut file, "}}")?;
-            self.format_file(&file_path).await?;
+            tx3.send(file_path)?;
             Ok(())
         });
 
         let src_folder2 = src_folder.clone();
-        let tx2 = tx.clone();
+        let tx2 = started_file.clone();
+        let tx3 = finished_file.clone();
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("simd.rs"));
             tx2.send(file_path.clone())?;
             let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
             let src = SIMD_SRC;
             write!(&mut file, "{src}")?;
-            self.format_file(&file_path).await?;
+            tx3.send(file_path)?;
             Ok(())
         });
 
-        drop(tx);
+        drop(started_file);
+        drop(finished_file);
         join_set.collect_results().await
     }
 
@@ -1873,15 +1900,19 @@ impl std::hash::Hash for {ucc} {{
         Ok(())
     }
 
-    async fn format_file<P: AsRef<Path>>(&self, p: P) -> anyhow::Result<()> {
+    async fn format_file<P: AsRef<Path>>(p: P) -> anyhow::Result<()> {
         let mut cmd = Command::new("rustfmt");
         cmd.arg(p.as_ref().to_string_lossy().to_string());
         match cmd.spawn() {
             Ok(mut child) => {
                 tokio::task::spawn_blocking::<_, anyhow::Result<()>>(move || {
-                    match child.wait() {
-                        Ok(exit_status) if exit_status.success() => {}
-                        Ok(exit_status) => bail!("rustfmt failure: {exit_status:?}"),
+                    match child.wait_with_output() {
+                        Ok(o) if o.status.success() => {}
+                        Ok(o) => {
+                            let stderr = String::from_utf8_lossy(&o.stderr);
+                            let stdout = String::from_utf8_lossy(&o.stdout);
+                            bail!("rustfmt failure: {stderr} {stdout}")
+                        },
                         Err(e) => Err(e)?,
                     }
                     Ok(())
