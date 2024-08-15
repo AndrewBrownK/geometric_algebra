@@ -1,0 +1,41 @@
+// Note on Operative Statistics:
+// Operative Statistics are not a precise predictor of performance or performance comparisons.
+// This is due to varying hardware capabilities and compiler optimizations.
+// As always, where performance is a concern, there is no substitute for
+// real measurements on real work-loads on real hardware.
+// Disclaimer aside, enjoy the fun information =)
+impl AntiGrade for AntiScalar {
+    fn anti_grade() -> usize {
+        return 0;
+    }
+}
+impl AntiGrade for Horizon {
+    fn anti_grade() -> usize {
+        return 1;
+    }
+}
+impl AntiGrade for Line {
+    fn anti_grade() -> usize {
+        return 2;
+    }
+}
+impl AntiGrade for Origin {
+    fn anti_grade() -> usize {
+        return 3;
+    }
+}
+impl AntiGrade for Plane {
+    fn anti_grade() -> usize {
+        return 1;
+    }
+}
+impl AntiGrade for Point {
+    fn anti_grade() -> usize {
+        return 3;
+    }
+}
+impl AntiGrade for Scalar {
+    fn anti_grade() -> usize {
+        return 4;
+    }
+}
