@@ -4,9 +4,8 @@
 #![feature(effects)]
 
 use std::path::PathBuf;
-use std::sync::Arc;
 
-use codegen::algebra2::multivector::{DeclareMultiVecs, MultiVecRepository};
+use codegen::algebra2::multivector::DeclareMultiVecs;
 use codegen::elements::e12345;
 
 codegen::multi_vecs! { e12345;
@@ -52,7 +51,7 @@ fn main() {
         e4 => 0.5 * (eM - eP);
         e5 => eP + eM;
     };
-    let repo = generate_variants(base_documentation(register_multi_vecs(cga3d)));
+    let repo = generate_variants(base_documentation(register_multi_vecs(cga3d))).finished();
     let traits = codegen::register_all! { repo;
         // specialized::Plane_BulkExpansion_Plane
         // |
@@ -103,7 +102,7 @@ fn base_documentation(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMult
     declarations
 }
 
-fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVecRepository<e12345>> {
+fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMultiVecs<e12345> {
     use codegen::algebra2::basis::filter::{allow_all_signatures, SigFilter, signatures_containing};
     use codegen::elements::*;
 
@@ -149,7 +148,7 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVec
         but an imaginary radius, and a spacial presence in the shape of a
         {type} with a real radius.",
     ));
-    declarations.finished()
+    declarations
 }
 
 pub mod specialized {

@@ -4,7 +4,7 @@
 #![feature(effects)]
 
 use std::path::PathBuf;
-use std::sync::Arc;
+
 use codegen::algebra2::multivector::DeclareMultiVecs;
 use codegen::elements::e1234;
 
