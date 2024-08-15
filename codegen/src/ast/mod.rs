@@ -88,12 +88,6 @@ impl<'a> Parameter<'a> {
     }
 }
 
-// TODO overhaul Ast leveraging the insights gained so far, so that we might implement something
-//  like complete cargo feature support and pave the way for things like G(4,2,0) and G(6,3,0).
-//  This (newer Ast, not "this" Ast right here) is where we should also embrace multithreaded
-//  asynchronous code generation, more declarative (async) dependency evaluation (for trait impls
-//  depending on trait impls), and code inlining (to remove all inter-trait dependencies in the
-//  final output). Should also help make it easier to rearrange the output files.
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub enum AstNode<'a> {
     None,

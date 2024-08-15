@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 use std::collections::{BTreeSet, HashMap, HashSet};
-use std::ops::{Deref, DerefMut};
+use std::ops::Deref;
 use std::sync::Arc;
 
 use async_trait::async_trait;
@@ -10,13 +10,13 @@ use regex::Regex;
 use tokio::task::JoinSet;
 
 use crate::algebra2::basis::{BasisElement, BasisSignature};
-use crate::algebra2::multivector::{DynamicMultiVector, MultiVecRepository};
 use crate::algebra2::GeometricAlgebra;
+use crate::algebra2::multivector::{DynamicMultiVector, MultiVecRepository};
+use crate::ast2::{RawVariableDeclaration, Variable};
 use crate::ast2::datatype::{ClassesFromRegistry, ExpressionType, MultiVector};
-use crate::ast2::expressions::{extract_multivector_expr, AnyExpression, Expression, MultiVectorExpr, TraitResultType};
+use crate::ast2::expressions::{AnyExpression, Expression, extract_multivector_expr, MultiVectorExpr, TraitResultType};
 use crate::ast2::impls::Elaborated;
 use crate::ast2::operations_tracker::{TrackOperations, TraitOperationsLookup, VectoredOperationsTracker};
-use crate::ast2::{RawVariableDeclaration, Variable};
 use crate::utility::AsyncMap;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -1385,6 +1385,16 @@ impl<T: TraitDef_2Class_2Param> Register22 for T {
     }
 }
 
+pub fn tokio_rt() -> tokio::runtime::Runtime {
+    tokio::runtime::Runtime::new().expect("Tokio should work")
+}
+pub fn tokio_joinset<T>() -> JoinSet<T> {
+    JoinSet::new()
+}
+pub fn indicatif_multi_progress() -> Arc<indicatif::MultiProgress> {
+    Arc::new(indicatif::MultiProgress::new())
+}
+
 #[macro_export]
 macro_rules! register_all {
     ($mv_repo:expr; $($t:ident)+ $(| $($t2:ident)+)*) => {
@@ -1392,12 +1402,12 @@ macro_rules! register_all {
             use $crate::build_scripts2::common_traits::*;
             let tir = $crate::ast2::traits::TraitImplRegistry::new();
             use $crate::ast2::traits::{Register10, Register11, Register21, Register22};
-            let rt = tokio::runtime::Runtime::new().expect("Tokio should work");
+            let rt = $crate::ast2::traits::tokio_rt();
 
-            let multi_progress = std::sync::Arc::new(indicatif::MultiProgress::new());
+            let multi_progress = $crate::ast2::traits::indicatif_multi_progress();
             let _: () = rt.block_on(async {
 
-                let mut js = tokio::task::JoinSet::new();
+                let mut js = $crate::ast2::traits::tokio_joinset();
                 $(
                 let tir_c = tir.clone();
                 let mv_repo_c = $mv_repo.clone();
@@ -1409,7 +1419,7 @@ macro_rules! register_all {
                 while let Some(_) = js.join_next().await {}
 
                 $(
-                let mut js = tokio::task::JoinSet::new();
+                let mut js = $crate::ast2::traits::tokio_joinset();
                 $(
                 let tir_c = tir.clone();
                 let mv_repo_c = $mv_repo.clone();

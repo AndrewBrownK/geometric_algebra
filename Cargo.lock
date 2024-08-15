@@ -230,8 +230,13 @@ name = "build_cga3d_faceted"
 version = "0.3.0"
 dependencies = [
  "codegen",
- "indicatif",
- "tokio",
+]
+
+[[package]]
+name = "build_rga3d"
+version = "0.3.0"
+dependencies = [
+ "codegen",
 ]
 
 [[package]]
@@ -353,7 +358,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "cga3d_max"
+name = "cga3d_faceted"
 version = "1.0.0"
 dependencies = [
  "anyhow",

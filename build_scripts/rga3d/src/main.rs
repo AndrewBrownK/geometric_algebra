@@ -1,0 +1,80 @@
+#![allow(non_upper_case_globals)]
+#![feature(const_mut_refs)]
+#![feature(const_trait_impl)]
+#![feature(effects)]
+
+use std::path::PathBuf;
+use std::sync::Arc;
+use codegen::algebra2::multivector::DeclareMultiVecs;
+use codegen::elements::e1234;
+
+codegen::multi_vecs! { e1234;
+
+    // Special Objects
+    Scalar     as scalar;
+    AntiScalar as e1234;
+    Origin     as e4;
+    Horizon    as e321;
+    DualNum    as scalar, e1234;
+
+    // Uniform Grade Flat Objects
+    Point      as e1, e2, e3, e4;
+    Line       as e41, e42, e43 | e23, e31, e12;
+    Plane      as e423, e431, e412, e321;
+
+    // Versors
+    Motor      as e41, e42, e43, e1234 | e23, e31, e12, scalar;
+    Flector    as e1, e2, e3, e4 | e423, e431, e412, e321;
+}
+
+fn main() {
+    let rga3d = codegen::ga! { e1234;
+        1 => e1, e2, e3;
+        0 => e4
+    };
+    let repo = base_documentation(register_multi_vecs(rga3d)).finished();
+    let traits = codegen::register_all! { repo;
+        Zero One AntiOne Unit
+        Grade AntiGrade Into TryInto
+        Dual AntiDual Reverse AntiReverse
+        |
+        Wedge AntiWedge GeometricProduct GeometricAntiProduct Sandwich AntiSandwich
+    };
+    codegen::operators! { traits;
+        infix => Div;
+
+        binary
+        BitXor => Wedge,
+        Mul => GeometricProduct;
+
+        unary
+        Not => Dual;
+    }
+    let traits = traits.finish();
+
+    let file_path = PathBuf::from("libraries/rga3d/");
+    let mut rust = codegen::Rust::new(true).all_features();
+    rust.sql = false;
+    rust.write_crate(
+        file_path.clone(),
+        "rga3d",
+        1, 0, 0, "",
+        "Latest generated test case",
+        "https://github.com/AndrewBrownK/projective_ga/",
+        &[],
+        repo, traits
+    );
+}
+
+fn base_documentation(mut declarations: DeclareMultiVecs<e1234>) -> DeclareMultiVecs<e1234> {
+    declarations.append_documentation(
+        &Origin,
+        "\
+    The Origin is the RoundPoint where x, y, z, and radius are all zero.
+    It is the base element e4.
+    Not to be confused with FlatOrigin, which is a Dipole connecting Origin and Infinity.
+    ",
+    );
+    // TODO more documentation
+    declarations
+}

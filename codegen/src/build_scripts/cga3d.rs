@@ -104,7 +104,6 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
             e4235,e4315,e4125|e1234,e3215",
     ];
 
-    // TODO add more of these if/where applicable to CGA
     let sandwich_outputs: BTreeMap<(&str, &str), &str> = [
         ("Translator", "Origin", "Point"),
         ("Translator", "LineAtOrigin", "Line"),

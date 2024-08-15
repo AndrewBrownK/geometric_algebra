@@ -1,5 +1,5 @@
 [package]
-name = "build_cga3d_faceted"
+name = "build_rga3d"
 version = "0.3.0"
 authors = ["Alexander Meißner <AlexanderMeissner@gmx.net>", "Andrew Brown <Andrew.Brown.UNL@gmail.com>"]
 edition = "2021"

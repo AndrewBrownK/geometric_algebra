@@ -364,14 +364,6 @@ impl Product {
             products.push((*name, anti_product.projected(max_grade, anti_wedge_like), docs.clone()))
         }
 
-        // TODO these dot products don't look SIMD optimal (as far as I know, which is not much)
-        //  for example see `impl Dot<Point> for Point` in rga3d
-        //  It (might?) be more efficient to multiply first, and add second. Even if we multiply
-        //  and unused SIMD element, it might be faster than extracting crap out manually and then
-        //  multiplying and adding. I heard GPUs can perform the dot product into addition like
-        //  really efficiently.
-        // https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
-
         let synonyms = Product::synonyms(&dialect.dot_product);
         let docs = format!(
             "

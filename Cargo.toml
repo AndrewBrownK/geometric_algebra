@@ -9,6 +9,7 @@ members = [
     "cga3d_min",
     "libraries/cga3d_faceted",
 
+    "build_scripts/rga3d",
     "build_scripts/cga3d_faceted",
 
     "examples/compile_to_spirv",

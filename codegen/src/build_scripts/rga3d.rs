@@ -43,7 +43,6 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     // On sandwich products, assume that the output
     // class is the same as the input class, unless it is
     // in the following guide
-    // TODO add more of these if necessary
     let sandwich_outputs: BTreeMap<(&str, &str), &str> = [
         // Rotations of objects at origin are still objects at origin
         // But as you can see, the inputs and outputs are the same,

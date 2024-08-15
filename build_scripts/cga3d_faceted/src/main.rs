@@ -3,11 +3,11 @@
 #![feature(const_trait_impl)]
 #![feature(effects)]
 
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::sync::Arc;
 
-use codegen::elements::e12345;
 use codegen::algebra2::multivector::{DeclareMultiVecs, MultiVecRepository};
+use codegen::elements::e12345;
 
 codegen::multi_vecs! { e12345;
 
@@ -79,23 +79,15 @@ fn main() {
     let file_path = PathBuf::from("libraries/cga3d_faceted/");
     let mut rust = codegen::Rust::new(true).all_features();
     rust.sql = false;
-
-    let rt = tokio::runtime::Runtime::new().expect("tokio works");
-    let e = rt.block_on(async move {
-        rust.write_crate(
-            file_path.clone(),
-            "cga3d_faceted",
-            1, 0, 0, "",
-            "Latest generated test case",
-            "https://github.com/AndrewBrownK/projective_ga/",
-            &[],
-        )
-        .await?;
-        rust.write_src(file_path.join(Path::new("src")), repo, traits).await
-    });
-    if let Err(e) = e {
-        panic!("Errors: {e:?}");
-    }
+    rust.write_crate(
+        file_path.clone(),
+        "cga3d_faceted",
+        1, 0, 0, "",
+        "Latest generated test case",
+        "https://github.com/AndrewBrownK/projective_ga/",
+        &[],
+        repo, traits
+    );
 }
 
 fn base_documentation(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMultiVecs<e12345> {
@@ -161,10 +153,10 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVec
 }
 
 pub mod specialized {
-    use codegen::elements::e12345;
     use codegen::ast2::datatype::MultiVector;
     use codegen::ast2::impls::{Specialize_22, Specialized_22};
     use codegen::build_scripts2::common_traits::BulkExpansion;
+    use codegen::elements::e12345;
 
     use crate::Plane;
 

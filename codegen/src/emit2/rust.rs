@@ -95,7 +95,34 @@ impl Rust {
         self
     }
 
-    pub async fn write_crate<P: AsRef<Path>>(
+    pub fn write_crate<P: AsRef<Path>, const AntiScalar: BasisElement>(
+        self,
+        crate_folder: P,
+        algebra_name: &str,
+        version_major: usize, version_minor: usize, version_patch: usize, version_pre: &str,
+        description: &str,
+        repository: &str,
+        authors: &[&str],
+        multi_vecs: Arc<MultiVecRepository<AntiScalar>>,
+        impls: Arc<TraitImplRegistry>,
+    ) {
+        let file_path = crate_folder.as_ref().to_path_buf();
+        let rt = tokio::runtime::Runtime::new().expect("tokio works");
+        let e = rt.block_on(async move {
+            self.write_cargo_toml(
+                crate_folder,
+                algebra_name,
+                version_major, version_minor, version_patch, version_pre,
+                description, repository, authors,
+            ).await?;
+            self.write_src(file_path.join(Path::new("src")), multi_vecs, impls).await
+        });
+        if let Err(e) = e {
+            panic!("Rust Errors: {e:?}");
+        }
+    }
+
+    async fn write_cargo_toml<P: AsRef<Path>>(
         &self,
         crate_folder: P,
         algebra_name: &str,
@@ -176,7 +203,7 @@ postgres-types = "0.2.7""#
         Ok(())
     }
 
-    pub async fn write_src<P: AsRef<Path>, const AntiScalar: BasisElement>(
+    async fn write_src<P: AsRef<Path>, const AntiScalar: BasisElement>(
         mut self,
         src_folder: P,
         multi_vecs: Arc<MultiVecRepository<AntiScalar>>,
