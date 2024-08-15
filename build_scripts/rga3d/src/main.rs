@@ -3,8 +3,6 @@
 #![feature(const_trait_impl)]
 #![feature(effects)]
 
-use std::path::PathBuf;
-
 use codegen::algebra2::multivector::DeclareMultiVecs;
 use codegen::elements::e1234;
 
@@ -52,11 +50,10 @@ fn main() {
     }
     let traits = traits.finish();
 
-    let file_path = PathBuf::from("libraries/rga3d/");
     let mut rust = codegen::Rust::new(true).all_features();
     rust.sql = false;
     rust.write_crate(
-        file_path.clone(),
+        "libraries/rga3d/",
         "rga3d",
         1, 0, 0, "",
         "Latest generated test case",

@@ -3,8 +3,6 @@
 #![feature(const_trait_impl)]
 #![feature(effects)]
 
-use std::path::PathBuf;
-
 use codegen::algebra2::multivector::DeclareMultiVecs;
 use codegen::elements::e12345;
 
@@ -75,11 +73,10 @@ fn main() {
     }
     let traits = traits.finish();
 
-    let file_path = PathBuf::from("libraries/cga3d_faceted/");
     let mut rust = codegen::Rust::new(true).all_features();
     rust.sql = false;
     rust.write_crate(
-        file_path.clone(),
+        "libraries/cga3d_faceted/",
         "cga3d_faceted",
         1, 0, 0, "",
         "Latest generated test case",
