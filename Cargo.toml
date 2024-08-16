@@ -7,6 +7,9 @@ members = [
     "rga3d",
     "cga3d",
     "cga3d_min",
+
+    "libraries/rga3d",
+    "libraries/cga3d",
     "libraries/cga3d_faceted",
 
     "build_scripts/rga3d",

@@ -3,6 +3,7 @@ use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::multivector::{BasisElementGroup, MultiVec};
 use crate::ast2::expressions::{FloatExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
 use std::cmp::Ordering;
+use std::collections::BTreeMap;
 use std::fmt::{Display, Formatter};
 
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug, Ord, PartialOrd)]
@@ -123,6 +124,19 @@ impl MultiVector {
             expr: Box::new(MultiVectorVia::Construct(outer)),
         };
         result.simplify();
+        result
+    }
+
+    pub fn construct_direct<A: AsRef<[(BasisElement, FloatExpr)]>>(&self, arr: A) -> MultiVectorExpr {
+        let arr = arr.as_ref();
+        let mut vals: BTreeMap<BasisElement, FloatExpr> = arr.into_iter().collect();
+        let result = self.construct(|el| {
+            vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))
+        });
+        if !vals.is_empty() {
+            let k: Vec<_> = vals.keys().collect();
+            panic!("Attempted direct construction of {self} using mismatched elements {k:?}");
+        }
         result
     }
 

@@ -132,7 +132,11 @@ impl Involution {
                 involution.negated(|grade, _| grade % 2 == 1),
                 "\nNegates elements with `grade % 2 == 1`\n\nAlso called main involution",
             ),
-            ("Conjugation", involution.negated(|grade, _| (grade + 3) % 4 < 2), "\nNegates elements with `(grade + 3) % 4 < 2`"),
+            (
+                "Conjugation",
+                involution.negated(|grade, _| (grade + 3) % 4 < 2),
+                "\nNegates elements with `(grade + 3) % 4 < 2`"
+            ),
             (
                 "Reversal",
                 involution.negated(|grade, _| grade % 4 >= 2),

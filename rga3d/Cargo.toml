@@ -1,5 +1,5 @@
 [package]
-name = "rga3d"
+name = "rga3d_old"
 version = "0.3.0"
 authors = ["Alexander Meißner <AlexanderMeissner@gmx.net>", "Andrew Brown <Andrew.Brown.UNL@gmail.com>"]
 description = "Generate(d) custom libraries for geometric algebras"

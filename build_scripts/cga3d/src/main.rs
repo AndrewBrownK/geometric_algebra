@@ -2,6 +2,7 @@
 #![feature(const_mut_refs)]
 #![feature(const_trait_impl)]
 #![feature(effects)]
+#![feature(adt_const_params)]
 
 use codegen::algebra2::multivector::DeclareMultiVecs;
 use codegen::elements::e12345;
@@ -63,10 +64,13 @@ fn main() {
         infix => Div;
 
         binary
+        Add => Addition,
+        Sub => Subtraction,
         BitXor => Wedge,
         Mul => GeometricProduct;
 
         unary
+        Neg => Negation,
         Not => Dual;
     }
     let traits = traits.finish();
@@ -97,3 +101,42 @@ fn base_documentation(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMult
     declarations
 }
 
+pub mod custom_traits {
+    use async_trait::async_trait;
+
+    use codegen::algebra2::basis::BasisElement;
+    use codegen::algebra2::multivector::DynamicMultiVector;
+    use codegen::ast2::datatype::MultiVector;
+    use codegen::ast2::impls::Elaborated;
+    use codegen::ast2::traits::{HasNotReturned, NameTrait, TraitImpl_11, TraitImplBuilder};
+    use codegen::ast2::Variable;
+    use codegen::elements::e5;
+
+    pub static ConformalConjugate: Elaborated<ConformalConjugateImpl> = ConformalConjugateImpl
+        .new_trait_named("ConformalConjugate")
+        .blurb("TODO");
+    #[derive(Clone, Copy)]
+    struct ConformalConjugateImpl;
+    #[async_trait]
+    impl TraitImpl_11 for ConformalConjugateImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let infinity_sig = e5.signature();
+            let mut result = DynamicMultiVector::zero();
+            for (mut fe, el) in slf.elements_by_groups() {
+                if el.signature().contains(infinity_sig) {
+                    fe = fe * -1.0;
+                }
+                result += (fe, el);
+            }
+            let result = result.construct(&b)?;
+            b.return_expr(result)
+        }
+    }
+
+
+}

@@ -26,6 +26,46 @@ pub static Reverse: Elaborated<ReverseImpl> = ReverseImpl.new_trait_named("Rever
 
 pub static AntiReverse: Elaborated<AntiReverseImpl> = AntiReverseImpl.new_trait_named("AntiReverse").blurb("TODO");
 
+pub static AutoMorphism: Elaborated<AutoMorphismImpl> = AutoMorphismImpl
+    .new_trait_named("AutoMorphism")
+    .blurb("TODO");
+
+pub static AntiAutoMorphism: Elaborated<AntiAutoMorphismImpl> = AntiAutoMorphismImpl
+    .new_trait_named("AntiAutoMorphism")
+    .blurb("TODO");
+
+pub static Conjugation: Elaborated<ConjugationImpl> = ConjugationImpl
+    .new_trait_named("Conjugation")
+    .blurb("TODO");
+
+pub static AntiConjugation: Elaborated<AntiConjugationImpl> = AntiConjugationImpl
+    .new_trait_named("AntiConjugation")
+    .blurb("TODO");
+
+pub static RightComplement: Elaborated<RightComplementImpl> = RightComplementImpl
+    .new_trait_named("RightComplement")
+    .blurb("TODO");
+
+pub static LeftComplement: Elaborated<LeftComplementImpl> = LeftComplementImpl
+    .new_trait_named("LeftComplement")
+    .blurb("TODO");
+
+pub static DoubleComplement: Elaborated<DoubleComplementImpl> = DoubleComplementImpl
+    .new_trait_named("DoubleComplement")
+    .blurb("TODO");
+
+pub static Negation: Elaborated<NegationImpl> = NegationImpl
+    .new_trait_named("Negation")
+    .blurb("TODO");
+
+pub static Addition: Elaborated<AdditionImpl> = AdditionImpl
+    .new_trait_named("Addition")
+    .blurb("TODO");
+
+pub static Subtraction: Elaborated<SubtractionImpl> = SubtractionImpl
+    .new_trait_named("Subtraction")
+    .blurb("TODO");
+
 pub static Wedge: Elaborated<WedgeImpl> = WedgeImpl.new_trait_named("Wedge").blurb("TODO");
 pub static AntiWedge: Elaborated<AntiWedgeImpl> = AntiWedgeImpl.new_trait_named("AntiWedge").blurb("TODO");
 
@@ -279,6 +319,191 @@ mod impls {
             }
             let result = result.construct(&b)?;
             b.return_expr(result)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct AutoMorphismImpl;
+    #[async_trait]
+    impl TraitImpl_11 for AutoMorphismImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(self, b: TraitImplBuilder<AntiScalar, HasNotReturned>, slf: Variable<MultiVector>) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut result = DynamicMultiVector::zero();
+            for (mut fe, el) in slf.elements_by_groups() {
+                if el.grade() % 2 == 1 {
+                    fe = fe * -1.0;
+                }
+                result += (fe, el);
+            }
+            let result = result.construct(&b)?;
+            b.return_expr(result)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct AntiAutoMorphismImpl;
+    #[async_trait]
+    impl TraitImpl_11 for AntiAutoMorphismImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(self, b: TraitImplBuilder<AntiScalar, HasNotReturned>, slf: Variable<MultiVector>) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut result = DynamicMultiVector::zero();
+            for (mut fe, el) in slf.elements_by_groups() {
+                if el.anti_grade(AntiScalar) % 2 == 1 {
+                    fe = fe * -1.0;
+                }
+                result += (fe, el);
+            }
+            let result = result.construct(&b)?;
+            b.return_expr(result)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct ConjugationImpl;
+    #[async_trait]
+    impl TraitImpl_11 for ConjugationImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(self, b: TraitImplBuilder<AntiScalar, HasNotReturned>, slf: Variable<MultiVector>) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut result = DynamicMultiVector::zero();
+            for (mut fe, el) in slf.elements_by_groups() {
+                if (el.grade() + 3) % 4 < 2 {
+                    fe = fe * -1.0;
+                }
+                result += (fe, el);
+            }
+            let result = result.construct(&b)?;
+            b.return_expr(result)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct AntiConjugationImpl;
+    #[async_trait]
+    impl TraitImpl_11 for AntiConjugationImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(self, b: TraitImplBuilder<AntiScalar, HasNotReturned>, slf: Variable<MultiVector>) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut result = DynamicMultiVector::zero();
+            for (mut fe, el) in slf.elements_by_groups() {
+                if (el.anti_grade(AntiScalar) + 3) % 4 < 2 {
+                    fe = fe * -1.0;
+                }
+                result += (fe, el);
+            }
+            let result = result.construct(&b)?;
+            b.return_expr(result)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct RightComplementImpl;
+    #[async_trait]
+    impl TraitImpl_11 for RightComplementImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(self, b: TraitImplBuilder<AntiScalar, HasNotReturned>, slf: Variable<MultiVector>) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut result = DynamicMultiVector::zero();
+            for (fe, el) in slf.elements_by_groups() {
+                let (f, el) = b.ga.fix_name_and_sign(el.right_complement(AntiScalar));
+                result += (fe * f, el);
+            }
+            let result = result.construct(&b)?;
+            b.return_expr(result)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct LeftComplementImpl;
+    #[async_trait]
+    impl TraitImpl_11 for LeftComplementImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(self, b: TraitImplBuilder<AntiScalar, HasNotReturned>, slf: Variable<MultiVector>) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut result = DynamicMultiVector::zero();
+            for (fe, el) in slf.elements_by_groups() {
+                let (f, el) = b.ga.fix_name_and_sign(el.left_complement(AntiScalar));
+                result += (fe * f, el);
+            }
+            let result = result.construct(&b)?;
+            b.return_expr(result)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct DoubleComplementImpl;
+    #[async_trait]
+    impl TraitImpl_11 for DoubleComplementImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(self, b: TraitImplBuilder<AntiScalar, HasNotReturned>, slf: Variable<MultiVector>) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut result = DynamicMultiVector::zero();
+            for (fe, el) in slf.elements_by_groups() {
+                let el = el.right_complement(AntiScalar).right_complement(AntiScalar);
+                let (f, el) = b.ga.fix_name_and_sign(el);
+                result += (fe * f, el);
+            }
+            let result = result.construct(&b)?;
+            b.return_expr(result)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct NegationImpl;
+    #[async_trait]
+    impl TraitImpl_11 for NegationImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self, b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut result = DynamicMultiVector::zero();
+            for (fe, el) in slf.elements_by_groups() {
+                result += (fe * -1.0, el);
+            }
+            let result = result.construct(&b)?;
+            b.return_expr(result)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct AdditionImpl;
+    #[async_trait]
+    impl TraitImpl_22 for AdditionImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: Variable<MultiVector>,
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut dyn_mv = DynamicMultiVector::zero();
+            for (a, a_el) in slf.elements_by_groups() {
+                dyn_mv += (a, a_el);
+            }
+            for (b, b_el) in other.elements_by_groups() {
+                dyn_mv += (b, b_el);
+            }
+            let mv = dyn_mv.construct(&b)?;
+            b.return_expr(mv)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct SubtractionImpl;
+    #[async_trait]
+    impl TraitImpl_22 for SubtractionImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: Variable<MultiVector>,
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut dyn_mv = DynamicMultiVector::zero();
+            for (a, a_el) in slf.elements_by_groups() {
+                dyn_mv += (a, a_el);
+            }
+            for (b, b_el) in other.elements_by_groups() {
+                dyn_mv += (b * -1.0, b_el);
+            }
+            let mv = dyn_mv.construct(&b)?;
+            b.return_expr(mv)
         }
     }
 
