@@ -226,6 +226,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "build_cga3d"
+version = "0.3.0"
+dependencies = [
+ "codegen",
+]
+
+[[package]]
 name = "build_cga3d_faceted"
 version = "0.3.0"
 dependencies = [

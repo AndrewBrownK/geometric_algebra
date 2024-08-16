@@ -61,6 +61,7 @@ pub static TryInto: Elaborated<TryIntoImpl> = TryIntoImpl.new_trait_named("TryIn
 // terms that are unused by the final result of each function will be cut out of the AST
 // automatically. With grade selection declarations (not inlining strictly always), then
 // you'd have the chance to use grade selection in application code which is very undesirable.)
+// TODO actually cut out unused terms and variables, as claimed above
 
 macro_rules! select_grades {
     ($($gr:literal),+ $(,)?) => {

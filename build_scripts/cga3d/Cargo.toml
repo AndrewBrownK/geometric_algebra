@@ -1,0 +1,9 @@
+[package]
+name = "build_cga3d"
+version = "0.3.0"
+authors = ["Alexander Meißner <AlexanderMeissner@gmx.net>", "Andrew Brown <Andrew.Brown.UNL@gmail.com>"]
+edition = "2021"
+publish = false
+
+[dependencies]
+codegen = { path = "../../codegen" }
