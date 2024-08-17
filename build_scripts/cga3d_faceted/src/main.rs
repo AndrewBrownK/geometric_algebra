@@ -77,6 +77,7 @@ fn main() {
         Mul => GeometricProduct;
 
         unary
+        Neg => Negation,
         Not => Dual;
     }
     let traits = traits.finish();

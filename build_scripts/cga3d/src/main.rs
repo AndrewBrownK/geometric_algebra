@@ -112,6 +112,8 @@ pub mod custom_traits {
     use codegen::ast2::Variable;
     use codegen::elements::e5;
 
+
+    // TODO macroooo
     pub static ConformalConjugate: Elaborated<ConformalConjugateImpl> = ConformalConjugateImpl
         .new_trait_named("ConformalConjugate")
         .blurb("TODO");

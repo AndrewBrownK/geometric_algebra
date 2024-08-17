@@ -103,7 +103,7 @@ pub trait TraitImpl_10: Copy + Send + Sync + 'static {
 
     async fn general_implementation<const AntiScalar: BasisElement>(
         self,
-        b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: MultiVector,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>>;
 }
@@ -131,32 +131,32 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
 
     async fn invoke<const AntiScalar: BasisElement>(
         &self,
-        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: MultiVector,
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
         let cycle_detector_key = (trait_key.clone(), owner.clone(), None);
-        if b.cycle_detector.contains(&cycle_detector_key) {
-            let all_in_cycle = b.cycle_detector.iter().collect::<Vec<_>>();
+        if builder.cycle_detector.contains(&cycle_detector_key) {
+            let all_in_cycle = builder.cycle_detector.iter().collect::<Vec<_>>();
             panic!("Cycle detected at trait {trait_key:?}: {all_in_cycle:?}")
         } else {
-            b.cycle_detector.insert(cycle_detector_key);
+            builder.cycle_detector.insert(cycle_detector_key);
         }
-        if b.inline_dependencies {
-            let return_as_var = self.inline(b, owner).await?;
+        if builder.inline_dependencies {
+            let return_as_var = self.inline(builder, owner).await?;
             return Some(<Self::Output as TraitResultType>::inlined_expr_10(return_as_var));
         }
 
         let slf = self.clone();
-        let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let the_def = builder.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner.clone());
         let owner_clone = owner.clone();
-        let registry = b.registry.clone();
-        let cycle_detector_clone = b.cycle_detector.clone();
-        let ga = b.ga.clone();
-        let mvs = b.mvs.clone();
+        let registry = builder.registry.clone();
+        let cycle_detector_clone = builder.cycle_detector.clone();
+        let ga = builder.ga.clone();
+        let mvs = builder.mvs.clone();
         let t_self = self.clone();
         let f = async move {
             // Create and register the implementation
@@ -165,16 +165,16 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
             let trait_impl = t_self.general_implementation(builder, owner_clone.clone()).await?;
             Some(trait_impl.into_trait10(owner_clone))
         };
-        let the_impl = b.registry.traits10.get_or_create_or_panic(impl_key.clone(), f).await?;
+        let the_impl = builder.registry.traits10.get_or_create_or_panic(impl_key.clone(), f).await?;
         let owner_type = ExpressionType::Class(owner.clone());
         let return_type = the_impl.return_expr.expression_type();
 
         TraitTypeConsensus::add_vote(&the_def.owner, owner_type, true);
         TraitTypeConsensus::add_vote(&the_def.output, return_type, owner_type == return_type);
-        b.trait_def.dependencies.lock().insert(trait_key);
+        builder.trait_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
-        if let Some(_) = b.traits10_dependencies.insert(impl_key, the_impl.clone()) {
+        if let Some(_) = builder.traits10_dependencies.insert(impl_key, the_impl.clone()) {
             // We already had the dependency. No problem.
         }
         let mv_result = match &the_impl.return_expr {
@@ -186,17 +186,21 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
         Some(invocation_expression)
     }
 
-    async fn inline<const AntiScalar: BasisElement>(&self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>, owner: MultiVector) -> Option<Variable<Self::Output>> {
+    async fn inline<const AntiScalar: BasisElement>(
+        &self,
+        builder: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        owner: MultiVector
+    ) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
         let impl_key = (trait_key.clone(), owner.clone());
 
         // Double Option/None: First is no impl attempted yet, Second is impl determined absent
-        if let Some(Some(raw_impl)) = b.registry.traits10.get(&impl_key).await {
+        if let Some(Some(raw_impl)) = builder.registry.traits10.get(&impl_key).await {
             // It is faster to inline here, rather than copying existing impls,
             // because variable substitution involves copying and mutating an entire AST.
             // So the only time we want to copy an AST is if it is specialized.
             if raw_impl.specialized {
-                return b.inline_by_copy_existing_10::<Self>(&trait_key, raw_impl);
+                return builder.inline_by_copy_existing_10::<Self>(&trait_key, raw_impl);
             }
         }
 
@@ -205,23 +209,23 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
         // Inlining will not trigger implicit declaration.
         // let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def = slf.def();
-        let builder = TraitImplBuilder::new(
-            b.ga.clone(),
-            b.mvs.clone(),
+        let inner_builder = TraitImplBuilder::new(
+            builder.ga.clone(),
+            builder.mvs.clone(),
             the_def,
-            b.registry.clone(),
-            b.inline_dependencies,
-            b.variables.clone(),
-            b.cycle_detector.clone(),
+            builder.registry.clone(),
+            builder.inline_dependencies,
+            builder.variables.clone(),
+            builder.cycle_detector.clone(),
         );
-        let trait_impl = self.general_implementation(builder, owner).await?;
+        let trait_impl = self.general_implementation(inner_builder, owner).await?;
         let var_name = trait_key.as_lower_snake();
-        trait_impl.finish_inline(b, var_name)
+        trait_impl.finish_inline(builder, var_name)
     }
 
     async fn deep_inline<const AntiScalar: BasisElement>(
         &self,
-        b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: MultiVector,
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
@@ -231,8 +235,8 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
         // let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def = slf.def();
         let variables = Arc::new(Mutex::new(HashMap::new()));
-        let builder = TraitImplBuilder::new(b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), true, variables.clone(), b.cycle_detector.clone());
-        let trait_impl = self.general_implementation(builder, owner).await?;
+        let inner_builder = TraitImplBuilder::new(builder.ga.clone(), builder.mvs.clone(), the_def, builder.registry.clone(), true, variables.clone(), builder.cycle_detector.clone());
+        let trait_impl = self.general_implementation(inner_builder, owner).await?;
         trait_impl.finish_deep_inline()
     }
 }
@@ -243,7 +247,7 @@ pub trait TraitImpl_11: Copy + Send + Sync + 'static {
     type Output: TraitResultType;
     async fn general_implementation<const AntiScalar: BasisElement>(
         self,
-        b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>>;
 }
@@ -271,34 +275,34 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
 
     async fn invoke<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
         &self,
-        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr,
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
         let owner_class = owner.expression_type();
         let owner_param = owner;
         let cycle_detector_key = (trait_key.clone(), owner_class.clone(), None);
-        if b.cycle_detector.contains(&cycle_detector_key) {
-            let all_in_cycle = b.cycle_detector.iter().collect::<Vec<_>>();
+        if builder.cycle_detector.contains(&cycle_detector_key) {
+            let all_in_cycle = builder.cycle_detector.iter().collect::<Vec<_>>();
             panic!("Cycle detected at trait {trait_key:?}: {all_in_cycle:?}")
         } else {
-            b.cycle_detector.insert(cycle_detector_key);
+            builder.cycle_detector.insert(cycle_detector_key);
         }
-        if b.inline_dependencies {
-            let return_as_var = self.inline(b, owner_param).await?;
+        if builder.inline_dependencies {
+            let return_as_var = self.inline(builder, owner_param).await?;
             return Some(<Self::Output as TraitResultType>::inlined_expr_11(return_as_var));
         }
 
         let slf = self.clone();
-        let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let the_def = builder.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner_class.clone());
         let owner_class_clone = owner_class.clone();
-        let registry = b.registry.clone();
-        let cycle_detector_clone = b.cycle_detector.clone();
-        let ga = b.ga.clone();
-        let mvs = b.mvs.clone();
+        let registry = builder.registry.clone();
+        let cycle_detector_clone = builder.cycle_detector.clone();
+        let ga = builder.ga.clone();
+        let mvs = builder.mvs.clone();
         let t_self = self.clone();
         let f = async move {
             // Create and register the implementation
@@ -313,16 +317,16 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
             let trait_impl = t_self.general_implementation(builder, var_self).await?;
             Some(trait_impl.into_trait11(owner_class_clone))
         };
-        let the_impl = b.registry.traits11.get_or_create_or_panic(impl_key.clone(), f).await?;
+        let the_impl = builder.registry.traits11.get_or_create_or_panic(impl_key.clone(), f).await?;
         let owner_type = ExpressionType::Class(owner_class.clone());
         let return_type = the_impl.return_expr.expression_type();
 
         TraitTypeConsensus::add_vote(&the_def.owner, owner_type, true);
         TraitTypeConsensus::add_vote(&the_def.output, return_type, owner_type == return_type);
-        b.trait_def.dependencies.lock().insert(trait_key);
+        builder.trait_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
-        if let Some(_) = b.traits11_dependencies.insert(impl_key, the_impl.clone()) {
+        if let Some(_) = builder.traits11_dependencies.insert(impl_key, the_impl.clone()) {
             // We already had the dependency. No problem.
         }
         let mv_result = match &the_impl.return_expr {
@@ -336,19 +340,19 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
     }
     async fn inline<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
         &self,
-        b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr,
     ) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
         let impl_key = (trait_key.clone(), owner.expression_type());
 
         // Double Option/None: First is no impl attempted yet, Second is impl determined absent
-        if let Some(Some(raw_impl)) = b.registry.traits11.get(&impl_key).await {
+        if let Some(Some(raw_impl)) = builder.registry.traits11.get(&impl_key).await {
             // It is faster to inline here, rather than copying existing impls,
             // because variable substitution involves copying and mutating an entire AST.
             // So the only time we want to copy an AST is if it is specialized.
             if raw_impl.specialized {
-                return b.inline_by_copy_existing_11::<Self, _>(&trait_key, raw_impl, owner);
+                return builder.inline_by_copy_existing_11::<Self, _>(&trait_key, raw_impl, owner);
             }
         }
 
@@ -357,24 +361,24 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
         // Inlining will not trigger implicit declaration.
         // let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def = slf.def();
-        let mut builder = TraitImplBuilder::new(
-            b.ga.clone(),
-            b.mvs.clone(),
+        let mut inner_builder = TraitImplBuilder::new(
+            builder.ga.clone(),
+            builder.mvs.clone(),
             the_def,
-            b.registry.clone(),
-            b.inline_dependencies,
-            b.variables.clone(),
-            b.cycle_detector.clone(),
+            builder.registry.clone(),
+            builder.inline_dependencies,
+            builder.variables.clone(),
+            builder.cycle_detector.clone(),
         );
-        let owner = builder.coerce_variable("self", owner);
-        let trait_impl = self.general_implementation(builder, owner).await?;
+        let owner = inner_builder.coerce_variable("self", owner);
+        let trait_impl = self.general_implementation(inner_builder, owner).await?;
         let var_name = trait_key.as_lower_snake();
-        trait_impl.finish_inline(b, var_name)
+        trait_impl.finish_inline(builder, var_name)
     }
 
     async fn deep_inline<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
         &self,
-        b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr,
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
@@ -384,9 +388,9 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
         // let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def = slf.def();
         let variables = Arc::new(Mutex::new(HashMap::new()));
-        let mut builder = TraitImplBuilder::new(b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), true, variables.clone(), b.cycle_detector.clone());
-        let owner = builder.coerce_variable("self", owner);
-        let trait_impl = self.general_implementation(builder, owner).await?;
+        let mut inner_builder = TraitImplBuilder::new(builder.ga.clone(), builder.mvs.clone(), the_def, builder.registry.clone(), true, variables.clone(), builder.cycle_detector.clone());
+        let owner = inner_builder.coerce_variable("self", owner);
+        let trait_impl = self.general_implementation(inner_builder, owner).await?;
         trait_impl.finish_deep_inline()
     }
 }
@@ -397,7 +401,7 @@ pub trait TraitImpl_21: Copy + Send + Sync + 'static {
     type Output: TraitResultType;
     async fn general_implementation<const AntiScalar: BasisElement>(
         self,
-        b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: MultiVector,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>>;
@@ -427,7 +431,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
 
     async fn invoke<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
         &self,
-        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr,
         other: MultiVector,
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
@@ -436,28 +440,28 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
         let owner_param = owner;
         let other_class = other;
         let cycle_detector_key = (trait_key.clone(), owner_class.clone(), Some(other_class.clone()));
-        if b.cycle_detector.contains(&cycle_detector_key) {
-            let all_in_cycle = b.cycle_detector.iter().collect::<Vec<_>>();
+        if builder.cycle_detector.contains(&cycle_detector_key) {
+            let all_in_cycle = builder.cycle_detector.iter().collect::<Vec<_>>();
             panic!("Cycle detected at trait {trait_key:?}: {all_in_cycle:?}")
         } else {
-            b.cycle_detector.insert(cycle_detector_key);
+            builder.cycle_detector.insert(cycle_detector_key);
         }
-        if b.inline_dependencies {
-            let return_as_var = self.inline(b, owner_param, other_class.clone()).await?;
+        if builder.inline_dependencies {
+            let return_as_var = self.inline(builder, owner_param, other_class.clone()).await?;
             return Some(<Self::Output as TraitResultType>::inlined_expr_21(return_as_var));
         }
 
         let slf = self.clone();
-        let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let the_def = builder.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner_class.clone(), other_class.clone());
         let owner_class_clone = owner_class.clone();
         let other_class_clone = other_class.clone();
-        let registry = b.registry.clone();
-        let cycle_detector_clone = b.cycle_detector.clone();
-        let ga = b.ga.clone();
-        let mvs = b.mvs.clone();
+        let registry = builder.registry.clone();
+        let cycle_detector_clone = builder.cycle_detector.clone();
+        let ga = builder.ga.clone();
+        let mvs = builder.mvs.clone();
         let t_self = self.clone();
         let f = async move {
             // Create and register the implementation
@@ -472,16 +476,16 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
             let trait_impl = t_self.general_implementation(builder, var_self, other_class_clone.clone()).await?;
             Some(trait_impl.into_trait21(owner_class_clone, other_class_clone.clone()))
         };
-        let the_impl = b.registry.traits21.get_or_create_or_panic(impl_key.clone(), f).await?;
+        let the_impl = builder.registry.traits21.get_or_create_or_panic(impl_key.clone(), f).await?;
         let owner_type = ExpressionType::Class(owner_class.clone());
         let return_type = the_impl.return_expr.expression_type();
 
         TraitTypeConsensus::add_vote(&the_def.owner, owner_type, true);
         TraitTypeConsensus::add_vote(&the_def.output, return_type, owner_type == return_type);
-        b.trait_def.dependencies.lock().insert(trait_key);
+        builder.trait_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
-        if let Some(_) = b.traits21_dependencies.insert(impl_key, the_impl.clone()) {
+        if let Some(_) = builder.traits21_dependencies.insert(impl_key, the_impl.clone()) {
             // We already had the dependency. No problem.
         }
         let mv_result = match &the_impl.return_expr {
@@ -496,7 +500,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
 
     async fn inline<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
         &self,
-        b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr,
         other: MultiVector,
     ) -> Option<Variable<Self::Output>> {
@@ -504,12 +508,12 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
         let impl_key = (trait_key.clone(), owner.expression_type(), other.clone());
 
         // Double Option/None: First is no impl attempted yet, Second is impl determined absent
-        if let Some(Some(raw_impl)) = b.registry.traits21.get(&impl_key).await {
+        if let Some(Some(raw_impl)) = builder.registry.traits21.get(&impl_key).await {
             // It is faster to inline here, rather than copying existing impls,
             // because variable substitution involves copying and mutating an entire AST.
             // So the only time we want to copy an AST is if it is specialized.
             if raw_impl.specialized {
-                return b.inline_by_copy_existing_21::<Self, _>(&trait_key, raw_impl, owner);
+                return builder.inline_by_copy_existing_21::<Self, _>(&trait_key, raw_impl, owner);
             }
         }
 
@@ -518,24 +522,24 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
         // Inlining will not trigger implicit declaration.
         // let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def = slf.def();
-        let mut builder = TraitImplBuilder::new(
-            b.ga.clone(),
-            b.mvs.clone(),
+        let mut inner_builder = TraitImplBuilder::new(
+            builder.ga.clone(),
+            builder.mvs.clone(),
             the_def,
-            b.registry.clone(),
-            b.inline_dependencies,
-            b.variables.clone(),
-            b.cycle_detector.clone(),
+            builder.registry.clone(),
+            builder.inline_dependencies,
+            builder.variables.clone(),
+            builder.cycle_detector.clone(),
         );
-        let owner = builder.coerce_variable("self", owner);
-        let trait_impl = self.general_implementation(builder, owner, other).await?;
+        let owner = inner_builder.coerce_variable("self", owner);
+        let trait_impl = self.general_implementation(inner_builder, owner, other).await?;
         let var_name = trait_key.as_lower_snake();
-        trait_impl.finish_inline(b, var_name)
+        trait_impl.finish_inline(builder, var_name)
     }
 
     async fn deep_inline<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
         &self,
-        b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr,
         other: MultiVector,
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
@@ -546,9 +550,9 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
         // let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def = slf.def();
         let variables = Arc::new(Mutex::new(HashMap::new()));
-        let mut builder = TraitImplBuilder::new(b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), true, variables.clone(), b.cycle_detector.clone());
-        let owner = builder.coerce_variable("self", owner);
-        let trait_impl = self.general_implementation(builder, owner, other).await?;
+        let mut inner_builder = TraitImplBuilder::new(builder.ga.clone(), builder.mvs.clone(), the_def, builder.registry.clone(), true, variables.clone(), builder.cycle_detector.clone());
+        let owner = inner_builder.coerce_variable("self", owner);
+        let trait_impl = self.general_implementation(inner_builder, owner, other).await?;
         trait_impl.finish_deep_inline()
     }
 }
@@ -559,7 +563,7 @@ pub trait TraitImpl_22: Copy + Send + Sync + 'static {
     type Output: TraitResultType;
     async fn general_implementation<const AntiScalar: BasisElement>(
         self,
-        b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>>;
@@ -589,7 +593,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
 
     async fn invoke<const AntiScalar: BasisElement, Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
         &self,
-        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr1,
         other: Expr2,
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
@@ -599,28 +603,28 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
         let other_class = other.expression_type();
         let other_param = other;
         let cycle_detector_key = (trait_key.clone(), owner_class.clone(), Some(other_class.clone()));
-        if b.cycle_detector.contains(&cycle_detector_key) {
-            let all_in_cycle = b.cycle_detector.iter().collect::<Vec<_>>();
+        if builder.cycle_detector.contains(&cycle_detector_key) {
+            let all_in_cycle = builder.cycle_detector.iter().collect::<Vec<_>>();
             panic!("Cycle detected at trait {trait_key:?}: {all_in_cycle:?}")
         } else {
-            b.cycle_detector.insert(cycle_detector_key);
+            builder.cycle_detector.insert(cycle_detector_key);
         }
-        if b.inline_dependencies {
-            let return_as_var = self.inline(b, owner_param, other_param).await?;
+        if builder.inline_dependencies {
+            let return_as_var = self.inline(builder, owner_param, other_param).await?;
             return Some(<Self::Output as TraitResultType>::inlined_expr_22(return_as_var));
         }
 
         let slf = self.clone();
-        let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let the_def = builder.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner_class.clone(), other_class.clone());
         let owner_class_clone = owner_class.clone();
         let other_class_clone = other_class.clone();
-        let registry = b.registry.clone();
-        let cycle_detector_clone = b.cycle_detector.clone();
-        let ga = b.ga.clone();
-        let mvs = b.mvs.clone();
+        let registry = builder.registry.clone();
+        let cycle_detector_clone = builder.cycle_detector.clone();
+        let ga = builder.ga.clone();
+        let mvs = builder.mvs.clone();
         let t_self = self.clone();
         let f = async move {
             // Create and register the implementation
@@ -641,16 +645,16 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
             let trait_impl = t_self.general_implementation(builder, var_self, var_other).await?;
             Some(trait_impl.into_trait22(owner_class_clone.clone(), other_class_clone.clone()))
         };
-        let the_impl = b.registry.traits22.get_or_create_or_panic(impl_key.clone(), f).await?;
+        let the_impl = builder.registry.traits22.get_or_create_or_panic(impl_key.clone(), f).await?;
         let owner_type = ExpressionType::Class(owner_class.clone());
         let return_type = the_impl.return_expr.expression_type();
 
         TraitTypeConsensus::add_vote(&the_def.owner, owner_type, true);
         TraitTypeConsensus::add_vote(&the_def.output, return_type, owner_type == return_type);
-        b.trait_def.dependencies.lock().insert(trait_key);
+        builder.trait_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
-        if let Some(_) = b.traits22_dependencies.insert(impl_key, the_impl.clone()) {
+        if let Some(_) = builder.traits22_dependencies.insert(impl_key, the_impl.clone()) {
             // We already had the dependency. No problem.
         }
         let mv_result = match &the_impl.return_expr {
@@ -666,7 +670,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
 
     async fn inline<const AntiScalar: BasisElement, Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
         &self,
-        b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr1,
         other: Expr2,
     ) -> Option<Variable<Self::Output>> {
@@ -674,12 +678,12 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
         let impl_key = (trait_key.clone(), owner.expression_type(), other.expression_type());
 
         // Double Option/None: First is no impl attempted yet, Second is impl determined absent
-        if let Some(Some(raw_impl)) = b.registry.traits22.get(&impl_key).await {
+        if let Some(Some(raw_impl)) = builder.registry.traits22.get(&impl_key).await {
             // It is faster to inline here, rather than copying existing impls,
             // because variable substitution involves copying and mutating an entire AST.
             // So the only time we want to copy an AST is if it is specialized.
             if raw_impl.specialized {
-                return b.inline_by_copy_existing_22::<Self, _, _>(&trait_key, raw_impl, owner, other);
+                return builder.inline_by_copy_existing_22::<Self, _, _>(&trait_key, raw_impl, owner, other);
             }
         }
 
@@ -688,25 +692,25 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
         // Inlining will not trigger implicit declaration.
         // let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def = slf.def();
-        let mut builder = TraitImplBuilder::new(
-            b.ga.clone(),
-            b.mvs.clone(),
+        let mut inner_builder = TraitImplBuilder::new(
+            builder.ga.clone(),
+            builder.mvs.clone(),
             the_def,
-            b.registry.clone(),
-            b.inline_dependencies,
-            b.variables.clone(),
-            b.cycle_detector.clone(),
+            builder.registry.clone(),
+            builder.inline_dependencies,
+            builder.variables.clone(),
+            builder.cycle_detector.clone(),
         );
-        let owner = builder.coerce_variable("self", owner);
-        let other = builder.coerce_variable("other", other);
-        let trait_impl = self.general_implementation(builder, owner, other).await?;
+        let owner = inner_builder.coerce_variable("self", owner);
+        let other = inner_builder.coerce_variable("other", other);
+        let trait_impl = self.general_implementation(inner_builder, owner, other).await?;
         let var_name = trait_key.as_lower_snake();
-        trait_impl.finish_inline(b, var_name)
+        trait_impl.finish_inline(builder, var_name)
     }
 
     async fn deep_inline<const AntiScalar: BasisElement, Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
         &self,
-        b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr1,
         other: Expr2,
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
@@ -728,10 +732,10 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
         // let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def = slf.def();
         let variables = Arc::new(Mutex::new(HashMap::new()));
-        let mut builder = TraitImplBuilder::new(b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), true, variables.clone(), b.cycle_detector.clone());
-        let owner = builder.coerce_variable("self", owner);
-        let other = builder.coerce_variable("other", other);
-        let trait_impl = self.general_implementation(builder, owner, other).await?;
+        let mut inner_builder = TraitImplBuilder::new(builder.ga.clone(), builder.mvs.clone(), the_def, builder.registry.clone(), true, variables.clone(), builder.cycle_detector.clone());
+        let owner = inner_builder.coerce_variable("self", owner);
+        let other = inner_builder.coerce_variable("other", other);
+        let trait_impl = self.general_implementation(inner_builder, owner, other).await?;
         trait_impl.finish_deep_inline()
     }
 }
@@ -938,9 +942,6 @@ impl UnaryOps {
 #[repr(u32)]
 #[derive(PartialEq, Eq, Clone, Copy, Debug, PartialOrd, Ord, Hash)]
 pub enum BinaryOps {
-    // TODO should not allow overriding Add and Sub... ...which also means Neg...
-    //  ah whatever... maybe to just allow full freedom, but create an easy method to
-    //  activate sensible defaults.
     Add,
     Sub,
     Mul,
