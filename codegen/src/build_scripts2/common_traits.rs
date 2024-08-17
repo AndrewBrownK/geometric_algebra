@@ -5,26 +5,46 @@ use crate::ast2::impls::{Elaborated, InlineOnly};
 use crate::ast2::traits::{NameTrait, TraitDef_1Class_1Param, TraitImpl_10, TraitImpl_11, TraitImpl_21};
 use crate::build_scripts2::common_traits::impls::*;
 
-pub static Zero: Elaborated<ZeroImpl> = ZeroImpl.new_trait_named("Zero").blurb("All elements set to zero.");
-pub static One: Elaborated<OneImpl> = OneImpl.new_trait_named("One").blurb("The scalar element set to one, and all other elements set to zero.");
-pub static AntiOne: Elaborated<AntiOneImpl> = AntiOneImpl.new_trait_named("AntiOne").blurb("The anti-scalar element set to one, and all other elements set to zero.");
-pub static Unit: Elaborated<UnitImpl> = UnitImpl.new_trait_named("Unit").blurb("All elements set to one.");
-pub static Grade: Elaborated<GradeImpl> = GradeImpl.new_trait_named("Grade").blurb(
+pub static Zero: Elaborated<ZeroImpl> = ZeroImpl
+    .new_trait_named("Zero")
+    .blurb("All elements set to zero.");
+pub static One: Elaborated<OneImpl> = OneImpl
+    .new_trait_named("One")
+    .blurb("The scalar element set to one, and all other elements set to zero.");
+pub static AntiOne: Elaborated<AntiOneImpl> = AntiOneImpl
+    .new_trait_named("AntiOne")
+    .blurb("The anti-scalar element set to one, and all other elements set to zero.");
+pub static Unit: Elaborated<UnitImpl> = UnitImpl
+    .new_trait_named("Unit")
+    .blurb("All elements set to one.");
+pub static Grade: Elaborated<GradeImpl> = GradeImpl
+    .new_trait_named("Grade")
+    .blurb(
     "A multivector class may have uniform grade, or mixed grade, depending on \
     the grades of its elements. This trait only characterizes uniform grade multivectors.",
 );
-pub static AntiGrade: Elaborated<AntiGradeImpl> = AntiGradeImpl.new_trait_named("AntiGrade").blurb(
+pub static AntiGrade: Elaborated<AntiGradeImpl> = AntiGradeImpl
+    .new_trait_named("AntiGrade")
+    .blurb(
     "The AntiGrade can be described as the missing Grade with respect to an \
     AntiScalar. This trait only characterizes uniform anti-grade multivectors.",
 );
 
-pub static Dual: Elaborated<DualImpl> = DualImpl.new_trait_named("Dual").blurb("TODO");
+pub static Dual: Elaborated<DualImpl> = DualImpl
+    .new_trait_named("Dual")
+    .blurb("TODO");
 
-pub static AntiDual: Elaborated<AntiDualImpl> = AntiDualImpl.new_trait_named("AntiDual").blurb("TODO");
+pub static AntiDual: Elaborated<AntiDualImpl> = AntiDualImpl
+    .new_trait_named("AntiDual")
+    .blurb("TODO");
 
-pub static Reverse: Elaborated<ReverseImpl> = ReverseImpl.new_trait_named("Reverse").blurb("TODO");
+pub static Reverse: Elaborated<ReverseImpl> = ReverseImpl
+    .new_trait_named("Reverse")
+    .blurb("TODO");
 
-pub static AntiReverse: Elaborated<AntiReverseImpl> = AntiReverseImpl.new_trait_named("AntiReverse").blurb("TODO");
+pub static AntiReverse: Elaborated<AntiReverseImpl> = AntiReverseImpl
+    .new_trait_named("AntiReverse")
+    .blurb("TODO");
 
 pub static AutoMorphism: Elaborated<AutoMorphismImpl> = AutoMorphismImpl
     .new_trait_named("AutoMorphism")
@@ -66,32 +86,60 @@ pub static Subtraction: Elaborated<SubtractionImpl> = SubtractionImpl
     .new_trait_named("Subtraction")
     .blurb("TODO");
 
-pub static Wedge: Elaborated<WedgeImpl> = WedgeImpl.new_trait_named("Wedge").blurb("TODO");
-pub static AntiWedge: Elaborated<AntiWedgeImpl> = AntiWedgeImpl.new_trait_named("AntiWedge").blurb("TODO");
+pub static Wedge: Elaborated<WedgeImpl> = WedgeImpl
+    .new_trait_named("Wedge")
+    .blurb("TODO");
+pub static AntiWedge: Elaborated<AntiWedgeImpl> = AntiWedgeImpl
+    .new_trait_named("AntiWedge")
+    .blurb("TODO");
 
-pub static GeometricProduct: Elaborated<GeometricProductImpl> = GeometricProductImpl.new_trait_named("GeometricProduct").blurb("TODO");
+pub static GeometricProduct: Elaborated<GeometricProductImpl> = GeometricProductImpl
+    .new_trait_named("GeometricProduct")
+    .blurb("TODO");
 
-pub static GeometricAntiProduct: Elaborated<GeometricAntiProductImpl> = GeometricAntiProductImpl.new_trait_named("GeometricAntiProduct").blurb("TODO");
+pub static GeometricAntiProduct: Elaborated<GeometricAntiProductImpl> = GeometricAntiProductImpl
+    .new_trait_named("GeometricAntiProduct")
+    .blurb("TODO");
 
-pub static Sandwich: Elaborated<SandwichImpl> = SandwichImpl.new_trait_named("Sandwich").blurb("TODO");
+pub static Sandwich: Elaborated<SandwichImpl> = SandwichImpl
+    .new_trait_named("Sandwich")
+    .blurb("TODO");
 
-pub static AntiSandwich: Elaborated<AntiSandwichImpl> = AntiSandwichImpl.new_trait_named("AntiSandwich").blurb("TODO");
+pub static AntiSandwich: Elaborated<AntiSandwichImpl> = AntiSandwichImpl
+    .new_trait_named("AntiSandwich")
+    .blurb("TODO");
 
-pub static ScalarProduct: Elaborated<ScalarProductImpl> = ScalarProductImpl.new_trait_named("ScalarProduct").blurb("TODO");
+pub static ScalarProduct: Elaborated<ScalarProductImpl> = ScalarProductImpl
+    .new_trait_named("ScalarProduct")
+    .blurb("TODO");
 
-pub static AntiScalarProduct: Elaborated<AntiScalarProductImpl> = AntiScalarProductImpl.new_trait_named("AntiScalarProduct").blurb("TODO");
+pub static AntiScalarProduct: Elaborated<AntiScalarProductImpl> = AntiScalarProductImpl
+    .new_trait_named("AntiScalarProduct")
+    .blurb("TODO");
 
-pub static BulkContraction: Elaborated<BulkContractionImpl> = BulkContractionImpl.new_trait_named("BulkContraction").blurb("TODO");
+pub static BulkContraction: Elaborated<BulkContractionImpl> = BulkContractionImpl
+    .new_trait_named("BulkContraction")
+    .blurb("TODO");
 
-pub static WeightContraction: Elaborated<WeightContractionImpl> = WeightContractionImpl.new_trait_named("WeightContraction").blurb("TODO");
+pub static WeightContraction: Elaborated<WeightContractionImpl> = WeightContractionImpl
+    .new_trait_named("WeightContraction")
+    .blurb("TODO");
 
-pub static BulkExpansion: Elaborated<BulkExpansionImpl> = BulkExpansionImpl.new_trait_named("BulkExpansion").blurb("TODO");
+pub static BulkExpansion: Elaborated<BulkExpansionImpl> = BulkExpansionImpl
+    .new_trait_named("BulkExpansion")
+    .blurb("TODO");
 
-pub static WeightExpansion: Elaborated<WeightExpansionImpl> = WeightExpansionImpl.new_trait_named("WeightExpansion").blurb("TODO");
+pub static WeightExpansion: Elaborated<WeightExpansionImpl> = WeightExpansionImpl
+    .new_trait_named("WeightExpansion")
+    .blurb("TODO");
 
-pub static Into: Elaborated<IntoImpl> = IntoImpl.new_trait_named("Into").blurb("TODO");
+pub static Into: Elaborated<IntoImpl> = IntoImpl
+    .new_trait_named("Into")
+    .blurb("TODO");
 
-pub static TryInto: Elaborated<TryIntoImpl> = TryIntoImpl.new_trait_named("TryInto").blurb("TODO");
+pub static TryInto: Elaborated<TryIntoImpl> = TryIntoImpl
+    .new_trait_named("TryInto")
+    .blurb("TODO");
 
 // NOTE: If you find yourself wanting to generate grade selection traits, you are
 // probably generating extremely wasteful implementations that perform a lot more

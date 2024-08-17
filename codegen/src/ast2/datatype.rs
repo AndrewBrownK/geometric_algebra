@@ -127,8 +127,7 @@ impl MultiVector {
         result
     }
 
-    pub fn construct_direct<A: AsRef<[(BasisElement, FloatExpr)]>>(&self, arr: A) -> MultiVectorExpr {
-        let arr = arr.as_ref();
+    pub fn construct_direct<const N: usize>(&self, arr: [(BasisElement, FloatExpr); N]) -> MultiVectorExpr {
         let mut vals: BTreeMap<BasisElement, FloatExpr> = arr.into_iter().collect();
         let result = self.construct(|el| {
             vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))

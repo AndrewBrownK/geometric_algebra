@@ -1,18 +1,16 @@
 #![allow(non_camel_case_types)]
 
-use async_trait::async_trait;
 use std::future::Future;
 use std::marker::PhantomData;
 use std::pin::Pin;
+
+use async_trait::async_trait;
 
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::MultiVec;
 use crate::ast2::datatype::{AnyClasses, MultiVector, Specifically};
 use crate::ast2::expressions::{Expression, TraitResultType};
-use crate::ast2::traits::{
-    HasNotReturned, ProvideTraitNames, TraitAlias, TraitDef_1Class_0Param, TraitDef_1Class_1Param, TraitDef_2Class_1Param, TraitDef_2Class_2Param, TraitImplBuilder, TraitImpl_10,
-    TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitKey, TraitNames,
-};
+use crate::ast2::traits::{HasNotReturned, ProvideTraitNames, TraitAlias, TraitDef_1Class_0Param, TraitDef_1Class_1Param, TraitDef_2Class_1Param, TraitDef_2Class_2Param, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder, TraitKey, TraitNames};
 use crate::ast2::Variable;
 
 #[derive(Clone, Copy)]
@@ -253,7 +251,6 @@ impl<Impl: TraitImpl_10> TraitDef_1Class_0Param for InlineOnly<Impl> {
 #[async_trait]
 impl<Impl: TraitImpl_11> TraitImpl_11 for InlineOnly<Impl> {
     type Output = Impl::Output;
-
     async fn general_implementation<const AntiScalar: BasisElement>(
         self,
         b: TraitImplBuilder<AntiScalar, HasNotReturned>,
@@ -347,6 +344,7 @@ impl<Impl: TraitImpl_22> TraitDef_2Class_2Param for InlineOnly<Impl> {
         return Some(<Self::Output as TraitResultType>::inlined_expr_22(return_as_var));
     }
 }
+
 pub type SpecializedImpl_10<const AntiScalar: BasisElement, Output> = &'static (dyn Fn(TraitImplBuilder<AntiScalar, HasNotReturned>, MultiVector) -> Pin<Box<dyn Future<Output = Option<TraitImplBuilder<AntiScalar, Output>>> + Send>>
               + Send
               + Sync);
@@ -663,5 +661,114 @@ where
     ) -> Specialized_22<AntiScalar, Output> {
         let trait_names: TraitNames = ProvideTraitNames::trait_names(self);
         Specialized_22(trait_names, owner, other, PhantomData, the_impl)
+    }
+}
+
+#[derive(Clone, Copy)]
+pub struct OvertDelegate<Impl> {
+    name: &'static str,
+    the_impl: Impl,
+}
+impl<Impl: Copy> OvertDelegate<Impl> {
+    pub const fn new(name: &'static str, the_impl: Impl) -> Self {
+        OvertDelegate { name, the_impl }
+    }
+}
+
+impl<Impl> const ProvideTraitNames for OvertDelegate<Impl> {
+    fn trait_names(&self) -> TraitNames {
+        TraitNames::just(self.name)
+    }
+}
+#[async_trait]
+impl<Impl: TraitDef_1Class_0Param> TraitImpl_10 for OvertDelegate<Impl> {
+    type Output = Impl::Output;
+    async fn general_implementation<const AntiScalar: BasisElement>(
+        self,
+        mut b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        owner: MultiVector,
+    ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+        let result = self.the_impl.invoke(&mut b, owner).await?;
+        b.return_expr(result)
+    }
+}
+#[async_trait]
+impl<Impl: TraitDef_1Class_0Param> TraitDef_1Class_0Param for OvertDelegate<Impl> {
+    type Owner = AnyClasses;
+    fn general_documentation(&self) -> String {
+        String::new()
+    }
+    fn domain(&self) -> Self::Owner {
+        self.domain()
+    }
+}
+#[async_trait]
+impl<Impl: TraitDef_1Class_1Param> TraitImpl_11 for OvertDelegate<Impl> {
+    type Output = Impl::Output;
+    async fn general_implementation<const AntiScalar: BasisElement>(
+        self,
+        mut b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        slf: Variable<MultiVector>,
+    ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+        let result = self.the_impl.invoke(&mut b, slf).await?;
+        b.return_expr(result)
+    }
+}
+#[async_trait]
+impl<Impl: TraitDef_1Class_1Param> TraitDef_1Class_1Param for OvertDelegate<Impl> {
+    type Owner = Impl::Owner;
+    fn general_documentation(&self) -> String {
+        String::new()
+    }
+    fn domain(&self) -> Self::Owner {
+        self.domain()
+    }
+}
+#[async_trait]
+impl<Impl: TraitDef_2Class_1Param> TraitImpl_21 for OvertDelegate<Impl> {
+    type Output = Impl::Output;
+    async fn general_implementation<const AntiScalar: BasisElement>(
+        self,
+        mut b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        slf: Variable<MultiVector>,
+        other: MultiVector,
+    ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+        let result = self.the_impl.invoke(&mut b, slf, other).await?;
+        b.return_expr(result)
+    }
+}
+#[async_trait]
+impl<Impl: TraitDef_2Class_1Param> TraitDef_2Class_1Param for OvertDelegate<Impl> {
+    type Owner = Impl::Owner;
+    type Other = Impl::Other;
+    fn general_documentation(&self) -> String {
+        String::new()
+    }
+    fn domain(&self) -> (Self::Owner, Self::Other) {
+        self.domain()
+    }
+}
+#[async_trait]
+impl<Impl: TraitDef_2Class_2Param> TraitImpl_22 for OvertDelegate<Impl> {
+    type Output = Impl::Output;
+    async fn general_implementation<const AntiScalar: BasisElement>(
+        self,
+        mut b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        slf: Variable<MultiVector>,
+        other: Variable<MultiVector>,
+    ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+        let result = self.the_impl.invoke(&mut b, slf, other).await?;
+        b.return_expr(result)
+    }
+}
+#[async_trait]
+impl<Impl: TraitDef_2Class_2Param> TraitDef_2Class_2Param for OvertDelegate<Impl> {
+    type Owner = Impl::Owner;
+    type Other = Impl::Other;
+    fn general_documentation(&self) -> String {
+        String::new()
+    }
+    fn domain(&self) -> (Self::Owner, Self::Other) {
+        self.domain()
     }
 }

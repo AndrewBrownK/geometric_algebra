@@ -349,6 +349,9 @@ postgres-types = "0.2.7""#
                 writeln!(&mut file, "use crate::data::*;")?;
                 writeln!(&mut file, "use crate::simd::*;")?;
                 self.declare_multi_vector(&mut file, multi_vec, doc)?;
+                // TODO detect and then include a manual-impls file
+                //  This could be useful for stuff like the geometric constraint, and custom
+                //  constructors/builders
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
                 tx3.send(file_path)?;
                 pb2.inc(1);
@@ -406,6 +409,8 @@ postgres-types = "0.2.7""#
             trait_mods.entry(arity).and_modify(|v| v.push(td.clone())).or_insert(vec![td.clone()]);
             let folder_traits = folder_traits.clone();
             match n.as_str() {
+                "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr"
+                | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => continue,
                 "Into" | "TryInto" => continue,
                 _ => {}
             }
@@ -432,7 +437,8 @@ postgres-types = "0.2.7""#
         for i in impls {
             let k = i.definition.names.trait_key;
             let (folder, name) = match k.as_upper_camel().as_str() {
-                "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr" | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => {
+                "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr"
+                | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => {
                     let ExpressionType::Class(mv) = i.owner else { continue };
                     let n = TraitKey::new(mv.name()).as_lower_snake();
                     ("data", n)
@@ -1782,14 +1788,29 @@ impl std::hash::Hash for {ucc} {{
 
     fn declare_trait_impl<W: Write>(&self, w: &mut W, impls: Arc<RawTraitImplementation>, already_granted_infix: &mut BTreeSet<&'static str>) -> anyhow::Result<()> {
         let def = &impls.definition;
-        let ucc = def.names.trait_key.as_upper_camel();
-        let lsc = def.names.trait_key.as_lower_snake();
+
         let output_kind = def.output.read();
         let output_ty = impls.return_expr.expression_type();
         let owner_ty = &impls.owner;
         if impls.other_var_params.len() > 1 || impls.other_type_params.len() > 1 {
             bail!("We do not support high arity traits yet");
         }
+
+
+        let op = def.op.lock().clone();
+        let ucc = def.names.trait_key.as_upper_camel();
+        let mut lsc = def.names.trait_key.as_lower_snake();
+        let mut do_assign_impl = false;
+        if let Some(op) = op {
+            if op.rust_trait_name() == ucc.as_str() {
+                lsc = op.rust_trait_method().to_string();
+                do_assign_impl = def.arity == TraitArity::Two && *owner_ty == output_ty;
+            }
+        }
+        let lsc = lsc;
+        let do_assign_impl = do_assign_impl;
+
+
         let mut var_param = None;
         if !impls.other_var_params.is_empty() {
             let ty_param = &impls.other_type_params[0];
@@ -1956,6 +1977,70 @@ impl std::hash::Hash for {ucc} {{
         self.write_expression(w, &impls.return_expr)?;
         writeln!(w, ";")?;
         writeln!(w, "    }}\n}}")?;
+
+
+
+        if !do_assign_impl {
+            return Ok(());
+        }
+
+
+
+        write!(w, "impl {ucc}Assign")?;
+        if let (TraitArity::Two, Some(var_param)) = (def.arity, var_param) {
+            write!(w, "<")?;
+            self.write_type(w, *var_param)?;
+            write!(w, ">")?;
+        }
+        write!(w, " for ")?;
+        self.write_type(w, *owner_ty)?;
+        writeln!(w, " {{")?;
+
+        write!(w, "    fn {lsc}_assign(")?;
+        match (def.arity, var_param) {
+            (TraitArity::Zero, _) => {}
+            (TraitArity::One, _) => write!(w, "&mut self")?,
+            (TraitArity::Two, Some(other_ty)) => {
+                write!(w, "&mut self, other: ")?;
+                self.write_type(w, *other_ty)?;
+            }
+            _ => panic!("Arity 2 should always have other type"),
+        }
+        writeln!(w, ") {{")?;
+        if impls.statistics.basis_element_struct_access {
+            writeln!(w, "        use crate::elements::*;")?;
+        }
+        for line in impls.lines.iter() {
+            match line {
+                CommentOrVariableDeclaration::Comment(c) => {
+                    self.emit_comment(w, false, c.to_string())?;
+                }
+                CommentOrVariableDeclaration::VarDec(var_dec) => {
+                    let Some(expr) = &var_dec.expr else { continue };
+                    if let Some(c) = &var_dec.comment {
+                        self.emit_comment(w, false, c.to_string())?;
+                    }
+                    let name = var_dec.name.0.to_string();
+                    let mut no = var_dec.name.1;
+                    if no == 0 {
+                        write!(w, "let {name} = ")?;
+                    } else {
+                        no += 1;
+                        write!(w, "let {name}_{no} = ")?;
+                    }
+                    self.write_expression(w, expr)?;
+                    writeln!(w, ";")?;
+                }
+            }
+        }
+        if let Some(c) = &impls.return_comment {
+            self.emit_comment(w, false, c.to_string())?;
+        }
+        write!(w, "        *self = ")?;
+        self.write_expression(w, &impls.return_expr)?;
+        writeln!(w, ";")?;
+        writeln!(w, "    }}\n}}")?;
+
         Ok(())
     }
 

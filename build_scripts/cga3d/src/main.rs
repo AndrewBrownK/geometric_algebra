@@ -60,8 +60,8 @@ fn main() {
         // TODO do CGA expansion/contraction, not naive flat ones
         // BulkExpansion BulkContraction WeightExpansion WeightContraction
     };
-    codegen::operators! { traits;
-        infix => Div;
+    codegen::operators! { repo, traits;
+        fancy_infix => Div;
 
         binary
         Add => Addition,

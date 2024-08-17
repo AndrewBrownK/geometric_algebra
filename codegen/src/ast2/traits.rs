@@ -4,6 +4,7 @@ use std::ops::Deref;
 use std::sync::Arc;
 
 use async_trait::async_trait;
+use indicatif::MultiProgress;
 use lazy_static::lazy_static;
 use parking_lot::{Mutex, RwLock};
 use regex::Regex;
@@ -15,7 +16,7 @@ use crate::algebra2::multivector::{DynamicMultiVector, MultiVecRepository};
 use crate::ast2::{RawVariableDeclaration, Variable};
 use crate::ast2::datatype::{ClassesFromRegistry, ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, Expression, extract_multivector_expr, MultiVectorExpr, TraitResultType};
-use crate::ast2::impls::Elaborated;
+use crate::ast2::impls::{Elaborated, InlineOnly, OvertDelegate};
 use crate::ast2::operations_tracker::{TrackOperations, TraitOperationsLookup, VectoredOperationsTracker};
 use crate::utility::AsyncMap;
 
@@ -54,7 +55,7 @@ impl TraitTypeConsensus {
 
 pub type TraitParam = ExpressionType;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub enum TraitArity {
     Zero,
     One,
@@ -882,6 +883,27 @@ pub enum UnaryOps {
     Neg,
     Not,
 }
+impl UnaryOps {
+    pub fn rust_trait_name(self) -> &'static str {
+        match self {
+            UnaryOps::Neg => "Neg",
+            UnaryOps::Not => "Not",
+        }
+    }
+    pub fn rust_trait_method(self) -> &'static str {
+        match self {
+            UnaryOps::Neg => "neg",
+            UnaryOps::Not => "not",
+        }
+    }
+    pub fn rust_operator(self) -> &'static str {
+        match self {
+            UnaryOps::Neg => "-",
+            UnaryOps::Not => "!",
+        }
+    }
+}
+
 #[repr(u32)]
 #[derive(PartialEq, Eq, Clone, Copy, Debug, PartialOrd, Ord, Hash)]
 pub enum BinaryOps {
@@ -921,9 +943,9 @@ impl BinaryOps {
             BinaryOps::Div => "div",
             BinaryOps::Shl => "shl",
             BinaryOps::Shr => "shr",
-            BinaryOps::BitAnd => "bit_and",
-            BinaryOps::BitOr => "bit_or",
-            BinaryOps::BitXor => "bit_xor",
+            BinaryOps::BitAnd => "bitand",
+            BinaryOps::BitOr => "bitor",
+            BinaryOps::BitXor => "bitxor",
         }
     }
 
@@ -965,6 +987,24 @@ impl Ops {
         match self {
             Ops::Unary(o) => o as u32,
             Ops::Binary(o) => (o as u32) + 2,
+        }
+    }
+    pub fn rust_trait_name(self) -> &'static str {
+        match self {
+            Ops::Unary(op) => op.rust_trait_name(),
+            Ops::Binary(op) => op.rust_trait_name(),
+        }
+    }
+    pub fn rust_trait_method(self) -> &'static str {
+        match self {
+            Ops::Unary(op) => op.rust_trait_method(),
+            Ops::Binary(op) => op.rust_trait_method(),
+        }
+    }
+    pub fn rust_operator(self) -> &'static str {
+        match self {
+            Ops::Unary(op) => op.rust_operator(),
+            Ops::Binary(op) => op.rust_operator(),
         }
     }
 }
@@ -1016,8 +1056,11 @@ impl TraitImplRegistry {
         }
     }
 
-    pub fn set_binary_operator<TD: TraitDef_2Class_2Param>(&self, op: BinaryOps, td: TD) {
+    pub fn set_binary_operator<TD: TraitDef_2Class_2Param, const AntiScalar: BasisElement>(
+        &self, repo: Arc<MultiVecRepository<AntiScalar>>, op: BinaryOps, td: TD
+    ) {
         let mut set_ops = self.has_set_operators.lock();
+        let op_key = op.rust_trait_name();
         let op = Ops::Binary(op);
         if set_ops.contains(&op) {
             panic!("There was an attempt to set an operator's trait more than once: {op:?}")
@@ -1027,10 +1070,24 @@ impl TraitImplRegistry {
 
         let rt = tokio::runtime::Runtime::new().expect("Tokio must work");
         let tdr = self.defs.clone();
+        let slf = self.clone();
+        let multi_progress = Arc::new(MultiProgress::new());
         rt.block_on(async move {
-            let def = td.def();
-            let key = def.names.trait_key;
-            let def = tdr.traits22.get_or_create_or_panic(key, async move { def }).await;
+            // Check if the trait has already been registered.
+            // If it has, then the operator will overtly delegate to it.
+            // If it hasn't, then we will inline the trait, so that it doesn't have to be declared separately.
+            let orig_key = td.def().names.trait_key;
+            let orig_td = tdr.traits22.get(&orig_key).await;
+            let key = if orig_td.is_none() {
+                let td = OvertDelegate::new(op_key, InlineOnly::new(orig_key.final_name, td));
+                td.register(slf, repo, multi_progress).await;
+                td.trait_names().trait_key
+            } else {
+                let td = OvertDelegate::new(op_key, td);
+                td.register(slf, repo, multi_progress).await;
+                td.trait_names().trait_key
+            };
+            let def = tdr.traits22.get(&key).await.expect("Created during registration");
             let mut the_op = def.op.lock();
             if the_op.is_some() {
                 // Shouldn't really happen because of previous panic/check in this function
@@ -1043,8 +1100,11 @@ impl TraitImplRegistry {
         });
     }
 
-    pub fn set_unary_operator<TD: TraitDef_1Class_1Param>(&self, op: UnaryOps, td: TD) {
+    pub fn set_unary_operator<TD: TraitDef_1Class_1Param, const AntiScalar: BasisElement>(
+        &self, repo: Arc<MultiVecRepository<AntiScalar>>, op: UnaryOps, td: TD
+    ) {
         let mut set_ops = self.has_set_operators.lock();
+        let op_key = op.rust_trait_name();
         let op = Ops::Unary(op);
         if set_ops.contains(&op) {
             panic!("There was an attempt to set an operator's trait more than once: {op:?}")
@@ -1054,10 +1114,24 @@ impl TraitImplRegistry {
 
         let rt = tokio::runtime::Runtime::new().expect("Tokio must work");
         let tdr = self.defs.clone();
+        let slf = self.clone();
+        let multi_progress = Arc::new(MultiProgress::new());
         rt.block_on(async move {
-            let def = td.def();
-            let key = def.names.trait_key;
-            let def = tdr.traits11.get_or_create_or_panic(key, async move { def }).await;
+            // Check if the trait has already been registered.
+            // If it has, then the operator will overtly delegate to it.
+            // If it hasn't, then we will inline the trait, so that it doesn't have to be declared separately.
+            let orig_key = td.def().names.trait_key;
+            let orig_td = tdr.traits22.get(&orig_key).await;
+            let key = if orig_td.is_none() {
+                let td = OvertDelegate::new(op_key, InlineOnly::new(orig_key.final_name, td));
+                td.register(slf, repo, multi_progress).await;
+                td.trait_names().trait_key
+            } else {
+                let td = OvertDelegate::new(op_key, td);
+                td.register(slf, repo, multi_progress).await;
+                td.trait_names().trait_key
+            };
+            let def = tdr.traits11.get(&key).await.expect("Created during registration");
             let mut the_op = def.op.lock();
             if the_op.is_some() {
                 // Shouldn't really happen because of previous panic/check in this function
@@ -1137,11 +1211,21 @@ pub(crate) fn progress_style() -> indicatif::ProgressStyle {
 
 #[async_trait]
 pub trait Register10: TraitDef_1Class_0Param {
-    async fn register<const AntiScalar: BasisElement>(self, tr: TraitImplRegistry, mvs: Arc<MultiVecRepository<AntiScalar>>, progress: Arc<indicatif::MultiProgress>);
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tr: TraitImplRegistry,
+        mvs: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
+    );
 }
 #[async_trait]
 impl<T: TraitDef_1Class_0Param> Register10 for T {
-    async fn register<const AntiScalar: BasisElement>(self, tir: TraitImplRegistry, mv_repo: Arc<MultiVecRepository<AntiScalar>>, progress: Arc<indicatif::MultiProgress>) {
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tir: TraitImplRegistry,
+        mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
+    ) {
         let ga = mv_repo.ga();
         let trait_key = self.trait_names().trait_key;
         let def = tir.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
@@ -1191,11 +1275,21 @@ impl<T: TraitDef_1Class_0Param> Register10 for T {
 }
 #[async_trait]
 pub trait Register11: TraitDef_1Class_1Param {
-    async fn register<const AntiScalar: BasisElement>(self, tir: TraitImplRegistry, mv_repo: Arc<MultiVecRepository<AntiScalar>>, progress: Arc<indicatif::MultiProgress>);
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tir: TraitImplRegistry,
+        mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
+    );
 }
 #[async_trait]
 impl<T: TraitDef_1Class_1Param> Register11 for T {
-    async fn register<const AntiScalar: BasisElement>(self, tir: TraitImplRegistry, mv_repo: Arc<MultiVecRepository<AntiScalar>>, progress: Arc<indicatif::MultiProgress>) {
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tir: TraitImplRegistry,
+        mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
+    ) {
         let ga = mv_repo.ga();
         let trait_key = self.trait_names().trait_key;
         let def = tir.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
@@ -1251,11 +1345,21 @@ impl<T: TraitDef_1Class_1Param> Register11 for T {
 }
 #[async_trait]
 pub trait Register21: TraitDef_2Class_1Param {
-    async fn register<const AntiScalar: BasisElement>(self, tir: TraitImplRegistry, mv_repo: Arc<MultiVecRepository<AntiScalar>>, progress: Arc<indicatif::MultiProgress>);
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tir: TraitImplRegistry,
+        mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
+    );
 }
 #[async_trait]
 impl<T: TraitDef_2Class_1Param> Register21 for T {
-    async fn register<const AntiScalar: BasisElement>(self, tir: TraitImplRegistry, mv_repo: Arc<MultiVecRepository<AntiScalar>>, progress: Arc<indicatif::MultiProgress>) {
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tir: TraitImplRegistry,
+        mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
+    ) {
         let ga = mv_repo.ga();
         let trait_key = self.trait_names().trait_key;
         let def = tir.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
@@ -1316,11 +1420,21 @@ impl<T: TraitDef_2Class_1Param> Register21 for T {
 }
 #[async_trait]
 pub trait Register22: TraitDef_2Class_2Param {
-    async fn register<const AntiScalar: BasisElement>(self, tir: TraitImplRegistry, mv_repo: Arc<MultiVecRepository<AntiScalar>>, progress: Arc<indicatif::MultiProgress>);
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tir: TraitImplRegistry,
+        mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
+    );
 }
 #[async_trait]
 impl<T: TraitDef_2Class_2Param> Register22 for T {
-    async fn register<const AntiScalar: BasisElement>(self, tir: TraitImplRegistry, mv_repo: Arc<MultiVecRepository<AntiScalar>>, progress: Arc<indicatif::MultiProgress>) {
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tir: TraitImplRegistry,
+        mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
+    ) {
         let ga = mv_repo.ga();
         let trait_key = self.trait_names().trait_key;
         let def = tir.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
@@ -1333,6 +1447,7 @@ impl<T: TraitDef_2Class_2Param> Register22 for T {
         pb.set_message(format!("AST - {n}"));
 
         let mut js = JoinSet::new();
+        // TODO actually restrict by the domain on the TraitDefs
         for mv_a in mv_repo.all_classes() {
             for mv_b in mv_repo.all_classes() {
                 let tir_2 = tir.clone();
@@ -1438,17 +1553,17 @@ macro_rules! register_all {
 
 #[macro_export]
 macro_rules! operators {
-    ($tir:ident $(; infix => $itr:ident)? $(; binary $($bop:ident => $btr:ident),+)? $(; unary $($uop:ident => $utr:ident),+ )? $(;)? ) => {
+    ($mv_repo:expr, $tir:ident $(; fancy_infix => $itr:ident)? $(; binary $($bop:ident => $btr:ident),+)? $(; unary $($uop:ident => $utr:ident),+ )? $(;)? ) => {
         {
             use $crate::build_scripts2::common_traits::*;
             use $crate::ast2::traits::BinaryOps::*;
             use $crate::ast2::traits::UnaryOps::*;
             $($tir.generate_infix_trick($itr);)?
             $($(
-                $tir.set_binary_operator($bop, $btr);
+                $tir.set_binary_operator($mv_repo.clone(), $bop, $btr);
             )+)?
             $($(
-                $tir.set_unary_operator($uop, $utr);
+                $tir.set_unary_operator($mv_repo.clone(), $uop, $utr);
             )+)?
         }
     };
@@ -1456,14 +1571,14 @@ macro_rules! operators {
 
 pub struct HasNotReturned;
 
-fn param_self() -> Arc<RawVariableDeclaration> {
+pub(crate) fn param_self() -> Arc<RawVariableDeclaration> {
     Arc::new(RawVariableDeclaration {
         comment: None,
         name: ("self".to_string(), 0),
         expr: None,
     })
 }
-fn param_other() -> Arc<RawVariableDeclaration> {
+pub(crate) fn param_other() -> Arc<RawVariableDeclaration> {
     Arc::new(RawVariableDeclaration {
         comment: None,
         name: ("other".to_string(), 0),

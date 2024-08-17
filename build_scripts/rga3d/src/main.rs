@@ -38,10 +38,12 @@ fn main() {
         |
         Wedge AntiWedge GeometricProduct GeometricAntiProduct Sandwich AntiSandwich
     };
-    codegen::operators! { traits;
-        infix => Div;
+    codegen::operators! { repo, traits;
+        fancy_infix => Div;
 
         binary
+        Add => Addition,
+        Sub => Subtraction,
         BitXor => Wedge,
         Mul => GeometricProduct;
 
