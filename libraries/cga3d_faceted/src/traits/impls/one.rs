@@ -4,6 +4,50 @@
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+impl One for AntiCircleRotor {
+    fn one() -> Self {
+        return AntiCircleRotor::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+        );
+    }
+}
+impl One for AntiCircleRotorAligningOrigin {
+    fn one() -> Self {
+        return AntiCircleRotorAligningOrigin::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e15, e25, e35, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+        );
+    }
+}
+impl One for AntiCircleRotorAligningOriginAtInfinity {
+    fn one() -> Self {
+        return AntiCircleRotorAligningOriginAtInfinity::from_groups(
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e15, e25, e35, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+        );
+    }
+}
+impl One for AntiCircleRotorAtInfinity {
+    fn one() -> Self {
+        return AntiCircleRotorAtInfinity::from_groups(/* e23, e31, e12, e45 */ Simd32x4::from(0.0), /* e15, e25, e35, scalar */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]));
+    }
+}
+impl One for AntiCircleRotorOnOrigin {
+    fn one() -> Self {
+        return AntiCircleRotorOnOrigin::from_groups(/* e41, e42, e43, scalar */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e23, e31, e12 */ Simd32x3::from(0.0));
+    }
+}
 impl One for AntiDualNum {
     fn one() -> Self {
         return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([0.0, 1.0]));

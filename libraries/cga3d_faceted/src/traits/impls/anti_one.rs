@@ -9,6 +9,60 @@ impl AntiOne for AntiScalar {
         return AntiScalar::from_groups(/* e12345 */ 1.0);
     }
 }
+impl AntiOne for CircleRotor {
+    fn anti_one() -> Self {
+        return CircleRotor::from_groups(
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e235, e315, e125, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+        );
+    }
+}
+impl AntiOne for CircleRotorAligningOrigin {
+    fn anti_one() -> Self {
+        return CircleRotorAligningOrigin::from_groups(
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e415, e425, e435
+            Simd32x3::from(0.0),
+            // e235, e315, e125, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+        );
+    }
+}
+impl AntiOne for CircleRotorAligningOriginAtInfinity {
+    fn anti_one() -> Self {
+        return CircleRotorAligningOriginAtInfinity::from_groups(
+            // e415, e425, e435
+            Simd32x3::from(0.0),
+            // e235, e315, e125, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+        );
+    }
+}
+impl AntiOne for CircleRotorAtInfinity {
+    fn anti_one() -> Self {
+        return CircleRotorAtInfinity::from_groups(
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e235, e315, e125, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+        );
+    }
+}
+impl AntiOne for CircleRotorOnOrigin {
+    fn anti_one() -> Self {
+        return CircleRotorOnOrigin::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            // e415, e425, e435
+            Simd32x3::from(0.0),
+        );
+    }
+}
 impl AntiOne for DualNum {
     fn anti_one() -> Self {
         return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([0.0, 1.0]));

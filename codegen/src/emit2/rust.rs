@@ -402,6 +402,9 @@ postgres-types = "0.2.7""#
         let mut trait_mods: BTreeMap<String, Vec<_>> = BTreeMap::new();
         for td in defs.iter() {
             let td = td.clone();
+            if let TraitTypeConsensus::NoVotes = *td.output.read() {
+                continue
+            }
             let k = td.names.trait_key;
             let n = k.as_upper_camel();
             let lsc = k.as_lower_snake();
@@ -432,7 +435,7 @@ postgres-types = "0.2.7""#
             });
         }
 
-        let mut impl_files: HashMap<String, (Vec<Arc<RawTraitImplementation>>, Vec<TraitKey>)> = HashMap::new();
+        let mut impl_files: HashMap<String, (Vec<Arc<RawTraitImplementation>>, BTreeSet<TraitKey>)> = HashMap::new();
 
         for i in impls {
             let k = i.definition.names.trait_key;
@@ -451,9 +454,13 @@ postgres-types = "0.2.7""#
                 _ => ("traits", k.as_lower_snake()),
             };
             let i2 = i.clone();
-            impl_files.entry(format!("{folder}/impls/{name}.rs")).and_modify(move |(v, _)| v.push(i2)).or_insert_with(|| {
-                let mut t_deps: Vec<_> = i.definition.dependencies.lock().iter().cloned().collect();
-                t_deps.sort();
+            impl_files.entry(format!("{folder}/impls/{name}.rs")).and_modify(move |(v, deps)| {
+                for t_dep in i2.definition.dependencies.lock().iter().cloned() {
+                    deps.insert(t_dep);
+                };
+                v.push(i2);
+            }).or_insert_with(|| {
+                let mut t_deps: BTreeSet<_> = i.definition.dependencies.lock().iter().cloned().collect();
                 (vec![i], t_deps)
             });
             impls_pb.inc(1);
@@ -471,10 +478,15 @@ postgres-types = "0.2.7""#
 
                 let qty_impls = impls.len() as u64;
                 let qty_deps = deps.len() as u64;
-                let pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_impls + qty_deps + 2)));
-                pb.set_style(progress_style());
-                let fpd = file_path.display();
-                pb.set_message(format!("Rust - {fpd}"));
+                let mut pb = None;
+                if qty_impls > 100 {
+                    pb = Some(Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_impls + qty_deps + 2))));
+                }
+                if let Some(pb) = &pb {
+                    pb.set_style(progress_style());
+                    let fpd = file_path.display();
+                    pb.set_message(format!("Rust - {fpd}"));
+                }
 
                 tx2.send(file_path.clone())?;
                 let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
@@ -488,10 +500,14 @@ postgres-types = "0.2.7""#
                         let ucc = dep.as_upper_camel();
                         writeln!(&mut file, "use crate::traits::{ucc};")?;
                     }
-                    pb.inc(1);
+                    if let Some(pb) = &pb {
+                        pb.inc(1);
+                    }
                 }
                 sort_trait_impls(&mut impls, deps_set)?;
-                pb.inc(1);
+                if let Some(pb) = &pb {
+                    pb.inc(1);
+                }
 
                 writeln!(&mut file, "// Note on Operative Statistics: ")?;
                 writeln!(&mut file, "// Operative Statistics are not a precise predictor of performance or performance comparisons. ")?;
@@ -510,11 +526,15 @@ postgres-types = "0.2.7""#
                         "TryInto" => self.write_trait_try_from(&mut file, i),
                         _ => self.declare_trait_impl(&mut file, i, &mut already_granted_infix),
                     }?;
-                    pb.inc(1);
+                    if let Some(pb) = &pb {
+                        pb.inc(1);
+                    }
                 }
                 tx3.send(file_path)?;
-                pb.inc(1);
-                pb.finish_and_clear();
+                if let Some(pb) = &pb {
+                    pb.inc(1);
+                    pb.finish_and_clear();
+                }
                 Ok(())
             });
         }
@@ -559,37 +579,26 @@ postgres-types = "0.2.7""#
                     let lsc = n.as_lower_snake();
                     let n = n.as_upper_camel();
                     match n.as_str() {
+                        "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr"
+                        | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => continue,
                         "Into" | "TryInto" => continue,
                         _ => {}
                     }
                     writeln!(&mut file, "pub use crate::traits::{lsc}::{n};")?;
-                    if fancy_infix.is_some() {
-                        match t.arity {
-                            TraitArity::Zero => {}
-                            TraitArity::One => {
-                                writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc};")?;
-                            }
-                            TraitArity::Two => {
-                                writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc};")?;
-                                writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc}_partial;")?;
-                            }
-                        }
-                    }
                 }
                 writeln!(&mut file, "}}")?;
             }
-            for td in defs.iter() {
-                let td = td.clone();
-                let k = td.names.trait_key;
-                let n = k.as_upper_camel();
-                let lsc = k.as_lower_snake();
-                match n.as_str() {
-                    "Into" | "TryInto" => continue,
-                    _ => {}
-                }
-                writeln!(&mut file, "mod {lsc};")?;
-                writeln!(&mut file, "pub use {lsc}::{n};")?;
-                if fancy_infix.is_some() {
+            if fancy_infix.is_some() {
+                writeln!(&mut file, "pub mod infix {{")?;
+                for td in defs.iter() {
+                    let n = td.names.trait_key.as_upper_camel();
+                    match n.as_str() {
+                        "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr"
+                        | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => continue,
+                        "Into" | "TryInto" => continue,
+                        _ => {}
+                    }
+                    let lsc = td.names.trait_key.as_lower_snake();
                     match td.arity {
                         TraitArity::Zero => {}
                         TraitArity::One => {
@@ -601,6 +610,21 @@ postgres-types = "0.2.7""#
                         }
                     }
                 }
+                writeln!(&mut file, "}}")?;
+            }
+            for td in defs.iter() {
+                let td = td.clone();
+                let k = td.names.trait_key;
+                let n = k.as_upper_camel();
+                let lsc = k.as_lower_snake();
+                match n.as_str() {
+                    "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr"
+                    | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => continue,
+                    "Into" | "TryInto" => continue,
+                    _ => {}
+                }
+                writeln!(&mut file, "mod {lsc};")?;
+                writeln!(&mut file, "pub use {lsc}::{n};")?;
             }
             tx3.send(file_path)?;
             Ok(())
@@ -1801,12 +1825,18 @@ impl std::hash::Hash for {ucc} {{
         let ucc = def.names.trait_key.as_upper_camel();
         let mut lsc = def.names.trait_key.as_lower_snake();
         let mut do_assign_impl = false;
+        let mut is_op = false;
+        let mut module = "";
         if let Some(op) = op {
             if op.rust_trait_name() == ucc.as_str() {
+                is_op = true;
+                module = op.rust_mod();
                 lsc = op.rust_trait_method().to_string();
                 do_assign_impl = def.arity == TraitArity::Two && *owner_ty == output_ty;
             }
         }
+        let module = module;
+        let is_op = is_op;
         let lsc = lsc;
         let do_assign_impl = do_assign_impl;
 
@@ -1825,7 +1855,7 @@ impl std::hash::Hash for {ucc} {{
         if let TraitArity::Two = def.arity {
             if let TraitParam::Class(mv) = &owner_ty {
                 let n = mv.name();
-                if !already_granted_infix.contains(n) {
+                if !is_op && !already_granted_infix.contains(n) {
                     already_granted_infix.insert(n);
                     writeln!(w, "impl Infix{ucc} for {n} {{}}")?;
                 }
@@ -1833,7 +1863,7 @@ impl std::hash::Hash for {ucc} {{
         }
 
         // todo alias documentation
-        write!(w, "impl {ucc}")?;
+        write!(w, "impl {module}{ucc}")?;
         if let (TraitArity::Two, Some(var_param)) = (def.arity, var_param) {
             write!(w, "<")?;
             self.write_type(w, *var_param)?;
@@ -1986,7 +2016,7 @@ impl std::hash::Hash for {ucc} {{
 
 
 
-        write!(w, "impl {ucc}Assign")?;
+        write!(w, "impl {module}{ucc}Assign")?;
         if let (TraitArity::Two, Some(var_param)) = (def.arity, var_param) {
             write!(w, "<")?;
             self.write_type(w, *var_param)?;

@@ -19,6 +19,160 @@ impl Dual for AntiCircleOnOrigin {
         );
     }
 }
+impl Dual for AntiCircleRotor {
+    type Output = CircleRotor;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        6        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        7        0
+    //  no simd        0        9        0
+    fn dual(self) -> Self::Output {
+        return CircleRotor::from_groups(
+            // e423, e431, e412
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            // e235, e315, e125, e12345
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+        );
+    }
+}
+impl Dual for AntiCircleRotorAligningOrigin {
+    type Output = CircleRotorAligningOrigin;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        9        0
+    fn dual(self) -> Self::Output {
+        return CircleRotorAligningOrigin::from_groups(
+            // e423, e431, e412
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e415, e425, e435
+            (self.group1() * Simd32x3::from(-1.0)),
+            // e235, e315, e125, e12345
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+        );
+    }
+}
+impl Dual for AntiCircleRotorAligningOriginAtInfinity {
+    type Output = CircleRotorAligningOriginAtInfinity;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        6        0
+    fn dual(self) -> Self::Output {
+        return CircleRotorAligningOriginAtInfinity::from_groups(
+            // e415, e425, e435
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e235, e315, e125, e12345
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+        );
+    }
+}
+impl Dual for AntiCircleRotorAtInfinity {
+    type Output = CircleRotorAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        6        0
+    fn dual(self) -> Self::Output {
+        return CircleRotorAtInfinity::from_groups(
+            // e415, e425, e435, e321
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e235, e315, e125, e12345
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+        );
+    }
+}
+impl Dual for AntiCircleRotorOnOrigin {
+    type Output = CircleRotorOnOrigin;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        6        0
+    fn dual(self) -> Self::Output {
+        return CircleRotorOnOrigin::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e415, e425, e435
+            (self.group1() * Simd32x3::from(-1.0)),
+        );
+    }
+}
+impl Dual for AntiDipoleInversion {
+    type Output = DipoleInversion;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn dual(self) -> Self::Output {
+        return DipoleInversion::from_groups(
+            // e41, e42, e43
+            self.group0(),
+            // e23, e31, e12, e45
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] * -1.0)]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] * -1.0)]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] * -1.0)]),
+        );
+    }
+}
+impl Dual for AntiDipoleInversionAtInfinity {
+    type Output = DipoleInversionAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn dual(self) -> Self::Output {
+        return DipoleInversionAtInfinity::from_groups(
+            // e23, e31, e12, e45
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
+            // e15, e25, e35
+            self.group1(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] * -1.0)]),
+        );
+    }
+}
+impl Dual for AntiDipoleInversionOnOrigin {
+    type Output = DipoleInversionOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn dual(self) -> Self::Output {
+        return DipoleInversionOnOrigin::from_groups(
+            // e41, e42, e43, e45
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([(self.group1()[0] * -1.0), self.group1()[1], self.group1()[2], self.group1()[3]]),
+        );
+    }
+}
+impl Dual for AntiDipoleInversionOrthogonalOrigin {
+    type Output = DipoleInversionOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn dual(self) -> Self::Output {
+        return DipoleInversionOrthogonalOrigin::from_groups(
+            // e41, e42, e43, e3215
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
+            // e23, e31, e12
+            self.group1(),
+            // e15, e25, e35, e1234
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] * -1.0)]),
+        );
+    }
+}
 impl Dual for AntiDipoleOnOrigin {
     type Output = DipoleOnOrigin;
     // Operative Statistics for this implementation:
@@ -190,20 +344,6 @@ impl Dual for AntiVersorEvenOnOrigin {
         );
     }
 }
-impl Dual for AntiVersorOddOnOrigin {
-    type Output = VersorOddOnOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn dual(self) -> Self::Output {
-        return VersorOddOnOrigin::from_groups(
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(self.group1()[0] * -1.0), self.group1()[1], self.group1()[2], self.group1()[3]]),
-        );
-    }
-}
 impl Dual for Circle {
     type Output = Dipole;
     // Operative Statistics for this implementation:
@@ -262,6 +402,80 @@ impl Dual for CircleOrthogonalOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
             // e15, e25, e35
+            self.group1(),
+        );
+    }
+}
+impl Dual for CircleRotor {
+    type Output = AntiCircleRotor;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn dual(self) -> Self::Output {
+        return AntiCircleRotor::from_groups(
+            // e41, e42, e43
+            self.group0(),
+            // e23, e31, e12, e45
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] * -1.0)]),
+            // e15, e25, e35, scalar
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] * -1.0)]),
+        );
+    }
+}
+impl Dual for CircleRotorAligningOrigin {
+    type Output = AntiCircleRotorAligningOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn dual(self) -> Self::Output {
+        return AntiCircleRotorAligningOrigin::from_groups(
+            // e41, e42, e43
+            self.group0(),
+            // e23, e31, e12
+            self.group1(),
+            // e15, e25, e35, scalar
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] * -1.0)]),
+        );
+    }
+}
+impl Dual for CircleRotorAligningOriginAtInfinity {
+    type Output = AntiCircleRotorAligningOriginAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn dual(self) -> Self::Output {
+        return AntiCircleRotorAligningOriginAtInfinity::from_groups(
+            // e23, e31, e12
+            self.group0(),
+            // e15, e25, e35, scalar
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] * -1.0)]),
+        );
+    }
+}
+impl Dual for CircleRotorAtInfinity {
+    type Output = AntiCircleRotorAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn dual(self) -> Self::Output {
+        return AntiCircleRotorAtInfinity::from_groups(
+            // e23, e31, e12, e45
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
+            // e15, e25, e35, scalar
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] * -1.0)]),
+        );
+    }
+}
+impl Dual for CircleRotorOnOrigin {
+    type Output = AntiCircleRotorOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn dual(self) -> Self::Output {
+        return AntiCircleRotorOnOrigin::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
+            // e23, e31, e12
             self.group1(),
         );
     }
@@ -334,6 +548,112 @@ impl Dual for DipoleAtOrigin {
             (self.group0() * Simd32x3::from(-1.0)),
             // e235, e315, e125
             (self.group1() * Simd32x3::from(-1.0)),
+        );
+    }
+}
+impl Dual for DipoleInversion {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        9        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0       10        0
+    //  no simd        0       12        0
+    fn dual(self) -> Self::Output {
+        return AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            // e235, e315, e125, e4
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            // e1, e2, e3, e5
+            Simd32x4::from([(self.group3()[0] * -1.0), (self.group3()[1] * -1.0), (self.group3()[2] * -1.0), self.group3()[3]]),
+        );
+    }
+}
+impl Dual for DipoleInversionAligningOrigin {
+    type Output = VersorEvenOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        9        0
+    fn dual(self) -> Self::Output {
+        return VersorEvenOrthogonalOrigin::from_groups(
+            // e423, e431, e412, e321
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group2()[3]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group1()[3]]),
+        );
+    }
+}
+impl Dual for DipoleInversionAtInfinity {
+    type Output = AntiDipoleInversionAtInfinity;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        6        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        7        0
+    //  no simd        0        9        0
+    fn dual(self) -> Self::Output {
+        return AntiDipoleInversionAtInfinity::from_groups(
+            // e415, e425, e435, e321
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e235, e315, e125
+            (self.group1() * Simd32x3::from(-1.0)),
+            // e1, e2, e3, e5
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+        );
+    }
+}
+impl Dual for DipoleInversionAtOrigin {
+    type Output = VersorEvenAtOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        6        0
+    fn dual(self) -> Self::Output {
+        return VersorEvenAtOrigin::from_groups(
+            // e423, e431, e412, e4
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group1()[3]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group0()[3]]),
+        );
+    }
+}
+impl Dual for DipoleInversionOnOrigin {
+    type Output = AntiDipoleInversionOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        6        0
+    fn dual(self) -> Self::Output {
+        return AntiDipoleInversionOnOrigin::from_groups(
+            // e423, e431, e412, e321
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e4, e1, e2, e3
+            Simd32x4::from([self.group1()[0], (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), (self.group1()[3] * -1.0)]),
+        );
+    }
+}
+impl Dual for DipoleInversionOrthogonalOrigin {
+    type Output = AntiDipoleInversionOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        6        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        7        0
+    //  no simd        0        9        0
+    fn dual(self) -> Self::Output {
+        return AntiDipoleInversionOrthogonalOrigin::from_groups(
+            // e423, e431, e412, e5
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e415, e425, e435
+            (self.group1() * Simd32x3::from(-1.0)),
+            // e235, e315, e125, e4
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
         );
     }
 }
@@ -567,25 +887,7 @@ impl Dual for NullDipoleAtOrigin {
         return NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ (self.group0() * Simd32x3::from(-1.0)));
     }
 }
-impl Dual for NullSphereAtOrigin {
-    type Output = NullSphereAtOrigin;
-    fn dual(self) -> Self::Output {
-        return self;
-    }
-}
-impl Dual for NullVersorEvenAtOrigin {
-    type Output = NullVersorOddAtOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn dual(self) -> Self::Output {
-        return NullVersorOddAtOrigin::from_groups(
-            // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
-        );
-    }
-}
-impl Dual for NullVersorOddAtOrigin {
+impl Dual for NullDipoleInversionAtOrigin {
     type Output = NullVersorEvenAtOrigin;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -594,6 +896,24 @@ impl Dual for NullVersorOddAtOrigin {
         return NullVersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
             Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+        );
+    }
+}
+impl Dual for NullSphereAtOrigin {
+    type Output = NullSphereAtOrigin;
+    fn dual(self) -> Self::Output {
+        return self;
+    }
+}
+impl Dual for NullVersorEvenAtOrigin {
+    type Output = NullDipoleInversionAtOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn dual(self) -> Self::Output {
+        return NullDipoleInversionAtOrigin::from_groups(
+            // e41, e42, e43, e1234
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
         );
     }
 }
@@ -744,12 +1064,12 @@ impl Dual for VersorEvenAtInfinity {
     }
 }
 impl Dual for VersorEvenAtOrigin {
-    type Output = VersorOddAtOrigin;
+    type Output = DipoleInversionAtOrigin;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        2        0
     fn dual(self) -> Self::Output {
-        return VersorOddAtOrigin::from_groups(
+        return DipoleInversionAtOrigin::from_groups(
             // e41, e42, e43, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group1()[3] * -1.0)]),
             // e15, e25, e35, e1234
@@ -772,12 +1092,12 @@ impl Dual for VersorEvenOnOrigin {
     }
 }
 impl Dual for VersorEvenOrthogonalOrigin {
-    type Output = VersorOddAligningOrigin;
+    type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        3        0
     fn dual(self) -> Self::Output {
-        return VersorOddAligningOrigin::from_groups(
+        return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
             // e15, e25, e35, e1234
@@ -805,22 +1125,6 @@ impl Dual for VersorOdd {
         );
     }
 }
-impl Dual for VersorOddAligningOrigin {
-    type Output = VersorEvenOrthogonalOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        9        0
-    fn dual(self) -> Self::Output {
-        return VersorEvenOrthogonalOrigin::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
-            // e235, e315, e125, e5
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group2()[3]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group1()[3]]),
-        );
-    }
-}
 impl Dual for VersorOddAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
@@ -834,34 +1138,6 @@ impl Dual for VersorOddAtInfinity {
             Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
             // e235, e315, e125, e5
             Simd32x4::from([(self.group0()[1] * -1.0), (self.group0()[2] * -1.0), (self.group0()[3] * -1.0), self.group2()[3]]),
-        );
-    }
-}
-impl Dual for VersorOddAtOrigin {
-    type Output = VersorEvenAtOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        6        0
-    fn dual(self) -> Self::Output {
-        return VersorEvenAtOrigin::from_groups(
-            // e423, e431, e412, e4
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group1()[3]]),
-            // e235, e315, e125, e5
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group0()[3]]),
-        );
-    }
-}
-impl Dual for VersorOddOnOrigin {
-    type Output = AntiVersorOddOnOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        6        0
-    fn dual(self) -> Self::Output {
-        return AntiVersorOddOnOrigin::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
-            // e4, e1, e2, e3
-            Simd32x4::from([self.group1()[0], (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), (self.group1()[3] * -1.0)]),
         );
     }
 }

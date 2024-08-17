@@ -171,7 +171,7 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
 
         TraitTypeConsensus::add_vote(&the_def.owner, owner_type, true);
         TraitTypeConsensus::add_vote(&the_def.output, return_type, owner_type == return_type);
-        the_def.dependencies.lock().insert(trait_key);
+        b.trait_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
         if let Some(_) = b.traits10_dependencies.insert(impl_key, the_impl.clone()) {
@@ -201,7 +201,10 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
         }
 
         let slf = self.clone();
-        let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        // We do not implicitly declare the trait unless it is invoked by name.
+        // Inlining will not trigger implicit declaration.
+        // let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let the_def = slf.def();
         let builder = TraitImplBuilder::new(
             b.ga.clone(),
             b.mvs.clone(),
@@ -223,7 +226,10 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
         let slf = self.clone();
-        let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        // We do not implicitly declare the trait unless it is invoked by name.
+        // Inlining will not trigger implicit declaration.
+        // let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let the_def = slf.def();
         let variables = Arc::new(Mutex::new(HashMap::new()));
         let builder = TraitImplBuilder::new(b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), true, variables.clone(), b.cycle_detector.clone());
         let trait_impl = self.general_implementation(builder, owner).await?;
@@ -313,7 +319,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
 
         TraitTypeConsensus::add_vote(&the_def.owner, owner_type, true);
         TraitTypeConsensus::add_vote(&the_def.output, return_type, owner_type == return_type);
-        the_def.dependencies.lock().insert(trait_key);
+        b.trait_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
         if let Some(_) = b.traits11_dependencies.insert(impl_key, the_impl.clone()) {
@@ -347,7 +353,10 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
         }
 
         let slf = self.clone();
-        let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        // We do not implicitly declare the trait unless it is invoked by name.
+        // Inlining will not trigger implicit declaration.
+        // let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let the_def = slf.def();
         let mut builder = TraitImplBuilder::new(
             b.ga.clone(),
             b.mvs.clone(),
@@ -370,7 +379,10 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
         let slf = self.clone();
-        let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        // We do not implicitly declare the trait unless it is invoked by name.
+        // Inlining will not trigger implicit declaration.
+        // let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let the_def = slf.def();
         let variables = Arc::new(Mutex::new(HashMap::new()));
         let mut builder = TraitImplBuilder::new(b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), true, variables.clone(), b.cycle_detector.clone());
         let owner = builder.coerce_variable("self", owner);
@@ -466,7 +478,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
 
         TraitTypeConsensus::add_vote(&the_def.owner, owner_type, true);
         TraitTypeConsensus::add_vote(&the_def.output, return_type, owner_type == return_type);
-        the_def.dependencies.lock().insert(trait_key);
+        b.trait_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
         if let Some(_) = b.traits21_dependencies.insert(impl_key, the_impl.clone()) {
@@ -502,7 +514,10 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
         }
 
         let slf = self.clone();
-        let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        // We do not implicitly declare the trait unless it is invoked by name.
+        // Inlining will not trigger implicit declaration.
+        // let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let the_def = slf.def();
         let mut builder = TraitImplBuilder::new(
             b.ga.clone(),
             b.mvs.clone(),
@@ -526,7 +541,10 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
         let slf = self.clone();
-        let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        // We do not implicitly declare the trait unless it is invoked by name.
+        // Inlining will not trigger implicit declaration.
+        // let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let the_def = slf.def();
         let variables = Arc::new(Mutex::new(HashMap::new()));
         let mut builder = TraitImplBuilder::new(b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), true, variables.clone(), b.cycle_detector.clone());
         let owner = builder.coerce_variable("self", owner);
@@ -629,7 +647,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
 
         TraitTypeConsensus::add_vote(&the_def.owner, owner_type, true);
         TraitTypeConsensus::add_vote(&the_def.output, return_type, owner_type == return_type);
-        the_def.dependencies.lock().insert(trait_key);
+        b.trait_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
         if let Some(_) = b.traits22_dependencies.insert(impl_key, the_impl.clone()) {
@@ -666,7 +684,10 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
         }
 
         let slf = self.clone();
-        let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        // We do not implicitly declare the trait unless it is invoked by name.
+        // Inlining will not trigger implicit declaration.
+        // let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let the_def = slf.def();
         let mut builder = TraitImplBuilder::new(
             b.ga.clone(),
             b.mvs.clone(),
@@ -702,7 +723,10 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
 
         let trait_key = self.trait_names().trait_key;
         let slf = self.clone();
-        let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        // We do not implicitly declare the trait unless it is invoked by name.
+        // Inlining will not trigger implicit declaration.
+        // let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let the_def = slf.def();
         let variables = Arc::new(Mutex::new(HashMap::new()));
         let mut builder = TraitImplBuilder::new(b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), true, variables.clone(), b.cycle_detector.clone());
         let owner = builder.coerce_variable("self", owner);
@@ -884,6 +908,13 @@ pub enum UnaryOps {
     Not,
 }
 impl UnaryOps {
+    pub fn rust_mod(self) -> &'static str {
+        "std::ops::"
+        // match self {
+        //     UnaryOps::Neg => "core::ops::arith::",
+        //     UnaryOps::Not => "core::ops::bit::",
+        // }
+    }
     pub fn rust_trait_name(self) -> &'static str {
         match self {
             UnaryOps::Neg => "Neg",
@@ -921,6 +952,14 @@ pub enum BinaryOps {
     BitXor,
 }
 impl BinaryOps {
+    pub fn rust_mod(self) -> &'static str {
+        "std::ops::"
+        // match self {
+        //     BinaryOps::Add | BinaryOps::Sub | BinaryOps::Mul | BinaryOps::Div => "core::ops::arith::",
+        //     BinaryOps::Shl | BinaryOps::Shr | BinaryOps::BitAnd | BinaryOps::BitOr | BinaryOps::BitXor => "core::ops::bit::",
+        // }
+    }
+
     pub fn rust_trait_name(self) -> &'static str {
         match self {
             BinaryOps::Add => "Add",
@@ -983,6 +1022,12 @@ pub enum Ops {
     // Exp(ExperimentalOps),
 }
 impl Ops {
+    pub fn rust_mod(self) -> &'static str {
+        match self {
+            Ops::Unary(op) => op.rust_mod(),
+            Ops::Binary(op) => op.rust_mod(),
+        }
+    }
     pub const fn into_u32(self) -> u32 {
         match self {
             Ops::Unary(o) => o as u32,

@@ -1,4 +1,3 @@
-use crate::traits::AntiReverse;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
 // This is due to varying hardware capabilities and compiler optimizations.
@@ -16,6 +15,165 @@ impl AntiReverse for AntiCircleOnOrigin {
             (self.group0() * Simd32x3::from(-1.0)),
             // e23, e31, e12
             (self.group1() * Simd32x3::from(-1.0)),
+        );
+    }
+}
+impl AntiReverse for AntiCircleRotor {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0       10        0
+    fn anti_reverse(self) -> Self {
+        return AntiCircleRotor::from_groups(
+            // e41, e42, e43
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e23, e31, e12, e45
+            (self.group1() * Simd32x4::from(-1.0)),
+            // e15, e25, e35, scalar
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+        );
+    }
+}
+impl AntiReverse for AntiCircleRotorAligningOrigin {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        9        0
+    fn anti_reverse(self) -> Self {
+        return AntiCircleRotorAligningOrigin::from_groups(
+            // e41, e42, e43
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e23, e31, e12
+            (self.group1() * Simd32x3::from(-1.0)),
+            // e15, e25, e35, scalar
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+        );
+    }
+}
+impl AntiReverse for AntiCircleRotorAligningOriginAtInfinity {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        6        0
+    fn anti_reverse(self) -> Self {
+        return AntiCircleRotorAligningOriginAtInfinity::from_groups(
+            // e23, e31, e12
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e15, e25, e35, scalar
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+        );
+    }
+}
+impl AntiReverse for AntiCircleRotorAtInfinity {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
+    fn anti_reverse(self) -> Self {
+        return AntiCircleRotorAtInfinity::from_groups(
+            // e23, e31, e12, e45
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e15, e25, e35, scalar
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+        );
+    }
+}
+impl AntiReverse for AntiCircleRotorOnOrigin {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        6        0
+    fn anti_reverse(self) -> Self {
+        return AntiCircleRotorOnOrigin::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e23, e31, e12
+            (self.group1() * Simd32x3::from(-1.0)),
+        );
+    }
+}
+impl AntiReverse for AntiDipoleInversion {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0       10        0
+    fn anti_reverse(self) -> Self {
+        return AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            (self.group1() * Simd32x4::from(-1.0)),
+            // e235, e315, e125, e4
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            // e1, e2, e3, e5
+            self.group3(),
+        );
+    }
+}
+impl AntiReverse for AntiDipoleInversionAtInfinity {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        7        0
+    fn anti_reverse(self) -> Self {
+        return AntiDipoleInversionAtInfinity::from_groups(
+            // e415, e425, e435, e321
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e235, e315, e125
+            (self.group1() * Simd32x3::from(-1.0)),
+            // e1, e2, e3, e5
+            self.group2(),
+        );
+    }
+}
+impl AntiReverse for AntiDipoleInversionOnOrigin {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_reverse(self) -> Self {
+        return AntiDipoleInversionOnOrigin::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(-1.0)), /* e4, e1, e2, e3 */ self.group1());
+    }
+}
+impl AntiReverse for AntiDipoleInversionOrthogonalOrigin {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        6        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        7        0
+    //  no simd        0        9        0
+    fn anti_reverse(self) -> Self {
+        return AntiDipoleInversionOrthogonalOrigin::from_groups(
+            // e423, e431, e412, e5
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e415, e425, e435
+            (self.group1() * Simd32x3::from(-1.0)),
+            // e235, e315, e125, e4
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
         );
     }
 }
@@ -151,15 +309,6 @@ impl AntiReverse for AntiVersorEvenOnOrigin {
         );
     }
 }
-impl AntiReverse for AntiVersorOddOnOrigin {
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
-    fn anti_reverse(self) -> Self {
-        return AntiVersorOddOnOrigin::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(-1.0)), /* e4, e1, e2, e3 */ self.group1());
-    }
-}
 impl AntiReverse for Circle {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -257,6 +406,96 @@ impl AntiReverse for CircleOrthogonalOrigin {
         );
     }
 }
+impl AntiReverse for CircleRotor {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0       10        0
+    fn anti_reverse(self) -> Self {
+        return CircleRotor::from_groups(
+            // e423, e431, e412
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            (self.group1() * Simd32x4::from(-1.0)),
+            // e235, e315, e125, e12345
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+        );
+    }
+}
+impl AntiReverse for CircleRotorAligningOrigin {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        9        0
+    fn anti_reverse(self) -> Self {
+        return CircleRotorAligningOrigin::from_groups(
+            // e423, e431, e412
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e415, e425, e435
+            (self.group1() * Simd32x3::from(-1.0)),
+            // e235, e315, e125, e12345
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+        );
+    }
+}
+impl AntiReverse for CircleRotorAligningOriginAtInfinity {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        6        0
+    fn anti_reverse(self) -> Self {
+        return CircleRotorAligningOriginAtInfinity::from_groups(
+            // e415, e425, e435
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e235, e315, e125, e12345
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+        );
+    }
+}
+impl AntiReverse for CircleRotorAtInfinity {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
+    fn anti_reverse(self) -> Self {
+        return CircleRotorAtInfinity::from_groups(
+            // e415, e425, e435, e321
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e235, e315, e125, e12345
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+        );
+    }
+}
+impl AntiReverse for CircleRotorOnOrigin {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        6        0
+    fn anti_reverse(self) -> Self {
+        return CircleRotorOnOrigin::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e415, e425, e435
+            (self.group1() * Simd32x3::from(-1.0)),
+        );
+    }
+}
 impl AntiReverse for Dipole {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -321,6 +560,112 @@ impl AntiReverse for DipoleAtOrigin {
             (self.group0() * Simd32x3::from(-1.0)),
             // e15, e25, e35
             (self.group1() * Simd32x3::from(-1.0)),
+        );
+    }
+}
+impl AntiReverse for DipoleInversion {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0       10        0
+    fn anti_reverse(self) -> Self {
+        return DipoleInversion::from_groups(
+            // e41, e42, e43
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e23, e31, e12, e45
+            (self.group1() * Simd32x4::from(-1.0)),
+            // e15, e25, e35, e1234
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            // e4235, e4315, e4125, e3215
+            self.group3(),
+        );
+    }
+}
+impl AntiReverse for DipoleInversionAligningOrigin {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
+    fn anti_reverse(self) -> Self {
+        return DipoleInversionAligningOrigin::from_groups(
+            // e41, e42, e43, e45
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e15, e25, e35, e1234
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            // e4235, e4315, e4125, e3215
+            self.group2(),
+        );
+    }
+}
+impl AntiReverse for DipoleInversionAtInfinity {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        7        0
+    fn anti_reverse(self) -> Self {
+        return DipoleInversionAtInfinity::from_groups(
+            // e23, e31, e12, e45
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e15, e25, e35
+            (self.group1() * Simd32x3::from(-1.0)),
+            // e4235, e4315, e4125, e3215
+            self.group2(),
+        );
+    }
+}
+impl AntiReverse for DipoleInversionAtOrigin {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        6        0
+    fn anti_reverse(self) -> Self {
+        return DipoleInversionAtOrigin::from_groups(
+            // e41, e42, e43, e3215
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+        );
+    }
+}
+impl AntiReverse for DipoleInversionOnOrigin {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_reverse(self) -> Self {
+        return DipoleInversionOnOrigin::from_groups(
+            // e41, e42, e43, e45
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e1234, e4235, e4315, e4125
+            self.group1(),
+        );
+    }
+}
+impl AntiReverse for DipoleInversionOrthogonalOrigin {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        6        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        7        0
+    //  no simd        0        9        0
+    fn anti_reverse(self) -> Self {
+        return DipoleInversionOrthogonalOrigin::from_groups(
+            // e41, e42, e43, e3215
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            // e23, e31, e12
+            (self.group1() * Simd32x3::from(-1.0)),
+            // e15, e25, e35, e1234
+            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
         );
     }
 }
@@ -548,6 +893,17 @@ impl AntiReverse for NullDipoleAtOrigin {
         return NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ (self.group0() * Simd32x3::from(-1.0)));
     }
 }
+impl AntiReverse for NullDipoleInversionAtOrigin {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn anti_reverse(self) -> Self {
+        return NullDipoleInversionAtOrigin::from_groups(
+            // e41, e42, e43, e1234
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+        );
+    }
+}
 impl AntiReverse for NullSphereAtOrigin {
     fn anti_reverse(self) -> Self {
         return self;
@@ -560,17 +916,6 @@ impl AntiReverse for NullVersorEvenAtOrigin {
     fn anti_reverse(self) -> Self {
         return NullVersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
-        );
-    }
-}
-impl AntiReverse for NullVersorOddAtOrigin {
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
-    fn anti_reverse(self) -> Self {
-        return NullVersorOddAtOrigin::from_groups(
-            // e41, e42, e43, e1234
             Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
         );
     }
@@ -741,25 +1086,6 @@ impl AntiReverse for VersorOdd {
         );
     }
 }
-impl AntiReverse for VersorOddAligningOrigin {
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
-    fn anti_reverse(self) -> Self {
-        return VersorOddAligningOrigin::from_groups(
-            // e41, e42, e43, e45
-            (self.group0() * Simd32x4::from(-1.0)),
-            // e15, e25, e35, e1234
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
-            // e4235, e4315, e4125, e3215
-            self.group2(),
-        );
-    }
-}
 impl AntiReverse for VersorOddAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -776,33 +1102,6 @@ impl AntiReverse for VersorOddAtInfinity {
             (self.group1() * Simd32x4::from(-1.0)),
             // e4235, e4315, e4125, e3215
             self.group2(),
-        );
-    }
-}
-impl AntiReverse for VersorOddAtOrigin {
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        6        0
-    fn anti_reverse(self) -> Self {
-        return VersorOddAtOrigin::from_groups(
-            // e41, e42, e43, e3215
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
-            // e15, e25, e35, e1234
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
-        );
-    }
-}
-impl AntiReverse for VersorOddOnOrigin {
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
-    fn anti_reverse(self) -> Self {
-        return VersorOddOnOrigin::from_groups(
-            // e41, e42, e43, e45
-            (self.group0() * Simd32x4::from(-1.0)),
-            // e1234, e4235, e4315, e4125
-            self.group1(),
         );
     }
 }

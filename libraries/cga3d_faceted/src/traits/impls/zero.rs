@@ -9,6 +9,88 @@ impl Zero for AntiCircleOnOrigin {
         return AntiCircleOnOrigin::from_groups(/* e41, e42, e43 */ Simd32x3::from(0.0), /* e23, e31, e12 */ Simd32x3::from(0.0));
     }
 }
+impl Zero for AntiCircleRotor {
+    fn zero() -> Self {
+        return AntiCircleRotor::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35, scalar
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl Zero for AntiCircleRotorAligningOrigin {
+    fn zero() -> Self {
+        return AntiCircleRotorAligningOrigin::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e15, e25, e35, scalar
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl Zero for AntiCircleRotorAligningOriginAtInfinity {
+    fn zero() -> Self {
+        return AntiCircleRotorAligningOriginAtInfinity::from_groups(/* e23, e31, e12 */ Simd32x3::from(0.0), /* e15, e25, e35, scalar */ Simd32x4::from(0.0));
+    }
+}
+impl Zero for AntiCircleRotorAtInfinity {
+    fn zero() -> Self {
+        return AntiCircleRotorAtInfinity::from_groups(/* e23, e31, e12, e45 */ Simd32x4::from(0.0), /* e15, e25, e35, scalar */ Simd32x4::from(0.0));
+    }
+}
+impl Zero for AntiCircleRotorOnOrigin {
+    fn zero() -> Self {
+        return AntiCircleRotorOnOrigin::from_groups(/* e41, e42, e43, scalar */ Simd32x4::from(0.0), /* e23, e31, e12 */ Simd32x3::from(0.0));
+    }
+}
+impl Zero for AntiDipoleInversion {
+    fn zero() -> Self {
+        return AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e235, e315, e125, e4
+            Simd32x4::from(0.0),
+            // e1, e2, e3, e5
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl Zero for AntiDipoleInversionAtInfinity {
+    fn zero() -> Self {
+        return AntiDipoleInversionAtInfinity::from_groups(
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1, e2, e3, e5
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl Zero for AntiDipoleInversionOnOrigin {
+    fn zero() -> Self {
+        return AntiDipoleInversionOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(0.0), /* e4, e1, e2, e3 */ Simd32x4::from(0.0));
+    }
+}
+impl Zero for AntiDipoleInversionOrthogonalOrigin {
+    fn zero() -> Self {
+        return AntiDipoleInversionOrthogonalOrigin::from_groups(
+            // e423, e431, e412, e5
+            Simd32x4::from(0.0),
+            // e415, e425, e435
+            Simd32x3::from(0.0),
+            // e235, e315, e125, e4
+            Simd32x4::from(0.0),
+        );
+    }
+}
 impl Zero for AntiDipoleOnOrigin {
     fn zero() -> Self {
         return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(0.0));
@@ -84,11 +166,6 @@ impl Zero for AntiVersorEvenOnOrigin {
         return AntiVersorEvenOnOrigin::from_groups(/* e41, e42, e43, scalar */ Simd32x4::from(0.0), /* e23, e31, e12, e1234 */ Simd32x4::from(0.0));
     }
 }
-impl Zero for AntiVersorOddOnOrigin {
-    fn zero() -> Self {
-        return AntiVersorOddOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(0.0), /* e4, e1, e2, e3 */ Simd32x4::from(0.0));
-    }
-}
 impl Zero for Circle {
     fn zero() -> Self {
         return Circle::from_groups(
@@ -133,6 +210,45 @@ impl Zero for CircleOrthogonalOrigin {
         return CircleOrthogonalOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(0.0), /* e235, e315, e125 */ Simd32x3::from(0.0));
     }
 }
+impl Zero for CircleRotor {
+    fn zero() -> Self {
+        return CircleRotor::from_groups(
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e235, e315, e125, e12345
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl Zero for CircleRotorAligningOrigin {
+    fn zero() -> Self {
+        return CircleRotorAligningOrigin::from_groups(
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e415, e425, e435
+            Simd32x3::from(0.0),
+            // e235, e315, e125, e12345
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl Zero for CircleRotorAligningOriginAtInfinity {
+    fn zero() -> Self {
+        return CircleRotorAligningOriginAtInfinity::from_groups(/* e415, e425, e435 */ Simd32x3::from(0.0), /* e235, e315, e125, e12345 */ Simd32x4::from(0.0));
+    }
+}
+impl Zero for CircleRotorAtInfinity {
+    fn zero() -> Self {
+        return CircleRotorAtInfinity::from_groups(/* e415, e425, e435, e321 */ Simd32x4::from(0.0), /* e235, e315, e125, e12345 */ Simd32x4::from(0.0));
+    }
+}
+impl Zero for CircleRotorOnOrigin {
+    fn zero() -> Self {
+        return CircleRotorOnOrigin::from_groups(/* e423, e431, e412, e12345 */ Simd32x4::from(0.0), /* e415, e425, e435 */ Simd32x3::from(0.0));
+    }
+}
 impl Zero for Dipole {
     fn zero() -> Self {
         return Dipole::from_groups(
@@ -158,6 +274,66 @@ impl Zero for DipoleAtInfinity {
 impl Zero for DipoleAtOrigin {
     fn zero() -> Self {
         return DipoleAtOrigin::from_groups(/* e41, e42, e43 */ Simd32x3::from(0.0), /* e15, e25, e35 */ Simd32x3::from(0.0));
+    }
+}
+impl Zero for DipoleInversion {
+    fn zero() -> Self {
+        return DipoleInversion::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35, e1234
+            Simd32x4::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl Zero for DipoleInversionAligningOrigin {
+    fn zero() -> Self {
+        return DipoleInversionAligningOrigin::from_groups(
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35, e1234
+            Simd32x4::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl Zero for DipoleInversionAtInfinity {
+    fn zero() -> Self {
+        return DipoleInversionAtInfinity::from_groups(
+            // e23, e31, e12, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl Zero for DipoleInversionAtOrigin {
+    fn zero() -> Self {
+        return DipoleInversionAtOrigin::from_groups(/* e41, e42, e43, e3215 */ Simd32x4::from(0.0), /* e15, e25, e35, e1234 */ Simd32x4::from(0.0));
+    }
+}
+impl Zero for DipoleInversionOnOrigin {
+    fn zero() -> Self {
+        return DipoleInversionOnOrigin::from_groups(/* e41, e42, e43, e45 */ Simd32x4::from(0.0), /* e1234, e4235, e4315, e4125 */ Simd32x4::from(0.0));
+    }
+}
+impl Zero for DipoleInversionOrthogonalOrigin {
+    fn zero() -> Self {
+        return DipoleInversionOrthogonalOrigin::from_groups(
+            // e41, e42, e43, e3215
+            Simd32x4::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e15, e25, e35, e1234
+            Simd32x4::from(0.0),
+        );
     }
 }
 impl Zero for DipoleOnOrigin {
@@ -290,6 +466,11 @@ impl Zero for NullDipoleAtOrigin {
         return NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ Simd32x3::from(0.0));
     }
 }
+impl Zero for NullDipoleInversionAtOrigin {
+    fn zero() -> Self {
+        return NullDipoleInversionAtOrigin::from_groups(/* e41, e42, e43, e1234 */ Simd32x4::from(0.0));
+    }
+}
 impl Zero for NullSphereAtOrigin {
     fn zero() -> Self {
         return NullSphereAtOrigin::from_groups(/* e1234 */ 0.0);
@@ -298,11 +479,6 @@ impl Zero for NullSphereAtOrigin {
 impl Zero for NullVersorEvenAtOrigin {
     fn zero() -> Self {
         return NullVersorEvenAtOrigin::from_groups(/* e423, e431, e412, e4 */ Simd32x4::from(0.0));
-    }
-}
-impl Zero for NullVersorOddAtOrigin {
-    fn zero() -> Self {
-        return NullVersorOddAtOrigin::from_groups(/* e41, e42, e43, e1234 */ Simd32x4::from(0.0));
     }
 }
 impl Zero for Origin {
@@ -424,18 +600,6 @@ impl Zero for VersorOdd {
         );
     }
 }
-impl Zero for VersorOddAligningOrigin {
-    fn zero() -> Self {
-        return VersorOddAligningOrigin::from_groups(
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            Simd32x4::from(0.0),
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
-        );
-    }
-}
 impl Zero for VersorOddAtInfinity {
     fn zero() -> Self {
         return VersorOddAtInfinity::from_groups(
@@ -446,16 +610,6 @@ impl Zero for VersorOddAtInfinity {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
-    }
-}
-impl Zero for VersorOddAtOrigin {
-    fn zero() -> Self {
-        return VersorOddAtOrigin::from_groups(/* e41, e42, e43, e3215 */ Simd32x4::from(0.0), /* e15, e25, e35, e1234 */ Simd32x4::from(0.0));
-    }
-}
-impl Zero for VersorOddOnOrigin {
-    fn zero() -> Self {
-        return VersorOddOnOrigin::from_groups(/* e41, e42, e43, e45 */ Simd32x4::from(0.0), /* e1234, e4235, e4315, e4125 */ Simd32x4::from(0.0));
     }
 }
 impl Zero for VersorOddOrthogonalOrigin {
