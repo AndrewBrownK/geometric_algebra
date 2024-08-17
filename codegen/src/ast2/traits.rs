@@ -110,7 +110,7 @@ pub trait TraitImpl_10: Copy + Send + Sync + 'static {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
+pub trait TraitDef_1_Param_0_Arg: TraitImpl_10 + ProvideTraitNames {
     type Owner: ClassesFromRegistry;
     fn general_documentation(&self) -> String {
         String::new()
@@ -254,7 +254,7 @@ pub trait TraitImpl_11: Copy + Send + Sync + 'static {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
+pub trait TraitDef_1_Param_1_Arg: TraitImpl_11 + ProvideTraitNames {
     type Owner: ClassesFromRegistry;
     fn general_documentation(&self) -> String {
         String::new()
@@ -409,7 +409,7 @@ pub trait TraitImpl_21: Copy + Send + Sync + 'static {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
+pub trait TraitDef_2_Param_1_Arg: TraitImpl_21 + ProvideTraitNames {
     type Owner: ClassesFromRegistry;
     type Other: ClassesFromRegistry;
     fn general_documentation(&self) -> String {
@@ -571,7 +571,7 @@ pub trait TraitImpl_22: Copy + Send + Sync + 'static {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
+pub trait TraitDef_2_Param_2_Arg: TraitImpl_22 + ProvideTraitNames {
     type Owner: ClassesFromRegistry;
     type Other: ClassesFromRegistry;
     fn general_documentation(&self) -> String {
@@ -1102,7 +1102,7 @@ impl TraitImplRegistry {
         }
     }
 
-    pub fn set_binary_operator<TD: TraitDef_2Class_2Param, const AntiScalar: BasisElement>(
+    pub fn set_binary_operator<TD: TraitDef_2_Param_2_Arg, const AntiScalar: BasisElement>(
         &self, repo: Arc<MultiVecRepository<AntiScalar>>, op: BinaryOps, td: TD
     ) {
         let mut set_ops = self.has_set_operators.lock();
@@ -1146,7 +1146,7 @@ impl TraitImplRegistry {
         });
     }
 
-    pub fn set_unary_operator<TD: TraitDef_1Class_1Param, const AntiScalar: BasisElement>(
+    pub fn set_unary_operator<TD: TraitDef_1_Param_1_Arg, const AntiScalar: BasisElement>(
         &self, repo: Arc<MultiVecRepository<AntiScalar>>, op: UnaryOps, td: TD
     ) {
         let mut set_ops = self.has_set_operators.lock();
@@ -1256,7 +1256,7 @@ pub(crate) fn progress_style() -> indicatif::ProgressStyle {
 }
 
 #[async_trait]
-pub trait Register10: TraitDef_1Class_0Param {
+pub trait Register10: TraitDef_1_Param_0_Arg {
     async fn register<const AntiScalar: BasisElement>(
         self,
         tr: TraitImplRegistry,
@@ -1265,7 +1265,7 @@ pub trait Register10: TraitDef_1Class_0Param {
     );
 }
 #[async_trait]
-impl<T: TraitDef_1Class_0Param> Register10 for T {
+impl<T: TraitDef_1_Param_0_Arg> Register10 for T {
     async fn register<const AntiScalar: BasisElement>(
         self,
         tir: TraitImplRegistry,
@@ -1320,7 +1320,7 @@ impl<T: TraitDef_1Class_0Param> Register10 for T {
     }
 }
 #[async_trait]
-pub trait Register11: TraitDef_1Class_1Param {
+pub trait Register11: TraitDef_1_Param_1_Arg {
     async fn register<const AntiScalar: BasisElement>(
         self,
         tir: TraitImplRegistry,
@@ -1329,7 +1329,7 @@ pub trait Register11: TraitDef_1Class_1Param {
     );
 }
 #[async_trait]
-impl<T: TraitDef_1Class_1Param> Register11 for T {
+impl<T: TraitDef_1_Param_1_Arg> Register11 for T {
     async fn register<const AntiScalar: BasisElement>(
         self,
         tir: TraitImplRegistry,
@@ -1390,7 +1390,7 @@ impl<T: TraitDef_1Class_1Param> Register11 for T {
     }
 }
 #[async_trait]
-pub trait Register21: TraitDef_2Class_1Param {
+pub trait Register21: TraitDef_2_Param_1_Arg {
     async fn register<const AntiScalar: BasisElement>(
         self,
         tir: TraitImplRegistry,
@@ -1399,7 +1399,7 @@ pub trait Register21: TraitDef_2Class_1Param {
     );
 }
 #[async_trait]
-impl<T: TraitDef_2Class_1Param> Register21 for T {
+impl<T: TraitDef_2_Param_1_Arg> Register21 for T {
     async fn register<const AntiScalar: BasisElement>(
         self,
         tir: TraitImplRegistry,
@@ -1465,7 +1465,7 @@ impl<T: TraitDef_2Class_1Param> Register21 for T {
     }
 }
 #[async_trait]
-pub trait Register22: TraitDef_2Class_2Param {
+pub trait Register22: TraitDef_2_Param_2_Arg {
     async fn register<const AntiScalar: BasisElement>(
         self,
         tir: TraitImplRegistry,
@@ -1474,7 +1474,7 @@ pub trait Register22: TraitDef_2Class_2Param {
     );
 }
 #[async_trait]
-impl<T: TraitDef_2Class_2Param> Register22 for T {
+impl<T: TraitDef_2_Param_2_Arg> Register22 for T {
     async fn register<const AntiScalar: BasisElement>(
         self,
         tir: TraitImplRegistry,
@@ -1826,7 +1826,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         });
     }
 
-    fn inline_by_copy_existing_10<T: TraitDef_1Class_0Param + ?Sized>(&self, trait_key: &TraitKey, raw_impl: Arc<RawTraitImplementation>) -> Option<Variable<T::Output>> {
+    fn inline_by_copy_existing_10<T: TraitDef_1_Param_0_Arg + ?Sized>(&self, trait_key: &TraitKey, raw_impl: Arc<RawTraitImplementation>) -> Option<Variable<T::Output>> {
         let mut var_replacements: Vec<(Arc<RawVariableDeclaration>, Arc<RawVariableDeclaration>)> = vec![];
         self.inline_the_lines(&mut var_replacements, &raw_impl.lines);
         let mut return_expr = raw_impl.return_expr.clone();
@@ -1839,7 +1839,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         Some(var)
     }
 
-    fn inline_by_copy_existing_11<T: TraitDef_1Class_1Param + ?Sized, Expr: Expression<MultiVector>>(
+    fn inline_by_copy_existing_11<T: TraitDef_1_Param_1_Arg + ?Sized, Expr: Expression<MultiVector>>(
         &self,
         trait_key: &TraitKey,
         raw_impl: Arc<RawTraitImplementation>,
@@ -1859,7 +1859,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         Some(var)
     }
 
-    fn inline_by_copy_existing_21<T: TraitDef_2Class_1Param + ?Sized, Expr: Expression<MultiVector>>(
+    fn inline_by_copy_existing_21<T: TraitDef_2_Param_1_Arg + ?Sized, Expr: Expression<MultiVector>>(
         &self,
         trait_key: &TraitKey,
         raw_impl: Arc<RawTraitImplementation>,
@@ -1879,7 +1879,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         Some(var)
     }
 
-    fn inline_by_copy_existing_22<T: TraitDef_2Class_2Param + ?Sized, Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
+    fn inline_by_copy_existing_22<T: TraitDef_2_Param_2_Arg + ?Sized, Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
         &self,
         trait_key: &TraitKey,
         raw_impl: Arc<RawTraitImplementation>,
