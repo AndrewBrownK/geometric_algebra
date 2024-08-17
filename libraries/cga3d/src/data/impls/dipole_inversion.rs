@@ -6,6 +6,20 @@ use crate::traits::Wedge;
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 74
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         4       4       0
+//  Average:        18      22       0
+//  Maximum:       222     250       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         5       7       0
+//  Average:        32      37       0
+//  Maximum:       448     480       0
 impl std::ops::Add<AntiScalar> for DipoleInversion {
     type Output = MultiVector;
     fn add(self, other: AntiScalar) -> Self::Output {

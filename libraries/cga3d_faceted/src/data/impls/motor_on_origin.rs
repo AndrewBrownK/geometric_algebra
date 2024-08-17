@@ -6,6 +6,20 @@ use crate::traits::Wedge;
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 319
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         0       3       0
+//  Average:         3       6       0
+//  Maximum:        40      56       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         0       4       0
+//  Average:         5       9       0
+//  Maximum:        96     128       0
 impl std::ops::Add<AntiCircleOnOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiCircleOnOrigin) -> Self::Output {

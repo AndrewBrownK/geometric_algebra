@@ -6,6 +6,20 @@ use crate::traits::Wedge;
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 382
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         3       2       0
+//  Average:        10      14       0
+//  Maximum:       170     198       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         3       4       0
+//  Average:        16      21       0
+//  Maximum:       320     352       0
 impl std::ops::Add<AntiCircleOnOrigin> for AntiDipoleInversionOrthogonalOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiCircleOnOrigin) -> Self::Output {

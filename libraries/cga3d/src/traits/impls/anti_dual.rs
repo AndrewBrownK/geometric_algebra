@@ -4,6 +4,20 @@
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 17
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         0       2       0
+//  Average:         0       4       0
+//  Maximum:         0      12       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         0       3       0
+//  Average:         0       4       0
+//  Maximum:         0      16       0
 impl AntiDual for AntiScalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:

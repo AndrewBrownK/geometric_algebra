@@ -4,6 +4,20 @@
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 4
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         0       0       0
+//  Average:         0       0       0
+//  Maximum:         0       0       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         0       0       0
+//  Average:         0       0       0
+//  Maximum:         0       0       0
 impl One for DualNum {
     fn one() -> Self {
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([1.0, 0.0]));

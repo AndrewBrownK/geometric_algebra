@@ -6,6 +6,20 @@ use crate::traits::Wedge;
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 354
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         0       2       0
+//  Average:         0       4       0
+//  Maximum:        22      50       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         0       4       0
+//  Average:         1       7       0
+//  Maximum:        32      68       0
 impl std::ops::Add<AntiCircleOnOrigin> for DualNum {
     type Output = MultiVector;
     fn add(self, other: AntiCircleOnOrigin) -> Self::Output {

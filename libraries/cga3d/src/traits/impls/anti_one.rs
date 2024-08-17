@@ -4,6 +4,20 @@
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 6
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         0       0       0
+//  Average:         0       0       0
+//  Maximum:         0       0       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         0       0       0
+//  Average:         0       0       0
+//  Maximum:         0       0       0
 impl AntiOne for AntiScalar {
     fn anti_one() -> Self {
         return AntiScalar::from_groups(/* e12345 */ 1.0);

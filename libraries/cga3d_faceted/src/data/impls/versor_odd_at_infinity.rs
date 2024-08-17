@@ -6,6 +6,20 @@ use crate::traits::Wedge;
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 389
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         3       3       0
+//  Average:        10      14       0
+//  Maximum:       182     210       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         4       4       0
+//  Average:        18      23       0
+//  Maximum:       352     384       0
 impl std::ops::Add<AntiCircleOnOrigin> for VersorOddAtInfinity {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:

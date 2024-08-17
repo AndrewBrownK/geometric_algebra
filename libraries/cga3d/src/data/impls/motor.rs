@@ -6,6 +6,20 @@ use crate::traits::Wedge;
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 71
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         1       2       0
+//  Average:         9      12       0
+//  Maximum:       106     133       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         1       4       0
+//  Average:        15      20       0
+//  Maximum:       225     259       0
 impl std::ops::Add<AntiScalar> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:

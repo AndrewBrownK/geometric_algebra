@@ -4,6 +4,20 @@
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 87
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         0       2       0
+//  Average:         0       2       0
+//  Maximum:         0       9       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         0       6       0
+//  Average:         0       4       0
+//  Maximum:         0      20       0
 impl Reverse for AntiCircleOnOrigin {
     // Operative Statistics for this implementation:
     //          add/sub      mul      div

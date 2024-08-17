@@ -516,6 +516,75 @@ postgres-types = "0.2.7""#
                 writeln!(&mut file, "// real measurements on real work-loads on real hardware.")?;
                 writeln!(&mut file, "// Disclaimer aside, enjoy the fun information =)")?;
 
+                if qty_impls > 1 {
+                    let qty_impls = qty_impls as usize;
+                    let mut add_w = vec![];
+                    let mut mul_w = vec![];
+                    let mut div_w = vec![];
+                    let mut add_wo = vec![];
+                    let mut mul_wo = vec![];
+                    let mut div_wo = vec![];
+                    for i in &impls {
+                        let w = i.statistics.with_simd();
+                        add_w.push(w.add_sub);
+                        mul_w.push(w.mul);
+                        div_w.push(w.div);
+                        let wo = i.statistics.without_simd();
+                        add_wo.push(wo.add_sub);
+                        mul_wo.push(wo.mul);
+                        div_wo.push(wo.div);
+                    }
+                    add_w.sort();
+                    mul_w.sort();
+                    div_w.sort();
+                    add_wo.sort();
+                    mul_wo.sort();
+                    div_wo.sort();
+
+                    let add_w_min = add_w.first().cloned().unwrap_or(0);
+                    let add_w_max = add_w.last().cloned().unwrap_or(0);
+                    let add_w_med = add_w.get(qty_impls/2).cloned().unwrap_or(0);
+                    let add_w_avg = add_w.into_iter().sum::<usize>() / qty_impls;
+
+                    let mul_w_min = mul_w.first().cloned().unwrap_or(0);
+                    let mul_w_max = mul_w.last().cloned().unwrap_or(0);
+                    let mul_w_med = mul_w.get(qty_impls/2).cloned().unwrap_or(0);
+                    let mul_w_avg = mul_w.into_iter().sum::<usize>() / qty_impls;
+
+                    let div_w_min = div_w.first().cloned().unwrap_or(0);
+                    let div_w_max = div_w.last().cloned().unwrap_or(0);
+                    let div_w_med = div_w.get(qty_impls/2).cloned().unwrap_or(0);
+                    let div_w_avg = div_w.into_iter().sum::<usize>() / qty_impls;
+
+                    let add_wo_min = add_wo.first().cloned().unwrap_or(0);
+                    let add_wo_max = add_wo.last().cloned().unwrap_or(0);
+                    let add_wo_med = add_wo.get(qty_impls/2).cloned().unwrap_or(0);
+                    let add_wo_avg = add_wo.into_iter().sum::<usize>() / qty_impls;
+
+                    let mul_wo_min = mul_wo.first().cloned().unwrap_or(0);
+                    let mul_wo_max = mul_wo.last().cloned().unwrap_or(0);
+                    let mul_wo_med = mul_wo.get(qty_impls/2).cloned().unwrap_or(0);
+                    let mul_wo_avg = mul_wo.into_iter().sum::<usize>() / qty_impls;
+
+                    let div_wo_min = div_wo.first().cloned().unwrap_or(0);
+                    let div_wo_max = div_wo.last().cloned().unwrap_or(0);
+                    let div_wo_med = div_wo.get(qty_impls/2).cloned().unwrap_or(0);
+                    let div_wo_avg = div_wo.into_iter().sum::<usize>() / qty_impls;
+
+                    writeln!(&mut file, "//\n// Total Implementations: {qty_impls}")?;
+                    writeln!(&mut file, "//\n// Yes SIMD:   add/sub     mul     div")?;
+                    writeln!(&mut file, "//  Minimum:   {add_w_min:>7} {mul_w_min:>7} {div_w_min:>7}")?;
+                    writeln!(&mut file, "//   Median:   {add_w_med:>7} {mul_w_med:>7} {div_w_med:>7}")?;
+                    writeln!(&mut file, "//  Average:   {add_w_avg:>7} {mul_w_avg:>7} {div_w_avg:>7}")?;
+                    writeln!(&mut file, "//  Maximum:   {add_w_max:>7} {mul_w_max:>7} {div_w_max:>7}")?;
+                    writeln!(&mut file, "//\n//  No SIMD:   add/sub     mul     div")?;
+                    writeln!(&mut file, "//  Minimum:   {add_wo_min:>7} {mul_wo_min:>7} {div_wo_min:>7}")?;
+                    writeln!(&mut file, "//   Median:   {add_wo_med:>7} {mul_wo_med:>7} {div_wo_med:>7}")?;
+                    writeln!(&mut file, "//  Average:   {add_wo_avg:>7} {mul_wo_avg:>7} {div_wo_avg:>7}")?;
+                    writeln!(&mut file, "//  Maximum:   {add_wo_max:>7} {mul_wo_max:>7} {div_wo_max:>7}")?;
+                }
+
+
                 // writeln!(&mut file, "use crate::data::*;")?;
                 // writeln!(&mut file, "use crate::simd::*;")?;
                 let mut already_granted_infix = BTreeSet::new();

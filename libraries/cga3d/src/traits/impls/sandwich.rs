@@ -6,6 +6,20 @@ use crate::traits::Reverse;
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 289
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       2       0
+//   Median:        81     112       0
+//  Average:       120     151       0
+//  Maximum:      1070    1132       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       2       0
+//   Median:       137     172       0
+//  Average:       227     267       0
+//  Maximum:      1984    2068       0
 impl InfixSandwich for AntiScalar {}
 impl Sandwich<AntiScalar> for AntiScalar {
     type Output = AntiScalar;

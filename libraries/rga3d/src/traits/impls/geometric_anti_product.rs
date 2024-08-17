@@ -4,6 +4,20 @@
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 117
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       1       0
+//   Median:         0       4       0
+//  Average:         6      11       0
+//  Maximum:       103     118       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       1       0
+//   Median:         0       8       0
+//  Average:        10      18       0
+//  Maximum:       177     192       0
 impl InfixGeometricAntiProduct for AntiScalar {}
 impl GeometricAntiProduct<AntiScalar> for AntiScalar {
     type Output = AntiScalar;

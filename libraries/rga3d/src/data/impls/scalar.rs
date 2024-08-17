@@ -6,6 +6,20 @@ use crate::traits::Wedge;
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 48
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         0       1       0
+//  Average:         0       1       0
+//  Maximum:         1       6       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         0       1       0
+//  Average:         0       3       0
+//  Maximum:         1      16       0
 impl std::ops::Add<AntiScalar> for Scalar {
     type Output = DualNum;
     fn add(self, other: AntiScalar) -> Self::Output {

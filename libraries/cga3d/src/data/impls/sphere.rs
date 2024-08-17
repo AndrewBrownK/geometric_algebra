@@ -6,6 +6,20 @@ use crate::traits::Wedge;
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 65
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         0       2       0
+//  Average:         4       9       0
+//  Maximum:        57      81       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         0       5       0
+//  Average:         9      14       0
+//  Maximum:       128     164       0
 impl std::ops::Add<AntiScalar> for Sphere {
     type Output = MultiVector;
     fn add(self, other: AntiScalar) -> Self::Output {

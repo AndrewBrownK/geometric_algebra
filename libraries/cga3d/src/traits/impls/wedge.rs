@@ -4,6 +4,20 @@
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 193
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       1       0
+//   Median:         5       9       0
+//  Average:         8      14       0
+//  Maximum:       131     153       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       1       0
+//   Median:         6      12       0
+//  Average:        13      21       0
+//  Maximum:       211     243       0
 impl InfixWedge for AntiScalar {}
 impl Wedge<MultiVector> for AntiScalar {
     type Output = AntiScalar;

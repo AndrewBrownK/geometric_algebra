@@ -6,6 +6,20 @@ use crate::traits::Wedge;
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 372
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         2       3       0
+//  Average:        10      15       0
+//  Maximum:       169     192       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         4       6       0
+//  Average:        14      19       0
+//  Maximum:       256     288       0
 impl std::ops::Add<AntiCircleOnOrigin> for DipoleOrthogonalOrigin {
     type Output = DipoleOrthogonalOrigin;
     // Operative Statistics for this implementation:

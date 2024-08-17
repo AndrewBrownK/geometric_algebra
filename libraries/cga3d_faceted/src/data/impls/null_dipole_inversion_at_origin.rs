@@ -6,6 +6,20 @@ use crate::traits::Wedge;
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 342
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         1       3       0
+//  Average:         3       6       0
+//  Maximum:        46      58       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         1       4       0
+//  Average:         6      10       0
+//  Maximum:       111     128       0
 impl std::ops::Add<AntiCircleOnOrigin> for NullDipoleInversionAtOrigin {
     type Output = AntiVersorEvenOnOrigin;
     // Operative Statistics for this implementation:

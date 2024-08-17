@@ -6,6 +6,20 @@ use crate::traits::Wedge;
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 77
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         4       2       0
+//  Average:        17      21       0
+//  Maximum:       235     263       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         6       5       0
+//  Average:        34      40       0
+//  Maximum:       480     512       0
 impl std::ops::Add<AntiScalar> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:

@@ -6,6 +6,20 @@ use crate::traits::Wedge;
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 300
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       0       0
+//   Median:         0       2       0
+//  Average:         3       6       0
+//  Maximum:        48      72       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       0       0
+//   Median:         0       3       0
+//  Average:         3       8       0
+//  Maximum:        64      96       0
 impl std::ops::Add<AntiCircleOnOrigin> for PlaneOnOrigin {
     type Output = DipoleInversion;
     fn add(self, other: AntiCircleOnOrigin) -> Self::Output {

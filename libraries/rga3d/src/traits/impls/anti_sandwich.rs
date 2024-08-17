@@ -6,6 +6,20 @@ use crate::traits::GeometricAntiProduct;
 // As always, where performance is a concern, there is no substitute for
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
+//
+// Total Implementations: 109
+//
+// Yes SIMD:   add/sub     mul     div
+//  Minimum:         0       2       0
+//   Median:        14      29       0
+//  Average:        26      40       0
+//  Maximum:       206     239       0
+//
+//  No SIMD:   add/sub    mul    div
+//  Minimum:         0       2       0
+//   Median:        19      39       0
+//  Average:        44      63       0
+//  Maximum:       354     394       0
 impl InfixAntiSandwich for AntiScalar {}
 impl AntiSandwich<AntiScalar> for AntiScalar {
     type Output = AntiScalar;
