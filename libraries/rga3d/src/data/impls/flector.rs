@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 49
+// Total Implementations: 50
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,9 +15,9 @@ use crate::traits::Wedge;
 //  Average:         3       6       0
 //  Maximum:        50      65       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         1       1       0
+//   Median:         1       2       0
 //  Average:         7       9       0
 //  Maximum:        81      96       0
 impl std::ops::Add<AntiScalar> for Flector {
@@ -589,6 +589,21 @@ impl std::ops::MulAssign<Scalar> for Flector {
     fn mul_assign(&mut self, other: Scalar) {
         use crate::elements::*;
         *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for Flector {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
+    fn neg(self) -> Self {
+        let negation = Flector::from_groups(
+            // e1, e2, e3, e4
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e423, e431, e412, e321
+            (self.group1() * Simd32x4::from(-1.0)),
+        );
+        return negation;
     }
 }
 impl std::ops::Not for Flector {

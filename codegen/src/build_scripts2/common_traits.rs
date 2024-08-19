@@ -2,7 +2,7 @@
 
 use crate::algebra2::basis::grades::{AntiGrades, Grades};
 use crate::ast2::impls::{Elaborated, InlineOnly};
-use crate::ast2::traits::{NameTrait, TraitDef_1_Param_1_Arg, TraitImpl_10, TraitImpl_11, TraitImpl_21};
+use crate::ast2::traits::{NameTrait, TraitDef_1_Type_1_Arg, TraitImpl_10, TraitImpl_11, TraitImpl_21};
 use crate::build_scripts2::common_traits::impls::*;
 
 pub static Zero: Elaborated<ZeroImpl> = ZeroImpl
@@ -117,6 +117,46 @@ pub static AntiScalarProduct: Elaborated<AntiScalarProductImpl> = AntiScalarProd
     .new_trait_named("AntiScalarProduct")
     .blurb("TODO");
 
+pub static ScalarNormSquared: Elaborated<ScalarNormSquaredImpl> = ScalarNormSquaredImpl
+    .new_trait_named("ScalarNormSquared")
+    .blurb("TODO");
+
+pub static AntiScalarNormSquared: Elaborated<AntiScalarNormImpl> = AntiScalarNormImpl
+    .new_trait_named("AntiScalarNormSquared")
+    .blurb("TODO");
+
+pub static ScalarNorm: Elaborated<ScalarNormSquaredImpl> = ScalarNormSquaredImpl
+    .new_trait_named("ScalarNorm")
+    .blurb("TODO");
+
+pub static AntiScalarNorm: Elaborated<AntiScalarNormImpl> = AntiScalarNormImpl
+    .new_trait_named("AntiScalarNorm")
+    .blurb("TODO");
+
+pub static Inverse: Elaborated<InverseImpl> = InverseImpl
+    .new_trait_named("Inverse")
+    .blurb("TODO");
+
+pub static AntiInverse: Elaborated<AntiInverseImpl> = AntiInverseImpl
+    .new_trait_named("AntiInverse")
+    .blurb("TODO");
+
+pub static GeometricQuotient: Elaborated<GeometricQuotientImpl> = GeometricQuotientImpl
+    .new_trait_named("GeometricQuotient")
+    .blurb("TODO");
+
+pub static GeometricAntiQuotient: Elaborated<GeometricAntiQuotientImpl> = GeometricAntiQuotientImpl
+    .new_trait_named("GeometricAntiQuotient")
+    .blurb("TODO");
+
+pub static SquareRoot: Elaborated<SquareRootImpl> = SquareRootImpl
+    .new_trait_named("SquareRoot")
+    .blurb("TODO");
+
+pub static AntiSquareRoot: Elaborated<AntiSquareRootImpl> = AntiSquareRootImpl
+    .new_trait_named("AntiSquareRoot")
+    .blurb("TODO");
+
 pub static BulkContraction: Elaborated<BulkContractionImpl> = BulkContractionImpl
     .new_trait_named("BulkContraction")
     .blurb("TODO");
@@ -175,38 +215,17 @@ mod impls {
 
     use async_trait::async_trait;
 
-    use crate::algebra2::basis::grades::{AntiGrades, Grades};
     use crate::algebra2::basis::{BasisElement, BasisSignature};
+    use crate::algebra2::basis::grades::{AntiGrades, Grades};
     use crate::algebra2::multivector::DynamicMultiVector;
     use crate::ast2::datatype::{Integer, MultiVector};
     use crate::ast2::expressions::{Expression, FloatExpr, IntExpr};
-    use crate::ast2::traits::{HasNotReturned, TraitDef_1_Param_1_Arg, TraitDef_2_Param_2_Arg, TraitImplBuilder, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22};
+    use crate::ast2::traits::{HasNotReturned, TraitDef_1_Type_0_Args, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder};
     use crate::ast2::Variable;
-    use crate::build_scripts2::common_traits::{AntiDual, AntiReverse, AntiWedge, Dual, GeometricAntiProduct, GeometricProduct, Reverse, Wedge};
-
-    macro_rules! impl_trait {
-        ($trait_name:ident, $fn_name:ident, $param:ident, $body:tt) => {
-            impl $trait_name for MyStruct {
-                fn $fn_name(&self, $param: u32) {
-                    $body
-                }
-            }
-        };
-    }
-
-    trait MyTrait {
-        fn my_function(&self, param: u32);
-    }
-
-    struct MyStruct;
-    impl_trait!(MyTrait, my_function, param, {
-        println!("The parameter is: {}", param);
-    });
-
-
+    use crate::build_scripts2::common_traits::{AntiDual, AntiOne, AntiReverse, AntiScalarProduct, AntiWedge, Dual, GeometricAntiProduct, GeometricProduct, One, Reverse, ScalarProduct, Wedge};
 
     #[macro_export]
-    macro_rules! trait_impl_1_param_0_arg {
+    macro_rules! trait_impl_1_type_0_args {
         ($trait_impl:ident($builder:ident, $owner:ident) -> $output:ident $the_impl:tt) => {
             #[derive(Clone, Copy)]
             pub struct $trait_impl;
@@ -224,7 +243,7 @@ mod impls {
         };
     }
     #[macro_export]
-    macro_rules! trait_impl_1_param_1_arg {
+    macro_rules! trait_impl_1_type_1_arg {
         ($trait_impl:ident($builder:ident, $slf:ident) -> $output:ident $the_impl:tt) => {
             #[derive(Clone, Copy)]
             pub struct $trait_impl;
@@ -242,7 +261,7 @@ mod impls {
         };
     }
     #[macro_export]
-    macro_rules! trait_impl_2_param_1_arg {
+    macro_rules! trait_impl_2_types_1_arg {
         ($trait_impl:ident($builder:ident, $slf:ident, $other:ident) -> $output:ident $the_impl:tt) => {
             #[derive(Clone, Copy)]
             pub struct $trait_impl;
@@ -261,7 +280,7 @@ mod impls {
         };
     }
     #[macro_export]
-    macro_rules! trait_impl_2_param_2_arg {
+    macro_rules! trait_impl_2_types_2_args {
         ($trait_impl:ident($builder:ident, $slf:ident, $other:ident) -> $output:ident $the_impl:tt) => {
             #[derive(Clone, Copy)]
             pub struct $trait_impl;
@@ -280,11 +299,11 @@ mod impls {
         };
     }
 
-    trait_impl_1_param_0_arg!(ZeroImpl(builder, owner) -> MultiVector {
+    trait_impl_1_type_0_args!(ZeroImpl(builder, owner) -> MultiVector {
         builder.return_expr(owner.construct(|_| FloatExpr::Literal(0.0)))
     });
 
-    trait_impl_1_param_0_arg!(OneImpl(builder, owner) -> MultiVector {
+    trait_impl_1_type_0_args!(OneImpl(builder, owner) -> MultiVector {
         if !owner.elements().into_iter().any(|el| el.signature() == BasisSignature::scalar) {
             return None;
         }
@@ -297,7 +316,7 @@ mod impls {
         }))
     });
 
-    trait_impl_1_param_0_arg!(AntiOneImpl(builder, owner) -> MultiVector {
+    trait_impl_1_type_0_args!(AntiOneImpl(builder, owner) -> MultiVector {
         if !owner.elements().into_iter().any(|el| el.signature() == AntiScalar.signature()) {
             return None;
         }
@@ -310,21 +329,21 @@ mod impls {
         }))
     });
 
-    trait_impl_1_param_0_arg!(UnitImpl(builder, owner) -> MultiVector {
+    trait_impl_1_type_0_args!(UnitImpl(builder, owner) -> MultiVector {
         builder.return_expr(owner.construct(|_| FloatExpr::Literal(1.0)))
     });
 
-    trait_impl_1_param_0_arg!(GradeImpl(builder, owner) -> Integer {
+    trait_impl_1_type_0_args!(GradeImpl(builder, owner) -> Integer {
         let gr = owner.grade()?;
         builder.return_expr(IntExpr::Literal(gr))
     });
 
-    trait_impl_1_param_0_arg!(AntiGradeImpl(builder, owner) -> Integer {
+    trait_impl_1_type_0_args!(AntiGradeImpl(builder, owner) -> Integer {
         let ag = owner.anti_grade()?;
         builder.return_expr(IntExpr::Literal(ag))
     });
 
-    trait_impl_1_param_1_arg!(DualImpl(builder, slf) -> MultiVector {
+    trait_impl_1_type_1_arg!(DualImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
         for (fe, el) in slf.elements_by_groups() {
             let (f, el) = builder.ga.dual(el);
@@ -334,7 +353,7 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_1_param_1_arg!(AntiDualImpl(builder, slf) -> MultiVector {
+    trait_impl_1_type_1_arg!(AntiDualImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
         for (fe, el) in slf.elements_by_groups() {
             let (f, el) = builder.ga.anti_dual(el);
@@ -344,7 +363,7 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_1_param_1_arg!(ReverseImpl(builder, slf) -> MultiVector {
+    trait_impl_1_type_1_arg!(ReverseImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
         for (fe, el) in slf.elements_by_groups() {
             let (f, el) = builder.ga.reverse(el);
@@ -354,7 +373,7 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_1_param_1_arg!(AntiReverseImpl(builder, slf) -> MultiVector {
+    trait_impl_1_type_1_arg!(AntiReverseImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
         for (fe, el) in slf.elements_by_groups() {
             let (f, el) = builder.ga.anti_reverse(el);
@@ -364,7 +383,7 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_1_param_1_arg!(AutoMorphismImpl(builder, slf) -> MultiVector {
+    trait_impl_1_type_1_arg!(AutoMorphismImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
         for (mut fe, el) in slf.elements_by_groups() {
             if el.grade() % 2 == 1 {
@@ -376,7 +395,7 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_1_param_1_arg!(AntiAutoMorphismImpl(builder, slf) -> MultiVector {
+    trait_impl_1_type_1_arg!(AntiAutoMorphismImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
         for (mut fe, el) in slf.elements_by_groups() {
             if el.anti_grade(AntiScalar) % 2 == 1 {
@@ -388,7 +407,7 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_1_param_1_arg!(ConjugationImpl(builder, slf) -> MultiVector {
+    trait_impl_1_type_1_arg!(ConjugationImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
         for (mut fe, el) in slf.elements_by_groups() {
             if (el.grade() + 3) % 4 < 2 {
@@ -400,7 +419,7 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_1_param_1_arg!(AntiConjugationImpl(builder, slf) -> MultiVector {
+    trait_impl_1_type_1_arg!(AntiConjugationImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
         for (mut fe, el) in slf.elements_by_groups() {
             if (el.anti_grade(AntiScalar) + 3) % 4 < 2 {
@@ -412,7 +431,7 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_1_param_1_arg!(RightComplementImpl(builder, slf) -> MultiVector {
+    trait_impl_1_type_1_arg!(RightComplementImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
         for (fe, el) in slf.elements_by_groups() {
             let (f, el) = builder.ga.fix_name_and_sign(el.right_complement(AntiScalar));
@@ -422,7 +441,7 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_1_param_1_arg!(LeftComplementImpl(builder, slf) -> MultiVector {
+    trait_impl_1_type_1_arg!(LeftComplementImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
         for (fe, el) in slf.elements_by_groups() {
             let (f, el) = builder.ga.fix_name_and_sign(el.left_complement(AntiScalar));
@@ -432,7 +451,7 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_1_param_1_arg!(DoubleComplementImpl(builder, slf) -> MultiVector {
+    trait_impl_1_type_1_arg!(DoubleComplementImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
         for (fe, el) in slf.elements_by_groups() {
             let el = el.right_complement(AntiScalar).right_complement(AntiScalar);
@@ -443,7 +462,7 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_1_param_1_arg!(NegationImpl(builder, slf) -> MultiVector {
+    trait_impl_1_type_1_arg!(NegationImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
         for (fe, el) in slf.elements_by_groups() {
             result += (fe * -1.0, el);
@@ -452,7 +471,7 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_2_param_2_arg!(AdditionImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_2_args!(AdditionImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
         for (a, a_el) in slf.elements_by_groups() {
             dyn_mv += (a, a_el);
@@ -464,7 +483,7 @@ mod impls {
         builder.return_expr(mv)
     });
 
-    trait_impl_2_param_2_arg!(SubtractionImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_2_args!(SubtractionImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
         for (a, a_el) in slf.elements_by_groups() {
             dyn_mv += (a, a_el);
@@ -476,7 +495,7 @@ mod impls {
         builder.return_expr(mv)
     });
 
-    trait_impl_2_param_2_arg!(WedgeImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_2_args!(WedgeImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
         for (a, a_el) in slf.elements_by_groups() {
             for (b, b_el) in other.elements_by_groups() {
@@ -489,7 +508,7 @@ mod impls {
         builder.return_expr(mv)
     });
 
-    trait_impl_2_param_2_arg!(AntiWedgeImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_2_args!(AntiWedgeImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
         for (a, a_el) in slf.elements_by_groups() {
             for (b, b_el) in other.elements_by_groups() {
@@ -502,7 +521,7 @@ mod impls {
         builder.return_expr(mv)
     });
 
-    trait_impl_2_param_2_arg!(GeometricProductImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_2_args!(GeometricProductImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
         for (a, a_el) in slf.elements_by_groups() {
             for (b, b_el) in other.elements_by_groups() {
@@ -518,7 +537,7 @@ mod impls {
         builder.return_expr(mv)
     });
 
-    trait_impl_2_param_2_arg!(GeometricAntiProductImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_2_args!(GeometricAntiProductImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
         for (a, a_el) in slf.elements_by_groups() {
             for (b, b_el) in other.elements_by_groups() {
@@ -534,7 +553,7 @@ mod impls {
         builder.return_expr(mv)
     });
 
-    trait_impl_2_param_2_arg!(SandwichImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_2_args!(SandwichImpl(builder, slf, other) -> MultiVector {
         // TODO incorrect cycle detection if use all invoke
         let c = GeometricProduct.inline(&builder, slf.clone(), other).await?;
         let r = Reverse.invoke(&mut builder, slf).await?;
@@ -542,7 +561,7 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_2_param_2_arg!(AntiSandwichImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_2_args!(AntiSandwichImpl(builder, slf, other) -> MultiVector {
         // TODO incorrect cycle detection if use all invoke
         let c = GeometricAntiProduct.inline(&builder, slf.clone(), other).await?;
         let r = AntiReverse.invoke(&mut builder, slf).await?;
@@ -550,7 +569,7 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_2_param_2_arg!(ScalarProductImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_2_args!(ScalarProductImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
         for (a, a_el) in slf.elements_by_groups() {
             for (b, b_el) in other.elements_by_groups() {
@@ -567,7 +586,7 @@ mod impls {
         builder.return_expr(mv)
     });
 
-    trait_impl_2_param_2_arg!(AntiScalarProductImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_2_args!(AntiScalarProductImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
         for (a, a_el) in slf.elements_by_groups() {
             for (b, b_el) in other.elements_by_groups() {
@@ -584,28 +603,86 @@ mod impls {
         builder.return_expr(mv)
     });
 
-    trait_impl_2_param_2_arg!(BulkExpansionImpl(builder, slf, other) -> MultiVector {
+    trait_impl_1_type_1_arg!(ScalarNormSquaredImpl(builder, slf) -> MultiVector {
+        let result = ScalarProduct.invoke(&mut builder, slf.clone(), slf).await?;
+        builder.return_expr(result)
+    });
+
+    trait_impl_1_type_1_arg!(AntiScalarNormSquaredImpl(builder, slf) -> MultiVector {
+        let result = AntiScalarProduct.invoke(&mut builder, slf.clone(), slf).await?;
+        builder.return_expr(result)
+    });
+
+    trait_impl_1_type_1_arg!(ScalarNormImpl(builder, slf) -> MultiVector {
+        let result = ScalarProduct.invoke(&mut builder, slf.clone(), slf).await?;
+        // TODO
+        builder.return_expr(result)
+    });
+
+    trait_impl_1_type_1_arg!(AntiScalarNormImpl(builder, slf) -> MultiVector {
+        let result = AntiScalarProduct.invoke(&mut builder, slf.clone(), slf).await?;
+        // TODO
+        builder.return_expr(result)
+    });
+
+    trait_impl_1_type_1_arg!(InverseImpl(builder, slf) -> MultiVector {
+        let one = One.invoke(&mut builder, MultiVector::from(builder.mvs.scalar())).await?;
+
+        // TODO
+        builder.return_expr(slf)
+    });
+
+    trait_impl_1_type_1_arg!(AntiInverseImpl(builder, slf) -> MultiVector {
+        let anti_one = AntiOne.invoke(&mut builder, MultiVector::from(builder.mvs.anti_scalar())).await?;
+        // TODO
+        builder.return_expr(slf)
+    });
+
+    trait_impl_2_types_2_args!(GeometricQuotientImpl(builder, slf, other) -> MultiVector {
+        // TODO
+        None
+    });
+
+    trait_impl_2_types_2_args!(GeometricAntiQuotientImpl(builder, slf, other) -> MultiVector {
+        // TODO
+        None
+    });
+
+    trait_impl_1_type_1_arg!(SquareRootImpl(builder, slf) -> MultiVector {
+        let one = One.invoke(&mut builder, MultiVector::from(builder.mvs.scalar())).await?;
+
+        // TODO
+        builder.return_expr(slf)
+    });
+
+    trait_impl_1_type_1_arg!(AntiSquareRootImpl(builder, slf) -> MultiVector {
+        let anti_one = AntiOne.invoke(&mut builder, MultiVector::from(builder.mvs.anti_scalar())).await?;
+        // TODO
+        builder.return_expr(slf)
+    });
+
+    trait_impl_2_types_2_args!(BulkExpansionImpl(builder, slf, other) -> MultiVector {
         // TODO inline again after getting Rust emission import fixed
         let dual = Dual.invoke(&mut builder, other).await?;
         let wedge = Wedge.invoke(&mut builder, slf, dual).await?;
         builder.return_expr(wedge)
     });
 
-    trait_impl_2_param_2_arg!(WeightExpansionImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_2_args!(WeightExpansionImpl(builder, slf, other) -> MultiVector {
         // TODO inline again after getting Rust emission import fixed
         let anti_dual = AntiDual.invoke(&mut builder, other).await?;
         let wedge = Wedge.invoke(&mut builder, slf, anti_dual).await?;
         builder.return_expr(wedge)
     });
 
-    trait_impl_2_param_2_arg!(BulkContractionImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_2_args!(BulkContractionImpl(builder, slf, other) -> MultiVector {
         // TODO inline again after getting Rust emission import fixed
         let dual = Dual.invoke(&mut builder, other).await?;
         let anti_wedge = AntiWedge.invoke(&mut builder, slf, dual).await?;
         builder.return_expr(anti_wedge)
     });
 
-    trait_impl_2_param_2_arg!(WeightContractionImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_2_args!(WeightContractionImpl(builder, slf, other) -> MultiVector {
         // TODO inline again after getting Rust emission import fixed
         let anti_dual = AntiDual.invoke(&mut builder, other).await?;
         let anti_wedge = AntiWedge.invoke(&mut builder, slf, anti_dual).await?;
@@ -615,7 +692,7 @@ mod impls {
     // Into is treated kind of special, because we actually want to implement From,
     // but the TraitImpl_21 pattern assumes the first argument is the owner.
     // So in the code generation we have a special exception to treat Into as From instead.
-    trait_impl_2_param_1_arg!(IntoImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_1_arg!(IntoImpl(builder, slf, other) -> MultiVector {
         if slf.expression_type() == other {
             return None;
         }
@@ -634,7 +711,7 @@ mod impls {
     // TryInto is treated kind of special, because we actually want to implement TryFrom,
     // but the TraitImpl_21 pattern assumes the first argument is the owner.
     // So in the code generation we have a special exception to treat TrInto as TryFrom instead.
-    trait_impl_2_param_1_arg!(TryIntoImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_1_arg!(TryIntoImpl(builder, slf, other) -> MultiVector {
         let mut missing_some = false;
         let mut overlapping_some = false;
         let other_elements: BTreeSet<_> = other.elements().into_iter().collect();

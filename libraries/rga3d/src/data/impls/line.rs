@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 44
+// Total Implementations: 45
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,7 +15,7 @@ use crate::traits::Wedge;
 //  Average:         3       5       0
 //  Maximum:        34      45       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       3       0
 //  Average:         5       8       0
@@ -453,6 +453,21 @@ impl std::ops::MulAssign<Scalar> for Line {
     fn mul_assign(&mut self, other: Scalar) {
         use crate::elements::*;
         *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for Line {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
+    fn neg(self) -> Self {
+        let negation = Line::from_groups(
+            // e41, e42, e43
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e23, e31, e12
+            (self.group1() * Simd32x3::from(-1.0)),
+        );
+        return negation;
     }
 }
 impl std::ops::Not for Line {

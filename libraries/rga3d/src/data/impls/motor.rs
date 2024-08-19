@@ -7,17 +7,17 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 50
+// Total Implementations: 51
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         1       1       0
+//   Median:         0       1       0
 //  Average:         3       5       0
 //  Maximum:        37      47       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         1       3       0
+//   Median:         0       3       0
 //  Average:         6       9       0
 //  Maximum:        82      96       0
 impl std::ops::Add<AntiScalar> for Motor {
@@ -641,6 +641,21 @@ impl std::ops::MulAssign<Scalar> for Motor {
     fn mul_assign(&mut self, other: Scalar) {
         use crate::elements::*;
         *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for Motor {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
+    fn neg(self) -> Self {
+        let negation = Motor::from_groups(
+            // e41, e42, e43, e1234
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e23, e31, e12, scalar
+            (self.group1() * Simd32x4::from(-1.0)),
+        );
+        return negation;
     }
 }
 impl std::ops::Not for Motor {

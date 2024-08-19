@@ -10,7 +10,7 @@ use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::MultiVec;
 use crate::ast2::datatype::{AnyClasses, MultiVector, Specifically};
 use crate::ast2::expressions::{Expression, TraitResultType};
-use crate::ast2::traits::{HasNotReturned, ProvideTraitNames, TraitAlias, TraitDef_1_Param_0_Arg, TraitDef_1_Param_1_Arg, TraitDef_2_Param_1_Arg, TraitDef_2_Param_2_Arg, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder, TraitKey, TraitNames};
+use crate::ast2::traits::{HasNotReturned, ProvideTraitNames, TraitAlias, TraitDef_1_Type_0_Args, TraitDef_1_Type_1_Arg, TraitDef_2_Types_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder, TraitKey, TraitNames};
 use crate::ast2::Variable;
 
 #[derive(Clone, Copy)]
@@ -122,7 +122,7 @@ impl<Impl: TraitImpl_10> TraitImpl_10 for Elaborated<Impl> {
     }
 }
 #[async_trait]
-impl<Impl: TraitImpl_10> TraitDef_1_Param_0_Arg for Elaborated<Impl> {
+impl<Impl: TraitImpl_10> TraitDef_1_Type_0_Args for Elaborated<Impl> {
     type Owner = AnyClasses;
     fn general_documentation(&self) -> String {
         standard_documentation(<Elaborated<Impl> as ProvideTraitNames>::trait_names(self), self.blurb)
@@ -144,7 +144,7 @@ impl<Impl: TraitImpl_11> TraitImpl_11 for Elaborated<Impl> {
     }
 }
 #[async_trait]
-impl<Impl: TraitImpl_11> TraitDef_1_Param_1_Arg for Elaborated<Impl> {
+impl<Impl: TraitImpl_11> TraitDef_1_Type_1_Arg for Elaborated<Impl> {
     type Owner = AnyClasses;
     fn general_documentation(&self) -> String {
         standard_documentation(<Elaborated<Impl> as ProvideTraitNames>::trait_names(self), self.blurb)
@@ -166,7 +166,7 @@ impl<Impl: TraitImpl_21> TraitImpl_21 for Elaborated<Impl> {
     }
 }
 #[async_trait]
-impl<Impl: TraitImpl_21> TraitDef_2_Param_1_Arg for Elaborated<Impl> {
+impl<Impl: TraitImpl_21> TraitDef_2_Types_1_Arg for Elaborated<Impl> {
     type Owner = AnyClasses;
     type Other = AnyClasses;
     fn general_documentation(&self) -> String {
@@ -189,7 +189,7 @@ impl<Impl: TraitImpl_22> TraitImpl_22 for Elaborated<Impl> {
     }
 }
 #[async_trait]
-impl<Impl: TraitImpl_22> TraitDef_2_Param_2_Arg for Elaborated<Impl> {
+impl<Impl: TraitImpl_22> TraitDef_2_Types_2_Args for Elaborated<Impl> {
     type Owner = AnyClasses;
     type Other = AnyClasses;
     fn general_documentation(&self) -> String {
@@ -230,7 +230,7 @@ impl<Impl: TraitImpl_10> TraitImpl_10 for InlineOnly<Impl> {
     }
 }
 #[async_trait]
-impl<Impl: TraitImpl_10> TraitDef_1_Param_0_Arg for InlineOnly<Impl> {
+impl<Impl: TraitImpl_10> TraitDef_1_Type_0_Args for InlineOnly<Impl> {
     type Owner = AnyClasses;
     fn general_documentation(&self) -> String {
         String::new()
@@ -260,7 +260,7 @@ impl<Impl: TraitImpl_11> TraitImpl_11 for InlineOnly<Impl> {
     }
 }
 #[async_trait]
-impl<Impl: TraitImpl_11> TraitDef_1_Param_1_Arg for InlineOnly<Impl> {
+impl<Impl: TraitImpl_11> TraitDef_1_Type_1_Arg for InlineOnly<Impl> {
     type Owner = AnyClasses;
     fn general_documentation(&self) -> String {
         String::new()
@@ -291,7 +291,7 @@ impl<Impl: TraitImpl_21> TraitImpl_21 for InlineOnly<Impl> {
     }
 }
 #[async_trait]
-impl<Impl: TraitImpl_21> TraitDef_2_Param_1_Arg for InlineOnly<Impl> {
+impl<Impl: TraitImpl_21> TraitDef_2_Types_1_Arg for InlineOnly<Impl> {
     type Owner = AnyClasses;
     type Other = AnyClasses;
     fn general_documentation(&self) -> String {
@@ -324,7 +324,7 @@ impl<Impl: TraitImpl_22> TraitImpl_22 for InlineOnly<Impl> {
     }
 }
 #[async_trait]
-impl<Impl: TraitImpl_22> TraitDef_2_Param_2_Arg for InlineOnly<Impl> {
+impl<Impl: TraitImpl_22> TraitDef_2_Types_2_Args for InlineOnly<Impl> {
     type Owner = AnyClasses;
     type Other = AnyClasses;
     fn general_documentation(&self) -> String {
@@ -390,7 +390,7 @@ where
     }
 }
 #[async_trait]
-impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitDef_1_Param_0_Arg for Specialized_10<AntiScalar, Output>
+impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitDef_1_Type_0_Args for Specialized_10<AntiScalar, Output>
 where
     Self: Copy,
 {
@@ -465,7 +465,7 @@ where
     }
 }
 #[async_trait]
-impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitDef_1_Param_1_Arg for Specialized_11<AntiScalar, Output>
+impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitDef_1_Type_1_Arg for Specialized_11<AntiScalar, Output>
 where
     Self: Copy,
 {
@@ -546,7 +546,7 @@ where
     }
 }
 #[async_trait]
-impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitDef_2_Param_1_Arg for Specialized_21<AntiScalar, Output>
+impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitDef_2_Types_1_Arg for Specialized_21<AntiScalar, Output>
 where
     Self: Copy,
 {
@@ -630,7 +630,7 @@ where
     }
 }
 #[async_trait]
-impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitDef_2_Param_2_Arg for Specialized_22<AntiScalar, Output>
+impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitDef_2_Types_2_Args for Specialized_22<AntiScalar, Output>
 where
     Self: Copy,
 {
@@ -681,7 +681,7 @@ impl<Impl> const ProvideTraitNames for OvertDelegate<Impl> {
     }
 }
 #[async_trait]
-impl<Impl: TraitDef_1_Param_0_Arg> TraitImpl_10 for OvertDelegate<Impl> {
+impl<Impl: TraitDef_1_Type_0_Args> TraitImpl_10 for OvertDelegate<Impl> {
     type Output = Impl::Output;
     async fn general_implementation<const AntiScalar: BasisElement>(
         self,
@@ -693,7 +693,7 @@ impl<Impl: TraitDef_1_Param_0_Arg> TraitImpl_10 for OvertDelegate<Impl> {
     }
 }
 #[async_trait]
-impl<Impl: TraitDef_1_Param_0_Arg> TraitDef_1_Param_0_Arg for OvertDelegate<Impl> {
+impl<Impl: TraitDef_1_Type_0_Args> TraitDef_1_Type_0_Args for OvertDelegate<Impl> {
     type Owner = AnyClasses;
     fn general_documentation(&self) -> String {
         String::new()
@@ -703,7 +703,7 @@ impl<Impl: TraitDef_1_Param_0_Arg> TraitDef_1_Param_0_Arg for OvertDelegate<Impl
     }
 }
 #[async_trait]
-impl<Impl: TraitDef_1_Param_1_Arg> TraitImpl_11 for OvertDelegate<Impl> {
+impl<Impl: TraitDef_1_Type_1_Arg> TraitImpl_11 for OvertDelegate<Impl> {
     type Output = Impl::Output;
     async fn general_implementation<const AntiScalar: BasisElement>(
         self,
@@ -715,7 +715,7 @@ impl<Impl: TraitDef_1_Param_1_Arg> TraitImpl_11 for OvertDelegate<Impl> {
     }
 }
 #[async_trait]
-impl<Impl: TraitDef_1_Param_1_Arg> TraitDef_1_Param_1_Arg for OvertDelegate<Impl> {
+impl<Impl: TraitDef_1_Type_1_Arg> TraitDef_1_Type_1_Arg for OvertDelegate<Impl> {
     type Owner = Impl::Owner;
     fn general_documentation(&self) -> String {
         String::new()
@@ -725,7 +725,7 @@ impl<Impl: TraitDef_1_Param_1_Arg> TraitDef_1_Param_1_Arg for OvertDelegate<Impl
     }
 }
 #[async_trait]
-impl<Impl: TraitDef_2_Param_1_Arg> TraitImpl_21 for OvertDelegate<Impl> {
+impl<Impl: TraitDef_2_Types_1_Arg> TraitImpl_21 for OvertDelegate<Impl> {
     type Output = Impl::Output;
     async fn general_implementation<const AntiScalar: BasisElement>(
         self,
@@ -738,7 +738,7 @@ impl<Impl: TraitDef_2_Param_1_Arg> TraitImpl_21 for OvertDelegate<Impl> {
     }
 }
 #[async_trait]
-impl<Impl: TraitDef_2_Param_1_Arg> TraitDef_2_Param_1_Arg for OvertDelegate<Impl> {
+impl<Impl: TraitDef_2_Types_1_Arg> TraitDef_2_Types_1_Arg for OvertDelegate<Impl> {
     type Owner = Impl::Owner;
     type Other = Impl::Other;
     fn general_documentation(&self) -> String {
@@ -749,7 +749,7 @@ impl<Impl: TraitDef_2_Param_1_Arg> TraitDef_2_Param_1_Arg for OvertDelegate<Impl
     }
 }
 #[async_trait]
-impl<Impl: TraitDef_2_Param_2_Arg> TraitImpl_22 for OvertDelegate<Impl> {
+impl<Impl: TraitDef_2_Types_2_Args> TraitImpl_22 for OvertDelegate<Impl> {
     type Output = Impl::Output;
     async fn general_implementation<const AntiScalar: BasisElement>(
         self,
@@ -762,7 +762,7 @@ impl<Impl: TraitDef_2_Param_2_Arg> TraitImpl_22 for OvertDelegate<Impl> {
     }
 }
 #[async_trait]
-impl<Impl: TraitDef_2_Param_2_Arg> TraitDef_2_Param_2_Arg for OvertDelegate<Impl> {
+impl<Impl: TraitDef_2_Types_2_Args> TraitDef_2_Types_2_Args for OvertDelegate<Impl> {
     type Owner = Impl::Owner;
     type Other = Impl::Other;
     fn general_documentation(&self) -> String {

@@ -15,7 +15,7 @@ use crate::traits::Reverse;
 //  Average:        25      40       0
 //  Maximum:       206     239       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       2       0
 //   Median:        19      39       0
 //  Average:        44      64       0

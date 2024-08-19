@@ -71,21 +71,18 @@ pub mod products {
         "
 use crate::*;",
     )?;
-    code_gen.emit_geometric_products(&mut emitter)?;
 
     emitter.new_rust_collector(&file_path.join(Path::new("products/exterior")));
     emitter.emit_rust_preamble(
         "
 use crate::*;",
     )?;
-    code_gen.emit_exterior_products(&mut emitter)?;
 
     emitter.new_rust_collector(&file_path.join(Path::new("products/dot")));
     emitter.emit_rust_preamble(
         "
 use crate::*;",
     )?;
-    code_gen.emit_dot_products(&mut emitter)?;
 
     emitter.new_rust_collector(&file_path.join(Path::new("aspects")));
     emitter.emit_rust_preamble(
@@ -102,7 +99,6 @@ use projective_ga::{simd::*, *};
 use crate::*;
 use std::ops::{Add, Div, Mul, Neg, Sub};",
     )?;
-    code_gen.emit_involutions_and_duals(&mut emitter)?;
 
     emitter.new_rust_collector(&file_path.join(Path::new("aspect_duals")));
     emitter.emit_rust_preamble(

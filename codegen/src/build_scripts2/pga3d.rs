@@ -4,7 +4,7 @@ use crate::algebra2::basis::elements::e0123;
 use crate::algebra2::multivector::DynamicMultiVector;
 use crate::ast2::datatype::{Float, MultiVector};
 use crate::ast2::expressions::FloatExpr;
-use crate::ast2::traits::{TraitDef_1_Param_1_Arg, TraitDef_2_Param_2_Arg, TraitImplBuilder};
+use crate::ast2::traits::{TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImplBuilder};
 use crate::ast2::Variable;
 use crate::build_scripts2::common_traits::{AntiReverse, AntiScalarProduct, AntiWedge, Dual, GeometricProduct, Reverse, Sandwich, ScalarProduct, Wedge};
 use crate::{ga, multi_vecs};

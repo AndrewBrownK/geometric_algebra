@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 55
+// Total Implementations: 56
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,10 +15,10 @@ use crate::traits::Wedge;
 //  Average:         7      10       0
 //  Maximum:       103     118       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         1       0       0
-//  Average:        13      16       0
+//  Average:        12      16       0
 //  Maximum:       177     192       0
 impl std::ops::Add<AntiScalar> for MultiVector {
     type Output = MultiVector;
@@ -1054,6 +1054,31 @@ impl std::ops::MulAssign<Scalar> for MultiVector {
     fn mul_assign(&mut self, other: Scalar) {
         use crate::elements::*;
         *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for MultiVector {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd2        0        1        0
+    //    simd3        0        2        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0       16        0
+    fn neg(self) -> Self {
+        let negation = MultiVector::from_groups(
+            // scalar, e1234
+            (self.group0() * Simd32x2::from(-1.0)),
+            // e1, e2, e3, e4
+            (self.group1() * Simd32x4::from(-1.0)),
+            // e41, e42, e43
+            (self.group2() * Simd32x3::from(-1.0)),
+            // e23, e31, e12
+            (self.group3() * Simd32x3::from(-1.0)),
+            // e423, e431, e412, e321
+            (self.group4() * Simd32x4::from(-1.0)),
+        );
+        return negation;
     }
 }
 impl std::ops::Not for MultiVector {

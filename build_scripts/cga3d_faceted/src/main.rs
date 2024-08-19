@@ -2,6 +2,7 @@
 #![feature(const_mut_refs)]
 #![feature(const_trait_impl)]
 #![feature(effects)]
+#![feature(adt_const_params)]
 
 use codegen::algebra2::multivector::DeclareMultiVecs;
 use codegen::elements::e12345;
@@ -157,7 +158,7 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMulti
     declarations
 }
 
-pub mod specialized {
+pub mod specialized_traits {
     use codegen::ast2::datatype::MultiVector;
     use codegen::ast2::impls::{Specialize_22, Specialized_22};
     use codegen::build_scripts2::common_traits::BulkExpansion;
@@ -171,4 +172,35 @@ pub mod specialized {
             b.return_expr(slf)
         })
     });
+}
+
+//noinspection DuplicatedCode
+pub mod custom_traits {
+    use async_trait::async_trait;
+
+    use codegen::algebra2::multivector::DynamicMultiVector;
+    use codegen::ast2::datatype::MultiVector;
+    use codegen::ast2::impls::Elaborated;
+    use codegen::ast2::traits::NameTrait;
+    use codegen::elements::e5;
+    use codegen::trait_impl_1_type_1_arg;
+
+    pub static ConformalConjugate: Elaborated<ConformalConjugateImpl> = ConformalConjugateImpl
+        .new_trait_named("ConformalConjugate")
+        .blurb("TODO");
+
+    trait_impl_1_type_1_arg!(ConformalConjugateImpl(builder, slf) -> MultiVector {
+        let infinity_sig = e5.signature();
+        let mut result = DynamicMultiVector::zero();
+        for (mut fe, el) in slf.elements_by_groups() {
+            if el.signature().contains(infinity_sig) {
+                fe = fe * -1.0;
+            }
+            result += (fe, el);
+        }
+        let result = result.construct(&builder)?;
+        builder.return_expr(result)
+    });
+
+
 }

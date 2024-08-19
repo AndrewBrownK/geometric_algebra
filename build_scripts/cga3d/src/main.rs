@@ -101,44 +101,33 @@ fn base_documentation(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMult
     declarations
 }
 
+//noinspection DuplicatedCode
 pub mod custom_traits {
     use async_trait::async_trait;
 
-    use codegen::algebra2::basis::BasisElement;
     use codegen::algebra2::multivector::DynamicMultiVector;
     use codegen::ast2::datatype::MultiVector;
     use codegen::ast2::impls::Elaborated;
-    use codegen::ast2::traits::{HasNotReturned, NameTrait, TraitImpl_11, TraitImplBuilder};
-    use codegen::ast2::Variable;
+    use codegen::ast2::traits::NameTrait;
     use codegen::elements::e5;
+    use codegen::trait_impl_1_type_1_arg;
 
-
-    // TODO macroooo
     pub static ConformalConjugate: Elaborated<ConformalConjugateImpl> = ConformalConjugateImpl
         .new_trait_named("ConformalConjugate")
         .blurb("TODO");
-    #[derive(Clone, Copy)]
-    struct ConformalConjugateImpl;
-    #[async_trait]
-    impl TraitImpl_11 for ConformalConjugateImpl {
-        type Output = MultiVector;
-        async fn general_implementation<const AntiScalar: BasisElement>(
-            self,
-            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
-            slf: Variable<MultiVector>
-        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            let infinity_sig = e5.signature();
-            let mut result = DynamicMultiVector::zero();
-            for (mut fe, el) in slf.elements_by_groups() {
-                if el.signature().contains(infinity_sig) {
-                    fe = fe * -1.0;
-                }
-                result += (fe, el);
+
+    trait_impl_1_type_1_arg!(ConformalConjugateImpl(builder, slf) -> MultiVector {
+        let infinity_sig = e5.signature();
+        let mut result = DynamicMultiVector::zero();
+        for (mut fe, el) in slf.elements_by_groups() {
+            if el.signature().contains(infinity_sig) {
+                fe = fe * -1.0;
             }
-            let result = result.construct(&b)?;
-            b.return_expr(result)
+            result += (fe, el);
         }
-    }
+        let result = result.construct(&builder)?;
+        builder.return_expr(result)
+    });
 
 
 }

@@ -15,7 +15,7 @@ use crate::traits::GeometricAntiProduct;
 //  Average:        26      40       0
 //  Maximum:       206     239       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       2       0
 //   Median:        19      39       0
 //  Average:        44      63       0

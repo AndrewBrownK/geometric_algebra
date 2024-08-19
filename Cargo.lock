@@ -237,6 +237,7 @@ dependencies = [
 name = "build_cga3d_faceted"
 version = "0.3.0"
 dependencies = [
+ "async-trait",
  "codegen",
 ]
 

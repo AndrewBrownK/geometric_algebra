@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 38
+// Total Implementations: 39
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,7 +15,7 @@ use crate::traits::Wedge;
 //  Average:         0       1       0
 //  Maximum:         1      10       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       1       0
 //  Average:         0       2       0
@@ -373,6 +373,16 @@ impl std::ops::MulAssign<Scalar> for AntiScalar {
     fn mul_assign(&mut self, other: Scalar) {
         use crate::elements::*;
         *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for AntiScalar {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn neg(self) -> Self {
+        use crate::elements::*;
+        let negation = AntiScalar::from_groups(/* e1234 */ (self[e1234] * -1.0));
+        return negation;
     }
 }
 impl std::ops::Sub<AntiScalar> for AntiScalar {

@@ -4,7 +4,7 @@ use crate::ast::{GatherData, UsualGatherData};
 use crate::emit::Emitter;
 use crate::impls::TraitImpls;
 use crate::{
-    algebra::{Involution, MultiVectorClass, MultiVectorClassRegistry, Product},
+    algebra::{MultiVectorClass, MultiVectorClassRegistry, Product},
     ast::{AstNode, DataType, Expression, ExpressionContent, Parameter},
 };
 use std::collections::{BTreeMap, BTreeSet};
@@ -311,139 +311,6 @@ impl MultiVectorClass {
     }
 }
 
-pub fn derive_involution<'a>(name: &'static str, involution: &Involution, parameter_a: &Parameter<'a>, registry: &'a MultiVectorClassRegistry, project: bool) -> AstNode<'a> {
-    let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
-    let mut result_signature = Vec::new();
-    for a_element in a_flat_basis.iter() {
-        for (in_element, out_element) in involution.terms.iter() {
-            let indexes_match = in_element.index == a_element.index;
-            let in_is_nonzero = in_element.coefficient != 0;
-            let out_is_nonzero = out_element.coefficient != 0;
-            if indexes_match && in_is_nonzero && out_is_nonzero {
-                result_signature.push(out_element.index);
-                break;
-            }
-        }
-    }
-    if project {
-        for (in_element, _out_element) in involution.terms.iter() {
-            if !a_flat_basis.iter().any(|element| element.index == in_element.index) {
-                return AstNode::None;
-            }
-        }
-    }
-    result_signature.sort_unstable();
-
-    let result_class = match registry.get_at_least(result_signature.as_slice()) {
-        None => return AstNode::None,
-        Some(rc) => rc,
-    };
-    let result_flat_basis = result_class.flat_basis();
-    let mut body = Vec::new();
-    let mut base_index = 0;
-    let mut all_zeroes = true;
-    let mut is_identity = result_class == parameter_a.multi_vector_class();
-    for (result_group_index, result_group) in result_class.grouped_basis.iter().enumerate() {
-        let size = result_group.len();
-        let mut a_group_index = None;
-        let mut factors = vec![];
-        let mut a_indices = vec![];
-        'for_index_in_group: for index_in_group in 0..size {
-            let result_element = &result_flat_basis[base_index + index_in_group];
-            let (in_element, out_element) = match involution.terms.iter().find(|(_in, out)| out.index == result_element.index) {
-                Some((_in, out)) => (_in.clone(), out.clone()),
-                None => (BasisElement::zero(), BasisElement::zero()),
-            };
-            if in_element.coefficient == 0 || out_element.coefficient == 0 {
-                factors.push(0);
-                is_identity = false;
-                a_indices.push(GatherData::RawZero);
-                continue 'for_index_in_group;
-            }
-
-            let index_in_a = a_flat_basis.iter().position(|a_element| a_element.index == in_element.index);
-            let index_in_a = match index_in_a {
-                None => {
-                    factors.push(0);
-                    is_identity = false;
-                    a_indices.push(GatherData::RawZero);
-                    continue 'for_index_in_group;
-                }
-                Some(index_in_a) => index_in_a,
-            };
-            all_zeroes = false;
-            let coefficient = out_element.coefficient * result_element.coefficient * in_element.coefficient * a_flat_basis[index_in_a].coefficient;
-            let (group, element) = parameter_a.multi_vector_class().index_in_group(index_in_a);
-            let group_size = parameter_a.multi_vector_class().grouped_basis[group].len();
-            if a_group_index.is_none() {
-                a_group_index = Some(group);
-            }
-            let negate = false;
-            factors.push(coefficient);
-            if coefficient != 1 {
-                is_identity = false;
-            }
-            if group != result_group_index || element != a_indices.len() {
-                is_identity = false;
-            }
-            a_indices.push(GatherData::Usual(UsualGatherData {
-                negate,
-                group,
-                element,
-                group_size,
-            }));
-        }
-        let expression = Expression {
-            size,
-            content: ExpressionContent::Multiply(
-                Box::new(Expression {
-                    size,
-                    content: ExpressionContent::Gather(
-                        Box::new(Expression {
-                            size,
-                            content: ExpressionContent::Variable(parameter_a.name),
-                            data_type_hint: None,
-                        }),
-                        a_indices,
-                    ),
-                    data_type_hint: None,
-                }),
-                Box::new(Expression {
-                    size,
-                    content: ExpressionContent::Constant(DataType::SimdVector(size), factors),
-                    data_type_hint: Some(DataType::SimdVector(size)),
-                }),
-            ),
-            data_type_hint: Some(DataType::SimdVector(size)),
-        };
-        body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
-        base_index += size;
-    }
-    if all_zeroes {
-        return AstNode::None;
-    }
-    let return_expr = if is_identity {
-        variable(&parameter_a)
-    } else {
-        Expression {
-            size: 1,
-            content: ExpressionContent::InvokeClassMethod(result_class, "Constructor", body),
-            data_type_hint: Some(DataType::MultiVector(result_class)),
-        }
-    };
-    AstNode::TraitImplementation {
-        result: Parameter {
-            name,
-            data_type: DataType::MultiVector(result_class),
-        },
-        class: parameter_a.multi_vector_class(),
-        parameters: vec![parameter_a.clone()],
-        body: vec![AstNode::ReturnStatement {
-            expression: Box::new(return_expr),
-        }],
-    }
-}
-
 pub fn element_wise<'a>(name: &'static str, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>, registry: &'a MultiVectorClassRegistry) -> AstNode<'a> {
     let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
     let b_flat_basis = parameter_b.multi_vector_class().flat_basis();
@@ -542,328 +409,6 @@ pub fn element_wise<'a>(name: &'static str, parameter_a: &Parameter<'a>, paramet
     }
 }
 
-pub fn derive_product<'a>(name: &'static str, product: &Product, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>, registry: &'a MultiVectorClassRegistry) -> AstNode<'a> {
-    let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
-    let b_flat_basis = parameter_b.multi_vector_class().flat_basis();
-    let mut result_signature = BTreeSet::new();
-    for product_term in product.terms.iter() {
-        if a_flat_basis.iter().any(|e| e.index == product_term.factor_a.index) && b_flat_basis.iter().any(|e| e.index == product_term.factor_b.index) {
-            for pt in product_term.product.iter() {
-                if pt.coefficient != 0 {
-                    result_signature.insert(pt.index);
-                }
-            }
-        }
-    }
-    let mut result_signature = result_signature.into_iter().collect::<Vec<_>>();
-    result_signature.sort_unstable();
-
-    // Be a little bit more flexible when finding a result type
-    // Needed (for example) in order to get geometric product on Motor x Line
-    // without having to predefine every intermediate type of product
-
-    let result_class = registry.get_at_least(&result_signature);
-
-    let result_class = match result_class {
-        Some(rc) => rc,
-        None => return AstNode::None,
-    };
-
-    let result_flat_basis = result_class.flat_basis();
-    let mut terms_in_result: BTreeMap<usize, Vec<(isize, usize, usize)>> = BTreeMap::new();
-    let stuff = product.terms.iter().flat_map(|it| it.product.iter().map(|p| (it.factor_a.clone(), it.factor_b.clone(), p.clone())));
-    for (factor_a, factor_b, product) in stuff {
-        let a_position = a_flat_basis.iter().position(|e| e.index == factor_a.index);
-        let b_position = b_flat_basis.iter().position(|e| e.index == factor_b.index);
-        let result_position = result_flat_basis.iter().position(|e| e.index == product.index);
-        let (a_flat_index, b_flat_index, result_flat_index) = match (a_position, b_position, result_position) {
-            (Some(a), Some(b), Some(r)) => (a, b, r),
-            _ => continue,
-        };
-        let coefficient = result_flat_basis[result_flat_index].coefficient
-            * product.coefficient
-            * a_flat_basis[a_flat_index].coefficient
-            * factor_a.coefficient
-            * b_flat_basis[b_flat_index].coefficient
-            * factor_b.coefficient;
-        terms_in_result
-            .entry(result_flat_index)
-            .and_modify(|v| v.push((coefficient, a_flat_index, b_flat_index)))
-            .or_insert(vec![(coefficient, a_flat_index, b_flat_index)]);
-    }
-
-    let mut body = Vec::new();
-    let mut base_index = 0;
-    for result_group in result_class.grouped_basis.iter() {
-        let result_group_size = result_group.len();
-        let mut expression = Expression {
-            size: result_group_size,
-            content: ExpressionContent::None,
-            data_type_hint: None,
-        };
-
-        let mut terms_by_a: BTreeMap<(usize, usize), [Vec<(isize, usize, usize)>; 4]> = BTreeMap::new();
-        for index_in_group in 0..result_group_size {
-            let terms = terms_in_result.remove(&(base_index + index_in_group)).unwrap_or_default();
-            for (coefficient, a_flat_index, b_flat_index) in terms {
-                let (a_group, a_element) = parameter_a.multi_vector_class().index_in_group(a_flat_index);
-                let (b_group, b_element) = parameter_b.multi_vector_class().index_in_group(b_flat_index);
-                terms_by_a
-                    .entry((a_group, a_element))
-                    .and_modify(|it| it[index_in_group].push((coefficient, b_group, b_element)))
-                    .or_insert_with(|| {
-                        let mut v = [vec![], vec![], vec![], vec![]];
-                        v[index_in_group].push((coefficient, b_group, b_element));
-                        v
-                    });
-            }
-        }
-
-        let mut new_terms_by_a = BTreeMap::new();
-
-        let mut latest_entry = None;
-        for ((a_group, a), [mut terms_0, mut terms_1, mut terms_2, mut terms_3]) in terms_by_a {
-            if latest_entry.is_none() {
-                latest_entry = Some(((a_group, vec![a; result_group_size]), [terms_0, terms_1, terms_2, terms_3]));
-                continue;
-            }
-            let ((contract_a_group, mut contract_a), [mut contract_terms_0, mut contract_terms_1, mut contract_terms_2, mut contract_terms_3]) = latest_entry.take().unwrap();
-
-            let a_group_match = a_group == contract_a_group;
-            let can_contract_on_0 = terms_0.iter().all(|it| it.0 == 0) || contract_terms_0.iter().all(|it| it.0 == 0);
-            let can_contract_on_1 = terms_1.iter().all(|it| it.0 == 0) || contract_terms_1.iter().all(|it| it.0 == 0);
-            let can_contract_on_2 = terms_2.iter().all(|it| it.0 == 0) || contract_terms_2.iter().all(|it| it.0 == 0);
-            let can_contract_on_3 = terms_3.iter().all(|it| it.0 == 0) || contract_terms_3.iter().all(|it| it.0 == 0);
-
-            let can_contract = a_group_match && can_contract_on_0 && can_contract_on_1 && can_contract_on_2 && can_contract_on_3;
-            if can_contract {
-                if terms_0.iter().any(|it| it.0 != 0) && result_group_size > 0 {
-                    contract_a[0] = a;
-                }
-                if terms_1.iter().any(|it| it.0 != 0) && result_group_size > 1 {
-                    contract_a[1] = a;
-                }
-                if terms_2.iter().any(|it| it.0 != 0) && result_group_size > 2 {
-                    contract_a[2] = a;
-                }
-                if terms_3.iter().any(|it| it.0 != 0) && result_group_size > 3 {
-                    contract_a[3] = a;
-                }
-                contract_terms_0.append(&mut terms_0);
-                contract_terms_1.append(&mut terms_1);
-                contract_terms_2.append(&mut terms_2);
-                contract_terms_3.append(&mut terms_3);
-                latest_entry = Some(((contract_a_group, contract_a), [contract_terms_0, contract_terms_1, contract_terms_2, contract_terms_3]));
-            } else {
-                new_terms_by_a.insert((contract_a_group, contract_a), [contract_terms_0, contract_terms_1, contract_terms_2, contract_terms_3]);
-                latest_entry = Some(((a_group, vec![a; result_group_size]), [terms_0, terms_1, terms_2, terms_3]));
-            }
-        }
-        if let Some((key, val)) = latest_entry {
-            new_terms_by_a.insert(key, val);
-        }
-
-        for ((a_group, a), [mut terms_0, mut terms_1, mut terms_2, mut terms_3]) in new_terms_by_a {
-            let a_size = parameter_a.multi_vector_class().grouped_basis[a_group].len();
-            let a_indices: Vec<_> = a
-                .iter()
-                .map(|a| {
-                    let negate = false;
-                    GatherData::Usual(UsualGatherData {
-                        negate,
-                        group: a_group,
-                        element: *a,
-                        group_size: a_size,
-                    })
-                })
-                .collect();
-            'inner: while !terms_0.is_empty() || !terms_1.is_empty() || !terms_2.is_empty() || !terms_3.is_empty() {
-                let mut b_indices = vec![];
-                let mut coefficients = vec![];
-
-                // Sort by group_b
-                terms_0.sort_by_key(|it| it.1);
-                terms_1.sort_by_key(|it| it.1);
-                terms_2.sort_by_key(|it| it.1);
-                terms_3.sort_by_key(|it| it.1);
-
-                let (c, b_group, b) = terms_0.pop().unwrap_or_else(|| (0, 0, 0));
-                let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
-                coefficients.push(c);
-                let negate = false;
-                let mut b_gather_data = GatherData::Usual(UsualGatherData {
-                    negate,
-                    group: b_group,
-                    element: b,
-                    group_size: b_size,
-                });
-                if c == 0 {
-                    b_gather_data = GatherData::RawZero;
-                }
-                b_indices.push(b_gather_data);
-
-                if !terms_1.is_empty() {
-                    assert!(result_group_size > 1);
-                }
-                if !terms_2.is_empty() {
-                    assert!(result_group_size > 2);
-                }
-                if !terms_3.is_empty() {
-                    assert!(result_group_size > 3);
-                }
-
-                let (c, b_group, b) = terms_1.pop().unwrap_or_else(|| (0, 0, 0));
-                if result_group_size > 1 {
-                    let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
-                    coefficients.push(c);
-                    let negate = false;
-                    let mut b_gather_data = GatherData::Usual(UsualGatherData {
-                        negate,
-                        group: b_group,
-                        element: b,
-                        group_size: b_size,
-                    });
-                    if c == 0 {
-                        b_gather_data = GatherData::RawZero;
-                    }
-                    b_indices.push(b_gather_data);
-                }
-
-                let (c, b_group, b) = terms_2.pop().unwrap_or_else(|| (0, 0, 0));
-                if result_group_size > 2 {
-                    let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
-                    coefficients.push(c);
-                    let negate = false;
-                    let mut b_gather_data = GatherData::Usual(UsualGatherData {
-                        negate,
-                        group: b_group,
-                        element: b,
-                        group_size: b_size,
-                    });
-                    if c == 0 {
-                        b_gather_data = GatherData::RawZero;
-                    }
-                    b_indices.push(b_gather_data);
-                }
-
-                let (c, b_group, b) = terms_3.pop().unwrap_or_else(|| (0, 0, 0));
-                if result_group_size > 3 {
-                    let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
-                    coefficients.push(c);
-                    let negate = false;
-                    let mut b_gather_data = GatherData::Usual(UsualGatherData {
-                        negate,
-                        group: b_group,
-                        element: b,
-                        group_size: b_size,
-                    });
-                    if c == 0 {
-                        b_gather_data = GatherData::RawZero;
-                    }
-                    b_indices.push(b_gather_data);
-                }
-
-                if coefficients.iter().all(|it| *it == 0) {
-                    continue 'inner;
-                }
-
-                // for (i, c) in coefficients.iter().enumerate() {
-                //     if *c == 0 && i < b_indices.len() {
-                //         b_indices[i] = GatherData::RawZero;
-                //     }
-                // }
-
-                let gather_a = Expression {
-                    size: result_group_size,
-                    data_type_hint: None,
-                    content: ExpressionContent::Gather(
-                        Box::new(Expression {
-                            size: parameter_a.multi_vector_class().grouped_basis[a_group].len(),
-                            data_type_hint: None,
-                            content: ExpressionContent::Variable(parameter_a.name),
-                        }),
-                        a_indices.clone(),
-                    ),
-                };
-
-                let mut gather_b = Expression {
-                    size: result_group_size,
-                    data_type_hint: None,
-                    content: ExpressionContent::Gather(
-                        Box::new(Expression {
-                            size: result_group_size,
-                            data_type_hint: None,
-                            content: ExpressionContent::Variable(parameter_b.name),
-                        }),
-                        b_indices,
-                    ),
-                };
-
-                if !coefficients.iter().all(|it| *it == 1) {
-                    let const_coefficients = Expression {
-                        size: result_group_size,
-                        data_type_hint: None,
-                        content: ExpressionContent::Constant(DataType::SimdVector(result_group_size), coefficients),
-                    };
-                    gather_b = Expression {
-                        size: result_group_size,
-                        data_type_hint: None,
-                        content: ExpressionContent::Multiply(Box::new(gather_b), Box::new(const_coefficients)),
-                    };
-                }
-
-                let mul = Expression {
-                    size: result_group_size,
-                    data_type_hint: None,
-                    content: ExpressionContent::Multiply(Box::new(gather_a), Box::new(gather_b)),
-                };
-
-                let sum = Expression {
-                    size: result_group_size,
-                    data_type_hint: None,
-                    content: ExpressionContent::Add(Box::new(expression), Box::new(mul)),
-                };
-
-                expression = sum;
-            }
-        }
-
-        // If this entire result_group has not been expressed yet...
-        if expression.content == ExpressionContent::None {
-            // ...then it is zero
-            expression = Expression {
-                size: result_group_size,
-                content: ExpressionContent::Constant(DataType::SimdVector(result_group_size), (0..result_group_size).map(|_| 0).collect()),
-                data_type_hint: Some(DataType::SimdVector(result_group_size)),
-            };
-        }
-
-        // Push the expression for this result group
-        let simplified = simplify_and_legalize(Box::new(expression));
-        body.push((DataType::SimdVector(result_group_size), *simplified));
-
-        // and move on to the next result_group
-        base_index += result_group_size;
-    }
-    if body.is_empty() {
-        return AstNode::None;
-    }
-    AstNode::TraitImplementation {
-        result: Parameter {
-            name,
-            data_type: DataType::MultiVector(result_class),
-        },
-        class: parameter_a.multi_vector_class(),
-        parameters: vec![parameter_a.clone(), parameter_b.clone()],
-        body: vec![AstNode::ReturnStatement {
-            expression: Box::new(Expression {
-                size: 1,
-                content: ExpressionContent::InvokeClassMethod(result_class, "Constructor", body),
-                data_type_hint: Some(DataType::MultiVector(result_class)),
-            }),
-        }],
-    }
-}
 
 pub fn derive_unitize<'a>(name: &'static str, geometric_product: &AstNode<'a>, weight_norm: &AstNode<'a>, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>) -> AstNode<'a> {
     let geometric_product_result = result_of_trait!(geometric_product);
@@ -1284,47 +829,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
     /// Step 1: These items are somewhat universal across geometric algebras
     pub fn preamble_and_universal_traits<'s>(&'s mut self, registry: &'r MultiVectorClassRegistry) -> std::io::Result<()> {
-        // Constants
-        for param_a in registry.single_parameters() {
-            let class_a = param_a.multi_vector_class();
-            for name in &["Zero", "One", "Unit"] {
-                let ast_node = class_a.constant(name);
-                if ast_node != AstNode::None {
-                    self.trait_impls.add_class_impl(name, param_a.multi_vector_class(), ast_node);
-                }
-            }
-        }
 
-        // Uniform Grades
-        for param_a in registry.single_parameters() {
-            let class_a = param_a.multi_vector_class();
-
-            let grade_unanimity = class_a
-                .flat_basis()
-                .iter()
-                .map(|a| (a.grade(), true))
-                .reduce(|(a_grade, unanimous), (b_grade, _)| (a_grade, a_grade == b_grade && unanimous));
-
-            if let Some((grade, true)) = grade_unanimity {
-                let anti_grade = (self.algebra.anti_scalar_element().grade() as isize - grade as isize).unsigned_abs();
-                let grade_impl = derive_grade("Grade", &param_a, grade);
-                self.trait_impls.add_class_impl("Grade", param_a.multi_vector_class(), grade_impl);
-
-                let anti_grade_impl = derive_grade("AntiGrade", &param_a, anti_grade);
-                self.trait_impls.add_class_impl("AntiGrade", param_a.multi_vector_class(), anti_grade_impl);
-            }
-        }
-
-        // Involutions
-        let involutions = Involution::involutions(&self.algebra);
-        for param_a in registry.single_parameters() {
-            for (name, involution, _) in involutions.iter() {
-                let ast_node = derive_involution(name, involution, &param_a, registry, false);
-                if ast_node != AstNode::None {
-                    self.trait_impls.add_single_impl(name, param_a.clone(), ast_node);
-                }
-            }
-        }
 
         // Square Root
         // See also DualNum
@@ -1357,51 +862,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             self.trait_impls.add_single_impl(name, param_a, sqrt);
         }
 
-        // Into
-        for (param_a, param_b) in registry.pair_parameters() {
-            let class_a = param_a.multi_vector_class();
-            let class_b = param_b.multi_vector_class();
-            if class_a != class_b {
-                let ast_node = derive_involution("Into", &Involution::projection(param_b.multi_vector_class()), &param_a, registry, true);
-                if ast_node != AstNode::None {
-                    self.trait_impls.add_pair_impl("Into", param_a.clone(), param_b.clone(), ast_node);
-                }
-            }
-        }
-
-        // Add, Subtract
-        for (param_a, param_b) in registry.pair_parameters() {
-            for name in &["Add", "Sub"] {
-                let ast_node = element_wise(*name, &param_a, &param_b, registry);
-                if ast_node != AstNode::None {
-                    self.trait_impls.add_pair_impl(name, param_a.clone(), param_b.clone(), ast_node);
-                }
-            }
-        }
-
-        // Multiply, Divide
-        for (param_a, param_b) in registry.pair_parameters() {
-            if param_a.multi_vector_class() != param_b.multi_vector_class() {
-                continue;
-            }
-            for name in &["Mul", "Div"] {
-                let ast_node = element_wise(*name, &param_a, &param_b, registry);
-                if ast_node != AstNode::None {
-                    self.trait_impls.add_pair_impl(name, param_a.clone(), param_b.clone(), ast_node);
-                }
-            }
-        }
-
-        // Products from Geometric Algebra
-        let products = Product::products(&self.algebra);
-        for (param_a, param_b) in registry.pair_parameters() {
-            for (name, product, _) in products.iter() {
-                let ast_node = derive_product(name, product, &param_a, &param_b, registry);
-                if ast_node != AstNode::None {
-                    self.trait_impls.add_pair_impl(name, param_a.clone(), param_b.clone(), ast_node);
-                }
-            }
-        }
 
         // Inverse
         for param_a in registry.single_parameters() {
@@ -1409,11 +869,15 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let _: Option<()> = try {
                 let dot = self.algebra.dialect().dot_product.first()?;
                 let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
+
                 let scalar_type = registry.classes.iter().find(|it| it.class_name == "Scalar")?;
                 let one = self.trait_impls.get_class_invocation("Unit", scalar_type)?;
+
                 let inverse_norm_squared = self.trait_impls.get_pair_invocation("Div", one, dot)?;
+
                 let product = self.algebra.dialect().geometric_product.first()?;
                 let expr = self.trait_impls.get_pair_invocation(product, variable(&param_a), inverse_norm_squared)?;
+
                 let the_impl = single_trait_impl(name, &param_a, vec![], expr);
                 self.trait_impls.add_single_impl(name, param_a, the_impl);
             };
@@ -1425,11 +889,15 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let _: Option<()> = try {
                 let dot = self.algebra.dialect().anti_dot_product.first()?;
                 let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
+
                 let scalar_type = registry.classes.iter().find(|it| it.class_name == "AntiScalar")?;
                 let one = self.trait_impls.get_class_invocation("Unit", scalar_type)?;
+
                 let inverse_norm_squared = self.trait_impls.get_pair_invocation("Div", one, dot)?;
+
                 let product = self.algebra.dialect().geometric_anti_product.first()?;
                 let expr = self.trait_impls.get_pair_invocation(product, variable(&param_a), inverse_norm_squared)?;
+
                 let the_impl = single_trait_impl(name, &param_a, vec![], expr);
                 self.trait_impls.add_single_impl(name, param_a, the_impl);
             };
@@ -3465,79 +2933,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         Ok(())
     }
 
-    pub fn emit_geometric_products(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
-        let products = Product::products(&self.algebra);
-
-        let mut trait_names = BTreeSet::new();
-        for n in &self.algebra.dialect().geometric_product {
-            trait_names.insert(n.to_string());
-        }
-        for n in &self.algebra.dialect().geometric_anti_product {
-            trait_names.insert(n.to_string());
-        }
-        for (name, _, docs) in &products {
-            if trait_names.contains(*name) {
-                emitter.emit(&AstNode::TraitDefinition {
-                    name: name.to_string(),
-                    params: 2,
-                    docs: docs.to_string(),
-                })?;
-            }
-        }
-
-        let trait_names2: Vec<_> = trait_names.iter().map(|it| it.as_str()).collect();
-        self.emit_exact_name_match_trait_impls(trait_names2.as_slice(), emitter)?;
-        Ok(())
-    }
-    pub fn emit_exterior_products(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
-        let products = Product::products(&self.algebra);
-
-        let mut trait_names = BTreeSet::new();
-        for n in &self.algebra.dialect().exterior_product {
-            trait_names.insert(n.to_string());
-        }
-        for n in &self.algebra.dialect().exterior_anti_product {
-            trait_names.insert(n.to_string());
-        }
-        for (name, _, docs) in &products {
-            if trait_names.contains(*name) {
-                emitter.emit(&AstNode::TraitDefinition {
-                    name: name.to_string(),
-                    params: 2,
-                    docs: docs.to_string(),
-                })?;
-            }
-        }
-
-        let trait_names2: Vec<_> = trait_names.iter().map(|it| it.as_str()).collect();
-        self.emit_exact_name_match_trait_impls(trait_names2.as_slice(), emitter)?;
-        Ok(())
-    }
-    pub fn emit_dot_products(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
-        let products = Product::products(&self.algebra);
-
-        let mut trait_names = BTreeSet::new();
-        for n in &self.algebra.dialect().dot_product {
-            trait_names.insert(n.to_string());
-        }
-        for n in &self.algebra.dialect().anti_dot_product {
-            trait_names.insert(n.to_string());
-        }
-        for (name, _, docs) in &products {
-            if trait_names.contains(*name) {
-                emitter.emit(&AstNode::TraitDefinition {
-                    name: name.to_string(),
-                    params: 2,
-                    docs: docs.to_string(),
-                })?;
-            }
-        }
-
-        let trait_names2: Vec<_> = trait_names.iter().map(|it| it.as_str()).collect();
-        self.emit_exact_name_match_trait_impls(trait_names2.as_slice(), emitter)?;
-        Ok(())
-    }
-
     pub fn emit_isometries(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
         emitter.emit(&AstNode::TraitDefinition {
             name: "Sandwich".to_string(),
@@ -3616,27 +3011,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         self.emit_exact_name_match_trait_impls(&["Sandwich"], emitter)?;
         self.emit_exact_name_match_trait_impls(&["PointInversion", "Reflect", "Transflect", "Translate", "Rotate"], emitter)?;
-        Ok(())
-    }
-
-    pub fn emit_involutions_and_duals(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
-        let external_trait_names = vec!["Neg"];
-        let mut trait_names = BTreeSet::new();
-        let involutions = Involution::involutions(&self.algebra);
-        for (name, _, docs) in involutions.iter() {
-            if !external_trait_names.contains(name) {
-                let name = name.to_string();
-                trait_names.insert(name.clone());
-                emitter.emit(&AstNode::TraitDefinition {
-                    name,
-                    params: 1,
-                    docs: docs.to_string(),
-                })?;
-            }
-        }
-
-        let trait_names: Vec<_> = trait_names.iter().map(|it| it.as_str()).collect();
-        self.emit_exact_name_match_trait_impls(trait_names.as_slice(), emitter)?;
         Ok(())
     }
 

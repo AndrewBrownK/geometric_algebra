@@ -33,10 +33,13 @@ fn main() {
     let repo = base_documentation(register_multi_vecs(rga3d)).finished();
     let traits = codegen::register_all! { repo;
         Zero One AntiOne Unit
-        Grade AntiGrade Into TryInto
-        Dual AntiDual Reverse AntiReverse
-        |
-        Wedge AntiWedge GeometricProduct GeometricAntiProduct Sandwich AntiSandwich
+        Into TryInto
+        Grade AntiGrade
+        Dual AntiDual
+        Reverse AntiReverse
+        Wedge AntiWedge
+        GeometricProduct GeometricAntiProduct
+        Sandwich AntiSandwich
     };
     codegen::operators! { repo, traits;
         fancy_infix => Div;
@@ -77,4 +80,8 @@ fn base_documentation(mut declarations: DeclareMultiVecs<e1234>) -> DeclareMulti
     );
     // TODO more documentation
     declarations
+}
+
+pub mod custom_traits {
+    //
 }
