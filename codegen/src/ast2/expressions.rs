@@ -2032,81 +2032,69 @@ impl FloatExpr {
                 if product.is_empty() {
                     panic!("Problem")
                 }
-                for p in product.iter_mut() {
+                for (factor, _exponent) in product.iter_mut() {
                     if !insides_already_done {
-                        p.simplify();
-                    }
-                    if let FloatExpr::Literal(0.0) = p {
-                        *self = FloatExpr::Literal(0.0);
-                        return;
+                        factor.simplify();
                     }
                 }
-                if product.len() == 1 {
-                    *self = product.remove(0);
-                    return;
+                if product.len() == 1 && *last_factor == 1.0 {
+                    if product[0].1 == 1.0 {
+                        let (factor, _exponent) = product.remove(0);
+                        *self = factor;
+                        return
+                    }
                 }
-                let mut coalesce = 1.0;
-                let mut contained_one = false;
                 let mut flatten = vec![];
-                product.retain_mut(|it| {
-                    if let FloatExpr::Literal(f) = it {
-                        contained_one |= *f == 1.0;
-                        coalesce *= *f;
+                product.retain_mut(|(factor, exponent)| match factor {
+                    FloatExpr::Literal(f) => {
+                        *last_factor *= f32::powf(*f, *exponent);
                         false
-                    } else if let FloatExpr::Product(ref mut p) = it {
+                    }
+                    FloatExpr::Product(ref mut p, another_factor) => {
+                        for (_, e) in p.iter_mut() {
+                            *e = *e * *exponent;
+                        }
                         flatten.append(p);
+                        *last_factor *= *another_factor;
                         false
-                    } else {
-                        true
                     }
+                    _ => true,
                 });
-                flatten.retain(|it| {
-                    if let FloatExpr::Literal(f) = it {
-                        contained_one |= *f == 1.0;
-                        coalesce *= f;
+                flatten.retain(|(factor, exponent)| match factor {
+                    FloatExpr::Literal(f) => {
+                        *last_factor *= f32::powf(*f, *exponent);
                         false
-                    } else {
-                        true
                     }
+                    _ => true,
                 });
-                if coalesce != 1.0 {
-                    product.push(FloatExpr::Literal(coalesce));
-                }
                 product.append(&mut flatten);
-                if product.len() == 1 {
-                    *self = product.remove(0);
-                    return;
+
+                let mut partition = 1;
+                while partition <= product.len() {
+                    let (front, back) = product.split_at_mut(partition);
+                    let (front_expr, front_exponent) = &mut front[partition - 1];
+                    let kept_length = slice_retain_mut(back, |(back_expr, back_exponent)| {
+                        if front_expr == back_expr {
+                            *front_exponent += *back_exponent;
+                            false
+                        } else {
+                            true
+                        }
+                    });
+                    product.truncate(partition + kept_length);
+                    partition += 1;
                 }
-                if product.len() == 2 {
-                    let (a, b) = product.split_at_mut(1);
-                    let a = &mut a[0];
-                    let b = &mut b[0];
-                    match (a, b) {
-                        (FloatExpr::Sum(v, ad), FloatExpr::Literal(l)) => {
-                            *ad = *ad * *l;
-                            for (_, f) in v.iter_mut() {
-                                *f = *f * *l;
-                            }
-                            *self = FloatExpr::Sum(v.take_as_owned(), ad.clone());
-                            return;
-                        }
-                        (FloatExpr::Literal(l), FloatExpr::Sum(v, ad)) => {
-                            *ad = *ad * *l;
-                            for (_, f) in v.iter_mut() {
-                                *f = *f * *l;
-                            }
-                            *self = FloatExpr::Sum(v.take_as_owned(), ad.clone());
-                            return;
-                        }
-                        (_, _) => {}
+                product.retain(|(_, e)| *e != 0.0);
+
+                if product.len() == 1 && *last_factor == 1.0 {
+                    if product[0].1 == 1.0 {
+                        let (factor, _exponent) = product.remove(0);
+                        *self = factor;
+                        return
                     }
-                }
-                if product.is_empty() && contained_one {
-                    *self = FloatExpr::Literal(1.0);
-                    return;
                 }
                 if product.is_empty() {
-                    panic!("Problem")
+                    *self = FloatExpr::Literal(*last_factor);
                 }
             }
             FloatExpr::Sum(sum, last_addend) => {
@@ -2144,7 +2132,9 @@ impl FloatExpr {
                         *factor *= *last_factor;
                         *last_factor = 1.0;
                         if p.len() == 1 {
-                            *addend = p.remove(0);
+                            if p[0].1 == 1.0 {
+                                *addend = p.remove(0).0;
+                            }
                         }
                         true
                     }
@@ -2261,103 +2251,90 @@ impl Vec2Expr {
                 if product.is_empty() {
                     panic!("Problem")
                 }
-                for p in product.iter_mut() {
+                for (factor, _exponent) in product.iter_mut() {
                     if !insides_already_done {
-                        p.simplify();
+                        factor.simplify();
                     }
-                    if let Vec2Expr::Gather1(FloatExpr::Literal(0.0)) = p {
-                        *self = Vec2Expr::Gather1(FloatExpr::Literal(0.0));
-                        return;
-                    }
-                    if let Vec2Expr::Gather2(FloatExpr::Literal(0.0), FloatExpr::Literal(0.0)) = p {
-                        *self = Vec2Expr::Gather1(FloatExpr::Literal(0.0));
+                }
+                if product.len() == 1 && *last_factor == [1.0; 2] {
+                    if product[0].1 == 1.0 {
+                        let (factor, _exponent) = product.remove(0);
+                        *self = factor;
                         return;
                     }
                 }
-                if product.len() == 1 {
-                    *self = product.remove(0);
-                    return;
-                }
-                let mut coalesce = [1.0, 1.0];
-                let mut contained_one = false;
                 let mut flatten = vec![];
-                product.retain_mut(|it| {
-                    if let Vec2Expr::Gather1(FloatExpr::Literal(f)) = it {
-                        contained_one |= *f == 1.0;
-                        coalesce[0] *= *f;
-                        coalesce[1] *= *f;
-                        false
-                    } else if let Vec2Expr::Gather2(FloatExpr::Literal(f0), FloatExpr::Literal(f1)) = it {
-                        contained_one |= *f0 == 1.0 && *f1 == 1.0;
-                        coalesce[0] *= *f0;
-                        coalesce[1] *= *f1;
-                        false
-                    } else if let Vec2Expr::Product(ref mut p) = it {
-                        flatten.append(p);
-                        false
-                    } else {
-                        true
+                product.retain_mut(|(factor, exponent)| {
+                    match factor {
+                        Vec2Expr::Gather1(FloatExpr::Literal(f)) => {
+                            let powf = f32::powf(*f, *exponent);
+                            last_factor[0] *= powf;
+                            last_factor[1] *= powf;
+                            false
+                        }
+                        Vec2Expr::Gather2(FloatExpr::Literal(f0), FloatExpr::Literal(f1)) => {
+                            last_factor[0] *= f32::powf(*f0, *exponent);
+                            last_factor[1] *= f32::powf(*f1, *exponent);
+                            false
+                        }
+                        Vec2Expr::Product(ref mut p, another_factor) => {
+                            for (_, e) in p.iter_mut() {
+                                *e = *e * *exponent;
+                            }
+                            flatten.append(p);
+                            last_factor[0] *= another_factor[0];
+                            last_factor[1] *= another_factor[1];
+                            false
+                        }
+                        _ => true,
                     }
                 });
-                flatten.retain(|it| {
-                    if let Vec2Expr::Gather1(FloatExpr::Literal(f)) = it {
-                        contained_one |= *f == 1.0;
-                        coalesce[0] *= *f;
-                        coalesce[1] *= *f;
-                        false
-                    } else if let Vec2Expr::Gather2(FloatExpr::Literal(f0), FloatExpr::Literal(f1)) = it {
-                        contained_one |= *f0 == 1.0 && *f1 == 1.0;
-                        coalesce[0] *= *f0;
-                        coalesce[1] *= *f1;
-                        false
-                    } else {
-                        true
+                flatten.retain(|(factor, exponent)| {
+                    match factor {
+                        Vec2Expr::Gather1(FloatExpr::Literal(f)) => {
+                            let powf = f32::powf(*f, *exponent);
+                            last_factor[0] *= powf;
+                            last_factor[1] *= powf;
+                            false
+                        }
+                        Vec2Expr::Gather2(FloatExpr::Literal(f0), FloatExpr::Literal(f1)) => {
+                            last_factor[0] *= f32::powf(*f0, *exponent);
+                            last_factor[1] *= f32::powf(*f1, *exponent);
+                            false
+                        }
+                        _ => true,
                     }
                 });
-                if coalesce != [1.0, 1.0] {
-                    if coalesce[0] == coalesce[1] {
-                        product.push(Vec2Expr::Gather1(FloatExpr::Literal(coalesce[0])))
-                    } else {
-                        product.push(Vec2Expr::Gather2(FloatExpr::Literal(coalesce[0]), FloatExpr::Literal(coalesce[1])))
-                    }
-                }
                 product.append(&mut flatten);
-                if product.len() == 1 {
-                    *self = product.remove(0);
-                    return;
+
+                let mut partition = 1;
+                while partition <= product.len() {
+                    let (front, back) = product.split_at_mut(partition);
+                    let (front_expr, front_exponent) = &mut front[partition - 1];
+                    let kept_length = slice_retain_mut(back, |(back_expr, back_exponent)| {
+                        if front_expr == back_expr {
+                            *front_exponent += *back_exponent;
+                            false
+                        } else {
+                            true
+                        }
+                    });
+                    product.truncate(partition + kept_length);
+                    partition += 1;
                 }
-                if product.len() == 2 {
-                    let (a, b) = product.split_at_mut(1);
-                    let a = &mut a[0];
-                    let b = &mut b[0];
-                    match (a, b) {
-                        (Vec2Expr::Sum(v, ad), Vec2Expr::Gather1(FloatExpr::Literal(l))) => {
-                            ad[0] *= *l;
-                            ad[1] *= *l;
-                            for (_, f) in v.iter_mut() {
-                                *f = *f * *l;
-                            }
-                            *self = Vec2Expr::Sum(v.take_as_owned(), ad.clone());
-                            return;
-                        }
-                        (Vec2Expr::Gather1(FloatExpr::Literal(l)), Vec2Expr::Sum(v, ad)) => {
-                            ad[0] *= *l;
-                            ad[1] *= *l;
-                            for (_, f) in v.iter_mut() {
-                                *f = *f * *l;
-                            }
-                            *self = Vec2Expr::Sum(v.take_as_owned(), ad.clone());
-                            return;
-                        }
-                        (_, _) => {}
+                product.retain(|(_, e)| *e != 0.0);
+
+                if product.len() == 1 && *last_factor == [1.0; 2] {
+                    if product[0].1 == 1.0 {
+                        let (factor, _exponent) = product.remove(0);
+                        *self = factor;
+                        return;
                     }
-                }
-                if product.is_empty() && contained_one {
-                    *self = Vec2Expr::Gather1(FloatExpr::Literal(1.0));
-                    return;
                 }
                 if product.is_empty() {
-                    panic!("Problem")
+                    let f0 = FloatExpr::Literal(last_factor[0]);
+                    let f1 = FloatExpr::Literal(last_factor[1]);
+                    *self = if f0 == f1 { Vec2Expr::Gather1(f0) } else { Vec2Expr::Gather2(f0, f1) };
                 }
             }
             Vec2Expr::Sum(ref mut sum, last_addend) => {
@@ -2374,7 +2351,7 @@ impl Vec2Expr {
                     return if factor == 1.0 {
                         *self = addend;
                     } else {
-                        *self = Vec2Expr::Product(vec![(addend, 1.0)], factor);
+                        *self = Vec2Expr::Product(vec![(addend, 1.0)], [factor, factor]);
                     };
                 }
                 let mut flatten = vec![];
@@ -2403,8 +2380,11 @@ impl Vec2Expr {
                         factor[1] *= last_factor[1];
                         *last_factor = [1.0; 2];
                         if p.len() == 1 {
-                            *addend = p.remove(0);
+                            if p[0].1 == 1.0 {
+                                *addend = p.remove(0).0;
+                            }
                         }
+                        true
                     }
                     _ => true,
                 });
@@ -2534,109 +2514,94 @@ impl Vec3Expr {
                 if product.is_empty() {
                     panic!("Problem")
                 }
-                for p in product.iter_mut() {
+                for (factor, _exponent) in product.iter_mut() {
                     if !insides_already_done {
-                        p.simplify();
+                        factor.simplify();
                     }
-                    if let Vec3Expr::Gather1(FloatExpr::Literal(0.0)) = p {
-                        *self = Vec3Expr::Gather1(FloatExpr::Literal(0.0));
-                        return;
-                    }
-                    if let Vec3Expr::Gather3(FloatExpr::Literal(0.0), FloatExpr::Literal(0.0), FloatExpr::Literal(0.0)) = p {
-                        *self = Vec3Expr::Gather1(FloatExpr::Literal(0.0));
+                }
+                if product.len() == 1 && *last_factor == [1.0; 3] {
+                    if product[0].1 == 1.0 {
+                        let (factor, _exponent) = product.remove(0);
+                        *self = factor;
                         return;
                     }
                 }
-                if product.len() == 1 {
-                    *self = product.remove(0);
-                    return;
-                }
-                let mut coalesce = [1.0, 1.0, 1.0];
-                let mut contained_one = false;
                 let mut flatten = vec![];
-                product.retain_mut(|it| {
-                    if let Vec3Expr::Gather1(FloatExpr::Literal(f)) = it {
-                        contained_one |= *f == 1.0;
-                        coalesce[0] *= *f;
-                        coalesce[1] *= *f;
-                        coalesce[2] *= *f;
-                        false
-                    } else if let Vec3Expr::Gather3(FloatExpr::Literal(f0), FloatExpr::Literal(f1), FloatExpr::Literal(f2)) = it {
-                        contained_one |= *f0 == 1.0 && *f1 == 1.0 && *f2 == 1.0;
-                        coalesce[0] *= *f0;
-                        coalesce[1] *= *f1;
-                        coalesce[2] *= *f2;
-                        false
-                    } else if let Vec3Expr::Product(ref mut p) = it {
-                        flatten.append(p);
-                        false
-                    } else {
-                        true
+                product.retain_mut(|(factor, exponent)| {
+                    match factor {
+                        Vec3Expr::Gather1(FloatExpr::Literal(f)) => {
+                            let powf = f32::powf(*f, *exponent);
+                            last_factor[0] *= powf;
+                            last_factor[1] *= powf;
+                            last_factor[2] *= powf;
+                            false
+                        }
+                        Vec3Expr::Gather3(FloatExpr::Literal(f0), FloatExpr::Literal(f1), FloatExpr::Literal(f2)) => {
+                            last_factor[0] *= f32::powf(*f0, *exponent);
+                            last_factor[1] *= f32::powf(*f1, *exponent);
+                            last_factor[2] *= f32::powf(*f2, *exponent);
+                            false
+                        }
+                        Vec3Expr::Product(ref mut p, another_factor) => {
+                            for (_, e) in p.iter_mut() {
+                                *e = *e * *exponent;
+                            }
+                            flatten.append(p);
+                            last_factor[0] *= another_factor[0];
+                            last_factor[1] *= another_factor[1];
+                            last_factor[2] *= another_factor[2];
+                            false
+                        }
+                        _ => true,
                     }
                 });
-                flatten.retain(|it| {
-                    if let Vec3Expr::Gather1(FloatExpr::Literal(f)) = it {
-                        contained_one |= *f == 1.0;
-                        coalesce[0] *= *f;
-                        coalesce[1] *= *f;
-                        coalesce[2] *= *f;
+                flatten.retain(|(factor, exponent)| match factor {
+                    Vec3Expr::Gather1(FloatExpr::Literal(f)) => {
+                        let powf = f32::powf(*f, *exponent);
+                        last_factor[0] *= powf;
+                        last_factor[1] *= powf;
+                        last_factor[2] *= powf;
                         false
-                    } else if let Vec3Expr::Gather3(FloatExpr::Literal(f0), FloatExpr::Literal(f1), FloatExpr::Literal(f2)) = it {
-                        contained_one |= *f0 == 1.0 && *f1 == 1.0 && *f2 == 1.0;
-                        coalesce[0] *= *f0;
-                        coalesce[1] *= *f1;
-                        coalesce[2] *= *f2;
-                        false
-                    } else {
-                        true
                     }
+                    Vec3Expr::Gather3(FloatExpr::Literal(f0), FloatExpr::Literal(f1), FloatExpr::Literal(f2)) => {
+                        last_factor[0] *= f32::powf(*f0, *exponent);
+                        last_factor[1] *= f32::powf(*f1, *exponent);
+                        last_factor[2] *= f32::powf(*f2, *exponent);
+                        false
+                    }
+                    _ => true,
                 });
                 product.append(&mut flatten);
-                if coalesce != [1.0, 1.0, 1.0] {
-                    if coalesce[0] == coalesce[1] && coalesce[1] == coalesce[2] {
-                        product.push(Vec3Expr::Gather1(FloatExpr::Literal(coalesce[0])))
-                    } else {
-                        product.push(Vec3Expr::Gather3(FloatExpr::Literal(coalesce[0]), FloatExpr::Literal(coalesce[1]), FloatExpr::Literal(coalesce[2])))
-                    }
-                }
-                if product.len() == 1 {
-                    *self = product.remove(0);
-                    return;
-                }
-                if product.len() == 2 {
-                    let (a, b) = product.split_at_mut(1);
-                    let a = &mut a[0];
-                    let b = &mut b[0];
-                    match (a, b) {
-                        (Vec3Expr::Sum(v, ad), Vec3Expr::Gather1(FloatExpr::Literal(l))) => {
-                            ad[0] *= *l;
-                            ad[1] *= *l;
-                            ad[2] *= *l;
-                            for (_, f) in v.iter_mut() {
-                                *f = *f * *l;
-                            }
-                            *self = Vec3Expr::Sum(v.take_as_owned(), ad.clone());
-                            return;
+
+                let mut partition = 1;
+                while partition <= product.len() {
+                    let (front, back) = product.split_at_mut(partition);
+                    let (front_expr, front_exponent) = &mut front[partition - 1];
+                    let kept_length = slice_retain_mut(back, |(back_expr, back_exponent)| {
+                        if front_expr == back_expr {
+                            *front_exponent += *back_exponent;
+                            false
+                        } else {
+                            true
                         }
-                        (Vec3Expr::Gather1(FloatExpr::Literal(l)), Vec3Expr::Sum(v, ad)) => {
-                            ad[0] *= *l;
-                            ad[1] *= *l;
-                            ad[2] *= *l;
-                            for (_, f) in v.iter_mut() {
-                                *f = *f * *l;
-                            }
-                            *self = Vec3Expr::Sum(v.take_as_owned(), ad.clone());
-                            return;
-                        }
-                        (_, _) => {}
-                    }
+                    });
+                    product.truncate(partition + kept_length);
+                    partition += 1;
                 }
-                if product.is_empty() && contained_one {
-                    *self = Vec3Expr::Gather1(FloatExpr::Literal(1.0));
-                    return;
+                product.retain(|(_, e)| *e != 0.0);
+
+                if product.len() == 1 && *last_factor == [1.0; 3] {
+                    if product[0].1 == 1.0 {
+                        let (factor, _exponent) = product.remove(0);
+                        *self = factor;
+                        return;
+                    }
                 }
                 if product.is_empty() {
-                    panic!("Problem")
+                    let f0 = FloatExpr::Literal(last_factor[0]);
+                    let f1 = FloatExpr::Literal(last_factor[1]);
+                    let f2 = FloatExpr::Literal(last_factor[2]);
+                    *self = if f0 == f1 && f1 == f2 { Vec3Expr::Gather1(f0) } else { Vec3Expr::Gather3(f0, f1, f2) };
                 }
             }
             Vec3Expr::Sum(ref mut sum, last_addend) => {
@@ -2653,7 +2618,7 @@ impl Vec3Expr {
                     return if factor == 1.0 {
                         *self = addend;
                     } else {
-                        *self = Vec3Expr::Product(vec![(addend, 1.0)], factor);
+                        *self = Vec3Expr::Product(vec![(addend, 1.0)], [factor, factor, factor]);
                     };
                 }
                 let mut flatten = vec![];
@@ -2686,7 +2651,9 @@ impl Vec3Expr {
                         factor[2] *= last_factor[2];
                         *last_factor = [1.0; 3];
                         if p.len() == 1 {
-                            *addend = p.remove(0);
+                            if p[0].1 == 1.0 {
+                                *addend = p.remove(0).0;
+                            }
                         }
                         true
                     }
@@ -2824,120 +2791,100 @@ impl Vec4Expr {
                 if product.is_empty() {
                     panic!("Problem")
                 }
-                for p in product.iter_mut() {
+                for (factor, _exponent) in product.iter_mut() {
                     if !insides_already_done {
-                        p.simplify();
+                        factor.simplify();
                     }
-                    if let Vec4Expr::Gather1(FloatExpr::Literal(0.0)) = p {
-                        *self = Vec4Expr::Gather1(FloatExpr::Literal(0.0));
-                        return;
-                    }
-                    if let Vec4Expr::Gather4(FloatExpr::Literal(0.0), FloatExpr::Literal(0.0), FloatExpr::Literal(0.0), FloatExpr::Literal(0.0)) = p {
-                        *self = Vec4Expr::Gather1(FloatExpr::Literal(0.0));
+                }
+                if product.len() == 1 && *last_factor == [1.0; 4] {
+                    if product[0].1 == 1.0 {
+                        let (factor, _exponent) = product.remove(0);
+                        *self = factor;
                         return;
                     }
                 }
-                if product.len() == 1 {
-                    *self = product.remove(0);
-                    return;
-                }
-                let mut coalesce = [1.0, 1.0, 1.0, 1.0];
-                let mut contained_one = false;
                 let mut flatten = vec![];
-                product.retain_mut(|it| {
-                    if let Vec4Expr::Gather1(FloatExpr::Literal(f)) = it {
-                        contained_one |= *f == 1.0;
-                        coalesce[0] *= *f;
-                        coalesce[1] *= *f;
-                        coalesce[2] *= *f;
-                        coalesce[3] *= *f;
-                        false
-                    } else if let Vec4Expr::Gather4(FloatExpr::Literal(f0), FloatExpr::Literal(f1), FloatExpr::Literal(f2), FloatExpr::Literal(f3)) = it {
-                        contained_one |= *f0 == 1.0 && *f1 == 1.0 && *f2 == 1.0 && *f3 == 1.0;
-                        coalesce[0] *= *f0;
-                        coalesce[1] *= *f1;
-                        coalesce[2] *= *f2;
-                        coalesce[3] *= *f3;
-                        false
-                    } else if let Vec4Expr::Product(ref mut p) = it {
-                        flatten.append(p);
-                        false
-                    } else {
-                        true
+                product.retain_mut(|(factor, exponent)| {
+                    match factor {
+                        Vec4Expr::Gather1(FloatExpr::Literal(f)) => {
+                            let powf = f32::powf(*f, *exponent);
+                            last_factor[0] *= powf;
+                            last_factor[1] *= powf;
+                            last_factor[2] *= powf;
+                            last_factor[3] *= powf;
+                            false
+                        }
+                        Vec4Expr::Gather4(FloatExpr::Literal(f0), FloatExpr::Literal(f1), FloatExpr::Literal(f2), FloatExpr::Literal(f3)) => {
+                            last_factor[0] *= f32::powf(*f0, *exponent);
+                            last_factor[1] *= f32::powf(*f1, *exponent);
+                            last_factor[2] *= f32::powf(*f2, *exponent);
+                            last_factor[3] *= f32::powf(*f3, *exponent);
+                            false
+                        }
+                        Vec4Expr::Product(ref mut p, another_factor) => {
+                            for (_, e) in p.iter_mut() {
+                                *e = *e * *exponent;
+                            }
+                            flatten.append(p);
+                            last_factor[0] *= another_factor[0];
+                            last_factor[1] *= another_factor[1];
+                            last_factor[2] *= another_factor[2];
+                            last_factor[3] *= another_factor[3];
+                            false
+                        }
+                        _ => true,
                     }
                 });
-                flatten.retain(|it| {
-                    if let Vec4Expr::Gather1(FloatExpr::Literal(f)) = it {
-                        contained_one |= *f == 1.0;
-                        coalesce[0] *= *f;
-                        coalesce[1] *= *f;
-                        coalesce[2] *= *f;
-                        coalesce[3] *= *f;
+                flatten.retain(|(factor, exponent)| match factor {
+                    Vec4Expr::Gather1(FloatExpr::Literal(f)) => {
+                        let powf = f32::powf(*f, *exponent);
+                        last_factor[0] *= powf;
+                        last_factor[1] *= powf;
+                        last_factor[2] *= powf;
+                        last_factor[3] *= powf;
                         false
-                    } else if let Vec4Expr::Gather4(FloatExpr::Literal(f0), FloatExpr::Literal(f1), FloatExpr::Literal(f2), FloatExpr::Literal(f3)) = it {
-                        contained_one |= *f0 == 1.0 && *f1 == 1.0 && *f2 == 1.0 && *f3 == 1.0;
-                        coalesce[0] *= *f0;
-                        coalesce[1] *= *f1;
-                        coalesce[2] *= *f2;
-                        coalesce[3] *= *f3;
-                        false
-                    } else {
-                        true
                     }
+                    Vec4Expr::Gather4(FloatExpr::Literal(f0), FloatExpr::Literal(f1), FloatExpr::Literal(f2), FloatExpr::Literal(f3)) => {
+                        last_factor[0] *= f32::powf(*f0, *exponent);
+                        last_factor[1] *= f32::powf(*f1, *exponent);
+                        last_factor[2] *= f32::powf(*f2, *exponent);
+                        last_factor[3] *= f32::powf(*f3, *exponent);
+                        false
+                    }
+                    _ => true,
                 });
-                if coalesce != [1.0, 1.0, 1.0, 1.0] {
-                    if coalesce[0] == coalesce[1] && coalesce[1] == coalesce[2] && coalesce[2] == coalesce[3] {
-                        product.push(Vec4Expr::Gather1(FloatExpr::Literal(coalesce[0])))
-                    } else {
-                        product.push(Vec4Expr::Gather4(
-                            FloatExpr::Literal(coalesce[0]),
-                            FloatExpr::Literal(coalesce[1]),
-                            FloatExpr::Literal(coalesce[2]),
-                            FloatExpr::Literal(coalesce[3]),
-                        ))
-                    }
-                }
                 product.append(&mut flatten);
-                if product.len() == 1 {
-                    *self = product.remove(0);
-                    return;
+
+                let mut partition = 1;
+                while partition <= product.len() {
+                    let (front, back) = product.split_at_mut(partition);
+                    let (front_expr, front_exponent) = &mut front[partition - 1];
+                    let kept_length = slice_retain_mut(back, |(back_expr, back_exponent)| {
+                        if front_expr == back_expr {
+                            *front_exponent += *back_exponent;
+                            false
+                        } else {
+                            true
+                        }
+                    });
+                    product.truncate(partition + kept_length);
+                    partition += 1;
                 }
-                if product.len() == 2 {
-                    let (a, b) = product.split_at_mut(1);
-                    let a = &mut a[0];
-                    let b = &mut b[0];
-                    match (a, b) {
-                        (Vec4Expr::Sum(v, ad), Vec4Expr::Gather1(FloatExpr::Literal(l))) => {
-                            ad[0] *= *l;
-                            ad[1] *= *l;
-                            ad[2] *= *l;
-                            ad[3] *= *l;
-                            for (_, f) in v.iter_mut() {
-                                *f = *f * *l;
-                            }
-                            *self = Vec4Expr::Sum(v.take_as_owned(), ad.clone());
-                            return;
-                        }
-                        (Vec4Expr::Gather1(FloatExpr::Literal(l)), Vec4Expr::Sum(v, ad)) => {
-                            ad[0] *= *l;
-                            ad[1] *= *l;
-                            ad[2] *= *l;
-                            ad[3] *= *l;
-                            for (_, f) in v.iter_mut() {
-                                *f = *f * *l;
-                            }
-                            *self = Vec4Expr::Sum(v.take_as_owned(), ad.clone());
-                            return;
-                        }
-                        (_, _) => {}
+                product.retain(|(_, e)| *e != 0.0);
+
+                if product.len() == 1 && *last_factor == [1.0; 4] {
+                    if product[0].1 == 1.0 {
+                        let (factor, _exponent) = product.remove(0);
+                        *self = factor;
+                        return;
                     }
-                }
-                if product.is_empty() && contained_one {
-                    *self = Vec4Expr::Gather1(FloatExpr::Literal(1.0));
-                    return;
                 }
                 if product.is_empty() {
-                    panic!("Problem")
+                    let f0 = FloatExpr::Literal(last_factor[0]);
+                    let f1 = FloatExpr::Literal(last_factor[1]);
+                    let f2 = FloatExpr::Literal(last_factor[2]);
+                    let f3 = FloatExpr::Literal(last_factor[3]);
+                    *self = if f0 == f1 && f1 == f2 && f2 == f3 { Vec4Expr::Gather1(f0) } else { Vec4Expr::Gather4(f0, f1, f2, f3) };
                 }
             }
             Vec4Expr::Sum(sum, last_addend) => {
@@ -2954,7 +2901,7 @@ impl Vec4Expr {
                     return if factor == 1.0 {
                         *self = addend;
                     } else {
-                        *self = Vec4Expr::Product(vec![(addend, 1.0)], factor);
+                        *self = Vec4Expr::Product(vec![(addend, 1.0)], [factor, factor, factor, factor]);
                     };
                 }
                 let mut flatten = vec![];
@@ -2988,10 +2935,12 @@ impl Vec4Expr {
                         factor[0] *= last_factor[0];
                         factor[1] *= last_factor[1];
                         factor[2] *= last_factor[2];
-                        factor[3] *= last_factor[3]
+                        factor[3] *= last_factor[3];
                         *last_factor = [1.0; 4];
                         if p.len() == 1 {
-                            *addend = p.remove(0);
+                            if p[0].1 == 1.0 {
+                                *addend = p.remove(0).0;
+                            }
                         }
                         true
                     }
