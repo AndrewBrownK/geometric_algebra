@@ -9,12 +9,13 @@ pub struct OperationsTracker {
     pub add_sub: usize,
     pub mul: usize,
     pub div: usize,
+    pub transcendental: usize,
     // TODO add more
 }
 
 impl OperationsTracker {
     pub fn zero() -> Self {
-        Self { add_sub: 0, mul: 0, div: 0 }
+        Self { add_sub: 0, mul: 0, div: 0, transcendental: 0 }
     }
     pub fn is_zero(&self) -> bool {
         self.add_sub == 0 && self.mul == 0 && self.div == 0
@@ -29,6 +30,7 @@ impl Mul<usize> for OperationsTracker {
             add_sub: rhs * self.add_sub,
             mul: rhs * self.mul,
             div: rhs * self.div,
+            transcendental: rhs * self.transcendental
         }
     }
 }
@@ -47,6 +49,7 @@ impl Add<OperationsTracker> for OperationsTracker {
             add_sub: self.add_sub + rhs.add_sub,
             mul: self.mul + rhs.mul,
             div: self.div + rhs.div,
+            transcendental: self.transcendental + rhs.transcendental,
         }
     }
 }

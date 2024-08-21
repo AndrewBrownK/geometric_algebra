@@ -14,6 +14,7 @@
 #![feature(box_patterns)]
 
 mod algebra;
+// TODO calculus: https://en.wikipedia.org/wiki/Geometric_calculus
 pub mod algebra2;
 mod ast;
 pub mod ast2;

@@ -848,22 +848,75 @@ postgres-types = "0.2.7""#
                     }
                 }
             }
-            FloatExpr::Product(v) => {
-                if v.is_empty() {
+            FloatExpr::Product(v, last_factor) => {
+                let has_last_factor = *last_factor != 1.0;
+                if v.is_empty() && !has_last_factor {
                     bail!("Attempted to write an empty product that should have been simplified");
                 }
-                if v.len() > 1 {
+                let mut len = v.len();
+                if has_last_factor {
+                    len += 1;
+                }
+                if len > 1 {
                     write!(w, "(")?;
                 }
-                for (i, e) in v.iter().enumerate() {
-                    if i > 0 {
-                        write!(w, " * ")?;
-                    }
+                for (i, (factor, exponent)) in v.iter().enumerate() {
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_float(w, e)?;
+                    match (*exponent, i > 0) {
+                        (f, _) if f == 0.0 => continue,
+
+                        (1.0, false) => self.write_float(w, factor)?,
+                        (-1.0, false) => {
+                            write!(w, "(1.0/")?;
+                            self.write_float(w, factor)?;
+                            write!(w, ")")?;
+                        },
+                        (e, false) => {
+                            if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
+                                let e = e as i32;
+                                write!(w, "f32::powi(")?;
+                                self.write_float(w, factor)?;
+                                write!(w, ", {e})")?;
+                            } else {
+                                write!(w, "f32::powf(")?;
+                                self.write_float(w, factor)?;
+                                write!(w, ", {e})")?;
+                            }
+                        }
+
+                        (1.0, true) => {
+                            write!(w, " * ")?;
+                            self.write_float(w, factor)?;
+                        }
+                        (-1.0, true) => {
+                            write!(w, " / (")?;
+                            self.write_float(w, factor)?;
+                            write!(w, ")")?;
+                        },
+                        (e, true) => {
+                            if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
+                                let e = e as i32;
+                                write!(w, " * f32::powi(")?;
+                                self.write_float(w, factor)?;
+                                write!(w, ", {e})")?;
+                            } else {
+                                write!(w, " * f32::powf(")?;
+                                self.write_float(w, factor)?;
+                                write!(w, ", {e})")?;
+                            }
+                        }
+
+                        _ => unreachable!("This match is complete across conditions (unless NaN?)")
+                    }
                 }
-                if v.len() > 1 {
+                match (*last_factor, len > 1) {
+                    (fl, _) if fl == 1.0 => {}
+                    (fl, false) => write!(w, "{fl}")?,
+                    (fl, true) => write!(w, " * {fl}")?,
+                    _ => {}
+                }
+                if len > 1 {
                     write!(w, ")")?;
                 }
             }
@@ -946,22 +999,77 @@ postgres-types = "0.2.7""#
                 self.write_multi_vec(w, mv)?;
                 write!(w, ".group{i}()")?;
             }
-            Vec2Expr::Product(v) => {
-                if v.is_empty() {
+            Vec2Expr::Product(v, last_factor) => {
+                let has_last_factor = *last_factor != [1.0; 2];
+                if v.is_empty() && !has_last_factor {
                     bail!("Attempted to write an empty product that should have been simplified");
                 }
-                if v.len() > 1 {
+                let mut len = v.len();
+                if has_last_factor {
+                    len += 1;
+                }
+                if len > 1 {
                     write!(w, "(")?;
                 }
-                for (i, e) in v.iter().enumerate() {
-                    if i > 0 {
-                        write!(w, " * ")?;
-                    }
+                for (i, (factor, exponent)) in v.iter().enumerate() {
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_vec2(w, e)?;
+                    match (*exponent, i > 0) {
+                        (f, _) if f == 0.0 => continue,
+
+                        (1.0, false) => self.write_vec2(w, factor)?,
+                        (-1.0, false) => {
+                            write!(w, "(Simd32x2::from(1.0) / ")?;
+                            self.write_vec2(w, factor)?;
+                            write!(w, ")")?;
+                        }
+                        (e, false) => {
+                            if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
+                                let e = e as i32;
+                                write!(w, "Simd32x2::powi(")?;
+                                self.write_vec2(w, factor)?;
+                                write!(w, ", {e})")?;
+                            } else {
+                                write!(w, "Simd32x2::powf(")?;
+                                self.write_vec2(w, factor)?;
+                                write!(w, ", {e})")?;
+                            }
+                        }
+
+                        (1.0, true) => {
+                            write!(w, " * ")?;
+                            self.write_vec2(w, factor)?
+                        },
+                        (-1.0, true) => {
+                            write!(w, " / (")?;
+                            self.write_vec2(w, factor)?;
+                            write!(w, ")")?;
+                        }
+                        (e, true) => {
+                            if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
+                                let e = e as i32;
+                                write!(w, " * Simd32x2::powi(")?;
+                                self.write_vec2(w, factor)?;
+                                write!(w, ", {e})")?;
+                            } else {
+                                write!(w, " * Simd32x2::powf(")?;
+                                self.write_vec2(w, factor)?;
+                                write!(w, ", {e})")?;
+                            }
+                        }
+
+                        _ => unreachable!("This match is complete across conditions (unless NaN?)")
+                    }
                 }
-                if v.len() > 1 {
+                if *last_factor != [1.0; 2] {
+                    if len > 1 {
+                        write!(w, " * ")?;
+                    }
+                    let a = last_factor[0];
+                    let b = last_factor[1];
+                    write!(w, "Simd32x2::from([{a}, {b}])")?;
+                }
+                if len > 1 {
                     write!(w, ")")?;
                 }
             }
@@ -1048,22 +1156,78 @@ postgres-types = "0.2.7""#
                 self.write_multi_vec(w, mv)?;
                 write!(w, ".group{i}()")?;
             }
-            Vec3Expr::Product(v) => {
-                if v.is_empty() {
+            Vec3Expr::Product(v, last_factor) => {
+                let has_last_factor = *last_factor != [1.0; 3];
+                if v.is_empty() && !has_last_factor {
                     bail!("Attempted to write an empty product that should have been simplified");
                 }
-                if v.len() > 1 {
+                let mut len = v.len();
+                if has_last_factor {
+                    len += 1;
+                }
+                if len > 1 {
                     write!(w, "(")?;
                 }
-                for (i, e) in v.iter().enumerate() {
-                    if i > 0 {
-                        write!(w, " * ")?;
-                    }
+                for (i, (factor, exponent)) in v.iter().enumerate() {
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_vec3(w, e)?;
+                    match (*exponent, i > 0) {
+                        (f, _) if f == 0.0 => continue,
+
+                        (1.0, false) => self.write_vec3(w, factor)?,
+                        (-1.0, false) => {
+                            write!(w, "(Simd32x3::from(1.0) / ")?;
+                            self.write_vec3(w, factor)?;
+                            write!(w, ")")?;
+                        }
+                        (e, false) => {
+                            if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
+                                let e = e as i32;
+                                write!(w, "Simd32x3::powi(")?;
+                                self.write_vec3(w, factor)?;
+                                write!(w, ", {e})")?;
+                            } else {
+                                write!(w, "Simd32x3::powf(")?;
+                                self.write_vec3(w, factor)?;
+                                write!(w, ", {e})")?;
+                            }
+                        }
+
+                        (1.0, true) => {
+                            write!(w, " * ")?;
+                            self.write_vec3(w, factor)?
+                        },
+                        (-1.0, true) => {
+                            write!(w, " / (")?;
+                            self.write_vec3(w, factor)?;
+                            write!(w, ")")?;
+                        }
+                        (e, true) => {
+                            if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
+                                let e = e as i32;
+                                write!(w, " * Simd32x3::powi(")?;
+                                self.write_vec3(w, factor)?;
+                                write!(w, ", {e})")?;
+                            } else {
+                                write!(w, " * Simd32x3::powf(")?;
+                                self.write_vec3(w, factor)?;
+                                write!(w, ", {e})")?;
+                            }
+                        }
+
+                        _ => unreachable!("This match is complete across conditions (unless NaN?)")
+                    }
                 }
-                if v.len() > 1 {
+                if *last_factor != [1.0; 3] {
+                    if len > 1 {
+                        write!(w, " * ")?;
+                    }
+                    let a = last_factor[0];
+                    let b = last_factor[1];
+                    let c = last_factor[2];
+                    write!(w, "Simd32x3::from([{a}, {b}, {c}])")?;
+                }
+                if len > 1 {
                     write!(w, ")")?;
                 }
             }
@@ -1153,22 +1317,79 @@ postgres-types = "0.2.7""#
                 self.write_multi_vec(w, mv)?;
                 write!(w, ".group{i}()")?;
             }
-            Vec4Expr::Product(v) => {
-                if v.is_empty() {
+            Vec4Expr::Product(v, last_factor) => {
+                let has_last_factor = *last_factor != [1.0; 4];
+                if v.is_empty() && !has_last_factor {
                     bail!("Attempted to write an empty product that should have been simplified");
                 }
-                if v.len() > 1 {
+                let mut len = v.len();
+                if has_last_factor {
+                    len += 1;
+                }
+                if len > 1 {
                     write!(w, "(")?;
                 }
-                for (i, e) in v.iter().enumerate() {
-                    if i > 0 {
-                        write!(w, " * ")?;
-                    }
+                for (i, (factor, exponent)) in v.iter().enumerate() {
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_vec4(w, e)?;
+                    match (*exponent, i > 0) {
+                        (f, _) if f == 0.0 => continue,
+
+                        (1.0, false) => self.write_vec4(w, factor)?,
+                        (-1.0, false) => {
+                            write!(w, "(Simd32x4::from(1.0) / ")?;
+                            self.write_vec4(w, factor)?;
+                            write!(w, ")")?;
+                        }
+                        (e, false) => {
+                            if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
+                                let e = e as i32;
+                                write!(w, "Simd32x4::powi(")?;
+                                self.write_vec4(w, factor)?;
+                                write!(w, ", {e})")?;
+                            } else {
+                                write!(w, "Simd32x4::powf(")?;
+                                self.write_vec4(w, factor)?;
+                                write!(w, ", {e})")?;
+                            }
+                        }
+
+                        (1.0, true) => {
+                            write!(w, " * ")?;
+                            self.write_vec4(w, factor)?
+                        },
+                        (-1.0, true) => {
+                            write!(w, " / (")?;
+                            self.write_vec4(w, factor)?;
+                            write!(w, ")")?;
+                        }
+                        (e, true) => {
+                            if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
+                                let e = e as i32;
+                                write!(w, " * Simd32x4::powi(")?;
+                                self.write_vec4(w, factor)?;
+                                write!(w, ", {e})")?;
+                            } else {
+                                write!(w, " * Simd32x4::powf(")?;
+                                self.write_vec4(w, factor)?;
+                                write!(w, ", {e})")?;
+                            }
+                        }
+
+                        _ => unreachable!("This match is complete across conditions (unless NaN?)")
+                    }
                 }
-                if v.len() > 1 {
+                if *last_factor != [1.0; 4] {
+                    if len > 1 {
+                        write!(w, " * ")?;
+                    }
+                    let a = last_factor[0];
+                    let b = last_factor[1];
+                    let c = last_factor[2];
+                    let d = last_factor[3];
+                    write!(w, "Simd32x4::from([{a}, {b}, {c}, {d}])")?;
+                }
+                if len > 1 {
                     write!(w, ")")?;
                 }
             }

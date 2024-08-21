@@ -146,6 +146,32 @@ macro_rules! swizzle {
     };
 }
 
+impl Simd32x2 {
+    pub fn powi(self, exponent: i32) -> Self {
+        todo!()
+    }
+    pub fn powf(self, exponent: f32) -> Self {
+        todo!()
+    }
+}
+impl Simd32x3 {
+    pub fn powi(self, exponent: i32) -> Self {
+        todo!()
+    }
+    pub fn powf(self, exponent: f32) -> Self {
+        todo!()
+    }
+}
+impl Simd32x4 {
+    pub fn powi(self, exponent: i32) -> Self {
+        todo!()
+    }
+    pub fn powf(self, exponent: f32) -> Self {
+        todo!()
+    }
+}
+
+
 impl std::ops::Index<usize> for Simd32x4 {
     type Output = f32;
 

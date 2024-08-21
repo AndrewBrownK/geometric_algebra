@@ -178,13 +178,7 @@ pub enum FloatExpr {
     AccessMultiVecFlat(MultiVectorExpr, u16),
     // e.g. UnitizedNorm
     TraitInvoke11ToFloat(TraitKey, MultiVectorExpr),
-    // There is an argument to be made that this should contain at least 2 elements,
-    // but for now, the consistency of handling everything in a single Vec is nice.
-    // Note that this does cause panics and/or Errors if this Vec is provoked
-    // when empty, so it is an important part of the simplification methods
-    // to ensure no empty Vecs escape.
-    // TODO give Product a similar treatment to Sum
-    Product(Vec<FloatExpr>),
+    Product(Vec<(FloatExpr, f32)>, f32),
     Sum(Vec<(FloatExpr, f32)>, f32),
     // TODO trig? floor? log? round? trunc? mix? step? smoothstep? fma? fract? modf?
 }
@@ -195,12 +189,7 @@ pub enum Vec2Expr {
     Gather2(FloatExpr, FloatExpr),
     SwizzleVec2(Box<Vec2Expr>, u8, u8),
     AccessMultiVecGroup(MultiVectorExpr, u16),
-    // There is an argument to be made that this should contain at least 2 elements,
-    // but for now, the consistency of handling everything in a single Vec is nice.
-    // Note that this does cause panics and/or Errors if this Vec is provoked
-    // when empty, so it is an important part of the simplification methods
-    // to ensure no empty Vecs escape.
-    Product(Vec<Vec2Expr>),
+    Product(Vec<(Vec2Expr, f32)>, [f32; 2]),
     Sum(Vec<(Vec2Expr, f32)>, [f32; 2]),
 }
 #[derive(PartialEq, Clone, Debug)]
@@ -210,12 +199,7 @@ pub enum Vec3Expr {
     Gather3(FloatExpr, FloatExpr, FloatExpr),
     SwizzleVec3(Box<Vec3Expr>, u8, u8, u8),
     AccessMultiVecGroup(MultiVectorExpr, u16),
-    // There is an argument to be made that this should contain at least 2 elements,
-    // but for now, the consistency of handling everything in a single Vec is nice.
-    // Note that this does cause panics and/or Errors if this Vec is provoked
-    // when empty, so it is an important part of the simplification methods
-    // to ensure no empty Vecs escape.
-    Product(Vec<Vec3Expr>),
+    Product(Vec<(Vec3Expr, f32)>, [f32; 3]),
     Sum(Vec<(Vec3Expr, f32)>, [f32; 3]),
 }
 #[derive(PartialEq, Clone, Debug)]
@@ -225,12 +209,7 @@ pub enum Vec4Expr {
     Gather4(FloatExpr, FloatExpr, FloatExpr, FloatExpr),
     SwizzleVec4(Box<Vec4Expr>, u8, u8, u8, u8),
     AccessMultiVecGroup(MultiVectorExpr, u16),
-    // There is an argument to be made that this should contain at least 2 elements,
-    // but for now, the consistency of handling everything in a single Vec is nice.
-    // Note that this does cause panics and/or Errors if this Vec is provoked
-    // when empty, so it is an important part of the simplification methods
-    // to ensure no empty Vecs escape.
-    Product(Vec<Vec4Expr>),
+    Product(Vec<(Vec4Expr, f32)>, [f32; 4]),
     Sum(Vec<(Vec4Expr, f32)>, [f32; 4]),
 }
 #[derive(PartialEq, Clone, Debug)]
@@ -411,7 +390,7 @@ impl Expression<Float> for FloatExpr {
             FloatExpr::TraitInvoke11ToFloat(_, mvc) => mvc.substitute_variable(old.clone(), new.clone()),
             FloatExpr::AccessMultiVecGroup(mve, _) => mve.substitute_variable(old.clone(), new.clone()),
             FloatExpr::AccessMultiVecFlat(mve, _) => mve.substitute_variable(old.clone(), new.clone()),
-            FloatExpr::Product(v) => {
+            FloatExpr::Product(v, _last_factor) => {
                 for v in v.iter_mut() {
                     v.substitute_variable(old.clone(), new.clone());
                 }
@@ -470,7 +449,7 @@ impl Expression<Vec2> for Vec2Expr {
                 f2.substitute_variable(old.clone(), new.clone());
             }
             Vec2Expr::AccessMultiVecGroup(mve, _) => mve.substitute_variable(old.clone(), new.clone()),
-            Vec2Expr::Product(v) => {
+            Vec2Expr::Product(v, _last_factor) => {
                 for v in v.iter_mut() {
                     v.substitute_variable(old.clone(), new.clone());
                 }
@@ -531,7 +510,7 @@ impl Expression<Vec3> for Vec3Expr {
                 f3.substitute_variable(old.clone(), new.clone());
             }
             Vec3Expr::AccessMultiVecGroup(mve, _) => mve.substitute_variable(old.clone(), new.clone()),
-            Vec3Expr::Product(v) => {
+            Vec3Expr::Product(v, _last_factor) => {
                 for v in v.iter_mut() {
                     v.substitute_variable(old.clone(), new.clone());
                 }
@@ -593,7 +572,7 @@ impl Expression<Vec4> for Vec4Expr {
                 f4.substitute_variable(old.clone(), new.clone());
             }
             Vec4Expr::AccessMultiVecGroup(mve, _) => mve.substitute_variable(old.clone(), new.clone()),
-            Vec4Expr::Product(v) => {
+            Vec4Expr::Product(v, _last_factor) => {
                 for v in v.iter_mut() {
                     v.substitute_variable(old.clone(), new.clone());
                 }
@@ -1135,13 +1114,25 @@ impl Display for FloatExpr {
                 let n = t.as_lower_snake();
                 write!(f, "({mv} {n})")?
             },
-            FloatExpr::Product(v) => {
+            FloatExpr::Product(v, last_factor) => {
                 write!(f, "(")?;
-                for (i, factor) in v.iter().enumerate() {
+                for (i, (factor, exponent)) in v.iter().enumerate() {
                     if i > 0 {
                         write!(f, " * ")?;
                     }
+                    if *exponent != 1.0 {
+                        write!(f, "(")?;
+                    }
                     write!(f, "{factor}")?;
+                    if *exponent != 1.0 {
+                        write!(f, " ^{exponent})")?;
+                    }
+                }
+                if *last_factor != 1.0 {
+                    if !v.is_empty() {
+                        write!(f, " * ")?;
+                    }
+                    write!(f, "{last_factor}")?;
                 }
                 write!(f, ")")?;
             }
@@ -1238,13 +1229,27 @@ impl Display for Vec2Expr {
                     },
                 }
             }
-            Vec2Expr::Product(v) => {
+            Vec2Expr::Product(v, last_factor) => {
                 write!(f, "(")?;
-                for (i, factor) in v.iter().enumerate() {
+                for (i, (factor, exponent)) in v.iter().enumerate() {
                     if i > 0 {
                         write!(f, " * ")?;
                     }
+                    if *exponent != 1.0 {
+                        write!(f, "(")?;
+                    }
                     write!(f, "{factor}")?;
+                    if *exponent != 1.0 {
+                        write!(f, " ^{exponent})")?;
+                    }
+                }
+                if *last_factor != [1.0; 2] {
+                    if !v.is_empty() {
+                        write!(f, " * ")?;
+                    }
+                    let a0 = last_factor[0];
+                    let a1 = last_factor[1];
+                    write!(f, "[{a0}, {a1}]")?;
                 }
                 write!(f, ")")?;
             }
@@ -1268,14 +1273,13 @@ impl Display for Vec2Expr {
                         _ => unreachable!("This match is complete across if conditions (unless NaN?)"),
                     }
                 }
-                match (*last_addend, !v.is_empty()) {
-                    (a, _) if a == [0.0; 2] => {}
-                    (a, false) => {
-                        let a0 = a[0];
-                        let a1 = a[1];
-                        write!(f, "[{a0}, {a1}]")?;
+                if *last_addend != [0.0; 2] {
+                    if !v.is_empty() {
+                        write!(f, " + ")?;
                     }
-                    _ => {}
+                    let a0 = last_addend[0];
+                    let a1 = last_addend[1];
+                    write!(f, "[{a0}, {a1}]")?;
                 }
                 write!(f, ")")?;
             }
@@ -1340,13 +1344,28 @@ impl Display for Vec3Expr {
                     },
                 }
             }
-            Vec3Expr::Product(v) => {
+            Vec3Expr::Product(v, last_factor) => {
                 write!(f, "(")?;
-                for (i, factor) in v.iter().enumerate() {
+                for (i, (factor, exponent)) in v.iter().enumerate() {
                     if i > 0 {
                         write!(f, " * ")?;
                     }
+                    if *exponent != 1.0 {
+                        write!(f, "(")?;
+                    }
                     write!(f, "{factor}")?;
+                    if *exponent != 1.0 {
+                        write!(f, " ^{exponent})")?;
+                    }
+                }
+                if *last_factor != [1.0; 3] {
+                    if !v.is_empty() {
+                        write!(f, " * ")?;
+                    }
+                    let a0 = last_factor[0];
+                    let a1 = last_factor[1];
+                    let a2 = last_factor[2];
+                    write!(f, "[{a0}, {a1}, {a2}]")?;
                 }
                 write!(f, ")")?;
             }
@@ -1370,15 +1389,14 @@ impl Display for Vec3Expr {
                         _ => unreachable!("This match is complete across if conditions (unless NaN?)"),
                     }
                 }
-                match (*last_addend, !v.is_empty()) {
-                    (a, _) if a == [0.0; 3] => {}
-                    (a, false) => {
-                        let a0 = a[0];
-                        let a1 = a[1];
-                        let a2 = a[2];
-                        write!(f, "[{a0}, {a1}, {a2}]")?;
+                if *last_addend != [0.0; 3] {
+                    if !v.is_empty() {
+                        write!(f, " + ")?;
                     }
-                    _ => {}
+                    let a0 = last_addend[0];
+                    let a1 = last_addend[1];
+                    let a2 = last_addend[2];
+                    write!(f, "[{a0}, {a1}, {a2}]")?;
                 }
                 write!(f, ")")?;
             }
@@ -1443,13 +1461,29 @@ impl Display for Vec4Expr {
                     },
                 }
             }
-            Vec4Expr::Product(v) => {
+            Vec4Expr::Product(v, last_factor) => {
                 write!(f, "(")?;
-                for (i, factor) in v.iter().enumerate() {
+                for (i, (factor, exponent)) in v.iter().enumerate() {
                     if i > 0 {
                         write!(f, " * ")?;
                     }
+                    if *exponent != 1.0 {
+                        write!(f, "(")?;
+                    }
                     write!(f, "{factor}")?;
+                    if *exponent != 1.0 {
+                        write!(f, " ^{exponent})")?;
+                    }
+                }
+                if *last_factor != [1.0; 4] {
+                    if !v.is_empty() {
+                        write!(f, " * ")?;
+                    }
+                    let a0 = last_factor[0];
+                    let a1 = last_factor[1];
+                    let a2 = last_factor[2];
+                    let a3 = last_factor[3];
+                    write!(f, "[{a0}, {a1}, {a2}, {a3}]")?;
                 }
                 write!(f, ")")?;
             }
@@ -1473,16 +1507,15 @@ impl Display for Vec4Expr {
                         _ => unreachable!("This match is complete across if conditions (unless NaN?)"),
                     }
                 }
-                match (*last_addend, !v.is_empty()) {
-                    (a, _) if a == [0.0; 4] => {}
-                    (a, false) => {
-                        let a0 = a[0];
-                        let a1 = a[1];
-                        let a2 = a[2];
-                        let a3 = a[3];
-                        write!(f, "[{a0}, {a1}, {a2}, {a3}]")?;
+                if *last_addend != [0.0; 4] {
+                    if !v.is_empty() {
+                        write!(f, " + ")?;
                     }
-                    _ => {}
+                    let a0 = last_addend[0];
+                    let a1 = last_addend[1];
+                    let a2 = last_addend[2];
+                    let a3 = last_addend[3];
+                    write!(f, "[{a0}, {a1}, {a2}, {a3}]")?;
                 }
                 write!(f, ")")?;
             }
@@ -1589,7 +1622,7 @@ impl FloatExpr {
             FloatExpr::AccessMultiVecGroup(mv, _) => mv.deep_inline_variables(),
             FloatExpr::AccessMultiVecFlat(mv, _) => mv.deep_inline_variables(),
             FloatExpr::TraitInvoke11ToFloat(_, _) => false,
-            FloatExpr::Product(v) => {
+            FloatExpr::Product(v, _) => {
                 let mut result = false;
                 for e in v.iter_mut() {
                     result |= e.deep_inline_variables();
@@ -1635,7 +1668,7 @@ impl Vec2Expr {
             }
             Vec2Expr::SwizzleVec2(v, _, _) => v.deep_inline_variables(),
             Vec2Expr::AccessMultiVecGroup(mv, _) => mv.deep_inline_variables(),
-            Vec2Expr::Product(v) => {
+            Vec2Expr::Product(v, _) => {
                 let mut result = false;
                 for e in v.iter_mut() {
                     result |= e.deep_inline_variables();
@@ -1682,7 +1715,7 @@ impl Vec3Expr {
             }
             Vec3Expr::SwizzleVec3(v, _, _, _) => v.deep_inline_variables(),
             Vec3Expr::AccessMultiVecGroup(mv, _) => mv.deep_inline_variables(),
-            Vec3Expr::Product(v) => {
+            Vec3Expr::Product(v, _) => {
                 let mut result = false;
                 for e in v.iter_mut() {
                     result |= e.deep_inline_variables();
@@ -1730,7 +1763,7 @@ impl Vec4Expr {
             }
             Vec4Expr::SwizzleVec4(v, _, _, _, _) => v.deep_inline_variables(),
             Vec4Expr::AccessMultiVecGroup(mv, _) => mv.deep_inline_variables(),
-            Vec4Expr::Product(v) => {
+            Vec4Expr::Product(v, _) => {
                 let mut result = false;
                 for e in v.iter_mut() {
                     result |= e.deep_inline_variables();
@@ -1995,7 +2028,7 @@ impl FloatExpr {
                 }
             }
             FloatExpr::TraitInvoke11ToFloat(_, _) => {}
-            FloatExpr::Product(product) => {
+            FloatExpr::Product(product, last_factor) => {
                 if product.is_empty() {
                     panic!("Problem")
                 }
@@ -2090,7 +2123,7 @@ impl FloatExpr {
                     return if factor == 1.0 {
                         *self = addend;
                     } else {
-                        *self = FloatExpr::Product(vec![addend, FloatExpr::Literal(factor)]);
+                        *self = FloatExpr::Product(vec![(addend, 1.0)], factor);
                     };
                 }
                 let mut flatten = vec![];
@@ -2107,25 +2140,9 @@ impl FloatExpr {
                         *last_addend += *another_addend;
                         false
                     }
-                    FloatExpr::Product(p) => {
-                        p.retain(|f| match f {
-                            FloatExpr::Literal(f) => {
-                                *factor *= f;
-                                false
-                            }
-                            _ => true,
-                        });
-                        if p.is_empty() {
-                            // It's tempting to say return false, but it's the safer bet to panic.
-                            // Product simplification should always merge literals, and if the only
-                            // thing in the product is one (merged) literal, then it should replace
-                            // the product with just that one element. So there should never be a
-                            // case (outside FloatExpr::Product simplification) where we remove all
-                            // FloatExpr::Literal from a FloatExpr::Product and find no other
-                            // product factors remaining. So if we ever hit this branch/panic,
-                            // we need and want to know, so that we can fix simplification.
-                            panic!("Problem")
-                        }
+                    FloatExpr::Product(p, last_factor) => {
+                        *factor *= *last_factor;
+                        *last_factor = 1.0;
                         if p.len() == 1 {
                             *addend = p.remove(0);
                         }
@@ -2164,7 +2181,7 @@ impl FloatExpr {
                     return if factor == 1.0 {
                         *self = addend;
                     } else {
-                        *self = FloatExpr::Product(vec![addend, FloatExpr::Literal(factor)]);
+                        *self = FloatExpr::Product(vec![(addend, 1.0)], factor);
                     };
                 }
                 if sum.is_empty() {
@@ -2240,7 +2257,7 @@ impl Vec2Expr {
                     }
                 }
             }
-            Vec2Expr::Product(ref mut product) => {
+            Vec2Expr::Product(ref mut product, last_factor) => {
                 if product.is_empty() {
                     panic!("Problem")
                 }
@@ -2357,7 +2374,7 @@ impl Vec2Expr {
                     return if factor == 1.0 {
                         *self = addend;
                     } else {
-                        *self = Vec2Expr::Product(vec![addend, Vec2Expr::Gather1(FloatExpr::Literal(factor))]);
+                        *self = Vec2Expr::Product(vec![(addend, 1.0)], factor);
                     };
                 }
                 let mut flatten = vec![];
@@ -2381,30 +2398,13 @@ impl Vec2Expr {
                         last_addend[1] += another_addend[1];
                         false
                     }
-                    Vec2Expr::Product(p) => {
-                        let mut contains_gather_lits = false;
-                        p.retain(|f| match f {
-                            Vec2Expr::Gather1(FloatExpr::Literal(f)) => {
-                                *factor *= f;
-                                false
-                            }
-                            Vec2Expr::Gather2(FloatExpr::Literal(_f0), FloatExpr::Literal(_f1)) => {
-                                contains_gather_lits = true;
-                                // If it was one factor we could easily pull out, then we'd
-                                // be in the above Gather1 case, not this case.
-                                true
-                            }
-                            _ => true,
-                        });
-                        if p.is_empty() && !contains_gather_lits {
-                            // TODO not 100% sure about panicking here yet, but we'll see
-                            // Read explanation in analogous spot in FloatExpr::simplify
-                            panic!("Problem")
-                        }
+                    Vec2Expr::Product(p, last_factor) => {
+                        factor[0] *= last_factor[0];
+                        factor[1] *= last_factor[1];
+                        *last_factor = [1.0; 2];
                         if p.len() == 1 {
                             *addend = p.remove(0);
                         }
-                        true
                     }
                     _ => true,
                 });
@@ -2445,10 +2445,8 @@ impl Vec2Expr {
                     return if factor == 1.0 {
                         *self = addend;
                     } else {
-                        let f0 = FloatExpr::Literal(last_addend[0]);
-                        let f1 = FloatExpr::Literal(last_addend[1]);
-                        let gather = if f0 == f1 { Vec2Expr::Gather1(f0) } else { Vec2Expr::Gather2(f0, f1) };
-                        *self = Vec2Expr::Product(vec![addend, gather]);
+                        let gather = [factor, factor];
+                        *self = Vec2Expr::Product(vec![(addend, 1.0)], gather);
                     };
                 }
                 if sum.is_empty() {
@@ -2532,7 +2530,7 @@ impl Vec3Expr {
                     }
                 }
             }
-            Vec3Expr::Product(ref mut product) => {
+            Vec3Expr::Product(ref mut product, last_factor) => {
                 if product.is_empty() {
                     panic!("Problem")
                 }
@@ -2655,7 +2653,7 @@ impl Vec3Expr {
                     return if factor == 1.0 {
                         *self = addend;
                     } else {
-                        *self = Vec3Expr::Product(vec![addend, Vec3Expr::Gather1(FloatExpr::Literal(factor))])
+                        *self = Vec3Expr::Product(vec![(addend, 1.0)], factor);
                     };
                 }
                 let mut flatten = vec![];
@@ -2682,26 +2680,11 @@ impl Vec3Expr {
                         last_addend[2] += another_addend[2];
                         false
                     }
-                    Vec3Expr::Product(p) => {
-                        let mut contains_gather_lits = false;
-                        p.retain(|f| match f {
-                            Vec3Expr::Gather1(FloatExpr::Literal(f)) => {
-                                *factor *= f;
-                                false
-                            }
-                            Vec3Expr::Gather3(FloatExpr::Literal(_f0), FloatExpr::Literal(_f1), FloatExpr::Literal(_f2)) => {
-                                contains_gather_lits = true;
-                                // If it was one factor we could easily pull out, then we'd
-                                // be in the above Gather1 case, not this case.
-                                true
-                            }
-                            _ => true,
-                        });
-                        if p.is_empty() && !contains_gather_lits {
-                            // TODO not 100% sure about panicking here yet, but we'll see
-                            // Read explanation in analogous spot in FloatExpr::simplify
-                            panic!("Problem")
-                        }
+                    Vec3Expr::Product(p, last_factor) => {
+                        factor[0] *= last_factor[0];
+                        factor[1] *= last_factor[1];
+                        factor[2] *= last_factor[2];
+                        *last_factor = [1.0; 3];
                         if p.len() == 1 {
                             *addend = p.remove(0);
                         }
@@ -2748,11 +2731,8 @@ impl Vec3Expr {
                     return if factor == 1.0 {
                         *self = addend;
                     } else {
-                        let f0 = FloatExpr::Literal(last_addend[0]);
-                        let f1 = FloatExpr::Literal(last_addend[1]);
-                        let f2 = FloatExpr::Literal(last_addend[2]);
-                        let gather = if f0 == f1 && f1 == f2 { Vec3Expr::Gather1(f0) } else { Vec3Expr::Gather3(f0, f1, f2) };
-                        *self = Vec3Expr::Product(vec![addend, gather]);
+                        let gather = [factor, factor, factor];
+                        *self = Vec3Expr::Product(vec![(addend, 1.0)], gather);
                     };
                 }
                 if sum.is_empty() {
@@ -2840,7 +2820,7 @@ impl Vec4Expr {
                     }
                 }
             }
-            Vec4Expr::Product(product) => {
+            Vec4Expr::Product(product, last_factor) => {
                 if product.is_empty() {
                     panic!("Problem")
                 }
@@ -2974,7 +2954,7 @@ impl Vec4Expr {
                     return if factor == 1.0 {
                         *self = addend;
                     } else {
-                        *self = Vec4Expr::Product(vec![addend, Vec4Expr::Gather1(FloatExpr::Literal(factor))])
+                        *self = Vec4Expr::Product(vec![(addend, 1.0)], factor);
                     };
                 }
                 let mut flatten = vec![];
@@ -3004,26 +2984,12 @@ impl Vec4Expr {
                         last_addend[3] += another_addend[3];
                         false
                     }
-                    Vec4Expr::Product(p) => {
-                        let mut contains_gather_lits = false;
-                        p.retain(|f| match f {
-                            Vec4Expr::Gather1(FloatExpr::Literal(f)) => {
-                                *factor *= f;
-                                false
-                            }
-                            Vec4Expr::Gather4(FloatExpr::Literal(_f0), FloatExpr::Literal(_f1), FloatExpr::Literal(_f2), FloatExpr::Literal(_f3)) => {
-                                contains_gather_lits = true;
-                                // If it was one factor we could easily pull out, then we'd
-                                // be in the above Gather1 case, not this case.
-                                true
-                            }
-                            _ => true,
-                        });
-                        if p.is_empty() && !contains_gather_lits {
-                            // TODO not 100% sure about panicking here yet, but we'll see
-                            // Read explanation in analogous spot in FloatExpr::simplify
-                            panic!("Problem")
-                        }
+                    Vec4Expr::Product(p, last_factor) => {
+                        factor[0] *= last_factor[0];
+                        factor[1] *= last_factor[1];
+                        factor[2] *= last_factor[2];
+                        factor[3] *= last_factor[3]
+                        *last_factor = [1.0; 4];
                         if p.len() == 1 {
                             *addend = p.remove(0);
                         }
@@ -3072,16 +3038,8 @@ impl Vec4Expr {
                     return if factor == 1.0 {
                         *self = addend;
                     } else {
-                        let f0 = FloatExpr::Literal(last_addend[0]);
-                        let f1 = FloatExpr::Literal(last_addend[1]);
-                        let f2 = FloatExpr::Literal(last_addend[2]);
-                        let f3 = FloatExpr::Literal(last_addend[3]);
-                        let gather = if f0 == f1 && f1 == f2 && f2 == f3 {
-                            Vec4Expr::Gather1(f0)
-                        } else {
-                            Vec4Expr::Gather4(f0, f1, f2, f3)
-                        };
-                        *self = Vec4Expr::Product(vec![addend, gather]);
+                        let gather = [factor, factor, factor, factor];
+                        *self = Vec4Expr::Product(vec![(addend, 1.0)], gather);
                     };
                 }
                 if sum.is_empty() {
@@ -3254,7 +3212,7 @@ impl<FE: Into<FloatExpr>> Mul<FE> for FloatExpr {
 
     fn mul(self, rhs: FE) -> Self::Output {
         let rhs = rhs.into();
-        let mut s = FloatExpr::Product(vec![self, rhs]);
+        let mut s = FloatExpr::Product(vec![(self, 1.0), (rhs, 1.0)], 1.0);
         s.simplify();
         s
     }
@@ -3264,7 +3222,7 @@ impl<FE: Into<FloatExpr>> MulAssign<FE> for FloatExpr {
         let rhs = rhs.into();
         let mut x = FloatExpr::Literal(1.0);
         mem::swap(&mut x, self);
-        *self = FloatExpr::Product(vec![x, rhs]);
+        *self = FloatExpr::Product(vec![(x, 1.0), (rhs, 1.0)], 1.0);
         self.simplify();
     }
 }
@@ -3314,7 +3272,7 @@ impl<V: Into<Vec2Expr>> Mul<V> for Vec2Expr {
 
     fn mul(self, rhs: V) -> Self::Output {
         let rhs = rhs.into();
-        let mut s = Vec2Expr::Product(vec![self, rhs]);
+        let mut s = Vec2Expr::Product(vec![(self, 1.0), (rhs, 1.0)], [1.0; 2]);
         s.simplify();
         s
     }
@@ -3324,7 +3282,7 @@ impl<V: Into<Vec2Expr>> MulAssign<V> for Vec2Expr {
         let rhs = rhs.into();
         let mut x = Vec2Expr::Gather1(FloatExpr::Literal(1.0));
         mem::swap(&mut x, self);
-        *self = Vec2Expr::Product(vec![x, rhs]);
+        *self = Vec2Expr::Product(vec![(x, 1.0), (rhs, 1.0)], [1.0; 2]);
         self.simplify();
     }
 }
@@ -3374,7 +3332,7 @@ impl<V: Into<Vec3Expr>> Mul<V> for Vec3Expr {
 
     fn mul(self, rhs: V) -> Self::Output {
         let rhs = rhs.into();
-        let mut s = Vec3Expr::Product(vec![self, rhs]);
+        let mut s = Vec3Expr::Product(vec![(self, 1.0), (rhs, 1.0)], [1.0; 3]);
         s.simplify();
         s
     }
@@ -3384,7 +3342,7 @@ impl<V: Into<Vec3Expr>> MulAssign<V> for Vec3Expr {
         let rhs = rhs.into();
         let mut x = Vec3Expr::Gather1(FloatExpr::Literal(1.0));
         mem::swap(&mut x, self);
-        *self = Vec3Expr::Product(vec![x, rhs]);
+        *self = Vec3Expr::Product(vec![(x, 1.0), (rhs, 1.0)], [1.0; 3]);
         self.simplify();
     }
 }
@@ -3434,7 +3392,7 @@ impl<V: Into<Vec4Expr>> Mul<V> for Vec4Expr {
 
     fn mul(self, rhs: V) -> Self::Output {
         let rhs = rhs.into();
-        let mut s = Vec4Expr::Product(vec![self, rhs]);
+        let mut s = Vec4Expr::Product(vec![(self, 1.0), (rhs, 1.0)], [1.0; 4]);
         s.simplify();
         s
     }
@@ -3444,7 +3402,7 @@ impl<V: Into<Vec4Expr>> MulAssign<V> for Vec4Expr {
         let rhs = rhs.into();
         let mut x = Vec4Expr::Gather1(FloatExpr::Literal(1.0));
         mem::swap(&mut x, self);
-        *self = Vec4Expr::Product(vec![x, rhs]);
+        *self = Vec4Expr::Product(vec![(x, 1.0), (rhs, 1.0)], [1.0; 4]);
         self.simplify();
     }
 }
@@ -3511,13 +3469,26 @@ impl TrackOperations for FloatExpr {
                 result
             }
             FloatExpr::TraitInvoke11ToFloat(t, m) => m.count_operations(lookup) + lookup.trait_11_ops(t, &m.mv_class),
-            FloatExpr::Product(v) => {
+            FloatExpr::Product(v, last_factor) => {
                 let mut result = VectoredOperationsTracker::zero();
-                for f in v.iter() {
+                for (i, (f, exp)) in v.iter().enumerate() {
                     result += f.count_operations(lookup);
+                    match exp {
+                        1.0 => {
+                            if i > 0 {
+                                result.floats.mul += 1;
+                            }
+                        }
+                        -1.0 => {
+                            result.floats.div += 1;
+                        }
+                        _ => {
+                            result.floats.transcendental += 1;
+                        }
+                    }
                 }
-                if v.len() > 1 {
-                    result.floats.mul += v.len() - 1;
+                if !v.is_empty() && *last_factor != 1.0 {
+                    result.floats.mul += 1;
                 }
                 result
             }
@@ -3532,7 +3503,7 @@ impl TrackOperations for FloatExpr {
                 if v.len() > 1 {
                     result.floats.add_sub += v.len() - 1;
                 }
-                if *lits != 0.0 {
+                if !v.is_empty() && *lits != 0.0 {
                     result.floats.add_sub += 1;
                 }
                 result
@@ -3547,13 +3518,26 @@ impl TrackOperations for Vec2Expr {
             Vec2Expr::Gather1(f) => f.count_operations(lookup),
             Vec2Expr::Gather2(f0, f1) => f0.count_operations(lookup) + f1.count_operations(lookup),
             Vec2Expr::AccessMultiVecGroup(m, _) => m.count_operations(lookup),
-            Vec2Expr::Product(v) => {
+            Vec2Expr::Product(v, last_factor) => {
                 let mut result = VectoredOperationsTracker::zero();
-                for f in v.iter() {
+                for (i, (f, exp)) in v.iter().enumerate() {
                     result += f.count_operations(lookup);
+                    match exp {
+                        1.0 => {
+                            if i > 0 {
+                                result.simd2.mul += 1;
+                            }
+                        }
+                        -1.0 => {
+                            result.simd2.div += 1;
+                        }
+                        _ => {
+                            result.simd2.transcendental += 1;
+                        }
+                    }
                 }
-                if v.len() > 1 {
-                    result.simd2.mul += v.len() - 1;
+                if !v.is_empty() && *last_factor != [1.0; 2] {
+                    result.simd2.mul += 1;
                 }
                 result
             }
@@ -3568,7 +3552,7 @@ impl TrackOperations for Vec2Expr {
                 if v.len() > 1 {
                     result.simd2.add_sub += v.len() - 1;
                 }
-                if *lits != [0.0; 2] {
+                if !v.is_empty() && *lits != [0.0; 2] {
                     result.simd2.add_sub += 1;
                 }
                 result
@@ -3584,13 +3568,26 @@ impl TrackOperations for Vec3Expr {
             Vec3Expr::Gather1(f) => f.count_operations(lookup),
             Vec3Expr::Gather3(f0, f1, f2) => f0.count_operations(lookup) + f1.count_operations(lookup) + f2.count_operations(lookup),
             Vec3Expr::AccessMultiVecGroup(m, _) => m.count_operations(lookup),
-            Vec3Expr::Product(v) => {
+            Vec3Expr::Product(v, last_factor) => {
                 let mut result = VectoredOperationsTracker::zero();
-                for f in v.iter() {
+                for (i, (f, exp)) in v.iter().enumerate() {
                     result += f.count_operations(lookup);
+                    match exp {
+                        1.0 => {
+                            if i > 0 {
+                                result.simd3.mul += 1;
+                            }
+                        }
+                        -1.0 => {
+                            result.simd3.div += 1;
+                        }
+                        _ => {
+                            result.simd3.transcendental += 1;
+                        }
+                    }
                 }
-                if v.len() > 1 {
-                    result.simd3.mul += v.len() - 1;
+                if !v.is_empty() && *last_factor != [1.0; 3] {
+                    result.simd3.mul += 1;
                 }
                 result
             }
@@ -3605,7 +3602,7 @@ impl TrackOperations for Vec3Expr {
                 if v.len() > 1 {
                     result.simd3.add_sub += v.len() - 1;
                 }
-                if *lits != [0.0; 3] {
+                if !v.is_empty() && *lits != [0.0; 3] {
                     result.simd3.add_sub += 1;
                 }
                 result
@@ -3621,13 +3618,26 @@ impl TrackOperations for Vec4Expr {
             Vec4Expr::Gather1(f) => f.count_operations(lookup),
             Vec4Expr::Gather4(f0, f1, f2, f3) => f0.count_operations(lookup) + f1.count_operations(lookup) + f2.count_operations(lookup) + f3.count_operations(lookup),
             Vec4Expr::AccessMultiVecGroup(m, _) => m.count_operations(lookup),
-            Vec4Expr::Product(v) => {
+            Vec4Expr::Product(v, last_factor) => {
                 let mut result = VectoredOperationsTracker::zero();
-                for f in v.iter() {
+                for (i, (f, exp)) in v.iter().enumerate() {
                     result += f.count_operations(lookup);
+                    match exp {
+                        1.0 => {
+                            if i > 0 {
+                                result.simd4.mul += 1;
+                            }
+                        }
+                        -1.0 => {
+                            result.simd4.div += 1;
+                        }
+                        _ => {
+                            result.simd4.transcendental += 1;
+                        }
+                    }
                 }
-                if v.len() > 1 {
-                    result.simd4.mul += v.len() - 1;
+                if !v.is_empty() && *last_factor != [1.0; 4] {
+                    result.simd4.mul += 1;
                 }
                 result
             }
@@ -3642,7 +3652,7 @@ impl TrackOperations for Vec4Expr {
                 if v.len() > 1 {
                     result.simd4.add_sub += v.len() - 1;
                 }
-                if *lits != [0.0; 4] {
+                if !v.is_empty() && *lits != [0.0; 4] {
                     result.simd4.add_sub += 1;
                 }
                 result
@@ -3679,7 +3689,11 @@ impl TrackOperations for MultiVectorExpr {
     }
 }
 
-fn transpose_vec2_product(float_product_0: &mut Vec<FloatExpr>, float_product_1: &mut Vec<FloatExpr>) -> Option<Vec2Expr> {
+fn transpose_vec2_product(
+    float_product_0: &mut Vec<FloatExpr>,
+    float_product_1: &mut Vec<FloatExpr>,
+    mut coalesce_product_literal: [f32; 2],
+) -> Option<Vec2Expr> {
     use crate::ast2::expressions::FloatExpr::*;
     // See if we can pull out a Vec2Expr::Product
     let mut coalesce_product_literals = [1.0, 1.0];
@@ -3728,17 +3742,24 @@ fn transpose_vec2_product(float_product_0: &mut Vec<FloatExpr>, float_product_1:
     Some(result)
 }
 
-fn vec2_product_extract(vec2_product: &mut Vec<Vec2Expr>, coalesce_product_literals: &mut [f32; 2], f0: &mut FloatExpr, f1: &mut FloatExpr) -> bool {
+fn vec2_product_extract(
+    vec2_product: &mut Vec<Vec2Expr>,
+    coalesce_product_literals: &mut [f32; 2],
+    e0: &mut FloatExpr,
+    f0: &mut f32,
+    e1: &mut FloatExpr,
+    f1: &mut f32,
+) -> bool {
     use crate::ast2::expressions::FloatExpr::*;
     let mut pulled_out_literal = false;
-    if let Literal(f) = f0 {
+    if let Literal(f) = e0 {
         if *f != 1.0 {
             coalesce_product_literals[0] *= *f;
             *f = 1.0;
             pulled_out_literal = true;
         }
     }
-    if let Literal(f) = f1 {
+    if let Literal(f) = e1 {
         if *f != 1.0 {
             coalesce_product_literals[1] *= *f;
             *f = 1.0;
@@ -3748,11 +3769,11 @@ fn vec2_product_extract(vec2_product: &mut Vec<Vec2Expr>, coalesce_product_liter
     if pulled_out_literal {
         return false;
     }
-    if f0 == f1 {
-        vec2_product.push(Vec2Expr::Gather1(f0.clone()));
+    if e0 == e1 {
+        vec2_product.push(Vec2Expr::Gather1(e0.clone()));
         return true;
     }
-    return match (f0, f1) {
+    return match (e0, e1) {
         (AccessVec2(box v0, 0), AccessVec2(box v1, 1)) if v0 == v1 => {
             vec2_product.push(v0.clone());
             true
@@ -3771,7 +3792,11 @@ fn vec2_product_extract(vec2_product: &mut Vec<Vec2Expr>, coalesce_product_liter
     };
 }
 
-fn transpose_vec2_sum(float_sum_0: &mut Vec<(FloatExpr, f32)>, float_sum_1: &mut Vec<(FloatExpr, f32)>, mut coalesce_sum_literal: [f32; 2]) -> Option<Vec2Expr> {
+fn transpose_vec2_sum(
+    float_sum_0: &mut Vec<(FloatExpr, f32)>,
+    float_sum_1: &mut Vec<(FloatExpr, f32)>,
+    mut coalesce_sum_literal: [f32; 2]
+) -> Option<Vec2Expr> {
     use crate::ast2::expressions::FloatExpr::*;
     // See if we can pull out a Vec2Expr::Sum
     let mut vec2_sum = vec![];
@@ -3814,7 +3839,14 @@ fn transpose_vec2_sum(float_sum_0: &mut Vec<(FloatExpr, f32)>, float_sum_1: &mut
     Some(result)
 }
 
-fn vec2_sum_extract(vec2_sum: &mut Vec<(Vec2Expr, f32)>, coalesce_sum_literals: &mut [f32; 2], e0: &mut FloatExpr, f0: &mut f32, e1: &mut FloatExpr, f1: &mut f32) -> bool {
+fn vec2_sum_extract(
+    vec2_sum: &mut Vec<(Vec2Expr, f32)>,
+    coalesce_sum_literals: &mut [f32; 2],
+    e0: &mut FloatExpr,
+    f0: &mut f32,
+    e1: &mut FloatExpr,
+    f1: &mut f32
+) -> bool {
     use crate::ast2::expressions::FloatExpr::*;
     let mut pulled_out_literal = false;
     if let Literal(f) = e0 {
@@ -3858,7 +3890,12 @@ fn vec2_sum_extract(vec2_sum: &mut Vec<(Vec2Expr, f32)>, coalesce_sum_literals: 
     };
 }
 
-fn transpose_vec3_product(float_product_0: &mut Vec<FloatExpr>, float_product_1: &mut Vec<FloatExpr>, float_product_2: &mut Vec<FloatExpr>) -> Option<Vec3Expr> {
+fn transpose_vec3_product(
+    float_product_0: &mut Vec<FloatExpr>,
+    float_product_1: &mut Vec<FloatExpr>,
+    float_product_2: &mut Vec<FloatExpr>,
+    mut coalesce_product_literal: [f32; 3],
+) -> Option<Vec3Expr> {
     use crate::ast2::expressions::FloatExpr::*;
     // See if we can pull out a Vec3Expr::Product
     let mut coalesce_product_literals = [1.0, 1.0, 1.0];
@@ -3923,24 +3960,33 @@ fn transpose_vec3_product(float_product_0: &mut Vec<FloatExpr>, float_product_1:
     Some(result)
 }
 
-fn vec3_product_extract(vec3_product: &mut Vec<Vec3Expr>, coalesce_product_literals: &mut [f32; 3], f0: &mut FloatExpr, f1: &mut FloatExpr, f2: &mut FloatExpr) -> bool {
+fn vec3_product_extract(
+    vec3_product: &mut Vec<Vec3Expr>,
+    coalesce_product_literals: &mut [f32; 3],
+    e0: &mut FloatExpr,
+    f0: &mut f32,
+    e1: &mut FloatExpr,
+    f1: &mut f32,
+    e2: &mut FloatExpr,
+    f2: &mut f32,
+) -> bool {
     use crate::ast2::expressions::FloatExpr::*;
     let mut pulled_out_literal = false;
-    if let Literal(f) = f0 {
+    if let Literal(f) = e0 {
         if *f != 1.0 {
             coalesce_product_literals[0] *= *f;
             *f = 1.0;
             pulled_out_literal = true;
         }
     }
-    if let Literal(f) = f1 {
+    if let Literal(f) = e1 {
         if *f != 1.0 {
             coalesce_product_literals[1] *= *f;
             *f = 1.0;
             pulled_out_literal = true;
         }
     }
-    if let Literal(f) = f2 {
+    if let Literal(f) = e2 {
         if *f != 1.0 {
             coalesce_product_literals[2] *= *f;
             *f = 1.0;
@@ -3950,11 +3996,11 @@ fn vec3_product_extract(vec3_product: &mut Vec<Vec3Expr>, coalesce_product_liter
     if pulled_out_literal {
         return false;
     }
-    if f0 == f1 && f1 == f2 {
-        vec3_product.push(Vec3Expr::Gather1(f0.clone()));
+    if e0 == e1 && e1 == e2 {
+        vec3_product.push(Vec3Expr::Gather1(e0.clone()));
         return true;
     }
-    return match (f0, f1, f2) {
+    return match (e0, e1, e2) {
         (AccessVec3(box v0, 0), AccessVec3(box v1, 1), AccessVec3(box v2, 2)) if v0 == v1 && v1 == v2 => {
             vec3_product.push(v0.clone());
             true
@@ -4114,6 +4160,7 @@ fn transpose_vec4_product(
     float_product_1: &mut Vec<FloatExpr>,
     float_product_2: &mut Vec<FloatExpr>,
     float_product_3: &mut Vec<FloatExpr>,
+    mut coalesce_product_literal: [f32; 4],
 ) -> Option<Vec4Expr> {
     use crate::ast2::expressions::FloatExpr::*;
     // See if we can pull out a Vec4Expr::Product
@@ -4198,35 +4245,39 @@ fn transpose_vec4_product(
 fn vec4_product_extract(
     vec4_product: &mut Vec<Vec4Expr>,
     coalesce_product_literals: &mut [f32; 4],
-    f0: &mut FloatExpr,
-    f1: &mut FloatExpr,
-    f2: &mut FloatExpr,
-    f3: &mut FloatExpr,
+    e0: &mut FloatExpr,
+    f0: &mut f32,
+    e1: &mut FloatExpr,
+    f1: &mut f32,
+    e2: &mut FloatExpr,
+    f2: &mut f32,
+    e3: &mut FloatExpr,
+    f3: &mut f32,
 ) -> bool {
     use crate::ast2::expressions::FloatExpr::*;
     let mut pulled_out_literal = false;
-    if let Literal(f) = f0 {
+    if let Literal(f) = e0 {
         if *f != 1.0 {
             coalesce_product_literals[0] *= *f;
             *f = 1.0;
             pulled_out_literal = true;
         }
     }
-    if let Literal(f) = f1 {
+    if let Literal(f) = e1 {
         if *f != 1.0 {
             coalesce_product_literals[1] *= *f;
             *f = 1.0;
             pulled_out_literal = true;
         }
     }
-    if let Literal(f) = f2 {
+    if let Literal(f) = e2 {
         if *f != 1.0 {
             coalesce_product_literals[2] *= *f;
             *f = 1.0;
             pulled_out_literal = true;
         }
     }
-    if let Literal(f) = f3 {
+    if let Literal(f) = e3 {
         if *f != 1.0 {
             coalesce_product_literals[3] *= *f;
             *f = 1.0;
@@ -4236,11 +4287,11 @@ fn vec4_product_extract(
     if pulled_out_literal {
         return false;
     }
-    if f0 == f1 && f1 == f2 && f2 == f3 {
-        vec4_product.push(Vec4Expr::Gather1(f0.clone()));
+    if e0 == e1 && e1 == e2 && e2 == e3 {
+        vec4_product.push(Vec4Expr::Gather1(e0.clone()));
         return true;
     }
-    return match (f0, f1, f2, f3) {
+    return match (e0, e1, e2, e3) {
         (AccessVec4(box v0, 0), AccessVec4(box v1, 1), AccessVec4(box v2, 2), AccessVec4(box v3, 3)) if v0 == v1 && v1 == v2 && v2 == v3 => {
             vec4_product.push(v0.clone());
             true
