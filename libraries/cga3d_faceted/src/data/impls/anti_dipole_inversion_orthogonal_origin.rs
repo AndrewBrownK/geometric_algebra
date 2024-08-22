@@ -7,15 +7,15 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 382
+// Total Implementations: 383
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         3       2       0
+//   Median:         2       2       0
 //  Average:        10      14       0
 //  Maximum:       170     198       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         3       4       0
 //  Average:        16      21       0
@@ -4834,6 +4834,26 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for AntiDipoleInversionOrthogonalO
     //  no simd      116      132        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for AntiDipoleInversionOrthogonalOrigin {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0       11        0
+    fn neg(self) -> Self {
+        let negation = AntiDipoleInversionOrthogonalOrigin::from_groups(
+            // e423, e431, e412, e5
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e415, e425, e435
+            (self.group1() * Simd32x3::from(-1.0)),
+            // e235, e315, e125, e4
+            (self.group2() * Simd32x4::from(-1.0)),
+        );
+        return negation;
     }
 }
 impl std::ops::Not for AntiDipoleInversionOrthogonalOrigin {

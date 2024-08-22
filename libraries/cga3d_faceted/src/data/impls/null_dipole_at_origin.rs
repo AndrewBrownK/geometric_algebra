@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 338
+// Total Implementations: 339
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,7 +15,7 @@ use crate::traits::Wedge;
 //  Average:         3       6       0
 //  Maximum:        56      75       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       4       0
 //  Average:         4       8       0
@@ -3579,6 +3579,16 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for NullDipoleAtOrigin {
     //  no simd       24       36        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for NullDipoleAtOrigin {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        1        0
+    // no simd        0        3        0
+    fn neg(self) -> Self {
+        let negation = NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ (self.group0() * Simd32x3::from(-1.0)));
+        return negation;
     }
 }
 impl std::ops::Not for NullDipoleAtOrigin {

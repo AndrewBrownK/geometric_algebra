@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 387
+// Total Implementations: 388
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,7 +15,7 @@ use crate::traits::Wedge;
 //  Average:        10      14       0
 //  Maximum:       178     205       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         4       4       0
 //  Average:        18      23       0
@@ -5249,6 +5249,23 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for VersorEvenAtInfinity {
     //  no simd      128      144        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for VersorEvenAtInfinity {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
+    fn neg(self) -> Self {
+        let negation = VersorEvenAtInfinity::from_groups(
+            // e12345, e1, e2, e3
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e415, e425, e435, e321
+            (self.group1() * Simd32x4::from(-1.0)),
+            // e235, e315, e125, e5
+            (self.group2() * Simd32x4::from(-1.0)),
+        );
+        return negation;
     }
 }
 impl std::ops::Not for VersorEvenAtInfinity {

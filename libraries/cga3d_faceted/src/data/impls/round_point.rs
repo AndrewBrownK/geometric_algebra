@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 371
+// Total Implementations: 372
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,7 +15,7 @@ use crate::traits::Wedge;
 //  Average:         4       9       0
 //  Maximum:        52      80       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         2       7       0
 //  Average:         7      14       0
@@ -4652,6 +4652,20 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for RoundPoint {
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for RoundPoint {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
+    fn neg(self) -> Self {
+        use crate::elements::*;
+        let negation = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (self.group0() * Simd32x4::from(-1.0)), /* e5 */ (self[e2] * -1.0));
+        return negation;
     }
 }
 impl std::ops::Not for RoundPoint {

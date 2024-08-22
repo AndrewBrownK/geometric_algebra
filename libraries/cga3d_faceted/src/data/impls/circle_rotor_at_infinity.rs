@@ -7,15 +7,15 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 354
+// Total Implementations: 355
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         2       2       0
+//   Median:         1       2       0
 //  Average:         6      10       0
 //  Maximum:       113     144       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         2       4       0
 //  Average:        11      16       0
@@ -4369,6 +4369,21 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for CircleRotorAtInfinity {
     //  no simd       81       99        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for CircleRotorAtInfinity {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
+    fn neg(self) -> Self {
+        let negation = CircleRotorAtInfinity::from_groups(
+            // e415, e425, e435, e321
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e235, e315, e125, e12345
+            (self.group1() * Simd32x4::from(-1.0)),
+        );
+        return negation;
     }
 }
 impl std::ops::Not for CircleRotorAtInfinity {

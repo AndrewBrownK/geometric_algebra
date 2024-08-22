@@ -7,18 +7,18 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 391
+// Total Implementations: 392
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         4       2       0
-//  Average:        14      18       0
+//  Average:        13      18       0
 //  Maximum:       234     264       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         4       4       0
-//  Average:        25      31       0
+//  Average:        25      30       0
 //  Maximum:       480     512       0
 impl std::ops::Add<AntiCircleOnOrigin> for VersorEven {
     type Output = MultiVector;
@@ -6545,6 +6545,25 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for VersorEven {
 impl std::ops::MulAssign<VersorOddOrthogonalOrigin> for VersorEven {
     fn mul_assign(&mut self, other: VersorOddOrthogonalOrigin) {
         *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for VersorEven {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
+    fn neg(self) -> Self {
+        let negation = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e415, e425, e435, e321
+            (self.group1() * Simd32x4::from(-1.0)),
+            // e235, e315, e125, e5
+            (self.group2() * Simd32x4::from(-1.0)),
+            // e1, e2, e3, e4
+            (self.group3() * Simd32x4::from(-1.0)),
+        );
+        return negation;
     }
 }
 impl std::ops::Not for VersorEven {

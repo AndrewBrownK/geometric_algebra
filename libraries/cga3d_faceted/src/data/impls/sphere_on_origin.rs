@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 315
+// Total Implementations: 316
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,7 +15,7 @@ use crate::traits::Wedge;
 //  Average:         3       7       0
 //  Maximum:        48      77       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       4       0
 //  Average:         4      10       0
@@ -3611,6 +3611,16 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for SphereOnOrigin {
     //  no simd       32       52        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for SphereOnOrigin {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn neg(self) -> Self {
+        let negation = SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ (self.group0() * Simd32x4::from(-1.0)));
+        return negation;
     }
 }
 impl std::ops::Not for SphereOnOrigin {

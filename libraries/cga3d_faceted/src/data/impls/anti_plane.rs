@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 367
+// Total Implementations: 368
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,7 +15,7 @@ use crate::traits::Wedge;
 //  Average:         3       8       0
 //  Maximum:        47      76       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         1       7       0
 //  Average:         5      12       0
@@ -4218,6 +4218,16 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for AntiPlane {
     //  no simd       32       49        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for AntiPlane {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn neg(self) -> Self {
+        let negation = AntiPlane::from_groups(/* e1, e2, e3, e5 */ (self.group0() * Simd32x4::from(-1.0)));
+        return negation;
     }
 }
 impl std::ops::Not for AntiPlane {

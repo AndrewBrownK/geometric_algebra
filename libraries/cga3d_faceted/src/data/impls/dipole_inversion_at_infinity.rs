@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 379
+// Total Implementations: 380
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,7 +15,7 @@ use crate::traits::Wedge;
 //  Average:        10      13       0
 //  Maximum:       164     190       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         3       4       0
 //  Average:        16      21       0
@@ -4744,6 +4744,26 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for DipoleInversionAtInfinity {
     //  no simd      116      132        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for DipoleInversionAtInfinity {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0       11        0
+    fn neg(self) -> Self {
+        let negation = DipoleInversionAtInfinity::from_groups(
+            // e23, e31, e12, e45
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e15, e25, e35
+            (self.group1() * Simd32x3::from(-1.0)),
+            // e4235, e4315, e4125, e3215
+            (self.group2() * Simd32x4::from(-1.0)),
+        );
+        return negation;
     }
 }
 impl std::ops::Not for DipoleInversionAtInfinity {

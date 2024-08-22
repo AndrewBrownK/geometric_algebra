@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 435
+// Total Implementations: 436
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,7 +15,7 @@ use crate::traits::Wedge;
 //  Average:        25      32       0
 //  Maximum:       501     529       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         8       0       0
 //  Average:        46      54       0
@@ -12449,6 +12449,45 @@ impl std::ops::MulAssign<VersorOddOrthogonalOrigin> for MultiVector {
     fn mul_assign(&mut self, other: VersorOddOrthogonalOrigin) {
         use crate::elements::*;
         *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for MultiVector {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd2        0        1        0
+    //    simd3        0        4        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        0       11        0
+    //  no simd        0       32        0
+    fn neg(self) -> Self {
+        use crate::elements::*;
+        let negation = MultiVector::from_groups(
+            // scalar, e12345
+            (self.group0() * Simd32x2::from(-1.0)),
+            // e1, e2, e3, e4
+            (self.group1() * Simd32x4::from(-1.0)),
+            // e5
+            (self[e1] * -1.0),
+            // e41, e42, e43, e45
+            (self.group3() * Simd32x4::from(-1.0)),
+            // e15, e25, e35
+            (self.group4() * Simd32x3::from(-1.0)),
+            // e23, e31, e12
+            (self.group5() * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            (self.group6() * Simd32x4::from(-1.0)),
+            // e423, e431, e412
+            (self.group7() * Simd32x3::from(-1.0)),
+            // e235, e315, e125
+            (self.group8() * Simd32x3::from(-1.0)),
+            // e1234, e4235, e4315, e4125
+            (self.group9() * Simd32x4::from(-1.0)),
+            // e3215
+            (self[e45] * -1.0),
+        );
+        return negation;
     }
 }
 impl std::ops::Not for MultiVector {

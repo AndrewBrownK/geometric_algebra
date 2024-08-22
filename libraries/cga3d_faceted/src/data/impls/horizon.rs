@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 299
+// Total Implementations: 300
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,7 +15,7 @@ use crate::traits::Wedge;
 //  Average:         0       2       0
 //  Maximum:         4      22       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       2       0
 //  Average:         0       4       0
@@ -3344,6 +3344,16 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for Horizon {
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for Horizon {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn neg(self) -> Self {
+        use crate::elements::*;
+        let negation = Horizon::from_groups(/* e3215 */ (self[e3215] * -1.0));
+        return negation;
     }
 }
 impl std::ops::Not for Horizon {

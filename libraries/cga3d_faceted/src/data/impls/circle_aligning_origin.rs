@@ -7,15 +7,15 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 352
+// Total Implementations: 353
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         2       2       0
+//   Median:         1       2       0
 //  Average:         9      13       0
 //  Maximum:       153     177       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         3       4       0
 //  Average:        13      18       0
@@ -4184,6 +4184,23 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for CircleAligningOrigin {
     //  no simd       92      108        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for CircleAligningOrigin {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        3        0
+    // no simd        0        9        0
+    fn neg(self) -> Self {
+        let negation = CircleAligningOrigin::from_groups(
+            // e423, e431, e412
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e415, e425, e435
+            (self.group1() * Simd32x3::from(-1.0)),
+            // e235, e315, e125
+            (self.group2() * Simd32x3::from(-1.0)),
+        );
+        return negation;
     }
 }
 impl std::ops::Not for CircleAligningOrigin {

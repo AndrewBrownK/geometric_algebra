@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 392
+// Total Implementations: 393
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,7 +15,7 @@ use crate::traits::Wedge;
 //  Average:        14      18       0
 //  Maximum:       231     259       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         4       4       0
 //  Average:        25      30       0
@@ -6566,6 +6566,25 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for VersorOdd {
 impl std::ops::MulAssign<VersorOddOrthogonalOrigin> for VersorOdd {
     fn mul_assign(&mut self, other: VersorOddOrthogonalOrigin) {
         *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for VersorOdd {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
+    fn neg(self) -> Self {
+        let negation = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            (self.group0() * Simd32x4::from(-1.0)),
+            // e23, e31, e12, e45
+            (self.group1() * Simd32x4::from(-1.0)),
+            // e15, e25, e35, e1234
+            (self.group2() * Simd32x4::from(-1.0)),
+            // e4235, e4315, e4125, e3215
+            (self.group3() * Simd32x4::from(-1.0)),
+        );
+        return negation;
     }
 }
 impl std::ops::Not for VersorOdd {

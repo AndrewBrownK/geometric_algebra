@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 372
+// Total Implementations: 373
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,10 +15,10 @@ use crate::traits::Wedge;
 //  Average:        10      15       0
 //  Maximum:       169     192       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         4       6       0
-//  Average:        14      19       0
+//  Average:        13      19       0
 //  Maximum:       256     288       0
 impl std::ops::Add<AntiCircleOnOrigin> for DipoleOrthogonalOrigin {
     type Output = DipoleOrthogonalOrigin;
@@ -4443,6 +4443,23 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for DipoleOrthogonalOrigin {
     //  no simd       92      108        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for DipoleOrthogonalOrigin {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        3        0
+    // no simd        0        9        0
+    fn neg(self) -> Self {
+        let negation = DipoleOrthogonalOrigin::from_groups(
+            // e41, e42, e43
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e23, e31, e12
+            (self.group1() * Simd32x3::from(-1.0)),
+            // e15, e25, e35
+            (self.group2() * Simd32x3::from(-1.0)),
+        );
+        return negation;
     }
 }
 impl std::ops::Not for DipoleOrthogonalOrigin {

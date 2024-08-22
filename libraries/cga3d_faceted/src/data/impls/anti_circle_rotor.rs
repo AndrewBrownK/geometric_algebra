@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 385
+// Total Implementations: 386
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,7 +15,7 @@ use crate::traits::Wedge;
 //  Average:        11      16       0
 //  Maximum:       184     212       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         4       5       0
 //  Average:        17      23       0
@@ -5223,6 +5223,26 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for AntiCircleRotor {
     //  no simd      116      132        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
+    }
+}
+impl std::ops::Neg for AntiCircleRotor {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0       11        0
+    fn neg(self) -> Self {
+        let negation = AntiCircleRotor::from_groups(
+            // e41, e42, e43
+            (self.group0() * Simd32x3::from(-1.0)),
+            // e23, e31, e12, e45
+            (self.group1() * Simd32x4::from(-1.0)),
+            // e15, e25, e35, scalar
+            (self.group2() * Simd32x4::from(-1.0)),
+        );
+        return negation;
     }
 }
 impl std::ops::Not for AntiCircleRotor {
