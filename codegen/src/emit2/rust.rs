@@ -790,6 +790,15 @@ postgres-types = "0.2.7""#
         Ok(())
     }
 
+    fn write_f32<W: Write>(&self, w: &mut W, f: f32) -> anyhow::Result<()> {
+        if f.fract() == 0.0 {
+            write!(w, "{f:.1}")?;
+        } else {
+            write!(w, "{f}")?;
+        }
+        Ok(())
+    }
+
     fn write_float<W: Write>(&self, w: &mut W, expr: &FloatExpr) -> anyhow::Result<()> {
         match expr {
             FloatExpr::Variable(v) => {
@@ -802,13 +811,7 @@ postgres-types = "0.2.7""#
                     write!(w, "{name}_{no}")?;
                 }
             }
-            FloatExpr::Literal(l) => {
-                if l.fract() == 0.0 {
-                    write!(w, "{l:.1}")?;
-                } else {
-                    write!(w, "{l}")?;
-                }
-            }
+            FloatExpr::Literal(l) => self.write_f32(w, *l)?,
             FloatExpr::AccessVec2(v, i) => {
                 self.write_vec2(w, v.as_ref())?;
                 write!(w, "[{i}]")?;
@@ -912,8 +915,11 @@ postgres-types = "0.2.7""#
                 }
                 match (*last_factor, len > 1) {
                     (fl, _) if fl == 1.0 => {}
-                    (fl, false) => write!(w, "{fl}")?,
-                    (fl, true) => write!(w, " * {fl}")?,
+                    (fl, false) => self.write_f32(w, fl)?,
+                    (fl, true) => {
+                        write!(w, " * ")?;
+                        self.write_f32(w, fl)?
+                    },
                     _ => {}
                 }
                 if len > 1 {
@@ -938,14 +944,22 @@ postgres-types = "0.2.7""#
 
                         (1.0, false) => {}
                         (-1.0, false) => write!(w, "-")?,
-                        (f, false) => write!(w, "{f}*")?,
+                        (f, false) => {
+                            self.write_f32(w, f)?;
+                            write!(w, "*")?
+                        },
 
                         (1.0, true) => write!(w, " + ")?,
                         (-1.0, true) => write!(w, " - ")?,
-                        (f, true) if f > 0.0 => write!(w, " + {f}*")?,
+                        (f, true) if f > 0.0 => {
+                            write!(w, " + *")?;
+                            self.write_f32(w, f)?
+                        },
                         (f, true) if f < 0.0 => {
                             let f = -f;
-                            write!(w, " - {f}*")?;
+                            write!(w, " - ")?;
+                            self.write_f32(w, f)?;
+                            write!(w, " * ")?;
                         }
                         _ => unreachable!("This match is complete across if conditions (unless NaN?)"),
                     }
@@ -955,11 +969,15 @@ postgres-types = "0.2.7""#
                 }
                 match (*last_addend, len > 1) {
                     (fl, _) if fl == 0.0 => {}
-                    (fl, false) => write!(w, "{fl}")?,
-                    (fl, true) if fl > 0.0 => write!(w, " + {fl}")?,
+                    (fl, false) => self.write_f32(w, fl)?,
+                    (fl, true) if fl > 0.0 => {
+                        write!(w, " + ")?;
+                        self.write_f32(w, fl)?
+                    },
                     (fl, true) if fl < 0.0 => {
                         let fl = -fl;
-                        write!(w, " - {fl}")?;
+                        write!(w, " - ")?;
+                        self.write_f32(w, fl)?
                     }
                     _ => {}
                 }
@@ -1067,7 +1085,17 @@ postgres-types = "0.2.7""#
                     }
                     let a = last_factor[0];
                     let b = last_factor[1];
-                    write!(w, "Simd32x2::from([{a}, {b}])")?;
+                    if a == b {
+                        write!(w, "Simd32x2::from(")?;
+                        self.write_f32(w, a)?;
+                        write!(w, ")")?;
+                    } else {
+                        write!(w, "Simd32x2::from([")?;
+                        self.write_f32(w, a)?;
+                        write!(w, ", ")?;
+                        self.write_f32(w, b)?;
+                        write!(w, "])")?;
+                    }
                 }
                 if len > 1 {
                     write!(w, ")")?;
@@ -1091,14 +1119,24 @@ postgres-types = "0.2.7""#
 
                         (1.0, false) => {}
                         (-1.0, false) => write!(w, "-")?,
-                        (f, false) => write!(w, "Simd32x2::from({f})*")?,
+                        (f, false) => {
+                            write!(w, "Simd32x2::from(")?;
+                            self.write_f32(w, f)?;
+                            write!(w, ")*")?;
+                        },
 
                         (1.0, true) => write!(w, " + ")?,
                         (-1.0, true) => write!(w, " - ")?,
-                        (f, true) if f > 0.0 => write!(w, " + Simd32x2::from({f})*")?,
+                        (f, true) if f > 0.0 => {
+                            write!(w, " + Simd32x2::from(")?;
+                            self.write_f32(w, f)?;
+                            write!(w, ")*")?;
+                        },
                         (f, true) if f < 0.0 => {
                             let f = -f;
-                            write!(w, " - Simd32x2::from({f})*")?;
+                            write!(w, " - Simd32x2::from(")?;
+                            self.write_f32(w, f)?;
+                            write!(w, ")*")?;
                         }
                         _ => unreachable!("This match is complete across if conditions (unless NaN?)"),
                     }
@@ -1108,10 +1146,21 @@ postgres-types = "0.2.7""#
                 }
                 let a0 = last_addend[0];
                 let a1 = last_addend[1];
-                match (*last_addend, len > 1) {
-                    (f, _) if f == [0.0; 2] => {}
-                    (_, false) => write!(w, "Simd32x2::from([{a0}, {a1}])")?,
-                    (_, true) => write!(w, " + Simd32x2::from([{a0}, {a1}])")?,
+                if *last_addend != [0.0; 2] {
+                    if len > 1 {
+                        write!(w, " + ")?;
+                    }
+                    if a0 == a1 {
+                        write!(w, "Simd32x2::from(")?;
+                        self.write_f32(w, a0)?;
+                        write!(w, ")")?;
+                    } else {
+                        write!(w, "Simd32x2::from([")?;
+                        self.write_f32(w, a0)?;
+                        write!(w, ", ")?;
+                        self.write_f32(w, a1)?;
+                        write!(w, "])")?;
+                    }
                 }
                 if len > 1 {
                     write!(w, ")")?;
@@ -1225,7 +1274,19 @@ postgres-types = "0.2.7""#
                     let a = last_factor[0];
                     let b = last_factor[1];
                     let c = last_factor[2];
-                    write!(w, "Simd32x3::from([{a}, {b}, {c}])")?;
+                    if a == b && b == c {
+                        write!(w, "Simd32x3::from(")?;
+                        self.write_f32(w, a)?;
+                        write!(w, ")")?;
+                    } else {
+                        write!(w, "Simd32x3::from([")?;
+                        self.write_f32(w, a)?;
+                        write!(w, ", ")?;
+                        self.write_f32(w, b)?;
+                        write!(w, ", ")?;
+                        self.write_f32(w, c)?;
+                        write!(w, "])")?;
+                    }
                 }
                 if len > 1 {
                     write!(w, ")")?;
@@ -1249,14 +1310,24 @@ postgres-types = "0.2.7""#
 
                         (1.0, false) => {}
                         (-1.0, false) => write!(w, "-")?,
-                        (f, false) => write!(w, "Simd32x3::from({f})*")?,
+                        (f, false) => {
+                            write!(w, "Simd32x3::from(")?;
+                            self.write_f32(w, f)?;
+                            write!(w, ")*")?;
+                        },
 
                         (1.0, true) => write!(w, " + ")?,
                         (-1.0, true) => write!(w, " - ")?,
-                        (f, true) if f > 0.0 => write!(w, " + Simd32x3::from({f})*")?,
+                        (f, true) if f > 0.0 => {
+                            write!(w, " + Simd32x3::from(")?;
+                            self.write_f32(w, f)?;
+                            write!(w, ")*")?;
+                        },
                         (f, true) if f < 0.0 => {
                             let f = -f;
-                            write!(w, " - Simd32x3::from({f})*")?;
+                            write!(w, " - Simd32x3::from(")?;
+                            self.write_f32(w, f)?;
+                            write!(w, ")*")?;
                         }
                         _ => unreachable!("This match is complete across if conditions (unless NaN?)"),
                     }
@@ -1264,13 +1335,26 @@ postgres-types = "0.2.7""#
                     // because expression simplification flattens out associative operations.
                     self.write_vec3(w, addend)?;
                 }
-                let a0 = last_addend[0];
-                let a1 = last_addend[1];
-                let a2 = last_addend[2];
-                match (*last_addend, len > 1) {
-                    (f, _) if f == [0.0; 3] => {}
-                    (_, false) => write!(w, "Simd32x3::from([{a0}, {a1}, {a2}])")?,
-                    (_, true) => write!(w, " + Simd32x3::from([{a0}, {a1}, {a2}])")?,
+                if *last_addend != [0.0; 3] {
+                    if len > 1 {
+                        write!(w, " + ")?;
+                    }
+                    let a = last_addend[0];
+                    let b = last_addend[1];
+                    let c = last_addend[2];
+                    if a == b && b == c {
+                        write!(w, "Simd32x3::from(")?;
+                        self.write_f32(w, a)?;
+                        write!(w, ")")?;
+                    } else {
+                        write!(w, "Simd32x3::from([")?;
+                        self.write_f32(w, a)?;
+                        write!(w, ", ")?;
+                        self.write_f32(w, b)?;
+                        write!(w, ", ")?;
+                        self.write_f32(w, c)?;
+                        write!(w, "])")?;
+                    }
                 }
                 if len > 1 {
                     write!(w, ")")?;
@@ -1387,7 +1471,21 @@ postgres-types = "0.2.7""#
                     let b = last_factor[1];
                     let c = last_factor[2];
                     let d = last_factor[3];
-                    write!(w, "Simd32x4::from([{a}, {b}, {c}, {d}])")?;
+                    if a == b && b == c && c == d {
+                        write!(w, "Simd32x4::from(")?;
+                        self.write_f32(w, a)?;
+                        write!(w, ")")?;
+                    } else {
+                        write!(w, "Simd32x4::from([")?;
+                        self.write_f32(w, a)?;
+                        write!(w, ", ")?;
+                        self.write_f32(w, b)?;
+                        write!(w, ", ")?;
+                        self.write_f32(w, c)?;
+                        write!(w, ", ")?;
+                        self.write_f32(w, d)?;
+                        write!(w, "])")?;
+                    }
                 }
                 if len > 1 {
                     write!(w, ")")?;
@@ -1411,14 +1509,24 @@ postgres-types = "0.2.7""#
 
                         (1.0, false) => {}
                         (-1.0, false) => write!(w, "-")?,
-                        (f, false) => write!(w, "Simd32x4::from({f})*")?,
+                        (f, false) => {
+                            write!(w, "Simd32x4::from(")?;
+                            self.write_f32(w, f)?;
+                            write!(w, ")*")?;
+                        },
 
                         (1.0, true) => write!(w, " + ")?,
                         (-1.0, true) => write!(w, " - ")?,
-                        (f, true) if f > 0.0 => write!(w, " + Simd32x4::from({f})*")?,
+                        (f, true) if f > 0.0 => {
+                            write!(w, " + Simd32x4::from(")?;
+                            self.write_f32(w, f)?;
+                            write!(w, ")*")?;
+                        },
                         (f, true) if f < 0.0 => {
                             let f = -f;
-                            write!(w, " - Simd32x4::from({f})*")?;
+                            write!(w, " - Simd32x4::from(")?;
+                            self.write_f32(w, f)?;
+                            write!(w, ")*")?;
                         }
                         _ => unreachable!("This match is complete across if conditions (unless NaN?)"),
                     }
@@ -1426,14 +1534,29 @@ postgres-types = "0.2.7""#
                     // because expression simplification flattens out associative operations.
                     self.write_vec4(w, addend)?;
                 }
-                let a0 = last_addend[0];
-                let a1 = last_addend[1];
-                let a2 = last_addend[2];
-                let a3 = last_addend[3];
-                match (*last_addend, len > 1) {
-                    (f, _) if f == [0.0; 4] => {}
-                    (_, false) => write!(w, "Simd32x4::from([{a0}, {a1}, {a2}, {a3}])")?,
-                    (_, true) => write!(w, " + Simd32x4::from([{a0}, {a1}, {a2}, {a3}])")?,
+                if *last_addend != [0.0; 4] {
+                    if len > 1 {
+                        write!(w, " + ")?;
+                    }
+                    let a = last_addend[0];
+                    let b = last_addend[1];
+                    let c = last_addend[2];
+                    let d = last_addend[3];
+                    if a == b && b == c && c == d {
+                        write!(w, "Simd32x4::from(")?;
+                        self.write_f32(w, a)?;
+                        write!(w, ")")?;
+                    } else {
+                        write!(w, "Simd32x4::from([")?;
+                        self.write_f32(w, a)?;
+                        write!(w, ", ")?;
+                        self.write_f32(w, b)?;
+                        write!(w, ", ")?;
+                        self.write_f32(w, c)?;
+                        write!(w, ", ")?;
+                        self.write_f32(w, d)?;
+                        write!(w, "])")?;
+                    }
                 }
                 if len > 1 {
                     write!(w, ")")?;

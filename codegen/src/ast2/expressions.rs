@@ -2086,8 +2086,16 @@ impl FloatExpr {
                 }
                 product.retain(|(_, e)| *e != 0.0);
 
-                if product.len() == 1 && *last_factor == 1.0 {
-                    if product[0].1 == 1.0 {
+                if product.len() == 1 && product[0].1 == 1.0 {
+                    if let FloatExpr::Sum(sum, last_addend) = &mut product[0].0 {
+                        *last_addend *= *last_factor;
+                        for (_addend, sum_factor) in sum.iter_mut() {
+                            *sum_factor *= *last_factor;
+                        }
+                        *last_factor = 1.0;
+                    }
+                    if *last_factor == 1.0 {
+                        // _exponent is 1.0 (we just checked it a few lines ago)
                         let (factor, _exponent) = product.remove(0);
                         *self = factor;
                         return
@@ -2356,20 +2364,20 @@ impl Vec2Expr {
                     };
                 }
                 let mut flatten = vec![];
-                sum.retain_mut(|(addend, mut factor)| match addend {
+                sum.retain_mut(|(addend, factor)| match addend {
                     Vec2Expr::Gather1(FloatExpr::Literal(f)) => {
-                        last_addend[0] += *f * factor;
-                        last_addend[1] += *f * factor;
+                        last_addend[0] += *f * *factor;
+                        last_addend[1] += *f * *factor;
                         false
                     }
                     Vec2Expr::Gather2(FloatExpr::Literal(f0), FloatExpr::Literal(f1)) => {
-                        last_addend[0] += *f0 * factor;
-                        last_addend[1] += *f1 * factor;
+                        last_addend[0] += *f0 * *factor;
+                        last_addend[1] += *f1 * *factor;
                         false
                     }
                     Vec2Expr::Sum(s, another_addend) => {
                         for (_, f) in s.iter_mut() {
-                            *f = *f * factor;
+                            *f = *f * *factor;
                         }
                         flatten.append(s);
                         last_addend[0] += another_addend[0];
@@ -2378,13 +2386,11 @@ impl Vec2Expr {
                     }
                     Vec2Expr::Product(p, last_factor) => {
                         if last_factor[0] == last_factor[1] {
-                            factor *= last_factor[0];
+                            *factor *= last_factor[0];
                             *last_factor = [1.0; 2];
                         }
-                        if p.len() == 1 {
-                            if p[0].1 == 1.0 {
-                                *addend = p.remove(0).0;
-                            }
+                        if p.len() == 1 && p[0].1 == 1.0 && *last_factor == [1.0; 2] {
+                            *addend = p.remove(0).0;
                         }
                         true
                     }
@@ -2653,10 +2659,8 @@ impl Vec3Expr {
                             *factor *= last_factor[0];
                             *last_factor = [1.0; 3];
                         }
-                        if p.len() == 1 {
-                            if p[0].1 == 1.0 {
-                                *addend = p.remove(0).0;
-                            }
+                        if p.len() == 1 && p[0].1 == 1.0 && *last_factor == [1.0; 3]{
+                            *addend = p.remove(0).0;
                         }
                         true
                     }
@@ -2940,10 +2944,8 @@ impl Vec4Expr {
                             *factor *= last_factor[0];
                             *last_factor = [1.0; 4];
                         }
-                        if p.len() == 1 {
-                            if p[0].1 == 1.0 {
-                                *addend = p.remove(0).0;
-                            }
+                        if p.len() == 1 && p[0].1 == 1.0 && *last_factor == [1.0; 4] {
+                            *addend = p.remove(0).0;
                         }
                         true
                     }
@@ -3661,7 +3663,7 @@ fn transpose_vec2_product(
         !pulling_out_factor
     });
 
-    if vec2_product.is_empty() {
+    if vec2_product.is_empty() && coalesce_product_literal == [1.0; 2] {
         return None;
     }
     let mut keep_remaining = false;
@@ -3669,13 +3671,13 @@ fn transpose_vec2_product(
         Literal(1.0)
     } else {
         keep_remaining = true;
-        Product(float_product_0.clone(), 1.0)
+        Product(float_product_0.take_as_owned(), 1.0)
     };
     let p1 = if float_product_1.is_empty() {
         Literal(1.0)
     } else {
         keep_remaining = true;
-        Product(float_product_1.clone(), 1.0)
+        Product(float_product_1.take_as_owned(), 1.0)
     };
     if keep_remaining {
         vec2_product.push((Vec2Expr::Gather2(p0, p1), 1.0));
@@ -3763,7 +3765,7 @@ fn transpose_vec2_sum(
         !pulling_out_addend
     });
 
-    if vec2_sum.is_empty() {
+    if vec2_sum.is_empty() && coalesce_sum_literal == [0.0; 2] {
         return None;
     }
     let mut keep_remaining = false;
@@ -3771,13 +3773,13 @@ fn transpose_vec2_sum(
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_0.clone(), 0.0)
+        Sum(float_sum_0.take_as_owned(), 0.0)
     };
     let p1 = if float_sum_1.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_1.clone(), 0.0)
+        Sum(float_sum_1.take_as_owned(), 0.0)
     };
     if keep_remaining {
         vec2_sum.push((Vec2Expr::Gather2(p0, p1), 1.0));
@@ -3872,7 +3874,7 @@ fn transpose_vec3_product(
         !pulling_out_factor
     });
 
-    if vec3_product.is_empty() {
+    if vec3_product.is_empty() && coalesce_product_literal == [1.0; 3] {
         return None;
     }
     let mut keep_remaining = false;
@@ -3880,19 +3882,19 @@ fn transpose_vec3_product(
         Literal(1.0)
     } else {
         keep_remaining = true;
-        Product(float_product_0.clone(), 1.0)
+        Product(float_product_0.take_as_owned(), 1.0)
     };
     let p1 = if float_product_1.is_empty() {
         Literal(1.0)
     } else {
         keep_remaining = true;
-        Product(float_product_1.clone(), 1.0)
+        Product(float_product_1.take_as_owned(), 1.0)
     };
     let p2 = if float_product_2.is_empty() {
         Literal(1.0)
     } else {
         keep_remaining = true;
-        Product(float_product_2.clone(), 1.0)
+        Product(float_product_2.take_as_owned(), 1.0)
     };
     if keep_remaining {
         vec3_product.push((Vec3Expr::Gather3(p0, p1, p2), 1.0));
@@ -3997,7 +3999,7 @@ fn transpose_vec3_sum(
         !pulling_out_addend
     });
 
-    if vec3_sum.is_empty() {
+    if vec3_sum.is_empty() && coalesce_sum_literal == [0.0; 3] {
         return None;
     }
     let mut keep_remaining = false;
@@ -4005,19 +4007,19 @@ fn transpose_vec3_sum(
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_0.clone(), 0.0)
+        Sum(float_sum_0.take_as_owned(), 0.0)
     };
     let p1 = if float_sum_1.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_1.clone(), 0.0)
+        Sum(float_sum_1.take_as_owned(), 0.0)
     };
     let p2 = if float_sum_2.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_2.clone(), 0.0)
+        Sum(float_sum_2.take_as_owned(), 0.0)
     };
     if keep_remaining {
         vec3_sum.push((Vec3Expr::Gather3(p0, p1, p2), 1.0));
@@ -4129,7 +4131,7 @@ fn transpose_vec4_product(
         !pulling_out_factor
     });
 
-    if vec4_product.is_empty() {
+    if vec4_product.is_empty() && coalesce_product_literal == [1.0; 4] {
         return None;
     }
     let mut keep_remaining = false;
@@ -4137,25 +4139,25 @@ fn transpose_vec4_product(
         Literal(1.0)
     } else {
         keep_remaining = true;
-        Product(float_product_0.clone(), 1.0)
+        Product(float_product_0.take_as_owned(), 1.0)
     };
     let p1 = if float_product_1.is_empty() {
         Literal(1.0)
     } else {
         keep_remaining = true;
-        Product(float_product_1.clone(), 1.0)
+        Product(float_product_1.take_as_owned(), 1.0)
     };
     let p2 = if float_product_2.is_empty() {
         Literal(1.0)
     } else {
         keep_remaining = true;
-        Product(float_product_2.clone(), 1.0)
+        Product(float_product_2.take_as_owned(), 1.0)
     };
     let p3 = if float_product_3.is_empty() {
         Literal(1.0)
     } else {
         keep_remaining = true;
-        Product(float_product_3.clone(), 1.0)
+        Product(float_product_3.take_as_owned(), 1.0)
     };
     if keep_remaining {
         vec4_product.push((Vec4Expr::Gather4(p0, p1, p2, p3), 1.0));
@@ -4277,7 +4279,7 @@ fn transpose_vec4_sum(
         !pulling_out_addend
     });
 
-    if vec4_sum.is_empty() {
+    if vec4_sum.is_empty() && coalesce_sum_literal == [0.0; 4] {
         return None;
     }
     let mut keep_remaining = false;
@@ -4285,25 +4287,25 @@ fn transpose_vec4_sum(
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_0.clone(), 0.0)
+        Sum(float_sum_0.take_as_owned(), 0.0)
     };
     let p1 = if float_sum_1.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_1.clone(), 0.0)
+        Sum(float_sum_1.take_as_owned(), 0.0)
     };
     let p2 = if float_sum_2.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_2.clone(), 0.0)
+        Sum(float_sum_2.take_as_owned(), 0.0)
     };
     let p3 = if float_sum_3.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_3.clone(), 0.0)
+        Sum(float_sum_3.take_as_owned(), 0.0)
     };
     if keep_remaining {
         vec4_sum.push((Vec4Expr::Gather4(p0, p1, p2, p3), 1.0));
