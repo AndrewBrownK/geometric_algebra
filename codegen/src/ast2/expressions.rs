@@ -3437,7 +3437,7 @@ impl TrackOperations for FloatExpr {
                             result.floats.div += 1;
                         }
                         _ => {
-                            result.floats.transcendental += 1;
+                            result.floats.pow += 1;
                         }
                     }
                 }
@@ -3486,7 +3486,7 @@ impl TrackOperations for Vec2Expr {
                             result.simd2.div += 1;
                         }
                         _ => {
-                            result.simd2.transcendental += 1;
+                            result.simd2.pow += 1;
                         }
                     }
                 }
@@ -3536,7 +3536,7 @@ impl TrackOperations for Vec3Expr {
                             result.simd3.div += 1;
                         }
                         _ => {
-                            result.simd3.transcendental += 1;
+                            result.simd3.pow += 1;
                         }
                     }
                 }
@@ -3586,7 +3586,7 @@ impl TrackOperations for Vec4Expr {
                             result.simd4.div += 1;
                         }
                         _ => {
-                            result.simd4.transcendental += 1;
+                            result.simd4.pow += 1;
                         }
                     }
                 }
