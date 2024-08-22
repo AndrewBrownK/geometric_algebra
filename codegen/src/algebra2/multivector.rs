@@ -1305,7 +1305,7 @@ impl DynamicMultiVector {
 
             match f {
                 FloatExpr::Literal(0.0) => continue,
-                FloatExpr::Product(v) if v.is_empty() => panic!("Problem"),
+                FloatExpr::Product(v, _f) if v.is_empty() => panic!("Problem"),
                 FloatExpr::Sum(v, _a) if v.is_empty() => panic!("Problem"),
                 _ => {}
             }
@@ -1358,7 +1358,7 @@ impl DynamicMultiVector {
 
             match f {
                 FloatExpr::Literal(0.0) => continue,
-                FloatExpr::Product(v) if v.is_empty() => panic!("Problem"),
+                FloatExpr::Product(v, _f) if v.is_empty() => panic!("Problem"),
                 FloatExpr::Sum(v, _a) if v.is_empty() => panic!("Problem"),
                 _ => {}
             }

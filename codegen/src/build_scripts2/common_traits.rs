@@ -626,14 +626,16 @@ mod impls {
     });
 
     trait_impl_1_type_1_arg!(InverseImpl(builder, slf) -> MultiVector {
-        let one = One.invoke(&mut builder, MultiVector::from(builder.mvs.scalar())).await?;
+        let scalar = builder.mvs.scalar();
+        let one = One.invoke(&mut builder, MultiVector::from(scalar)).await?;
 
         // TODO
         builder.return_expr(slf)
     });
 
     trait_impl_1_type_1_arg!(AntiInverseImpl(builder, slf) -> MultiVector {
-        let anti_one = AntiOne.invoke(&mut builder, MultiVector::from(builder.mvs.anti_scalar())).await?;
+        let anti_scalar = builder.mvs.anti_scalar();
+        let anti_one = AntiOne.invoke(&mut builder, MultiVector::from(anti_scalar)).await?;
         // TODO
         builder.return_expr(slf)
     });
@@ -649,14 +651,16 @@ mod impls {
     });
 
     trait_impl_1_type_1_arg!(SquareRootImpl(builder, slf) -> MultiVector {
-        let one = One.invoke(&mut builder, MultiVector::from(builder.mvs.scalar())).await?;
+        let scalar = builder.mvs.scalar();
+        let one = One.invoke(&mut builder, MultiVector::from(scalar)).await?;
 
         // TODO
         builder.return_expr(slf)
     });
 
     trait_impl_1_type_1_arg!(AntiSquareRootImpl(builder, slf) -> MultiVector {
-        let anti_one = AntiOne.invoke(&mut builder, MultiVector::from(builder.mvs.anti_scalar())).await?;
+        let anti_scalar = builder.mvs.anti_scalar();
+        let anti_one = AntiOne.invoke(&mut builder, MultiVector::from(anti_scalar)).await?;
         // TODO
         builder.return_expr(slf)
     });
