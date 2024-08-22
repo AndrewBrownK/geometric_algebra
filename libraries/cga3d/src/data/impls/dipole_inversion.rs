@@ -15,7 +15,7 @@ use crate::traits::Wedge;
 //  Average:        18      22       0
 //  Maximum:       222     250       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         5       7       0
 //  Average:        32      37       0

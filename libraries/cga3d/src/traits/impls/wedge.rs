@@ -13,7 +13,7 @@
 //  Average:         8      14       0
 //  Maximum:       131     153       0
 //
-//  No SIMD:   add/sub    mul    div
+//  No SIMD:   add/sub     mul     div
 //  Minimum:         0       1       0
 //   Median:         6      12       0
 //  Average:        13      21       0
