@@ -434,8 +434,8 @@ impl std::ops::Not for Horizon {
     // f32        0        1        0
     fn not(self) -> Self::Output {
         use crate::elements::*;
-        let dual = Origin::from_groups(/* e4 */ (self[e321] * -1.0));
-        return dual;
+        let right_dual = Origin::from_groups(/* e4 */ (self[e321] * -1.0));
+        return right_dual;
     }
 }
 impl std::ops::Sub<AntiScalar> for Horizon {

@@ -20,7 +20,7 @@ impl<A: Reverse> std::ops::Div<A> for reverse {
         rhs.reverse()
     }
 }
-impl<A: Reverse> DivAssign<A> for reverse {
+impl<A: Reverse> std::ops::DivAssign<A> for reverse {
     fn div_assign(&mut self, rhs: reverse) {
         *self = *self.reverse()
     }

@@ -438,8 +438,8 @@ impl std::ops::Not for Plane {
     //      add/sub      mul      div
     // f32        0        1        0
     fn not(self) -> Self::Output {
-        let dual = Origin::from_groups(/* e4 */ (self.group0()[3] * -1.0));
-        return dual;
+        let right_dual = Origin::from_groups(/* e4 */ (self.group0()[3] * -1.0));
+        return right_dual;
     }
 }
 impl std::ops::Sub<AntiScalar> for Plane {

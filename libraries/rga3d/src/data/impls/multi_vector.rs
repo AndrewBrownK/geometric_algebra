@@ -1091,7 +1091,7 @@ impl std::ops::Not for MultiVector {
     // yes simd        0        2        0
     //  no simd        0        4        0
     fn not(self) -> Self::Output {
-        let dual = MultiVector::from_groups(
+        let right_dual = MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([0.0, self.group0()[0]]),
             // e1, e2, e3, e4
@@ -1103,7 +1103,7 @@ impl std::ops::Not for MultiVector {
             // e423, e431, e412, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
-        return dual;
+        return right_dual;
     }
 }
 impl std::ops::Sub<AntiScalar> for MultiVector {

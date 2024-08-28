@@ -490,8 +490,8 @@ impl std::ops::Neg for Point {
 impl std::ops::Not for Point {
     type Output = Plane;
     fn not(self) -> Self::Output {
-        let dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]));
-        return dual;
+        let right_dual = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]));
+        return right_dual;
     }
 }
 impl std::ops::Sub<AntiScalar> for Point {

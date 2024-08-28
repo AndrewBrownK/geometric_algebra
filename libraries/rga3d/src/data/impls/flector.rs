@@ -612,13 +612,13 @@ impl std::ops::Not for Flector {
     //      add/sub      mul      div
     // f32        0        1        0
     fn not(self) -> Self::Output {
-        let dual = Flector::from_groups(
+        let right_dual = Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, (self.group1()[3] * -1.0)]),
             // e423, e431, e412, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
         );
-        return dual;
+        return right_dual;
     }
 }
 impl std::ops::Sub<AntiScalar> for Flector {

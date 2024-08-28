@@ -18,18 +18,18 @@
 //   Median:         0       1       0
 //  Average:         0       1       0
 //  Maximum:         0       4       0
-impl AntiDual for DualNum {
+impl RightAntiDual for DualNum {
     type Output = AntiScalar;
-    fn anti_dual(self) -> Self::Output {
+    fn right_anti_dual(self) -> Self::Output {
         return AntiScalar::from_groups(/* e1234 */ self.group0()[0]);
     }
 }
-impl AntiDual for Flector {
+impl RightAntiDual for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
-    fn anti_dual(self) -> Self::Output {
+    fn right_anti_dual(self) -> Self::Output {
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, (self.group1()[3] * -1.0)]),
@@ -38,32 +38,32 @@ impl AntiDual for Flector {
         );
     }
 }
-impl AntiDual for Horizon {
+impl RightAntiDual for Horizon {
     type Output = Origin;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
-    fn anti_dual(self) -> Self::Output {
+    fn right_anti_dual(self) -> Self::Output {
         use crate::elements::*;
         return Origin::from_groups(/* e4 */ (self[e321] * -1.0));
     }
 }
-impl AntiDual for Line {
+impl RightAntiDual for Line {
     type Output = Line;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd3        0        1        0
     // no simd        0        3        0
-    fn anti_dual(self) -> Self::Output {
+    fn right_anti_dual(self) -> Self::Output {
         return Line::from_groups(/* e41, e42, e43 */ (self.group1() * Simd32x3::from(-1.0)), /* e23, e31, e12 */ Simd32x3::from(0.0));
     }
 }
-impl AntiDual for Motor {
+impl RightAntiDual for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        3        0
-    fn anti_dual(self) -> Self::Output {
+    fn right_anti_dual(self) -> Self::Output {
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
@@ -72,7 +72,7 @@ impl AntiDual for Motor {
         );
     }
 }
-impl AntiDual for MultiVector {
+impl RightAntiDual for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -81,7 +81,7 @@ impl AntiDual for MultiVector {
     // Totals...
     // yes simd        0        2        0
     //  no simd        0        4        0
-    fn anti_dual(self) -> Self::Output {
+    fn right_anti_dual(self) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([0.0, self.group0()[0]]),
@@ -96,24 +96,24 @@ impl AntiDual for MultiVector {
         );
     }
 }
-impl AntiDual for Plane {
+impl RightAntiDual for Plane {
     type Output = Origin;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
-    fn anti_dual(self) -> Self::Output {
+    fn right_anti_dual(self) -> Self::Output {
         return Origin::from_groups(/* e4 */ (self.group0()[3] * -1.0));
     }
 }
-impl AntiDual for Point {
+impl RightAntiDual for Point {
     type Output = Plane;
-    fn anti_dual(self) -> Self::Output {
+    fn right_anti_dual(self) -> Self::Output {
         return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]));
     }
 }
-impl AntiDual for Scalar {
+impl RightAntiDual for Scalar {
     type Output = Scalar;
-    fn anti_dual(self) -> Self::Output {
+    fn right_anti_dual(self) -> Self::Output {
         return self;
     }
 }
