@@ -35,11 +35,15 @@ fn main() {
         Zero One AntiOne Unit
         Into TryInto
         Grade AntiGrade
-        Dual AntiDual
+        RightDual RightAntiDual
         Reverse AntiReverse
         Wedge AntiWedge
         GeometricProduct GeometricAntiProduct
         Sandwich AntiSandwich
+        Fix AntiFix
+        Inverse AntiInverse
+        SquareRoot AntiSquareRoot
+        GeometricQuotient GeometricAntiQuotient
     };
     codegen::operators! { repo, traits;
         fancy_infix => Div;
@@ -52,7 +56,7 @@ fn main() {
 
         unary
         Neg => Negation,
-        Not => Dual;
+        Not => RightDual;
     }
     let traits = traits.finish();
 

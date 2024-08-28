@@ -6,7 +6,7 @@ use crate::ast2::datatype::{Float, MultiVector};
 use crate::ast2::expressions::FloatExpr;
 use crate::ast2::traits::{TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImplBuilder};
 use crate::ast2::Variable;
-use crate::build_scripts2::common_traits::{AntiReverse, AntiScalarProduct, AntiWedge, Dual, GeometricProduct, Reverse, Sandwich, ScalarProduct, Wedge};
+use crate::build_scripts2::common_traits::{AntiReverse, AntiScalarProduct, AntiWedge, RightDual, GeometricProduct, Reverse, Sandwich, ScalarProduct, Wedge};
 use crate::{ga, multi_vecs};
 
 fn float_var(n: &str) -> Variable<Float> {
@@ -98,11 +98,11 @@ fn anti_product_argument() {
     let builder = TraitImplBuilder::new_sandbox(rga3d.clone(), repo);
     let rt = tokio::runtime::Runtime::new().expect("tokio works");
     let result: Option<()> = rt.block_on(async move {
-        let a_dual = Dual.deep_inline(&builder, a.clone()).await?;
+        let a_dual = RightDual.deep_inline(&builder, a.clone()).await?;
         println!("A = {a}");
         println!("A* = {a_dual}");
 
-        let b_dual = Dual.deep_inline(&builder, b.clone()).await?;
+        let b_dual = RightDual.deep_inline(&builder, b.clone()).await?;
         println!("B = {b}");
         println!("B* = {b_dual}");
 

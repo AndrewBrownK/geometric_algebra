@@ -156,15 +156,27 @@ impl<const AntiScalar: BasisElement> GeometricAlgebra<AntiScalar> {
         self.fix_name_and_sign(a)
     }
 
-    pub fn dual(&self, a: BasisElement) -> (f32, BasisElement) {
+    pub fn right_dual(&self, a: BasisElement) -> (f32, BasisElement) {
         let a = self.name_in(a);
         let a = self.repo.apply_metric(a).right_complement(AntiScalar);
         self.fix_name_and_sign(a)
     }
 
-    pub fn anti_dual(&self, a: BasisElement) -> (f32, BasisElement) {
+    pub fn right_anti_dual(&self, a: BasisElement) -> (f32, BasisElement) {
         let a = self.name_in(a);
         let a = self.repo.apply_metric(a).right_complement(AntiScalar);
+        self.fix_name_and_sign(a)
+    }
+
+    pub fn left_dual(&self, a: BasisElement) -> (f32, BasisElement) {
+        let a = self.name_in(a);
+        let a = self.repo.apply_metric(a).left_complement(AntiScalar);
+        self.fix_name_and_sign(a)
+    }
+
+    pub fn left_anti_dual(&self, a: BasisElement) -> (f32, BasisElement) {
+        let a = self.name_in(a);
+        let a = self.repo.apply_metric(a).left_complement(AntiScalar);
         self.fix_name_and_sign(a)
     }
 

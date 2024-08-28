@@ -30,12 +30,20 @@ pub static AntiGrade: Elaborated<AntiGradeImpl> = AntiGradeImpl
     AntiScalar. This trait only characterizes uniform anti-grade multivectors.",
 );
 
-pub static Dual: Elaborated<DualImpl> = DualImpl
-    .new_trait_named("Dual")
+pub static RightDual: Elaborated<RightDualImpl> = RightDualImpl
+    .new_trait_named("RightDual")
     .blurb("TODO");
 
-pub static AntiDual: Elaborated<AntiDualImpl> = AntiDualImpl
-    .new_trait_named("AntiDual")
+pub static RightAntiDual: Elaborated<RightAntiDualImpl> = RightAntiDualImpl
+    .new_trait_named("RightAntiDual")
+    .blurb("TODO");
+
+pub static LeftDual: Elaborated<LeftDualImpl> = LeftDualImpl
+    .new_trait_named("LeftDual")
+    .blurb("TODO");
+
+pub static LeftAntiDual: Elaborated<LeftAntiDualImpl> = LeftAntiDualImpl
+    .new_trait_named("LeftAntiDual")
     .blurb("TODO");
 
 pub static Reverse: Elaborated<ReverseImpl> = ReverseImpl
@@ -133,6 +141,14 @@ pub static AntiScalarNorm: Elaborated<AntiScalarNormImpl> = AntiScalarNormImpl
     .new_trait_named("AntiScalarNorm")
     .blurb("TODO");
 
+pub static Fix: Elaborated<FixImpl> = FixImpl
+    .new_trait_named("Fix")
+    .blurb("TODO");
+
+pub static AntiFix: Elaborated<AntiFixImpl> = AntiFixImpl
+    .new_trait_named("AntiFixImpl")
+    .blurb("TODO");
+
 pub static Inverse: Elaborated<InverseImpl> = InverseImpl
     .new_trait_named("Inverse")
     .blurb("TODO");
@@ -220,9 +236,10 @@ mod impls {
     use crate::algebra2::multivector::DynamicMultiVector;
     use crate::ast2::datatype::{Integer, MultiVector};
     use crate::ast2::expressions::{Expression, FloatExpr, IntExpr};
-    use crate::ast2::traits::{HasNotReturned, TraitDef_1_Type_0_Args, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder};
+    use crate::ast2::traits::{HasNotReturned, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder};
     use crate::ast2::Variable;
-    use crate::build_scripts2::common_traits::{AntiDual, AntiOne, AntiReverse, AntiScalarProduct, AntiWedge, Dual, GeometricAntiProduct, GeometricProduct, One, Reverse, ScalarProduct, Wedge};
+    use crate::build_scripts2::common_traits::{AntiInverse, AntiReverse, AntiScalarProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightDual, ScalarProduct, SquareRoot, Wedge};
+    use crate::elements::scalar;
 
     #[macro_export]
     macro_rules! trait_impl_1_type_0_args {
@@ -343,20 +360,43 @@ mod impls {
         builder.return_expr(IntExpr::Literal(ag))
     });
 
-    trait_impl_1_type_1_arg!(DualImpl(builder, slf) -> MultiVector {
+    // TODO left duals, because https://terathon.com/blog/poor-foundations-ga.html
+    //  Also rename scalar product to inner product, also for technical reasons in that blog post
+
+    trait_impl_1_type_1_arg!(RightDualImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
         for (fe, el) in slf.elements_by_groups() {
-            let (f, el) = builder.ga.dual(el);
+            let (f, el) = builder.ga.right_dual(el);
             result += (fe * f, el);
         }
         let result = result.construct(&builder)?;
         builder.return_expr(result)
     });
 
-    trait_impl_1_type_1_arg!(AntiDualImpl(builder, slf) -> MultiVector {
+    trait_impl_1_type_1_arg!(RightAntiDualImpl(builder, slf) -> MultiVector {
         let mut result = DynamicMultiVector::zero();
         for (fe, el) in slf.elements_by_groups() {
-            let (f, el) = builder.ga.anti_dual(el);
+            let (f, el) = builder.ga.right_anti_dual(el);
+            result += (fe * f, el);
+        }
+        let result = result.construct(&builder)?;
+        builder.return_expr(result)
+    });
+
+    trait_impl_1_type_1_arg!(LeftDualImpl(builder, slf) -> MultiVector {
+        let mut result = DynamicMultiVector::zero();
+        for (fe, el) in slf.elements_by_groups() {
+            let (f, el) = builder.ga.left_dual(el);
+            result += (fe * f, el);
+        }
+        let result = result.construct(&builder)?;
+        builder.return_expr(result)
+    });
+
+    trait_impl_1_type_1_arg!(LeftAntiDualImpl(builder, slf) -> MultiVector {
+        let mut result = DynamicMultiVector::zero();
+        for (fe, el) in slf.elements_by_groups() {
+            let (f, el) = builder.ga.left_anti_dual(el);
             result += (fe * f, el);
         }
         let result = result.construct(&builder)?;
@@ -625,70 +665,103 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_1_type_1_arg!(InverseImpl(builder, slf) -> MultiVector {
-        let scalar = builder.mvs.scalar();
-        let one = One.invoke(&mut builder, MultiVector::from(scalar)).await?;
+    // See section 3.4.3 and 3.6.2 of the book
+    // TODO we absolutely need advanced inlining and factorization for Fix and AntiFix
+    trait_impl_1_type_1_arg!(FixImpl(builder, slf) -> MultiVector {
+        let r = Reverse.inline(&builder, slf.clone()).await?;
+        let p = GeometricProduct.inline(&builder, slf.clone(), r).await?;
+        let sqrt = SquareRoot.inline(&builder, p).await?;
+        let i = Inverse.inline(&builder, sqrt).await?;
+        let result = GeometricProduct.inline(&builder, slf, i).await?;
+        builder.return_expr(result)
+    });
+    trait_impl_1_type_1_arg!(AntiFixImpl(builder, slf) -> MultiVector {
+        let r = AntiReverse.inline(&builder, slf.clone()).await?;
+        let p = GeometricAntiProduct.inline(&builder, slf.clone(), r).await?;
+        let sqrt = AntiSquareRoot.inline(&builder, p).await?;
+        let i = AntiInverse.inline(&builder, sqrt).await?;
+        let result = GeometricAntiProduct.inline(&builder, slf, i).await?;
+        builder.return_expr(result)
+    });
 
-        // TODO
-        builder.return_expr(slf)
+    trait_impl_1_type_1_arg!(InverseImpl(builder, slf) -> MultiVector {
+        let scalar_mv = MultiVector::from(builder.mvs.scalar());
+        let dot = ScalarProduct.inline(&builder, slf.clone(), slf).await?;
+        let raw_dot = FloatExpr::AccessMultiVecFlat(dot.into(), 0);
+        let result = scalar_mv.construct_direct([(scalar, FloatExpr::Product(vec![(raw_dot, -1.0)], 1.0))]);
+        builder.return_expr(result)
     });
 
     trait_impl_1_type_1_arg!(AntiInverseImpl(builder, slf) -> MultiVector {
-        let anti_scalar = builder.mvs.anti_scalar();
-        let anti_one = AntiOne.invoke(&mut builder, MultiVector::from(anti_scalar)).await?;
-        // TODO
-        builder.return_expr(slf)
+        let anti_scalar_mv = MultiVector::from(builder.mvs.anti_scalar());
+        let anti_scalar = builder.ga.anti_scalar();
+        let dot = AntiScalarProduct.inline(&builder, slf.clone(), slf).await?;
+        let raw_dot = FloatExpr::AccessMultiVecFlat(dot.into(), 0);
+        let result = anti_scalar_mv.construct_direct([(anti_scalar, FloatExpr::Product(vec![(raw_dot, -1.0)], 1.0))]);
+        builder.return_expr(result)
     });
 
     trait_impl_2_types_2_args!(GeometricQuotientImpl(builder, slf, other) -> MultiVector {
-        // TODO
-        None
+        let i = Inverse.inline(&builder, other).await?;
+        let result = GeometricProduct.inline(&builder, slf, i).await?;
+        builder.return_expr(result)
     });
 
     trait_impl_2_types_2_args!(GeometricAntiQuotientImpl(builder, slf, other) -> MultiVector {
-        // TODO
-        None
+        let i = AntiInverse.inline(&builder, other).await?;
+        let result = GeometricAntiProduct.inline(&builder, slf, i).await?;
+        builder.return_expr(result)
     });
 
     trait_impl_1_type_1_arg!(SquareRootImpl(builder, slf) -> MultiVector {
-        let scalar = builder.mvs.scalar();
-        let one = One.invoke(&mut builder, MultiVector::from(scalar)).await?;
-
-        // TODO
-        builder.return_expr(slf)
+        let scalar_mv = MultiVector::from(builder.mvs.scalar());
+        if slf.expr_type == scalar_mv {
+            let raw = FloatExpr::AccessMultiVecFlat(slf.into(), 0);
+            let sqrt = FloatExpr::Product(vec![(raw, 0.5)], 1.0);
+            let result = scalar_mv.construct_direct([(scalar, sqrt)]);
+            return builder.return_expr(result)
+        }
+        // TODO support SquareRoot with more types of MultiVector
+        None
     });
 
     trait_impl_1_type_1_arg!(AntiSquareRootImpl(builder, slf) -> MultiVector {
-        let anti_scalar = builder.mvs.anti_scalar();
-        let anti_one = AntiOne.invoke(&mut builder, MultiVector::from(anti_scalar)).await?;
-        // TODO
-        builder.return_expr(slf)
+        let anti_scalar_mv = MultiVector::from(builder.mvs.anti_scalar());
+        let anti_scalar = builder.ga.anti_scalar();
+        if slf.expr_type == anti_scalar_mv {
+            let raw = FloatExpr::AccessMultiVecFlat(slf.into(), 0);
+            let sqrt = FloatExpr::Product(vec![(raw, 0.5)], 1.0);
+            let result = anti_scalar_mv.construct_direct([(anti_scalar, sqrt)]);
+            return builder.return_expr(result)
+        }
+        // TODO support AntiSquareRoot with more types of MultiVector
+        None
     });
 
     trait_impl_2_types_2_args!(BulkExpansionImpl(builder, slf, other) -> MultiVector {
         // TODO inline again after getting Rust emission import fixed
-        let dual = Dual.invoke(&mut builder, other).await?;
+        let dual = RightDual.invoke(&mut builder, other).await?;
         let wedge = Wedge.invoke(&mut builder, slf, dual).await?;
         builder.return_expr(wedge)
     });
 
     trait_impl_2_types_2_args!(WeightExpansionImpl(builder, slf, other) -> MultiVector {
         // TODO inline again after getting Rust emission import fixed
-        let anti_dual = AntiDual.invoke(&mut builder, other).await?;
+        let anti_dual = RightAntiDual.invoke(&mut builder, other).await?;
         let wedge = Wedge.invoke(&mut builder, slf, anti_dual).await?;
         builder.return_expr(wedge)
     });
 
     trait_impl_2_types_2_args!(BulkContractionImpl(builder, slf, other) -> MultiVector {
         // TODO inline again after getting Rust emission import fixed
-        let dual = Dual.invoke(&mut builder, other).await?;
+        let dual = RightDual.invoke(&mut builder, other).await?;
         let anti_wedge = AntiWedge.invoke(&mut builder, slf, dual).await?;
         builder.return_expr(anti_wedge)
     });
 
     trait_impl_2_types_2_args!(WeightContractionImpl(builder, slf, other) -> MultiVector {
         // TODO inline again after getting Rust emission import fixed
-        let anti_dual = AntiDual.invoke(&mut builder, other).await?;
+        let anti_dual = RightAntiDual.invoke(&mut builder, other).await?;
         let anti_wedge = AntiWedge.invoke(&mut builder, slf, anti_dual).await?;
         builder.return_expr(anti_wedge)
     });

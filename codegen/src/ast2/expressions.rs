@@ -160,6 +160,11 @@ impl TraitResultType for MultiVector {
     }
 }
 
+
+// TODO what you should really do next is either...
+//  - make Expressions Ord so that you can do advanced redundancy extraction
+//  - figure out GeometricQuotient and stuff
+
 #[derive(PartialEq, Clone, Debug)]
 pub enum IntExpr {
     Variable(RawVariableInvocation),

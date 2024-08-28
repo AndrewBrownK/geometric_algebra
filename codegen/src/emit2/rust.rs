@@ -2212,7 +2212,7 @@ impl std::hash::Hash for {ucc} {{
                 writeln!(w, "        rhs.{lsc}()")?;
                 writeln!(w, "    }}\n}}")?;
                 if let TraitTypeConsensus::AlwaysSelf = *output_ty {
-                    writeln!(w, "impl<A: {ucc}> {operator_name}Assign<A> for {lsc} {{")?;
+                    writeln!(w, "impl<A: {ucc}> std::ops::{operator_name}Assign<A> for {lsc} {{")?;
                     writeln!(w, "    fn {operator_method}_assign(&mut self, rhs: {lsc}) {{")?;
                     writeln!(w, "        *self = *self.{lsc}()")?;
                     writeln!(w, "    }}\n}}")?;
