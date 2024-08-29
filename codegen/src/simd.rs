@@ -171,7 +171,6 @@ impl Simd32x4 {
     }
 }
 
-
 impl std::ops::Index<usize> for Simd32x4 {
     type Output = f32;
 

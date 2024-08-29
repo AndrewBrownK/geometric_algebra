@@ -53,7 +53,6 @@ pub trait GeometricAlgebraTrait {
     fn anti_product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement>;
 }
 
-
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct ProductTerm {
     pub product: Vec<BasisElement>,

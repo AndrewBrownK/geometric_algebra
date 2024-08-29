@@ -129,9 +129,7 @@ impl MultiVector {
 
     pub fn construct_direct<const N: usize>(&self, arr: [(BasisElement, FloatExpr); N]) -> MultiVectorExpr {
         let mut vals: BTreeMap<BasisElement, FloatExpr> = arr.into_iter().collect();
-        let result = self.construct(|el| {
-            vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))
-        });
+        let result = self.construct(|el| vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0)));
         if !vals.is_empty() {
             let k: Vec<_> = vals.keys().collect();
             panic!("Attempted direct construction of {self} using mismatched elements {k:?}");

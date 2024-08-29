@@ -10,7 +10,10 @@ use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::MultiVec;
 use crate::ast2::datatype::{AnyClasses, MultiVector, Specifically};
 use crate::ast2::expressions::{Expression, TraitResultType};
-use crate::ast2::traits::{HasNotReturned, ProvideTraitNames, TraitAlias, TraitDef_1_Type_0_Args, TraitDef_1_Type_1_Arg, TraitDef_2_Types_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder, TraitKey, TraitNames};
+use crate::ast2::traits::{
+    HasNotReturned, ProvideTraitNames, TraitAlias, TraitDef_1_Type_0_Args, TraitDef_1_Type_1_Arg, TraitDef_2_Types_1_Arg, TraitDef_2_Types_2_Args, TraitImplBuilder, TraitImpl_10,
+    TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitKey, TraitNames,
+};
 use crate::ast2::Variable;
 
 #[derive(Clone, Copy)]

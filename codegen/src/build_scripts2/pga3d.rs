@@ -6,7 +6,7 @@ use crate::ast2::datatype::{Float, MultiVector};
 use crate::ast2::expressions::FloatExpr;
 use crate::ast2::traits::{TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImplBuilder};
 use crate::ast2::Variable;
-use crate::build_scripts2::common_traits::{AntiReverse, AntiScalarProduct, AntiWedge, RightDual, GeometricProduct, Reverse, Sandwich, ScalarProduct, Wedge};
+use crate::build_scripts2::common_traits::{AntiReverse, AntiScalarProduct, AntiWedge, GeometricProduct, Reverse, RightDual, Sandwich, ScalarProduct, Wedge};
 use crate::{ga, multi_vecs};
 
 fn float_var(n: &str) -> Variable<Float> {

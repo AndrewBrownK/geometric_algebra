@@ -41,6 +41,8 @@ fn main() {
         GeometricProduct GeometricAntiProduct
         Sandwich AntiSandwich
         Fix AntiFix
+        ConstraintViolation AntiConstraintViolation
+        ConstraintValid AntiConstraintValid
         Inverse AntiInverse
         SquareRoot AntiSquareRoot
         GeometricQuotient GeometricAntiQuotient
@@ -65,11 +67,15 @@ fn main() {
     rust.write_crate(
         "libraries/rga3d/",
         "rga3d",
-        1, 0, 0, "",
+        1,
+        0,
+        0,
+        "",
         "Latest generated test case",
         "https://github.com/AndrewBrownK/projective_ga/",
         &[],
-        repo, traits
+        repo,
+        traits,
     );
 }
 
@@ -83,6 +89,7 @@ fn base_documentation(mut declarations: DeclareMultiVecs<e1234>) -> DeclareMulti
     ",
     );
     // TODO more documentation
+    // declarations.generate_missing_duals(None);
     declarations
 }
 

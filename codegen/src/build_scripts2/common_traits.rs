@@ -5,197 +5,109 @@ use crate::ast2::impls::{Elaborated, InlineOnly};
 use crate::ast2::traits::{NameTrait, TraitDef_1_Type_1_Arg, TraitImpl_10, TraitImpl_11, TraitImpl_21};
 use crate::build_scripts2::common_traits::impls::*;
 
-pub static Zero: Elaborated<ZeroImpl> = ZeroImpl
-    .new_trait_named("Zero")
-    .blurb("All elements set to zero.");
-pub static One: Elaborated<OneImpl> = OneImpl
-    .new_trait_named("One")
-    .blurb("The scalar element set to one, and all other elements set to zero.");
-pub static AntiOne: Elaborated<AntiOneImpl> = AntiOneImpl
-    .new_trait_named("AntiOne")
-    .blurb("The anti-scalar element set to one, and all other elements set to zero.");
-pub static Unit: Elaborated<UnitImpl> = UnitImpl
-    .new_trait_named("Unit")
-    .blurb("All elements set to one.");
-pub static Grade: Elaborated<GradeImpl> = GradeImpl
-    .new_trait_named("Grade")
-    .blurb(
+pub static Zero: Elaborated<ZeroImpl> = ZeroImpl.new_trait_named("Zero").blurb("All elements set to zero.");
+pub static One: Elaborated<OneImpl> = OneImpl.new_trait_named("One").blurb("The scalar element set to one, and all other elements set to zero.");
+pub static AntiOne: Elaborated<AntiOneImpl> = AntiOneImpl.new_trait_named("AntiOne").blurb("The anti-scalar element set to one, and all other elements set to zero.");
+pub static Unit: Elaborated<UnitImpl> = UnitImpl.new_trait_named("Unit").blurb("All elements set to one.");
+pub static Grade: Elaborated<GradeImpl> = GradeImpl.new_trait_named("Grade").blurb(
     "A multivector class may have uniform grade, or mixed grade, depending on \
     the grades of its elements. This trait only characterizes uniform grade multivectors.",
 );
-pub static AntiGrade: Elaborated<AntiGradeImpl> = AntiGradeImpl
-    .new_trait_named("AntiGrade")
-    .blurb(
+pub static AntiGrade: Elaborated<AntiGradeImpl> = AntiGradeImpl.new_trait_named("AntiGrade").blurb(
     "The AntiGrade can be described as the missing Grade with respect to an \
     AntiScalar. This trait only characterizes uniform anti-grade multivectors.",
 );
 
-pub static RightDual: Elaborated<RightDualImpl> = RightDualImpl
-    .new_trait_named("RightDual")
-    .blurb("TODO");
+pub static RightDual: Elaborated<RightDualImpl> = RightDualImpl.new_trait_named("RightDual").blurb("TODO");
 
-pub static RightAntiDual: Elaborated<RightAntiDualImpl> = RightAntiDualImpl
-    .new_trait_named("RightAntiDual")
-    .blurb("TODO");
+pub static RightAntiDual: Elaborated<RightAntiDualImpl> = RightAntiDualImpl.new_trait_named("RightAntiDual").blurb("TODO");
 
-pub static LeftDual: Elaborated<LeftDualImpl> = LeftDualImpl
-    .new_trait_named("LeftDual")
-    .blurb("TODO");
+pub static LeftDual: Elaborated<LeftDualImpl> = LeftDualImpl.new_trait_named("LeftDual").blurb("TODO");
 
-pub static LeftAntiDual: Elaborated<LeftAntiDualImpl> = LeftAntiDualImpl
-    .new_trait_named("LeftAntiDual")
-    .blurb("TODO");
+pub static LeftAntiDual: Elaborated<LeftAntiDualImpl> = LeftAntiDualImpl.new_trait_named("LeftAntiDual").blurb("TODO");
 
-pub static Reverse: Elaborated<ReverseImpl> = ReverseImpl
-    .new_trait_named("Reverse")
-    .blurb("TODO");
+pub static Reverse: Elaborated<ReverseImpl> = ReverseImpl.new_trait_named("Reverse").blurb("TODO");
 
-pub static AntiReverse: Elaborated<AntiReverseImpl> = AntiReverseImpl
-    .new_trait_named("AntiReverse")
-    .blurb("TODO");
+pub static AntiReverse: Elaborated<AntiReverseImpl> = AntiReverseImpl.new_trait_named("AntiReverse").blurb("TODO");
 
-pub static AutoMorphism: Elaborated<AutoMorphismImpl> = AutoMorphismImpl
-    .new_trait_named("AutoMorphism")
-    .blurb("TODO");
+pub static AutoMorphism: Elaborated<AutoMorphismImpl> = AutoMorphismImpl.new_trait_named("AutoMorphism").blurb("TODO");
 
-pub static AntiAutoMorphism: Elaborated<AntiAutoMorphismImpl> = AntiAutoMorphismImpl
-    .new_trait_named("AntiAutoMorphism")
-    .blurb("TODO");
+pub static AntiAutoMorphism: Elaborated<AntiAutoMorphismImpl> = AntiAutoMorphismImpl.new_trait_named("AntiAutoMorphism").blurb("TODO");
 
-pub static Conjugation: Elaborated<ConjugationImpl> = ConjugationImpl
-    .new_trait_named("Conjugation")
-    .blurb("TODO");
+pub static Conjugation: Elaborated<ConjugationImpl> = ConjugationImpl.new_trait_named("Conjugation").blurb("TODO");
 
-pub static AntiConjugation: Elaborated<AntiConjugationImpl> = AntiConjugationImpl
-    .new_trait_named("AntiConjugation")
-    .blurb("TODO");
+pub static AntiConjugation: Elaborated<AntiConjugationImpl> = AntiConjugationImpl.new_trait_named("AntiConjugation").blurb("TODO");
 
-pub static RightComplement: Elaborated<RightComplementImpl> = RightComplementImpl
-    .new_trait_named("RightComplement")
-    .blurb("TODO");
+pub static RightComplement: Elaborated<RightComplementImpl> = RightComplementImpl.new_trait_named("RightComplement").blurb("TODO");
 
-pub static LeftComplement: Elaborated<LeftComplementImpl> = LeftComplementImpl
-    .new_trait_named("LeftComplement")
-    .blurb("TODO");
+pub static LeftComplement: Elaborated<LeftComplementImpl> = LeftComplementImpl.new_trait_named("LeftComplement").blurb("TODO");
 
-pub static DoubleComplement: Elaborated<DoubleComplementImpl> = DoubleComplementImpl
-    .new_trait_named("DoubleComplement")
-    .blurb("TODO");
+pub static DoubleComplement: Elaborated<DoubleComplementImpl> = DoubleComplementImpl.new_trait_named("DoubleComplement").blurb("TODO");
 
-pub static Negation: Elaborated<NegationImpl> = NegationImpl
-    .new_trait_named("Negation")
-    .blurb("TODO");
+pub static Negation: Elaborated<NegationImpl> = NegationImpl.new_trait_named("Negation").blurb("TODO");
 
-pub static Addition: Elaborated<AdditionImpl> = AdditionImpl
-    .new_trait_named("Addition")
-    .blurb("TODO");
+pub static Addition: Elaborated<AdditionImpl> = AdditionImpl.new_trait_named("Addition").blurb("TODO");
 
-pub static Subtraction: Elaborated<SubtractionImpl> = SubtractionImpl
-    .new_trait_named("Subtraction")
-    .blurb("TODO");
+pub static Subtraction: Elaborated<SubtractionImpl> = SubtractionImpl.new_trait_named("Subtraction").blurb("TODO");
 
-pub static Wedge: Elaborated<WedgeImpl> = WedgeImpl
-    .new_trait_named("Wedge")
-    .blurb("TODO");
-pub static AntiWedge: Elaborated<AntiWedgeImpl> = AntiWedgeImpl
-    .new_trait_named("AntiWedge")
-    .blurb("TODO");
+pub static Wedge: Elaborated<WedgeImpl> = WedgeImpl.new_trait_named("Wedge").blurb("TODO");
+pub static AntiWedge: Elaborated<AntiWedgeImpl> = AntiWedgeImpl.new_trait_named("AntiWedge").blurb("TODO");
 
-pub static GeometricProduct: Elaborated<GeometricProductImpl> = GeometricProductImpl
-    .new_trait_named("GeometricProduct")
-    .blurb("TODO");
+pub static GeometricProduct: Elaborated<GeometricProductImpl> = GeometricProductImpl.new_trait_named("GeometricProduct").blurb("TODO");
 
-pub static GeometricAntiProduct: Elaborated<GeometricAntiProductImpl> = GeometricAntiProductImpl
-    .new_trait_named("GeometricAntiProduct")
-    .blurb("TODO");
+pub static GeometricAntiProduct: Elaborated<GeometricAntiProductImpl> = GeometricAntiProductImpl.new_trait_named("GeometricAntiProduct").blurb("TODO");
 
-pub static Sandwich: Elaborated<SandwichImpl> = SandwichImpl
-    .new_trait_named("Sandwich")
-    .blurb("TODO");
+pub static Sandwich: Elaborated<SandwichImpl> = SandwichImpl.new_trait_named("Sandwich").blurb("TODO");
 
-pub static AntiSandwich: Elaborated<AntiSandwichImpl> = AntiSandwichImpl
-    .new_trait_named("AntiSandwich")
-    .blurb("TODO");
+pub static AntiSandwich: Elaborated<AntiSandwichImpl> = AntiSandwichImpl.new_trait_named("AntiSandwich").blurb("TODO");
 
-pub static ScalarProduct: Elaborated<ScalarProductImpl> = ScalarProductImpl
-    .new_trait_named("ScalarProduct")
-    .blurb("TODO");
+pub static ScalarProduct: Elaborated<ScalarProductImpl> = ScalarProductImpl.new_trait_named("ScalarProduct").blurb("TODO");
 
-pub static AntiScalarProduct: Elaborated<AntiScalarProductImpl> = AntiScalarProductImpl
-    .new_trait_named("AntiScalarProduct")
-    .blurb("TODO");
+pub static AntiScalarProduct: Elaborated<AntiScalarProductImpl> = AntiScalarProductImpl.new_trait_named("AntiScalarProduct").blurb("TODO");
 
-pub static ScalarNormSquared: Elaborated<ScalarNormSquaredImpl> = ScalarNormSquaredImpl
-    .new_trait_named("ScalarNormSquared")
-    .blurb("TODO");
+pub static ScalarNormSquared: Elaborated<ScalarNormSquaredImpl> = ScalarNormSquaredImpl.new_trait_named("ScalarNormSquared").blurb("TODO");
 
-pub static AntiScalarNormSquared: Elaborated<AntiScalarNormImpl> = AntiScalarNormImpl
-    .new_trait_named("AntiScalarNormSquared")
-    .blurb("TODO");
+pub static AntiScalarNormSquared: Elaborated<AntiScalarNormImpl> = AntiScalarNormImpl.new_trait_named("AntiScalarNormSquared").blurb("TODO");
 
-pub static ScalarNorm: Elaborated<ScalarNormSquaredImpl> = ScalarNormSquaredImpl
-    .new_trait_named("ScalarNorm")
-    .blurb("TODO");
+pub static ScalarNorm: Elaborated<ScalarNormSquaredImpl> = ScalarNormSquaredImpl.new_trait_named("ScalarNorm").blurb("TODO");
 
-pub static AntiScalarNorm: Elaborated<AntiScalarNormImpl> = AntiScalarNormImpl
-    .new_trait_named("AntiScalarNorm")
-    .blurb("TODO");
+pub static AntiScalarNorm: Elaborated<AntiScalarNormImpl> = AntiScalarNormImpl.new_trait_named("AntiScalarNorm").blurb("TODO");
 
-pub static Fix: Elaborated<FixImpl> = FixImpl
-    .new_trait_named("Fix")
-    .blurb("TODO");
+pub static ConstraintViolation: Elaborated<ConstraintViolationImpl> = ConstraintViolationImpl.new_trait_named("ConstraintViolation").blurb("TODO");
 
-pub static AntiFix: Elaborated<AntiFixImpl> = AntiFixImpl
-    .new_trait_named("AntiFixImpl")
-    .blurb("TODO");
+pub static AntiConstraintViolation: Elaborated<AntiConstraintViolationImpl> = AntiConstraintViolationImpl.new_trait_named("AntiConstraintViolation").blurb("TODO");
 
-pub static Inverse: Elaborated<InverseImpl> = InverseImpl
-    .new_trait_named("Inverse")
-    .blurb("TODO");
+pub static ConstraintValid: Elaborated<ConstraintValidImpl> = ConstraintValidImpl.new_trait_named("ConstraintValid").blurb("TODO");
 
-pub static AntiInverse: Elaborated<AntiInverseImpl> = AntiInverseImpl
-    .new_trait_named("AntiInverse")
-    .blurb("TODO");
+pub static AntiConstraintValid: Elaborated<AntiConstraintValidImpl> = AntiConstraintValidImpl.new_trait_named("AntiConstraintValid").blurb("TODO");
 
-pub static GeometricQuotient: Elaborated<GeometricQuotientImpl> = GeometricQuotientImpl
-    .new_trait_named("GeometricQuotient")
-    .blurb("TODO");
+pub static Fix: Elaborated<FixImpl> = FixImpl.new_trait_named("Fix").blurb("TODO");
 
-pub static GeometricAntiQuotient: Elaborated<GeometricAntiQuotientImpl> = GeometricAntiQuotientImpl
-    .new_trait_named("GeometricAntiQuotient")
-    .blurb("TODO");
+pub static AntiFix: Elaborated<AntiFixImpl> = AntiFixImpl.new_trait_named("AntiFixImpl").blurb("TODO");
 
-pub static SquareRoot: Elaborated<SquareRootImpl> = SquareRootImpl
-    .new_trait_named("SquareRoot")
-    .blurb("TODO");
+pub static Inverse: Elaborated<InverseImpl> = InverseImpl.new_trait_named("Inverse").blurb("TODO");
 
-pub static AntiSquareRoot: Elaborated<AntiSquareRootImpl> = AntiSquareRootImpl
-    .new_trait_named("AntiSquareRoot")
-    .blurb("TODO");
+pub static AntiInverse: Elaborated<AntiInverseImpl> = AntiInverseImpl.new_trait_named("AntiInverse").blurb("TODO");
 
-pub static BulkContraction: Elaborated<BulkContractionImpl> = BulkContractionImpl
-    .new_trait_named("BulkContraction")
-    .blurb("TODO");
+pub static GeometricQuotient: Elaborated<GeometricQuotientImpl> = GeometricQuotientImpl.new_trait_named("GeometricQuotient").blurb("TODO");
 
-pub static WeightContraction: Elaborated<WeightContractionImpl> = WeightContractionImpl
-    .new_trait_named("WeightContraction")
-    .blurb("TODO");
+pub static GeometricAntiQuotient: Elaborated<GeometricAntiQuotientImpl> = GeometricAntiQuotientImpl.new_trait_named("GeometricAntiQuotient").blurb("TODO");
 
-pub static BulkExpansion: Elaborated<BulkExpansionImpl> = BulkExpansionImpl
-    .new_trait_named("BulkExpansion")
-    .blurb("TODO");
+pub static SquareRoot: Elaborated<SquareRootImpl> = SquareRootImpl.new_trait_named("SquareRoot").blurb("TODO");
 
-pub static WeightExpansion: Elaborated<WeightExpansionImpl> = WeightExpansionImpl
-    .new_trait_named("WeightExpansion")
-    .blurb("TODO");
+pub static AntiSquareRoot: Elaborated<AntiSquareRootImpl> = AntiSquareRootImpl.new_trait_named("AntiSquareRoot").blurb("TODO");
 
-pub static Into: Elaborated<IntoImpl> = IntoImpl
-    .new_trait_named("Into")
-    .blurb("TODO");
+pub static BulkContraction: Elaborated<BulkContractionImpl> = BulkContractionImpl.new_trait_named("BulkContraction").blurb("TODO");
 
-pub static TryInto: Elaborated<TryIntoImpl> = TryIntoImpl
-    .new_trait_named("TryInto")
-    .blurb("TODO");
+pub static WeightContraction: Elaborated<WeightContractionImpl> = WeightContractionImpl.new_trait_named("WeightContraction").blurb("TODO");
+
+pub static BulkExpansion: Elaborated<BulkExpansionImpl> = BulkExpansionImpl.new_trait_named("BulkExpansion").blurb("TODO");
+
+pub static WeightExpansion: Elaborated<WeightExpansionImpl> = WeightExpansionImpl.new_trait_named("WeightExpansion").blurb("TODO");
+
+pub static Into: Elaborated<IntoImpl> = IntoImpl.new_trait_named("Into").blurb("TODO");
+
+pub static TryInto: Elaborated<TryIntoImpl> = TryIntoImpl.new_trait_named("TryInto").blurb("TODO");
 
 // NOTE: If you find yourself wanting to generate grade selection traits, you are
 // probably generating extremely wasteful implementations that perform a lot more
@@ -205,7 +117,6 @@ pub static TryInto: Elaborated<TryIntoImpl> = TryIntoImpl
 // terms that are unused by the final result of each function will be cut out of the AST
 // automatically. With grade selection declarations (not inlining strictly always), then
 // you'd have the chance to use grade selection in application code which is very undesirable.)
-// TODO actually cut out unused terms and variables, as claimed above
 
 macro_rules! select_grades {
     ($($gr:literal),+ $(,)?) => {
@@ -231,14 +142,17 @@ mod impls {
 
     use async_trait::async_trait;
 
-    use crate::algebra2::basis::{BasisElement, BasisSignature};
     use crate::algebra2::basis::grades::{AntiGrades, Grades};
+    use crate::algebra2::basis::{BasisElement, BasisSignature};
     use crate::algebra2::multivector::DynamicMultiVector;
     use crate::ast2::datatype::{Integer, MultiVector};
     use crate::ast2::expressions::{Expression, FloatExpr, IntExpr};
-    use crate::ast2::traits::{HasNotReturned, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder};
+    use crate::ast2::traits::{HasNotReturned, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImplBuilder, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22};
     use crate::ast2::Variable;
-    use crate::build_scripts2::common_traits::{AntiInverse, AntiReverse, AntiScalarProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightDual, ScalarProduct, SquareRoot, Wedge};
+    use crate::build_scripts2::common_traits::{
+        AntiInverse, AntiReverse, AntiScalarProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightDual, ScalarProduct,
+        SquareRoot, Subtraction, Wedge,
+    };
     use crate::elements::scalar;
 
     #[macro_export]
@@ -654,15 +568,59 @@ mod impls {
     });
 
     trait_impl_1_type_1_arg!(ScalarNormImpl(builder, slf) -> MultiVector {
-        let result = ScalarProduct.invoke(&mut builder, slf.clone(), slf).await?;
-        // TODO
+        let dot = ScalarProduct.invoke(&mut builder, slf.clone(), slf).await?;
+        let result = SquareRoot.invoke(&mut builder, dot).await?;
         builder.return_expr(result)
     });
 
     trait_impl_1_type_1_arg!(AntiScalarNormImpl(builder, slf) -> MultiVector {
-        let result = AntiScalarProduct.invoke(&mut builder, slf.clone(), slf).await?;
-        // TODO
+        let dot = AntiScalarProduct.invoke(&mut builder, slf.clone(), slf).await?;
+        let result = AntiSquareRoot.invoke(&mut builder, dot).await?;
         builder.return_expr(result)
+    });
+
+    // TODO these violation traits should only be implemented where the constraint is possible to violate
+    //  then also make a trait where it is always/only implemented where the constraint is impossible to violate
+    trait_impl_1_type_1_arg!(ConstraintViolationImpl(builder, slf) -> MultiVector {
+        let r = Reverse.inline(&builder, slf.clone()).await?;
+        let p = GeometricProduct.inline(&builder, slf.clone(), r).await?;
+        let d = ScalarProduct.inline(&builder, slf.clone(), slf.clone()).await?;
+        let result = Subtraction.inline(&builder, p, d).await?;
+        builder.return_expr(result)
+    });
+    trait_impl_1_type_1_arg!(AntiConstraintViolationImpl(builder, slf) -> MultiVector {
+        let r = AntiReverse.inline(&builder, slf.clone()).await?;
+        let p = GeometricAntiProduct.inline(&builder, slf.clone(), r).await?;
+        let d = AntiScalarProduct.inline(&builder, slf.clone(), slf.clone()).await?;
+        let result = Subtraction.inline(&builder, p, d).await?;
+        builder.return_expr(result)
+    });
+
+    trait_impl_1_type_1_arg!(ConstraintValidImpl(builder, slf) -> MultiVector {
+        let r = Reverse.inline(&builder, slf.clone()).await?;
+        let p = GeometricProduct.inline(&builder, slf.clone(), r).await;
+        let d = ScalarProduct.inline(&builder, slf.clone(), slf.clone()).await;
+        let (p, d) = match (p, d) {
+            (None, None) => return builder.return_expr(slf),
+            (p, d) => (p?, d?),
+        };
+        match Subtraction.inline(&builder, p, d).await {
+            None => builder.return_expr(slf),
+            Some(_) => None,
+        }
+    });
+    trait_impl_1_type_1_arg!(AntiConstraintValidImpl(builder, slf) -> MultiVector {
+        let r = AntiReverse.inline(&builder, slf.clone()).await?;
+        let p = GeometricAntiProduct.inline(&builder, slf.clone(), r).await;
+        let d = AntiScalarProduct.inline(&builder, slf.clone(), slf.clone()).await;
+        let (p, d) = match (p, d) {
+            (None, None) => return builder.return_expr(slf),
+            (p, d) => (p?, d?),
+        };
+        match Subtraction.inline(&builder, p, d).await {
+            None => builder.return_expr(slf),
+            Some(_) => None,
+        }
     });
 
     // See section 3.4.3 and 3.6.2 of the book
@@ -721,7 +679,60 @@ mod impls {
             let result = scalar_mv.construct_direct([(scalar, sqrt)]);
             return builder.return_expr(result)
         }
+        let mv_elements = scalar_mv.elements();
+        if !mv_elements.contains(&scalar) {
+            return None
+        }
+
         // TODO support SquareRoot with more types of MultiVector
+        //  I've looked through the product impls and found that the following might be square roots
+        //  - RoundPoint squares to AntiCircleRotor
+        //  - RoundPointAtOrigin squares to AntiCircleRotorAtInfinity
+        //  - AntiCircleOnOrigin squares to AntiVersorEvenOnOrigin
+        //  - AntiLine squares to AntiMotor
+        //  - AntiLineOnOrigin squares to AntiMotorOnOrigin
+        //  - Dipole squares to VersorOdd
+        //  - DipoleAligningOrigin squares to VersorOdd
+        //  - DipoleAtInfinity squares to VersorOddAtInfinity
+        //  - DipoleAtOrigin squares to VersorOddAtInfinity
+        //  - DipoleOnOrigin squares to AntiCircleRotorOnOrigin
+        //  - DipoleOrthogonalOrigin squares to VersorOdd
+        //  - FlatOrigin squares to Scalar
+        //  - FlatPoint squares to AntiCircleRotorAligningOriginAtInfinity
+        //  - AntiDipoleOnOrigin squares to AntiCircleRotorOnOrigin
+        //  - AntiFlatOrigin squares to Scalar
+        //  - AntiFlatPoint squares to AntiCircleRotorAligningOriginAtInfinity
+        //  - Circle squares to VersorOdd
+        //  - CircleAligningOrigin squares to VersorOdd
+        //  - CircleAtInfinity squares to VersorOddAtInfinity
+        //  - CircleAtOrigin squares to VersorOddAtInfinity
+        //  - CircleOnOrigin squares to AntiVersorEvenOnOrigin
+        //  - CircleOrthogonalOrigin squares to VersorOdd
+        //  - Line squares to AntiMotor
+        //  - LineOnOrigin squares to AntiMotorOnOrigin
+        //  - Plane squares to AntiCircleRotorAligningOriginAtInfinity
+        //  - PlaneOnOrigin squares to AntiMotorOnOrigin
+        //  - Sphere squares to AntiCircleRotor
+        //  - SphereAtOrigin squares to AntiCircleRotorAtInfinity
+        //  - SphereOnOrigin squares to AntiCircleRotorOnOrigin
+        //  - VersorOdd squares to VersorOdd
+        //  - VersorEven squares to VersorOdd
+        //  - AntiScalar squares to Scalar
+        //  - AntiDualNum squares to AntiDualNum
+        //  - DualNum squares to AntiDualNum
+
+        // TODO I think these ones stand out to me as telling:
+        //  - Scalar squares to Scalar
+        //  - AntiScalar squares to Scalar
+        //  - VersorOdd squares to VersorOdd
+        //  - VersorEven squares to VersorOdd
+        //  - AntiDualNum squares to AntiDualNum
+        //  - DualNum squares to AntiDualNum
+
+        // TODO other things of note...
+        //  - CircleRotor squares to VersorOdd
+        //  - DipoleInversion squares to VersorOdd
+
         None
     });
 
@@ -734,7 +745,24 @@ mod impls {
             let result = anti_scalar_mv.construct_direct([(anti_scalar, sqrt)]);
             return builder.return_expr(result)
         }
+        let mv_elements = anti_scalar_mv.elements();
+        if !mv_elements.contains(&anti_scalar) {
+            return None
+        }
         // TODO support AntiSquareRoot with more types of MultiVector
+
+        // TODO I think these ones stand out to me as telling:
+        //  - Scalar anti-squares to AntiScalar
+        //  - AntiScalar anti-squares to AntiScalar
+        //  - VersorOdd anti-squares to VersorEven
+        //  - VersorEven anti-squares to VersorEven
+        //  - AntiDualNum anti-squares to DualNum
+        //  - DualNum anti-squares to DualNum
+
+        // TODO so knowing that, we can try to predict....
+        //  - CircleRotor anti-squares to CircleRotor? No.... VersorEven.
+        //  - DipoleInversion anti-squares to VersorEven
+
         None
     });
 

@@ -1,27 +1,27 @@
+use anyhow::{anyhow, bail, Context, Error};
+use indicatif::ProgressFinish;
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
-use std::fs;
 use std::io::{BufRead, BufReader, ErrorKind, Read, Write};
 use std::ops::Deref;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::Arc;
-
-use anyhow::{bail, Error};
-use indicatif::ProgressFinish;
+use std::time::Duration;
+use std::{fs, thread};
 use tokio::task::JoinSet;
 
-use crate::algebra2::basis::BasisElement;
 use crate::algebra2::basis::grades::{plane_based_k_reflections, point_based_k_reflections};
+use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
 use crate::ast2::datatype::{ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
-use crate::ast2::RawVariableDeclaration;
 use crate::ast2::traits::{
-    BinaryOps, CommentOrVariableDeclaration, progress_style, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus,
+    progress_style, BinaryOps, CommentOrVariableDeclaration, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus,
 };
-use crate::emit2::{sort_trait_impls};
-use crate::SIMD_SRC;
+use crate::ast2::RawVariableDeclaration;
+use crate::emit2::sort_trait_impls;
 use crate::utility::CollectResults;
+use crate::SIMD_SRC;
 
 /// Generate a Rust project.
 #[derive(Copy, Clone)]
@@ -99,7 +99,10 @@ impl Rust {
         self,
         crate_folder: P,
         algebra_name: &str,
-        version_major: usize, version_minor: usize, version_patch: usize, version_pre: &str,
+        version_major: usize,
+        version_minor: usize,
+        version_patch: usize,
+        version_pre: &str,
         description: &str,
         repository: &str,
         authors: &[&str],
@@ -109,12 +112,8 @@ impl Rust {
         let file_path = crate_folder.as_ref().to_path_buf();
         let rt = tokio::runtime::Runtime::new().expect("tokio works");
         let e = rt.block_on(async move {
-            self.write_cargo_toml(
-                crate_folder,
-                algebra_name,
-                version_major, version_minor, version_patch, version_pre,
-                description, repository, authors,
-            ).await?;
+            self.write_cargo_toml(crate_folder, algebra_name, version_major, version_minor, version_patch, version_pre, description, repository, authors)
+                .await?;
             self.write_src(file_path.join(Path::new("src")), multi_vecs, impls).await
         });
         if let Err(e) = e {
@@ -126,7 +125,10 @@ impl Rust {
         &self,
         crate_folder: P,
         algebra_name: &str,
-        version_major: usize, version_minor: usize, version_patch: usize, version_pre: &str,
+        version_major: usize,
+        version_minor: usize,
+        version_patch: usize,
+        version_pre: &str,
         description: &str,
         repository: &str,
         authors: &[&str],
@@ -296,7 +298,6 @@ postgres-types = "0.2.7""#
             Ok(())
         });
 
-
         let qty_mvs = mvs.len() as u64;
         let data_pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_mvs).with_finish(ProgressFinish::AndLeave)));
         data_pb.set_style(progress_style());
@@ -317,7 +318,6 @@ postgres-types = "0.2.7""#
         fmt_pb.set_style(progress_style());
         fmt_pb.set_message("Rust - rustfmt");
 
-
         let (finished_file, mut rx) = tokio::sync::mpsc::unbounded_channel::<PathBuf>();
         let fmt_pb2 = fmt_pb.clone();
         join_set.spawn(async move {
@@ -329,7 +329,7 @@ postgres-types = "0.2.7""#
             Ok(())
         });
 
-
+        // data definitions
         let mut data_mods: BTreeMap<String, Vec<_>> = BTreeMap::new();
         for multi_vec in mvs.iter() {
             let multi_vec = *multi_vec;
@@ -349,9 +349,6 @@ postgres-types = "0.2.7""#
                 writeln!(&mut file, "use crate::data::*;")?;
                 writeln!(&mut file, "use crate::simd::*;")?;
                 self.declare_multi_vector(&mut file, multi_vec, doc)?;
-                // TODO detect and then include a manual-impls file
-                //  This could be useful for stuff like the geometric constraint, and custom
-                //  constructors/builders
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
                 tx3.send(file_path)?;
                 pb2.inc(1);
@@ -399,11 +396,13 @@ postgres-types = "0.2.7""#
             }
         }
 
+        // trait definitions
         let mut trait_mods: BTreeMap<String, Vec<_>> = BTreeMap::new();
         for td in defs.iter() {
             let td = td.clone();
             if let TraitTypeConsensus::NoVotes = *td.output.read() {
-                continue
+                trait_pb.inc(1);
+                continue;
             }
             let k = td.names.trait_key;
             let n = k.as_upper_camel();
@@ -412,9 +411,14 @@ postgres-types = "0.2.7""#
             trait_mods.entry(arity).and_modify(|v| v.push(td.clone())).or_insert(vec![td.clone()]);
             let folder_traits = folder_traits.clone();
             match n.as_str() {
-                "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr"
-                | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => continue,
-                "Into" | "TryInto" => continue,
+                "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr" | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => {
+                    trait_pb.inc(1);
+                    continue;
+                }
+                "Into" | "TryInto" => {
+                    trait_pb.inc(1);
+                    continue;
+                }
                 _ => {}
             }
             let tx2 = started_file.clone();
@@ -437,11 +441,11 @@ postgres-types = "0.2.7""#
 
         let mut impl_files: HashMap<String, (Vec<Arc<RawTraitImplementation>>, BTreeSet<TraitKey>)> = HashMap::new();
 
+        // trait impl distribution
         for i in impls {
             let k = i.definition.names.trait_key;
             let (folder, name) = match k.as_upper_camel().as_str() {
-                "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr"
-                | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => {
+                "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr" | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => {
                     let ExpressionType::Class(mv) = i.owner else { continue };
                     let n = TraitKey::new(mv.name()).as_lower_snake();
                     ("data", n)
@@ -454,25 +458,31 @@ postgres-types = "0.2.7""#
                 _ => ("traits", k.as_lower_snake()),
             };
             let i2 = i.clone();
-            impl_files.entry(format!("{folder}/impls/{name}.rs")).and_modify(move |(v, deps)| {
-                for t_dep in i2.definition.dependencies.lock().iter().cloned() {
-                    deps.insert(t_dep);
-                };
-                v.push(i2);
-            }).or_insert_with(|| {
-                let mut t_deps: BTreeSet<_> = i.definition.dependencies.lock().iter().cloned().collect();
-                (vec![i], t_deps)
-            });
+            impl_files
+                .entry(format!("{folder}/impls/{name}.rs"))
+                .and_modify(move |(v, deps)| {
+                    for t_dep in i2.definition.dependencies.lock().iter().cloned() {
+                        deps.insert(t_dep);
+                    }
+                    v.push(i2);
+                })
+                .or_insert_with(|| {
+                    let mut t_deps: BTreeSet<_> = i.definition.dependencies.lock().iter().cloned().collect();
+                    (vec![i], t_deps)
+                });
             impls_pb.inc(1);
         }
         impls_pb.finish();
         fmt_pb.inc_length(impl_files.len() as u64);
 
+        // trait implementations
+        let (closed_types, mut closed_types_rx) = tokio::sync::mpsc::unbounded_channel::<String>();
         for (file_path, (mut impls, deps)) in impl_files {
             let src_folder = src_folder.clone();
             let tx2 = started_file.clone();
             let tx3 = finished_file.clone();
             let multi_progress = multi_progress.clone();
+            let closed_types = closed_types.clone();
             join_set.spawn(async move {
                 let file_path = src_folder.join(Path::new(file_path.as_str())).with_extension("rs");
 
@@ -543,32 +553,32 @@ postgres-types = "0.2.7""#
 
                     let add_w_min = add_w.first().cloned().unwrap_or(0);
                     let add_w_max = add_w.last().cloned().unwrap_or(0);
-                    let add_w_med = add_w.get(qty_impls/2).cloned().unwrap_or(0);
+                    let add_w_med = add_w.get(qty_impls / 2).cloned().unwrap_or(0);
                     let add_w_avg = add_w.into_iter().sum::<usize>() / qty_impls;
 
                     let mul_w_min = mul_w.first().cloned().unwrap_or(0);
                     let mul_w_max = mul_w.last().cloned().unwrap_or(0);
-                    let mul_w_med = mul_w.get(qty_impls/2).cloned().unwrap_or(0);
+                    let mul_w_med = mul_w.get(qty_impls / 2).cloned().unwrap_or(0);
                     let mul_w_avg = mul_w.into_iter().sum::<usize>() / qty_impls;
 
                     let div_w_min = div_w.first().cloned().unwrap_or(0);
                     let div_w_max = div_w.last().cloned().unwrap_or(0);
-                    let div_w_med = div_w.get(qty_impls/2).cloned().unwrap_or(0);
+                    let div_w_med = div_w.get(qty_impls / 2).cloned().unwrap_or(0);
                     let div_w_avg = div_w.into_iter().sum::<usize>() / qty_impls;
 
                     let add_wo_min = add_wo.first().cloned().unwrap_or(0);
                     let add_wo_max = add_wo.last().cloned().unwrap_or(0);
-                    let add_wo_med = add_wo.get(qty_impls/2).cloned().unwrap_or(0);
+                    let add_wo_med = add_wo.get(qty_impls / 2).cloned().unwrap_or(0);
                     let add_wo_avg = add_wo.into_iter().sum::<usize>() / qty_impls;
 
                     let mul_wo_min = mul_wo.first().cloned().unwrap_or(0);
                     let mul_wo_max = mul_wo.last().cloned().unwrap_or(0);
-                    let mul_wo_med = mul_wo.get(qty_impls/2).cloned().unwrap_or(0);
+                    let mul_wo_med = mul_wo.get(qty_impls / 2).cloned().unwrap_or(0);
                     let mul_wo_avg = mul_wo.into_iter().sum::<usize>() / qty_impls;
 
                     let div_wo_min = div_wo.first().cloned().unwrap_or(0);
                     let div_wo_max = div_wo.last().cloned().unwrap_or(0);
-                    let div_wo_med = div_wo.get(qty_impls/2).cloned().unwrap_or(0);
+                    let div_wo_med = div_wo.get(qty_impls / 2).cloned().unwrap_or(0);
                     let div_wo_avg = div_wo.into_iter().sum::<usize>() / qty_impls;
 
                     writeln!(&mut file, "//\n// Total Implementations: {qty_impls}")?;
@@ -584,17 +594,34 @@ postgres-types = "0.2.7""#
                     writeln!(&mut file, "//  Maximum:   {add_wo_max:>7} {mul_wo_max:>7} {div_wo_max:>7}")?;
                 }
 
-
                 // writeln!(&mut file, "use crate::data::*;")?;
                 // writeln!(&mut file, "use crate::simd::*;")?;
                 let mut already_granted_infix = BTreeSet::new();
                 for i in impls {
                     let ucc = i.definition.names.trait_key.as_upper_camel();
+                    let j = i.clone();
                     match ucc.as_str() {
                         "Into" => self.write_trait_from(&mut file, i),
                         "TryInto" => self.write_trait_try_from(&mut file, i),
                         _ => self.declare_trait_impl(&mut file, i, &mut already_granted_infix),
                     }?;
+                    let i = j;
+                    if let TraitArity::Two = i.definition.arity {
+                        let owner = i.owner;
+                        let other = i.other_type_params.first();
+                        let output = i.return_expr.expression_type();
+                        // TODO I could output information like this in a comment on the type itself. And trait definition.
+                        match (owner, other, output) {
+                            (TraitParam::Class(a), Some(TraitParam::Class(b)), ExpressionType::Class(c))
+                                if a == *b && a == c && (ucc.as_str() == "GeometricProduct" || ucc.as_str() == "GeometricAntiProduct") =>
+                            {
+                                let n = a.name();
+                                let msg = format!("{n} is closed under {ucc}");
+                                closed_types.send(msg)?;
+                            }
+                            _ => {}
+                        }
+                    }
                     if let Some(pb) = &pb {
                         pb.inc(1);
                     }
@@ -608,6 +635,7 @@ postgres-types = "0.2.7""#
             });
         }
 
+        // data.rs
         let src_folder2 = src_folder.clone();
         let tx2 = started_file.clone();
         let tx3 = finished_file.clone();
@@ -634,6 +662,7 @@ postgres-types = "0.2.7""#
             Ok(())
         });
 
+        // traits.rs
         let src_folder2 = src_folder.clone();
         let tx2 = started_file.clone();
         let tx3 = finished_file.clone();
@@ -644,12 +673,14 @@ postgres-types = "0.2.7""#
             for (the_mod, ts) in trait_mods {
                 writeln!(&mut file, "pub mod {the_mod} {{")?;
                 for t in ts {
+                    if let TraitTypeConsensus::NoVotes = *t.output.read() {
+                        continue;
+                    }
                     let n = t.names.trait_key;
                     let lsc = n.as_lower_snake();
                     let n = n.as_upper_camel();
                     match n.as_str() {
-                        "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr"
-                        | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => continue,
+                        "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr" | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => continue,
                         "Into" | "TryInto" => continue,
                         _ => {}
                     }
@@ -660,10 +691,12 @@ postgres-types = "0.2.7""#
             if fancy_infix.is_some() {
                 writeln!(&mut file, "pub mod infix {{")?;
                 for td in defs.iter() {
+                    if let TraitTypeConsensus::NoVotes = *td.output.read() {
+                        continue;
+                    }
                     let n = td.names.trait_key.as_upper_camel();
                     match n.as_str() {
-                        "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr"
-                        | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => continue,
+                        "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr" | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => continue,
                         "Into" | "TryInto" => continue,
                         _ => {}
                     }
@@ -682,13 +715,15 @@ postgres-types = "0.2.7""#
                 writeln!(&mut file, "}}")?;
             }
             for td in defs.iter() {
+                if let TraitTypeConsensus::NoVotes = *td.output.read() {
+                    continue;
+                }
                 let td = td.clone();
                 let k = td.names.trait_key;
                 let n = k.as_upper_camel();
                 let lsc = k.as_lower_snake();
                 match n.as_str() {
-                    "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr"
-                    | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => continue,
+                    "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr" | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => continue,
                     "Into" | "TryInto" => continue,
                     _ => {}
                 }
@@ -699,6 +734,7 @@ postgres-types = "0.2.7""#
             Ok(())
         });
 
+        // lib.rs
         let src_folder2 = src_folder.clone();
         let tx2 = started_file.clone();
         let tx3 = finished_file.clone();
@@ -721,6 +757,7 @@ postgres-types = "0.2.7""#
             Ok(())
         });
 
+        // simd.rs
         let src_folder2 = src_folder.clone();
         let tx2 = started_file.clone();
         let tx3 = finished_file.clone();
@@ -736,7 +773,17 @@ postgres-types = "0.2.7""#
 
         drop(started_file);
         drop(finished_file);
-        join_set.collect_results().await
+        let result = join_set.collect_results().await;
+
+        tokio::task::spawn_blocking(move || {
+            thread::sleep(Duration::from_secs(5));
+            drop(closed_types);
+            while let Some(thing) = closed_types_rx.blocking_recv() {
+                println!("{thing}");
+            }
+        });
+
+        result
     }
 
     fn write_type<W: Write>(&self, w: &mut W, data_type: ExpressionType) -> anyhow::Result<()> {
@@ -874,7 +921,7 @@ postgres-types = "0.2.7""#
                             write!(w, "(1.0/")?;
                             self.write_float(w, factor)?;
                             write!(w, ")")?;
-                        },
+                        }
                         (e, false) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
@@ -896,7 +943,7 @@ postgres-types = "0.2.7""#
                             write!(w, " / (")?;
                             self.write_float(w, factor)?;
                             write!(w, ")")?;
-                        },
+                        }
                         (e, true) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
@@ -910,7 +957,7 @@ postgres-types = "0.2.7""#
                             }
                         }
 
-                        _ => unreachable!("This match is complete across conditions (unless NaN?)")
+                        _ => unreachable!("This match is complete across conditions (unless NaN?)"),
                     }
                 }
                 match (*last_factor, len > 1) {
@@ -919,7 +966,7 @@ postgres-types = "0.2.7""#
                     (fl, true) => {
                         write!(w, " * ")?;
                         self.write_f32(w, fl)?
-                    },
+                    }
                     _ => {}
                 }
                 if len > 1 {
@@ -947,14 +994,14 @@ postgres-types = "0.2.7""#
                         (f, false) => {
                             self.write_f32(w, f)?;
                             write!(w, "*")?
-                        },
+                        }
 
                         (1.0, true) => write!(w, " + ")?,
                         (-1.0, true) => write!(w, " - ")?,
                         (f, true) if f > 0.0 => {
                             write!(w, " + *")?;
                             self.write_f32(w, f)?
-                        },
+                        }
                         (f, true) if f < 0.0 => {
                             let f = -f;
                             write!(w, " - ")?;
@@ -973,7 +1020,7 @@ postgres-types = "0.2.7""#
                     (fl, true) if fl > 0.0 => {
                         write!(w, " + ")?;
                         self.write_f32(w, fl)?
-                    },
+                    }
                     (fl, true) if fl < 0.0 => {
                         let fl = -fl;
                         write!(w, " - ")?;
@@ -1057,7 +1104,7 @@ postgres-types = "0.2.7""#
                         (1.0, true) => {
                             write!(w, " * ")?;
                             self.write_vec2(w, factor)?
-                        },
+                        }
                         (-1.0, true) => {
                             write!(w, " / (")?;
                             self.write_vec2(w, factor)?;
@@ -1076,7 +1123,7 @@ postgres-types = "0.2.7""#
                             }
                         }
 
-                        _ => unreachable!("This match is complete across conditions (unless NaN?)")
+                        _ => unreachable!("This match is complete across conditions (unless NaN?)"),
                     }
                 }
                 if *last_factor != [1.0; 2] {
@@ -1123,7 +1170,7 @@ postgres-types = "0.2.7""#
                             write!(w, "Simd32x2::from(")?;
                             self.write_f32(w, f)?;
                             write!(w, ")*")?;
-                        },
+                        }
 
                         (1.0, true) => write!(w, " + ")?,
                         (-1.0, true) => write!(w, " - ")?,
@@ -1131,7 +1178,7 @@ postgres-types = "0.2.7""#
                             write!(w, " + Simd32x2::from(")?;
                             self.write_f32(w, f)?;
                             write!(w, ")*")?;
-                        },
+                        }
                         (f, true) if f < 0.0 => {
                             let f = -f;
                             write!(w, " - Simd32x2::from(")?;
@@ -1245,7 +1292,7 @@ postgres-types = "0.2.7""#
                         (1.0, true) => {
                             write!(w, " * ")?;
                             self.write_vec3(w, factor)?
-                        },
+                        }
                         (-1.0, true) => {
                             write!(w, " / (")?;
                             self.write_vec3(w, factor)?;
@@ -1264,7 +1311,7 @@ postgres-types = "0.2.7""#
                             }
                         }
 
-                        _ => unreachable!("This match is complete across conditions (unless NaN?)")
+                        _ => unreachable!("This match is complete across conditions (unless NaN?)"),
                     }
                 }
                 if *last_factor != [1.0; 3] {
@@ -1314,7 +1361,7 @@ postgres-types = "0.2.7""#
                             write!(w, "Simd32x3::from(")?;
                             self.write_f32(w, f)?;
                             write!(w, ")*")?;
-                        },
+                        }
 
                         (1.0, true) => write!(w, " + ")?,
                         (-1.0, true) => write!(w, " - ")?,
@@ -1322,7 +1369,7 @@ postgres-types = "0.2.7""#
                             write!(w, " + Simd32x3::from(")?;
                             self.write_f32(w, f)?;
                             write!(w, ")*")?;
-                        },
+                        }
                         (f, true) if f < 0.0 => {
                             let f = -f;
                             write!(w, " - Simd32x3::from(")?;
@@ -1441,7 +1488,7 @@ postgres-types = "0.2.7""#
                         (1.0, true) => {
                             write!(w, " * ")?;
                             self.write_vec4(w, factor)?
-                        },
+                        }
                         (-1.0, true) => {
                             write!(w, " / (")?;
                             self.write_vec4(w, factor)?;
@@ -1460,7 +1507,7 @@ postgres-types = "0.2.7""#
                             }
                         }
 
-                        _ => unreachable!("This match is complete across conditions (unless NaN?)")
+                        _ => unreachable!("This match is complete across conditions (unless NaN?)"),
                     }
                 }
                 if *last_factor != [1.0; 4] {
@@ -1513,7 +1560,7 @@ postgres-types = "0.2.7""#
                             write!(w, "Simd32x4::from(")?;
                             self.write_f32(w, f)?;
                             write!(w, ")*")?;
-                        },
+                        }
 
                         (1.0, true) => write!(w, " + ")?,
                         (-1.0, true) => write!(w, " - ")?,
@@ -1521,7 +1568,7 @@ postgres-types = "0.2.7""#
                             write!(w, " + Simd32x4::from(")?;
                             self.write_f32(w, f)?;
                             write!(w, ")*")?;
-                        },
+                        }
                         (f, true) if f < 0.0 => {
                             let f = -f;
                             write!(w, " - Simd32x4::from(")?;
@@ -2233,7 +2280,6 @@ impl std::hash::Hash for {ucc} {{
             bail!("We do not support high arity traits yet");
         }
 
-
         let op = def.op.lock().clone();
         let ucc = def.names.trait_key.as_upper_camel();
         let mut lsc = def.names.trait_key.as_lower_snake();
@@ -2252,7 +2298,6 @@ impl std::hash::Hash for {ucc} {{
         let is_op = is_op;
         let lsc = lsc;
         let do_assign_impl = do_assign_impl;
-
 
         let mut var_param = None;
         if !impls.other_var_params.is_empty() {
@@ -2315,7 +2360,11 @@ impl std::hash::Hash for {ucc} {{
             if !wos.is_zero() {
                 writeln!(w, "// Operative Statistics for this implementation:")?;
                 let space = if qty_types == 1 {
-                    if has_simd { "    " } else { "" }
+                    if has_simd {
+                        "    "
+                    } else {
+                        ""
+                    }
                 } else {
                     "     "
                 };
@@ -2396,6 +2445,7 @@ impl std::hash::Hash for {ucc} {{
                     self.emit_comment(w, false, c.to_string())?;
                 }
                 CommentOrVariableDeclaration::VarDec(var_dec) => {
+                    let Some(var_dec) = var_dec.upgrade() else { continue };
                     let Some(expr) = &var_dec.expr else { continue };
                     if let Some(c) = &var_dec.comment {
                         self.emit_comment(w, false, c.to_string())?;
@@ -2421,13 +2471,9 @@ impl std::hash::Hash for {ucc} {{
         writeln!(w, ";")?;
         writeln!(w, "    }}\n}}")?;
 
-
-
         if !do_assign_impl {
             return Ok(());
         }
-
-
 
         write!(w, "impl {module}{ucc}Assign")?;
         if let (TraitArity::Two, Some(var_param)) = (def.arity, var_param) {
@@ -2459,6 +2505,7 @@ impl std::hash::Hash for {ucc} {{
                     self.emit_comment(w, false, c.to_string())?;
                 }
                 CommentOrVariableDeclaration::VarDec(var_dec) => {
+                    let Some(var_dec) = var_dec.upgrade() else { continue };
                     let Some(expr) = &var_dec.expr else { continue };
                     if let Some(c) = &var_dec.comment {
                         self.emit_comment(w, false, c.to_string())?;
@@ -2513,7 +2560,8 @@ impl std::hash::Hash for {ucc} {{
 
     async fn format_file<P: AsRef<Path>>(p: P) -> anyhow::Result<()> {
         let mut cmd = Command::new("rustfmt");
-        cmd.arg(p.as_ref().to_string_lossy().to_string());
+        let file_name = p.as_ref().to_string_lossy().to_string();
+        cmd.arg(file_name.clone());
         match cmd.spawn() {
             Ok(mut child) => {
                 tokio::task::spawn_blocking::<_, anyhow::Result<()>>(move || {
@@ -2522,14 +2570,17 @@ impl std::hash::Hash for {ucc} {{
                         Ok(o) => {
                             let stderr = String::from_utf8_lossy(&o.stderr);
                             let stdout = String::from_utf8_lossy(&o.stdout);
-                            bail!("rustfmt failure: {stderr} {stdout}")
-                        },
-                        Err(e) => Err(e)?,
+                            let e = Err(anyhow!("rustfmt failure: {stderr} {stdout}"))
+                                .with_context(move || file_name);
+                            return e;
+                        }
+                        Err(e) => Err(e).with_context(move || file_name)?,
                     }
                     Ok(())
-                }).await??;
-            },
-            Err(e) => Err(Error::from(e))?,
+                })
+                .await??;
+            }
+            Err(e) => Err(Error::from(e)).with_context(move || file_name)?,
         }
         Ok(())
     }

@@ -7,7 +7,6 @@ fn main() {
     generate_multi_bases();
 }
 
-
 /// Code-gen for code-gen for code-gen.... kind of absurd
 /// Speaking of absurd
 /// What if someone wants 16 different basis elements?

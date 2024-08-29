@@ -62,5 +62,4 @@ fn sort_trait_impls(trait_implementations: &mut Vec<Arc<RawTraitImplementation>>
     Ok(())
 }
 
-
 //

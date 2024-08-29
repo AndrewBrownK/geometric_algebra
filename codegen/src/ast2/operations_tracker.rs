@@ -15,7 +15,12 @@ pub struct OperationsTracker {
 
 impl OperationsTracker {
     pub fn zero() -> Self {
-        Self { add_sub: 0, mul: 0, div: 0, pow: 0 }
+        Self {
+            add_sub: 0,
+            mul: 0,
+            div: 0,
+            pow: 0,
+        }
     }
     pub fn is_zero(&self) -> bool {
         self.add_sub == 0 && self.mul == 0 && self.div == 0
@@ -30,7 +35,7 @@ impl Mul<usize> for OperationsTracker {
             add_sub: rhs * self.add_sub,
             mul: rhs * self.mul,
             div: rhs * self.div,
-            pow: rhs * self.pow
+            pow: rhs * self.pow,
         }
     }
 }

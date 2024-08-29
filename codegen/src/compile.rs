@@ -409,7 +409,6 @@ pub fn element_wise<'a>(name: &'static str, parameter_a: &Parameter<'a>, paramet
     }
 }
 
-
 pub fn derive_unitize<'a>(name: &'static str, geometric_product: &AstNode<'a>, weight_norm: &AstNode<'a>, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>) -> AstNode<'a> {
     let geometric_product_result = result_of_trait!(geometric_product);
     let weight_norm_result = result_of_trait!(weight_norm);
@@ -829,8 +828,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
     /// Step 1: These items are somewhat universal across geometric algebras
     pub fn preamble_and_universal_traits<'s>(&'s mut self, registry: &'r MultiVectorClassRegistry) -> std::io::Result<()> {
-
-
         // Square Root
         // See also DualNum
         let scalar_like = vec!["Scalar", "AntiScalar"];
@@ -861,7 +858,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let sqrt = single_trait_impl(name, &param_a, vec![], construct);
             self.trait_impls.add_single_impl(name, param_a, sqrt);
         }
-
 
         // Inverse
         for param_a in registry.single_parameters() {
