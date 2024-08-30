@@ -118,7 +118,7 @@ impl AntiFixImpl for RoundPoint {
         use crate::elements::*;
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + *2.0(self.group0()[3] * self[e2])),
+            (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + 2.0 * (self.group0()[3] * self[e2])),
         );
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));

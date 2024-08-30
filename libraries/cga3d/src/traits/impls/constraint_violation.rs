@@ -258,9 +258,9 @@ impl ConstraintViolation for AntiDipoleInversion {
                 + f32::powi(self.group3()[0], 2)
                 + f32::powi(self.group3()[1], 2)
                 + f32::powi(self.group3()[2], 2)
-                + *2.0(self.group0()[0] * self.group2()[0])
-                + *2.0(self.group0()[1] * self.group2()[1])
-                + *2.0(self.group0()[2] * self.group2()[2])
+                + 2.0 * (self.group0()[0] * self.group2()[0])
+                + 2.0 * (self.group0()[1] * self.group2()[1])
+                + 2.0 * (self.group0()[2] * self.group2()[2])
                 - 2.0 * (self.group2()[3] * self.group3()[3])),
         );
         let subtraction = VersorOdd::from_groups(
@@ -553,7 +553,7 @@ impl ConstraintViolation for AntiQuadNum {
         );
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2) + *2.0(self.group0()[0] * self.group0()[1])),
+            (f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2) + 2.0 * (self.group0()[0] * self.group0()[1])),
         );
         let subtraction = AntiTripleNum::from_groups(/* e1234, e3215, scalar */ Simd32x3::from([
             geometric_product.group0()[0],
@@ -579,7 +579,7 @@ impl ConstraintViolation for AntiTripleNum {
         let geometric_product = AntiTripleNum::from_groups(/* e1234, e3215, scalar */ Simd32x3::from([
             (self.group0()[0] * self.group0()[2] * 2.0),
             (self.group0()[1] * self.group0()[2] * 2.0),
-            (f32::powi(self.group0()[2], 2) + *2.0(self.group0()[0] * self.group0()[1])),
+            (f32::powi(self.group0()[2], 2) + 2.0 * (self.group0()[0] * self.group0()[1])),
         ]));
         let subtraction = AntiTripleNum::from_groups(/* e1234, e3215, scalar */ Simd32x3::from([geometric_product.group0()[0], geometric_product.group0()[1], 0.0]));
         return subtraction;
@@ -667,9 +667,9 @@ impl ConstraintViolation for Circle {
         let scalar_product = Scalar::from_groups(
             // scalar
             (f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2)
-                + *2.0(self.group0()[0] * self.group2()[0])
-                + *2.0(self.group0()[1] * self.group2()[1])
-                + *2.0(self.group0()[2] * self.group2()[2])),
+                + 2.0 * (self.group0()[0] * self.group2()[0])
+                + 2.0 * (self.group0()[1] * self.group2()[1])
+                + 2.0 * (self.group0()[2] * self.group2()[2])),
         );
         let subtraction = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -772,9 +772,9 @@ impl ConstraintViolation for CircleRotor {
         let scalar_product = Scalar::from_groups(
             // scalar
             (f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2) - f32::powi(self.group2()[3], 2)
-                + *2.0(self.group0()[0] * self.group2()[0])
-                + *2.0(self.group0()[1] * self.group2()[1])
-                + *2.0(self.group0()[2] * self.group2()[2])),
+                + 2.0 * (self.group0()[0] * self.group2()[0])
+                + 2.0 * (self.group0()[1] * self.group2()[1])
+                + 2.0 * (self.group0()[2] * self.group2()[2])),
         );
         let subtraction = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -1058,7 +1058,7 @@ impl ConstraintViolation for DipoleInversion {
                 - 2.0 * (self.group0()[0] * self.group2()[0])
                 - 2.0 * (self.group0()[1] * self.group2()[1])
                 - 2.0 * (self.group0()[2] * self.group2()[2])
-                + *2.0(self.group2()[3] * self.group3()[3])),
+                + 2.0 * (self.group2()[3] * self.group3()[3])),
         );
         let subtraction = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -1914,11 +1914,11 @@ impl ConstraintViolation for MultiVector {
                 - 2.0 * (self.group4()[0] * self.group3()[0])
                 - 2.0 * (self.group4()[1] * self.group3()[1])
                 - 2.0 * (self.group4()[2] * self.group3()[2])
-                + *2.0(self.group7()[0] * self.group8()[0])
-                + *2.0(self.group7()[1] * self.group8()[1])
-                + *2.0(self.group7()[2] * self.group8()[2])
+                + 2.0 * (self.group7()[0] * self.group8()[0])
+                + 2.0 * (self.group7()[1] * self.group8()[1])
+                + 2.0 * (self.group7()[2] * self.group8()[2])
                 - 2.0 * (self.group1()[3] * self[e1])
-                + *2.0(self.group9()[3] * self[e45])),
+                + 2.0 * (self.group9()[3] * self[e45])),
         );
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
@@ -2165,9 +2165,9 @@ impl ConstraintViolation for VersorEven {
                 + f32::powi(self.group3()[0], 2)
                 + f32::powi(self.group3()[1], 2)
                 + f32::powi(self.group3()[2], 2)
-                + *2.0(self.group0()[0] * self.group2()[0])
-                + *2.0(self.group0()[1] * self.group2()[1])
-                + *2.0(self.group0()[2] * self.group2()[2])
+                + 2.0 * (self.group0()[0] * self.group2()[0])
+                + 2.0 * (self.group0()[1] * self.group2()[1])
+                + 2.0 * (self.group0()[2] * self.group2()[2])
                 - 2.0 * (self.group2()[3] * self.group3()[3])),
         );
         let subtraction = VersorOdd::from_groups(
@@ -2353,7 +2353,7 @@ impl ConstraintViolation for VersorOdd {
                 - 2.0 * (self.group0()[0] * self.group2()[0])
                 - 2.0 * (self.group0()[1] * self.group2()[1])
                 - 2.0 * (self.group0()[2] * self.group2()[2])
-                + *2.0(self.group2()[3] * self.group3()[3])),
+                + 2.0 * (self.group2()[3] * self.group3()[3])),
         );
         let subtraction = VersorOdd::from_groups(
             // e41, e42, e43, scalar

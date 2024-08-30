@@ -105,9 +105,9 @@ impl AntiConstraintViolation for AntiCircleRotor {
         let anti_scalar_product = AntiScalar::from_groups(
             // e12345
             (f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2) - f32::powi(self.group2()[3], 2)
-                + *2.0(self.group0()[0] * self.group2()[0])
-                + *2.0(self.group0()[1] * self.group2()[1])
-                + *2.0(self.group0()[2] * self.group2()[2])),
+                + 2.0 * (self.group0()[0] * self.group2()[0])
+                + 2.0 * (self.group0()[1] * self.group2()[1])
+                + 2.0 * (self.group0()[2] * self.group2()[2])),
         );
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -288,7 +288,7 @@ impl AntiConstraintViolation for AntiDipoleInversion {
                 - 2.0 * (self.group0()[0] * self.group2()[0])
                 - 2.0 * (self.group0()[1] * self.group2()[1])
                 - 2.0 * (self.group0()[2] * self.group2()[2])
-                + *2.0(self.group2()[3] * self.group3()[3])),
+                + 2.0 * (self.group2()[3] * self.group3()[3])),
         );
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -921,9 +921,9 @@ impl AntiConstraintViolation for Dipole {
         let anti_scalar_product = AntiScalar::from_groups(
             // e12345
             (f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2)
-                + *2.0(self.group0()[0] * self.group2()[0])
-                + *2.0(self.group0()[1] * self.group2()[1])
-                + *2.0(self.group0()[2] * self.group2()[2])),
+                + 2.0 * (self.group0()[0] * self.group2()[0])
+                + 2.0 * (self.group0()[1] * self.group2()[1])
+                + 2.0 * (self.group0()[2] * self.group2()[2])),
         );
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -1084,9 +1084,9 @@ impl AntiConstraintViolation for DipoleInversion {
                 + f32::powi(self.group3()[0], 2)
                 + f32::powi(self.group3()[1], 2)
                 + f32::powi(self.group3()[2], 2)
-                + *2.0(self.group0()[0] * self.group2()[0])
-                + *2.0(self.group0()[1] * self.group2()[1])
-                + *2.0(self.group0()[2] * self.group2()[2])
+                + 2.0 * (self.group0()[0] * self.group2()[0])
+                + 2.0 * (self.group0()[1] * self.group2()[1])
+                + 2.0 * (self.group0()[2] * self.group2()[2])
                 - 2.0 * (self.group2()[3] * self.group3()[3])),
         );
         let subtraction = VersorEven::from_groups(
@@ -1969,13 +1969,13 @@ impl AntiConstraintViolation for MultiVector {
                 + f32::powi(self.group9()[0], 2)
                 + f32::powi(self.group9()[1], 2)
                 + f32::powi(self.group9()[2], 2)
-                + *2.0(self.group4()[0] * self.group3()[0])
-                + *2.0(self.group4()[1] * self.group3()[1])
-                + *2.0(self.group4()[2] * self.group3()[2])
+                + 2.0 * (self.group4()[0] * self.group3()[0])
+                + 2.0 * (self.group4()[1] * self.group3()[1])
+                + 2.0 * (self.group4()[2] * self.group3()[2])
                 - 2.0 * (self.group7()[0] * self.group8()[0])
                 - 2.0 * (self.group7()[1] * self.group8()[1])
                 - 2.0 * (self.group7()[2] * self.group8()[2])
-                + *2.0(self.group1()[3] * self[e1])
+                + 2.0 * (self.group1()[3] * self[e1])
                 - 2.0 * (self.group9()[3] * self[e45])),
         );
         let subtraction = MultiVector::from_groups(
@@ -2037,7 +2037,7 @@ impl AntiConstraintViolation for QuadNum {
         );
         let anti_scalar_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2) + *2.0(self.group0()[0] * self.group0()[1])),
+            (f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2) + 2.0 * (self.group0()[0] * self.group0()[1])),
         );
         let subtraction = TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([
             geometric_anti_product.group0()[0],
@@ -2077,7 +2077,7 @@ impl AntiConstraintViolation for TripleNum {
         let geometric_anti_product = TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([
             (self.group0()[0] * self.group0()[2] * 2.0),
             (self.group0()[1] * self.group0()[2] * 2.0),
-            (f32::powi(self.group0()[2], 2) + *2.0(self.group0()[0] * self.group0()[1])),
+            (f32::powi(self.group0()[2], 2) + 2.0 * (self.group0()[0] * self.group0()[1])),
         ]));
         let subtraction = TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([geometric_anti_product.group0()[0], geometric_anti_product.group0()[1], 0.0]));
         return subtraction;
@@ -2246,7 +2246,7 @@ impl AntiConstraintViolation for VersorEven {
                 - 2.0 * (self.group0()[0] * self.group2()[0])
                 - 2.0 * (self.group0()[1] * self.group2()[1])
                 - 2.0 * (self.group0()[2] * self.group2()[2])
-                + *2.0(self.group2()[3] * self.group3()[3])),
+                + 2.0 * (self.group2()[3] * self.group3()[3])),
         );
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2407,9 +2407,9 @@ impl AntiConstraintViolation for VersorOdd {
                 + f32::powi(self.group3()[0], 2)
                 + f32::powi(self.group3()[1], 2)
                 + f32::powi(self.group3()[2], 2)
-                + *2.0(self.group0()[0] * self.group2()[0])
-                + *2.0(self.group0()[1] * self.group2()[1])
-                + *2.0(self.group0()[2] * self.group2()[2])
+                + 2.0 * (self.group0()[0] * self.group2()[0])
+                + 2.0 * (self.group0()[1] * self.group2()[1])
+                + 2.0 * (self.group0()[2] * self.group2()[2])
                 - 2.0 * (self.group2()[3] * self.group3()[3])),
         );
         let subtraction = VersorEven::from_groups(
