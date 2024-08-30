@@ -8,15 +8,15 @@
 // Total Implementations: 2
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         0       2       1
+//  Minimum:         0       1       1
 //   Median:         0       4       1
-//  Average:         0       3       1
+//  Average:         0       2       1
 //  Maximum:         0       4       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       2       1
+//  Minimum:         0       1       1
 //   Median:         0       4       1
-//  Average:         0       3       1
+//  Average:         0       2       1
 //  Maximum:         0       4       1
 impl Fix for Horizon {
     // Operative Statistics for this implementation:
@@ -36,11 +36,10 @@ impl Fix for Horizon {
 impl Fix for Scalar {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        1
+    // f32        0        1        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = self;
-        let geometric_product = Scalar::from_groups(/* scalar */ (self[scalar] * reverse[scalar]));
+        let geometric_product = Scalar::from_groups(/* scalar */ f32::powi(self[scalar], 2));
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));

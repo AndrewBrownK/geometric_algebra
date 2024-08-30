@@ -7,7 +7,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 341
+// Total Implementations: 425
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -292,47 +292,11 @@ impl std::ops::Add<AntiDipoleOnOrigin> for Infinity {
         return addition;
     }
 }
-impl std::ops::Add<AntiDualNum> for Infinity {
-    type Output = MultiVector;
-    fn add(self, other: AntiDualNum) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group0()[1], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            self[e5],
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            other.group0()[0],
-        );
-        return addition;
-    }
-}
 impl std::ops::Add<AntiFlatOrigin> for Infinity {
-    type Output = AntiFlector;
+    type Output = QuadNumOrthogonalOrigin;
     fn add(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiFlector::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
-            // e1, e2, e3, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
-        );
+        let addition = QuadNumOrthogonalOrigin::from_groups(/* e4, e5, e321 */ Simd32x3::from([0.0, self[e5], other[e321]]));
         return addition;
     }
 }
@@ -497,6 +461,83 @@ impl std::ops::Add<AntiMotorOnOrigin> for Infinity {
         return addition;
     }
 }
+impl std::ops::Add<AntiMysteryCircleRotor> for Infinity {
+    type Output = MultiVector;
+    fn add(self, other: AntiMysteryCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other[e31], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiMysteryDipoleInversion> for Infinity {
+    type Output = AntiDipoleInversionAtInfinity;
+    fn add(self, other: AntiMysteryDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        let addition = AntiDipoleInversionAtInfinity::from_groups(
+            // e415, e425, e435, e321
+            other.group0(),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1, e2, e3, e5
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self[e5]]),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiMysteryQuadNum> for Infinity {
+    type Output = MultiVector;
+    fn add(self, other: AntiMysteryQuadNum) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group0()[1], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+        return addition;
+    }
+}
 impl std::ops::Add<AntiPlane> for Infinity {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
@@ -519,11 +560,197 @@ impl std::ops::Add<AntiPlaneOnOrigin> for Infinity {
         return addition;
     }
 }
+impl std::ops::Add<AntiQuadNum> for Infinity {
+    type Output = MultiVector;
+    fn add(self, other: AntiQuadNum) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group0()[3], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([other.group0()[0], 0.0, 0.0, 0.0]),
+            // e3215
+            other.group0()[1],
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiQuadNumAligningOrigin> for Infinity {
+    type Output = MultiVector;
+    fn add(self, other: AntiQuadNumAligningOrigin) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group0()[2], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([other.group0()[0], 0.0, 0.0, 0.0]),
+            // e3215
+            other.group0()[1],
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiQuadNumAligningOriginAtInfinity> for Infinity {
+    type Output = MultiVector;
+    fn add(self, other: AntiQuadNumAligningOriginAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group0()[1], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            other.group0()[0],
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiQuadNumAtInfinity> for Infinity {
+    type Output = MultiVector;
+    fn add(self, other: AntiQuadNumAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group0()[2], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            other.group0()[0],
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiQuadNumOnOrigin> for Infinity {
+    type Output = MultiVector;
+    fn add(self, other: AntiQuadNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group0()[1], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([other.group0()[0], 0.0, 0.0, 0.0]),
+            // e3215
+            0.0,
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiQuadNumOrthogonalOrigin> for Infinity {
+    type Output = MultiVector;
+    fn add(self, other: AntiQuadNumOrthogonalOrigin) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([other.group0()[0], 0.0, 0.0, 0.0]),
+            // e3215
+            other.group0()[1],
+        );
+        return addition;
+    }
+}
 impl std::ops::Add<AntiScalar> for Infinity {
-    type Output = DualNum;
+    type Output = QuadNumAligningOriginAtInfinity;
     fn add(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let addition = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([self[e5], other[e12345]]));
+        let addition = QuadNumAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([self[e5], other[e12345]]));
         return addition;
     }
 }
@@ -1103,17 +1330,6 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for Infinity {
         return addition;
     }
 }
-impl std::ops::Add<DualNum> for Infinity {
-    type Output = DualNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
-    fn add(self, other: DualNum) -> Self::Output {
-        use crate::elements::*;
-        let addition = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([(self[e5] + other.group0()[0]), other.group0()[1]]));
-        return addition;
-    }
-}
 impl std::ops::Add<FlatOrigin> for Infinity {
     type Output = MultiVector;
     fn add(self, other: FlatOrigin) -> Self::Output {
@@ -1460,6 +1676,152 @@ impl std::ops::Add<MultiVector> for Infinity {
         return addition;
     }
 }
+impl std::ops::Add<MysteryCircle> for Infinity {
+    type Output = AntiDipoleInversionAtInfinity;
+    fn add(self, other: MysteryCircle) -> Self::Output {
+        use crate::elements::*;
+        let addition = AntiDipoleInversionAtInfinity::from_groups(
+            // e415, e425, e435, e321
+            other.group0(),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1, e2, e3, e5
+            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<MysteryCircleRotor> for Infinity {
+    type Output = VersorEvenAtInfinity;
+    fn add(self, other: MysteryCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        let addition = VersorEvenAtInfinity::from_groups(
+            // e12345, e1, e2, e3
+            Simd32x4::from([other[e425], 0.0, 0.0, 0.0]),
+            // e415, e425, e435, e321
+            other.group0(),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<MysteryDipole> for Infinity {
+    type Output = MultiVector;
+    fn add(self, other: MysteryDipole) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<MysteryDipoleInversion> for Infinity {
+    type Output = MultiVector;
+    fn add(self, other: MysteryDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([0.0, other.group1()[0], other.group1()[1], other.group1()[2]]),
+            // e3215
+            0.0,
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<MysteryQuadNum> for Infinity {
+    type Output = QuadNumAtInfinity;
+    fn add(self, other: MysteryQuadNum) -> Self::Output {
+        use crate::elements::*;
+        let addition = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([self[e5], other.group0()[0], other.group0()[1]]));
+        return addition;
+    }
+}
+impl std::ops::Add<MysteryVersorEven> for Infinity {
+    type Output = VersorEvenAtInfinity;
+    fn add(self, other: MysteryVersorEven) -> Self::Output {
+        use crate::elements::*;
+        let addition = VersorEvenAtInfinity::from_groups(
+            // e12345, e1, e2, e3
+            other.group0(),
+            // e415, e425, e435, e321
+            other.group1(),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<MysteryVersorOdd> for Infinity {
+    type Output = MultiVector;
+    fn add(self, other: MysteryVersorOdd) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group0()[0], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, other.group1()[3]]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([0.0, other.group0()[1], other.group0()[2], other.group0()[3]]),
+            // e3215
+            0.0,
+        );
+        return addition;
+    }
+}
 impl std::ops::Add<NullCircleAtOrigin> for Infinity {
     type Output = VersorEvenAtOrigin;
     fn add(self, other: NullCircleAtOrigin) -> Self::Output {
@@ -1646,6 +2008,72 @@ impl std::ops::Add<PlaneOnOrigin> for Infinity {
             // e3215
             0.0,
         );
+        return addition;
+    }
+}
+impl std::ops::Add<QuadNum> for Infinity {
+    type Output = QuadNum;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        0        0
+    fn add(self, other: QuadNum) -> Self::Output {
+        use crate::elements::*;
+        let addition = QuadNum::from_groups(
+            // e4, e5, e321, e12345
+            Simd32x4::from([other.group0()[0], (self[e5] + other.group0()[1]), other.group0()[2], other.group0()[3]]),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<QuadNumAligningOrigin> for Infinity {
+    type Output = QuadNumAligningOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        0        0
+    fn add(self, other: QuadNumAligningOrigin) -> Self::Output {
+        use crate::elements::*;
+        let addition = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from([other.group0()[0], (self[e5] + other.group0()[1]), other.group0()[2]]));
+        return addition;
+    }
+}
+impl std::ops::Add<QuadNumAligningOriginAtInfinity> for Infinity {
+    type Output = QuadNumAligningOriginAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        0        0
+    fn add(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let addition = QuadNumAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([(self[e5] + other.group0()[0]), other.group0()[1]]));
+        return addition;
+    }
+}
+impl std::ops::Add<QuadNumAtInfinity> for Infinity {
+    type Output = QuadNumAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        0        0
+    fn add(self, other: QuadNumAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let addition = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([(self[e5] + other.group0()[0]), other.group0()[1], other.group0()[2]]));
+        return addition;
+    }
+}
+impl std::ops::Add<QuadNumOnOrigin> for Infinity {
+    type Output = QuadNumAligningOrigin;
+    fn add(self, other: QuadNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        let addition = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from([other.group0()[0], self[e5], other.group0()[1]]));
+        return addition;
+    }
+}
+impl std::ops::Add<QuadNumOrthogonalOrigin> for Infinity {
+    type Output = QuadNumOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        0        0
+    fn add(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
+        use crate::elements::*;
+        let addition = QuadNumOrthogonalOrigin::from_groups(/* e4, e5, e321 */ Simd32x3::from([other.group0()[0], (self[e5] + other.group0()[1]), other.group0()[2]]));
         return addition;
     }
 }
@@ -2123,22 +2551,6 @@ impl std::ops::BitXor<AntiDipoleOnOrigin> for Infinity {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<AntiDualNum> for Infinity {
-    type Output = Infinity;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiDualNum) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiDualNum> for Infinity {
-    fn bitxor_assign(&mut self, other: AntiDualNum) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
 impl std::ops::BitXor<AntiFlatOrigin> for Infinity {
     type Output = Horizon;
     // Operative Statistics for this implementation:
@@ -2225,6 +2637,44 @@ impl std::ops::BitXor<AntiMotorOnOrigin> for Infinity {
         return self.wedge(other);
     }
 }
+impl std::ops::BitXor<AntiMysteryCircleRotor> for Infinity {
+    type Output = MotorAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn bitxor(self, other: AntiMysteryCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiMysteryDipoleInversion> for Infinity {
+    type Output = FlectorAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
+    fn bitxor(self, other: AntiMysteryDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiMysteryQuadNum> for Infinity {
+    type Output = Infinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn bitxor(self, other: AntiMysteryQuadNum) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiMysteryQuadNum> for Infinity {
+    fn bitxor_assign(&mut self, other: AntiMysteryQuadNum) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
 impl std::ops::BitXor<AntiPlane> for Infinity {
     type Output = FlatPointAtInfinity;
     // Operative Statistics for this implementation:
@@ -2243,6 +2693,81 @@ impl std::ops::BitXor<AntiPlaneOnOrigin> for Infinity {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn bitxor(self, other: AntiPlaneOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiQuadNum> for Infinity {
+    type Output = QuadNumAligningOriginAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
+    fn bitxor(self, other: AntiQuadNum) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiQuadNumAligningOrigin> for Infinity {
+    type Output = QuadNumAligningOriginAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
+    fn bitxor(self, other: AntiQuadNumAligningOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiQuadNumAligningOriginAtInfinity> for Infinity {
+    type Output = Infinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn bitxor(self, other: AntiQuadNumAligningOriginAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiQuadNumAligningOriginAtInfinity> for Infinity {
+    fn bitxor_assign(&mut self, other: AntiQuadNumAligningOriginAtInfinity) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiQuadNumAtInfinity> for Infinity {
+    type Output = Infinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn bitxor(self, other: AntiQuadNumAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiQuadNumAtInfinity> for Infinity {
+    fn bitxor_assign(&mut self, other: AntiQuadNumAtInfinity) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiQuadNumOnOrigin> for Infinity {
+    type Output = QuadNumAligningOriginAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
+    fn bitxor(self, other: AntiQuadNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiQuadNumOrthogonalOrigin> for Infinity {
+    type Output = AntiScalar;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn bitxor(self, other: AntiQuadNumOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
     }
@@ -2529,6 +3054,80 @@ impl std::ops::BitXor<MultiVector> for Infinity {
         return self.wedge(other);
     }
 }
+impl std::ops::BitXor<MysteryCircle> for Infinity {
+    type Output = Horizon;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn bitxor(self, other: MysteryCircle) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<MysteryCircleRotor> for Infinity {
+    type Output = Horizon;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn bitxor(self, other: MysteryCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<MysteryDipole> for Infinity {
+    type Output = LineAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        1        0
+    // no simd        0        3        0
+    fn bitxor(self, other: MysteryDipole) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<MysteryDipoleInversion> for Infinity {
+    type Output = LineAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        1        0
+    // no simd        0        3        0
+    fn bitxor(self, other: MysteryDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<MysteryQuadNum> for Infinity {
+    type Output = Horizon;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn bitxor(self, other: MysteryQuadNum) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<MysteryVersorEven> for Infinity {
+    type Output = FlectorAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
+    fn bitxor(self, other: MysteryVersorEven) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<MysteryVersorOdd> for Infinity {
+    type Output = MotorAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn bitxor(self, other: MysteryVersorOdd) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
 impl std::ops::BitXor<NullCircleAtOrigin> for Infinity {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
@@ -2589,6 +3188,56 @@ impl std::ops::BitXor<Origin> for Infinity {
     //      add/sub      mul      div
     // f32        0        2        0
     fn bitxor(self, other: Origin) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<QuadNum> for Infinity {
+    type Output = AntiQuadNumOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        4        0
+    fn bitxor(self, other: QuadNum) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<QuadNumAligningOrigin> for Infinity {
+    type Output = FlatOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn bitxor(self, other: QuadNumAligningOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<QuadNumAtInfinity> for Infinity {
+    type Output = Horizon;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn bitxor(self, other: QuadNumAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<QuadNumOnOrigin> for Infinity {
+    type Output = FlatOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn bitxor(self, other: QuadNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<QuadNumOrthogonalOrigin> for Infinity {
+    type Output = AntiQuadNumOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        4        0
+    fn bitxor(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
     }
@@ -2901,22 +3550,6 @@ impl std::ops::Mul<AntiDipoleOnOrigin> for Infinity {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiDualNum> for Infinity {
-    type Output = Infinity;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn mul(self, other: AntiDualNum) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<AntiDualNum> for Infinity {
-    fn mul_assign(&mut self, other: AntiDualNum) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
 impl std::ops::Mul<AntiFlatOrigin> for Infinity {
     type Output = Horizon;
     // Operative Statistics for this implementation:
@@ -3003,6 +3636,42 @@ impl std::ops::Mul<AntiMotorOnOrigin> for Infinity {
         return self.geometric_product(other);
     }
 }
+impl std::ops::Mul<AntiMysteryCircleRotor> for Infinity {
+    type Output = MotorAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        5        0
+    fn mul(self, other: AntiMysteryCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiMysteryDipoleInversion> for Infinity {
+    type Output = FlectorAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3        8        0
+    fn mul(self, other: AntiMysteryDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiMysteryQuadNum> for Infinity {
+    type Output = Infinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        2        0
+    fn mul(self, other: AntiMysteryQuadNum) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiMysteryQuadNum> for Infinity {
+    fn mul_assign(&mut self, other: AntiMysteryQuadNum) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
 impl std::ops::Mul<AntiPlane> for Infinity {
     type Output = FlatPointAtInfinity;
     // Operative Statistics for this implementation:
@@ -3021,6 +3690,81 @@ impl std::ops::Mul<AntiPlaneOnOrigin> for Infinity {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn mul(self, other: AntiPlaneOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiQuadNum> for Infinity {
+    type Output = QuadNumAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        5        0
+    fn mul(self, other: AntiQuadNum) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiQuadNumAligningOrigin> for Infinity {
+    type Output = QuadNumAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
+    fn mul(self, other: AntiQuadNumAligningOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiQuadNumAligningOriginAtInfinity> for Infinity {
+    type Output = Infinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn mul(self, other: AntiQuadNumAligningOriginAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiQuadNumAligningOriginAtInfinity> for Infinity {
+    fn mul_assign(&mut self, other: AntiQuadNumAligningOriginAtInfinity) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiQuadNumAtInfinity> for Infinity {
+    type Output = Infinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        2        0
+    fn mul(self, other: AntiQuadNumAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiQuadNumAtInfinity> for Infinity {
+    fn mul_assign(&mut self, other: AntiQuadNumAtInfinity) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiQuadNumOnOrigin> for Infinity {
+    type Output = QuadNumAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
+    fn mul(self, other: AntiQuadNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiQuadNumOrthogonalOrigin> for Infinity {
+    type Output = QuadNumAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
+    fn mul(self, other: AntiQuadNumOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
@@ -3101,10 +3845,14 @@ impl std::ops::Mul<CircleAtInfinity> for Infinity {
     }
 }
 impl std::ops::Mul<CircleAtOrigin> for Infinity {
-    type Output = DipoleInversionAtInfinity;
+    type Output = MysteryDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       12        0
+    //           add/sub      mul      div
+    //      f32        0        6        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        0        8        0
+    //  no simd        0       12        0
     fn mul(self, other: CircleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3244,10 +3992,14 @@ impl std::ops::Mul<DipoleAtInfinity> for Infinity {
     }
 }
 impl std::ops::Mul<DipoleAtOrigin> for Infinity {
-    type Output = AntiDipoleInversionAtInfinity;
+    type Output = AntiMysteryDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        9        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        9        0
     fn mul(self, other: DipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3289,7 +4041,7 @@ impl std::ops::Mul<DipoleInversionAtInfinity> for Infinity {
     }
 }
 impl std::ops::Mul<DipoleInversionAtOrigin> for Infinity {
-    type Output = VersorEvenAtInfinity;
+    type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd4        0        4        0
@@ -3348,16 +4100,6 @@ impl std::ops::Mul<DipoleOrthogonalOrigin> for Infinity {
     // yes simd        0       10        0
     //  no simd        0       12        0
     fn mul(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<DualNum> for Infinity {
-    type Output = Horizon;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn mul(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
@@ -3476,28 +4218,110 @@ impl std::ops::Mul<MultiVector> for Infinity {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<NullCircleAtOrigin> for Infinity {
-    type Output = DipoleInversionAtInfinity;
+impl std::ops::Mul<MysteryCircle> for Infinity {
+    type Output = FlectorAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
+    fn mul(self, other: MysteryCircle) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<MysteryCircleRotor> for Infinity {
+    type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0       12        0
+    // f32        1        8        0
+    fn mul(self, other: MysteryCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<MysteryDipole> for Infinity {
+    type Output = MotorAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
+    fn mul(self, other: MysteryDipole) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<MysteryDipoleInversion> for Infinity {
+    type Output = MotorAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3        8        0
+    fn mul(self, other: MysteryDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<MysteryQuadNum> for Infinity {
+    type Output = Horizon;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        2        0
+    fn mul(self, other: MysteryQuadNum) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<MysteryVersorEven> for Infinity {
+    type Output = FlectorAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        1        2        0
+    // no simd        4        8        0
+    fn mul(self, other: MysteryVersorEven) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<MysteryVersorOdd> for Infinity {
+    type Output = MotorAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        1        2        0
+    // no simd        4        8        0
+    fn mul(self, other: MysteryVersorOdd) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<NullCircleAtOrigin> for Infinity {
+    type Output = MysteryDipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        6        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        0        8        0
+    //  no simd        0       12        0
     fn mul(self, other: NullCircleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
 }
 impl std::ops::Mul<NullDipoleAtOrigin> for Infinity {
-    type Output = AntiDipoleInversionAtInfinity;
+    type Output = AntiMysteryDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        9        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        9        0
     fn mul(self, other: NullDipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
 }
 impl std::ops::Mul<NullDipoleInversionAtOrigin> for Infinity {
-    type Output = VersorEvenAtInfinity;
+    type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd4        0        4        0
@@ -3508,34 +4332,32 @@ impl std::ops::Mul<NullDipoleInversionAtOrigin> for Infinity {
     }
 }
 impl std::ops::Mul<NullSphereAtOrigin> for Infinity {
-    type Output = CircleRotorAtInfinity;
+    type Output = MysteryQuadNum;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd2        0        2        0
+    // no simd        0        4        0
     fn mul(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
 }
 impl std::ops::Mul<NullVersorEvenAtOrigin> for Infinity {
-    type Output = VersorOddAtInfinity;
+    type Output = MysteryVersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn mul(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
 }
 impl std::ops::Mul<Origin> for Infinity {
-    type Output = AntiCircleRotorAtInfinity;
+    type Output = AntiMysteryQuadNum;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        2        0
     fn mul(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3563,6 +4385,69 @@ impl std::ops::Mul<PlaneOnOrigin> for Infinity {
         return self.geometric_product(other);
     }
 }
+impl std::ops::Mul<QuadNum> for Infinity {
+    type Output = AntiQuadNumAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        6        0
+    fn mul(self, other: QuadNum) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<QuadNumAligningOrigin> for Infinity {
+    type Output = AntiQuadNumAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
+    fn mul(self, other: QuadNumAligningOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<QuadNumAligningOriginAtInfinity> for Infinity {
+    type Output = Horizon;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn mul(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<QuadNumAtInfinity> for Infinity {
+    type Output = Horizon;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        2        0
+    fn mul(self, other: QuadNumAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<QuadNumOnOrigin> for Infinity {
+    type Output = AntiQuadNumAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
+    fn mul(self, other: QuadNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<QuadNumOrthogonalOrigin> for Infinity {
+    type Output = AntiQuadNumAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
+    fn mul(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
 impl std::ops::Mul<RoundPoint> for Infinity {
     type Output = AntiCircleRotorAtInfinity;
     // Operative Statistics for this implementation:
@@ -3578,10 +4463,10 @@ impl std::ops::Mul<RoundPoint> for Infinity {
     }
 }
 impl std::ops::Mul<RoundPointAtOrigin> for Infinity {
-    type Output = AntiCircleRotorAtInfinity;
+    type Output = AntiMysteryQuadNum;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        4        0
+    // f32        0        2        0
     fn mul(self, other: RoundPointAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3618,10 +4503,11 @@ impl std::ops::Mul<Sphere> for Infinity {
     }
 }
 impl std::ops::Mul<SphereAtOrigin> for Infinity {
-    type Output = CircleRotorAtInfinity;
+    type Output = MysteryQuadNum;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd2        0        2        0
+    // no simd        0        4        0
     fn mul(self, other: SphereAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3678,14 +4564,11 @@ impl std::ops::Mul<VersorEvenAtInfinity> for Infinity {
     }
 }
 impl std::ops::Mul<VersorEvenAtOrigin> for Infinity {
-    type Output = VersorOddAtInfinity;
+    type Output = MysteryVersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn mul(self, other: VersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3763,8 +4646,8 @@ impl std::ops::Not for Infinity {
     // f32        0        1        0
     fn not(self) -> Self::Output {
         use crate::elements::*;
-        let dual = Horizon::from_groups(/* e3215 */ (self[e5] * -1.0));
-        return dual;
+        let right_dual = Horizon::from_groups(/* e3215 */ (self[e5] * -1.0));
+        return right_dual;
     }
 }
 impl std::ops::Sub<AntiCircleOnOrigin> for Infinity {
@@ -4105,53 +4988,14 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for Infinity {
         return subtraction;
     }
 }
-impl std::ops::Sub<AntiDualNum> for Infinity {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn sub(self, other: AntiDualNum) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[1] * -1.0), 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            self[e5],
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            (other.group0()[0] * -1.0),
-        );
-        return subtraction;
-    }
-}
 impl std::ops::Sub<AntiFlatOrigin> for Infinity {
-    type Output = AntiFlector;
+    type Output = QuadNumOrthogonalOrigin;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
     fn sub(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiFlector::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (other[e321] * -1.0)]),
-            // e1, e2, e3, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
-        );
+        let subtraction = QuadNumOrthogonalOrigin::from_groups(/* e4, e5, e321 */ Simd32x3::from([0.0, self[e5], (other[e321] * -1.0)]));
         return subtraction;
     }
 }
@@ -4354,6 +5198,100 @@ impl std::ops::Sub<AntiMotorOnOrigin> for Infinity {
         return subtraction;
     }
 }
+impl std::ops::Sub<AntiMysteryCircleRotor> for Infinity {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        5        0
+    fn sub(self, other: AntiMysteryCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other[e31] * -1.0), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiMysteryDipoleInversion> for Infinity {
+    type Output = AntiDipoleInversionAtInfinity;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
+    fn sub(self, other: AntiMysteryDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = AntiDipoleInversionAtInfinity::from_groups(
+            // e415, e425, e435, e321
+            (other.group0() * Simd32x4::from(-1.0)),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1, e2, e3, e5
+            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self[e5]]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiMysteryQuadNum> for Infinity {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn sub(self, other: AntiMysteryQuadNum) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group0()[1] * -1.0), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+        return subtraction;
+    }
+}
 impl std::ops::Sub<AntiPlane> for Infinity {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
@@ -4384,14 +5322,218 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for Infinity {
         return subtraction;
     }
 }
+impl std::ops::Sub<AntiQuadNum> for Infinity {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        4        0
+    fn sub(self, other: AntiQuadNum) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[2] * -1.0)]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([(other.group0()[0] * -1.0), 0.0, 0.0, 0.0]),
+            // e3215
+            (other.group0()[1] * -1.0),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiQuadNumAligningOrigin> for Infinity {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn sub(self, other: AntiQuadNumAligningOrigin) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group0()[2] * -1.0), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([(other.group0()[0] * -1.0), 0.0, 0.0, 0.0]),
+            // e3215
+            (other.group0()[1] * -1.0),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiQuadNumAligningOriginAtInfinity> for Infinity {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn sub(self, other: AntiQuadNumAligningOriginAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group0()[1] * -1.0), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            (other.group0()[0] * -1.0),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiQuadNumAtInfinity> for Infinity {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn sub(self, other: AntiQuadNumAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group0()[2] * -1.0), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            (other.group0()[0] * -1.0),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiQuadNumOnOrigin> for Infinity {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn sub(self, other: AntiQuadNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group0()[1] * -1.0), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([(other.group0()[0] * -1.0), 0.0, 0.0, 0.0]),
+            // e3215
+            0.0,
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiQuadNumOrthogonalOrigin> for Infinity {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn sub(self, other: AntiQuadNumOrthogonalOrigin) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[2] * -1.0)]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([(other.group0()[0] * -1.0), 0.0, 0.0, 0.0]),
+            // e3215
+            (other.group0()[1] * -1.0),
+        );
+        return subtraction;
+    }
+}
 impl std::ops::Sub<AntiScalar> for Infinity {
-    type Output = DualNum;
+    type Output = QuadNumAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
     fn sub(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let subtraction = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([self[e5], (other[e12345] * -1.0)]));
+        let subtraction = QuadNumAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([self[e5], (other[e12345] * -1.0)]));
         return subtraction;
     }
 }
@@ -5136,17 +6278,6 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for Infinity {
         return subtraction;
     }
 }
-impl std::ops::Sub<DualNum> for Infinity {
-    type Output = DualNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        1        0
-    fn sub(self, other: DualNum) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([(self[e5] - other.group0()[0]), (other.group0()[1] * -1.0)]));
-        return subtraction;
-    }
-}
 impl std::ops::Sub<FlatOrigin> for Infinity {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -5555,6 +6686,191 @@ impl std::ops::Sub<MultiVector> for Infinity {
         return subtraction;
     }
 }
+impl std::ops::Sub<MysteryCircle> for Infinity {
+    type Output = AntiDipoleInversionAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn sub(self, other: MysteryCircle) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = AntiDipoleInversionAtInfinity::from_groups(
+            // e415, e425, e435, e321
+            (other.group0() * Simd32x4::from(-1.0)),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1, e2, e3, e5
+            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<MysteryCircleRotor> for Infinity {
+    type Output = VersorEvenAtInfinity;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
+    fn sub(self, other: MysteryCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = VersorEvenAtInfinity::from_groups(
+            // e12345, e1, e2, e3
+            Simd32x4::from([(other[e425] * -1.0), 0.0, 0.0, 0.0]),
+            // e415, e425, e435, e321
+            (other.group0() * Simd32x4::from(-1.0)),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<MysteryDipole> for Infinity {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        4        0
+    fn sub(self, other: MysteryDipole) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<MysteryDipoleInversion> for Infinity {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        7        0
+    fn sub(self, other: MysteryDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([0.0, (other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]),
+            // e3215
+            0.0,
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<MysteryQuadNum> for Infinity {
+    type Output = QuadNumAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn sub(self, other: MysteryQuadNum) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([self[e5], (other.group0()[0] * -1.0), (other.group0()[1] * -1.0)]));
+        return subtraction;
+    }
+}
+impl std::ops::Sub<MysteryVersorEven> for Infinity {
+    type Output = VersorEvenAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
+    fn sub(self, other: MysteryVersorEven) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = VersorEvenAtInfinity::from_groups(
+            // e12345, e1, e2, e3
+            (other.group0() * Simd32x4::from(-1.0)),
+            // e415, e425, e435, e321
+            (other.group1() * Simd32x4::from(-1.0)),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<MysteryVersorOdd> for Infinity {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        5        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        6        0
+    //  no simd        0        8        0
+    fn sub(self, other: MysteryVersorOdd) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group0()[0] * -1.0), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[3] * -1.0)]),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            (Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([0.0, (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group0()[3] * -1.0)]),
+            // e3215
+            0.0,
+        );
+        return subtraction;
+    }
+}
 impl std::ops::Sub<NullCircleAtOrigin> for Infinity {
     type Output = VersorEvenAtOrigin;
     // Operative Statistics for this implementation:
@@ -5765,6 +7081,86 @@ impl std::ops::Sub<PlaneOnOrigin> for Infinity {
             Simd32x4::from([0.0, (other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]),
             // e3215
             0.0,
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<QuadNum> for Infinity {
+    type Output = QuadNum;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        3        0
+    fn sub(self, other: QuadNum) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
+            (other.group0()[0] * -1.0),
+            (self[e5] - other.group0()[1]),
+            (other.group0()[2] * -1.0),
+            (other.group0()[3] * -1.0),
+        ]));
+        return subtraction;
+    }
+}
+impl std::ops::Sub<QuadNumAligningOrigin> for Infinity {
+    type Output = QuadNumAligningOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        2        0
+    fn sub(self, other: QuadNumAligningOrigin) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = QuadNumAligningOrigin::from_groups(
+            // e4, e5, e12345
+            Simd32x3::from([(other.group0()[0] * -1.0), (self[e5] - other.group0()[1]), (other.group0()[2] * -1.0)]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<QuadNumAligningOriginAtInfinity> for Infinity {
+    type Output = QuadNumAligningOriginAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        1        0
+    fn sub(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = QuadNumAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([(self[e5] - other.group0()[0]), (other.group0()[1] * -1.0)]));
+        return subtraction;
+    }
+}
+impl std::ops::Sub<QuadNumAtInfinity> for Infinity {
+    type Output = QuadNumAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        2        0
+    fn sub(self, other: QuadNumAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = QuadNumAtInfinity::from_groups(
+            // e5, e321, e12345
+            Simd32x3::from([(self[e5] - other.group0()[0]), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<QuadNumOnOrigin> for Infinity {
+    type Output = QuadNumAligningOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn sub(self, other: QuadNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from([(other.group0()[0] * -1.0), self[e5], (other.group0()[1] * -1.0)]));
+        return subtraction;
+    }
+}
+impl std::ops::Sub<QuadNumOrthogonalOrigin> for Infinity {
+    type Output = QuadNumOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        2        0
+    fn sub(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = QuadNumOrthogonalOrigin::from_groups(
+            // e4, e5, e321
+            Simd32x3::from([(other.group0()[0] * -1.0), (self[e5] - other.group0()[1]), (other.group0()[2] * -1.0)]),
         );
         return subtraction;
     }
@@ -6569,29 +7965,6 @@ impl TryFrom<AntiPlane> for Infinity {
     }
 }
 
-impl TryFrom<DualNum> for Infinity {
-    type Error = String;
-    fn try_from(dual_num: DualNum) -> Result<Self, Self::Error> {
-        use crate::elements::*;
-        let mut error_string = String::new();
-        let mut fail = false;
-        let el = dual_num[1];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e12345: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        if fail {
-            let mut error = "Elements from DualNum do not fit into Infinity { ".to_string();
-            error.push_str(error_string.as_str());
-            error.push('}');
-            return Err(error);
-        }
-        return Ok(Infinity::from_groups(/* e5 */ dual_num[e5]));
-    }
-}
-
 impl TryFrom<Motor> for Infinity {
     type Error = String;
     fn try_from(motor: Motor) -> Result<Self, Self::Error> {
@@ -6924,6 +8297,156 @@ impl TryFrom<MultiVector> for Infinity {
             return Err(error);
         }
         return Ok(Infinity::from_groups(/* e5 */ multi_vector[e5]));
+    }
+}
+
+impl TryFrom<QuadNum> for Infinity {
+    type Error = String;
+    fn try_from(quad_num: QuadNum) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = quad_num[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = quad_num[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e321: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = quad_num[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e12345: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from QuadNum do not fit into Infinity { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(Infinity::from_groups(/* e5 */ quad_num[e5]));
+    }
+}
+
+impl TryFrom<QuadNumAligningOrigin> for Infinity {
+    type Error = String;
+    fn try_from(quad_num_aligning_origin: QuadNumAligningOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = quad_num_aligning_origin[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = quad_num_aligning_origin[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e12345: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from QuadNumAligningOrigin do not fit into Infinity { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(Infinity::from_groups(/* e5 */ quad_num_aligning_origin[e5]));
+    }
+}
+
+impl TryFrom<QuadNumAligningOriginAtInfinity> for Infinity {
+    type Error = String;
+    fn try_from(quad_num_aligning_origin_at_infinity: QuadNumAligningOriginAtInfinity) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = quad_num_aligning_origin_at_infinity[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e12345: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from QuadNumAligningOriginAtInfinity do not fit into Infinity { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(Infinity::from_groups(/* e5 */ quad_num_aligning_origin_at_infinity[e5]));
+    }
+}
+
+impl TryFrom<QuadNumAtInfinity> for Infinity {
+    type Error = String;
+    fn try_from(quad_num_at_infinity: QuadNumAtInfinity) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = quad_num_at_infinity[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e321: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = quad_num_at_infinity[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e12345: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from QuadNumAtInfinity do not fit into Infinity { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(Infinity::from_groups(/* e5 */ quad_num_at_infinity[e5]));
+    }
+}
+
+impl TryFrom<QuadNumOrthogonalOrigin> for Infinity {
+    type Error = String;
+    fn try_from(quad_num_orthogonal_origin: QuadNumOrthogonalOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = quad_num_orthogonal_origin[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = quad_num_orthogonal_origin[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e321: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from QuadNumOrthogonalOrigin do not fit into Infinity { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(Infinity::from_groups(/* e5 */ quad_num_orthogonal_origin[e5]));
     }
 }
 

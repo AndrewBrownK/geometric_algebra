@@ -470,8 +470,7 @@ impl std::ops::Neg for Scalar {
 impl std::ops::Not for Scalar {
     type Output = Scalar;
     fn not(self) -> Self::Output {
-        let right_dual = self;
-        return right_dual;
+        return self;
     }
 }
 impl std::ops::Sub<AntiScalar> for Scalar {

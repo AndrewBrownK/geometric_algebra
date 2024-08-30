@@ -29,6 +29,7 @@ pub mod join_1 {
     pub use crate::data::flat_origin::FlatOrigin;
     pub use crate::data::flat_point::FlatPoint;
     pub use crate::data::flat_point_at_infinity::FlatPointAtInfinity;
+    pub use crate::data::mystery_dipole::MysteryDipole;
     pub use crate::data::null_dipole_at_origin::NullDipoleAtOrigin;
 }
 pub mod join_2 {
@@ -44,6 +45,7 @@ pub mod join_2 {
     pub use crate::data::line::Line;
     pub use crate::data::line_at_infinity::LineAtInfinity;
     pub use crate::data::line_on_origin::LineOnOrigin;
+    pub use crate::data::mystery_circle::MysteryCircle;
     pub use crate::data::null_circle_at_origin::NullCircleAtOrigin;
 }
 pub mod join_3 {
@@ -77,6 +79,7 @@ pub mod meet_1 {
     pub use crate::data::line::Line;
     pub use crate::data::line_at_infinity::LineAtInfinity;
     pub use crate::data::line_on_origin::LineOnOrigin;
+    pub use crate::data::mystery_circle::MysteryCircle;
     pub use crate::data::null_circle_at_origin::NullCircleAtOrigin;
 }
 pub mod meet_2 {
@@ -92,6 +95,7 @@ pub mod meet_2 {
     pub use crate::data::flat_origin::FlatOrigin;
     pub use crate::data::flat_point::FlatPoint;
     pub use crate::data::flat_point_at_infinity::FlatPointAtInfinity;
+    pub use crate::data::mystery_dipole::MysteryDipole;
     pub use crate::data::null_dipole_at_origin::NullDipoleAtOrigin;
 }
 pub mod meet_3 {
@@ -134,12 +138,16 @@ pub mod reflection_2 {
     pub use crate::data::line_at_infinity::LineAtInfinity;
     pub use crate::data::line_on_origin::LineOnOrigin;
     pub use crate::data::motor_on_origin::MotorOnOrigin;
+    pub use crate::data::mystery_circle::MysteryCircle;
+    pub use crate::data::mystery_circle_rotor::MysteryCircleRotor;
+    pub use crate::data::mystery_quad_num::MysteryQuadNum;
     pub use crate::data::null_circle_at_origin::NullCircleAtOrigin;
 }
 pub mod reflection_3 {
     pub use crate::data::anti_circle_on_origin::AntiCircleOnOrigin;
     pub use crate::data::anti_line::AntiLine;
     pub use crate::data::anti_line_on_origin::AntiLineOnOrigin;
+    pub use crate::data::anti_quad_num_orthogonal_origin::AntiQuadNumOrthogonalOrigin;
     pub use crate::data::dipole::Dipole;
     pub use crate::data::dipole_aligning_origin::DipoleAligningOrigin;
     pub use crate::data::dipole_at_infinity::DipoleAtInfinity;
@@ -158,6 +166,8 @@ pub mod reflection_3 {
     pub use crate::data::flector::Flector;
     pub use crate::data::flector_at_infinity::FlectorAtInfinity;
     pub use crate::data::flector_on_origin::FlectorOnOrigin;
+    pub use crate::data::mystery_dipole::MysteryDipole;
+    pub use crate::data::mystery_dipole_inversion::MysteryDipoleInversion;
     pub use crate::data::null_dipole_at_origin::NullDipoleAtOrigin;
     pub use crate::data::null_dipole_inversion_at_origin::NullDipoleInversionAtOrigin;
 }
@@ -168,15 +178,22 @@ pub mod reflection_4 {
     pub use crate::data::anti_dipole_inversion_orthogonal_origin::AntiDipoleInversionOrthogonalOrigin;
     pub use crate::data::anti_flector::AntiFlector;
     pub use crate::data::anti_flector_on_origin::AntiFlectorOnOrigin;
+    pub use crate::data::anti_mystery_dipole_inversion::AntiMysteryDipoleInversion;
     pub use crate::data::anti_plane::AntiPlane;
     pub use crate::data::anti_plane_on_origin::AntiPlaneOnOrigin;
     pub use crate::data::anti_sphere_on_origin::AntiSphereOnOrigin;
-    pub use crate::data::dual_num::DualNum;
     pub use crate::data::infinity::Infinity;
     pub use crate::data::motor::Motor;
     pub use crate::data::motor_at_infinity::MotorAtInfinity;
+    pub use crate::data::mystery_versor_even::MysteryVersorEven;
     pub use crate::data::null_versor_even_at_origin::NullVersorEvenAtOrigin;
     pub use crate::data::origin::Origin;
+    pub use crate::data::quad_num::QuadNum;
+    pub use crate::data::quad_num_aligning_origin::QuadNumAligningOrigin;
+    pub use crate::data::quad_num_aligning_origin_at_infinity::QuadNumAligningOriginAtInfinity;
+    pub use crate::data::quad_num_at_infinity::QuadNumAtInfinity;
+    pub use crate::data::quad_num_on_origin::QuadNumOnOrigin;
+    pub use crate::data::quad_num_orthogonal_origin::QuadNumOrthogonalOrigin;
     pub use crate::data::round_point::RoundPoint;
     pub use crate::data::round_point_at_origin::RoundPointAtOrigin;
     pub use crate::data::versor_even::VersorEven;
@@ -192,10 +209,17 @@ pub mod reflection_5 {
     pub use crate::data::anti_circle_rotor_aligning_origin_at_infinity::AntiCircleRotorAligningOriginAtInfinity;
     pub use crate::data::anti_circle_rotor_at_infinity::AntiCircleRotorAtInfinity;
     pub use crate::data::anti_circle_rotor_on_origin::AntiCircleRotorOnOrigin;
-    pub use crate::data::anti_dual_num::AntiDualNum;
     pub use crate::data::anti_motor::AntiMotor;
     pub use crate::data::anti_motor_on_origin::AntiMotorOnOrigin;
+    pub use crate::data::anti_mystery_circle_rotor::AntiMysteryCircleRotor;
+    pub use crate::data::anti_mystery_quad_num::AntiMysteryQuadNum;
+    pub use crate::data::anti_quad_num::AntiQuadNum;
+    pub use crate::data::anti_quad_num_aligning_origin::AntiQuadNumAligningOrigin;
+    pub use crate::data::anti_quad_num_aligning_origin_at_infinity::AntiQuadNumAligningOriginAtInfinity;
+    pub use crate::data::anti_quad_num_at_infinity::AntiQuadNumAtInfinity;
+    pub use crate::data::anti_quad_num_on_origin::AntiQuadNumOnOrigin;
     pub use crate::data::anti_versor_even_on_origin::AntiVersorEvenOnOrigin;
+    pub use crate::data::mystery_versor_odd::MysteryVersorOdd;
     pub use crate::data::scalar::Scalar;
     pub use crate::data::versor_odd::VersorOdd;
     pub use crate::data::versor_odd_at_infinity::VersorOddAtInfinity;
@@ -226,6 +250,7 @@ pub mod vector_2 {
     pub use crate::data::flat_origin::FlatOrigin;
     pub use crate::data::flat_point::FlatPoint;
     pub use crate::data::flat_point_at_infinity::FlatPointAtInfinity;
+    pub use crate::data::mystery_dipole::MysteryDipole;
     pub use crate::data::null_dipole_at_origin::NullDipoleAtOrigin;
 }
 pub mod vector_3 {
@@ -241,6 +266,7 @@ pub mod vector_3 {
     pub use crate::data::line::Line;
     pub use crate::data::line_at_infinity::LineAtInfinity;
     pub use crate::data::line_on_origin::LineOnOrigin;
+    pub use crate::data::mystery_circle::MysteryCircle;
     pub use crate::data::null_circle_at_origin::NullCircleAtOrigin;
 }
 pub mod vector_4 {
@@ -265,11 +291,19 @@ pub mod vector_mixed {
     pub use crate::data::anti_dipole_inversion_at_infinity::AntiDipoleInversionAtInfinity;
     pub use crate::data::anti_dipole_inversion_on_origin::AntiDipoleInversionOnOrigin;
     pub use crate::data::anti_dipole_inversion_orthogonal_origin::AntiDipoleInversionOrthogonalOrigin;
-    pub use crate::data::anti_dual_num::AntiDualNum;
     pub use crate::data::anti_flector::AntiFlector;
     pub use crate::data::anti_flector_on_origin::AntiFlectorOnOrigin;
     pub use crate::data::anti_motor::AntiMotor;
     pub use crate::data::anti_motor_on_origin::AntiMotorOnOrigin;
+    pub use crate::data::anti_mystery_circle_rotor::AntiMysteryCircleRotor;
+    pub use crate::data::anti_mystery_dipole_inversion::AntiMysteryDipoleInversion;
+    pub use crate::data::anti_mystery_quad_num::AntiMysteryQuadNum;
+    pub use crate::data::anti_quad_num::AntiQuadNum;
+    pub use crate::data::anti_quad_num_aligning_origin::AntiQuadNumAligningOrigin;
+    pub use crate::data::anti_quad_num_aligning_origin_at_infinity::AntiQuadNumAligningOriginAtInfinity;
+    pub use crate::data::anti_quad_num_at_infinity::AntiQuadNumAtInfinity;
+    pub use crate::data::anti_quad_num_on_origin::AntiQuadNumOnOrigin;
+    pub use crate::data::anti_quad_num_orthogonal_origin::AntiQuadNumOrthogonalOrigin;
     pub use crate::data::anti_versor_even_on_origin::AntiVersorEvenOnOrigin;
     pub use crate::data::circle_rotor::CircleRotor;
     pub use crate::data::circle_rotor_aligning_origin::CircleRotorAligningOrigin;
@@ -282,7 +316,6 @@ pub mod vector_mixed {
     pub use crate::data::dipole_inversion_at_origin::DipoleInversionAtOrigin;
     pub use crate::data::dipole_inversion_on_origin::DipoleInversionOnOrigin;
     pub use crate::data::dipole_inversion_orthogonal_origin::DipoleInversionOrthogonalOrigin;
-    pub use crate::data::dual_num::DualNum;
     pub use crate::data::flector::Flector;
     pub use crate::data::flector_at_infinity::FlectorAtInfinity;
     pub use crate::data::flector_on_origin::FlectorOnOrigin;
@@ -290,8 +323,19 @@ pub mod vector_mixed {
     pub use crate::data::motor_at_infinity::MotorAtInfinity;
     pub use crate::data::motor_on_origin::MotorOnOrigin;
     pub use crate::data::multi_vector::MultiVector;
+    pub use crate::data::mystery_circle_rotor::MysteryCircleRotor;
+    pub use crate::data::mystery_dipole_inversion::MysteryDipoleInversion;
+    pub use crate::data::mystery_quad_num::MysteryQuadNum;
+    pub use crate::data::mystery_versor_even::MysteryVersorEven;
+    pub use crate::data::mystery_versor_odd::MysteryVersorOdd;
     pub use crate::data::null_dipole_inversion_at_origin::NullDipoleInversionAtOrigin;
     pub use crate::data::null_versor_even_at_origin::NullVersorEvenAtOrigin;
+    pub use crate::data::quad_num::QuadNum;
+    pub use crate::data::quad_num_aligning_origin::QuadNumAligningOrigin;
+    pub use crate::data::quad_num_aligning_origin_at_infinity::QuadNumAligningOriginAtInfinity;
+    pub use crate::data::quad_num_at_infinity::QuadNumAtInfinity;
+    pub use crate::data::quad_num_on_origin::QuadNumOnOrigin;
+    pub use crate::data::quad_num_orthogonal_origin::QuadNumOrthogonalOrigin;
     pub use crate::data::versor_even::VersorEven;
     pub use crate::data::versor_even_aligning_origin::VersorEvenAligningOrigin;
     pub use crate::data::versor_even_at_infinity::VersorEvenAtInfinity;
@@ -324,8 +368,6 @@ mod anti_dipole_inversion_orthogonal_origin;
 pub use anti_dipole_inversion_orthogonal_origin::AntiDipoleInversionOrthogonalOrigin;
 mod anti_dipole_on_origin;
 pub use anti_dipole_on_origin::AntiDipoleOnOrigin;
-mod anti_dual_num;
-pub use anti_dual_num::AntiDualNum;
 mod anti_flat_origin;
 pub use anti_flat_origin::AntiFlatOrigin;
 mod anti_flat_point;
@@ -342,10 +384,28 @@ mod anti_motor;
 pub use anti_motor::AntiMotor;
 mod anti_motor_on_origin;
 pub use anti_motor_on_origin::AntiMotorOnOrigin;
+mod anti_mystery_circle_rotor;
+pub use anti_mystery_circle_rotor::AntiMysteryCircleRotor;
+mod anti_mystery_dipole_inversion;
+pub use anti_mystery_dipole_inversion::AntiMysteryDipoleInversion;
+mod anti_mystery_quad_num;
+pub use anti_mystery_quad_num::AntiMysteryQuadNum;
 mod anti_plane;
 pub use anti_plane::AntiPlane;
 mod anti_plane_on_origin;
 pub use anti_plane_on_origin::AntiPlaneOnOrigin;
+mod anti_quad_num;
+pub use anti_quad_num::AntiQuadNum;
+mod anti_quad_num_aligning_origin;
+pub use anti_quad_num_aligning_origin::AntiQuadNumAligningOrigin;
+mod anti_quad_num_aligning_origin_at_infinity;
+pub use anti_quad_num_aligning_origin_at_infinity::AntiQuadNumAligningOriginAtInfinity;
+mod anti_quad_num_at_infinity;
+pub use anti_quad_num_at_infinity::AntiQuadNumAtInfinity;
+mod anti_quad_num_on_origin;
+pub use anti_quad_num_on_origin::AntiQuadNumOnOrigin;
+mod anti_quad_num_orthogonal_origin;
+pub use anti_quad_num_orthogonal_origin::AntiQuadNumOrthogonalOrigin;
 mod anti_scalar;
 pub use anti_scalar::AntiScalar;
 mod anti_sphere_on_origin;
@@ -398,8 +458,6 @@ mod dipole_on_origin;
 pub use dipole_on_origin::DipoleOnOrigin;
 mod dipole_orthogonal_origin;
 pub use dipole_orthogonal_origin::DipoleOrthogonalOrigin;
-mod dual_num;
-pub use dual_num::DualNum;
 mod flat_origin;
 pub use flat_origin::FlatOrigin;
 mod flat_point;
@@ -430,6 +488,20 @@ mod motor_on_origin;
 pub use motor_on_origin::MotorOnOrigin;
 mod multi_vector;
 pub use multi_vector::MultiVector;
+mod mystery_circle;
+pub use mystery_circle::MysteryCircle;
+mod mystery_circle_rotor;
+pub use mystery_circle_rotor::MysteryCircleRotor;
+mod mystery_dipole;
+pub use mystery_dipole::MysteryDipole;
+mod mystery_dipole_inversion;
+pub use mystery_dipole_inversion::MysteryDipoleInversion;
+mod mystery_quad_num;
+pub use mystery_quad_num::MysteryQuadNum;
+mod mystery_versor_even;
+pub use mystery_versor_even::MysteryVersorEven;
+mod mystery_versor_odd;
+pub use mystery_versor_odd::MysteryVersorOdd;
 mod null_circle_at_origin;
 pub use null_circle_at_origin::NullCircleAtOrigin;
 mod null_dipole_at_origin;
@@ -446,6 +518,18 @@ mod plane;
 pub use plane::Plane;
 mod plane_on_origin;
 pub use plane_on_origin::PlaneOnOrigin;
+mod quad_num;
+pub use quad_num::QuadNum;
+mod quad_num_aligning_origin;
+pub use quad_num_aligning_origin::QuadNumAligningOrigin;
+mod quad_num_aligning_origin_at_infinity;
+pub use quad_num_aligning_origin_at_infinity::QuadNumAligningOriginAtInfinity;
+mod quad_num_at_infinity;
+pub use quad_num_at_infinity::QuadNumAtInfinity;
+mod quad_num_on_origin;
+pub use quad_num_on_origin::QuadNumOnOrigin;
+mod quad_num_orthogonal_origin;
+pub use quad_num_orthogonal_origin::QuadNumOrthogonalOrigin;
 mod round_point;
 pub use round_point::RoundPoint;
 mod round_point_at_origin;

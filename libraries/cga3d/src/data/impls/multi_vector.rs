@@ -7,19 +7,789 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 86
+// Total Implementations: 166
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         3       0       0
-//  Average:        34      40       0
+//   Median:         4       0       0
+//  Average:        26      32       0
 //  Maximum:       535     563       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         8       0       0
-//  Average:        62      70       0
+//   Median:         6       0       0
+//  Average:        48      57       0
 //  Maximum:       992    1024       0
+impl std::ops::Add<AntiCircleRotor> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd3        2        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        4        0        0
+    //  no simd       11        0        0
+    fn add(self, other: AntiCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group2()[3]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            (self.group3() + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
+            // e41, e42, e43
+            (self.group4() + other.group0()),
+            // e23, e31, e12
+            (self.group5() + Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<AntiCircleRotor> for MultiVector {
+    fn add_assign(&mut self, other: AntiCircleRotor) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group2()[3]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            (self.group3() + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
+            // e41, e42, e43
+            (self.group4() + other.group0()),
+            // e23, e31, e12
+            (self.group5() + Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<AntiDipoleInversion> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd3        2        0        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        5        0        0
+    //  no simd       15        0        0
+    fn add(self, other: AntiDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            (self.group1() + Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]])),
+            // e5
+            (self[e1] + other.group3()[3]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            (self.group6() + other.group1()),
+            // e423, e431, e412
+            (self.group7() + other.group0()),
+            // e235, e315, e125
+            (self.group8() + Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<AntiDipoleInversion> for MultiVector {
+    fn add_assign(&mut self, other: AntiDipoleInversion) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            (self.group1() + Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]])),
+            // e5
+            (self[e1] + other.group3()[3]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            (self.group6() + other.group1()),
+            // e423, e431, e412
+            (self.group7() + other.group0()),
+            // e235, e315, e125
+            (self.group8() + Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<AntiDualNum321> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn add(self, other: AntiDualNum321) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group0()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] + other.group0()[0])]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<AntiDualNum321> for MultiVector {
+    fn add_assign(&mut self, other: AntiDualNum321) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group0()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] + other.group0()[0])]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<AntiDualNum4> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn add(self, other: AntiDualNum4) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group0()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            (self[e45] + other.group0()[0]),
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<AntiDualNum4> for MultiVector {
+    fn add_assign(&mut self, other: AntiDualNum4) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group0()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            (self[e45] + other.group0()[0]),
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<AntiDualNum5> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn add(self, other: AntiDualNum5) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group0()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] + other.group0()[0])]),
+            // e1234
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<AntiDualNum5> for MultiVector {
+    fn add_assign(&mut self, other: AntiDualNum5) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group0()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] + other.group0()[0])]),
+            // e1234
+            self[e45],
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<AntiFlatPoint> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd3        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        4        0        0
+    fn add(self, other: AntiFlatPoint) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] + other.group0()[3])]),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            (self.group8() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<AntiFlatPoint> for MultiVector {
+    fn add_assign(&mut self, other: AntiFlatPoint) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] + other.group0()[3])]),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            (self.group8() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<AntiFlector> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        5        0        0
+    //    simd3        1        0        0
+    // Totals...
+    // yes simd        6        0        0
+    //  no simd        8        0        0
+    fn add(self, other: AntiFlector) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group1()[0] + other.group1()[0]),
+                (self.group1()[1] + other.group1()[1]),
+                (self.group1()[2] + other.group1()[2]),
+                self.group1()[3],
+            ]),
+            // e5
+            (self[e1] + other.group1()[3]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] + other.group0()[3])]),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            (self.group8() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<AntiFlector> for MultiVector {
+    fn add_assign(&mut self, other: AntiFlector) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group1()[0] + other.group1()[0]),
+                (self.group1()[1] + other.group1()[1]),
+                (self.group1()[2] + other.group1()[2]),
+                self.group1()[3],
+            ]),
+            // e5
+            (self[e1] + other.group1()[3]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] + other.group0()[3])]),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            (self.group8() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<AntiLine> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3        0        0
+    //    simd3        1        0        0
+    // Totals...
+    // yes simd        4        0        0
+    //  no simd        6        0        0
+    fn add(self, other: AntiLine) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([
+                (self.group3()[0] + other.group1()[0]),
+                (self.group3()[1] + other.group1()[1]),
+                (self.group3()[2] + other.group1()[2]),
+                self.group3()[3],
+            ]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            (self.group5() + other.group0()),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<AntiLine> for MultiVector {
+    fn add_assign(&mut self, other: AntiLine) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([
+                (self.group3()[0] + other.group1()[0]),
+                (self.group3()[1] + other.group1()[1]),
+                (self.group3()[2] + other.group1()[2]),
+                self.group3()[3],
+            ]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            (self.group5() + other.group0()),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<AntiMotor> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        5        0        0
+    //    simd3        1        0        0
+    // Totals...
+    // yes simd        6        0        0
+    //  no simd        8        0        0
+    fn add(self, other: AntiMotor) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group0()[3]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([
+                (self.group3()[0] + other.group1()[0]),
+                (self.group3()[1] + other.group1()[1]),
+                (self.group3()[2] + other.group1()[2]),
+                self.group3()[3],
+            ]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            (self.group5() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] + other.group1()[3])]),
+            // e1234
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<AntiMotor> for MultiVector {
+    fn add_assign(&mut self, other: AntiMotor) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group0()[3]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([
+                (self.group3()[0] + other.group1()[0]),
+                (self.group3()[1] + other.group1()[1]),
+                (self.group3()[2] + other.group1()[2]),
+                self.group3()[3],
+            ]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            (self.group5() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] + other.group1()[3])]),
+            // e1234
+            self[e45],
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<AntiPlane> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        4        0        0
+    fn add(self, other: AntiPlane) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group1()[0] + other.group0()[0]),
+                (self.group1()[1] + other.group0()[1]),
+                (self.group1()[2] + other.group0()[2]),
+                self.group1()[3],
+            ]),
+            // e5
+            (self[e1] + other.group0()[3]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<AntiPlane> for MultiVector {
+    fn add_assign(&mut self, other: AntiPlane) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group1()[0] + other.group0()[0]),
+                (self.group1()[1] + other.group0()[1]),
+                (self.group1()[2] + other.group0()[2]),
+                self.group1()[3],
+            ]),
+            // e5
+            (self[e1] + other.group0()[3]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<AntiQuadNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        4        0        0
+    fn add(self, other: AntiQuadNum) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group0()[3]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] + other.group0()[2])]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] + other.group0()[1])]),
+            // e1234
+            (self[e45] + other.group0()[0]),
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<AntiQuadNum> for MultiVector {
+    fn add_assign(&mut self, other: AntiQuadNum) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group0()[3]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] + other.group0()[2])]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] + other.group0()[1])]),
+            // e1234
+            (self[e45] + other.group0()[0]),
+        );
+        *self = addition;
+    }
+}
 impl std::ops::Add<AntiScalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -38,18 +808,18 @@ impl std::ops::Add<AntiScalar> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return addition;
     }
@@ -68,18 +838,82 @@ impl std::ops::AddAssign<AntiScalar> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<AntiTripleNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3        0        0
+    fn add(self, other: AntiTripleNum) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group0()[2]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] + other.group0()[1])]),
+            // e1234
+            (self[e45] + other.group0()[0]),
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<AntiTripleNum> for MultiVector {
+    fn add_assign(&mut self, other: AntiTripleNum) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group0()[2]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] + other.group0()[1])]),
+            // e1234
+            (self[e45] + other.group0()[0]),
         );
         *self = addition;
     }
@@ -106,18 +940,18 @@ impl std::ops::Add<Circle> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
-            (self.group5() + other.group1()),
+            (self.group6() + other.group1()),
             // e423, e431, e412
-            (self.group6() + other.group0()),
+            (self.group7() + other.group0()),
             // e235, e315, e125
-            (self.group7() + other.group2()),
+            (self.group8() + other.group2()),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return addition;
     }
@@ -136,18 +970,18 @@ impl std::ops::AddAssign<Circle> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
-            (self.group5() + other.group1()),
+            (self.group6() + other.group1()),
             // e423, e431, e412
-            (self.group6() + other.group0()),
+            (self.group7() + other.group0()),
             // e235, e315, e125
-            (self.group7() + other.group2()),
+            (self.group8() + other.group2()),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = addition;
     }
@@ -175,18 +1009,18 @@ impl std::ops::Add<CircleRotor> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
-            (self.group5() + other.group1()),
+            (self.group6() + other.group1()),
             // e423, e431, e412
-            (self.group6() + other.group0()),
+            (self.group7() + other.group0()),
             // e235, e315, e125
-            (self.group7() + Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
+            (self.group8() + Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return addition;
     }
@@ -205,18 +1039,18 @@ impl std::ops::AddAssign<CircleRotor> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
-            (self.group5() + other.group1()),
+            (self.group6() + other.group1()),
             // e423, e431, e412
-            (self.group6() + other.group0()),
+            (self.group7() + other.group0()),
             // e235, e315, e125
-            (self.group7() + Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
+            (self.group8() + Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = addition;
     }
@@ -243,18 +1077,18 @@ impl std::ops::Add<Dipole> for MultiVector {
             (self.group3() + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
             // e41, e42, e43
             (self.group4() + other.group0()),
+            // e23, e31, e12
+            (self.group5() + Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e415, e425, e435, e321
-            self.group5(),
-            // e423, e431, e412
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            (self.group10() + Simd32x3::from([other.group1()[2], other.group1()[1], other.group1()[0]])),
+            self[e45],
         );
         return addition;
     }
@@ -273,18 +1107,18 @@ impl std::ops::AddAssign<Dipole> for MultiVector {
             (self.group3() + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
             // e41, e42, e43
             (self.group4() + other.group0()),
+            // e23, e31, e12
+            (self.group5() + Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e415, e425, e435, e321
-            self.group5(),
-            // e423, e431, e412
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            (self.group10() + Simd32x3::from([other.group1()[2], other.group1()[1], other.group1()[0]])),
+            self[e45],
         );
         *self = addition;
     }
@@ -312,18 +1146,18 @@ impl std::ops::Add<DipoleInversion> for MultiVector {
             (self.group3() + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
             // e41, e42, e43
             (self.group4() + other.group0()),
+            // e23, e31, e12
+            (self.group5() + Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e415, e425, e435, e321
-            self.group5(),
-            // e423, e431, e412
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() + other.group3()),
+            (self.group9() + other.group3()),
             // e1234
-            (self[e35] + other.group2()[3]),
-            // e12, e31, e23
-            (self.group10() + Simd32x3::from([other.group1()[2], other.group1()[1], other.group1()[0]])),
+            (self[e45] + other.group2()[3]),
         );
         return addition;
     }
@@ -342,28 +1176,28 @@ impl std::ops::AddAssign<DipoleInversion> for MultiVector {
             (self.group3() + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
             // e41, e42, e43
             (self.group4() + other.group0()),
+            // e23, e31, e12
+            (self.group5() + Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e415, e425, e435, e321
-            self.group5(),
-            // e423, e431, e412
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() + other.group3()),
+            (self.group9() + other.group3()),
             // e1234
-            (self[e35] + other.group2()[3]),
-            // e12, e31, e23
-            (self.group10() + Simd32x3::from([other.group1()[2], other.group1()[1], other.group1()[0]])),
+            (self[e45] + other.group2()[3]),
         );
         *self = addition;
     }
 }
-impl std::ops::Add<DualNum> for MultiVector {
+impl std::ops::Add<DualNum321> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        2        0        0
-    fn add(self, other: DualNum) -> Self::Output {
+    fn add(self, other: DualNum321) -> Self::Output {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e12345
@@ -371,29 +1205,127 @@ impl std::ops::Add<DualNum> for MultiVector {
             // e1, e2, e3, e4
             self.group1(),
             // e5
-            (self[e1] + other.group0()[0]),
+            self[e1],
             // e15, e25, e35, e45
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] + other.group0()[0])]),
             // e423, e431, e412
-            self.group6(),
-            // e235, e315, e125
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return addition;
     }
 }
-impl std::ops::AddAssign<DualNum> for MultiVector {
-    fn add_assign(&mut self, other: DualNum) {
+impl std::ops::AddAssign<DualNum321> for MultiVector {
+    fn add_assign(&mut self, other: DualNum321) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[1])]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] + other.group0()[0])]),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<DualNum4> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn add(self, other: DualNum4) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[1])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[0])]),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<DualNum4> for MultiVector {
+    fn add_assign(&mut self, other: DualNum4) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[1])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[0])]),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<DualNum5> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn add(self, other: DualNum5) -> Self::Output {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e12345
@@ -406,18 +1338,48 @@ impl std::ops::AddAssign<DualNum> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<DualNum5> for MultiVector {
+    fn add_assign(&mut self, other: DualNum5) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[1])]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            (self[e1] + other.group0()[0]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
         );
         *self = addition;
     }
@@ -441,18 +1403,18 @@ impl std::ops::Add<FlatPoint> for MultiVector {
             (self.group3() + other.group0()),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return addition;
     }
@@ -471,18 +1433,18 @@ impl std::ops::AddAssign<FlatPoint> for MultiVector {
             (self.group3() + other.group0()),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = addition;
     }
@@ -506,18 +1468,18 @@ impl std::ops::Add<Flector> for MultiVector {
             (self.group3() + other.group0()),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() + other.group1()),
+            (self.group9() + other.group1()),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return addition;
     }
@@ -536,18 +1498,18 @@ impl std::ops::AddAssign<Flector> for MultiVector {
             (self.group3() + other.group0()),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() + other.group1()),
+            (self.group9() + other.group1()),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = addition;
     }
@@ -574,23 +1536,23 @@ impl std::ops::Add<Line> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group5()[0] + other.group0()[0]),
-                (self.group5()[1] + other.group0()[1]),
-                (self.group5()[2] + other.group0()[2]),
-                self.group5()[3],
+                (self.group6()[0] + other.group0()[0]),
+                (self.group6()[1] + other.group0()[1]),
+                (self.group6()[2] + other.group0()[2]),
+                self.group6()[3],
             ]),
             // e423, e431, e412
-            self.group6(),
+            self.group7(),
             // e235, e315, e125
-            (self.group7() + other.group1()),
+            (self.group8() + other.group1()),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return addition;
     }
@@ -609,23 +1571,23 @@ impl std::ops::AddAssign<Line> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group5()[0] + other.group0()[0]),
-                (self.group5()[1] + other.group0()[1]),
-                (self.group5()[2] + other.group0()[2]),
-                self.group5()[3],
+                (self.group6()[0] + other.group0()[0]),
+                (self.group6()[1] + other.group0()[1]),
+                (self.group6()[2] + other.group0()[2]),
+                self.group6()[3],
             ]),
             // e423, e431, e412
-            self.group6(),
+            self.group7(),
             // e235, e315, e125
-            (self.group7() + other.group1()),
+            (self.group8() + other.group1()),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = addition;
     }
@@ -652,23 +1614,23 @@ impl std::ops::Add<Motor> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group5()[0] + other.group0()[0]),
-                (self.group5()[1] + other.group0()[1]),
-                (self.group5()[2] + other.group0()[2]),
-                self.group5()[3],
+                (self.group6()[0] + other.group0()[0]),
+                (self.group6()[1] + other.group0()[1]),
+                (self.group6()[2] + other.group0()[2]),
+                self.group6()[3],
             ]),
             // e423, e431, e412
-            self.group6(),
+            self.group7(),
             // e235, e315, e125
-            (self.group7() + Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
+            (self.group8() + Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return addition;
     }
@@ -687,23 +1649,23 @@ impl std::ops::AddAssign<Motor> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group5()[0] + other.group0()[0]),
-                (self.group5()[1] + other.group0()[1]),
-                (self.group5()[2] + other.group0()[2]),
-                self.group5()[3],
+                (self.group6()[0] + other.group0()[0]),
+                (self.group6()[1] + other.group0()[1]),
+                (self.group6()[2] + other.group0()[2]),
+                self.group6()[3],
             ]),
             // e423, e431, e412
-            self.group6(),
+            self.group7(),
             // e235, e315, e125
-            (self.group7() + Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
+            (self.group8() + Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = addition;
     }
@@ -732,18 +1694,18 @@ impl std::ops::Add<MultiVector> for MultiVector {
             (self.group3() + other.group3()),
             // e41, e42, e43
             (self.group4() + other.group4()),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             (self.group5() + other.group5()),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             (self.group6() + other.group6()),
-            // e235, e315, e125
+            // e423, e431, e412
             (self.group7() + other.group7()),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             (self.group8() + other.group8()),
+            // e4235, e4315, e4125, e3215
+            (self.group9() + other.group9()),
             // e1234
-            (self[e35] + other[e35]),
-            // e12, e31, e23
-            (self.group10() + other.group10()),
+            (self[e45] + other[e45]),
         );
         return addition;
     }
@@ -762,18 +1724,18 @@ impl std::ops::AddAssign<MultiVector> for MultiVector {
             (self.group3() + other.group3()),
             // e41, e42, e43
             (self.group4() + other.group4()),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             (self.group5() + other.group5()),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             (self.group6() + other.group6()),
-            // e235, e315, e125
+            // e423, e431, e412
             (self.group7() + other.group7()),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             (self.group8() + other.group8()),
+            // e4235, e4315, e4125, e3215
+            (self.group9() + other.group9()),
             // e1234
-            (self[e35] + other[e35]),
-            // e12, e31, e23
-            (self.group10() + other.group10()),
+            (self[e45] + other[e45]),
         );
         *self = addition;
     }
@@ -797,18 +1759,18 @@ impl std::ops::Add<Plane> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() + other.group0()),
+            (self.group9() + other.group0()),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return addition;
     }
@@ -827,18 +1789,82 @@ impl std::ops::AddAssign<Plane> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() + other.group0()),
+            (self.group9() + other.group0()),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<QuadNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        4        0        0
+    fn add(self, other: QuadNum) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[3])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[0])]),
+            // e5
+            (self[e1] + other.group0()[1]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] + other.group0()[2])]),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<QuadNum> for MultiVector {
+    fn add_assign(&mut self, other: QuadNum) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[3])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[0])]),
+            // e5
+            (self[e1] + other.group0()[1]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] + other.group0()[2])]),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
         );
         *self = addition;
     }
@@ -865,18 +1891,18 @@ impl std::ops::Add<RoundPoint> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return addition;
     }
@@ -895,18 +1921,18 @@ impl std::ops::AddAssign<RoundPoint> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = addition;
     }
@@ -929,18 +1955,18 @@ impl std::ops::Add<Scalar> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return addition;
     }
@@ -959,18 +1985,18 @@ impl std::ops::AddAssign<Scalar> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = addition;
     }
@@ -997,18 +2023,18 @@ impl std::ops::Add<Sphere> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() + other.group0()),
+            (self.group9() + other.group0()),
             // e1234
-            (self[e35] + other[e4315]),
-            // e12, e31, e23
-            self.group10(),
+            (self[e45] + other[e4315]),
         );
         return addition;
     }
@@ -1027,18 +2053,82 @@ impl std::ops::AddAssign<Sphere> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() + other.group0()),
+            (self.group9() + other.group0()),
             // e1234
-            (self[e35] + other[e4315]),
-            // e12, e31, e23
-            self.group10(),
+            (self[e45] + other[e4315]),
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<TripleNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3        0        0
+    fn add(self, other: TripleNum) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[2])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[0])]),
+            // e5
+            (self[e1] + other.group0()[1]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<TripleNum> for MultiVector {
+    fn add_assign(&mut self, other: TripleNum) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[2])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[0])]),
+            // e5
+            (self[e1] + other.group0()[1]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
         );
         *self = addition;
     }
@@ -1066,18 +2156,18 @@ impl std::ops::Add<VersorEven> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
-            (self.group5() + other.group1()),
+            (self.group6() + other.group1()),
             // e423, e431, e412
-            (self.group6() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (self.group7() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
             // e235, e315, e125
-            (self.group7() + Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
+            (self.group8() + Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return addition;
     }
@@ -1096,18 +2186,18 @@ impl std::ops::AddAssign<VersorEven> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
-            (self.group5() + other.group1()),
+            (self.group6() + other.group1()),
             // e423, e431, e412
-            (self.group6() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (self.group7() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
             // e235, e315, e125
-            (self.group7() + Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
+            (self.group8() + Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = addition;
     }
@@ -1135,18 +2225,18 @@ impl std::ops::Add<VersorOdd> for MultiVector {
             (self.group3() + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
             // e41, e42, e43
             (self.group4() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e23, e31, e12
+            (self.group5() + Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e415, e425, e435, e321
-            self.group5(),
-            // e423, e431, e412
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() + other.group3()),
+            (self.group9() + other.group3()),
             // e1234
-            (self[e35] + other.group2()[3]),
-            // e12, e31, e23
-            (self.group10() + Simd32x3::from([other.group1()[2], other.group1()[1], other.group1()[0]])),
+            (self[e45] + other.group2()[3]),
         );
         return addition;
     }
@@ -1165,20 +2255,249 @@ impl std::ops::AddAssign<VersorOdd> for MultiVector {
             (self.group3() + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
             // e41, e42, e43
             (self.group4() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e23, e31, e12
+            (self.group5() + Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e415, e425, e435, e321
-            self.group5(),
-            // e423, e431, e412
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() + other.group3()),
+            (self.group9() + other.group3()),
             // e1234
-            (self[e35] + other.group2()[3]),
-            // e12, e31, e23
-            (self.group10() + Simd32x3::from([other.group1()[2], other.group1()[1], other.group1()[0]])),
+            (self[e45] + other.group2()[3]),
         );
         *self = addition;
+    }
+}
+impl std::ops::BitXor<AntiCircleRotor> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       35       50        0
+    //    simd3        7       10        0
+    //    simd4        6        8        0
+    // Totals...
+    // yes simd       48       68        0
+    //  no simd       80      112        0
+    fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiCircleRotor> for MultiVector {
+    fn bitxor_assign(&mut self, other: AntiCircleRotor) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiDipoleInversion> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       39       56        0
+    //    simd3        6        8        0
+    //    simd4        8       10        0
+    // Totals...
+    // yes simd       53       74        0
+    //  no simd       89      120        0
+    fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiDipoleInversion> for MultiVector {
+    fn bitxor_assign(&mut self, other: AntiDipoleInversion) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiDualNum321> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        8       24        0
+    //    simd3        0        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        8       29        0
+    //  no simd        8       40        0
+    fn bitxor(self, other: AntiDualNum321) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiDualNum321> for MultiVector {
+    fn bitxor_assign(&mut self, other: AntiDualNum321) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiDualNum4> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        6        0
+    //    simd3        0        4        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        2       14        0
+    //  no simd        2       34        0
+    fn bitxor(self, other: AntiDualNum4) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiDualNum4> for MultiVector {
+    fn bitxor_assign(&mut self, other: AntiDualNum4) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiDualNum5> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2       10        0
+    //    simd3        0        4        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        2       17        0
+    //  no simd        2       34        0
+    fn bitxor(self, other: AntiDualNum5) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiDualNum5> for MultiVector {
+    fn bitxor_assign(&mut self, other: AntiDualNum5) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiFlatPoint> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       13        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        6       14        0
+    //  no simd        6       16        0
+    fn bitxor(self, other: AntiFlatPoint) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiFlatPoint> for MultiVector {
+    fn bitxor_assign(&mut self, other: AntiFlatPoint) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiFlector> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       29       53        0
+    //    simd3        3        5        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       35       61        0
+    //  no simd       50       80        0
+    fn bitxor(self, other: AntiFlector) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiFlector> for MultiVector {
+    fn bitxor_assign(&mut self, other: AntiFlector) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiLine> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       20       33        0
+    //    simd3        2        5        0
+    // Totals...
+    // yes simd       22       38        0
+    //  no simd       26       48        0
+    fn bitxor(self, other: AntiLine) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiLine> for MultiVector {
+    fn bitxor_assign(&mut self, other: AntiLine) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiMotor> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       22       41        0
+    //    simd3        4        7        0
+    //    simd4        4        5        0
+    // Totals...
+    // yes simd       30       53        0
+    //  no simd       50       82        0
+    fn bitxor(self, other: AntiMotor) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiMotor> for MultiVector {
+    fn bitxor_assign(&mut self, other: AntiMotor) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiPlane> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       16       43        0
+    //    simd3        2        4        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       21       50        0
+    //  no simd       34       67        0
+    fn bitxor(self, other: AntiPlane) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiPlane> for MultiVector {
+    fn bitxor_assign(&mut self, other: AntiPlane) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiQuadNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        8       20        0
+    //    simd3        0        4        0
+    //    simd4        1        3        0
+    // Totals...
+    // yes simd        9       27        0
+    //  no simd       12       44        0
+    fn bitxor(self, other: AntiQuadNum) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiQuadNum> for MultiVector {
+    fn bitxor_assign(&mut self, other: AntiQuadNum) {
+        use crate::elements::*;
+        *self = self.wedge(other);
     }
 }
 impl std::ops::BitXor<AntiScalar> for MultiVector {
@@ -1189,6 +2508,27 @@ impl std::ops::BitXor<AntiScalar> for MultiVector {
     fn bitxor(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiTripleNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4       12        0
+    //    simd3        0        4        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        4       19        0
+    //  no simd        4       36        0
+    fn bitxor(self, other: AntiTripleNum) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiTripleNum> for MultiVector {
+    fn bitxor_assign(&mut self, other: AntiTripleNum) {
+        use crate::elements::*;
+        *self = self.wedge(other);
     }
 }
 impl std::ops::BitXor<Circle> for MultiVector {
@@ -1275,7 +2615,43 @@ impl std::ops::BitXorAssign<DipoleInversion> for MultiVector {
         *self = self.wedge(other);
     }
 }
-impl std::ops::BitXor<DualNum> for MultiVector {
+impl std::ops::BitXor<DualNum321> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        6        0
+    fn bitxor(self, other: DualNum321) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<DualNum321> for MultiVector {
+    fn bitxor_assign(&mut self, other: DualNum321) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<DualNum4> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1       16        0
+    //    simd3        0        3        0
+    // Totals...
+    // yes simd        1       19        0
+    //  no simd        1       25        0
+    fn bitxor(self, other: DualNum4) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<DualNum4> for MultiVector {
+    fn bitxor_assign(&mut self, other: DualNum4) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<DualNum5> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -1285,13 +2661,13 @@ impl std::ops::BitXor<DualNum> for MultiVector {
     // Totals...
     // yes simd        1        9        0
     //  no simd        1       17        0
-    fn bitxor(self, other: DualNum) -> Self::Output {
+    fn bitxor(self, other: DualNum5) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
     }
 }
-impl std::ops::BitXorAssign<DualNum> for MultiVector {
-    fn bitxor_assign(&mut self, other: DualNum) {
+impl std::ops::BitXorAssign<DualNum5> for MultiVector {
+    fn bitxor_assign(&mut self, other: DualNum5) {
         use crate::elements::*;
         *self = self.wedge(other);
     }
@@ -1411,6 +2787,27 @@ impl std::ops::BitXorAssign<Plane> for MultiVector {
         *self = self.wedge(other);
     }
 }
+impl std::ops::BitXor<QuadNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        8       20        0
+    //    simd3        0        4        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd        9       26        0
+    //  no simd       12       40        0
+    fn bitxor(self, other: QuadNum) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<QuadNum> for MultiVector {
+    fn bitxor_assign(&mut self, other: QuadNum) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
 impl std::ops::BitXor<RoundPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -1474,6 +2871,26 @@ impl std::ops::BitXorAssign<Sphere> for MultiVector {
         *self = self.wedge(other);
     }
 }
+impl std::ops::BitXor<TripleNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        9       25        0
+    //    simd3        0        4        0
+    // Totals...
+    // yes simd        9       29        0
+    //  no simd        9       37        0
+    fn bitxor(self, other: TripleNum) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<TripleNum> for MultiVector {
+    fn bitxor_assign(&mut self, other: TripleNum) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
 impl std::ops::BitXor<VersorEven> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -1517,6 +2934,336 @@ impl std::ops::BitXorAssign<VersorOdd> for MultiVector {
     }
 }
 
+impl From<AntiCircleRotor> for MultiVector {
+    fn from(anti_circle_rotor: AntiCircleRotor) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([anti_circle_rotor[scalar], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from([anti_circle_rotor[e15], anti_circle_rotor[e25], anti_circle_rotor[e35], anti_circle_rotor[e45]]),
+            // e41, e42, e43
+            Simd32x3::from([anti_circle_rotor[e41], anti_circle_rotor[e42], anti_circle_rotor[e43]]),
+            // e23, e31, e12
+            Simd32x3::from([anti_circle_rotor[e23], anti_circle_rotor[e31], anti_circle_rotor[e12]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+            // e1234
+            0.0,
+        );
+    }
+}
+
+impl From<AntiDipoleInversion> for MultiVector {
+    fn from(anti_dipole_inversion: AntiDipoleInversion) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from([anti_dipole_inversion[e1], anti_dipole_inversion[e2], anti_dipole_inversion[e3], anti_dipole_inversion[e4]]),
+            // e5
+            anti_dipole_inversion[e5],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([anti_dipole_inversion[e415], anti_dipole_inversion[e425], anti_dipole_inversion[e435], anti_dipole_inversion[e321]]),
+            // e423, e431, e412
+            Simd32x3::from([anti_dipole_inversion[e423], anti_dipole_inversion[e431], anti_dipole_inversion[e412]]),
+            // e235, e315, e125
+            Simd32x3::from([anti_dipole_inversion[e235], anti_dipole_inversion[e315], anti_dipole_inversion[e125]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+            // e1234
+            0.0,
+        );
+    }
+}
+
+impl From<AntiDualNum321> for MultiVector {
+    fn from(anti_dual_num321: AntiDualNum321) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([anti_dual_num321[scalar], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from([0.0, 0.0, 0.0, anti_dual_num321[e45]]),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+            // e1234
+            0.0,
+        );
+    }
+}
+
+impl From<AntiDualNum4> for MultiVector {
+    fn from(anti_dual_num4: AntiDualNum4) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([anti_dual_num4[scalar], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+            // e1234
+            anti_dual_num4[e1234],
+        );
+    }
+}
+
+impl From<AntiDualNum5> for MultiVector {
+    fn from(anti_dual_num5: AntiDualNum5) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([anti_dual_num5[scalar], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([0.0, 0.0, 0.0, anti_dual_num5[e3215]]),
+            // e1234
+            0.0,
+        );
+    }
+}
+
+impl From<AntiFlatPoint> for MultiVector {
+    fn from(anti_flat_point: AntiFlatPoint) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, anti_flat_point[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from([anti_flat_point[e235], anti_flat_point[e315], anti_flat_point[e125]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+            // e1234
+            0.0,
+        );
+    }
+}
+
+impl From<AntiFlector> for MultiVector {
+    fn from(anti_flector: AntiFlector) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from([anti_flector[e1], anti_flector[e2], anti_flector[e3], 0.0]),
+            // e5
+            anti_flector[e5],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, anti_flector[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from([anti_flector[e235], anti_flector[e315], anti_flector[e125]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+            // e1234
+            0.0,
+        );
+    }
+}
+
+impl From<AntiLine> for MultiVector {
+    fn from(anti_line: AntiLine) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from([anti_line[e15], anti_line[e25], anti_line[e35], 0.0]),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from([anti_line[e23], anti_line[e31], anti_line[e12]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+            // e1234
+            0.0,
+        );
+    }
+}
+
+impl From<AntiMotor> for MultiVector {
+    fn from(anti_motor: AntiMotor) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([anti_motor[scalar], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from([anti_motor[e15], anti_motor[e25], anti_motor[e35], 0.0]),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from([anti_motor[e23], anti_motor[e31], anti_motor[e12]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([0.0, 0.0, 0.0, anti_motor[e3215]]),
+            // e1234
+            0.0,
+        );
+    }
+}
+
+impl From<AntiPlane> for MultiVector {
+    fn from(anti_plane: AntiPlane) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from([anti_plane[e1], anti_plane[e2], anti_plane[e3], 0.0]),
+            // e5
+            anti_plane[e5],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+            // e1234
+            0.0,
+        );
+    }
+}
+
+impl From<AntiQuadNum> for MultiVector {
+    fn from(anti_quad_num: AntiQuadNum) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([anti_quad_num[scalar], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from([0.0, 0.0, 0.0, anti_quad_num[e45]]),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([0.0, 0.0, 0.0, anti_quad_num[e3215]]),
+            // e1234
+            anti_quad_num[e1234],
+        );
+    }
+}
+
 impl From<AntiScalar> for MultiVector {
     fn from(anti_scalar: AntiScalar) -> Self {
         use crate::elements::*;
@@ -1531,6 +3278,8 @@ impl From<AntiScalar> for MultiVector {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1541,8 +3290,36 @@ impl From<AntiScalar> for MultiVector {
             Simd32x4::from(0.0),
             // e1234
             0.0,
-            // e12, e31, e23
+        );
+    }
+}
+
+impl From<AntiTripleNum> for MultiVector {
+    fn from(anti_triple_num: AntiTripleNum) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([anti_triple_num[scalar], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([0.0, 0.0, 0.0, anti_triple_num[e3215]]),
+            // e1234
+            anti_triple_num[e1234],
         );
     }
 }
@@ -1561,6 +3338,8 @@ impl From<Circle> for MultiVector {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from([circle[e415], circle[e425], circle[e435], circle[e321]]),
             // e423, e431, e412
@@ -1571,8 +3350,6 @@ impl From<Circle> for MultiVector {
             Simd32x4::from(0.0),
             // e1234
             0.0,
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
     }
 }
@@ -1591,6 +3368,8 @@ impl From<CircleRotor> for MultiVector {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from([circle_rotor[e415], circle_rotor[e425], circle_rotor[e435], circle_rotor[e321]]),
             // e423, e431, e412
@@ -1601,8 +3380,6 @@ impl From<CircleRotor> for MultiVector {
             Simd32x4::from(0.0),
             // e1234
             0.0,
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
     }
 }
@@ -1621,6 +3398,8 @@ impl From<Dipole> for MultiVector {
             Simd32x4::from([dipole[e15], dipole[e25], dipole[e35], dipole[e45]]),
             // e41, e42, e43
             Simd32x3::from([dipole[e41], dipole[e42], dipole[e43]]),
+            // e23, e31, e12
+            Simd32x3::from([dipole[e23], dipole[e31], dipole[e12]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1631,8 +3410,6 @@ impl From<Dipole> for MultiVector {
             Simd32x4::from(0.0),
             // e1234
             0.0,
-            // e12, e31, e23
-            Simd32x3::from([dipole[e12], dipole[e31], dipole[e23]]),
         );
     }
 }
@@ -1651,6 +3428,8 @@ impl From<DipoleInversion> for MultiVector {
             Simd32x4::from([dipole_inversion[e15], dipole_inversion[e25], dipole_inversion[e35], dipole_inversion[e45]]),
             // e41, e42, e43
             Simd32x3::from([dipole_inversion[e41], dipole_inversion[e42], dipole_inversion[e43]]),
+            // e23, e31, e12
+            Simd32x3::from([dipole_inversion[e23], dipole_inversion[e31], dipole_inversion[e12]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1661,25 +3440,55 @@ impl From<DipoleInversion> for MultiVector {
             Simd32x4::from([dipole_inversion[e4235], dipole_inversion[e4315], dipole_inversion[e4125], dipole_inversion[e3215]]),
             // e1234
             dipole_inversion[e1234],
-            // e12, e31, e23
-            Simd32x3::from([dipole_inversion[e12], dipole_inversion[e31], dipole_inversion[e23]]),
         );
     }
 }
 
-impl From<DualNum> for MultiVector {
-    fn from(dual_num: DualNum) -> Self {
+impl From<DualNum321> for MultiVector {
+    fn from(dual_num321: DualNum321) -> Self {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, dual_num[e12345]]),
+            Simd32x2::from([0.0, dual_num321[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
-            dual_num[e5],
+            0.0,
             // e15, e25, e35, e45
             Simd32x4::from(0.0),
             // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, dual_num321[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+            // e1234
+            0.0,
+        );
+    }
+}
+
+impl From<DualNum4> for MultiVector {
+    fn from(dual_num4: DualNum4) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, dual_num4[e12345]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, dual_num4[e4]]),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -1691,8 +3500,36 @@ impl From<DualNum> for MultiVector {
             Simd32x4::from(0.0),
             // e1234
             0.0,
-            // e12, e31, e23
+        );
+    }
+}
+
+impl From<DualNum5> for MultiVector {
+    fn from(dual_num5: DualNum5) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, dual_num5[e12345]]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            dual_num5[e5],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+            // e1234
+            0.0,
         );
     }
 }
@@ -1711,6 +3548,8 @@ impl From<FlatPoint> for MultiVector {
             Simd32x4::from([flat_point[e15], flat_point[e25], flat_point[e35], flat_point[e45]]),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1721,8 +3560,6 @@ impl From<FlatPoint> for MultiVector {
             Simd32x4::from(0.0),
             // e1234
             0.0,
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
     }
 }
@@ -1741,6 +3578,8 @@ impl From<Flector> for MultiVector {
             Simd32x4::from([flector[e15], flector[e25], flector[e35], flector[e45]]),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1751,8 +3590,6 @@ impl From<Flector> for MultiVector {
             Simd32x4::from([flector[e4235], flector[e4315], flector[e4125], flector[e3215]]),
             // e1234
             0.0,
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
     }
 }
@@ -1771,6 +3608,8 @@ impl From<Line> for MultiVector {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from([line[e415], line[e425], line[e435], 0.0]),
             // e423, e431, e412
@@ -1781,8 +3620,6 @@ impl From<Line> for MultiVector {
             Simd32x4::from(0.0),
             // e1234
             0.0,
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
     }
 }
@@ -1801,6 +3638,8 @@ impl From<Motor> for MultiVector {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from([motor[e415], motor[e425], motor[e435], 0.0]),
             // e423, e431, e412
@@ -1811,8 +3650,6 @@ impl From<Motor> for MultiVector {
             Simd32x4::from(0.0),
             // e1234
             0.0,
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
     }
 }
@@ -1831,6 +3668,8 @@ impl From<Plane> for MultiVector {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1841,8 +3680,36 @@ impl From<Plane> for MultiVector {
             Simd32x4::from([plane[e4235], plane[e4315], plane[e4125], plane[e3215]]),
             // e1234
             0.0,
-            // e12, e31, e23
+        );
+    }
+}
+
+impl From<QuadNum> for MultiVector {
+    fn from(quad_num: QuadNum) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, quad_num[e12345]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, quad_num[e4]]),
+            // e5
+            quad_num[e5],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, quad_num[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+            // e1234
+            0.0,
         );
     }
 }
@@ -1861,6 +3728,8 @@ impl From<RoundPoint> for MultiVector {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1871,8 +3740,6 @@ impl From<RoundPoint> for MultiVector {
             Simd32x4::from(0.0),
             // e1234
             0.0,
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
     }
 }
@@ -1891,6 +3758,8 @@ impl From<Scalar> for MultiVector {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1901,8 +3770,6 @@ impl From<Scalar> for MultiVector {
             Simd32x4::from(0.0),
             // e1234
             0.0,
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
     }
 }
@@ -1921,6 +3788,8 @@ impl From<Sphere> for MultiVector {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1931,8 +3800,36 @@ impl From<Sphere> for MultiVector {
             Simd32x4::from([sphere[e4235], sphere[e4315], sphere[e4125], sphere[e3215]]),
             // e1234
             sphere[e1234],
-            // e12, e31, e23
+        );
+    }
+}
+
+impl From<TripleNum> for MultiVector {
+    fn from(triple_num: TripleNum) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, triple_num[e12345]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, triple_num[e4]]),
+            // e5
+            triple_num[e5],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+            // e1234
+            0.0,
         );
     }
 }
@@ -1951,6 +3848,8 @@ impl From<VersorEven> for MultiVector {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from([versor_even[e415], versor_even[e425], versor_even[e435], versor_even[e321]]),
             // e423, e431, e412
@@ -1961,8 +3860,6 @@ impl From<VersorEven> for MultiVector {
             Simd32x4::from(0.0),
             // e1234
             0.0,
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
     }
 }
@@ -1981,6 +3878,8 @@ impl From<VersorOdd> for MultiVector {
             Simd32x4::from([versor_odd[e15], versor_odd[e25], versor_odd[e35], versor_odd[e45]]),
             // e41, e42, e43
             Simd32x3::from([versor_odd[e41], versor_odd[e42], versor_odd[e43]]),
+            // e23, e31, e12
+            Simd32x3::from([versor_odd[e23], versor_odd[e31], versor_odd[e12]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1991,9 +3890,249 @@ impl From<VersorOdd> for MultiVector {
             Simd32x4::from([versor_odd[e4235], versor_odd[e4315], versor_odd[e4125], versor_odd[e3215]]),
             // e1234
             versor_odd[e1234],
-            // e12, e31, e23
-            Simd32x3::from([versor_odd[e12], versor_odd[e31], versor_odd[e23]]),
         );
+    }
+}
+impl std::ops::Mul<AntiCircleRotor> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       99      120        0
+    //    simd2       10       12        0
+    //    simd3       39       42        0
+    //    simd4       21       21        0
+    // Totals...
+    // yes simd      169      195        0
+    //  no simd      320      354        0
+    fn mul(self, other: AntiCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiCircleRotor> for MultiVector {
+    fn mul_assign(&mut self, other: AntiCircleRotor) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiDipoleInversion> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32      128      154        0
+    //    simd2        4        4        0
+    //    simd3       48       50        0
+    //    simd4       42       42        0
+    // Totals...
+    // yes simd      222      250        0
+    //  no simd      448      480        0
+    fn mul(self, other: AntiDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiDipoleInversion> for MultiVector {
+    fn mul_assign(&mut self, other: AntiDipoleInversion) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiDualNum321> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        8        0
+    //    simd2        1        3        0
+    //    simd3        4        8        0
+    //    simd4        4       10        0
+    // Totals...
+    // yes simd       11       29        0
+    //  no simd       32       78        0
+    fn mul(self, other: AntiDualNum321) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiDualNum321> for MultiVector {
+    fn mul_assign(&mut self, other: AntiDualNum321) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiDualNum4> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        7       24        0
+    //    simd2        1        2        0
+    //    simd3        5        9        0
+    //    simd4        2        4        0
+    // Totals...
+    // yes simd       15       39        0
+    //  no simd       32       71        0
+    fn mul(self, other: AntiDualNum4) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiDualNum4> for MultiVector {
+    fn mul_assign(&mut self, other: AntiDualNum4) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiDualNum5> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        9       27        0
+    //    simd2        1        2        0
+    //    simd3        3        7        0
+    //    simd4        3        4        0
+    // Totals...
+    // yes simd       16       40        0
+    //  no simd       32       68        0
+    fn mul(self, other: AntiDualNum5) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiDualNum5> for MultiVector {
+    fn mul_assign(&mut self, other: AntiDualNum5) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiFlatPoint> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       30       46        0
+    //    simd2        1        1        0
+    //    simd3        8       12        0
+    //    simd4       11       13        0
+    // Totals...
+    // yes simd       50       72        0
+    //  no simd      100      136        0
+    fn mul(self, other: AntiFlatPoint) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiFlatPoint> for MultiVector {
+    fn mul_assign(&mut self, other: AntiFlatPoint) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiFlector> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       57       78        0
+    //    simd2        4        4        0
+    //    simd3       20       22        0
+    //    simd4       26       26        0
+    // Totals...
+    // yes simd      107      130        0
+    //  no simd      229      256        0
+    fn mul(self, other: AntiFlector) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiFlector> for MultiVector {
+    fn mul_assign(&mut self, other: AntiFlector) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiLine> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       91      109        0
+    //    simd2        5        6        0
+    //    simd3       17       21        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd      115      138        0
+    //  no simd      160      192        0
+    fn mul(self, other: AntiLine) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiLine> for MultiVector {
+    fn mul_assign(&mut self, other: AntiLine) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiMotor> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       69       90        0
+    //    simd2        7        8        0
+    //    simd3       23       26        0
+    //    simd4       18       18        0
+    // Totals...
+    // yes simd      117      142        0
+    //  no simd      224      256        0
+    fn mul(self, other: AntiMotor) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiMotor> for MultiVector {
+    fn mul_assign(&mut self, other: AntiMotor) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiPlane> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       12       30        0
+    //    simd2        3        5        0
+    //    simd3        9       11        0
+    //    simd4       14       16        0
+    // Totals...
+    // yes simd       38       62        0
+    //  no simd      101      137        0
+    fn mul(self, other: AntiPlane) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiPlane> for MultiVector {
+    fn mul_assign(&mut self, other: AntiPlane) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiQuadNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       10       16        0
+    //    simd2        3        5        0
+    //    simd3       12       16        0
+    //    simd4       11       15        0
+    // Totals...
+    // yes simd       36       52        0
+    //  no simd       96      134        0
+    fn mul(self, other: AntiQuadNum) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiQuadNum> for MultiVector {
+    fn mul_assign(&mut self, other: AntiQuadNum) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
     }
 }
 impl std::ops::Mul<AntiScalar> for MultiVector {
@@ -2014,6 +4153,28 @@ impl std::ops::Mul<AntiScalar> for MultiVector {
 }
 impl std::ops::MulAssign<AntiScalar> for MultiVector {
     fn mul_assign(&mut self, other: AntiScalar) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiTripleNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        8       14        0
+    //    simd2        2        3        0
+    //    simd3        8       12        0
+    //    simd4        7       13        0
+    // Totals...
+    // yes simd       25       42        0
+    //  no simd       64      108        0
+    fn mul(self, other: AntiTripleNum) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiTripleNum> for MultiVector {
+    fn mul_assign(&mut self, other: AntiTripleNum) {
         use crate::elements::*;
         *self = self.geometric_product(other);
     }
@@ -2106,7 +4267,49 @@ impl std::ops::MulAssign<DipoleInversion> for MultiVector {
         *self = self.geometric_product(other);
     }
 }
-impl std::ops::Mul<DualNum> for MultiVector {
+impl std::ops::Mul<DualNum321> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       18       36        0
+    //    simd2        1        3        0
+    //    simd3        4        8        0
+    // Totals...
+    // yes simd       23       47        0
+    //  no simd       32       66        0
+    fn mul(self, other: DualNum321) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<DualNum321> for MultiVector {
+    fn mul_assign(&mut self, other: DualNum321) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<DualNum4> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       13       40        0
+    //    simd3        5        9        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       19       50        0
+    //  no simd       32       71        0
+    fn mul(self, other: DualNum4) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<DualNum4> for MultiVector {
+    fn mul_assign(&mut self, other: DualNum4) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<DualNum5> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -2116,13 +4319,13 @@ impl std::ops::Mul<DualNum> for MultiVector {
     // Totals...
     // yes simd       17       41        0
     //  no simd       32       72        0
-    fn mul(self, other: DualNum) -> Self::Output {
+    fn mul(self, other: DualNum5) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
 }
-impl std::ops::MulAssign<DualNum> for MultiVector {
-    fn mul_assign(&mut self, other: DualNum) {
+impl std::ops::MulAssign<DualNum5> for MultiVector {
+    fn mul_assign(&mut self, other: DualNum5) {
         use crate::elements::*;
         *self = self.geometric_product(other);
     }
@@ -2257,6 +4460,28 @@ impl std::ops::MulAssign<Plane> for MultiVector {
         *self = self.geometric_product(other);
     }
 }
+impl std::ops::Mul<QuadNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       18       30        0
+    //    simd2        1        1        0
+    //    simd3       12       16        0
+    //    simd4       10       13        0
+    // Totals...
+    // yes simd       41       60        0
+    //  no simd       96      132        0
+    fn mul(self, other: QuadNum) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<QuadNum> for MultiVector {
+    fn mul_assign(&mut self, other: QuadNum) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
 impl std::ops::Mul<RoundPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -2323,16 +4548,37 @@ impl std::ops::MulAssign<Sphere> for MultiVector {
         *self = self.geometric_product(other);
     }
 }
+impl std::ops::Mul<TripleNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       24       44        0
+    //    simd3        8       12        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       36       60        0
+    //  no simd       64       96        0
+    fn mul(self, other: TripleNum) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<TripleNum> for MultiVector {
+    fn mul_assign(&mut self, other: TripleNum) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
 impl std::ops::Mul<VersorEven> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      180        0
+    //      f32      145      177        0
     //    simd2        4        4        0
-    //    simd3       48       48        0
+    //    simd3       49       49        0
     //    simd4       45       45        0
     // Totals...
-    // yes simd      245      277        0
+    // yes simd      243      275        0
     //  no simd      480      512        0
     fn mul(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
@@ -2349,12 +4595,12 @@ impl std::ops::Mul<VersorOdd> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      136      168        0
+    //      f32      133      165        0
     //    simd2       12       12        0
-    //    simd3       52       52        0
+    //    simd3       53       53        0
     //    simd4       41       41        0
     // Totals...
-    // yes simd      241      273        0
+    // yes simd      239      271        0
     //  no simd      480      512        0
     fn mul(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
@@ -2390,18 +4636,18 @@ impl std::ops::Neg for MultiVector {
             (self.group3() * Simd32x4::from(-1.0)),
             // e41, e42, e43
             (self.group4() * Simd32x3::from(-1.0)),
+            // e23, e31, e12
+            (self.group5() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
-            (self.group5() * Simd32x4::from(-1.0)),
+            (self.group6() * Simd32x4::from(-1.0)),
             // e423, e431, e412
-            (self.group6() * Simd32x3::from(-1.0)),
-            // e235, e315, e125
             (self.group7() * Simd32x3::from(-1.0)),
+            // e235, e315, e125
+            (self.group8() * Simd32x3::from(-1.0)),
             // e4235, e4315, e4125, e3215
-            (self.group8() * Simd32x4::from(-1.0)),
+            (self.group9() * Simd32x4::from(-1.0)),
             // e1234
-            (self[e35] * -1.0),
-            // e12, e31, e23
-            (self.group10() * Simd32x3::from(-1.0)),
+            (self[e45] * -1.0),
         );
         return negation;
     }
@@ -2417,19 +4663,21 @@ impl std::ops::Not for MultiVector {
     //  no simd        0       16        0
     fn not(self) -> Self::Output {
         use crate::elements::*;
-        let dual = MultiVector::from_groups(
+        let right_dual = MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(self.group0()[1] * -1.0), self.group0()[0]]),
             // e1, e2, e3, e4
-            Simd32x4::from([(self.group8()[0] * -1.0), (self.group8()[1] * -1.0), (self.group8()[2] * -1.0), self[e35]]),
+            Simd32x4::from([(self.group9()[0] * -1.0), (self.group9()[1] * -1.0), (self.group9()[2] * -1.0), self[e45]]),
             // e5
-            self.group8()[3],
+            self.group9()[3],
             // e15, e25, e35, e45
-            Simd32x4::from([self.group7()[0], self.group7()[1], self.group7()[2], (self.group5()[3] * -1.0)]),
+            Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], (self.group6()[3] * -1.0)]),
             // e41, e42, e43
-            self.group6(),
+            self.group7(),
+            // e23, e31, e12
+            Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]),
             // e415, e425, e435, e321
-            Simd32x4::from([(self.group10()[2] * -1.0), (self.group10()[1] * -1.0), (self.group10()[0] * -1.0), self.group3()[3]]),
+            Simd32x4::from([(self.group5()[0] * -1.0), (self.group5()[1] * -1.0), (self.group5()[2] * -1.0), self.group3()[3]]),
             // e423, e431, e412
             (self.group4() * Simd32x3::from(-1.0)),
             // e235, e315, e125
@@ -2438,10 +4686,778 @@ impl std::ops::Not for MultiVector {
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self[e1] * -1.0)]),
             // e1234
             (self.group1()[3] * -1.0),
-            // e12, e31, e23
-            Simd32x3::from([self.group5()[2], self.group5()[1], self.group5()[0]]),
         );
-        return dual;
+        return right_dual;
+    }
+}
+impl std::ops::Sub<AntiCircleRotor> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd3        2        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        4        0        0
+    //  no simd       11        0        0
+    fn sub(self, other: AntiCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group2()[3]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            (self.group3() - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
+            // e41, e42, e43
+            (self.group4() - other.group0()),
+            // e23, e31, e12
+            (self.group5() - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<AntiCircleRotor> for MultiVector {
+    fn sub_assign(&mut self, other: AntiCircleRotor) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group2()[3]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            (self.group3() - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
+            // e41, e42, e43
+            (self.group4() - other.group0()),
+            // e23, e31, e12
+            (self.group5() - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<AntiDipoleInversion> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd3        2        0        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        5        0        0
+    //  no simd       15        0        0
+    fn sub(self, other: AntiDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            (self.group1() - Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]])),
+            // e5
+            (self[e1] - other.group3()[3]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            (self.group6() - other.group1()),
+            // e423, e431, e412
+            (self.group7() - other.group0()),
+            // e235, e315, e125
+            (self.group8() - Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<AntiDipoleInversion> for MultiVector {
+    fn sub_assign(&mut self, other: AntiDipoleInversion) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            (self.group1() - Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]])),
+            // e5
+            (self[e1] - other.group3()[3]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            (self.group6() - other.group1()),
+            // e423, e431, e412
+            (self.group7() - other.group0()),
+            // e235, e315, e125
+            (self.group8() - Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<AntiDualNum321> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn sub(self, other: AntiDualNum321) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group0()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] - other.group0()[0])]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<AntiDualNum321> for MultiVector {
+    fn sub_assign(&mut self, other: AntiDualNum321) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group0()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] - other.group0()[0])]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<AntiDualNum4> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn sub(self, other: AntiDualNum4) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group0()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            (self[e45] - other.group0()[0]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<AntiDualNum4> for MultiVector {
+    fn sub_assign(&mut self, other: AntiDualNum4) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group0()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            (self[e45] - other.group0()[0]),
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<AntiDualNum5> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn sub(self, other: AntiDualNum5) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group0()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] - other.group0()[0])]),
+            // e1234
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<AntiDualNum5> for MultiVector {
+    fn sub_assign(&mut self, other: AntiDualNum5) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group0()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] - other.group0()[0])]),
+            // e1234
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<AntiFlatPoint> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd3        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        4        0        0
+    fn sub(self, other: AntiFlatPoint) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] - other.group0()[3])]),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            (self.group8() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<AntiFlatPoint> for MultiVector {
+    fn sub_assign(&mut self, other: AntiFlatPoint) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] - other.group0()[3])]),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            (self.group8() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<AntiFlector> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        5        0        0
+    //    simd3        1        0        0
+    // Totals...
+    // yes simd        6        0        0
+    //  no simd        8        0        0
+    fn sub(self, other: AntiFlector) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group1()[0] - other.group1()[0]),
+                (self.group1()[1] - other.group1()[1]),
+                (self.group1()[2] - other.group1()[2]),
+                self.group1()[3],
+            ]),
+            // e5
+            (self[e1] - other.group1()[3]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] - other.group0()[3])]),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            (self.group8() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<AntiFlector> for MultiVector {
+    fn sub_assign(&mut self, other: AntiFlector) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group1()[0] - other.group1()[0]),
+                (self.group1()[1] - other.group1()[1]),
+                (self.group1()[2] - other.group1()[2]),
+                self.group1()[3],
+            ]),
+            // e5
+            (self[e1] - other.group1()[3]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] - other.group0()[3])]),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            (self.group8() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<AntiLine> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3        0        0
+    //    simd3        1        0        0
+    // Totals...
+    // yes simd        4        0        0
+    //  no simd        6        0        0
+    fn sub(self, other: AntiLine) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([
+                (self.group3()[0] - other.group1()[0]),
+                (self.group3()[1] - other.group1()[1]),
+                (self.group3()[2] - other.group1()[2]),
+                self.group3()[3],
+            ]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            (self.group5() - other.group0()),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<AntiLine> for MultiVector {
+    fn sub_assign(&mut self, other: AntiLine) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([
+                (self.group3()[0] - other.group1()[0]),
+                (self.group3()[1] - other.group1()[1]),
+                (self.group3()[2] - other.group1()[2]),
+                self.group3()[3],
+            ]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            (self.group5() - other.group0()),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<AntiMotor> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        5        0        0
+    //    simd3        1        0        0
+    // Totals...
+    // yes simd        6        0        0
+    //  no simd        8        0        0
+    fn sub(self, other: AntiMotor) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group0()[3]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([
+                (self.group3()[0] - other.group1()[0]),
+                (self.group3()[1] - other.group1()[1]),
+                (self.group3()[2] - other.group1()[2]),
+                self.group3()[3],
+            ]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            (self.group5() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] - other.group1()[3])]),
+            // e1234
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<AntiMotor> for MultiVector {
+    fn sub_assign(&mut self, other: AntiMotor) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group0()[3]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([
+                (self.group3()[0] - other.group1()[0]),
+                (self.group3()[1] - other.group1()[1]),
+                (self.group3()[2] - other.group1()[2]),
+                self.group3()[3],
+            ]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            (self.group5() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] - other.group1()[3])]),
+            // e1234
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<AntiPlane> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        4        0        0
+    fn sub(self, other: AntiPlane) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group1()[0] - other.group0()[0]),
+                (self.group1()[1] - other.group0()[1]),
+                (self.group1()[2] - other.group0()[2]),
+                self.group1()[3],
+            ]),
+            // e5
+            (self[e1] - other.group0()[3]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<AntiPlane> for MultiVector {
+    fn sub_assign(&mut self, other: AntiPlane) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            self.group0(),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group1()[0] - other.group0()[0]),
+                (self.group1()[1] - other.group0()[1]),
+                (self.group1()[2] - other.group0()[2]),
+                self.group1()[3],
+            ]),
+            // e5
+            (self[e1] - other.group0()[3]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<AntiQuadNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        4        0        0
+    fn sub(self, other: AntiQuadNum) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group0()[3]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] - other.group0()[2])]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] - other.group0()[1])]),
+            // e1234
+            (self[e45] - other.group0()[0]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<AntiQuadNum> for MultiVector {
+    fn sub_assign(&mut self, other: AntiQuadNum) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group0()[3]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] - other.group0()[2])]),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] - other.group0()[1])]),
+            // e1234
+            (self[e45] - other.group0()[0]),
+        );
+        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiScalar> for MultiVector {
@@ -2462,18 +5478,18 @@ impl std::ops::Sub<AntiScalar> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return subtraction;
     }
@@ -2492,18 +5508,82 @@ impl std::ops::SubAssign<AntiScalar> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<AntiTripleNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3        0        0
+    fn sub(self, other: AntiTripleNum) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group0()[2]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] - other.group0()[1])]),
+            // e1234
+            (self[e45] - other.group0()[0]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<AntiTripleNum> for MultiVector {
+    fn sub_assign(&mut self, other: AntiTripleNum) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group0()[2]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], (self.group9()[3] - other.group0()[1])]),
+            // e1234
+            (self[e45] - other.group0()[0]),
         );
         *self = subtraction;
     }
@@ -2530,18 +5610,18 @@ impl std::ops::Sub<Circle> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
-            (self.group5() - other.group1()),
+            (self.group6() - other.group1()),
             // e423, e431, e412
-            (self.group6() - other.group0()),
+            (self.group7() - other.group0()),
             // e235, e315, e125
-            (self.group7() - other.group2()),
+            (self.group8() - other.group2()),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return subtraction;
     }
@@ -2560,18 +5640,18 @@ impl std::ops::SubAssign<Circle> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
-            (self.group5() - other.group1()),
+            (self.group6() - other.group1()),
             // e423, e431, e412
-            (self.group6() - other.group0()),
+            (self.group7() - other.group0()),
             // e235, e315, e125
-            (self.group7() - other.group2()),
+            (self.group8() - other.group2()),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = subtraction;
     }
@@ -2599,18 +5679,18 @@ impl std::ops::Sub<CircleRotor> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
-            (self.group5() - other.group1()),
+            (self.group6() - other.group1()),
             // e423, e431, e412
-            (self.group6() - other.group0()),
+            (self.group7() - other.group0()),
             // e235, e315, e125
-            (self.group7() - Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
+            (self.group8() - Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return subtraction;
     }
@@ -2629,18 +5709,18 @@ impl std::ops::SubAssign<CircleRotor> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
-            (self.group5() - other.group1()),
+            (self.group6() - other.group1()),
             // e423, e431, e412
-            (self.group6() - other.group0()),
+            (self.group7() - other.group0()),
             // e235, e315, e125
-            (self.group7() - Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
+            (self.group8() - Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = subtraction;
     }
@@ -2667,18 +5747,18 @@ impl std::ops::Sub<Dipole> for MultiVector {
             (self.group3() - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
             // e41, e42, e43
             (self.group4() - other.group0()),
+            // e23, e31, e12
+            (self.group5() - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e415, e425, e435, e321
-            self.group5(),
-            // e423, e431, e412
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            (self.group10() - Simd32x3::from([other.group1()[2], other.group1()[1], other.group1()[0]])),
+            self[e45],
         );
         return subtraction;
     }
@@ -2697,18 +5777,18 @@ impl std::ops::SubAssign<Dipole> for MultiVector {
             (self.group3() - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
             // e41, e42, e43
             (self.group4() - other.group0()),
+            // e23, e31, e12
+            (self.group5() - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e415, e425, e435, e321
-            self.group5(),
-            // e423, e431, e412
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            (self.group10() - Simd32x3::from([other.group1()[2], other.group1()[1], other.group1()[0]])),
+            self[e45],
         );
         *self = subtraction;
     }
@@ -2736,18 +5816,18 @@ impl std::ops::Sub<DipoleInversion> for MultiVector {
             (self.group3() - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
             // e41, e42, e43
             (self.group4() - other.group0()),
+            // e23, e31, e12
+            (self.group5() - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e415, e425, e435, e321
-            self.group5(),
-            // e423, e431, e412
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() - other.group3()),
+            (self.group9() - other.group3()),
             // e1234
-            (self[e35] - other.group2()[3]),
-            // e12, e31, e23
-            (self.group10() - Simd32x3::from([other.group1()[2], other.group1()[1], other.group1()[0]])),
+            (self[e45] - other.group2()[3]),
         );
         return subtraction;
     }
@@ -2766,28 +5846,28 @@ impl std::ops::SubAssign<DipoleInversion> for MultiVector {
             (self.group3() - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
             // e41, e42, e43
             (self.group4() - other.group0()),
+            // e23, e31, e12
+            (self.group5() - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e415, e425, e435, e321
-            self.group5(),
-            // e423, e431, e412
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() - other.group3()),
+            (self.group9() - other.group3()),
             // e1234
-            (self[e35] - other.group2()[3]),
-            // e12, e31, e23
-            (self.group10() - Simd32x3::from([other.group1()[2], other.group1()[1], other.group1()[0]])),
+            (self[e45] - other.group2()[3]),
         );
         *self = subtraction;
     }
 }
-impl std::ops::Sub<DualNum> for MultiVector {
+impl std::ops::Sub<DualNum321> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        2        0        0
-    fn sub(self, other: DualNum) -> Self::Output {
+    fn sub(self, other: DualNum321) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
@@ -2795,29 +5875,127 @@ impl std::ops::Sub<DualNum> for MultiVector {
             // e1, e2, e3, e4
             self.group1(),
             // e5
-            (self[e1] - other.group0()[0]),
+            self[e1],
             // e15, e25, e35, e45
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] - other.group0()[0])]),
             // e423, e431, e412
-            self.group6(),
-            // e235, e315, e125
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return subtraction;
     }
 }
-impl std::ops::SubAssign<DualNum> for MultiVector {
-    fn sub_assign(&mut self, other: DualNum) {
+impl std::ops::SubAssign<DualNum321> for MultiVector {
+    fn sub_assign(&mut self, other: DualNum321) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[1])]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] - other.group0()[0])]),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<DualNum4> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn sub(self, other: DualNum4) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[1])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[0])]),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<DualNum4> for MultiVector {
+    fn sub_assign(&mut self, other: DualNum4) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[1])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[0])]),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<DualNum5> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn sub(self, other: DualNum5) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
@@ -2830,18 +6008,48 @@ impl std::ops::SubAssign<DualNum> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<DualNum5> for MultiVector {
+    fn sub_assign(&mut self, other: DualNum5) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[1])]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            (self[e1] - other.group0()[0]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
         );
         *self = subtraction;
     }
@@ -2865,18 +6073,18 @@ impl std::ops::Sub<FlatPoint> for MultiVector {
             (self.group3() - other.group0()),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return subtraction;
     }
@@ -2895,18 +6103,18 @@ impl std::ops::SubAssign<FlatPoint> for MultiVector {
             (self.group3() - other.group0()),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = subtraction;
     }
@@ -2930,18 +6138,18 @@ impl std::ops::Sub<Flector> for MultiVector {
             (self.group3() - other.group0()),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() - other.group1()),
+            (self.group9() - other.group1()),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return subtraction;
     }
@@ -2960,18 +6168,18 @@ impl std::ops::SubAssign<Flector> for MultiVector {
             (self.group3() - other.group0()),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() - other.group1()),
+            (self.group9() - other.group1()),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = subtraction;
     }
@@ -2998,23 +6206,23 @@ impl std::ops::Sub<Line> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group5()[0] - other.group0()[0]),
-                (self.group5()[1] - other.group0()[1]),
-                (self.group5()[2] - other.group0()[2]),
-                self.group5()[3],
+                (self.group6()[0] - other.group0()[0]),
+                (self.group6()[1] - other.group0()[1]),
+                (self.group6()[2] - other.group0()[2]),
+                self.group6()[3],
             ]),
             // e423, e431, e412
-            self.group6(),
+            self.group7(),
             // e235, e315, e125
-            (self.group7() - other.group1()),
+            (self.group8() - other.group1()),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return subtraction;
     }
@@ -3033,23 +6241,23 @@ impl std::ops::SubAssign<Line> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group5()[0] - other.group0()[0]),
-                (self.group5()[1] - other.group0()[1]),
-                (self.group5()[2] - other.group0()[2]),
-                self.group5()[3],
+                (self.group6()[0] - other.group0()[0]),
+                (self.group6()[1] - other.group0()[1]),
+                (self.group6()[2] - other.group0()[2]),
+                self.group6()[3],
             ]),
             // e423, e431, e412
-            self.group6(),
+            self.group7(),
             // e235, e315, e125
-            (self.group7() - other.group1()),
+            (self.group8() - other.group1()),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = subtraction;
     }
@@ -3076,23 +6284,23 @@ impl std::ops::Sub<Motor> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group5()[0] - other.group0()[0]),
-                (self.group5()[1] - other.group0()[1]),
-                (self.group5()[2] - other.group0()[2]),
-                self.group5()[3],
+                (self.group6()[0] - other.group0()[0]),
+                (self.group6()[1] - other.group0()[1]),
+                (self.group6()[2] - other.group0()[2]),
+                self.group6()[3],
             ]),
             // e423, e431, e412
-            self.group6(),
+            self.group7(),
             // e235, e315, e125
-            (self.group7() - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
+            (self.group8() - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return subtraction;
     }
@@ -3111,23 +6319,23 @@ impl std::ops::SubAssign<Motor> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group5()[0] - other.group0()[0]),
-                (self.group5()[1] - other.group0()[1]),
-                (self.group5()[2] - other.group0()[2]),
-                self.group5()[3],
+                (self.group6()[0] - other.group0()[0]),
+                (self.group6()[1] - other.group0()[1]),
+                (self.group6()[2] - other.group0()[2]),
+                self.group6()[3],
             ]),
             // e423, e431, e412
-            self.group6(),
+            self.group7(),
             // e235, e315, e125
-            (self.group7() - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
+            (self.group8() - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = subtraction;
     }
@@ -3156,18 +6364,18 @@ impl std::ops::Sub<MultiVector> for MultiVector {
             (self.group3() - other.group3()),
             // e41, e42, e43
             (self.group4() - other.group4()),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             (self.group5() - other.group5()),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             (self.group6() - other.group6()),
-            // e235, e315, e125
+            // e423, e431, e412
             (self.group7() - other.group7()),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             (self.group8() - other.group8()),
+            // e4235, e4315, e4125, e3215
+            (self.group9() - other.group9()),
             // e1234
-            (self[e35] - other[e35]),
-            // e12, e31, e23
-            (self.group10() - other.group10()),
+            (self[e45] - other[e45]),
         );
         return subtraction;
     }
@@ -3186,18 +6394,18 @@ impl std::ops::SubAssign<MultiVector> for MultiVector {
             (self.group3() - other.group3()),
             // e41, e42, e43
             (self.group4() - other.group4()),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             (self.group5() - other.group5()),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             (self.group6() - other.group6()),
-            // e235, e315, e125
+            // e423, e431, e412
             (self.group7() - other.group7()),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             (self.group8() - other.group8()),
+            // e4235, e4315, e4125, e3215
+            (self.group9() - other.group9()),
             // e1234
-            (self[e35] - other[e35]),
-            // e12, e31, e23
-            (self.group10() - other.group10()),
+            (self[e45] - other[e45]),
         );
         *self = subtraction;
     }
@@ -3221,18 +6429,18 @@ impl std::ops::Sub<Plane> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() - other.group0()),
+            (self.group9() - other.group0()),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return subtraction;
     }
@@ -3251,18 +6459,82 @@ impl std::ops::SubAssign<Plane> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() - other.group0()),
+            (self.group9() - other.group0()),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<QuadNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        4        0        0
+    fn sub(self, other: QuadNum) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[3])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[0])]),
+            // e5
+            (self[e1] - other.group0()[1]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] - other.group0()[2])]),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<QuadNum> for MultiVector {
+    fn sub_assign(&mut self, other: QuadNum) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[3])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[0])]),
+            // e5
+            (self[e1] - other.group0()[1]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] - other.group0()[2])]),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
         );
         *self = subtraction;
     }
@@ -3289,18 +6561,18 @@ impl std::ops::Sub<RoundPoint> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return subtraction;
     }
@@ -3319,18 +6591,18 @@ impl std::ops::SubAssign<RoundPoint> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = subtraction;
     }
@@ -3353,18 +6625,18 @@ impl std::ops::Sub<Scalar> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return subtraction;
     }
@@ -3383,18 +6655,18 @@ impl std::ops::SubAssign<Scalar> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
-            // e4235, e4315, e4125, e3215
+            // e235, e315, e125
             self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = subtraction;
     }
@@ -3421,18 +6693,18 @@ impl std::ops::Sub<Sphere> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() - other.group0()),
+            (self.group9() - other.group0()),
             // e1234
-            (self[e35] - other[e4315]),
-            // e12, e31, e23
-            self.group10(),
+            (self[e45] - other[e4315]),
         );
         return subtraction;
     }
@@ -3451,18 +6723,82 @@ impl std::ops::SubAssign<Sphere> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             self.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() - other.group0()),
+            (self.group9() - other.group0()),
             // e1234
-            (self[e35] - other[e4315]),
-            // e12, e31, e23
-            self.group10(),
+            (self[e45] - other[e4315]),
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<TripleNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3        0        0
+    fn sub(self, other: TripleNum) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[2])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[0])]),
+            // e5
+            (self[e1] - other.group0()[1]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<TripleNum> for MultiVector {
+    fn sub_assign(&mut self, other: TripleNum) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[2])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[0])]),
+            // e5
+            (self[e1] - other.group0()[1]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
         );
         *self = subtraction;
     }
@@ -3490,18 +6826,18 @@ impl std::ops::Sub<VersorEven> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
-            (self.group5() - other.group1()),
+            (self.group6() - other.group1()),
             // e423, e431, e412
-            (self.group6() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (self.group7() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
             // e235, e315, e125
-            (self.group7() - Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
+            (self.group8() - Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         return subtraction;
     }
@@ -3520,18 +6856,18 @@ impl std::ops::SubAssign<VersorEven> for MultiVector {
             self.group3(),
             // e41, e42, e43
             self.group4(),
+            // e23, e31, e12
+            self.group5(),
             // e415, e425, e435, e321
-            (self.group5() - other.group1()),
+            (self.group6() - other.group1()),
             // e423, e431, e412
-            (self.group6() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (self.group7() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
             // e235, e315, e125
-            (self.group7() - Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
+            (self.group8() - Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])),
             // e4235, e4315, e4125, e3215
-            self.group8(),
+            self.group9(),
             // e1234
-            self[e35],
-            // e12, e31, e23
-            self.group10(),
+            self[e45],
         );
         *self = subtraction;
     }
@@ -3559,18 +6895,18 @@ impl std::ops::Sub<VersorOdd> for MultiVector {
             (self.group3() - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
             // e41, e42, e43
             (self.group4() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e23, e31, e12
+            (self.group5() - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e415, e425, e435, e321
-            self.group5(),
-            // e423, e431, e412
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() - other.group3()),
+            (self.group9() - other.group3()),
             // e1234
-            (self[e35] - other.group2()[3]),
-            // e12, e31, e23
-            (self.group10() - Simd32x3::from([other.group1()[2], other.group1()[1], other.group1()[0]])),
+            (self[e45] - other.group2()[3]),
         );
         return subtraction;
     }
@@ -3589,18 +6925,18 @@ impl std::ops::SubAssign<VersorOdd> for MultiVector {
             (self.group3() - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
             // e41, e42, e43
             (self.group4() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e23, e31, e12
+            (self.group5() - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e415, e425, e435, e321
-            self.group5(),
-            // e423, e431, e412
             self.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             self.group7(),
+            // e235, e315, e125
+            self.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group8() - other.group3()),
+            (self.group9() - other.group3()),
             // e1234
-            (self[e35] - other.group2()[3]),
-            // e12, e31, e23
-            (self.group10() - Simd32x3::from([other.group1()[2], other.group1()[1], other.group1()[0]])),
+            (self[e45] - other.group2()[3]),
         );
         *self = subtraction;
     }

@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 14
+// Total Implementations: 21
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -77,11 +77,6 @@ impl AntiOne for CircleRotorOnOrigin {
         );
     }
 }
-impl AntiOne for DualNum {
-    fn anti_one() -> Self {
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([0.0, 1.0]));
-    }
-}
 impl AntiOne for Motor {
     fn anti_one() -> Self {
         return Motor::from_groups(
@@ -123,6 +118,51 @@ impl AntiOne for MultiVector {
             // e3215
             0.0,
         );
+    }
+}
+impl AntiOne for MysteryCircleRotor {
+    fn anti_one() -> Self {
+        return MysteryCircleRotor::from_groups(/* e415, e425, e435, e321 */ Simd32x4::from(0.0), /* e12345 */ 1.0);
+    }
+}
+impl AntiOne for MysteryQuadNum {
+    fn anti_one() -> Self {
+        return MysteryQuadNum::from_groups(/* e321, e12345 */ Simd32x2::from([0.0, 1.0]));
+    }
+}
+impl AntiOne for MysteryVersorEven {
+    fn anti_one() -> Self {
+        return MysteryVersorEven::from_groups(
+            // e12345, e1, e2, e3
+            Simd32x4::from([1.0, 0.0, 0.0, 0.0]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl AntiOne for QuadNum {
+    fn anti_one() -> Self {
+        return QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]));
+    }
+}
+impl AntiOne for QuadNumAligningOrigin {
+    fn anti_one() -> Self {
+        return QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from([0.0, 0.0, 1.0]));
+    }
+}
+impl AntiOne for QuadNumAligningOriginAtInfinity {
+    fn anti_one() -> Self {
+        return QuadNumAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([0.0, 1.0]));
+    }
+}
+impl AntiOne for QuadNumAtInfinity {
+    fn anti_one() -> Self {
+        return QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([0.0, 0.0, 1.0]));
+    }
+}
+impl AntiOne for QuadNumOnOrigin {
+    fn anti_one() -> Self {
+        return QuadNumOnOrigin::from_groups(/* e4, e12345 */ Simd32x2::from([0.0, 1.0]));
     }
 }
 impl AntiOne for VersorEven {

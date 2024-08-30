@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 42
+// Total Implementations: 44
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -166,6 +166,16 @@ impl AntiGrade for LineAtInfinity {
 impl AntiGrade for LineOnOrigin {
     fn anti_grade() -> usize {
         return 2;
+    }
+}
+impl AntiGrade for MysteryCircle {
+    fn anti_grade() -> usize {
+        return 2;
+    }
+}
+impl AntiGrade for MysteryDipole {
+    fn anti_grade() -> usize {
+        return 3;
     }
 }
 impl AntiGrade for NullCircleAtOrigin {

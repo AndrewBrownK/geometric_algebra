@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 3
+// Total Implementations: 10
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -18,6 +18,53 @@
 //   Median:         0       0       0
 //  Average:         0       0       0
 //  Maximum:         0       0       0
+impl One for AntiCircleRotor {
+    fn one() -> Self {
+        return AntiCircleRotor::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+        );
+    }
+}
+impl One for AntiDualNum321 {
+    fn one() -> Self {
+        return AntiDualNum321::from_groups(/* e45, scalar */ Simd32x2::from([0.0, 1.0]));
+    }
+}
+impl One for AntiDualNum4 {
+    fn one() -> Self {
+        return AntiDualNum4::from_groups(/* e1234, scalar */ Simd32x2::from([0.0, 1.0]));
+    }
+}
+impl One for AntiDualNum5 {
+    fn one() -> Self {
+        return AntiDualNum5::from_groups(/* e3215, scalar */ Simd32x2::from([0.0, 1.0]));
+    }
+}
+impl One for AntiMotor {
+    fn one() -> Self {
+        return AntiMotor::from_groups(
+            // e23, e31, e12, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            // e15, e25, e35, e3215
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl One for AntiQuadNum {
+    fn one() -> Self {
+        return AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]));
+    }
+}
+impl One for AntiTripleNum {
+    fn one() -> Self {
+        return AntiTripleNum::from_groups(/* e1234, e3215, scalar */ Simd32x3::from([0.0, 0.0, 1.0]));
+    }
+}
 impl One for MultiVector {
     fn one() -> Self {
         return MultiVector::from_groups(
@@ -31,6 +78,8 @@ impl One for MultiVector {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -41,8 +90,6 @@ impl One for MultiVector {
             Simd32x4::from(0.0),
             // e1234
             0.0,
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
     }
 }

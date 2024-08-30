@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 9
+// Total Implementations: 12
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -18,6 +18,21 @@
 //   Median:         0       0       0
 //  Average:         0       0       0
 //  Maximum:         0       0       0
+impl Grade for AntiFlatPoint {
+    fn grade() -> usize {
+        return 3;
+    }
+}
+impl Grade for AntiLine {
+    fn grade() -> usize {
+        return 2;
+    }
+}
+impl Grade for AntiPlane {
+    fn grade() -> usize {
+        return 1;
+    }
+}
 impl Grade for AntiScalar {
     fn grade() -> usize {
         return 5;

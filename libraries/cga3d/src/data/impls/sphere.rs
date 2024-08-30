@@ -7,19 +7,274 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 65
+// Total Implementations: 131
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       2       0
-//  Average:         4       9       0
+//  Average:         3       7       0
 //  Maximum:        57      81       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         0       5       0
-//  Average:         9      14       0
+//   Median:         0       4       0
+//  Average:         6      11       0
 //  Maximum:       128     164       0
+impl std::ops::Add<AntiCircleRotor> for Sphere {
+    type Output = VersorOdd;
+    fn add(self, other: AntiCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        let addition = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]),
+            // e23, e31, e12, e45
+            other.group1(),
+            // e15, e25, e35, e1234
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], self[e4315]]),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiDipoleInversion> for Sphere {
+    type Output = MultiVector;
+    fn add(self, other: AntiDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]]),
+            // e5
+            other.group3()[3],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            other.group1(),
+            // e423, e431, e412
+            other.group0(),
+            // e235, e315, e125
+            Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiDualNum321> for Sphere {
+    type Output = VersorOdd;
+    fn add(self, other: AntiDualNum321) -> Self::Output {
+        use crate::elements::*;
+        let addition = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, self[e4315]]),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiDualNum4> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        0        0
+    fn add(self, other: AntiDualNum4) -> Self::Output {
+        use crate::elements::*;
+        let addition = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
+            // e23, e31, e12, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (self[e4315] + other.group0()[0])]),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiDualNum5> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        0        0
+    fn add(self, other: AntiDualNum5) -> Self::Output {
+        use crate::elements::*;
+        let addition = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
+            // e23, e31, e12, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, self[e4315]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[0])]),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiFlatPoint> for Sphere {
+    type Output = MultiVector;
+    fn add(self, other: AntiFlatPoint) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiFlector> for Sphere {
+    type Output = MultiVector;
+    fn add(self, other: AntiFlector) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+            // e5
+            other.group1()[3],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiLine> for Sphere {
+    type Output = DipoleInversion;
+    fn add(self, other: AntiLine) -> Self::Output {
+        use crate::elements::*;
+        let addition = DipoleInversion::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12, e45
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self[e4315]]),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiMotor> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        0        0
+    fn add(self, other: AntiMotor) -> Self::Output {
+        use crate::elements::*;
+        let addition = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+            // e23, e31, e12, e45
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self[e4315]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group1()[3])]),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiPlane> for Sphere {
+    type Output = MultiVector;
+    fn add(self, other: AntiPlane) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            // e5
+            other.group0()[3],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiQuadNum> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn add(self, other: AntiQuadNum) -> Self::Output {
+        use crate::elements::*;
+        let addition = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (self[e4315] + other.group0()[0])]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[1])]),
+        );
+        return addition;
+    }
+}
 impl std::ops::Add<AntiScalar> for Sphere {
     type Output = MultiVector;
     fn add(self, other: AntiScalar) -> Self::Output {
@@ -35,6 +290,8 @@ impl std::ops::Add<AntiScalar> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -45,8 +302,26 @@ impl std::ops::Add<AntiScalar> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiTripleNum> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn add(self, other: AntiTripleNum) -> Self::Output {
+        use crate::elements::*;
+        let addition = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]]),
+            // e23, e31, e12, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (self[e4315] + other.group0()[0])]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[1])]),
         );
         return addition;
     }
@@ -66,6 +341,8 @@ impl std::ops::Add<Circle> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
@@ -76,8 +353,6 @@ impl std::ops::Add<Circle> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
         return addition;
     }
@@ -97,6 +372,8 @@ impl std::ops::Add<CircleRotor> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
@@ -107,8 +384,6 @@ impl std::ops::Add<CircleRotor> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
         return addition;
     }
@@ -154,9 +429,71 @@ impl std::ops::Add<DipoleInversion> for Sphere {
         return addition;
     }
 }
-impl std::ops::Add<DualNum> for Sphere {
+impl std::ops::Add<DualNum321> for Sphere {
     type Output = MultiVector;
-    fn add(self, other: DualNum) -> Self::Output {
+    fn add(self, other: DualNum321) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, other.group0()[1]]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<DualNum4> for Sphere {
+    type Output = MultiVector;
+    fn add(self, other: DualNum4) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, other.group0()[1]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<DualNum5> for Sphere {
+    type Output = MultiVector;
+    fn add(self, other: DualNum5) -> Self::Output {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e12345
@@ -169,6 +506,8 @@ impl std::ops::Add<DualNum> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -179,8 +518,6 @@ impl std::ops::Add<DualNum> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
         return addition;
     }
@@ -238,6 +575,8 @@ impl std::ops::Add<Line> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             // e423, e431, e412
@@ -248,8 +587,6 @@ impl std::ops::Add<Line> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
         return addition;
     }
@@ -269,6 +606,8 @@ impl std::ops::Add<Motor> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             // e423, e431, e412
@@ -279,8 +618,6 @@ impl std::ops::Add<Motor> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
         return addition;
     }
@@ -307,18 +644,18 @@ impl std::ops::Add<MultiVector> for Sphere {
             other.group3(),
             // e41, e42, e43
             other.group4(),
-            // e415, e425, e435, e321
+            // e23, e31, e12
             other.group5(),
-            // e423, e431, e412
+            // e415, e425, e435, e321
             other.group6(),
-            // e235, e315, e125
+            // e423, e431, e412
             other.group7(),
+            // e235, e315, e125
+            other.group8(),
             // e4235, e4315, e4125, e3215
-            (self.group0() + other.group8()),
+            (self.group0() + other.group9()),
             // e1234
-            (self[e4315] + other[e35]),
-            // e12, e31, e23
-            other.group10(),
+            (self[e4315] + other[e45]),
         );
         return addition;
     }
@@ -342,6 +679,37 @@ impl std::ops::AddAssign<Plane> for Sphere {
         *self = addition;
     }
 }
+impl std::ops::Add<QuadNum> for Sphere {
+    type Output = MultiVector;
+    fn add(self, other: QuadNum) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, other.group0()[3]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+            // e5
+            other.group0()[1],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return addition;
+    }
+}
 impl std::ops::Add<RoundPoint> for Sphere {
     type Output = MultiVector;
     fn add(self, other: RoundPoint) -> Self::Output {
@@ -357,6 +725,8 @@ impl std::ops::Add<RoundPoint> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -367,8 +737,6 @@ impl std::ops::Add<RoundPoint> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
         return addition;
     }
@@ -412,6 +780,37 @@ impl std::ops::AddAssign<Sphere> for Sphere {
         *self = addition;
     }
 }
+impl std::ops::Add<TripleNum> for Sphere {
+    type Output = MultiVector;
+    fn add(self, other: TripleNum) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, other.group0()[2]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+            // e5
+            other.group0()[1],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return addition;
+    }
+}
 impl std::ops::Add<VersorEven> for Sphere {
     type Output = MultiVector;
     fn add(self, other: VersorEven) -> Self::Output {
@@ -427,6 +826,8 @@ impl std::ops::Add<VersorEven> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
@@ -437,8 +838,6 @@ impl std::ops::Add<VersorEven> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
         return addition;
     }
@@ -467,12 +866,191 @@ impl std::ops::Add<VersorOdd> for Sphere {
         return addition;
     }
 }
-impl std::ops::BitXor<DualNum> for Sphere {
+impl std::ops::BitXor<AntiCircleRotor> for Sphere {
+    type Output = Sphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
+    fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiCircleRotor> for Sphere {
+    fn bitxor_assign(&mut self, other: AntiCircleRotor) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiDipoleInversion> for Sphere {
+    type Output = AntiScalar;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        4        5        0
+    fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiDualNum321> for Sphere {
+    type Output = Sphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
+    fn bitxor(self, other: AntiDualNum321) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiDualNum321> for Sphere {
+    fn bitxor_assign(&mut self, other: AntiDualNum321) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiDualNum4> for Sphere {
+    type Output = Sphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
+    fn bitxor(self, other: AntiDualNum4) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiDualNum4> for Sphere {
+    fn bitxor_assign(&mut self, other: AntiDualNum4) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiDualNum5> for Sphere {
+    type Output = Sphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
+    fn bitxor(self, other: AntiDualNum5) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiDualNum5> for Sphere {
+    fn bitxor_assign(&mut self, other: AntiDualNum5) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiFlector> for Sphere {
+    type Output = AntiScalar;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3        4        0
+    fn bitxor(self, other: AntiFlector) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiMotor> for Sphere {
+    type Output = Sphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
+    fn bitxor(self, other: AntiMotor) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiMotor> for Sphere {
+    fn bitxor_assign(&mut self, other: AntiMotor) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiPlane> for Sphere {
+    type Output = AntiScalar;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3        4        0
+    fn bitxor(self, other: AntiPlane) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiQuadNum> for Sphere {
+    type Output = Sphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
+    fn bitxor(self, other: AntiQuadNum) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiQuadNum> for Sphere {
+    fn bitxor_assign(&mut self, other: AntiQuadNum) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiTripleNum> for Sphere {
+    type Output = Sphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
+    fn bitxor(self, other: AntiTripleNum) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiTripleNum> for Sphere {
+    fn bitxor_assign(&mut self, other: AntiTripleNum) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<DualNum4> for Sphere {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
-    fn bitxor(self, other: DualNum) -> Self::Output {
+    fn bitxor(self, other: DualNum4) -> Self::Output {
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<DualNum5> for Sphere {
+    type Output = AntiScalar;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn bitxor(self, other: DualNum5) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
     }
@@ -497,6 +1075,16 @@ impl std::ops::BitXor<MultiVector> for Sphere {
     // yes simd        4        7        0
     //  no simd        4       10        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<QuadNum> for Sphere {
+    type Output = AntiScalar;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        2        0
+    fn bitxor(self, other: QuadNum) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
     }
@@ -529,6 +1117,16 @@ impl std::ops::BitXorAssign<Scalar> for Sphere {
     fn bitxor_assign(&mut self, other: Scalar) {
         use crate::elements::*;
         *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<TripleNum> for Sphere {
+    type Output = AntiScalar;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        2        0
+    fn bitxor(self, other: TripleNum) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
     }
 }
 impl std::ops::BitXor<VersorEven> for Sphere {
@@ -573,6 +1171,151 @@ impl From<Plane> for Sphere {
         );
     }
 }
+impl std::ops::Mul<AntiCircleRotor> for Sphere {
+    type Output = DipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       14       29        0
+    //    simd3        2        3        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       21       37        0
+    //  no simd       40       58        0
+    fn mul(self, other: AntiCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiDipoleInversion> for Sphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       19       31        0
+    //    simd4       10       12        0
+    // Totals...
+    // yes simd       29       43        0
+    //  no simd       59       79        0
+    fn mul(self, other: AntiDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiDualNum321> for Sphere {
+    type Output = DipoleInversion;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2       10        0
+    fn mul(self, other: AntiDualNum321) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiDualNum4> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0       14        0
+    fn mul(self, other: AntiDualNum4) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiDualNum5> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        7        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        8        0
+    //  no simd        0       11        0
+    fn mul(self, other: AntiDualNum5) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiFlatPoint> for Sphere {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        9       21        0
+    fn mul(self, other: AntiFlatPoint) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiFlector> for Sphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       16       31        0
+    //    simd4        2        4        0
+    // Totals...
+    // yes simd       18       35        0
+    //  no simd       24       47        0
+    fn mul(self, other: AntiFlector) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiLine> for Sphere {
+    type Output = DipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       12       23        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       13       25        0
+    //  no simd       16       30        0
+    fn mul(self, other: AntiLine) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiMotor> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       12       20        0
+    //    simd4        3        6        0
+    // Totals...
+    // yes simd       15       26        0
+    //  no simd       24       44        0
+    fn mul(self, other: AntiMotor) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiPlane> for Sphere {
+    type Output = CircleRotor;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        9        0
+    //    simd3        0        2        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        6       13        0
+    //  no simd       12       23        0
+    fn mul(self, other: AntiPlane) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiQuadNum> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        4       23        0
+    fn mul(self, other: AntiQuadNum) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
 impl std::ops::Mul<AntiScalar> for Sphere {
     type Output = RoundPoint;
     // Operative Statistics for this implementation:
@@ -587,29 +1330,45 @@ impl std::ops::Mul<AntiScalar> for Sphere {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<Circle> for Sphere {
-    type Output = VersorEven;
+impl std::ops::Mul<AntiTripleNum> for Sphere {
+    type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       15       30        0
-    //    simd4        5        5        0
+    //      f32        2       14        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       20       35        0
-    //  no simd       35       50        0
+    // yes simd        2       15        0
+    //  no simd        2       18        0
+    fn mul(self, other: AntiTripleNum) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<Circle> for Sphere {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        5       20        0
+    //    simd3        2        3        0
+    //    simd4        6        7        0
+    // Totals...
+    // yes simd       13       30        0
+    //  no simd       35       57        0
     fn mul(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
 }
 impl std::ops::Mul<CircleRotor> for Sphere {
-    type Output = VersorEven;
+    type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       15       27        0
-    //    simd4        7        7        0
+    //      f32        6       17        0
+    //    simd3        2        3        0
+    //    simd4        7        8        0
     // Totals...
-    // yes simd       22       34        0
-    //  no simd       43       55        0
+    // yes simd       15       28        0
+    //  no simd       40       58        0
     fn mul(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -644,7 +1403,31 @@ impl std::ops::Mul<DipoleInversion> for Sphere {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<DualNum> for Sphere {
+impl std::ops::Mul<DualNum321> for Sphere {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2       16        0
+    fn mul(self, other: DualNum321) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<DualNum4> for Sphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        0        7        0
+    //  no simd        0       19        0
+    fn mul(self, other: DualNum4) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<DualNum5> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -653,7 +1436,7 @@ impl std::ops::Mul<DualNum> for Sphere {
     // Totals...
     // yes simd        0        5        0
     //  no simd        0       14        0
-    fn mul(self, other: DualNum) -> Self::Output {
+    fn mul(self, other: DualNum5) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
@@ -679,13 +1462,14 @@ impl std::ops::Mul<Flector> for Sphere {
     }
 }
 impl std::ops::Mul<Line> for Sphere {
-    type Output = VersorEven;
+    type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       26        0
+    //      f32       12       23        0
+    //    simd3        0        1        0
     //    simd4        1        1        0
     // Totals...
-    // yes simd       13       27        0
+    // yes simd       13       25        0
     //  no simd       16       30        0
     fn mul(self, other: Line) -> Self::Output {
         use crate::elements::*;
@@ -723,11 +1507,26 @@ impl std::ops::Mul<MultiVector> for Sphere {
     }
 }
 impl std::ops::Mul<Plane> for Sphere {
-    type Output = VersorOdd;
+    type Output = AntiCircleRotor;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4       10        0
+    //    simd3        0        1        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        6       13        0
+    //  no simd       12       21        0
+    fn mul(self, other: Plane) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<QuadNum> for Sphere {
+    type Output = VersorEven;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        9       21        0
-    fn mul(self, other: Plane) -> Self::Output {
+    // f32        4       29        0
+    fn mul(self, other: QuadNum) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
@@ -768,15 +1567,30 @@ impl std::ops::MulAssign<Scalar> for Sphere {
     }
 }
 impl std::ops::Mul<Sphere> for Sphere {
-    type Output = VersorOdd;
+    type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        9        0
+    //      f32        2        3        0
+    //    simd3        1        2        0
     //    simd4        3        4        0
     // Totals...
-    // yes simd        8       13        0
+    // yes simd        6        9        0
     //  no simd       17       25        0
     fn mul(self, other: Sphere) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<TripleNum> for Sphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2       10        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        2       13        0
+    //  no simd        2       22        0
+    fn mul(self, other: TripleNum) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
@@ -830,13 +1644,306 @@ impl std::ops::Not for Sphere {
     // f32        0        3        0
     fn not(self) -> Self::Output {
         use crate::elements::*;
-        let dual = RoundPoint::from_groups(
+        let right_dual = RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self[e4315]]),
             // e5
             self.group0()[3],
         );
-        return dual;
+        return right_dual;
+    }
+}
+impl std::ops::Sub<AntiCircleRotor> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0       11        0
+    fn sub(self, other: AntiCircleRotor) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]) * Simd32x4::from(-1.0)),
+            // e23, e31, e12, e45
+            (other.group1() * Simd32x4::from(-1.0)),
+            // e15, e25, e35, e1234
+            Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), self[e4315]]),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiDipoleInversion> for Sphere {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd3        0        2        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0       15        0
+    fn sub(self, other: AntiDipoleInversion) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            (Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]]) * Simd32x4::from(-1.0)),
+            // e5
+            (other.group3()[3] * -1.0),
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            (other.group1() * Simd32x4::from(-1.0)),
+            // e423, e431, e412
+            (other.group0() * Simd32x3::from(-1.0)),
+            // e235, e315, e125
+            (Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) * Simd32x3::from(-1.0)),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiDualNum321> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn sub(self, other: AntiDualNum321) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, self[e4315]]),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiDualNum4> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        1        0
+    fn sub(self, other: AntiDualNum4) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
+            // e23, e31, e12, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (self[e4315] - other.group0()[0])]),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiDualNum5> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        1        0
+    fn sub(self, other: AntiDualNum5) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
+            // e23, e31, e12, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, self[e4315]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[0])]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiFlatPoint> for Sphere {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        4        0
+    fn sub(self, other: AntiFlatPoint) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiFlector> for Sphere {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        5        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        6        0
+    //  no simd        0        8        0
+    fn sub(self, other: AntiFlector) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), 0.0]),
+            // e5
+            (other.group1()[3] * -1.0),
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiLine> for Sphere {
+    type Output = DipoleInversion;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        6        0
+    fn sub(self, other: AntiLine) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = DipoleInversion::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12, e45
+            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self[e4315]]),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiMotor> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        7        0
+    fn sub(self, other: AntiMotor) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
+            // e23, e31, e12, e45
+            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self[e4315]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group1()[3])]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiPlane> for Sphere {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        4        0
+    fn sub(self, other: AntiPlane) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
+            // e5
+            (other.group0()[3] * -1.0),
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiQuadNum> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        2        0
+    fn sub(self, other: AntiQuadNum) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[2] * -1.0)]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (self[e4315] - other.group0()[0])]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[1])]),
+        );
+        return subtraction;
     }
 }
 impl std::ops::Sub<AntiScalar> for Sphere {
@@ -857,6 +1964,8 @@ impl std::ops::Sub<AntiScalar> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -867,8 +1976,26 @@ impl std::ops::Sub<AntiScalar> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiTripleNum> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        1        0
+    fn sub(self, other: AntiTripleNum) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[2] * -1.0)]),
+            // e23, e31, e12, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (self[e4315] - other.group0()[0])]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[1])]),
         );
         return subtraction;
     }
@@ -895,6 +2022,8 @@ impl std::ops::Sub<Circle> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             (other.group1() * Simd32x4::from(-1.0)),
             // e423, e431, e412
@@ -905,8 +2034,6 @@ impl std::ops::Sub<Circle> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
         return subtraction;
     }
@@ -934,6 +2061,8 @@ impl std::ops::Sub<CircleRotor> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             (other.group1() * Simd32x4::from(-1.0)),
             // e423, e431, e412
@@ -944,8 +2073,6 @@ impl std::ops::Sub<CircleRotor> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
         return subtraction;
     }
@@ -1000,12 +2127,80 @@ impl std::ops::Sub<DipoleInversion> for Sphere {
         return subtraction;
     }
 }
-impl std::ops::Sub<DualNum> for Sphere {
+impl std::ops::Sub<DualNum321> for Sphere {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        2        0
-    fn sub(self, other: DualNum) -> Self::Output {
+    fn sub(self, other: DualNum321) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, (other.group0()[1] * -1.0)]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<DualNum4> for Sphere {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn sub(self, other: DualNum4) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, (other.group0()[1] * -1.0)]),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<DualNum5> for Sphere {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn sub(self, other: DualNum5) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
@@ -1018,6 +2213,8 @@ impl std::ops::Sub<DualNum> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1028,8 +2225,6 @@ impl std::ops::Sub<DualNum> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
         return subtraction;
     }
@@ -1100,6 +2295,8 @@ impl std::ops::Sub<Line> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
             // e423, e431, e412
@@ -1110,8 +2307,6 @@ impl std::ops::Sub<Line> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
         return subtraction;
     }
@@ -1138,6 +2333,8 @@ impl std::ops::Sub<Motor> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
             // e423, e431, e412
@@ -1148,8 +2345,6 @@ impl std::ops::Sub<Motor> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
         return subtraction;
     }
@@ -1178,18 +2373,18 @@ impl std::ops::Sub<MultiVector> for Sphere {
             (other.group3() * Simd32x4::from(-1.0)),
             // e41, e42, e43
             (other.group4() * Simd32x3::from(-1.0)),
+            // e23, e31, e12
+            (other.group5() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
-            (other.group5() * Simd32x4::from(-1.0)),
+            (other.group6() * Simd32x4::from(-1.0)),
             // e423, e431, e412
-            (other.group6() * Simd32x3::from(-1.0)),
-            // e235, e315, e125
             (other.group7() * Simd32x3::from(-1.0)),
+            // e235, e315, e125
+            (other.group8() * Simd32x3::from(-1.0)),
             // e4235, e4315, e4125, e3215
-            (self.group0() - other.group8()),
+            (self.group0() - other.group9()),
             // e1234
-            (self[e4315] - other[e35]),
-            // e12, e31, e23
-            (other.group10() * Simd32x3::from(-1.0)),
+            (self[e4315] - other[e45]),
         );
         return subtraction;
     }
@@ -1211,6 +2406,40 @@ impl std::ops::SubAssign<Plane> for Sphere {
         use crate::elements::*;
         let subtraction = Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ (self.group0() - other.group0()), /* e1234 */ self[e4315]);
         *self = subtraction;
+    }
+}
+impl std::ops::Sub<QuadNum> for Sphere {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        4        0
+    fn sub(self, other: QuadNum) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, (other.group0()[3] * -1.0)]),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
+            // e5
+            (other.group0()[1] * -1.0),
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[2] * -1.0)]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return subtraction;
     }
 }
 impl std::ops::Sub<RoundPoint> for Sphere {
@@ -1235,6 +2464,8 @@ impl std::ops::Sub<RoundPoint> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1245,8 +2476,6 @@ impl std::ops::Sub<RoundPoint> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
         return subtraction;
     }
@@ -1293,6 +2522,40 @@ impl std::ops::SubAssign<Sphere> for Sphere {
         *self = subtraction;
     }
 }
+impl std::ops::Sub<TripleNum> for Sphere {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn sub(self, other: TripleNum) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, (other.group0()[2] * -1.0)]),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
+            // e5
+            (other.group0()[1] * -1.0),
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            self.group0(),
+            // e1234
+            self[e4315],
+        );
+        return subtraction;
+    }
+}
 impl std::ops::Sub<VersorEven> for Sphere {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -1316,6 +2579,8 @@ impl std::ops::Sub<VersorEven> for Sphere {
             Simd32x4::from(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
             // e415, e425, e435, e321
             (other.group1() * Simd32x4::from(-1.0)),
             // e423, e431, e412
@@ -1326,8 +2591,6 @@ impl std::ops::Sub<VersorEven> for Sphere {
             self.group0(),
             // e1234
             self[e4315],
-            // e12, e31, e23
-            Simd32x3::from(0.0),
         );
         return subtraction;
     }
@@ -1354,6 +2617,190 @@ impl std::ops::Sub<VersorOdd> for Sphere {
             (self.group0() - other.group3()),
         );
         return subtraction;
+    }
+}
+
+impl TryFrom<AntiDualNum4> for Sphere {
+    type Error = String;
+    fn try_from(anti_dual_num4: AntiDualNum4) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = anti_dual_num4[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from AntiDualNum4 do not fit into Sphere { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(0.0), /* e1234 */ anti_dual_num4[e1234]));
+    }
+}
+
+impl TryFrom<AntiDualNum5> for Sphere {
+    type Error = String;
+    fn try_from(anti_dual_num5: AntiDualNum5) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = anti_dual_num5[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from AntiDualNum5 do not fit into Sphere { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(Sphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([0.0, 0.0, 0.0, anti_dual_num5[e3215]]),
+            // e1234
+            0.0,
+        ));
+    }
+}
+
+impl TryFrom<AntiMotor> for Sphere {
+    type Error = String;
+    fn try_from(anti_motor: AntiMotor) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = anti_motor[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e23: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_motor[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e31: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_motor[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e12: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_motor[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_motor[4];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e15: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_motor[5];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e25: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_motor[6];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e35: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from AntiMotor do not fit into Sphere { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(Sphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([0.0, 0.0, 0.0, anti_motor[e3215]]),
+            // e1234
+            0.0,
+        ));
+    }
+}
+
+impl TryFrom<AntiQuadNum> for Sphere {
+    type Error = String;
+    fn try_from(anti_quad_num: AntiQuadNum) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = anti_quad_num[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e45: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = anti_quad_num[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from AntiQuadNum do not fit into Sphere { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(Sphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([0.0, 0.0, 0.0, anti_quad_num[e3215]]),
+            // e1234
+            anti_quad_num[e1234],
+        ));
+    }
+}
+
+impl TryFrom<AntiTripleNum> for Sphere {
+    type Error = String;
+    fn try_from(anti_triple_num: AntiTripleNum) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = anti_triple_num[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from AntiTripleNum do not fit into Sphere { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(Sphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([0.0, 0.0, 0.0, anti_triple_num[e3215]]),
+            // e1234
+            anti_triple_num[e1234],
+        ));
     }
 }
 
@@ -1604,91 +3051,91 @@ impl TryFrom<MultiVector> for Sphere {
         let el = multi_vector[14];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e415: ");
+            error_string.push_str("e23: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[15];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e425: ");
+            error_string.push_str("e31: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[16];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e435: ");
+            error_string.push_str("e12: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[17];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e321: ");
+            error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[18];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e423: ");
+            error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[19];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e431: ");
+            error_string.push_str("e435: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[20];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e412: ");
+            error_string.push_str("e321: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[21];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e235: ");
+            error_string.push_str("e423: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[22];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e315: ");
+            error_string.push_str("e431: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[23];
         if el != 0.0 {
             fail = true;
+            error_string.push_str("e412: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[24];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e235: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[25];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e315: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[26];
+        if el != 0.0 {
+            fail = true;
             error_string.push_str("e125: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = multi_vector[29];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e12: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = multi_vector[30];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e31: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = multi_vector[31];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e23: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }

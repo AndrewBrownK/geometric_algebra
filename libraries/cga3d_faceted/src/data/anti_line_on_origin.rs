@@ -2,10 +2,10 @@ use crate::data::*;
 use crate::simd::*;
 
 /// AntiLineOnOrigin.
-/// This variant of DipoleAtInfinity is the Dual to LineOnOrigin. It is common for
+/// This variant of MysteryDipole is the Dual to LineOnOrigin. It is common for
 /// objects of this type to not intersect the null cone, which also prevents them from
 /// projecting onto the horosphere in the usual manner. When this happens, this
-/// object has behavioral and operative similarity to a DipoleAtInfinity,
+/// object has behavioral and operative similarity to a MysteryDipole,
 /// but an imaginary radius, and a spacial presence in the shape of a
 /// LineOnOrigin with a real radius.
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]

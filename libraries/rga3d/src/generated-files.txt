@@ -24,6 +24,8 @@
 ./libraries/rga3d/src/lib.rs
 ./libraries/rga3d/src/simd.rs
 ./libraries/rga3d/src/traits.rs
+./libraries/rga3d/src/traits/anti_constraint_valid.rs
+./libraries/rga3d/src/traits/anti_constraint_violation.rs
 ./libraries/rga3d/src/traits/anti_fix_impl.rs
 ./libraries/rga3d/src/traits/anti_grade.rs
 ./libraries/rga3d/src/traits/anti_inverse.rs
@@ -32,12 +34,16 @@
 ./libraries/rga3d/src/traits/anti_sandwich.rs
 ./libraries/rga3d/src/traits/anti_square_root.rs
 ./libraries/rga3d/src/traits/anti_wedge.rs
+./libraries/rga3d/src/traits/constraint_valid.rs
+./libraries/rga3d/src/traits/constraint_violation.rs
 ./libraries/rga3d/src/traits/fix.rs
 ./libraries/rga3d/src/traits/geometric_anti_product.rs
 ./libraries/rga3d/src/traits/geometric_anti_quotient.rs
 ./libraries/rga3d/src/traits/geometric_product.rs
 ./libraries/rga3d/src/traits/geometric_quotient.rs
 ./libraries/rga3d/src/traits/grade.rs
+./libraries/rga3d/src/traits/impls/anti_constraint_valid.rs
+./libraries/rga3d/src/traits/impls/anti_constraint_violation.rs
 ./libraries/rga3d/src/traits/impls/anti_fix_impl.rs
 ./libraries/rga3d/src/traits/impls/anti_grade.rs
 ./libraries/rga3d/src/traits/impls/anti_inverse.rs
@@ -46,6 +52,8 @@
 ./libraries/rga3d/src/traits/impls/anti_sandwich.rs
 ./libraries/rga3d/src/traits/impls/anti_square_root.rs
 ./libraries/rga3d/src/traits/impls/anti_wedge.rs
+./libraries/rga3d/src/traits/impls/constraint_valid.rs
+./libraries/rga3d/src/traits/impls/constraint_violation.rs
 ./libraries/rga3d/src/traits/impls/fix.rs
 ./libraries/rga3d/src/traits/impls/geometric_anti_product.rs
 ./libraries/rga3d/src/traits/impls/geometric_anti_quotient.rs

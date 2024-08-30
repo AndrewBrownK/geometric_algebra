@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 42
+// Total Implementations: 44
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -166,6 +166,16 @@ impl Grade for LineAtInfinity {
 impl Grade for LineOnOrigin {
     fn grade() -> usize {
         return 3;
+    }
+}
+impl Grade for MysteryCircle {
+    fn grade() -> usize {
+        return 3;
+    }
+}
+impl Grade for MysteryDipole {
+    fn grade() -> usize {
+        return 2;
     }
 }
 impl Grade for NullCircleAtOrigin {

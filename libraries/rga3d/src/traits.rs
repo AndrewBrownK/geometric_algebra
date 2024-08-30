@@ -7,10 +7,14 @@ pub mod arity_0 {
     pub use crate::traits::zero::Zero;
 }
 pub mod arity_1 {
+    pub use crate::traits::anti_constraint_valid::AntiConstraintValid;
+    pub use crate::traits::anti_constraint_violation::AntiConstraintViolation;
     pub use crate::traits::anti_fix_impl::AntiFixImpl;
     pub use crate::traits::anti_inverse::AntiInverse;
     pub use crate::traits::anti_reverse::AntiReverse;
     pub use crate::traits::anti_square_root::AntiSquareRoot;
+    pub use crate::traits::constraint_valid::ConstraintValid;
+    pub use crate::traits::constraint_violation::ConstraintViolation;
     pub use crate::traits::fix::Fix;
     pub use crate::traits::inverse::Inverse;
     pub use crate::traits::reverse::Reverse;
@@ -29,6 +33,8 @@ pub mod arity_2 {
     pub use crate::traits::wedge::Wedge;
 }
 pub mod infix {
+    pub use crate::traits::anti_constraint_valid::anti_constraint_valid;
+    pub use crate::traits::anti_constraint_violation::anti_constraint_violation;
     pub use crate::traits::anti_fix_impl::anti_fix_impl;
     pub use crate::traits::anti_inverse::anti_inverse;
     pub use crate::traits::anti_reverse::anti_reverse;
@@ -37,6 +43,8 @@ pub mod infix {
     pub use crate::traits::anti_square_root::anti_square_root;
     pub use crate::traits::anti_wedge::anti_wedge;
     pub use crate::traits::anti_wedge::anti_wedge_partial;
+    pub use crate::traits::constraint_valid::constraint_valid;
+    pub use crate::traits::constraint_violation::constraint_violation;
     pub use crate::traits::fix::fix;
     pub use crate::traits::geometric_anti_product::geometric_anti_product;
     pub use crate::traits::geometric_anti_product::geometric_anti_product_partial;
@@ -56,6 +64,10 @@ pub mod infix {
     pub use crate::traits::wedge::wedge;
     pub use crate::traits::wedge::wedge_partial;
 }
+mod anti_constraint_valid;
+pub use anti_constraint_valid::AntiConstraintValid;
+mod anti_constraint_violation;
+pub use anti_constraint_violation::AntiConstraintViolation;
 mod anti_fix_impl;
 pub use anti_fix_impl::AntiFixImpl;
 mod anti_grade;
@@ -72,6 +84,10 @@ mod anti_square_root;
 pub use anti_square_root::AntiSquareRoot;
 mod anti_wedge;
 pub use anti_wedge::AntiWedge;
+mod constraint_valid;
+pub use constraint_valid::ConstraintValid;
+mod constraint_violation;
+pub use constraint_violation::ConstraintViolation;
 mod fix;
 pub use fix::Fix;
 mod geometric_anti_product;

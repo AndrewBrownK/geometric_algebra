@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 17
+// Total Implementations: 33
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -18,9 +18,85 @@
 //   Median:         0       0       0
 //  Average:         0       0       0
 //  Maximum:         0       0       0
+impl Unit for AntiCircleRotor {
+    fn unit() -> Self {
+        return AntiCircleRotor::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(1.0),
+            // e23, e31, e12, e45
+            Simd32x4::from(1.0),
+            // e15, e25, e35, scalar
+            Simd32x4::from(1.0),
+        );
+    }
+}
+impl Unit for AntiDipoleInversion {
+    fn unit() -> Self {
+        return AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            Simd32x3::from(1.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(1.0),
+            // e235, e315, e125, e4
+            Simd32x4::from(1.0),
+            // e1, e2, e3, e5
+            Simd32x4::from(1.0),
+        );
+    }
+}
+impl Unit for AntiDualNum321 {
+    fn unit() -> Self {
+        return AntiDualNum321::from_groups(/* e45, scalar */ Simd32x2::from(1.0));
+    }
+}
+impl Unit for AntiDualNum4 {
+    fn unit() -> Self {
+        return AntiDualNum4::from_groups(/* e1234, scalar */ Simd32x2::from(1.0));
+    }
+}
+impl Unit for AntiDualNum5 {
+    fn unit() -> Self {
+        return AntiDualNum5::from_groups(/* e3215, scalar */ Simd32x2::from(1.0));
+    }
+}
+impl Unit for AntiFlatPoint {
+    fn unit() -> Self {
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(1.0));
+    }
+}
+impl Unit for AntiFlector {
+    fn unit() -> Self {
+        return AntiFlector::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(1.0), /* e1, e2, e3, e5 */ Simd32x4::from(1.0));
+    }
+}
+impl Unit for AntiLine {
+    fn unit() -> Self {
+        return AntiLine::from_groups(/* e23, e31, e12 */ Simd32x3::from(1.0), /* e15, e25, e35 */ Simd32x3::from(1.0));
+    }
+}
+impl Unit for AntiMotor {
+    fn unit() -> Self {
+        return AntiMotor::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from(1.0), /* e15, e25, e35, e3215 */ Simd32x4::from(1.0));
+    }
+}
+impl Unit for AntiPlane {
+    fn unit() -> Self {
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(1.0));
+    }
+}
+impl Unit for AntiQuadNum {
+    fn unit() -> Self {
+        return AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from(1.0));
+    }
+}
 impl Unit for AntiScalar {
     fn unit() -> Self {
         return AntiScalar::from_groups(/* e12345 */ 1.0);
+    }
+}
+impl Unit for AntiTripleNum {
+    fn unit() -> Self {
+        return AntiTripleNum::from_groups(/* e1234, e3215, scalar */ Simd32x3::from(1.0));
     }
 }
 impl Unit for Circle {
@@ -73,9 +149,19 @@ impl Unit for DipoleInversion {
         );
     }
 }
-impl Unit for DualNum {
+impl Unit for DualNum321 {
     fn unit() -> Self {
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(1.0));
+        return DualNum321::from_groups(/* e321, e12345 */ Simd32x2::from(1.0));
+    }
+}
+impl Unit for DualNum4 {
+    fn unit() -> Self {
+        return DualNum4::from_groups(/* e4, e12345 */ Simd32x2::from(1.0));
+    }
+}
+impl Unit for DualNum5 {
+    fn unit() -> Self {
+        return DualNum5::from_groups(/* e5, e12345 */ Simd32x2::from(1.0));
     }
 }
 impl Unit for FlatPoint {
@@ -111,6 +197,8 @@ impl Unit for MultiVector {
             Simd32x4::from(1.0),
             // e41, e42, e43
             Simd32x3::from(1.0),
+            // e23, e31, e12
+            Simd32x3::from(1.0),
             // e415, e425, e435, e321
             Simd32x4::from(1.0),
             // e423, e431, e412
@@ -121,14 +209,17 @@ impl Unit for MultiVector {
             Simd32x4::from(1.0),
             // e1234
             1.0,
-            // e12, e31, e23
-            Simd32x3::from(1.0),
         );
     }
 }
 impl Unit for Plane {
     fn unit() -> Self {
         return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(1.0));
+    }
+}
+impl Unit for QuadNum {
+    fn unit() -> Self {
+        return QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from(1.0));
     }
 }
 impl Unit for RoundPoint {
@@ -144,6 +235,11 @@ impl Unit for Scalar {
 impl Unit for Sphere {
     fn unit() -> Self {
         return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(1.0), /* e1234 */ 1.0);
+    }
+}
+impl Unit for TripleNum {
+    fn unit() -> Self {
+        return TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from(1.0));
     }
 }
 impl Unit for VersorEven {

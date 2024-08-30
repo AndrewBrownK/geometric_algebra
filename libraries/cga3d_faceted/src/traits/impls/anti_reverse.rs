@@ -5,17 +5,17 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 87
+// Total Implementations: 107
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         0       2       0
+//   Median:         0       1       0
 //  Average:         0       2       0
 //  Maximum:         0       9       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         0       6       0
+//   Median:         0       4       0
 //  Average:         0       4       0
 //  Maximum:         0      20       0
 impl AntiReverse for AntiCircleOnOrigin {
@@ -200,11 +200,6 @@ impl AntiReverse for AntiDipoleOnOrigin {
         return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(-1.0)));
     }
 }
-impl AntiReverse for AntiDualNum {
-    fn anti_reverse(self) -> Self {
-        return self;
-    }
-}
 impl AntiReverse for AntiFlatOrigin {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -290,6 +285,33 @@ impl AntiReverse for AntiMotorOnOrigin {
         );
     }
 }
+impl AntiReverse for AntiMysteryCircleRotor {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_reverse(self) -> Self {
+        use crate::elements::*;
+        return AntiMysteryCircleRotor::from_groups(/* e23, e31, e12, e45 */ (self.group0() * Simd32x4::from(-1.0)), /* scalar */ self[e31]);
+    }
+}
+impl AntiReverse for AntiMysteryDipoleInversion {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_reverse(self) -> Self {
+        return AntiMysteryDipoleInversion::from_groups(/* e415, e425, e435, e321 */ (self.group0() * Simd32x4::from(-1.0)), /* e1, e2, e3 */ self.group1());
+    }
+}
+impl AntiReverse for AntiMysteryQuadNum {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn anti_reverse(self) -> Self {
+        return AntiMysteryQuadNum::from_groups(/* e45, scalar */ Simd32x2::from([(self.group0()[0] * -1.0), self.group0()[1]]));
+    }
+}
 impl AntiReverse for AntiPlane {
     fn anti_reverse(self) -> Self {
         return self;
@@ -298,6 +320,48 @@ impl AntiReverse for AntiPlane {
 impl AntiReverse for AntiPlaneOnOrigin {
     fn anti_reverse(self) -> Self {
         return self;
+    }
+}
+impl AntiReverse for AntiQuadNum {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn anti_reverse(self) -> Self {
+        return AntiQuadNum::from_groups(
+            // e1234, e3215, e45, scalar
+            Simd32x4::from([self.group0()[0], self.group0()[1], (self.group0()[2] * -1.0), self.group0()[3]]),
+        );
+    }
+}
+impl AntiReverse for AntiQuadNumAligningOrigin {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for AntiQuadNumAligningOriginAtInfinity {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for AntiQuadNumAtInfinity {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn anti_reverse(self) -> Self {
+        return AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ Simd32x3::from([self.group0()[0], (self.group0()[1] * -1.0), self.group0()[2]]));
+    }
+}
+impl AntiReverse for AntiQuadNumOnOrigin {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for AntiQuadNumOrthogonalOrigin {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn anti_reverse(self) -> Self {
+        return AntiQuadNumOrthogonalOrigin::from_groups(/* e1234, e3215, e45 */ Simd32x3::from([self.group0()[0], self.group0()[1], (self.group0()[2] * -1.0)]));
     }
 }
 impl AntiReverse for AntiScalar {
@@ -708,11 +772,6 @@ impl AntiReverse for DipoleOrthogonalOrigin {
         );
     }
 }
-impl AntiReverse for DualNum {
-    fn anti_reverse(self) -> Self {
-        return self;
-    }
-}
 impl AntiReverse for FlatOrigin {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -889,6 +948,74 @@ impl AntiReverse for MultiVector {
         );
     }
 }
+impl AntiReverse for MysteryCircle {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_reverse(self) -> Self {
+        return MysteryCircle::from_groups(/* e415, e425, e435, e321 */ (self.group0() * Simd32x4::from(-1.0)));
+    }
+}
+impl AntiReverse for MysteryCircleRotor {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_reverse(self) -> Self {
+        use crate::elements::*;
+        return MysteryCircleRotor::from_groups(/* e415, e425, e435, e321 */ (self.group0() * Simd32x4::from(-1.0)), /* e12345 */ self[e425]);
+    }
+}
+impl AntiReverse for MysteryDipole {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_reverse(self) -> Self {
+        return MysteryDipole::from_groups(/* e23, e31, e12, e45 */ (self.group0() * Simd32x4::from(-1.0)));
+    }
+}
+impl AntiReverse for MysteryDipoleInversion {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_reverse(self) -> Self {
+        return MysteryDipoleInversion::from_groups(/* e23, e31, e12, e45 */ (self.group0() * Simd32x4::from(-1.0)), /* e4235, e4315, e4125 */ self.group1());
+    }
+}
+impl AntiReverse for MysteryQuadNum {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn anti_reverse(self) -> Self {
+        return MysteryQuadNum::from_groups(/* e321, e12345 */ Simd32x2::from([(self.group0()[0] * -1.0), self.group0()[1]]));
+    }
+}
+impl AntiReverse for MysteryVersorEven {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_reverse(self) -> Self {
+        return MysteryVersorEven::from_groups(/* e12345, e1, e2, e3 */ self.group0(), /* e415, e425, e435, e321 */ (self.group1() * Simd32x4::from(-1.0)));
+    }
+}
+impl AntiReverse for MysteryVersorOdd {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_reverse(self) -> Self {
+        return MysteryVersorOdd::from_groups(
+            // scalar, e4235, e4315, e4125
+            self.group0(),
+            // e23, e31, e12, e45
+            (self.group1() * Simd32x4::from(-1.0)),
+        );
+    }
+}
 impl AntiReverse for NullCircleAtOrigin {
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
@@ -947,6 +1074,48 @@ impl AntiReverse for Plane {
 impl AntiReverse for PlaneOnOrigin {
     fn anti_reverse(self) -> Self {
         return self;
+    }
+}
+impl AntiReverse for QuadNum {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn anti_reverse(self) -> Self {
+        return QuadNum::from_groups(
+            // e4, e5, e321, e12345
+            Simd32x4::from([self.group0()[0], self.group0()[1], (self.group0()[2] * -1.0), self.group0()[3]]),
+        );
+    }
+}
+impl AntiReverse for QuadNumAligningOrigin {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for QuadNumAligningOriginAtInfinity {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for QuadNumAtInfinity {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn anti_reverse(self) -> Self {
+        return QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([self.group0()[0], (self.group0()[1] * -1.0), self.group0()[2]]));
+    }
+}
+impl AntiReverse for QuadNumOnOrigin {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for QuadNumOrthogonalOrigin {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn anti_reverse(self) -> Self {
+        return QuadNumOrthogonalOrigin::from_groups(/* e4, e5, e321 */ Simd32x3::from([self.group0()[0], self.group0()[1], (self.group0()[2] * -1.0)]));
     }
 }
 impl AntiReverse for RoundPoint {
