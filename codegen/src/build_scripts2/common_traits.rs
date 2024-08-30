@@ -97,6 +97,9 @@ pub static SquareRoot: Elaborated<SquareRootImpl> = SquareRootImpl.new_trait_nam
 
 pub static AntiSquareRoot: Elaborated<AntiSquareRootImpl> = AntiSquareRootImpl.new_trait_named("AntiSquareRoot").blurb("TODO");
 
+pub static Square: Elaborated<SquareImpl> = SquareImpl.new_trait_named("Square").blurb("TODO");
+pub static AntiSquare: Elaborated<AntiSquareImpl> = AntiSquareImpl.new_trait_named("AntiSquare").blurb("TODO");
+
 pub static BulkContraction: Elaborated<BulkContractionImpl> = BulkContractionImpl.new_trait_named("BulkContraction").blurb("TODO");
 
 pub static WeightContraction: Elaborated<WeightContractionImpl> = WeightContractionImpl.new_trait_named("WeightContraction").blurb("TODO");
@@ -671,6 +674,59 @@ mod impls {
         builder.return_expr(result)
     });
 
+    // TODO this is just a placeholder to help me figure out powi and then powf and then sqrt
+    trait_impl_1_type_1_arg!(SquareImpl(builder, slf) -> MultiVector {
+        let mut dyn_mv = DynamicMultiVector::zero();
+        for (a, a_el) in slf.elements_flat() {
+            for (b, b_el) in slf.elements_flat() {
+                let sop = builder.ga.product(a_el, b_el);
+                for p in sop.sum {
+                    let el = p.element;
+                    let f = a.clone() * b.clone() * p.coefficient;
+                    dyn_mv += (f, el);
+                }
+            }
+        }
+        let result = dyn_mv.construct(&builder)?;
+        builder.return_expr(result)
+    });
+    trait_impl_1_type_1_arg!(AntiSquareImpl(builder, slf) -> MultiVector {
+        let mut dyn_mv = DynamicMultiVector::zero();
+        for (a, a_el) in slf.elements_flat() {
+            for (b, b_el) in slf.elements_flat() {
+                let sop = builder.ga.anti_product(a_el, b_el);
+                for p in sop.sum {
+                    let el = p.element;
+                    let f = a.clone() * b.clone() * p.coefficient;
+                    dyn_mv += (f, el);
+                }
+            }
+        }
+        let result = dyn_mv.construct(&builder)?;
+        builder.return_expr(result)
+    });
+
+    /* AntiSquare QuadNum */
+    /*
+
+    TODO looks like I need to implement Ord on expressions
+impl AntiSquare for QuadNum {
+    type Output = QuadNum;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32       12       14        0
+    fn anti_square(self) -> Self::Output {
+        use crate::elements::*;
+        return QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
+            ((self[e12345] * self[e4]) - (self[e321] * self[e4]) + (self[e4] * self[e321]) + (self[e4] * self[e12345])),
+            ((self[e12345] * self[e5]) + (self[e321] * self[e5]) - (self[e5] * self[e321]) + (self[e5] * self[e12345])),
+            ((self[e12345] * self[e321]) + (self[e321] * self[e12345]) - (self[e4] * self[e5]) + (self[e5] * self[e4])),
+            (f32::powi(self[e12345], 2) + f32::powi(self[e321], 2) + (self[e4] * self[e5]) + (self[e5] * self[e4])),
+        ]));
+    }
+}
+    */
+
     trait_impl_1_type_1_arg!(SquareRootImpl(builder, slf) -> MultiVector {
         let scalar_mv = MultiVector::from(builder.mvs.scalar());
         if slf.expr_type == scalar_mv {
@@ -684,42 +740,23 @@ mod impls {
             return None
         }
 
+        let mut dyn_mv = DynamicMultiVector::zero();
+        for (a, a_el) in slf.elements_flat() {
+            for (b, b_el) in slf.elements_flat() {
+                let sop = builder.ga.product(a_el, b_el);
+                for p in sop.sum {
+                    let el = p.element;
+                    let f = a.clone() * b.clone() * p.coefficient;
+                    dyn_mv += (f, el);
+                }
+            }
+        }
+        let mv = dyn_mv.construct(&builder)?;
+        if mv.mv_class != slf.expr_type {
+            return None
+        }
+
         // TODO support SquareRoot with more types of MultiVector
-        //  I've looked through the product impls and found that the following might be square roots
-        //  - RoundPoint squares to AntiCircleRotor
-        //  - RoundPointAtOrigin squares to AntiCircleRotorAtInfinity
-        //  - AntiCircleOnOrigin squares to AntiVersorEvenOnOrigin
-        //  - AntiLine squares to AntiMotor
-        //  - AntiLineOnOrigin squares to AntiMotorOnOrigin
-        //  - Dipole squares to VersorOdd
-        //  - DipoleAligningOrigin squares to VersorOdd
-        //  - DipoleAtInfinity squares to VersorOddAtInfinity
-        //  - DipoleAtOrigin squares to VersorOddAtInfinity
-        //  - DipoleOnOrigin squares to AntiCircleRotorOnOrigin
-        //  - DipoleOrthogonalOrigin squares to VersorOdd
-        //  - FlatOrigin squares to Scalar
-        //  - FlatPoint squares to AntiCircleRotorAligningOriginAtInfinity
-        //  - AntiDipoleOnOrigin squares to AntiCircleRotorOnOrigin
-        //  - AntiFlatOrigin squares to Scalar
-        //  - AntiFlatPoint squares to AntiCircleRotorAligningOriginAtInfinity
-        //  - Circle squares to VersorOdd
-        //  - CircleAligningOrigin squares to VersorOdd
-        //  - CircleAtInfinity squares to VersorOddAtInfinity
-        //  - CircleAtOrigin squares to VersorOddAtInfinity
-        //  - CircleOnOrigin squares to AntiVersorEvenOnOrigin
-        //  - CircleOrthogonalOrigin squares to VersorOdd
-        //  - Line squares to AntiMotor
-        //  - LineOnOrigin squares to AntiMotorOnOrigin
-        //  - Plane squares to AntiCircleRotorAligningOriginAtInfinity
-        //  - PlaneOnOrigin squares to AntiMotorOnOrigin
-        //  - Sphere squares to AntiCircleRotor
-        //  - SphereAtOrigin squares to AntiCircleRotorAtInfinity
-        //  - SphereOnOrigin squares to AntiCircleRotorOnOrigin
-        //  - VersorOdd squares to VersorOdd
-        //  - VersorEven squares to VersorOdd
-        //  - AntiScalar squares to Scalar
-        //  - AntiDualNum squares to AntiDualNum
-        //  - DualNum squares to AntiDualNum
 
         // TODO I think these ones stand out to me as telling:
         //  - Scalar squares to Scalar

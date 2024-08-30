@@ -65,6 +65,7 @@ fn main() {
         Fix AntiFix
         ConstraintViolation AntiConstraintViolation
         ConstraintValid AntiConstraintValid
+        Square AntiSquare
     };
     codegen::operators! { repo, traits;
         fancy_infix => Div;
