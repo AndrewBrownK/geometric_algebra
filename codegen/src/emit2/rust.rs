@@ -999,8 +999,9 @@ postgres-types = "0.2.7""#
                         (1.0, true) => write!(w, " + ")?,
                         (-1.0, true) => write!(w, " - ")?,
                         (f, true) if f > 0.0 => {
-                            write!(w, " + *")?;
-                            self.write_f32(w, f)?
+                            write!(w, " + ")?;
+                            self.write_f32(w, f)?;
+                            write!(w, " * ")?;
                         }
                         (f, true) if f < 0.0 => {
                             let f = -f;
