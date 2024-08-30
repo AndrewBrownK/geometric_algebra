@@ -98,11 +98,11 @@ impl PartialEq for RawVariableInvocation {
 impl Eq for RawVariableInvocation {}
 impl PartialOrd for RawVariableInvocation {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.decl.partial_cmp(&other.decl)
+        Some(self.decl.cmp(&other.decl))
     }
 }
 impl Ord for RawVariableInvocation {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.cmp(other)
+        self.decl.cmp(&other.decl)
     }
 }
