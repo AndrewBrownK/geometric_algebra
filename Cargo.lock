@@ -415,6 +415,7 @@ dependencies = [
  "bitflags 2.5.0",
  "const_panic",
  "either",
+ "float-ord",
  "im",
  "indicatif",
  "lazy_static",

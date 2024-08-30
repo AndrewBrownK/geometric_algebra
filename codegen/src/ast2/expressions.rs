@@ -1,8 +1,9 @@
+use std::cmp::Ordering;
 use std::fmt::{Debug, Display, Formatter};
 use std::mem;
 use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 use std::sync::Arc;
-
+use float_ord::FloatOrd;
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::{BasisElementGroup, DynamicMultiVector};
 use crate::ast2::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
@@ -160,18 +161,14 @@ impl TraitResultType for MultiVector {
     }
 }
 
-// TODO what you should really do next is either...
-//  - make Expressions Ord so that you can do advanced redundancy extraction
-//  - figure out GeometricQuotient and stuff
-
-#[derive(PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntExpr {
     Variable(RawVariableInvocation),
     Literal(u32),
     // e.g. Grade
     TraitInvoke10ToInt(TraitKey, MultiVector),
 }
-#[derive(PartialEq, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub enum FloatExpr {
     Variable(RawVariableInvocation),
     Literal(f32),
@@ -186,7 +183,7 @@ pub enum FloatExpr {
     Sum(Vec<(FloatExpr, f32)>, f32),
     // TODO trig? floor? log? round? trunc? mix? step? smoothstep? fma? fract? modf?
 }
-#[derive(PartialEq, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub enum Vec2Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
@@ -196,7 +193,7 @@ pub enum Vec2Expr {
     Product(Vec<(Vec2Expr, f32)>, [f32; 2]),
     Sum(Vec<(Vec2Expr, f32)>, [f32; 2]),
 }
-#[derive(PartialEq, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub enum Vec3Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
@@ -206,7 +203,7 @@ pub enum Vec3Expr {
     Product(Vec<(Vec3Expr, f32)>, [f32; 3]),
     Sum(Vec<(Vec3Expr, f32)>, [f32; 3]),
 }
-#[derive(PartialEq, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub enum Vec4Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
@@ -216,19 +213,19 @@ pub enum Vec4Expr {
     Product(Vec<(Vec4Expr, f32)>, [f32; 4]),
     Sum(Vec<(Vec4Expr, f32)>, [f32; 4]),
 }
-#[derive(PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum MultiVectorGroupExpr {
     JustFloat(FloatExpr),
     Vec2(Vec2Expr),
     Vec3(Vec3Expr),
     Vec4(Vec4Expr),
 }
-#[derive(PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct MultiVectorExpr {
     pub mv_class: MultiVector,
     pub expr: Box<MultiVectorVia>,
 }
-#[derive(PartialEq, Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum MultiVectorVia {
     Variable(RawVariableInvocation),
     Construct(Vec<MultiVectorGroupExpr>),
@@ -240,7 +237,7 @@ pub enum MultiVectorVia {
     TraitInvoke22ToClass(TraitKey, MultiVectorExpr, MultiVectorExpr),
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum AnyExpression {
     Int(IntExpr),
     Float(FloatExpr),
@@ -1882,6 +1879,21 @@ impl<T> TakeAsOwned for Vec<T> {
 // ((self.group0()[1] * other.group0()[3]) + (self.group1()[0] * other.group0()[1])),
 // ((self.group0()[2] * other.group0()[3]) + (self.group1()[0] * other.group0()[2])),
 // ])),
+
+trait SortVecDespiteF32 {
+    fn sort_with_f32(&mut self);
+}
+impl<Expr: Ord> SortVecDespiteF32 for Vec<(Expr, f32)> {
+    fn sort_with_f32(&mut self) {
+        self.sort_by(|(a_expr, a_f32), (b_expr, b_f32)| {
+            a_expr.cmp(b_expr).then_with(|| {
+                FloatOrd(*a_f32).cmp(&FloatOrd(*b_f32))
+            })
+        });
+    }
+}
+
+
 impl FloatExpr {
     pub(crate) fn simplify(&mut self) {
         self.simplify_nuanced(false);
@@ -2071,6 +2083,7 @@ impl FloatExpr {
                     _ => true,
                 });
                 product.append(&mut flatten);
+                product.sort_with_f32();
 
                 let mut partition = 1;
                 while partition <= product.len() {
@@ -2159,6 +2172,7 @@ impl FloatExpr {
                     _ => true,
                 });
                 sum.append(&mut flatten);
+                sum.sort_with_f32();
 
                 let mut partition = 1;
                 while partition <= sum.len() {
@@ -2314,6 +2328,7 @@ impl Vec2Expr {
                     _ => true,
                 });
                 product.append(&mut flatten);
+                product.sort_with_f32();
 
                 let mut partition = 1;
                 while partition <= product.len() {
@@ -2409,6 +2424,7 @@ impl Vec2Expr {
                     _ => true,
                 });
                 sum.append(&mut flatten);
+                sum.sort_with_f32();
 
                 let mut partition = 1;
                 while partition <= sum.len() {
@@ -2578,6 +2594,7 @@ impl Vec3Expr {
                     _ => true,
                 });
                 product.append(&mut flatten);
+                product.sort_with_f32();
 
                 let mut partition = 1;
                 while partition <= product.len() {
@@ -2679,6 +2696,7 @@ impl Vec3Expr {
                     _ => true,
                 });
                 sum.append(&mut flatten);
+                sum.sort_with_f32();
 
                 let mut partition = 1;
                 while partition <= sum.len() {
@@ -2862,6 +2880,7 @@ impl Vec4Expr {
                     _ => true,
                 });
                 product.append(&mut flatten);
+                product.sort_with_f32();
 
                 let mut partition = 1;
                 while partition <= product.len() {
@@ -2973,6 +2992,7 @@ impl Vec4Expr {
                     _ => true,
                 });
                 sum.append(&mut flatten);
+                sum.sort_with_f32();
 
                 let mut partition = 1;
                 while partition <= sum.len() {
@@ -3145,6 +3165,558 @@ impl MultiVectorExpr {
         }
     }
 }
+
+impl PartialEq for FloatExpr {
+    fn eq(&self, other: &Self) -> bool {
+        use FloatExpr::*;
+        match (self, other) {
+            (Variable(a), Variable(b)) => a == b,
+            (Literal(a), Literal(b)) => FloatOrd(*a) == FloatOrd(*b),
+            (AccessVec2(a, ai), AccessVec2(b, bi)) => a == b && ai == bi,
+            (AccessVec3(a, ai), AccessVec3(b, bi)) => a == b && ai == bi,
+            (AccessVec4(a, ai), AccessVec4(b, bi)) => a == b && ai == bi,
+            (AccessMultiVecGroup(a, ai), AccessMultiVecGroup(b, bi)) => a == b && ai == bi,
+            (AccessMultiVecFlat(a, ai), AccessMultiVecFlat(b, bi)) => a == b && ai == bi,
+            (TraitInvoke11ToFloat(ak, a), TraitInvoke11ToFloat(bk, b)) => ak == bk && a == b,
+            (Product(a, al), Product(b, bl)) => {
+                if FloatOrd(*al) != FloatOrd(*bl) {
+                    return false
+                }
+                if a.len() != b.len() {
+                    return false
+                }
+                for ((af, ae), (bf, be)) in a.iter().zip(b.iter()) {
+                    if FloatOrd(*ae) != FloatOrd(*be) {
+                        return false
+                    }
+                    if af != bf {
+                        return false
+                    }
+                }
+                return true
+            }
+            (Sum(a, al), Sum(b, bl)) => {
+                if FloatOrd(*al) != FloatOrd(*bl) {
+                    return false
+                }
+                if a.len() != b.len() {
+                    return false
+                }
+                for ((aa, af), (ba, bf)) in a.iter().zip(b.iter()) {
+                    if FloatOrd(*af) != FloatOrd(*bf) {
+                        return false
+                    }
+                    if aa != ba {
+                        return false
+                    }
+                }
+                return true
+            }
+            _ => false,
+        }
+    }
+}
+impl Eq for FloatExpr {}
+impl PartialOrd for FloatExpr {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(Ord::cmp(self, other))
+    }
+}
+impl Ord for FloatExpr {
+    fn cmp(&self, other: &Self) -> Ordering {
+        use FloatExpr::*;
+        match (self, other) {
+            (Variable(a), Variable(b)) => a.cmp(b),
+            (Literal(a), Literal(b)) => FloatOrd(*a).cmp(&FloatOrd(*b)),
+            (AccessVec2(a, ai), AccessVec2(b, bi)) => a.cmp(b).then_with(|| ai.cmp(bi)),
+            (AccessVec3(a, ai), AccessVec3(b, bi)) => a.cmp(b).then_with(|| ai.cmp(bi)),
+            (AccessVec4(a, ai), AccessVec4(b, bi)) => a.cmp(b).then_with(|| ai.cmp(bi)),
+            (AccessMultiVecGroup(a, ai), AccessMultiVecGroup(b, bi)) => a.cmp(b).then_with(|| ai.cmp(bi)),
+            (AccessMultiVecFlat(a, ai), AccessMultiVecFlat(b, bi)) => a.cmp(b).then_with(|| ai.cmp(bi)),
+            (TraitInvoke11ToFloat(ak, a), TraitInvoke11ToFloat(bk, b)) => ak.cmp(bk).then_with(|| a.cmp(b)),
+            (Product(a, al), Product(b, bl)) => {
+                let c =  FloatOrd(*al).cmp(&FloatOrd(*bl));
+                if c != Ordering::Equal { return c }
+                let c = a.len().cmp(&b.len());
+                if c != Ordering::Equal { return c }
+                for ((af, ae), (bf, be)) in a.iter().zip(b.iter()) {
+                    let c = FloatOrd(*ae).cmp(&FloatOrd(*be));
+                    if c != Ordering::Equal { return c };
+                    let c = af.cmp(bf);
+                    if c != Ordering::Equal { return c }
+                }
+                return Ordering::Equal
+            }
+            (Sum(a, al), Sum(b, bl)) => {
+                let c =  FloatOrd(*al).cmp(&FloatOrd(*bl));
+                if c != Ordering::Equal { return c }
+                let c = a.len().cmp(&b.len());
+                if c != Ordering::Equal { return c }
+                for ((aa, af), (ba, bf)) in a.iter().zip(b.iter()) {
+                    let c = FloatOrd(*af).cmp(&FloatOrd(*bf));
+                    if c != Ordering::Equal { return c };
+                    let c = aa.cmp(ba);
+                    if c != Ordering::Equal { return c }
+                }
+                return Ordering::Equal
+            }
+            (Variable(_), _) => Ordering::Less,
+            (_, Variable(_)) => Ordering::Greater,
+            (Literal(_), _) => Ordering::Less,
+            (_, Literal(_)) => Ordering::Greater,
+            (AccessVec2(_, _), _) => Ordering::Less,
+            (_, AccessVec2(_, _)) => Ordering::Greater,
+            (AccessVec3(_, _), _) => Ordering::Less,
+            (_, AccessVec3(_, _)) => Ordering::Greater,
+            (AccessVec4(_, _), _) => Ordering::Less,
+            (_, AccessVec4(_, _)) => Ordering::Greater,
+            (AccessMultiVecGroup(_, _), _) => Ordering::Less,
+            (_, AccessMultiVecGroup(_, _)) => Ordering::Greater,
+            (AccessMultiVecFlat(_, _), _) => Ordering::Less,
+            (_, AccessMultiVecFlat(_, _)) => Ordering::Greater,
+            (TraitInvoke11ToFloat(_, _), _) => Ordering::Less,
+            (_, TraitInvoke11ToFloat(_, _)) => Ordering::Greater,
+            (Product(_, _), _) => Ordering::Less,
+            (_, Product(_, _)) => Ordering::Greater,
+            (Sum(_, _), _) => Ordering::Less,
+            (_, Sum(_, _)) => Ordering::Greater,
+        }
+    }
+}
+
+impl PartialEq for Vec2Expr {
+    fn eq(&self, other: &Self) -> bool {
+        use Vec2Expr::*;
+        match (self, other) {
+            (Variable(a), Variable(b)) => a.eq(&b),
+            (Gather1(a), Gather1(b)) => a.eq(&b),
+            (Gather2(a0, a1), Gather2(b0, b1)) => a0 == b0 && a1 == b1,
+            (SwizzleVec2(av, a0, a1), SwizzleVec2(bv, b0, b1)) => av == bv && a0 == b0 && a1 == b1,
+            (AccessMultiVecGroup(amv, ai), AccessMultiVecGroup(bmv, bi)) => amv == bmv && ai == bi,
+            (Product(a, al), Product(b, bl)) => {
+                if FloatOrd(al[0]) != FloatOrd(bl[0]) {
+                    return false
+                }
+                if FloatOrd(al[1]) != FloatOrd(bl[1]) {
+                    return false
+                }
+                if a.len() != b.len() {
+                    return false
+                }
+                for ((af, ae), (bf, be)) in a.iter().zip(b.iter()) {
+                    if FloatOrd(*ae) != FloatOrd(*be) {
+                        return false
+                    }
+                    if af != bf {
+                        return false
+                    }
+                }
+                return true
+            }
+            (Sum(a, al), Sum(b, bl)) => {
+                if FloatOrd(al[0]) != FloatOrd(bl[0]) {
+                    return false
+                }
+                if FloatOrd(al[1]) != FloatOrd(bl[1]) {
+                    return false
+                }
+                if a.len() != b.len() {
+                    return false
+                }
+                for ((aa, af), (ba, bf)) in a.iter().zip(b.iter()) {
+                    if FloatOrd(*af) != FloatOrd(*bf) {
+                        return false
+                    }
+                    if aa != ba {
+                        return false
+                    }
+                }
+                return true
+            }
+            _ => false
+        }
+    }
+}
+impl Eq for Vec2Expr {}
+impl PartialOrd for Vec2Expr {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(Ord::cmp(self, other))
+    }
+}
+impl Ord for Vec2Expr {
+    fn cmp(&self, other: &Self) -> Ordering {
+        use Vec2Expr::*;
+        match (self, other) {
+            (Variable(a), Variable(b)) => a.cmp(&b),
+            (Gather1(a), Gather1(b)) => a.cmp(&b),
+            (Gather2(a0, a1), Gather2(b0, b1)) => {
+                let c = a0.cmp(b0);
+                if c != Ordering::Equal { return c }
+                return a1.cmp(b1)
+            },
+            (SwizzleVec2(av, a0, a1), SwizzleVec2(bv, b0, b1)) => {
+                let c = av.cmp(bv);
+                if c != Ordering::Equal { return c }
+                let c = a0.cmp(b0);
+                if c != Ordering::Equal { return c }
+                return a1.cmp(b1)
+            },
+            (AccessMultiVecGroup(amv, ai), AccessMultiVecGroup(bmv, bi)) => {
+                let c = amv.cmp(bmv);
+                if c != Ordering::Equal { return c }
+                return ai.cmp(bi)
+            }
+            (Product(a, al), Product(b, bl)) => {
+                let c =  FloatOrd(al[0]).cmp(&FloatOrd(bl[0]));
+                if c != Ordering::Equal { return c }
+                let c =  FloatOrd(al[1]).cmp(&FloatOrd(bl[1]));
+                if c != Ordering::Equal { return c }
+                let c = a.len().cmp(&b.len());
+                if c != Ordering::Equal { return c }
+                for ((af, ae), (bf, be)) in a.iter().zip(b.iter()) {
+                    let c = FloatOrd(*ae).cmp(&FloatOrd(*be));
+                    if c != Ordering::Equal { return c };
+                    let c = af.cmp(bf);
+                    if c != Ordering::Equal { return c }
+                }
+                return Ordering::Equal
+            }
+            (Sum(a, al), Sum(b, bl)) => {
+                let c =  FloatOrd(al[0]).cmp(&FloatOrd(bl[0]));
+                if c != Ordering::Equal { return c }
+                let c =  FloatOrd(al[1]).cmp(&FloatOrd(bl[1]));
+                if c != Ordering::Equal { return c }
+                let c = a.len().cmp(&b.len());
+                if c != Ordering::Equal { return c }
+                for ((aa, af), (ba, bf)) in a.iter().zip(b.iter()) {
+                    let c = FloatOrd(*af).cmp(&FloatOrd(*bf));
+                    if c != Ordering::Equal { return c };
+                    let c = aa.cmp(ba);
+                    if c != Ordering::Equal { return c }
+                }
+                return Ordering::Equal
+            },
+            (Variable(_), _) => Ordering::Less,
+            (_, Variable(_)) => Ordering::Greater,
+            (Gather1(_), _) => Ordering::Less,
+            (_, Gather1(_)) => Ordering::Greater,
+            (Gather2(_, _), _) => Ordering::Less,
+            (_, Gather2(_, _)) => Ordering::Greater,
+            (SwizzleVec2(_, _, _), _) => Ordering::Less,
+            (_, SwizzleVec2(_, _, _)) => Ordering::Greater,
+            (AccessMultiVecGroup(_, _), _) => Ordering::Less,
+            (_, AccessMultiVecGroup(_, _)) => Ordering::Greater,
+            (Product(_, _), _) => Ordering::Less,
+            (_, Product(_, _)) => Ordering::Greater,
+            (Sum(_, _), _) => Ordering::Less,
+            (_, Sum(_, _)) => Ordering::Greater,
+        }
+    }
+}
+
+impl PartialEq for Vec3Expr {
+    fn eq(&self, other: &Self) -> bool {
+        use Vec3Expr::*;
+        match (self, other) {
+            (Variable(a), Variable(b)) => a.eq(&b),
+            (Gather1(a), Gather1(b)) => a.eq(&b),
+            (Gather3(a0, a1, a2), Gather3(b0, b1, b2)) => a0 == b0 && a1 == b1 && a2 == b2,
+            (SwizzleVec3(av, a0, a1, a2), SwizzleVec3(bv, b0, b1, b2)) => av == bv && a0 == b0 && a1 == b1 && a2 == b2,
+            (AccessMultiVecGroup(amv, ai), AccessMultiVecGroup(bmv, bi)) => amv == bmv && ai == bi,
+            (Product(a, al), Product(b, bl)) => {
+                if FloatOrd(al[0]) != FloatOrd(bl[0]) {
+                    return false
+                }
+                if FloatOrd(al[1]) != FloatOrd(bl[1]) {
+                    return false
+                }
+                if FloatOrd(al[2]) != FloatOrd(bl[2]) {
+                    return false
+                }
+                if a.len() != b.len() {
+                    return false
+                }
+                for ((af, ae), (bf, be)) in a.iter().zip(b.iter()) {
+                    if FloatOrd(*ae) != FloatOrd(*be) {
+                        return false
+                    }
+                    if af != bf {
+                        return false
+                    }
+                }
+                return true
+            }
+            (Sum(a, al), Sum(b, bl)) => {
+                if FloatOrd(al[0]) != FloatOrd(bl[0]) {
+                    return false
+                }
+                if FloatOrd(al[1]) != FloatOrd(bl[1]) {
+                    return false
+                }
+                if FloatOrd(al[2]) != FloatOrd(bl[2]) {
+                    return false
+                }
+                if a.len() != b.len() {
+                    return false
+                }
+                for ((aa, af), (ba, bf)) in a.iter().zip(b.iter()) {
+                    if FloatOrd(*af) != FloatOrd(*bf) {
+                        return false
+                    }
+                    if aa != ba {
+                        return false
+                    }
+                }
+                return true
+            }
+            _ => false
+        }
+    }
+}
+
+impl Eq for Vec3Expr {}
+impl PartialOrd for Vec3Expr {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(Ord::cmp(self, other))
+    }
+}
+impl Ord for Vec3Expr {
+    fn cmp(&self, other: &Self) -> Ordering {
+        use Vec3Expr::*;
+        match (self, other) {
+            (Variable(a), Variable(b)) => a.cmp(&b),
+            (Gather1(a), Gather1(b)) => a.cmp(&b),
+            (Gather3(a0, a1, a2), Gather3(b0, b1, b2)) => {
+                let c = a0.cmp(b0);
+                if c != Ordering::Equal { return c }
+                let c = a1.cmp(b1);
+                if c != Ordering::Equal { return c }
+                return a2.cmp(b2)
+            },
+            (SwizzleVec3(av, a0, a1, a2), SwizzleVec3(bv, b0, b1, b2)) => {
+                let c = av.cmp(bv);
+                if c != Ordering::Equal { return c }
+                let c = a0.cmp(b0);
+                if c != Ordering::Equal { return c }
+                let c = a1.cmp(b1);
+                if c != Ordering::Equal { return c }
+                return a2.cmp(b2)
+            },
+            (AccessMultiVecGroup(amv, ai), AccessMultiVecGroup(bmv, bi)) => {
+                let c = amv.cmp(bmv);
+                if c != Ordering::Equal { return c }
+                return ai.cmp(bi)
+            }
+            (Product(a, al), Product(b, bl)) => {
+                let c =  FloatOrd(al[0]).cmp(&FloatOrd(bl[0]));
+                if c != Ordering::Equal { return c }
+                let c =  FloatOrd(al[1]).cmp(&FloatOrd(bl[1]));
+                if c != Ordering::Equal { return c }
+                let c =  FloatOrd(al[2]).cmp(&FloatOrd(bl[2]));
+                if c != Ordering::Equal { return c }
+                let c = a.len().cmp(&b.len());
+                if c != Ordering::Equal { return c }
+                for ((af, ae), (bf, be)) in a.iter().zip(b.iter()) {
+                    let c = FloatOrd(*ae).cmp(&FloatOrd(*be));
+                    if c != Ordering::Equal { return c };
+                    let c = af.cmp(bf);
+                    if c != Ordering::Equal { return c }
+                }
+                return Ordering::Equal
+            }
+            (Sum(a, al), Sum(b, bl)) => {
+                let c =  FloatOrd(al[0]).cmp(&FloatOrd(bl[0]));
+                if c != Ordering::Equal { return c }
+                let c =  FloatOrd(al[1]).cmp(&FloatOrd(bl[1]));
+                if c != Ordering::Equal { return c }
+                let c =  FloatOrd(al[2]).cmp(&FloatOrd(bl[2]));
+                if c != Ordering::Equal { return c }
+                let c = a.len().cmp(&b.len());
+                if c != Ordering::Equal { return c }
+                for ((aa, af), (ba, bf)) in a.iter().zip(b.iter()) {
+                    let c = FloatOrd(*af).cmp(&FloatOrd(*bf));
+                    if c != Ordering::Equal { return c };
+                    let c = aa.cmp(ba);
+                    if c != Ordering::Equal { return c }
+                }
+                return Ordering::Equal
+            },
+            (Variable(_), _) => Ordering::Less,
+            (_, Variable(_)) => Ordering::Greater,
+            (Gather1(_), _) => Ordering::Less,
+            (_, Gather1(_)) => Ordering::Greater,
+            (Gather3(_, _, _), _) => Ordering::Less,
+            (_, Gather3(_, _, _)) => Ordering::Greater,
+            (SwizzleVec3(_, _, _, _), _) => Ordering::Less,
+            (_, SwizzleVec3(_, _, _, _)) => Ordering::Greater,
+            (AccessMultiVecGroup(_, _), _) => Ordering::Less,
+            (_, AccessMultiVecGroup(_, _)) => Ordering::Greater,
+            (Product(_, _), _) => Ordering::Less,
+            (_, Product(_, _)) => Ordering::Greater,
+            (Sum(_, _), _) => Ordering::Less,
+            (_, Sum(_, _)) => Ordering::Greater,
+        }
+    }
+}
+
+impl PartialEq for Vec4Expr {
+    fn eq(&self, other: &Self) -> bool {
+        use Vec4Expr::*;
+        match (self, other) {
+            (Variable(a), Variable(b)) => a.eq(&b),
+            (Gather1(a), Gather1(b)) => a.eq(&b),
+            (Gather4(a0, a1, a2, a3), Gather4(b0, b1, b2, b3)) => a0 == b0 && a1 == b1 && a2 == b2 && a3 == b3,
+            (SwizzleVec4(av, a0, a1, a2, a3), SwizzleVec4(bv, b0, b1, b2, b3)) => av == bv && a0 == b0 && a1 == b1 && a2 == b2 && a3 == b3,
+            (AccessMultiVecGroup(amv, ai), AccessMultiVecGroup(bmv, bi)) => amv == bmv && ai == bi,
+            (Product(a, al), Product(b, bl)) => {
+                if FloatOrd(al[0]) != FloatOrd(bl[0]) {
+                    return false
+                }
+                if FloatOrd(al[1]) != FloatOrd(bl[1]) {
+                    return false
+                }
+                if FloatOrd(al[2]) != FloatOrd(bl[2]) {
+                    return false
+                }
+                if FloatOrd(al[3]) != FloatOrd(bl[3]) {
+                    return false
+                }
+                if a.len() != b.len() {
+                    return false
+                }
+                for ((af, ae), (bf, be)) in a.iter().zip(b.iter()) {
+                    if FloatOrd(*ae) != FloatOrd(*be) {
+                        return false
+                    }
+                    if af != bf {
+                        return false
+                    }
+                }
+                return true
+            }
+            (Sum(a, al), Sum(b, bl)) => {
+                if FloatOrd(al[0]) != FloatOrd(bl[0]) {
+                    return false
+                }
+                if FloatOrd(al[1]) != FloatOrd(bl[1]) {
+                    return false
+                }
+                if FloatOrd(al[2]) != FloatOrd(bl[2]) {
+                    return false
+                }
+                if FloatOrd(al[3]) != FloatOrd(bl[3]) {
+                    return false
+                }
+                if a.len() != b.len() {
+                    return false
+                }
+                for ((aa, af), (ba, bf)) in a.iter().zip(b.iter()) {
+                    if FloatOrd(*af) != FloatOrd(*bf) {
+                        return false
+                    }
+                    if aa != ba {
+                        return false
+                    }
+                }
+                return true
+            },
+            _ => false
+        }
+    }
+}
+impl Eq for Vec4Expr {}
+impl PartialOrd for Vec4Expr {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(Ord::cmp(self, other))
+    }
+}
+impl Ord for Vec4Expr {
+    fn cmp(&self, other: &Self) -> Ordering {
+        use Vec4Expr::*;
+        match (self, other) {
+            (Variable(a), Variable(b)) => a.cmp(&b),
+            (Gather1(a), Gather1(b)) => a.cmp(&b),
+            (Gather4(a0, a1, a2, a3), Gather4(b0, b1, b2, b3)) => {
+                let c = a0.cmp(b0);
+                if c != Ordering::Equal { return c }
+                let c = a1.cmp(b1);
+                if c != Ordering::Equal { return c }
+                let c = a2.cmp(b2);
+                if c != Ordering::Equal { return c }
+                return a3.cmp(b3)
+            },
+            (SwizzleVec4(av, a0, a1, a2, a3), SwizzleVec4(bv, b0, b1, b2, b3)) => {
+                let c = av.cmp(bv);
+                if c != Ordering::Equal { return c }
+                let c = a0.cmp(b0);
+                if c != Ordering::Equal { return c }
+                let c = a1.cmp(b1);
+                if c != Ordering::Equal { return c }
+                let c = a2.cmp(b2);
+                if c != Ordering::Equal { return c }
+                return a3.cmp(b3)
+            },
+            (AccessMultiVecGroup(amv, ai), AccessMultiVecGroup(bmv, bi)) => {
+                let c = amv.cmp(bmv);
+                if c != Ordering::Equal { return c }
+                return ai.cmp(bi)
+            }
+            (Product(a, al), Product(b, bl)) => {
+                let c =  FloatOrd(al[0]).cmp(&FloatOrd(bl[0]));
+                if c != Ordering::Equal { return c }
+                let c =  FloatOrd(al[1]).cmp(&FloatOrd(bl[1]));
+                if c != Ordering::Equal { return c }
+                let c =  FloatOrd(al[2]).cmp(&FloatOrd(bl[2]));
+                if c != Ordering::Equal { return c }
+                let c =  FloatOrd(al[3]).cmp(&FloatOrd(bl[3]));
+                if c != Ordering::Equal { return c }
+                let c = a.len().cmp(&b.len());
+                if c != Ordering::Equal { return c }
+                for ((af, ae), (bf, be)) in a.iter().zip(b.iter()) {
+                    let c = FloatOrd(*ae).cmp(&FloatOrd(*be));
+                    if c != Ordering::Equal { return c };
+                    let c = af.cmp(bf);
+                    if c != Ordering::Equal { return c }
+                }
+                return Ordering::Equal
+            }
+            (Sum(a, al), Sum(b, bl)) => {
+                let c =  FloatOrd(al[0]).cmp(&FloatOrd(bl[0]));
+                if c != Ordering::Equal { return c }
+                let c =  FloatOrd(al[1]).cmp(&FloatOrd(bl[1]));
+                if c != Ordering::Equal { return c }
+                let c =  FloatOrd(al[2]).cmp(&FloatOrd(bl[2]));
+                if c != Ordering::Equal { return c }
+                let c =  FloatOrd(al[3]).cmp(&FloatOrd(bl[3]));
+                if c != Ordering::Equal { return c }
+                let c = a.len().cmp(&b.len());
+                if c != Ordering::Equal { return c }
+                for ((aa, af), (ba, bf)) in a.iter().zip(b.iter()) {
+                    let c = FloatOrd(*af).cmp(&FloatOrd(*bf));
+                    if c != Ordering::Equal { return c };
+                    let c = aa.cmp(ba);
+                    if c != Ordering::Equal { return c }
+                }
+                return Ordering::Equal
+            },
+            (Variable(_), _) => Ordering::Less,
+            (_, Variable(_)) => Ordering::Greater,
+            (Gather1(_), _) => Ordering::Less,
+            (_, Gather1(_)) => Ordering::Greater,
+            (Gather4(_, _, _, _), _) => Ordering::Less,
+            (_, Gather4(_, _, _, _)) => Ordering::Greater,
+            (SwizzleVec4(_, _, _, _, _), _) => Ordering::Less,
+            (_, SwizzleVec4(_, _, _, _, _)) => Ordering::Greater,
+            (AccessMultiVecGroup(_, _), _) => Ordering::Less,
+            (_, AccessMultiVecGroup(_, _)) => Ordering::Greater,
+            (Product(_, _), _) => Ordering::Less,
+            (_, Product(_, _)) => Ordering::Greater,
+            (Sum(_, _), _) => Ordering::Less,
+            (_, Sum(_, _)) => Ordering::Greater,
+        }
+    }
+}
+
 
 impl<FE: Into<FloatExpr>> Add<FE> for FloatExpr {
     type Output = FloatExpr;
