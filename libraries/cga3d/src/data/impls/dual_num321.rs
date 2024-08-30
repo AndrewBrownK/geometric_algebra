@@ -450,13 +450,13 @@ impl std::ops::Add<DualNum321> for DualNum321 {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn add(self, other: DualNum321) -> Self::Output {
-        let addition = DualNum321::from_groups(/* e321, e12345 */ (self.group0() + other.group0()));
+        let addition = DualNum321::from_groups(/* e321, e12345 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<DualNum321> for DualNum321 {
     fn add_assign(&mut self, other: DualNum321) {
-        let addition = DualNum321::from_groups(/* e321, e12345 */ (self.group0() + other.group0()));
+        let addition = DualNum321::from_groups(/* e321, e12345 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -1989,13 +1989,13 @@ impl std::ops::Sub<DualNum321> for DualNum321 {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn sub(self, other: DualNum321) -> Self::Output {
-        let subtraction = DualNum321::from_groups(/* e321, e12345 */ (self.group0() - other.group0()));
+        let subtraction = DualNum321::from_groups(/* e321, e12345 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<DualNum321> for DualNum321 {
     fn sub_assign(&mut self, other: DualNum321) {
-        let subtraction = DualNum321::from_groups(/* e321, e12345 */ (self.group0() - other.group0()));
+        let subtraction = DualNum321::from_groups(/* e321, e12345 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

@@ -56,9 +56,9 @@ impl std::ops::Add<DualNum> for Motor {
     fn add(self, other: DualNum) -> Self::Output {
         let addition = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] + self.group0()[3])]),
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[0])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] + self.group1()[3])]),
         );
         return addition;
     }
@@ -67,9 +67,9 @@ impl std::ops::AddAssign<DualNum> for Motor {
     fn add_assign(&mut self, other: DualNum) {
         let addition = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] + self.group0()[3])]),
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[0])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] + self.group1()[3])]),
         );
         *self = addition;
     }
@@ -120,16 +120,16 @@ impl std::ops::Add<Line> for Motor {
         let addition = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e23, e31, e12, scalar
             Simd32x4::from([
-                (self.group1()[0] + other.group1()[0]),
-                (self.group1()[1] + other.group1()[1]),
-                (self.group1()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group1()[0]),
+                (other.group1()[1] + self.group1()[1]),
+                (other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
         );
@@ -141,16 +141,16 @@ impl std::ops::AddAssign<Line> for Motor {
         let addition = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e23, e31, e12, scalar
             Simd32x4::from([
-                (self.group1()[0] + other.group1()[0]),
-                (self.group1()[1] + other.group1()[1]),
-                (self.group1()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group1()[0]),
+                (other.group1()[1] + self.group1()[1]),
+                (other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
         );
@@ -166,9 +166,9 @@ impl std::ops::Add<Motor> for Motor {
     fn add(self, other: Motor) -> Self::Output {
         let addition = Motor::from_groups(
             // e41, e42, e43, e1234
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e23, e31, e12, scalar
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
         );
         return addition;
     }
@@ -177,9 +177,9 @@ impl std::ops::AddAssign<Motor> for Motor {
     fn add_assign(&mut self, other: Motor) {
         let addition = Motor::from_groups(
             // e41, e42, e43, e1234
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e23, e31, e12, scalar
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
         );
         *self = addition;
     }
@@ -196,13 +196,13 @@ impl std::ops::Add<MultiVector> for Motor {
     fn add(self, other: MultiVector) -> Self::Output {
         let addition = MultiVector::from_groups(
             // scalar, e1234
-            (other.group0() + Simd32x2::from([self.group1()[3], self.group0()[3]])),
+            (Simd32x2::from([self.group1()[3], self.group0()[3]]) + other.group0()),
             // e1, e2, e3, e4
             other.group1(),
             // e41, e42, e43
-            (other.group2() + Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])),
+            (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group2()),
             // e23, e31, e12
-            (other.group3() + Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]])),
+            (Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) + other.group3()),
             // e423, e431, e412, e321
             other.group4(),
         );
@@ -523,11 +523,11 @@ impl std::ops::Mul<Flector> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       20        0
-    //    simd4        7        7        0
+    //      f32       12       16        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       20       27        0
-    //  no simd       41       48        0
+    // yes simd       20       24        0
+    //  no simd       44       48        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -709,9 +709,9 @@ impl std::ops::Sub<DualNum> for Motor {
     fn sub(self, other: DualNum) -> Self::Output {
         let subtraction = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[1] + self.group0()[3])]),
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[0])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[0] + self.group1()[3])]),
         );
         return subtraction;
     }
@@ -720,9 +720,9 @@ impl std::ops::SubAssign<DualNum> for Motor {
     fn sub_assign(&mut self, other: DualNum) {
         let subtraction = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[1] + self.group0()[3])]),
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[0])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[0] + self.group1()[3])]),
         );
         *self = subtraction;
     }
@@ -780,16 +780,16 @@ impl std::ops::Sub<Line> for Motor {
         let subtraction = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e23, e31, e12, scalar
             Simd32x4::from([
-                (self.group1()[0] - other.group1()[0]),
-                (self.group1()[1] - other.group1()[1]),
-                (self.group1()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group1()[0]),
+                (-other.group1()[1] + self.group1()[1]),
+                (-other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
         );
@@ -801,16 +801,16 @@ impl std::ops::SubAssign<Line> for Motor {
         let subtraction = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e23, e31, e12, scalar
             Simd32x4::from([
-                (self.group1()[0] - other.group1()[0]),
-                (self.group1()[1] - other.group1()[1]),
-                (self.group1()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group1()[0]),
+                (-other.group1()[1] + self.group1()[1]),
+                (-other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
         );
@@ -826,9 +826,9 @@ impl std::ops::Sub<Motor> for Motor {
     fn sub(self, other: Motor) -> Self::Output {
         let subtraction = Motor::from_groups(
             // e41, e42, e43, e1234
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e23, e31, e12, scalar
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
         );
         return subtraction;
     }
@@ -837,9 +837,9 @@ impl std::ops::SubAssign<Motor> for Motor {
     fn sub_assign(&mut self, other: Motor) {
         let subtraction = Motor::from_groups(
             // e41, e42, e43, e1234
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e23, e31, e12, scalar
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
         );
         *self = subtraction;
     }
@@ -857,13 +857,13 @@ impl std::ops::Sub<MultiVector> for Motor {
     fn sub(self, other: MultiVector) -> Self::Output {
         let subtraction = MultiVector::from_groups(
             // scalar, e1234
-            (-other.group0() + Simd32x2::from([self.group1()[3], self.group0()[3]])),
+            (Simd32x2::from([self.group1()[3], self.group0()[3]]) - other.group0()),
             // e1, e2, e3, e4
             (other.group1() * Simd32x4::from(-1.0)),
             // e41, e42, e43
-            (-other.group2() + Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])),
+            (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group2()),
             // e23, e31, e12
-            (-other.group3() + Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]])),
+            (Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) - other.group3()),
             // e423, e431, e412, e321
             (other.group4() * Simd32x4::from(-1.0)),
         );

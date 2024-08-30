@@ -66,9 +66,9 @@ impl std::ops::Add<Flector> for Flector {
     fn add(self, other: Flector) -> Self::Output {
         let addition = Flector::from_groups(
             // e1, e2, e3, e4
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e423, e431, e412, e321
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
         );
         return addition;
     }
@@ -77,9 +77,9 @@ impl std::ops::AddAssign<Flector> for Flector {
     fn add_assign(&mut self, other: Flector) {
         let addition = Flector::from_groups(
             // e1, e2, e3, e4
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e423, e431, e412, e321
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
         );
         *self = addition;
     }
@@ -674,9 +674,9 @@ impl std::ops::Sub<Flector> for Flector {
     fn sub(self, other: Flector) -> Self::Output {
         let subtraction = Flector::from_groups(
             // e1, e2, e3, e4
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e423, e431, e412, e321
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
         );
         return subtraction;
     }
@@ -685,9 +685,9 @@ impl std::ops::SubAssign<Flector> for Flector {
     fn sub_assign(&mut self, other: Flector) {
         let subtraction = Flector::from_groups(
             // e1, e2, e3, e4
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e423, e431, e412, e321
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
         );
         *self = subtraction;
     }

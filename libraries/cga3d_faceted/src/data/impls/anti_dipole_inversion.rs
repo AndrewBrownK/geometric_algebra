@@ -13,7 +13,7 @@ use crate::traits::Wedge;
 //  Minimum:         0       0       0
 //   Median:         3       2       0
 //  Average:        12      16       0
-//  Maximum:       239     269       0
+//  Maximum:       235     267       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -212,13 +212,13 @@ impl std::ops::Add<AntiDipoleInversion> for AntiDipoleInversion {
     fn add(self, other: AntiDipoleInversion) -> Self::Output {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435, e321
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
             // e235, e315, e125, e4
-            (self.group2() + other.group2()),
+            (other.group2() + self.group2()),
             // e1, e2, e3, e5
-            (self.group3() + other.group3()),
+            (other.group3() + self.group3()),
         );
         return addition;
     }
@@ -227,13 +227,13 @@ impl std::ops::AddAssign<AntiDipoleInversion> for AntiDipoleInversion {
     fn add_assign(&mut self, other: AntiDipoleInversion) {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435, e321
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
             // e235, e315, e125, e4
-            (self.group2() + other.group2()),
+            (other.group2() + self.group2()),
             // e1, e2, e3, e5
-            (self.group3() + other.group3()),
+            (other.group3() + self.group3()),
         );
         *self = addition;
     }
@@ -255,9 +255,9 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for AntiDipoleInversion {
             (self.group1() + other.group0()),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -275,9 +275,9 @@ impl std::ops::AddAssign<AntiDipoleInversionAtInfinity> for AntiDipoleInversion 
             (self.group1() + other.group0()),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -298,7 +298,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for AntiDipoleInversion {
     fn add(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[3])]),
             // e235, e315, e125, e4
@@ -318,7 +318,7 @@ impl std::ops::AddAssign<AntiDipoleInversionOnOrigin> for AntiDipoleInversion {
     fn add_assign(&mut self, other: AntiDipoleInversionOnOrigin) {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[3])]),
             // e235, e315, e125, e4
@@ -347,12 +347,12 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for AntiDipoleInversion 
     fn add(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] + other.group1()[0]),
-                (self.group1()[1] + other.group1()[1]),
-                (self.group1()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group1()[0]),
+                (other.group1()[1] + self.group1()[1]),
+                (other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
@@ -367,12 +367,12 @@ impl std::ops::AddAssign<AntiDipoleInversionOrthogonalOrigin> for AntiDipoleInve
     fn add_assign(&mut self, other: AntiDipoleInversionOrthogonalOrigin) {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] + other.group1()[0]),
-                (self.group1()[1] + other.group1()[1]),
-                (self.group1()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group1()[0]),
+                (other.group1()[1] + self.group1()[1]),
+                (other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
@@ -395,7 +395,7 @@ impl std::ops::Add<AntiDipoleOnOrigin> for AntiDipoleInversion {
     fn add(self, other: AntiDipoleOnOrigin) -> Self::Output {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[3])]),
             // e235, e315, e125, e4
@@ -410,7 +410,7 @@ impl std::ops::AddAssign<AntiDipoleOnOrigin> for AntiDipoleInversion {
     fn add_assign(&mut self, other: AntiDipoleOnOrigin) {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[3])]),
             // e235, e315, e125, e4
@@ -763,9 +763,9 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for AntiDipoleInversion {
             self.group2(),
             // e1, e2, e3, e5
             Simd32x4::from([
-                (self.group3()[0] + other.group1()[0]),
-                (self.group3()[1] + other.group1()[1]),
-                (self.group3()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group3()[0]),
+                (other.group1()[1] + self.group3()[1]),
+                (other.group1()[2] + self.group3()[2]),
                 self.group3()[3],
             ]),
         );
@@ -783,9 +783,9 @@ impl std::ops::AddAssign<AntiMysteryDipoleInversion> for AntiDipoleInversion {
             self.group2(),
             // e1, e2, e3, e5
             Simd32x4::from([
-                (self.group3()[0] + other.group1()[0]),
-                (self.group3()[1] + other.group1()[1]),
-                (self.group3()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group3()[0]),
+                (other.group1()[1] + self.group3()[1]),
+                (other.group1()[2] + self.group3()[2]),
                 self.group3()[3],
             ]),
         );
@@ -872,9 +872,9 @@ impl std::ops::Add<AntiPlaneOnOrigin> for AntiDipoleInversion {
             self.group2(),
             // e1, e2, e3, e5
             Simd32x4::from([
-                (self.group3()[0] + other.group0()[0]),
-                (self.group3()[1] + other.group0()[1]),
-                (self.group3()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group3()[0]),
+                (other.group0()[1] + self.group3()[1]),
+                (other.group0()[2] + self.group3()[2]),
                 self.group3()[3],
             ]),
         );
@@ -892,9 +892,9 @@ impl std::ops::AddAssign<AntiPlaneOnOrigin> for AntiDipoleInversion {
             self.group2(),
             // e1, e2, e3, e5
             Simd32x4::from([
-                (self.group3()[0] + other.group0()[0]),
-                (self.group3()[1] + other.group0()[1]),
-                (self.group3()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group3()[0]),
+                (other.group0()[1] + self.group3()[1]),
+                (other.group0()[2] + self.group3()[2]),
                 self.group3()[3],
             ]),
         );
@@ -1190,9 +1190,9 @@ impl std::ops::Add<Circle> for AntiDipoleInversion {
             (self.group1() + other.group1()),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group2()[0]),
-                (self.group2()[1] + other.group2()[1]),
-                (self.group2()[2] + other.group2()[2]),
+                (other.group2()[0] + self.group2()[0]),
+                (other.group2()[1] + self.group2()[1]),
+                (other.group2()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -1210,9 +1210,9 @@ impl std::ops::AddAssign<Circle> for AntiDipoleInversion {
             (self.group1() + other.group1()),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group2()[0]),
-                (self.group2()[1] + other.group2()[1]),
-                (self.group2()[2] + other.group2()[2]),
+                (other.group2()[0] + self.group2()[0]),
+                (other.group2()[1] + self.group2()[1]),
+                (other.group2()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -1236,16 +1236,16 @@ impl std::ops::Add<CircleAligningOrigin> for AntiDipoleInversion {
             (self.group0() + other.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] + other.group1()[0]),
-                (self.group1()[1] + other.group1()[1]),
-                (self.group1()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group1()[0]),
+                (other.group1()[1] + self.group1()[1]),
+                (other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group2()[0]),
-                (self.group2()[1] + other.group2()[1]),
-                (self.group2()[2] + other.group2()[2]),
+                (other.group2()[0] + self.group2()[0]),
+                (other.group2()[1] + self.group2()[1]),
+                (other.group2()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -1261,16 +1261,16 @@ impl std::ops::AddAssign<CircleAligningOrigin> for AntiDipoleInversion {
             (self.group0() + other.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] + other.group1()[0]),
-                (self.group1()[1] + other.group1()[1]),
-                (self.group1()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group1()[0]),
+                (other.group1()[1] + self.group1()[1]),
+                (other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group2()[0]),
-                (self.group2()[1] + other.group2()[1]),
-                (self.group2()[2] + other.group2()[2]),
+                (other.group2()[0] + self.group2()[0]),
+                (other.group2()[1] + self.group2()[1]),
+                (other.group2()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -1296,9 +1296,9 @@ impl std::ops::Add<CircleAtInfinity> for AntiDipoleInversion {
             (self.group1() + other.group0()),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -1316,9 +1316,9 @@ impl std::ops::AddAssign<CircleAtInfinity> for AntiDipoleInversion {
             (self.group1() + other.group0()),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -1344,9 +1344,9 @@ impl std::ops::Add<CircleAtOrigin> for AntiDipoleInversion {
             self.group1(),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -1364,9 +1364,9 @@ impl std::ops::AddAssign<CircleAtOrigin> for AntiDipoleInversion {
             self.group1(),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -1390,9 +1390,9 @@ impl std::ops::Add<CircleOnOrigin> for AntiDipoleInversion {
             (self.group0() + other.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] + other.group1()[0]),
-                (self.group1()[1] + other.group1()[1]),
-                (self.group1()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group1()[0]),
+                (other.group1()[1] + self.group1()[1]),
+                (other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
@@ -1410,9 +1410,9 @@ impl std::ops::AddAssign<CircleOnOrigin> for AntiDipoleInversion {
             (self.group0() + other.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] + other.group1()[0]),
-                (self.group1()[1] + other.group1()[1]),
-                (self.group1()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group1()[0]),
+                (other.group1()[1] + self.group1()[1]),
+                (other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
@@ -1435,14 +1435,14 @@ impl std::ops::Add<CircleOrthogonalOrigin> for AntiDipoleInversion {
     fn add(self, other: CircleOrthogonalOrigin) -> Self::Output {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[3])]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -1455,14 +1455,14 @@ impl std::ops::AddAssign<CircleOrthogonalOrigin> for AntiDipoleInversion {
     fn add_assign(&mut self, other: CircleOrthogonalOrigin) {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[3])]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -1520,9 +1520,9 @@ impl std::ops::Add<CircleRotorAligningOrigin> for AntiDipoleInversion {
             ]),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] + other.group1()[0]),
-                (self.group1()[1] + other.group1()[1]),
-                (self.group1()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group1()[0]),
+                (other.group1()[1] + self.group1()[1]),
+                (other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e5
@@ -1549,9 +1549,9 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for AntiDipoleInversion 
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group1()[3]]),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] + other.group0()[0]),
-                (self.group1()[1] + other.group0()[1]),
-                (self.group1()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group1()[0]),
+                (other.group0()[1] + self.group1()[1]),
+                (other.group0()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e5
@@ -1611,9 +1611,9 @@ impl std::ops::Add<CircleRotorOnOrigin> for AntiDipoleInversion {
             ]),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] + other.group1()[0]),
-                (self.group1()[1] + other.group1()[1]),
-                (self.group1()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group1()[0]),
+                (other.group1()[1] + self.group1()[1]),
+                (other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e5
@@ -2243,16 +2243,16 @@ impl std::ops::Add<Line> for AntiDipoleInversion {
             self.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] + other.group0()[0]),
-                (self.group1()[1] + other.group0()[1]),
-                (self.group1()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group1()[0]),
+                (other.group0()[1] + self.group1()[1]),
+                (other.group0()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -2268,16 +2268,16 @@ impl std::ops::AddAssign<Line> for AntiDipoleInversion {
             self.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] + other.group0()[0]),
-                (self.group1()[1] + other.group0()[1]),
-                (self.group1()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group1()[0]),
+                (other.group0()[1] + self.group1()[1]),
+                (other.group0()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -2299,9 +2299,9 @@ impl std::ops::Add<LineAtInfinity> for AntiDipoleInversion {
             self.group1(),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group0()[0]),
-                (self.group2()[1] + other.group0()[1]),
-                (self.group2()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group2()[0]),
+                (other.group0()[1] + self.group2()[1]),
+                (other.group0()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -2319,9 +2319,9 @@ impl std::ops::AddAssign<LineAtInfinity> for AntiDipoleInversion {
             self.group1(),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] + other.group0()[0]),
-                (self.group2()[1] + other.group0()[1]),
-                (self.group2()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group2()[0]),
+                (other.group0()[1] + self.group2()[1]),
+                (other.group0()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -2341,9 +2341,9 @@ impl std::ops::Add<LineOnOrigin> for AntiDipoleInversion {
             self.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] + other.group0()[0]),
-                (self.group1()[1] + other.group0()[1]),
-                (self.group1()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group1()[0]),
+                (other.group0()[1] + self.group1()[1]),
+                (other.group0()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
@@ -2361,9 +2361,9 @@ impl std::ops::AddAssign<LineOnOrigin> for AntiDipoleInversion {
             self.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] + other.group0()[0]),
-                (self.group1()[1] + other.group0()[1]),
-                (self.group1()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group1()[0]),
+                (other.group0()[1] + self.group1()[1]),
+                (other.group0()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
@@ -2395,7 +2395,7 @@ impl std::ops::Add<Motor> for AntiDipoleInversion {
                 self.group1()[3],
             ]),
             // e235, e315, e125, e5
-            (other.group1() + Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]])),
+            (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]) + other.group1()),
             // e1, e2, e3, e4
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3]]),
         );
@@ -2486,7 +2486,7 @@ impl std::ops::Add<MultiVector> for AntiDipoleInversion {
             // scalar, e12345
             other.group0(),
             // e1, e2, e3, e4
-            (other.group1() + Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3]])),
+            (Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3]]) + other.group1()),
             // e5
             (self.group3()[3] + other[e1]),
             // e41, e42, e43, e45
@@ -2500,7 +2500,7 @@ impl std::ops::Add<MultiVector> for AntiDipoleInversion {
             // e423, e431, e412
             (self.group0() + other.group7()),
             // e235, e315, e125
-            (other.group8() + Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]])),
+            (Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) + other.group8()),
             // e1234, e4235, e4315, e4125
             other.group9(),
             // e3215
@@ -2635,7 +2635,7 @@ impl std::ops::Add<MysteryQuadNum> for AntiDipoleInversion {
             // e423, e431, e412, e12345
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[1]]),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[0])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] + self.group1()[3])]),
             // e235, e315, e125, e5
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]),
             // e1, e2, e3, e4
@@ -2840,7 +2840,7 @@ impl std::ops::Add<NullVersorEvenAtOrigin> for AntiDipoleInversion {
     fn add(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e4
@@ -2855,7 +2855,7 @@ impl std::ops::AddAssign<NullVersorEvenAtOrigin> for AntiDipoleInversion {
     fn add_assign(&mut self, other: NullVersorEvenAtOrigin) {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e4
@@ -2993,9 +2993,9 @@ impl std::ops::Add<QuadNumAligningOrigin> for AntiDipoleInversion {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group3()[3] + other.group0()[1])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (other.group0()[1] + self.group3()[3])]),
             // e1, e2, e3, e4
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group2()[3] + other.group0()[0])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group0()[0] + self.group2()[3])]),
         );
         return addition;
     }
@@ -3012,7 +3012,7 @@ impl std::ops::Add<QuadNumAligningOriginAtInfinity> for AntiDipoleInversion {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group3()[3] + other.group0()[0])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (other.group0()[0] + self.group3()[3])]),
             // e1, e2, e3, e4
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3]]),
         );
@@ -3029,9 +3029,9 @@ impl std::ops::Add<QuadNumAtInfinity> for AntiDipoleInversion {
             // e423, e431, e412, e12345
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[2]]),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[1])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[1] + self.group1()[3])]),
             // e235, e315, e125, e5
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group3()[3] + other.group0()[0])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (other.group0()[0] + self.group3()[3])]),
             // e1, e2, e3, e4
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3]]),
         );
@@ -3052,7 +3052,7 @@ impl std::ops::Add<QuadNumOnOrigin> for AntiDipoleInversion {
             // e235, e315, e125, e5
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]),
             // e1, e2, e3, e4
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group2()[3] + other.group0()[0])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group0()[0] + self.group2()[3])]),
         );
         return addition;
     }
@@ -3067,11 +3067,11 @@ impl std::ops::Add<QuadNumOrthogonalOrigin> for AntiDipoleInversion {
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[2])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[2] + self.group1()[3])]),
             // e235, e315, e125, e4
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other.group0()[0])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (other.group0()[0] + self.group2()[3])]),
             // e1, e2, e3, e5
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] + other.group0()[1])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group0()[1] + self.group3()[3])]),
         );
         return addition;
     }
@@ -3082,11 +3082,11 @@ impl std::ops::AddAssign<QuadNumOrthogonalOrigin> for AntiDipoleInversion {
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[2])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[2] + self.group1()[3])]),
             // e235, e315, e125, e4
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other.group0()[0])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (other.group0()[0] + self.group2()[3])]),
             // e1, e2, e3, e5
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] + other.group0()[1])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group0()[1] + self.group3()[3])]),
         );
         *self = addition;
     }
@@ -3110,7 +3110,7 @@ impl std::ops::Add<RoundPoint> for AntiDipoleInversion {
             // e235, e315, e125, e4
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other.group0()[3])]),
             // e1, e2, e3, e5
-            (self.group3() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]])),
+            (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]]) + self.group3()),
         );
         return addition;
     }
@@ -3126,7 +3126,7 @@ impl std::ops::AddAssign<RoundPoint> for AntiDipoleInversion {
             // e235, e315, e125, e4
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other.group0()[3])]),
             // e1, e2, e3, e5
-            (self.group3() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]])),
+            (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]]) + self.group3()),
         );
         *self = addition;
     }
@@ -3143,9 +3143,9 @@ impl std::ops::Add<RoundPointAtOrigin> for AntiDipoleInversion {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other.group0()[0])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (other.group0()[0] + self.group2()[3])]),
             // e1, e2, e3, e5
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] + other.group0()[1])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group0()[1] + self.group3()[3])]),
         );
         return addition;
     }
@@ -3158,9 +3158,9 @@ impl std::ops::AddAssign<RoundPointAtOrigin> for AntiDipoleInversion {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other.group0()[0])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (other.group0()[0] + self.group2()[3])]),
             // e1, e2, e3, e5
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] + other.group0()[1])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group0()[1] + self.group3()[3])]),
         );
         *self = addition;
     }
@@ -3308,9 +3308,9 @@ impl std::ops::Add<VersorEven> for AntiDipoleInversion {
             // e415, e425, e435, e321
             (self.group1() + other.group1()),
             // e235, e315, e125, e5
-            (other.group2() + Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]])),
+            (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]) + other.group2()),
             // e1, e2, e3, e4
-            (other.group3() + Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3]])),
+            (Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3]]) + other.group3()),
         );
         return addition;
     }
@@ -3341,7 +3341,7 @@ impl std::ops::Add<VersorEvenAligningOrigin> for AntiDipoleInversion {
                 self.group1()[3],
             ]),
             // e235, e315, e125, e5
-            (other.group2() + Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]])),
+            (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]) + other.group2()),
             // e1, e2, e3, e4
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group2()[3] + other.group1()[3])]),
         );
@@ -3364,7 +3364,7 @@ impl std::ops::Add<VersorEvenAtInfinity> for AntiDipoleInversion {
             // e415, e425, e435, e321
             (self.group1() + other.group1()),
             // e235, e315, e125, e5
-            (other.group2() + Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]])),
+            (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]) + other.group2()),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (self.group3()[0] + other.group0()[1]),
@@ -3389,11 +3389,11 @@ impl std::ops::Add<VersorEvenAtOrigin> for AntiDipoleInversion {
     fn add(self, other: VersorEvenAtOrigin) -> Self::Output {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e4
-            (self.group2() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[3]])),
+            (Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[3]]) + self.group2()),
             // e1, e2, e3, e5
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] + other.group1()[3])]),
         );
@@ -3404,11 +3404,11 @@ impl std::ops::AddAssign<VersorEvenAtOrigin> for AntiDipoleInversion {
     fn add_assign(&mut self, other: VersorEvenAtOrigin) {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e4
-            (self.group2() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[3]])),
+            (Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[3]]) + self.group2()),
             // e1, e2, e3, e5
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] + other.group1()[3])]),
         );
@@ -3457,13 +3457,13 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for AntiDipoleInversion {
     fn add(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[3])]),
             // e235, e315, e125, e4
-            (self.group2() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group2()[3]])),
+            (Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group2()[3]]) + self.group2()),
             // e1, e2, e3, e5
-            (self.group3() + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
+            (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) + self.group3()),
         );
         return addition;
     }
@@ -3472,13 +3472,13 @@ impl std::ops::AddAssign<VersorEvenOrthogonalOrigin> for AntiDipoleInversion {
     fn add_assign(&mut self, other: VersorEvenOrthogonalOrigin) {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[3])]),
             // e235, e315, e125, e4
-            (self.group2() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group2()[3]])),
+            (Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group2()[3]]) + self.group2()),
             // e1, e2, e3, e5
-            (self.group3() + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
+            (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) + self.group3()),
         );
         *self = addition;
     }
@@ -5532,10 +5532,10 @@ impl std::ops::Mul<AntiCircleRotorOnOrigin> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       45       61        0
-    //    simd4       11       11        0
+    //      f32       41       57        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd       56       72        0
+    // yes simd       53       69        0
     //  no simd       89      105        0
     fn mul(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -5545,10 +5545,10 @@ impl std::ops::Mul<AntiDipoleInversion> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       45       61        0
-    //    simd4       41       41        0
+    //      f32       41       57        0
+    //    simd4       42       42        0
     // Totals...
-    // yes simd       86      102        0
+    // yes simd       83       99        0
     //  no simd      209      225        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -5558,11 +5558,11 @@ impl std::ops::Mul<AntiDipoleInversionAtInfinity> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       57       73        0
-    //    simd4       23       23        0
+    //      f32       53       72        0
+    //    simd4       24       24        0
     // Totals...
-    // yes simd       80       96        0
-    //  no simd      149      165        0
+    // yes simd       77       96        0
+    //  no simd      149      168        0
     fn mul(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -5571,10 +5571,10 @@ impl std::ops::Mul<AntiDipoleInversionOnOrigin> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       32       51        0
-    //    simd4       18       18        0
+    //      f32       36       55        0
+    //    simd4       17       17        0
     // Totals...
-    // yes simd       50       69        0
+    // yes simd       53       72        0
     //  no simd      104      123        0
     fn mul(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -5584,10 +5584,10 @@ impl std::ops::Mul<AntiDipoleInversionOrthogonalOrigin> for AntiDipoleInversion 
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       65       81        0
-    //    simd4       21       21        0
+    //      f32       61       77        0
+    //    simd4       22       22        0
     // Totals...
-    // yes simd       86      102        0
+    // yes simd       83       99        0
     //  no simd      149      165        0
     fn mul(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -5729,10 +5729,10 @@ impl std::ops::Mul<AntiMysteryDipoleInversion> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       41       57        0
-    //    simd4       12       12        0
+    //      f32       37       53        0
+    //    simd4       13       13        0
     // Totals...
-    // yes simd       53       69        0
+    // yes simd       50       66        0
     //  no simd       89      105        0
     fn mul(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -5794,10 +5794,10 @@ impl std::ops::Mul<AntiQuadNumAligningOrigin> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       21        0
-    //    simd4        6        7        0
+    //      f32        6       17        0
+    //    simd4        6        8        0
     // Totals...
-    // yes simd       12       28        0
+    // yes simd       12       25        0
     //  no simd       30       49        0
     fn mul(self, other: AntiQuadNumAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -5964,10 +5964,10 @@ impl std::ops::Mul<CircleOrthogonalOrigin> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       49       65        0
-    //    simd4       10       10        0
+    //      f32       45       61        0
+    //    simd4       11       11        0
     // Totals...
-    // yes simd       59       75        0
+    // yes simd       56       72        0
     //  no simd       89      105        0
     fn mul(self, other: CircleOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -6016,11 +6016,11 @@ impl std::ops::Mul<CircleRotorAtInfinity> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       31       44        0
-    //    simd4       19       20        0
+    //      f32       32       44        0
+    //    simd4       18       20        0
     // Totals...
     // yes simd       50       64        0
-    //  no simd      107      124        0
+    //  no simd      104      124        0
     fn mul(self, other: CircleRotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -6055,10 +6055,10 @@ impl std::ops::Mul<DipoleAligningOrigin> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       37       53        0
-    //    simd4       13       13        0
+    //      f32       33       49        0
+    //    simd4       14       14        0
     // Totals...
-    // yes simd       50       66        0
+    // yes simd       47       63        0
     //  no simd       89      105        0
     fn mul(self, other: DipoleAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -6094,10 +6094,10 @@ impl std::ops::Mul<DipoleInversion> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       65       77        0
-    //    simd4       36       37        0
+    //      f32       65       81        0
+    //    simd4       36       36        0
     // Totals...
-    // yes simd      101      114        0
+    // yes simd      101      117        0
     //  no simd      209      225        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -6107,10 +6107,10 @@ impl std::ops::Mul<DipoleInversionAligningOrigin> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       68        0
-    //    simd4       28       28        0
+    //      f32       48       64        0
+    //    simd4       29       29        0
     // Totals...
-    // yes simd       80       96        0
+    // yes simd       77       93        0
     //  no simd      164      180        0
     fn mul(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -6238,10 +6238,10 @@ impl std::ops::Mul<Flector> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       36       52        0
-    //    simd4       17       17        0
+    //      f32       32       48        0
+    //    simd4       18       18        0
     // Totals...
-    // yes simd       53       69        0
+    // yes simd       50       66        0
     //  no simd      104      120        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
@@ -6379,12 +6379,12 @@ impl std::ops::Mul<MultiVector> for AntiDipoleInversion {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      151      180        0
+    //      f32      146      178        0
     //    simd2        4        4        0
-    //    simd3       47       48        0
-    //    simd4       37       37        0
+    //    simd3       46       46        0
+    //    simd4       39       39        0
     // Totals...
-    // yes simd      239      269        0
+    // yes simd      235      267        0
     //  no simd      448      480        0
     fn mul(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -6461,10 +6461,10 @@ impl std::ops::Mul<MysteryVersorEven> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       28        0
-    //    simd4       22       24        0
+    //      f32       11       20        0
+    //    simd4       24       26        0
     // Totals...
-    // yes simd       41       52        0
+    // yes simd       35       46        0
     //  no simd      107      124        0
     fn mul(self, other: MysteryVersorEven) -> Self::Output {
         return self.geometric_product(other);
@@ -6658,11 +6658,11 @@ impl std::ops::Mul<QuadNumOrthogonalOrigin> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       26        0
-    //    simd4        5        6        0
+    //      f32       13       30        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       14       32        0
-    //  no simd       29       50        0
+    // yes simd       17       34        0
+    //  no simd       29       46        0
     fn mul(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -6671,11 +6671,11 @@ impl std::ops::Mul<RoundPoint> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       35        0
-    //    simd4       10       10        0
+    //      f32       15       32        0
+    //    simd4       11       11        0
     // Totals...
-    // yes simd       29       45        0
-    //  no simd       59       75        0
+    // yes simd       26       43        0
+    //  no simd       59       76        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -6718,11 +6718,11 @@ impl std::ops::Mul<Sphere> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       15       31        0
-    //    simd4       11       11        0
+    //      f32        7       15        0
+    //    simd4       13       17        0
     // Totals...
-    // yes simd       26       42        0
-    //  no simd       59       75        0
+    // yes simd       20       32        0
+    //  no simd       59       83        0
     fn mul(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -6758,10 +6758,10 @@ impl std::ops::Mul<VersorEven> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       68       84        0
-    //    simd4       39       39        0
+    //      f32       48       64        0
+    //    simd4       44       44        0
     // Totals...
-    // yes simd      107      123        0
+    // yes simd       92      108        0
     //  no simd      224      240        0
     fn mul(self, other: VersorEven) -> Self::Output {
         return self.geometric_product(other);
@@ -6771,10 +6771,10 @@ impl std::ops::Mul<VersorEvenAligningOrigin> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       64        0
-    //    simd4       29       29        0
+    //      f32       40       56        0
+    //    simd4       31       31        0
     // Totals...
-    // yes simd       77       93        0
+    // yes simd       71       87        0
     //  no simd      164      180        0
     fn mul(self, other: VersorEvenAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -6784,10 +6784,10 @@ impl std::ops::Mul<VersorEvenAtInfinity> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       43       52        0
-    //    simd4       31       33        0
+    //      f32       35       44        0
+    //    simd4       33       35        0
     // Totals...
-    // yes simd       74       85        0
+    // yes simd       68       79        0
     //  no simd      167      184        0
     fn mul(self, other: VersorEvenAtInfinity) -> Self::Output {
         return self.geometric_product(other);
@@ -6797,10 +6797,10 @@ impl std::ops::Mul<VersorEvenAtOrigin> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       32       48        0
-    //    simd4       18       18        0
+    //      f32       28       44        0
+    //    simd4       19       19        0
     // Totals...
-    // yes simd       50       66        0
+    // yes simd       47       63        0
     //  no simd      104      120        0
     fn mul(self, other: VersorEvenAtOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -6823,10 +6823,10 @@ impl std::ops::Mul<VersorEvenOrthogonalOrigin> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       60        0
-    //    simd4       30       30        0
+    //      f32       36       52        0
+    //    simd4       32       32        0
     // Totals...
-    // yes simd       74       90        0
+    // yes simd       68       84        0
     //  no simd      164      180        0
     fn mul(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -6849,10 +6849,10 @@ impl std::ops::Mul<VersorOddAtInfinity> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       36       52        0
-    //    simd4       32       32        0
+    //      f32       44       60        0
+    //    simd4       30       30        0
     // Totals...
-    // yes simd       68       84        0
+    // yes simd       74       90        0
     //  no simd      164      180        0
     fn mul(self, other: VersorOddAtInfinity) -> Self::Output {
         return self.geometric_product(other);
@@ -6862,10 +6862,10 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       80        0
-    //    simd4       25       25        0
+    //      f32       60       76        0
+    //    simd4       26       26        0
     // Totals...
-    // yes simd       89      105        0
+    // yes simd       86      102        0
     //  no simd      164      180        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -7147,13 +7147,13 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiDipoleInversion {
     fn sub(self, other: AntiDipoleInversion) -> Self::Output {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435, e321
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
             // e235, e315, e125, e4
-            (self.group2() - other.group2()),
+            (-other.group2() + self.group2()),
             // e1, e2, e3, e5
-            (self.group3() - other.group3()),
+            (-other.group3() + self.group3()),
         );
         return subtraction;
     }
@@ -7162,13 +7162,13 @@ impl std::ops::SubAssign<AntiDipoleInversion> for AntiDipoleInversion {
     fn sub_assign(&mut self, other: AntiDipoleInversion) {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435, e321
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
             // e235, e315, e125, e4
-            (self.group2() - other.group2()),
+            (-other.group2() + self.group2()),
             // e1, e2, e3, e5
-            (self.group3() - other.group3()),
+            (-other.group3() + self.group3()),
         );
         *self = subtraction;
     }
@@ -7190,9 +7190,9 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for AntiDipoleInversion {
             (self.group1() - other.group0()),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -7210,9 +7210,9 @@ impl std::ops::SubAssign<AntiDipoleInversionAtInfinity> for AntiDipoleInversion 
             (self.group1() - other.group0()),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -7233,7 +7233,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for AntiDipoleInversion {
     fn sub(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[3])]),
             // e235, e315, e125, e4
@@ -7253,7 +7253,7 @@ impl std::ops::SubAssign<AntiDipoleInversionOnOrigin> for AntiDipoleInversion {
     fn sub_assign(&mut self, other: AntiDipoleInversionOnOrigin) {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[3])]),
             // e235, e315, e125, e4
@@ -7282,12 +7282,12 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for AntiDipoleInversion 
     fn sub(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] - other.group1()[0]),
-                (self.group1()[1] - other.group1()[1]),
-                (self.group1()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group1()[0]),
+                (-other.group1()[1] + self.group1()[1]),
+                (-other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
@@ -7302,12 +7302,12 @@ impl std::ops::SubAssign<AntiDipoleInversionOrthogonalOrigin> for AntiDipoleInve
     fn sub_assign(&mut self, other: AntiDipoleInversionOrthogonalOrigin) {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] - other.group1()[0]),
-                (self.group1()[1] - other.group1()[1]),
-                (self.group1()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group1()[0]),
+                (-other.group1()[1] + self.group1()[1]),
+                (-other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
@@ -7330,7 +7330,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for AntiDipoleInversion {
     fn sub(self, other: AntiDipoleOnOrigin) -> Self::Output {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[3])]),
             // e235, e315, e125, e4
@@ -7345,7 +7345,7 @@ impl std::ops::SubAssign<AntiDipoleOnOrigin> for AntiDipoleInversion {
     fn sub_assign(&mut self, other: AntiDipoleOnOrigin) {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[3])]),
             // e235, e315, e125, e4
@@ -7727,9 +7727,9 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for AntiDipoleInversion {
             self.group2(),
             // e1, e2, e3, e5
             Simd32x4::from([
-                (self.group3()[0] - other.group1()[0]),
-                (self.group3()[1] - other.group1()[1]),
-                (self.group3()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group3()[0]),
+                (-other.group1()[1] + self.group3()[1]),
+                (-other.group1()[2] + self.group3()[2]),
                 self.group3()[3],
             ]),
         );
@@ -7747,9 +7747,9 @@ impl std::ops::SubAssign<AntiMysteryDipoleInversion> for AntiDipoleInversion {
             self.group2(),
             // e1, e2, e3, e5
             Simd32x4::from([
-                (self.group3()[0] - other.group1()[0]),
-                (self.group3()[1] - other.group1()[1]),
-                (self.group3()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group3()[0]),
+                (-other.group1()[1] + self.group3()[1]),
+                (-other.group1()[2] + self.group3()[2]),
                 self.group3()[3],
             ]),
         );
@@ -7839,9 +7839,9 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for AntiDipoleInversion {
             self.group2(),
             // e1, e2, e3, e5
             Simd32x4::from([
-                (self.group3()[0] - other.group0()[0]),
-                (self.group3()[1] - other.group0()[1]),
-                (self.group3()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group3()[0]),
+                (-other.group0()[1] + self.group3()[1]),
+                (-other.group0()[2] + self.group3()[2]),
                 self.group3()[3],
             ]),
         );
@@ -7859,9 +7859,9 @@ impl std::ops::SubAssign<AntiPlaneOnOrigin> for AntiDipoleInversion {
             self.group2(),
             // e1, e2, e3, e5
             Simd32x4::from([
-                (self.group3()[0] - other.group0()[0]),
-                (self.group3()[1] - other.group0()[1]),
-                (self.group3()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group3()[0]),
+                (-other.group0()[1] + self.group3()[1]),
+                (-other.group0()[2] + self.group3()[2]),
                 self.group3()[3],
             ]),
         );
@@ -8185,9 +8185,9 @@ impl std::ops::Sub<Circle> for AntiDipoleInversion {
             (self.group1() - other.group1()),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group2()[0]),
-                (self.group2()[1] - other.group2()[1]),
-                (self.group2()[2] - other.group2()[2]),
+                (-other.group2()[0] + self.group2()[0]),
+                (-other.group2()[1] + self.group2()[1]),
+                (-other.group2()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -8205,9 +8205,9 @@ impl std::ops::SubAssign<Circle> for AntiDipoleInversion {
             (self.group1() - other.group1()),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group2()[0]),
-                (self.group2()[1] - other.group2()[1]),
-                (self.group2()[2] - other.group2()[2]),
+                (-other.group2()[0] + self.group2()[0]),
+                (-other.group2()[1] + self.group2()[1]),
+                (-other.group2()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -8231,16 +8231,16 @@ impl std::ops::Sub<CircleAligningOrigin> for AntiDipoleInversion {
             (self.group0() - other.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] - other.group1()[0]),
-                (self.group1()[1] - other.group1()[1]),
-                (self.group1()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group1()[0]),
+                (-other.group1()[1] + self.group1()[1]),
+                (-other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group2()[0]),
-                (self.group2()[1] - other.group2()[1]),
-                (self.group2()[2] - other.group2()[2]),
+                (-other.group2()[0] + self.group2()[0]),
+                (-other.group2()[1] + self.group2()[1]),
+                (-other.group2()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -8256,16 +8256,16 @@ impl std::ops::SubAssign<CircleAligningOrigin> for AntiDipoleInversion {
             (self.group0() - other.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] - other.group1()[0]),
-                (self.group1()[1] - other.group1()[1]),
-                (self.group1()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group1()[0]),
+                (-other.group1()[1] + self.group1()[1]),
+                (-other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group2()[0]),
-                (self.group2()[1] - other.group2()[1]),
-                (self.group2()[2] - other.group2()[2]),
+                (-other.group2()[0] + self.group2()[0]),
+                (-other.group2()[1] + self.group2()[1]),
+                (-other.group2()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -8291,9 +8291,9 @@ impl std::ops::Sub<CircleAtInfinity> for AntiDipoleInversion {
             (self.group1() - other.group0()),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -8311,9 +8311,9 @@ impl std::ops::SubAssign<CircleAtInfinity> for AntiDipoleInversion {
             (self.group1() - other.group0()),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -8339,9 +8339,9 @@ impl std::ops::Sub<CircleAtOrigin> for AntiDipoleInversion {
             self.group1(),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -8359,9 +8359,9 @@ impl std::ops::SubAssign<CircleAtOrigin> for AntiDipoleInversion {
             self.group1(),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -8385,9 +8385,9 @@ impl std::ops::Sub<CircleOnOrigin> for AntiDipoleInversion {
             (self.group0() - other.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] - other.group1()[0]),
-                (self.group1()[1] - other.group1()[1]),
-                (self.group1()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group1()[0]),
+                (-other.group1()[1] + self.group1()[1]),
+                (-other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
@@ -8405,9 +8405,9 @@ impl std::ops::SubAssign<CircleOnOrigin> for AntiDipoleInversion {
             (self.group0() - other.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] - other.group1()[0]),
-                (self.group1()[1] - other.group1()[1]),
-                (self.group1()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group1()[0]),
+                (-other.group1()[1] + self.group1()[1]),
+                (-other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
@@ -8430,14 +8430,14 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for AntiDipoleInversion {
     fn sub(self, other: CircleOrthogonalOrigin) -> Self::Output {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[3])]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -8450,14 +8450,14 @@ impl std::ops::SubAssign<CircleOrthogonalOrigin> for AntiDipoleInversion {
     fn sub_assign(&mut self, other: CircleOrthogonalOrigin) {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[3])]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -8515,9 +8515,9 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for AntiDipoleInversion {
             ]),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] - other.group1()[0]),
-                (self.group1()[1] - other.group1()[1]),
-                (self.group1()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group1()[0]),
+                (-other.group1()[1] + self.group1()[1]),
+                (-other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e5
@@ -8544,9 +8544,9 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for AntiDipoleInversion 
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group1()[3] * -1.0)]),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] - other.group0()[0]),
-                (self.group1()[1] - other.group0()[1]),
-                (self.group1()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group1()[0]),
+                (-other.group0()[1] + self.group1()[1]),
+                (-other.group0()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e5
@@ -8606,9 +8606,9 @@ impl std::ops::Sub<CircleRotorOnOrigin> for AntiDipoleInversion {
             ]),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] - other.group1()[0]),
-                (self.group1()[1] - other.group1()[1]),
-                (self.group1()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group1()[0]),
+                (-other.group1()[1] + self.group1()[1]),
+                (-other.group1()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e5
@@ -9352,16 +9352,16 @@ impl std::ops::Sub<Line> for AntiDipoleInversion {
             self.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] - other.group0()[0]),
-                (self.group1()[1] - other.group0()[1]),
-                (self.group1()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group1()[0]),
+                (-other.group0()[1] + self.group1()[1]),
+                (-other.group0()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -9377,16 +9377,16 @@ impl std::ops::SubAssign<Line> for AntiDipoleInversion {
             self.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] - other.group0()[0]),
-                (self.group1()[1] - other.group0()[1]),
-                (self.group1()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group1()[0]),
+                (-other.group0()[1] + self.group1()[1]),
+                (-other.group0()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -9408,9 +9408,9 @@ impl std::ops::Sub<LineAtInfinity> for AntiDipoleInversion {
             self.group1(),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group0()[0]),
-                (self.group2()[1] - other.group0()[1]),
-                (self.group2()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group2()[0]),
+                (-other.group0()[1] + self.group2()[1]),
+                (-other.group0()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -9428,9 +9428,9 @@ impl std::ops::SubAssign<LineAtInfinity> for AntiDipoleInversion {
             self.group1(),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group2()[0] - other.group0()[0]),
-                (self.group2()[1] - other.group0()[1]),
-                (self.group2()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group2()[0]),
+                (-other.group0()[1] + self.group2()[1]),
+                (-other.group0()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -9450,9 +9450,9 @@ impl std::ops::Sub<LineOnOrigin> for AntiDipoleInversion {
             self.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] - other.group0()[0]),
-                (self.group1()[1] - other.group0()[1]),
-                (self.group1()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group1()[0]),
+                (-other.group0()[1] + self.group1()[1]),
+                (-other.group0()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
@@ -9470,9 +9470,9 @@ impl std::ops::SubAssign<LineOnOrigin> for AntiDipoleInversion {
             self.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group1()[0] - other.group0()[0]),
-                (self.group1()[1] - other.group0()[1]),
-                (self.group1()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group1()[0]),
+                (-other.group0()[1] + self.group1()[1]),
+                (-other.group0()[2] + self.group1()[2]),
                 self.group1()[3],
             ]),
             // e235, e315, e125, e4
@@ -9504,7 +9504,7 @@ impl std::ops::Sub<Motor> for AntiDipoleInversion {
                 self.group1()[3],
             ]),
             // e235, e315, e125, e5
-            (-other.group1() + Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]])),
+            (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]) - other.group1()),
             // e1, e2, e3, e4
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3]]),
         );
@@ -9596,7 +9596,7 @@ impl std::ops::Sub<MultiVector> for AntiDipoleInversion {
             // scalar, e12345
             (other.group0() * Simd32x2::from(-1.0)),
             // e1, e2, e3, e4
-            (-other.group1() + Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3]])),
+            (Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3]]) - other.group1()),
             // e5
             (self.group3()[3] - other[e1]),
             // e41, e42, e43, e45
@@ -9610,7 +9610,7 @@ impl std::ops::Sub<MultiVector> for AntiDipoleInversion {
             // e423, e431, e412
             (self.group0() - other.group7()),
             // e235, e315, e125
-            (-other.group8() + Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]])),
+            (Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) - other.group8()),
             // e1234, e4235, e4315, e4125
             (other.group9() * Simd32x4::from(-1.0)),
             // e3215
@@ -9762,7 +9762,7 @@ impl std::ops::Sub<MysteryQuadNum> for AntiDipoleInversion {
             // e423, e431, e412, e12345
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] * -1.0)]),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[0])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[0] + self.group1()[3])]),
             // e235, e315, e125, e5
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]),
             // e1, e2, e3, e4
@@ -9983,7 +9983,7 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for AntiDipoleInversion {
     fn sub(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e4
@@ -9998,7 +9998,7 @@ impl std::ops::SubAssign<NullVersorEvenAtOrigin> for AntiDipoleInversion {
     fn sub_assign(&mut self, other: NullVersorEvenAtOrigin) {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e4
@@ -10142,9 +10142,9 @@ impl std::ops::Sub<QuadNumAligningOrigin> for AntiDipoleInversion {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group3()[3] - other.group0()[1])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (-other.group0()[1] + self.group3()[3])]),
             // e1, e2, e3, e4
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group2()[3] - other.group0()[0])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[0] + self.group2()[3])]),
         );
         return subtraction;
     }
@@ -10161,7 +10161,7 @@ impl std::ops::Sub<QuadNumAligningOriginAtInfinity> for AntiDipoleInversion {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group3()[3] - other.group0()[0])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (-other.group0()[0] + self.group3()[3])]),
             // e1, e2, e3, e4
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3]]),
         );
@@ -10178,9 +10178,9 @@ impl std::ops::Sub<QuadNumAtInfinity> for AntiDipoleInversion {
             // e423, e431, e412, e12345
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[2] * -1.0)]),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[1])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[1] + self.group1()[3])]),
             // e235, e315, e125, e5
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group3()[3] - other.group0()[0])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (-other.group0()[0] + self.group3()[3])]),
             // e1, e2, e3, e4
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3]]),
         );
@@ -10201,7 +10201,7 @@ impl std::ops::Sub<QuadNumOnOrigin> for AntiDipoleInversion {
             // e235, e315, e125, e5
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]),
             // e1, e2, e3, e4
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group2()[3] - other.group0()[0])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[0] + self.group2()[3])]),
         );
         return subtraction;
     }
@@ -10216,11 +10216,11 @@ impl std::ops::Sub<QuadNumOrthogonalOrigin> for AntiDipoleInversion {
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[2])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[2] + self.group1()[3])]),
             // e235, e315, e125, e4
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other.group0()[0])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (-other.group0()[0] + self.group2()[3])]),
             // e1, e2, e3, e5
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] - other.group0()[1])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[1] + self.group3()[3])]),
         );
         return subtraction;
     }
@@ -10231,11 +10231,11 @@ impl std::ops::SubAssign<QuadNumOrthogonalOrigin> for AntiDipoleInversion {
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[2])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[2] + self.group1()[3])]),
             // e235, e315, e125, e4
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other.group0()[0])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (-other.group0()[0] + self.group2()[3])]),
             // e1, e2, e3, e5
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] - other.group0()[1])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[1] + self.group3()[3])]),
         );
         *self = subtraction;
     }
@@ -10259,7 +10259,7 @@ impl std::ops::Sub<RoundPoint> for AntiDipoleInversion {
             // e235, e315, e125, e4
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other.group0()[3])]),
             // e1, e2, e3, e5
-            (self.group3() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]])),
+            (-Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]]) + self.group3()),
         );
         return subtraction;
     }
@@ -10275,7 +10275,7 @@ impl std::ops::SubAssign<RoundPoint> for AntiDipoleInversion {
             // e235, e315, e125, e4
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other.group0()[3])]),
             // e1, e2, e3, e5
-            (self.group3() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]])),
+            (-Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]]) + self.group3()),
         );
         *self = subtraction;
     }
@@ -10292,9 +10292,9 @@ impl std::ops::Sub<RoundPointAtOrigin> for AntiDipoleInversion {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other.group0()[0])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (-other.group0()[0] + self.group2()[3])]),
             // e1, e2, e3, e5
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] - other.group0()[1])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[1] + self.group3()[3])]),
         );
         return subtraction;
     }
@@ -10307,9 +10307,9 @@ impl std::ops::SubAssign<RoundPointAtOrigin> for AntiDipoleInversion {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e4
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other.group0()[0])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (-other.group0()[0] + self.group2()[3])]),
             // e1, e2, e3, e5
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] - other.group0()[1])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[1] + self.group3()[3])]),
         );
         *self = subtraction;
     }
@@ -10474,9 +10474,9 @@ impl std::ops::Sub<VersorEven> for AntiDipoleInversion {
             // e415, e425, e435, e321
             (self.group1() - other.group1()),
             // e235, e315, e125, e5
-            (-other.group2() + Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]])),
+            (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]) - other.group2()),
             // e1, e2, e3, e4
-            (-other.group3() + Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3]])),
+            (Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3]]) - other.group3()),
         );
         return subtraction;
     }
@@ -10507,7 +10507,7 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for AntiDipoleInversion {
                 self.group1()[3],
             ]),
             // e235, e315, e125, e5
-            (-other.group2() + Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]])),
+            (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]) - other.group2()),
             // e1, e2, e3, e4
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group2()[3] - other.group1()[3])]),
         );
@@ -10530,7 +10530,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for AntiDipoleInversion {
             // e415, e425, e435, e321
             (self.group1() - other.group1()),
             // e235, e315, e125, e5
-            (-other.group2() + Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]])),
+            (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]) - other.group2()),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (self.group3()[0] - other.group0()[1]),
@@ -10555,11 +10555,11 @@ impl std::ops::Sub<VersorEvenAtOrigin> for AntiDipoleInversion {
     fn sub(self, other: VersorEvenAtOrigin) -> Self::Output {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e4
-            (self.group2() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[3]])),
+            (-Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[3]]) + self.group2()),
             // e1, e2, e3, e5
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] - other.group1()[3])]),
         );
@@ -10570,11 +10570,11 @@ impl std::ops::SubAssign<VersorEvenAtOrigin> for AntiDipoleInversion {
     fn sub_assign(&mut self, other: VersorEvenAtOrigin) {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e4
-            (self.group2() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[3]])),
+            (-Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[3]]) + self.group2()),
             // e1, e2, e3, e5
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] - other.group1()[3])]),
         );
@@ -10623,13 +10623,13 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for AntiDipoleInversion {
     fn sub(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[3])]),
             // e235, e315, e125, e4
-            (self.group2() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group2()[3]])),
+            (-Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group2()[3]]) + self.group2()),
             // e1, e2, e3, e5
-            (self.group3() - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
+            (-Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) + self.group3()),
         );
         return subtraction;
     }
@@ -10638,13 +10638,13 @@ impl std::ops::SubAssign<VersorEvenOrthogonalOrigin> for AntiDipoleInversion {
     fn sub_assign(&mut self, other: VersorEvenOrthogonalOrigin) {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[3])]),
             // e235, e315, e125, e4
-            (self.group2() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group2()[3]])),
+            (-Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group2()[3]]) + self.group2()),
             // e1, e2, e3, e5
-            (self.group3() - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]])),
+            (-Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) + self.group3()),
         );
         *self = subtraction;
     }

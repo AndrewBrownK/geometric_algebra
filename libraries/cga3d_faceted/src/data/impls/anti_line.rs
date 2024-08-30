@@ -31,7 +31,7 @@ impl std::ops::Add<AntiCircleOnOrigin> for AntiLine {
             // e41, e42, e43
             other.group0(),
             // e23, e31, e12
-            (self.group0() + other.group1()),
+            (other.group1() + self.group0()),
             // e15, e25, e35
             self.group1(),
         );
@@ -79,7 +79,7 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for AntiLine {
             // e41, e42, e43
             other.group0(),
             // e23, e31, e12
-            (self.group0() + other.group1()),
+            (other.group1() + self.group0()),
             // e15, e25, e35, scalar
             Simd32x4::from([
                 (self.group1()[0] + other.group2()[0]),
@@ -103,7 +103,7 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for AntiLine {
     fn add(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         let addition = AntiCircleRotorAligningOriginAtInfinity::from_groups(
             // e23, e31, e12
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e15, e25, e35, scalar
             Simd32x4::from([
                 (self.group1()[0] + other.group1()[0]),
@@ -151,7 +151,7 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for AntiLine {
             // e41, e42, e43
             Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e23, e31, e12
-            (self.group0() + other.group1()),
+            (other.group1() + self.group0()),
             // e15, e25, e35, scalar
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[3]]),
         );
@@ -436,13 +436,13 @@ impl std::ops::Add<AntiLine> for AntiLine {
     //   simd3        2        0        0
     // no simd        6        0        0
     fn add(self, other: AntiLine) -> Self::Output {
-        let addition = AntiLine::from_groups(/* e23, e31, e12 */ (self.group0() + other.group0()), /* e15, e25, e35 */ (self.group1() + other.group1()));
+        let addition = AntiLine::from_groups(/* e23, e31, e12 */ (other.group0() + self.group0()), /* e15, e25, e35 */ (other.group1() + self.group1()));
         return addition;
     }
 }
 impl std::ops::AddAssign<AntiLine> for AntiLine {
     fn add_assign(&mut self, other: AntiLine) {
-        let addition = AntiLine::from_groups(/* e23, e31, e12 */ (self.group0() + other.group0()), /* e15, e25, e35 */ (self.group1() + other.group1()));
+        let addition = AntiLine::from_groups(/* e23, e31, e12 */ (other.group0() + self.group0()), /* e15, e25, e35 */ (other.group1() + self.group1()));
         *self = addition;
     }
 }
@@ -497,7 +497,7 @@ impl std::ops::Add<AntiMotorOnOrigin> for AntiLine {
     fn add(self, other: AntiMotorOnOrigin) -> Self::Output {
         let addition = AntiCircleRotorAligningOriginAtInfinity::from_groups(
             // e23, e31, e12
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e15, e25, e35, scalar
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[3]]),
         );
@@ -1411,7 +1411,7 @@ impl std::ops::Add<FlatPoint> for AntiLine {
             // e23, e31, e12, e45
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[3]]),
             // e15, e25, e35
-            (self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
         );
         return addition;
     }
@@ -1444,7 +1444,7 @@ impl std::ops::Add<Flector> for AntiLine {
             // e23, e31, e12, e45
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[3]]),
             // e15, e25, e35
-            (self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
             // e4235, e4315, e4125, e3215
             other.group1(),
         );
@@ -5023,7 +5023,7 @@ impl std::ops::Sub<AntiCircleOnOrigin> for AntiLine {
             // e41, e42, e43
             (other.group0() * Simd32x3::from(-1.0)),
             // e23, e31, e12
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
             // e15, e25, e35
             self.group1(),
         );
@@ -5075,7 +5075,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for AntiLine {
             // e41, e42, e43
             (other.group0() * Simd32x3::from(-1.0)),
             // e23, e31, e12
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
             // e15, e25, e35, scalar
             Simd32x4::from([
                 (self.group1()[0] - other.group2()[0]),
@@ -5099,7 +5099,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for AntiLine {
     fn sub(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         let subtraction = AntiCircleRotorAligningOriginAtInfinity::from_groups(
             // e23, e31, e12
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e15, e25, e35, scalar
             Simd32x4::from([
                 (self.group1()[0] - other.group1()[0]),
@@ -5150,7 +5150,7 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for AntiLine {
             // e41, e42, e43
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
             // e23, e31, e12
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
             // e15, e25, e35, scalar
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[3] * -1.0)]),
         );
@@ -5493,13 +5493,13 @@ impl std::ops::Sub<AntiLine> for AntiLine {
     //   simd3        2        0        0
     // no simd        6        0        0
     fn sub(self, other: AntiLine) -> Self::Output {
-        let subtraction = AntiLine::from_groups(/* e23, e31, e12 */ (self.group0() - other.group0()), /* e15, e25, e35 */ (self.group1() - other.group1()));
+        let subtraction = AntiLine::from_groups(/* e23, e31, e12 */ (-other.group0() + self.group0()), /* e15, e25, e35 */ (-other.group1() + self.group1()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiLine> for AntiLine {
     fn sub_assign(&mut self, other: AntiLine) {
-        let subtraction = AntiLine::from_groups(/* e23, e31, e12 */ (self.group0() - other.group0()), /* e15, e25, e35 */ (self.group1() - other.group1()));
+        let subtraction = AntiLine::from_groups(/* e23, e31, e12 */ (-other.group0() + self.group0()), /* e15, e25, e35 */ (-other.group1() + self.group1()));
         *self = subtraction;
     }
 }
@@ -5557,7 +5557,7 @@ impl std::ops::Sub<AntiMotorOnOrigin> for AntiLine {
     fn sub(self, other: AntiMotorOnOrigin) -> Self::Output {
         let subtraction = AntiCircleRotorAligningOriginAtInfinity::from_groups(
             // e23, e31, e12
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e15, e25, e35, scalar
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[3] * -1.0)]),
         );
@@ -6631,7 +6631,7 @@ impl std::ops::Sub<FlatPoint> for AntiLine {
             // e23, e31, e12, e45
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] * -1.0)]),
             // e15, e25, e35
-            (self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
         );
         return subtraction;
     }
@@ -6668,7 +6668,7 @@ impl std::ops::Sub<Flector> for AntiLine {
             // e23, e31, e12, e45
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] * -1.0)]),
             // e15, e25, e35
-            (self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
             // e4235, e4315, e4125, e3215
             (other.group1() * Simd32x4::from(-1.0)),
         );

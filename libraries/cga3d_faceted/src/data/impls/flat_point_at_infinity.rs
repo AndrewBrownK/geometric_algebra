@@ -404,7 +404,7 @@ impl std::ops::Add<AntiLine> for FlatPointAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: AntiLine) -> Self::Output {
-        let addition = AntiLine::from_groups(/* e23, e31, e12 */ other.group0(), /* e15, e25, e35 */ (self.group0() + other.group1()));
+        let addition = AntiLine::from_groups(/* e23, e31, e12 */ other.group0(), /* e15, e25, e35 */ (other.group1() + self.group0()));
         return addition;
     }
 }
@@ -1064,7 +1064,7 @@ impl std::ops::Add<Dipole> for FlatPointAtInfinity {
             // e23, e31, e12, e45
             other.group1(),
             // e15, e25, e35
-            (self.group0() + other.group2()),
+            (other.group2() + self.group0()),
         );
         return addition;
     }
@@ -1076,7 +1076,7 @@ impl std::ops::Add<DipoleAligningOrigin> for FlatPointAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: DipoleAligningOrigin) -> Self::Output {
-        let addition = DipoleAligningOrigin::from_groups(/* e41, e42, e43, e45 */ other.group0(), /* e15, e25, e35 */ (self.group0() + other.group1()));
+        let addition = DipoleAligningOrigin::from_groups(/* e41, e42, e43, e45 */ other.group0(), /* e15, e25, e35 */ (other.group1() + self.group0()));
         return addition;
     }
 }
@@ -1087,7 +1087,7 @@ impl std::ops::Add<DipoleAtInfinity> for FlatPointAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: DipoleAtInfinity) -> Self::Output {
-        let addition = DipoleAtInfinity::from_groups(/* e23, e31, e12, e45 */ other.group0(), /* e15, e25, e35 */ (self.group0() + other.group1()));
+        let addition = DipoleAtInfinity::from_groups(/* e23, e31, e12, e45 */ other.group0(), /* e15, e25, e35 */ (other.group1() + self.group0()));
         return addition;
     }
 }
@@ -1098,7 +1098,7 @@ impl std::ops::Add<DipoleAtOrigin> for FlatPointAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: DipoleAtOrigin) -> Self::Output {
-        let addition = DipoleAtOrigin::from_groups(/* e41, e42, e43 */ other.group0(), /* e15, e25, e35 */ (self.group0() + other.group1()));
+        let addition = DipoleAtOrigin::from_groups(/* e41, e42, e43 */ other.group0(), /* e15, e25, e35 */ (other.group1() + self.group0()));
         return addition;
     }
 }
@@ -1159,7 +1159,7 @@ impl std::ops::Add<DipoleInversionAtInfinity> for FlatPointAtInfinity {
             // e23, e31, e12, e45
             other.group0(),
             // e15, e25, e35
-            (self.group0() + other.group1()),
+            (other.group1() + self.group0()),
             // e4235, e4315, e4125, e3215
             other.group2(),
         );
@@ -1242,7 +1242,7 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             other.group1(),
             // e15, e25, e35
-            (self.group0() + other.group2()),
+            (other.group2() + self.group0()),
         );
         return addition;
     }
@@ -1277,13 +1277,13 @@ impl std::ops::Add<FlatPointAtInfinity> for FlatPointAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: FlatPointAtInfinity) -> Self::Output {
-        let addition = FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (self.group0() + other.group0()));
+        let addition = FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<FlatPointAtInfinity> for FlatPointAtInfinity {
     fn add_assign(&mut self, other: FlatPointAtInfinity) {
-        let addition = FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (self.group0() + other.group0()));
+        let addition = FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -3794,10 +3794,10 @@ impl std::ops::Mul<DipoleInversionAtInfinity> for FlatPointAtInfinity {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        9        0
-    //    simd4        3        3        0
+    //      f32        1        5        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd        8       12        0
+    // yes simd        5        9        0
     //  no simd       17       21        0
     fn mul(self, other: DipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
@@ -4021,10 +4021,10 @@ impl std::ops::Mul<MysteryDipoleInversion> for FlatPointAtInfinity {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       13        0
-    //    simd4        2        2        0
+    //      f32        5        9        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd       11       15        0
+    // yes simd        8       12        0
     //  no simd       17       21        0
     fn mul(self, other: MysteryDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -4921,7 +4921,7 @@ impl std::ops::Sub<AntiLine> for FlatPointAtInfinity {
             // e23, e31, e12
             (other.group0() * Simd32x3::from(-1.0)),
             // e15, e25, e35
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
         );
         return subtraction;
     }
@@ -5731,7 +5731,7 @@ impl std::ops::Sub<Dipole> for FlatPointAtInfinity {
             // e23, e31, e12, e45
             (other.group1() * Simd32x4::from(-1.0)),
             // e15, e25, e35
-            (self.group0() - other.group2()),
+            (-other.group2() + self.group0()),
         );
         return subtraction;
     }
@@ -5750,7 +5750,7 @@ impl std::ops::Sub<DipoleAligningOrigin> for FlatPointAtInfinity {
             // e41, e42, e43, e45
             (other.group0() * Simd32x4::from(-1.0)),
             // e15, e25, e35
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
         );
         return subtraction;
     }
@@ -5769,7 +5769,7 @@ impl std::ops::Sub<DipoleAtInfinity> for FlatPointAtInfinity {
             // e23, e31, e12, e45
             (other.group0() * Simd32x4::from(-1.0)),
             // e15, e25, e35
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
         );
         return subtraction;
     }
@@ -5785,7 +5785,7 @@ impl std::ops::Sub<DipoleAtOrigin> for FlatPointAtInfinity {
             // e41, e42, e43
             (other.group0() * Simd32x3::from(-1.0)),
             // e15, e25, e35
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
         );
         return subtraction;
     }
@@ -5859,7 +5859,7 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for FlatPointAtInfinity {
             // e23, e31, e12, e45
             (other.group0() * Simd32x4::from(-1.0)),
             // e15, e25, e35
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
             // e4235, e4315, e4125, e3215
             (other.group2() * Simd32x4::from(-1.0)),
         );
@@ -5962,7 +5962,7 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for FlatPointAtInfinity {
             // e23, e31, e12
             (other.group1() * Simd32x3::from(-1.0)),
             // e15, e25, e35
-            (self.group0() - other.group2()),
+            (-other.group2() + self.group0()),
         );
         return subtraction;
     }
@@ -6003,13 +6003,13 @@ impl std::ops::Sub<FlatPointAtInfinity> for FlatPointAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn sub(self, other: FlatPointAtInfinity) -> Self::Output {
-        let subtraction = FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (self.group0() - other.group0()));
+        let subtraction = FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<FlatPointAtInfinity> for FlatPointAtInfinity {
     fn sub_assign(&mut self, other: FlatPointAtInfinity) {
-        let subtraction = FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (self.group0() - other.group0()));
+        let subtraction = FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

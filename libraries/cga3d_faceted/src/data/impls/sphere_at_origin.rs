@@ -591,7 +591,7 @@ impl std::ops::Add<AntiQuadNumAligningOriginAtInfinity> for SphereAtOrigin {
     fn add(self, other: AntiQuadNumAligningOriginAtInfinity) -> Self::Output {
         let addition = AntiQuadNumAligningOrigin::from_groups(
             // e1234, e3215, scalar
-            Simd32x3::from([self.group0()[1], (self.group0()[0] + other.group0()[0]), other.group0()[1]]),
+            Simd32x3::from([self.group0()[1], (other.group0()[0] + self.group0()[0]), other.group0()[1]]),
         );
         return addition;
     }
@@ -617,7 +617,7 @@ impl std::ops::Add<AntiQuadNumOnOrigin> for SphereAtOrigin {
     fn add(self, other: AntiQuadNumOnOrigin) -> Self::Output {
         let addition = AntiQuadNumAligningOrigin::from_groups(
             // e1234, e3215, scalar
-            Simd32x3::from([(self.group0()[1] + other.group0()[0]), self.group0()[0], other.group0()[1]]),
+            Simd32x3::from([(other.group0()[0] + self.group0()[1]), self.group0()[0], other.group0()[1]]),
         );
         return addition;
     }
@@ -2181,13 +2181,13 @@ impl std::ops::Add<SphereAtOrigin> for SphereAtOrigin {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn add(self, other: SphereAtOrigin) -> Self::Output {
-        let addition = SphereAtOrigin::from_groups(/* e3215, e1234 */ (self.group0() + other.group0()));
+        let addition = SphereAtOrigin::from_groups(/* e3215, e1234 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<SphereAtOrigin> for SphereAtOrigin {
     fn add_assign(&mut self, other: SphereAtOrigin) {
-        let addition = SphereAtOrigin::from_groups(/* e3215, e1234 */ (self.group0() + other.group0()));
+        let addition = SphereAtOrigin::from_groups(/* e3215, e1234 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -4145,12 +4145,9 @@ impl std::ops::Mul<Sphere> for SphereAtOrigin {
 impl std::ops::Mul<SphereAtOrigin> for SphereAtOrigin {
     type Output = AntiMysteryQuadNum;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        1        1        0
-    // Totals...
-    // yes simd        1        3        0
-    //  no simd        2        4        0
+    //          add/sub      mul      div
+    //   simd2        1        3        0
+    // no simd        2        6        0
     fn mul(self, other: SphereAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -5007,7 +5004,7 @@ impl std::ops::Sub<AntiQuadNumAligningOriginAtInfinity> for SphereAtOrigin {
     fn sub(self, other: AntiQuadNumAligningOriginAtInfinity) -> Self::Output {
         let subtraction = AntiQuadNumAligningOrigin::from_groups(
             // e1234, e3215, scalar
-            Simd32x3::from([self.group0()[1], (self.group0()[0] - other.group0()[0]), (other.group0()[1] * -1.0)]),
+            Simd32x3::from([self.group0()[1], (-other.group0()[0] + self.group0()[0]), (other.group0()[1] * -1.0)]),
         );
         return subtraction;
     }
@@ -5035,7 +5032,7 @@ impl std::ops::Sub<AntiQuadNumOnOrigin> for SphereAtOrigin {
     fn sub(self, other: AntiQuadNumOnOrigin) -> Self::Output {
         let subtraction = AntiQuadNumAligningOrigin::from_groups(
             // e1234, e3215, scalar
-            Simd32x3::from([(self.group0()[1] - other.group0()[0]), self.group0()[0], (other.group0()[1] * -1.0)]),
+            Simd32x3::from([(-other.group0()[0] + self.group0()[1]), self.group0()[0], (other.group0()[1] * -1.0)]),
         );
         return subtraction;
     }
@@ -6950,13 +6947,13 @@ impl std::ops::Sub<SphereAtOrigin> for SphereAtOrigin {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn sub(self, other: SphereAtOrigin) -> Self::Output {
-        let subtraction = SphereAtOrigin::from_groups(/* e3215, e1234 */ (self.group0() - other.group0()));
+        let subtraction = SphereAtOrigin::from_groups(/* e3215, e1234 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<SphereAtOrigin> for SphereAtOrigin {
     fn sub_assign(&mut self, other: SphereAtOrigin) {
-        let subtraction = SphereAtOrigin::from_groups(/* e3215, e1234 */ (self.group0() - other.group0()));
+        let subtraction = SphereAtOrigin::from_groups(/* e3215, e1234 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

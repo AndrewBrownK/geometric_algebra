@@ -13,7 +13,7 @@ use crate::traits::Wedge;
 //  Minimum:         0       0       0
 //   Median:         1       2       0
 //  Average:         9      13       0
-//  Maximum:       168     194       0
+//  Maximum:       167     195       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -209,9 +209,9 @@ impl std::ops::Add<AntiDipoleInversion> for CircleRotorAligningOrigin {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 self.group2()[3],
             ]),
             // e415, e425, e435, e321
@@ -223,9 +223,9 @@ impl std::ops::Add<AntiDipoleInversion> for CircleRotorAligningOrigin {
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
-                (self.group2()[0] + other.group2()[0]),
-                (self.group2()[1] + other.group2()[1]),
-                (self.group2()[2] + other.group2()[2]),
+                (other.group2()[0] + self.group2()[0]),
+                (other.group2()[1] + self.group2()[1]),
+                (other.group2()[2] + self.group2()[2]),
                 other.group3()[3],
             ]),
             // e1, e2, e3, e4
@@ -252,9 +252,9 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for CircleRotorAligningOrigin 
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 other.group2()[3],
             ]),
             // e1, e2, e3, e4
@@ -303,16 +303,16 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for CircleRotorAligningO
             ]),
             // e415, e425, e435, e4
             Simd32x4::from([
-                (self.group1()[0] + other.group1()[0]),
-                (self.group1()[1] + other.group1()[1]),
-                (self.group1()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group1()[0]),
+                (other.group1()[1] + self.group1()[1]),
+                (other.group1()[2] + self.group1()[2]),
                 other.group2()[3],
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
-                (self.group2()[0] + other.group2()[0]),
-                (self.group2()[1] + other.group2()[1]),
-                (self.group2()[2] + other.group2()[2]),
+                (other.group2()[0] + self.group2()[0]),
+                (other.group2()[1] + self.group2()[1]),
+                (other.group2()[2] + self.group2()[2]),
                 other.group0()[3],
             ]),
         );
@@ -328,7 +328,7 @@ impl std::ops::Add<AntiDipoleOnOrigin> for CircleRotorAligningOrigin {
     fn add(self, other: AntiDipoleOnOrigin) -> Self::Output {
         let addition = CircleRotor::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[3]]),
             // e235, e315, e125, e12345
@@ -365,9 +365,9 @@ impl std::ops::Add<AntiFlatPoint> for CircleRotorAligningOrigin {
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[3]]),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] + other.group0()[0]),
-                (self.group2()[1] + other.group0()[1]),
-                (self.group2()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group2()[0]),
+                (other.group0()[1] + self.group2()[1]),
+                (other.group0()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -387,9 +387,9 @@ impl std::ops::Add<AntiFlector> for CircleRotorAligningOrigin {
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[3]]),
             // e235, e315, e125, e5
             Simd32x4::from([
-                (self.group2()[0] + other.group0()[0]),
-                (self.group2()[1] + other.group0()[1]),
-                (self.group2()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group2()[0]),
+                (other.group0()[1] + self.group2()[1]),
+                (other.group0()[2] + self.group2()[2]),
                 other.group1()[3],
             ]),
             // e1, e2, e3, e4
@@ -921,7 +921,7 @@ impl std::ops::Add<Circle> for CircleRotorAligningOrigin {
     fn add(self, other: Circle) -> Self::Output {
         let addition = CircleRotor::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self.group1()[0] + other.group1()[0]),
@@ -931,9 +931,9 @@ impl std::ops::Add<Circle> for CircleRotorAligningOrigin {
             ]),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] + other.group2()[0]),
-                (self.group2()[1] + other.group2()[1]),
-                (self.group2()[2] + other.group2()[2]),
+                (other.group2()[0] + self.group2()[0]),
+                (other.group2()[1] + self.group2()[1]),
+                (other.group2()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -952,14 +952,14 @@ impl std::ops::Add<CircleAligningOrigin> for CircleRotorAligningOrigin {
     fn add(self, other: CircleAligningOrigin) -> Self::Output {
         let addition = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] + other.group2()[0]),
-                (self.group2()[1] + other.group2()[1]),
-                (self.group2()[2] + other.group2()[2]),
+                (other.group2()[0] + self.group2()[0]),
+                (other.group2()[1] + self.group2()[1]),
+                (other.group2()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -970,14 +970,14 @@ impl std::ops::AddAssign<CircleAligningOrigin> for CircleRotorAligningOrigin {
     fn add_assign(&mut self, other: CircleAligningOrigin) {
         let addition = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] + other.group2()[0]),
-                (self.group2()[1] + other.group2()[1]),
-                (self.group2()[2] + other.group2()[2]),
+                (other.group2()[0] + self.group2()[0]),
+                (other.group2()[1] + self.group2()[1]),
+                (other.group2()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -1002,9 +1002,9 @@ impl std::ops::Add<CircleAtInfinity> for CircleRotorAligningOrigin {
             ]),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -1023,14 +1023,14 @@ impl std::ops::Add<CircleAtOrigin> for CircleRotorAligningOrigin {
     fn add(self, other: CircleAtOrigin) -> Self::Output {
         let addition = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435
             self.group1(),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -1041,14 +1041,14 @@ impl std::ops::AddAssign<CircleAtOrigin> for CircleRotorAligningOrigin {
     fn add_assign(&mut self, other: CircleAtOrigin) {
         let addition = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435
             self.group1(),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -1064,9 +1064,9 @@ impl std::ops::Add<CircleOnOrigin> for CircleRotorAligningOrigin {
     fn add(self, other: CircleOnOrigin) -> Self::Output {
         let addition = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
             // e235, e315, e125, e12345
             self.group2(),
         );
@@ -1077,9 +1077,9 @@ impl std::ops::AddAssign<CircleOnOrigin> for CircleRotorAligningOrigin {
     fn add_assign(&mut self, other: CircleOnOrigin) {
         let addition = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
             // e235, e315, e125, e12345
             self.group2(),
         );
@@ -1098,14 +1098,14 @@ impl std::ops::Add<CircleOrthogonalOrigin> for CircleRotorAligningOrigin {
     fn add(self, other: CircleOrthogonalOrigin) -> Self::Output {
         let addition = CircleRotor::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[3]]),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -1125,7 +1125,7 @@ impl std::ops::Add<CircleRotor> for CircleRotorAligningOrigin {
     fn add(self, other: CircleRotor) -> Self::Output {
         let addition = CircleRotor::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self.group1()[0] + other.group1()[0]),
@@ -1134,7 +1134,7 @@ impl std::ops::Add<CircleRotor> for CircleRotorAligningOrigin {
                 other.group1()[3],
             ]),
             // e235, e315, e125, e12345
-            (self.group2() + other.group2()),
+            (other.group2() + self.group2()),
         );
         return addition;
     }
@@ -1151,11 +1151,11 @@ impl std::ops::Add<CircleRotorAligningOrigin> for CircleRotorAligningOrigin {
     fn add(self, other: CircleRotorAligningOrigin) -> Self::Output {
         let addition = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
             // e235, e315, e125, e12345
-            (self.group2() + other.group2()),
+            (other.group2() + self.group2()),
         );
         return addition;
     }
@@ -1164,11 +1164,11 @@ impl std::ops::AddAssign<CircleRotorAligningOrigin> for CircleRotorAligningOrigi
     fn add_assign(&mut self, other: CircleRotorAligningOrigin) {
         let addition = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
             // e235, e315, e125, e12345
-            (self.group2() + other.group2()),
+            (other.group2() + self.group2()),
         );
         *self = addition;
     }
@@ -1245,7 +1245,7 @@ impl std::ops::Add<CircleRotorOnOrigin> for CircleRotorAligningOrigin {
     fn add(self, other: CircleRotorOnOrigin) -> Self::Output {
         let addition = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435
             (self.group1() + other.group1()),
             // e235, e315, e125, e12345
@@ -1258,7 +1258,7 @@ impl std::ops::AddAssign<CircleRotorOnOrigin> for CircleRotorAligningOrigin {
     fn add_assign(&mut self, other: CircleRotorOnOrigin) {
         let addition = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435
             (self.group1() + other.group1()),
             // e235, e315, e125, e12345
@@ -1871,9 +1871,9 @@ impl std::ops::Add<Line> for CircleRotorAligningOrigin {
             (self.group1() + other.group0()),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -1889,9 +1889,9 @@ impl std::ops::AddAssign<Line> for CircleRotorAligningOrigin {
             (self.group1() + other.group0()),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] + other.group1()[0]),
-                (self.group2()[1] + other.group1()[1]),
-                (self.group2()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group2()[0]),
+                (other.group1()[1] + self.group2()[1]),
+                (other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -1911,9 +1911,9 @@ impl std::ops::Add<LineAtInfinity> for CircleRotorAligningOrigin {
             self.group1(),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] + other.group0()[0]),
-                (self.group2()[1] + other.group0()[1]),
-                (self.group2()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group2()[0]),
+                (other.group0()[1] + self.group2()[1]),
+                (other.group0()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -1929,9 +1929,9 @@ impl std::ops::AddAssign<LineAtInfinity> for CircleRotorAligningOrigin {
             self.group1(),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] + other.group0()[0]),
-                (self.group2()[1] + other.group0()[1]),
-                (self.group2()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group2()[0]),
+                (other.group0()[1] + self.group2()[1]),
+                (other.group0()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -2032,7 +2032,7 @@ impl std::ops::Add<MotorOnOrigin> for CircleRotorAligningOrigin {
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435
-            (self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
             // e235, e315, e125, e12345
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other.group0()[3])]),
         );
@@ -2045,7 +2045,7 @@ impl std::ops::AddAssign<MotorOnOrigin> for CircleRotorAligningOrigin {
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435
-            (self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
             // e235, e315, e125, e12345
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other.group0()[3])]),
         );
@@ -2065,7 +2065,7 @@ impl std::ops::Add<MultiVector> for CircleRotorAligningOrigin {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[0], (self.group2()[3] + other.group0()[1])]),
+            Simd32x2::from([other.group0()[0], (other.group0()[1] + self.group2()[3])]),
             // e1, e2, e3, e4
             other.group1(),
             // e5
@@ -2086,7 +2086,7 @@ impl std::ops::Add<MultiVector> for CircleRotorAligningOrigin {
             // e423, e431, e412
             (self.group0() + other.group7()),
             // e235, e315, e125
-            (other.group8() + Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]])),
+            (Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) + other.group8()),
             // e1234, e4235, e4315, e4125
             other.group9(),
             // e3215
@@ -2212,7 +2212,7 @@ impl std::ops::Add<MysteryQuadNum> for CircleRotorAligningOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[0]]),
             // e235, e315, e125, e12345
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other.group0()[1])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (other.group0()[1] + self.group2()[3])]),
         );
         return addition;
     }
@@ -2517,7 +2517,7 @@ impl std::ops::Add<QuadNumAligningOrigin> for CircleRotorAligningOrigin {
     fn add(self, other: QuadNumAligningOrigin) -> Self::Output {
         let addition = VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group2()[3] + other.group0()[2])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[2] + self.group2()[3])]),
             // e415, e425, e435, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[0]]),
             // e235, e315, e125, e5
@@ -2534,7 +2534,7 @@ impl std::ops::Add<QuadNumAligningOriginAtInfinity> for CircleRotorAligningOrigi
     fn add(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
         let addition = VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group2()[3] + other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] + self.group2()[3])]),
             // e415, e425, e435, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
             // e235, e315, e125, e5
@@ -2551,7 +2551,7 @@ impl std::ops::Add<QuadNumAtInfinity> for CircleRotorAligningOrigin {
     fn add(self, other: QuadNumAtInfinity) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group2()[3] + other.group0()[2])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[2] + self.group2()[3])]),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[1]]),
             // e235, e315, e125, e5
@@ -2570,7 +2570,7 @@ impl std::ops::Add<QuadNumOnOrigin> for CircleRotorAligningOrigin {
     fn add(self, other: QuadNumOnOrigin) -> Self::Output {
         let addition = VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group2()[3] + other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] + self.group2()[3])]),
             // e415, e425, e435, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[0]]),
             // e235, e315, e125, e5
@@ -2760,7 +2760,7 @@ impl std::ops::Add<VersorEven> for CircleRotorAligningOrigin {
     fn add(self, other: VersorEven) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            (other.group0() + Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]])),
+            (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]) + other.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self.group1()[0] + other.group1()[0]),
@@ -2793,7 +2793,7 @@ impl std::ops::Add<VersorEvenAligningOrigin> for CircleRotorAligningOrigin {
     fn add(self, other: VersorEvenAligningOrigin) -> Self::Output {
         let addition = VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            (other.group0() + Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]])),
+            (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]) + other.group0()),
             // e415, e425, e435, e4
             Simd32x4::from([
                 (self.group1()[0] + other.group1()[0]),
@@ -2880,7 +2880,7 @@ impl std::ops::Add<VersorEvenOnOrigin> for CircleRotorAligningOrigin {
     fn add(self, other: VersorEvenOnOrigin) -> Self::Output {
         let addition = VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            (other.group0() + Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]])),
+            (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]) + other.group0()),
             // e415, e425, e435, e4
             Simd32x4::from([
                 (self.group1()[0] + other.group1()[0]),
@@ -4181,10 +4181,10 @@ impl std::ops::Mul<AntiDipoleInversion> for CircleRotorAligningOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       66       82        0
-    //    simd4       17       17        0
+    //      f32       58       74        0
+    //    simd4       19       19        0
     // Totals...
-    // yes simd       83       99        0
+    // yes simd       77       93        0
     //  no simd      134      150        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -4194,10 +4194,10 @@ impl std::ops::Mul<AntiDipoleInversionAtInfinity> for CircleRotorAligningOrigin 
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       46       62        0
-    //    simd4       12       12        0
+    //      f32       42       58        0
+    //    simd4       13       13        0
     // Totals...
-    // yes simd       58       74        0
+    // yes simd       55       71        0
     //  no simd       94      110        0
     fn mul(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
@@ -4207,10 +4207,10 @@ impl std::ops::Mul<AntiDipoleInversionOnOrigin> for CircleRotorAligningOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       51        0
-    //    simd4        8        8        0
+    //      f32       29       47        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       41       59        0
+    // yes simd       38       56        0
     //  no simd       65       83        0
     fn mul(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -4525,10 +4525,10 @@ impl std::ops::Mul<Circle> for CircleRotorAligningOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       60       76        0
-    //    simd4        6        6        0
+    //      f32       56       72        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       66       82        0
+    // yes simd       63       79        0
     //  no simd       84      100        0
     fn mul(self, other: Circle) -> Self::Output {
         return self.geometric_product(other);
@@ -4603,10 +4603,10 @@ impl std::ops::Mul<CircleRotor> for CircleRotorAligningOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       54       70        0
-    //    simd4       10       10        0
+    //      f32       50       66        0
+    //    simd4       11       11        0
     // Totals...
-    // yes simd       64       80        0
+    // yes simd       61       77        0
     //  no simd       94      110        0
     fn mul(self, other: CircleRotor) -> Self::Output {
         return self.geometric_product(other);
@@ -4772,10 +4772,10 @@ impl std::ops::Mul<DipoleInversionOnOrigin> for CircleRotorAligningOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       23       36        0
-    //    simd4       11       12        0
+    //      f32       23       32        0
+    //    simd4       11       13        0
     // Totals...
-    // yes simd       34       48        0
+    // yes simd       34       45        0
     //  no simd       67       84        0
     fn mul(self, other: DipoleInversionOnOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -4995,11 +4995,11 @@ impl std::ops::Mul<MultiVector> for CircleRotorAligningOrigin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      117      140        0
-    //    simd3       33       36        0
-    //    simd4       18       18        0
+    //      f32      116      142        0
+    //    simd3       32       34        0
+    //    simd4       19       19        0
     // Totals...
-    // yes simd      168      194        0
+    // yes simd      167      195        0
     //  no simd      288      320        0
     fn mul(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -5366,10 +5366,10 @@ impl std::ops::Mul<VersorEven> for CircleRotorAligningOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       68       84        0
-    //    simd4       19       19        0
+    //      f32       64       80        0
+    //    simd4       20       20        0
     // Totals...
-    // yes simd       87      103        0
+    // yes simd       84      100        0
     //  no simd      144      160        0
     fn mul(self, other: VersorEven) -> Self::Output {
         return self.geometric_product(other);
@@ -5431,10 +5431,10 @@ impl std::ops::Mul<VersorEvenOrthogonalOrigin> for CircleRotorAligningOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       64        0
-    //    simd4       14       14        0
+    //      f32       52       68        0
+    //    simd4       13       13        0
     // Totals...
-    // yes simd       62       78        0
+    // yes simd       65       81        0
     //  no simd      104      120        0
     fn mul(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -5752,9 +5752,9 @@ impl std::ops::Sub<AntiDipoleInversion> for CircleRotorAligningOrigin {
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 self.group2()[3],
             ]),
             // e415, e425, e435, e321
@@ -5766,9 +5766,9 @@ impl std::ops::Sub<AntiDipoleInversion> for CircleRotorAligningOrigin {
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
-                (self.group2()[0] - other.group2()[0]),
-                (self.group2()[1] - other.group2()[1]),
-                (self.group2()[2] - other.group2()[2]),
+                (-other.group2()[0] + self.group2()[0]),
+                (-other.group2()[1] + self.group2()[1]),
+                (-other.group2()[2] + self.group2()[2]),
                 (other.group3()[3] * -1.0),
             ]),
             // e1, e2, e3, e4
@@ -5795,9 +5795,9 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for CircleRotorAligningOrigin 
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 (other.group2()[3] * -1.0),
             ]),
             // e1, e2, e3, e4
@@ -5850,16 +5850,16 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for CircleRotorAligningO
             ]),
             // e415, e425, e435, e4
             Simd32x4::from([
-                (self.group1()[0] - other.group1()[0]),
-                (self.group1()[1] - other.group1()[1]),
-                (self.group1()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group1()[0]),
+                (-other.group1()[1] + self.group1()[1]),
+                (-other.group1()[2] + self.group1()[2]),
                 (other.group2()[3] * -1.0),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
-                (self.group2()[0] - other.group2()[0]),
-                (self.group2()[1] - other.group2()[1]),
-                (self.group2()[2] - other.group2()[2]),
+                (-other.group2()[0] + self.group2()[0]),
+                (-other.group2()[1] + self.group2()[1]),
+                (-other.group2()[2] + self.group2()[2]),
                 (other.group0()[3] * -1.0),
             ]),
         );
@@ -5878,7 +5878,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for CircleRotorAligningOrigin {
     fn sub(self, other: AntiDipoleOnOrigin) -> Self::Output {
         let subtraction = CircleRotor::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[3] * -1.0)]),
             // e235, e315, e125, e12345
@@ -5918,9 +5918,9 @@ impl std::ops::Sub<AntiFlatPoint> for CircleRotorAligningOrigin {
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[3] * -1.0)]),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] - other.group0()[0]),
-                (self.group2()[1] - other.group0()[1]),
-                (self.group2()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group2()[0]),
+                (-other.group0()[1] + self.group2()[1]),
+                (-other.group0()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -5940,9 +5940,9 @@ impl std::ops::Sub<AntiFlector> for CircleRotorAligningOrigin {
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[3] * -1.0)]),
             // e235, e315, e125, e5
             Simd32x4::from([
-                (self.group2()[0] - other.group0()[0]),
-                (self.group2()[1] - other.group0()[1]),
-                (self.group2()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group2()[0]),
+                (-other.group0()[1] + self.group2()[1]),
+                (-other.group0()[2] + self.group2()[2]),
                 (other.group1()[3] * -1.0),
             ]),
             // e1, e2, e3, e4
@@ -6544,7 +6544,7 @@ impl std::ops::Sub<Circle> for CircleRotorAligningOrigin {
     fn sub(self, other: Circle) -> Self::Output {
         let subtraction = CircleRotor::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self.group1()[0] - other.group1()[0]),
@@ -6554,9 +6554,9 @@ impl std::ops::Sub<Circle> for CircleRotorAligningOrigin {
             ]),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] - other.group2()[0]),
-                (self.group2()[1] - other.group2()[1]),
-                (self.group2()[2] - other.group2()[2]),
+                (-other.group2()[0] + self.group2()[0]),
+                (-other.group2()[1] + self.group2()[1]),
+                (-other.group2()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -6575,14 +6575,14 @@ impl std::ops::Sub<CircleAligningOrigin> for CircleRotorAligningOrigin {
     fn sub(self, other: CircleAligningOrigin) -> Self::Output {
         let subtraction = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] - other.group2()[0]),
-                (self.group2()[1] - other.group2()[1]),
-                (self.group2()[2] - other.group2()[2]),
+                (-other.group2()[0] + self.group2()[0]),
+                (-other.group2()[1] + self.group2()[1]),
+                (-other.group2()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -6593,14 +6593,14 @@ impl std::ops::SubAssign<CircleAligningOrigin> for CircleRotorAligningOrigin {
     fn sub_assign(&mut self, other: CircleAligningOrigin) {
         let subtraction = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] - other.group2()[0]),
-                (self.group2()[1] - other.group2()[1]),
-                (self.group2()[2] - other.group2()[2]),
+                (-other.group2()[0] + self.group2()[0]),
+                (-other.group2()[1] + self.group2()[1]),
+                (-other.group2()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -6625,9 +6625,9 @@ impl std::ops::Sub<CircleAtInfinity> for CircleRotorAligningOrigin {
             ]),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -6646,14 +6646,14 @@ impl std::ops::Sub<CircleAtOrigin> for CircleRotorAligningOrigin {
     fn sub(self, other: CircleAtOrigin) -> Self::Output {
         let subtraction = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435
             self.group1(),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -6664,14 +6664,14 @@ impl std::ops::SubAssign<CircleAtOrigin> for CircleRotorAligningOrigin {
     fn sub_assign(&mut self, other: CircleAtOrigin) {
         let subtraction = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435
             self.group1(),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -6687,9 +6687,9 @@ impl std::ops::Sub<CircleOnOrigin> for CircleRotorAligningOrigin {
     fn sub(self, other: CircleOnOrigin) -> Self::Output {
         let subtraction = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
             // e235, e315, e125, e12345
             self.group2(),
         );
@@ -6700,9 +6700,9 @@ impl std::ops::SubAssign<CircleOnOrigin> for CircleRotorAligningOrigin {
     fn sub_assign(&mut self, other: CircleOnOrigin) {
         let subtraction = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
             // e235, e315, e125, e12345
             self.group2(),
         );
@@ -6721,14 +6721,14 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for CircleRotorAligningOrigin {
     fn sub(self, other: CircleOrthogonalOrigin) -> Self::Output {
         let subtraction = CircleRotor::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[3] * -1.0)]),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -6748,7 +6748,7 @@ impl std::ops::Sub<CircleRotor> for CircleRotorAligningOrigin {
     fn sub(self, other: CircleRotor) -> Self::Output {
         let subtraction = CircleRotor::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self.group1()[0] - other.group1()[0]),
@@ -6757,7 +6757,7 @@ impl std::ops::Sub<CircleRotor> for CircleRotorAligningOrigin {
                 (other.group1()[3] * -1.0),
             ]),
             // e235, e315, e125, e12345
-            (self.group2() - other.group2()),
+            (-other.group2() + self.group2()),
         );
         return subtraction;
     }
@@ -6774,11 +6774,11 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for CircleRotorAligningOrigin {
     fn sub(self, other: CircleRotorAligningOrigin) -> Self::Output {
         let subtraction = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
             // e235, e315, e125, e12345
-            (self.group2() - other.group2()),
+            (-other.group2() + self.group2()),
         );
         return subtraction;
     }
@@ -6787,11 +6787,11 @@ impl std::ops::SubAssign<CircleRotorAligningOrigin> for CircleRotorAligningOrigi
     fn sub_assign(&mut self, other: CircleRotorAligningOrigin) {
         let subtraction = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
             // e235, e315, e125, e12345
-            (self.group2() - other.group2()),
+            (-other.group2() + self.group2()),
         );
         *self = subtraction;
     }
@@ -6868,7 +6868,7 @@ impl std::ops::Sub<CircleRotorOnOrigin> for CircleRotorAligningOrigin {
     fn sub(self, other: CircleRotorOnOrigin) -> Self::Output {
         let subtraction = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435
             (self.group1() - other.group1()),
             // e235, e315, e125, e12345
@@ -6881,7 +6881,7 @@ impl std::ops::SubAssign<CircleRotorOnOrigin> for CircleRotorAligningOrigin {
     fn sub_assign(&mut self, other: CircleRotorOnOrigin) {
         let subtraction = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e415, e425, e435
             (self.group1() - other.group1()),
             // e235, e315, e125, e12345
@@ -7611,9 +7611,9 @@ impl std::ops::Sub<Line> for CircleRotorAligningOrigin {
             (self.group1() - other.group0()),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -7629,9 +7629,9 @@ impl std::ops::SubAssign<Line> for CircleRotorAligningOrigin {
             (self.group1() - other.group0()),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] - other.group1()[0]),
-                (self.group2()[1] - other.group1()[1]),
-                (self.group2()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group2()[0]),
+                (-other.group1()[1] + self.group2()[1]),
+                (-other.group1()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -7651,9 +7651,9 @@ impl std::ops::Sub<LineAtInfinity> for CircleRotorAligningOrigin {
             self.group1(),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] - other.group0()[0]),
-                (self.group2()[1] - other.group0()[1]),
-                (self.group2()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group2()[0]),
+                (-other.group0()[1] + self.group2()[1]),
+                (-other.group0()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -7669,9 +7669,9 @@ impl std::ops::SubAssign<LineAtInfinity> for CircleRotorAligningOrigin {
             self.group1(),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group2()[0] - other.group0()[0]),
-                (self.group2()[1] - other.group0()[1]),
-                (self.group2()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group2()[0]),
+                (-other.group0()[1] + self.group2()[1]),
+                (-other.group0()[2] + self.group2()[2]),
                 self.group2()[3],
             ]),
         );
@@ -7772,7 +7772,7 @@ impl std::ops::Sub<MotorOnOrigin> for CircleRotorAligningOrigin {
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435
-            (self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
             // e235, e315, e125, e12345
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other.group0()[3])]),
         );
@@ -7785,7 +7785,7 @@ impl std::ops::SubAssign<MotorOnOrigin> for CircleRotorAligningOrigin {
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435
-            (self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
             // e235, e315, e125, e12345
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other.group0()[3])]),
         );
@@ -7806,7 +7806,7 @@ impl std::ops::Sub<MultiVector> for CircleRotorAligningOrigin {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group0()[0] * -1.0), (self.group2()[3] - other.group0()[1])]),
+            Simd32x2::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self.group2()[3])]),
             // e1, e2, e3, e4
             (other.group1() * Simd32x4::from(-1.0)),
             // e5
@@ -7827,7 +7827,7 @@ impl std::ops::Sub<MultiVector> for CircleRotorAligningOrigin {
             // e423, e431, e412
             (self.group0() - other.group7()),
             // e235, e315, e125
-            (-other.group8() + Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]])),
+            (Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) - other.group8()),
             // e1234, e4235, e4315, e4125
             (other.group9() * Simd32x4::from(-1.0)),
             // e3215
@@ -7967,7 +7967,7 @@ impl std::ops::Sub<MysteryQuadNum> for CircleRotorAligningOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] * -1.0)]),
             // e235, e315, e125, e12345
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other.group0()[1])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (-other.group0()[1] + self.group2()[3])]),
         );
         return subtraction;
     }
@@ -8297,7 +8297,7 @@ impl std::ops::Sub<QuadNumAligningOrigin> for CircleRotorAligningOrigin {
     fn sub(self, other: QuadNumAligningOrigin) -> Self::Output {
         let subtraction = VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group2()[3] - other.group0()[2])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[2] + self.group2()[3])]),
             // e415, e425, e435, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] * -1.0)]),
             // e235, e315, e125, e5
@@ -8314,7 +8314,7 @@ impl std::ops::Sub<QuadNumAligningOriginAtInfinity> for CircleRotorAligningOrigi
     fn sub(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
         let subtraction = VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group2()[3] - other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[1] + self.group2()[3])]),
             // e415, e425, e435, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
             // e235, e315, e125, e5
@@ -8331,7 +8331,7 @@ impl std::ops::Sub<QuadNumAtInfinity> for CircleRotorAligningOrigin {
     fn sub(self, other: QuadNumAtInfinity) -> Self::Output {
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group2()[3] - other.group0()[2])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[2] + self.group2()[3])]),
             // e415, e425, e435, e321
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[1] * -1.0)]),
             // e235, e315, e125, e5
@@ -8350,7 +8350,7 @@ impl std::ops::Sub<QuadNumOnOrigin> for CircleRotorAligningOrigin {
     fn sub(self, other: QuadNumOnOrigin) -> Self::Output {
         let subtraction = VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group2()[3] - other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[1] + self.group2()[3])]),
             // e415, e425, e435, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] * -1.0)]),
             // e235, e315, e125, e5
@@ -8570,7 +8570,7 @@ impl std::ops::Sub<VersorEven> for CircleRotorAligningOrigin {
     fn sub(self, other: VersorEven) -> Self::Output {
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            (-other.group0() + Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]])),
+            (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]) - other.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self.group1()[0] - other.group1()[0]),
@@ -8603,7 +8603,7 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for CircleRotorAligningOrigin {
     fn sub(self, other: VersorEvenAligningOrigin) -> Self::Output {
         let subtraction = VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            (-other.group0() + Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]])),
+            (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]) - other.group0()),
             // e415, e425, e435, e4
             Simd32x4::from([
                 (self.group1()[0] - other.group1()[0]),
@@ -8690,7 +8690,7 @@ impl std::ops::Sub<VersorEvenOnOrigin> for CircleRotorAligningOrigin {
     fn sub(self, other: VersorEvenOnOrigin) -> Self::Output {
         let subtraction = VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            (-other.group0() + Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]])),
+            (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]) - other.group0()),
             // e415, e425, e435, e4
             Simd32x4::from([
                 (self.group1()[0] - other.group1()[0]),

@@ -586,7 +586,7 @@ impl std::ops::Add<AntiQuadNum> for SphereOnOrigin {
             // e23, e31, e12, e45
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] + other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[1]]),
         );
@@ -605,7 +605,7 @@ impl std::ops::Add<AntiQuadNumAligningOrigin> for SphereOnOrigin {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] + other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[1]]),
         );
@@ -656,7 +656,7 @@ impl std::ops::Add<AntiQuadNumOnOrigin> for SphereOnOrigin {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] + other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
         );
@@ -673,7 +673,7 @@ impl std::ops::Add<AntiQuadNumOrthogonalOrigin> for SphereOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] + other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[1]]),
         );
@@ -753,7 +753,7 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for SphereOnOrigin {
             // e23, e31, e12, e45
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] + other.group1()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[3] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
         );
@@ -1162,12 +1162,12 @@ impl std::ops::Add<DipoleInversion> for SphereOnOrigin {
             // e23, e31, e12, e45
             other.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (self.group0()[3] + other.group2()[3])]),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (other.group2()[3] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] + other.group3()[0]),
-                (self.group0()[1] + other.group3()[1]),
-                (self.group0()[2] + other.group3()[2]),
+                (other.group3()[0] + self.group0()[0]),
+                (other.group3()[1] + self.group0()[1]),
+                (other.group3()[2] + self.group0()[2]),
                 other.group3()[3],
             ]),
         );
@@ -1184,12 +1184,12 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for SphereOnOrigin {
             // e41, e42, e43, e45
             other.group0(),
             // e15, e25, e35, e1234
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[3] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] + other.group2()[0]),
-                (self.group0()[1] + other.group2()[1]),
-                (self.group0()[2] + other.group2()[2]),
+                (other.group2()[0] + self.group0()[0]),
+                (other.group2()[1] + self.group0()[1]),
+                (other.group2()[2] + self.group0()[2]),
                 other.group2()[3],
             ]),
         );
@@ -1211,9 +1211,9 @@ impl std::ops::Add<DipoleInversionAtInfinity> for SphereOnOrigin {
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[3]]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] + other.group2()[0]),
-                (self.group0()[1] + other.group2()[1]),
-                (self.group0()[2] + other.group2()[2]),
+                (other.group2()[0] + self.group0()[0]),
+                (other.group2()[1] + self.group0()[1]),
+                (other.group2()[2] + self.group0()[2]),
                 other.group2()[3],
             ]),
         );
@@ -1230,7 +1230,7 @@ impl std::ops::Add<DipoleInversionAtOrigin> for SphereOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[3] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[3]]),
         );
@@ -1265,7 +1265,7 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for SphereOnOrigin {
             // e23, e31, e12, e45
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (self.group0()[3] + other.group2()[3])]),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (other.group2()[3] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[3]]),
         );
@@ -1354,9 +1354,9 @@ impl std::ops::Add<Flector> for SphereOnOrigin {
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group0()[0]),
+                (other.group1()[1] + self.group0()[1]),
+                (other.group1()[2] + self.group0()[2]),
                 other.group1()[3],
             ]),
         );
@@ -1389,9 +1389,9 @@ impl std::ops::Add<FlectorOnOrigin> for SphereOnOrigin {
             // e1234, e4235, e4315, e4125
             Simd32x4::from([
                 self.group0()[3],
-                (self.group0()[0] + other.group0()[1]),
-                (self.group0()[1] + other.group0()[2]),
-                (self.group0()[2] + other.group0()[3]),
+                (other.group0()[1] + self.group0()[0]),
+                (other.group0()[2] + self.group0()[1]),
+                (other.group0()[3] + self.group0()[2]),
             ]),
         );
         return addition;
@@ -1748,9 +1748,9 @@ impl std::ops::Add<MysteryDipoleInversion> for SphereOnOrigin {
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group0()[0]),
+                (other.group1()[1] + self.group0()[1]),
+                (other.group1()[2] + self.group0()[2]),
                 0.0,
             ]),
         );
@@ -1832,9 +1832,9 @@ impl std::ops::Add<MysteryVersorOdd> for SphereOnOrigin {
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[1]),
-                (self.group0()[1] + other.group0()[2]),
-                (self.group0()[2] + other.group0()[3]),
+                (other.group0()[1] + self.group0()[0]),
+                (other.group0()[2] + self.group0()[1]),
+                (other.group0()[3] + self.group0()[2]),
                 0.0,
             ]),
         );
@@ -1893,7 +1893,7 @@ impl std::ops::Add<NullDipoleInversionAtOrigin> for SphereOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([(self.group0()[3] + other.group0()[3]), self.group0()[0], self.group0()[1], self.group0()[2]]),
+            Simd32x4::from([(other.group0()[3] + self.group0()[3]), self.group0()[0], self.group0()[1], self.group0()[2]]),
         );
         return addition;
     }
@@ -1992,9 +1992,9 @@ impl std::ops::Add<Plane> for SphereOnOrigin {
         let addition = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 other.group0()[3],
             ]),
             // e1234
@@ -2010,9 +2010,9 @@ impl std::ops::Add<PlaneOnOrigin> for SphereOnOrigin {
     // f32        3        0        0
     fn add(self, other: PlaneOnOrigin) -> Self::Output {
         let addition = SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ Simd32x4::from([
-            (self.group0()[0] + other.group0()[0]),
-            (self.group0()[1] + other.group0()[1]),
-            (self.group0()[2] + other.group0()[2]),
+            (other.group0()[0] + self.group0()[0]),
+            (other.group0()[1] + self.group0()[1]),
+            (other.group0()[2] + self.group0()[2]),
             self.group0()[3],
         ]));
         return addition;
@@ -2021,9 +2021,9 @@ impl std::ops::Add<PlaneOnOrigin> for SphereOnOrigin {
 impl std::ops::AddAssign<PlaneOnOrigin> for SphereOnOrigin {
     fn add_assign(&mut self, other: PlaneOnOrigin) {
         let addition = SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ Simd32x4::from([
-            (self.group0()[0] + other.group0()[0]),
-            (self.group0()[1] + other.group0()[1]),
-            (self.group0()[2] + other.group0()[2]),
+            (other.group0()[0] + self.group0()[0]),
+            (other.group0()[1] + self.group0()[1]),
+            (other.group0()[2] + self.group0()[2]),
             self.group0()[3],
         ]));
         *self = addition;
@@ -2297,9 +2297,9 @@ impl std::ops::Add<Sphere> for SphereOnOrigin {
         let addition = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 other.group0()[3],
             ]),
             // e1234
@@ -2318,7 +2318,7 @@ impl std::ops::Add<SphereAtOrigin> for SphereOnOrigin {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[0]]),
             // e1234
-            (self.group0()[3] + other.group0()[1]),
+            (other.group0()[1] + self.group0()[3]),
         );
         return addition;
     }
@@ -2330,13 +2330,13 @@ impl std::ops::Add<SphereOnOrigin> for SphereOnOrigin {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: SphereOnOrigin) -> Self::Output {
-        let addition = SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ (self.group0() + other.group0()));
+        let addition = SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<SphereOnOrigin> for SphereOnOrigin {
     fn add_assign(&mut self, other: SphereOnOrigin) {
-        let addition = SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ (self.group0() + other.group0()));
+        let addition = SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -5233,7 +5233,7 @@ impl std::ops::Sub<AntiQuadNum> for SphereOnOrigin {
             // e23, e31, e12, e45
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[2] * -1.0)]),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] - other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[0] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] * -1.0)]),
         );
@@ -5252,7 +5252,7 @@ impl std::ops::Sub<AntiQuadNumAligningOrigin> for SphereOnOrigin {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] - other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[0] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] * -1.0)]),
         );
@@ -5309,7 +5309,7 @@ impl std::ops::Sub<AntiQuadNumOnOrigin> for SphereOnOrigin {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] - other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[0] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
         );
@@ -5326,7 +5326,7 @@ impl std::ops::Sub<AntiQuadNumOrthogonalOrigin> for SphereOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[2] * -1.0)]),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] - other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[0] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] * -1.0)]),
         );
@@ -5417,7 +5417,7 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for SphereOnOrigin {
             // e23, e31, e12, e45
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), 0.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] - other.group1()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group1()[3] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
         );
@@ -5936,13 +5936,13 @@ impl std::ops::Sub<DipoleInversion> for SphereOnOrigin {
                 (other.group2()[0] * -1.0),
                 (other.group2()[1] * -1.0),
                 (other.group2()[2] * -1.0),
-                (self.group0()[3] - other.group2()[3]),
+                (-other.group2()[3] + self.group0()[3]),
             ]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] - other.group3()[0]),
-                (self.group0()[1] - other.group3()[1]),
-                (self.group0()[2] - other.group3()[2]),
+                (-other.group3()[0] + self.group0()[0]),
+                (-other.group3()[1] + self.group0()[1]),
+                (-other.group3()[2] + self.group0()[2]),
                 (other.group3()[3] * -1.0),
             ]),
         );
@@ -5967,13 +5967,13 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for SphereOnOrigin {
                 (other.group1()[0] * -1.0),
                 (other.group1()[1] * -1.0),
                 (other.group1()[2] * -1.0),
-                (self.group0()[3] - other.group1()[3]),
+                (-other.group1()[3] + self.group0()[3]),
             ]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] - other.group2()[0]),
-                (self.group0()[1] - other.group2()[1]),
-                (self.group0()[2] - other.group2()[2]),
+                (-other.group2()[0] + self.group0()[0]),
+                (-other.group2()[1] + self.group0()[1]),
+                (-other.group2()[2] + self.group0()[2]),
                 (other.group2()[3] * -1.0),
             ]),
         );
@@ -5999,9 +5999,9 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for SphereOnOrigin {
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self.group0()[3]]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] - other.group2()[0]),
-                (self.group0()[1] - other.group2()[1]),
-                (self.group0()[2] - other.group2()[2]),
+                (-other.group2()[0] + self.group0()[0]),
+                (-other.group2()[1] + self.group0()[1]),
+                (-other.group2()[2] + self.group0()[2]),
                 (other.group2()[3] * -1.0),
             ]),
         );
@@ -6022,7 +6022,7 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for SphereOnOrigin {
                 (other.group1()[0] * -1.0),
                 (other.group1()[1] * -1.0),
                 (other.group1()[2] * -1.0),
-                (self.group0()[3] - other.group1()[3]),
+                (-other.group1()[3] + self.group0()[3]),
             ]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] * -1.0)]),
@@ -6066,7 +6066,7 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for SphereOnOrigin {
                 (other.group2()[0] * -1.0),
                 (other.group2()[1] * -1.0),
                 (other.group2()[2] * -1.0),
-                (self.group0()[3] - other.group2()[3]),
+                (-other.group2()[3] + self.group0()[3]),
             ]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] * -1.0)]),
@@ -6176,9 +6176,9 @@ impl std::ops::Sub<Flector> for SphereOnOrigin {
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group0()[0]),
+                (-other.group1()[1] + self.group0()[1]),
+                (-other.group1()[2] + self.group0()[2]),
                 (other.group1()[3] * -1.0),
             ]),
         );
@@ -6214,9 +6214,9 @@ impl std::ops::Sub<FlectorOnOrigin> for SphereOnOrigin {
             // e1234, e4235, e4315, e4125
             Simd32x4::from([
                 self.group0()[3],
-                (self.group0()[0] - other.group0()[1]),
-                (self.group0()[1] - other.group0()[2]),
-                (self.group0()[2] - other.group0()[3]),
+                (-other.group0()[1] + self.group0()[0]),
+                (-other.group0()[2] + self.group0()[1]),
+                (-other.group0()[3] + self.group0()[2]),
             ]),
         );
         return subtraction;
@@ -6634,9 +6634,9 @@ impl std::ops::Sub<MysteryDipoleInversion> for SphereOnOrigin {
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group0()[0]),
+                (-other.group1()[1] + self.group0()[1]),
+                (-other.group1()[2] + self.group0()[2]),
                 0.0,
             ]),
         );
@@ -6732,9 +6732,9 @@ impl std::ops::Sub<MysteryVersorOdd> for SphereOnOrigin {
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[1]),
-                (self.group0()[1] - other.group0()[2]),
-                (self.group0()[2] - other.group0()[3]),
+                (-other.group0()[1] + self.group0()[0]),
+                (-other.group0()[2] + self.group0()[1]),
+                (-other.group0()[3] + self.group0()[2]),
                 0.0,
             ]),
         );
@@ -6800,7 +6800,7 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for SphereOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([(self.group0()[3] - other.group0()[3]), self.group0()[0], self.group0()[1], self.group0()[2]]),
+            Simd32x4::from([(-other.group0()[3] + self.group0()[3]), self.group0()[0], self.group0()[1], self.group0()[2]]),
         );
         return subtraction;
     }
@@ -6909,9 +6909,9 @@ impl std::ops::Sub<Plane> for SphereOnOrigin {
         let subtraction = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 (other.group0()[3] * -1.0),
             ]),
             // e1234
@@ -6927,9 +6927,9 @@ impl std::ops::Sub<PlaneOnOrigin> for SphereOnOrigin {
     // f32        3        0        0
     fn sub(self, other: PlaneOnOrigin) -> Self::Output {
         let subtraction = SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ Simd32x4::from([
-            (self.group0()[0] - other.group0()[0]),
-            (self.group0()[1] - other.group0()[1]),
-            (self.group0()[2] - other.group0()[2]),
+            (-other.group0()[0] + self.group0()[0]),
+            (-other.group0()[1] + self.group0()[1]),
+            (-other.group0()[2] + self.group0()[2]),
             self.group0()[3],
         ]));
         return subtraction;
@@ -6938,9 +6938,9 @@ impl std::ops::Sub<PlaneOnOrigin> for SphereOnOrigin {
 impl std::ops::SubAssign<PlaneOnOrigin> for SphereOnOrigin {
     fn sub_assign(&mut self, other: PlaneOnOrigin) {
         let subtraction = SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ Simd32x4::from([
-            (self.group0()[0] - other.group0()[0]),
-            (self.group0()[1] - other.group0()[1]),
-            (self.group0()[2] - other.group0()[2]),
+            (-other.group0()[0] + self.group0()[0]),
+            (-other.group0()[1] + self.group0()[1]),
+            (-other.group0()[2] + self.group0()[2]),
             self.group0()[3],
         ]));
         *self = subtraction;
@@ -7245,9 +7245,9 @@ impl std::ops::Sub<Sphere> for SphereOnOrigin {
         let subtraction = Sphere::from_groups(
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 (other.group0()[3] * -1.0),
             ]),
             // e1234
@@ -7266,7 +7266,7 @@ impl std::ops::Sub<SphereAtOrigin> for SphereOnOrigin {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[0] * -1.0)]),
             // e1234
-            (self.group0()[3] - other.group0()[1]),
+            (-other.group0()[1] + self.group0()[3]),
         );
         return subtraction;
     }
@@ -7278,13 +7278,13 @@ impl std::ops::Sub<SphereOnOrigin> for SphereOnOrigin {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: SphereOnOrigin) -> Self::Output {
-        let subtraction = SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ (self.group0() - other.group0()));
+        let subtraction = SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<SphereOnOrigin> for SphereOnOrigin {
     fn sub_assign(&mut self, other: SphereOnOrigin) {
-        let subtraction = SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ (self.group0() - other.group0()));
+        let subtraction = SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

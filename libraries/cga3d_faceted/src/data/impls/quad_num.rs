@@ -210,11 +210,11 @@ impl std::ops::Add<AntiDipoleInversion> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[2] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (self.group0()[1] + other.group3()[3])]),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (other.group3()[3] + self.group0()[1])]),
             // e1, e2, e3, e4
-            Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], (self.group0()[0] + other.group2()[3])]),
+            Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], (other.group2()[3] + self.group0()[0])]),
         );
         return addition;
     }
@@ -229,9 +229,9 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[2] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[1] + other.group2()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group2()[3] + self.group0()[1])]),
             // e1, e2, e3, e4
             Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], self.group0()[0]]),
         );
@@ -248,11 +248,11 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] + other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e1, e2, e3, e4
-            Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[3], (self.group0()[0] + other.group1()[0])]),
+            Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[3], (other.group1()[0] + self.group0()[0])]),
         );
         return addition;
     }
@@ -269,9 +269,9 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for QuadNum {
             // e415, e425, e435, e321
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[2]]),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (self.group0()[1] + other.group0()[3])]),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (other.group0()[3] + self.group0()[1])]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] + other.group2()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group2()[3] + self.group0()[0])]),
         );
         return addition;
     }
@@ -286,7 +286,7 @@ impl std::ops::Add<AntiDipoleOnOrigin> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] + other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -329,7 +329,7 @@ impl std::ops::Add<AntiFlatPoint> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] + other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[1]]),
             // e1, e2, e3, e4
@@ -348,9 +348,9 @@ impl std::ops::Add<AntiFlector> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] + other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[1] + other.group1()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group1()[3] + self.group0()[1])]),
             // e1, e2, e3, e4
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[0]]),
         );
@@ -367,7 +367,7 @@ impl std::ops::Add<AntiFlectorOnOrigin> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] + other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -537,7 +537,7 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[2] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -588,7 +588,7 @@ impl std::ops::Add<AntiPlane> for QuadNum {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[2]]),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] + other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] + self.group0()[1])]),
             // e1, e2, e3, e4
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[0]]),
         );
@@ -829,7 +829,7 @@ impl std::ops::Add<AntiSphereOnOrigin> for QuadNum {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e1, e2, e3, e4
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[0] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[0])]),
         );
         return addition;
     }
@@ -874,7 +874,7 @@ impl std::ops::Add<Circle> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[2] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], self.group0()[1]]),
             // e1, e2, e3, e4
@@ -909,7 +909,7 @@ impl std::ops::Add<CircleAtInfinity> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[2] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[1]]),
             // e1, e2, e3, e4
@@ -960,7 +960,7 @@ impl std::ops::Add<CircleOrthogonalOrigin> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] + other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[1]]),
             // e1, e2, e3, e4
@@ -977,9 +977,9 @@ impl std::ops::Add<CircleRotor> for QuadNum {
     fn add(self, other: CircleRotor) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[3] + other.group2()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group2()[3] + self.group0()[3])]),
             // e415, e425, e435, e321
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[2] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], self.group0()[1]]),
             // e1, e2, e3, e4
@@ -996,7 +996,7 @@ impl std::ops::Add<CircleRotorAligningOrigin> for QuadNum {
     fn add(self, other: CircleRotorAligningOrigin) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[3] + other.group2()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group2()[3] + self.group0()[3])]),
             // e415, e425, e435, e321
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[2]]),
             // e235, e315, e125, e5
@@ -1015,7 +1015,7 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for QuadNum {
     fn add(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] + other.group1()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[3] + self.group0()[3])]),
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[2]]),
             // e235, e315, e125, e5
@@ -1034,9 +1034,9 @@ impl std::ops::Add<CircleRotorAtInfinity> for QuadNum {
     fn add(self, other: CircleRotorAtInfinity) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] + other.group1()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[3] + self.group0()[3])]),
             // e415, e425, e435, e321
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[2] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[1]]),
             // e1, e2, e3, e4
@@ -1053,7 +1053,7 @@ impl std::ops::Add<CircleRotorOnOrigin> for QuadNum {
     fn add(self, other: CircleRotorOnOrigin) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[3] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[3])]),
             // e415, e425, e435, e321
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[2]]),
             // e235, e315, e125, e5
@@ -1716,11 +1716,11 @@ impl std::ops::Add<Motor> for QuadNum {
     fn add(self, other: Motor) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] + other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] + self.group0()[3])]),
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[2]]),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[1] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self.group0()[1])]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
@@ -1739,7 +1739,7 @@ impl std::ops::Add<MotorAtInfinity> for QuadNum {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[2]]),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[1] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[1])]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
@@ -1754,7 +1754,7 @@ impl std::ops::Add<MotorOnOrigin> for QuadNum {
     fn add(self, other: MotorOnOrigin) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] + other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] + self.group0()[3])]),
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[2]]),
             // e235, e315, e125, e5
@@ -1774,9 +1774,9 @@ impl std::ops::Add<MultiVector> for QuadNum {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[0], (self.group0()[3] + other.group0()[1])]),
+            Simd32x2::from([other.group0()[0], (other.group0()[1] + self.group0()[3])]),
             // e1, e2, e3, e4
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[0] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self.group0()[0])]),
             // e5
             (self.group0()[1] + other[e1]),
             // e41, e42, e43, e45
@@ -1786,7 +1786,7 @@ impl std::ops::Add<MultiVector> for QuadNum {
             // e23, e31, e12
             other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from([other.group6()[0], other.group6()[1], other.group6()[2], (self.group0()[2] + other.group6()[3])]),
+            Simd32x4::from([other.group6()[0], other.group6()[1], other.group6()[2], (other.group6()[3] + self.group0()[2])]),
             // e423, e431, e412
             other.group7(),
             // e235, e315, e125
@@ -1809,7 +1809,7 @@ impl std::ops::Add<MysteryCircle> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[2] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -1829,7 +1829,7 @@ impl std::ops::Add<MysteryCircleRotor> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] + other[e425])]),
             // e415, e425, e435, e321
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[2] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -1907,8 +1907,8 @@ impl std::ops::Add<MysteryQuadNum> for QuadNum {
         let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
             self.group0()[0],
             self.group0()[1],
-            (self.group0()[2] + other.group0()[0]),
-            (self.group0()[3] + other.group0()[1]),
+            (other.group0()[0] + self.group0()[2]),
+            (other.group0()[1] + self.group0()[3]),
         ]));
         return addition;
     }
@@ -1918,8 +1918,8 @@ impl std::ops::AddAssign<MysteryQuadNum> for QuadNum {
         let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
             self.group0()[0],
             self.group0()[1],
-            (self.group0()[2] + other.group0()[0]),
-            (self.group0()[3] + other.group0()[1]),
+            (other.group0()[0] + self.group0()[2]),
+            (other.group0()[1] + self.group0()[3]),
         ]));
         *self = addition;
     }
@@ -1932,9 +1932,9 @@ impl std::ops::Add<MysteryVersorEven> for QuadNum {
     fn add(self, other: MysteryVersorEven) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] + other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] + self.group0()[3])]),
             // e415, e425, e435, e321
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[2] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -2094,7 +2094,7 @@ impl std::ops::Add<NullVersorEvenAtOrigin> for QuadNum {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] + other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] + self.group0()[0])]),
         );
         return addition;
     }
@@ -2190,13 +2190,13 @@ impl std::ops::Add<QuadNum> for QuadNum {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: QuadNum) -> Self::Output {
-        let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ (self.group0() + other.group0()));
+        let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<QuadNum> for QuadNum {
     fn add_assign(&mut self, other: QuadNum) {
-        let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ (self.group0() + other.group0()));
+        let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -2207,10 +2207,10 @@ impl std::ops::Add<QuadNumAligningOrigin> for QuadNum {
     // f32        3        0        0
     fn add(self, other: QuadNumAligningOrigin) -> Self::Output {
         let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] + other.group0()[0]),
-            (self.group0()[1] + other.group0()[1]),
+            (other.group0()[0] + self.group0()[0]),
+            (other.group0()[1] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] + other.group0()[2]),
+            (other.group0()[2] + self.group0()[3]),
         ]));
         return addition;
     }
@@ -2218,10 +2218,10 @@ impl std::ops::Add<QuadNumAligningOrigin> for QuadNum {
 impl std::ops::AddAssign<QuadNumAligningOrigin> for QuadNum {
     fn add_assign(&mut self, other: QuadNumAligningOrigin) {
         let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] + other.group0()[0]),
-            (self.group0()[1] + other.group0()[1]),
+            (other.group0()[0] + self.group0()[0]),
+            (other.group0()[1] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] + other.group0()[2]),
+            (other.group0()[2] + self.group0()[3]),
         ]));
         *self = addition;
     }
@@ -2234,9 +2234,9 @@ impl std::ops::Add<QuadNumAligningOriginAtInfinity> for QuadNum {
     fn add(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
         let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] + other.group0()[0]),
+            (other.group0()[0] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] + other.group0()[1]),
+            (other.group0()[1] + self.group0()[3]),
         ]));
         return addition;
     }
@@ -2245,9 +2245,9 @@ impl std::ops::AddAssign<QuadNumAligningOriginAtInfinity> for QuadNum {
     fn add_assign(&mut self, other: QuadNumAligningOriginAtInfinity) {
         let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] + other.group0()[0]),
+            (other.group0()[0] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] + other.group0()[1]),
+            (other.group0()[1] + self.group0()[3]),
         ]));
         *self = addition;
     }
@@ -2260,9 +2260,9 @@ impl std::ops::Add<QuadNumAtInfinity> for QuadNum {
     fn add(self, other: QuadNumAtInfinity) -> Self::Output {
         let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] + other.group0()[0]),
-            (self.group0()[2] + other.group0()[1]),
-            (self.group0()[3] + other.group0()[2]),
+            (other.group0()[0] + self.group0()[1]),
+            (other.group0()[1] + self.group0()[2]),
+            (other.group0()[2] + self.group0()[3]),
         ]));
         return addition;
     }
@@ -2271,9 +2271,9 @@ impl std::ops::AddAssign<QuadNumAtInfinity> for QuadNum {
     fn add_assign(&mut self, other: QuadNumAtInfinity) {
         let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] + other.group0()[0]),
-            (self.group0()[2] + other.group0()[1]),
-            (self.group0()[3] + other.group0()[2]),
+            (other.group0()[0] + self.group0()[1]),
+            (other.group0()[1] + self.group0()[2]),
+            (other.group0()[2] + self.group0()[3]),
         ]));
         *self = addition;
     }
@@ -2285,10 +2285,10 @@ impl std::ops::Add<QuadNumOnOrigin> for QuadNum {
     // f32        2        0        0
     fn add(self, other: QuadNumOnOrigin) -> Self::Output {
         let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] + other.group0()[0]),
+            (other.group0()[0] + self.group0()[0]),
             self.group0()[1],
             self.group0()[2],
-            (self.group0()[3] + other.group0()[1]),
+            (other.group0()[1] + self.group0()[3]),
         ]));
         return addition;
     }
@@ -2296,10 +2296,10 @@ impl std::ops::Add<QuadNumOnOrigin> for QuadNum {
 impl std::ops::AddAssign<QuadNumOnOrigin> for QuadNum {
     fn add_assign(&mut self, other: QuadNumOnOrigin) {
         let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] + other.group0()[0]),
+            (other.group0()[0] + self.group0()[0]),
             self.group0()[1],
             self.group0()[2],
-            (self.group0()[3] + other.group0()[1]),
+            (other.group0()[1] + self.group0()[3]),
         ]));
         *self = addition;
     }
@@ -2311,9 +2311,9 @@ impl std::ops::Add<QuadNumOrthogonalOrigin> for QuadNum {
     // f32        3        0        0
     fn add(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
         let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] + other.group0()[0]),
-            (self.group0()[1] + other.group0()[1]),
-            (self.group0()[2] + other.group0()[2]),
+            (other.group0()[0] + self.group0()[0]),
+            (other.group0()[1] + self.group0()[1]),
+            (other.group0()[2] + self.group0()[2]),
             self.group0()[3],
         ]));
         return addition;
@@ -2322,9 +2322,9 @@ impl std::ops::Add<QuadNumOrthogonalOrigin> for QuadNum {
 impl std::ops::AddAssign<QuadNumOrthogonalOrigin> for QuadNum {
     fn add_assign(&mut self, other: QuadNumOrthogonalOrigin) {
         let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] + other.group0()[0]),
-            (self.group0()[1] + other.group0()[1]),
-            (self.group0()[2] + other.group0()[2]),
+            (other.group0()[0] + self.group0()[0]),
+            (other.group0()[1] + self.group0()[1]),
+            (other.group0()[2] + self.group0()[2]),
             self.group0()[3],
         ]));
         *self = addition;
@@ -2357,8 +2357,8 @@ impl std::ops::Add<RoundPointAtOrigin> for QuadNum {
     // f32        2        0        0
     fn add(self, other: RoundPointAtOrigin) -> Self::Output {
         let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] + other.group0()[0]),
-            (self.group0()[1] + other.group0()[1]),
+            (other.group0()[0] + self.group0()[0]),
+            (other.group0()[1] + self.group0()[1]),
             self.group0()[2],
             self.group0()[3],
         ]));
@@ -2368,8 +2368,8 @@ impl std::ops::Add<RoundPointAtOrigin> for QuadNum {
 impl std::ops::AddAssign<RoundPointAtOrigin> for QuadNum {
     fn add_assign(&mut self, other: RoundPointAtOrigin) {
         let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] + other.group0()[0]),
-            (self.group0()[1] + other.group0()[1]),
+            (other.group0()[0] + self.group0()[0]),
+            (other.group0()[1] + self.group0()[1]),
             self.group0()[2],
             self.group0()[3],
         ]));
@@ -5531,21 +5531,21 @@ impl std::ops::Sub<AntiDipoleInversion> for QuadNum {
                 (other.group1()[0] * -1.0),
                 (other.group1()[1] * -1.0),
                 (other.group1()[2] * -1.0),
-                (self.group0()[2] - other.group1()[3]),
+                (-other.group1()[3] + self.group0()[2]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
                 (other.group2()[0] * -1.0),
                 (other.group2()[1] * -1.0),
                 (other.group2()[2] * -1.0),
-                (self.group0()[1] - other.group3()[3]),
+                (-other.group3()[3] + self.group0()[1]),
             ]),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other.group3()[0] * -1.0),
                 (other.group3()[1] * -1.0),
                 (other.group3()[2] * -1.0),
-                (self.group0()[0] - other.group2()[3]),
+                (-other.group2()[3] + self.group0()[0]),
             ]),
         );
         return subtraction;
@@ -5565,14 +5565,14 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for QuadNum {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[2] - other.group0()[3]),
+                (-other.group0()[3] + self.group0()[2]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
                 (other.group1()[0] * -1.0),
                 (other.group1()[1] * -1.0),
                 (other.group1()[2] * -1.0),
-                (self.group0()[1] - other.group2()[3]),
+                (-other.group2()[3] + self.group0()[1]),
             ]),
             // e1, e2, e3, e4
             Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), self.group0()[0]]),
@@ -5590,7 +5590,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] - other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -5598,7 +5598,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for QuadNum {
                 (other.group1()[1] * -1.0),
                 (other.group1()[2] * -1.0),
                 (other.group1()[3] * -1.0),
-                (self.group0()[0] - other.group1()[0]),
+                (-other.group1()[0] + self.group0()[0]),
             ]),
         );
         return subtraction;
@@ -5620,10 +5620,10 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for QuadNum {
                 (other.group2()[0] * -1.0),
                 (other.group2()[1] * -1.0),
                 (other.group2()[2] * -1.0),
-                (self.group0()[1] - other.group0()[3]),
+                (-other.group0()[3] + self.group0()[1]),
             ]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] - other.group2()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group2()[3] + self.group0()[0])]),
         );
         return subtraction;
     }
@@ -5638,7 +5638,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] - other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -5681,7 +5681,7 @@ impl std::ops::Sub<AntiFlatPoint> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] - other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[1]]),
             // e1, e2, e3, e4
@@ -5700,13 +5700,13 @@ impl std::ops::Sub<AntiFlector> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] - other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[1] - other.group1()[3]),
+                (-other.group1()[3] + self.group0()[1]),
             ]),
             // e1, e2, e3, e4
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self.group0()[0]]),
@@ -5724,7 +5724,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] - other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[0] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -5927,7 +5927,7 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for QuadNum {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[2] - other.group0()[3]),
+                (-other.group0()[3] + self.group0()[2]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
@@ -5982,7 +5982,7 @@ impl std::ops::Sub<AntiPlane> for QuadNum {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[2]]),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] - other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[3] + self.group0()[1])]),
             // e1, e2, e3, e4
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[0]]),
         );
@@ -6248,7 +6248,7 @@ impl std::ops::Sub<AntiSphereOnOrigin> for QuadNum {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[0] - other.group0()[3]),
+                (-other.group0()[3] + self.group0()[0]),
             ]),
         );
         return subtraction;
@@ -6305,7 +6305,7 @@ impl std::ops::Sub<Circle> for QuadNum {
                 (other.group1()[0] * -1.0),
                 (other.group1()[1] * -1.0),
                 (other.group1()[2] * -1.0),
-                (self.group0()[2] - other.group1()[3]),
+                (-other.group1()[3] + self.group0()[2]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), self.group0()[1]]),
@@ -6348,7 +6348,7 @@ impl std::ops::Sub<CircleAtInfinity> for QuadNum {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[2] - other.group0()[3]),
+                (-other.group0()[3] + self.group0()[2]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self.group0()[1]]),
@@ -6406,7 +6406,7 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for QuadNum {
             // e423, e431, e412, e12345
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] - other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[3] + self.group0()[2])]),
             // e235, e315, e125, e5
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self.group0()[1]]),
             // e1, e2, e3, e4
@@ -6427,14 +6427,14 @@ impl std::ops::Sub<CircleRotor> for QuadNum {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[3] - other.group2()[3]),
+                (-other.group2()[3] + self.group0()[3]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other.group1()[0] * -1.0),
                 (other.group1()[1] * -1.0),
                 (other.group1()[2] * -1.0),
-                (self.group0()[2] - other.group1()[3]),
+                (-other.group1()[3] + self.group0()[2]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), self.group0()[1]]),
@@ -6456,7 +6456,7 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for QuadNum {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[3] - other.group2()[3]),
+                (-other.group2()[3] + self.group0()[3]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self.group0()[2]]),
@@ -6476,7 +6476,7 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for QuadNum {
     fn sub(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] - other.group1()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group1()[3] + self.group0()[3])]),
             // e415, e425, e435, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[2]]),
             // e235, e315, e125, e5
@@ -6495,13 +6495,13 @@ impl std::ops::Sub<CircleRotorAtInfinity> for QuadNum {
     fn sub(self, other: CircleRotorAtInfinity) -> Self::Output {
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] - other.group1()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group1()[3] + self.group0()[3])]),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[2] - other.group0()[3]),
+                (-other.group0()[3] + self.group0()[2]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self.group0()[1]]),
@@ -6523,7 +6523,7 @@ impl std::ops::Sub<CircleRotorOnOrigin> for QuadNum {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[3] - other.group0()[3]),
+                (-other.group0()[3] + self.group0()[3]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self.group0()[2]]),
@@ -7310,7 +7310,7 @@ impl std::ops::Sub<Motor> for QuadNum {
     fn sub(self, other: Motor) -> Self::Output {
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] - other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[3] + self.group0()[3])]),
             // e415, e425, e435, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[2]]),
             // e235, e315, e125, e5
@@ -7318,7 +7318,7 @@ impl std::ops::Sub<Motor> for QuadNum {
                 (other.group1()[0] * -1.0),
                 (other.group1()[1] * -1.0),
                 (other.group1()[2] * -1.0),
-                (self.group0()[1] - other.group1()[3]),
+                (-other.group1()[3] + self.group0()[1]),
             ]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
@@ -7342,7 +7342,7 @@ impl std::ops::Sub<MotorAtInfinity> for QuadNum {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[1] - other.group0()[3]),
+                (-other.group0()[3] + self.group0()[1]),
             ]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
@@ -7358,7 +7358,7 @@ impl std::ops::Sub<MotorOnOrigin> for QuadNum {
     fn sub(self, other: MotorOnOrigin) -> Self::Output {
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] - other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[3] + self.group0()[3])]),
             // e415, e425, e435, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[2]]),
             // e235, e315, e125, e5
@@ -7383,13 +7383,13 @@ impl std::ops::Sub<MultiVector> for QuadNum {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group0()[0] * -1.0), (self.group0()[3] - other.group0()[1])]),
+            Simd32x2::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self.group0()[3])]),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other.group1()[0] * -1.0),
                 (other.group1()[1] * -1.0),
                 (other.group1()[2] * -1.0),
-                (self.group0()[0] - other.group1()[3]),
+                (-other.group1()[3] + self.group0()[0]),
             ]),
             // e5
             (self.group0()[1] - other[e1]),
@@ -7404,7 +7404,7 @@ impl std::ops::Sub<MultiVector> for QuadNum {
                 (other.group6()[0] * -1.0),
                 (other.group6()[1] * -1.0),
                 (other.group6()[2] * -1.0),
-                (self.group0()[2] - other.group6()[3]),
+                (-other.group6()[3] + self.group0()[2]),
             ]),
             // e423, e431, e412
             (other.group7() * Simd32x3::from(-1.0)),
@@ -7432,7 +7432,7 @@ impl std::ops::Sub<MysteryCircle> for QuadNum {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[2] - other.group0()[3]),
+                (-other.group0()[3] + self.group0()[2]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
@@ -7457,7 +7457,7 @@ impl std::ops::Sub<MysteryCircleRotor> for QuadNum {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[2] - other.group0()[3]),
+                (-other.group0()[3] + self.group0()[2]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
@@ -7550,8 +7550,8 @@ impl std::ops::Sub<MysteryQuadNum> for QuadNum {
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
             self.group0()[0],
             self.group0()[1],
-            (self.group0()[2] - other.group0()[0]),
-            (self.group0()[3] - other.group0()[1]),
+            (-other.group0()[0] + self.group0()[2]),
+            (-other.group0()[1] + self.group0()[3]),
         ]));
         return subtraction;
     }
@@ -7561,8 +7561,8 @@ impl std::ops::SubAssign<MysteryQuadNum> for QuadNum {
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
             self.group0()[0],
             self.group0()[1],
-            (self.group0()[2] - other.group0()[0]),
-            (self.group0()[3] - other.group0()[1]),
+            (-other.group0()[0] + self.group0()[2]),
+            (-other.group0()[1] + self.group0()[3]),
         ]));
         *self = subtraction;
     }
@@ -7575,13 +7575,13 @@ impl std::ops::Sub<MysteryVersorEven> for QuadNum {
     fn sub(self, other: MysteryVersorEven) -> Self::Output {
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] - other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[0] + self.group0()[3])]),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other.group1()[0] * -1.0),
                 (other.group1()[1] * -1.0),
                 (other.group1()[2] * -1.0),
-                (self.group0()[2] - other.group1()[3]),
+                (-other.group1()[3] + self.group0()[2]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
@@ -7761,7 +7761,7 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for QuadNum {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] - other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[3] + self.group0()[0])]),
         );
         return subtraction;
     }
@@ -7863,13 +7863,13 @@ impl std::ops::Sub<QuadNum> for QuadNum {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: QuadNum) -> Self::Output {
-        let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ (self.group0() - other.group0()));
+        let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<QuadNum> for QuadNum {
     fn sub_assign(&mut self, other: QuadNum) {
-        let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ (self.group0() - other.group0()));
+        let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }
@@ -7880,10 +7880,10 @@ impl std::ops::Sub<QuadNumAligningOrigin> for QuadNum {
     // f32        3        0        0
     fn sub(self, other: QuadNumAligningOrigin) -> Self::Output {
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] - other.group0()[0]),
-            (self.group0()[1] - other.group0()[1]),
+            (-other.group0()[0] + self.group0()[0]),
+            (-other.group0()[1] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] - other.group0()[2]),
+            (-other.group0()[2] + self.group0()[3]),
         ]));
         return subtraction;
     }
@@ -7891,10 +7891,10 @@ impl std::ops::Sub<QuadNumAligningOrigin> for QuadNum {
 impl std::ops::SubAssign<QuadNumAligningOrigin> for QuadNum {
     fn sub_assign(&mut self, other: QuadNumAligningOrigin) {
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] - other.group0()[0]),
-            (self.group0()[1] - other.group0()[1]),
+            (-other.group0()[0] + self.group0()[0]),
+            (-other.group0()[1] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] - other.group0()[2]),
+            (-other.group0()[2] + self.group0()[3]),
         ]));
         *self = subtraction;
     }
@@ -7907,9 +7907,9 @@ impl std::ops::Sub<QuadNumAligningOriginAtInfinity> for QuadNum {
     fn sub(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] - other.group0()[0]),
+            (-other.group0()[0] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] - other.group0()[1]),
+            (-other.group0()[1] + self.group0()[3]),
         ]));
         return subtraction;
     }
@@ -7918,9 +7918,9 @@ impl std::ops::SubAssign<QuadNumAligningOriginAtInfinity> for QuadNum {
     fn sub_assign(&mut self, other: QuadNumAligningOriginAtInfinity) {
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] - other.group0()[0]),
+            (-other.group0()[0] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] - other.group0()[1]),
+            (-other.group0()[1] + self.group0()[3]),
         ]));
         *self = subtraction;
     }
@@ -7933,9 +7933,9 @@ impl std::ops::Sub<QuadNumAtInfinity> for QuadNum {
     fn sub(self, other: QuadNumAtInfinity) -> Self::Output {
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] - other.group0()[0]),
-            (self.group0()[2] - other.group0()[1]),
-            (self.group0()[3] - other.group0()[2]),
+            (-other.group0()[0] + self.group0()[1]),
+            (-other.group0()[1] + self.group0()[2]),
+            (-other.group0()[2] + self.group0()[3]),
         ]));
         return subtraction;
     }
@@ -7944,9 +7944,9 @@ impl std::ops::SubAssign<QuadNumAtInfinity> for QuadNum {
     fn sub_assign(&mut self, other: QuadNumAtInfinity) {
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] - other.group0()[0]),
-            (self.group0()[2] - other.group0()[1]),
-            (self.group0()[3] - other.group0()[2]),
+            (-other.group0()[0] + self.group0()[1]),
+            (-other.group0()[1] + self.group0()[2]),
+            (-other.group0()[2] + self.group0()[3]),
         ]));
         *self = subtraction;
     }
@@ -7958,10 +7958,10 @@ impl std::ops::Sub<QuadNumOnOrigin> for QuadNum {
     // f32        2        0        0
     fn sub(self, other: QuadNumOnOrigin) -> Self::Output {
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] - other.group0()[0]),
+            (-other.group0()[0] + self.group0()[0]),
             self.group0()[1],
             self.group0()[2],
-            (self.group0()[3] - other.group0()[1]),
+            (-other.group0()[1] + self.group0()[3]),
         ]));
         return subtraction;
     }
@@ -7969,10 +7969,10 @@ impl std::ops::Sub<QuadNumOnOrigin> for QuadNum {
 impl std::ops::SubAssign<QuadNumOnOrigin> for QuadNum {
     fn sub_assign(&mut self, other: QuadNumOnOrigin) {
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] - other.group0()[0]),
+            (-other.group0()[0] + self.group0()[0]),
             self.group0()[1],
             self.group0()[2],
-            (self.group0()[3] - other.group0()[1]),
+            (-other.group0()[1] + self.group0()[3]),
         ]));
         *self = subtraction;
     }
@@ -7984,9 +7984,9 @@ impl std::ops::Sub<QuadNumOrthogonalOrigin> for QuadNum {
     // f32        3        0        0
     fn sub(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] - other.group0()[0]),
-            (self.group0()[1] - other.group0()[1]),
-            (self.group0()[2] - other.group0()[2]),
+            (-other.group0()[0] + self.group0()[0]),
+            (-other.group0()[1] + self.group0()[1]),
+            (-other.group0()[2] + self.group0()[2]),
             self.group0()[3],
         ]));
         return subtraction;
@@ -7995,9 +7995,9 @@ impl std::ops::Sub<QuadNumOrthogonalOrigin> for QuadNum {
 impl std::ops::SubAssign<QuadNumOrthogonalOrigin> for QuadNum {
     fn sub_assign(&mut self, other: QuadNumOrthogonalOrigin) {
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] - other.group0()[0]),
-            (self.group0()[1] - other.group0()[1]),
-            (self.group0()[2] - other.group0()[2]),
+            (-other.group0()[0] + self.group0()[0]),
+            (-other.group0()[1] + self.group0()[1]),
+            (-other.group0()[2] + self.group0()[2]),
             self.group0()[3],
         ]));
         *self = subtraction;
@@ -8035,8 +8035,8 @@ impl std::ops::Sub<RoundPointAtOrigin> for QuadNum {
     // f32        2        0        0
     fn sub(self, other: RoundPointAtOrigin) -> Self::Output {
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] - other.group0()[0]),
-            (self.group0()[1] - other.group0()[1]),
+            (-other.group0()[0] + self.group0()[0]),
+            (-other.group0()[1] + self.group0()[1]),
             self.group0()[2],
             self.group0()[3],
         ]));
@@ -8046,8 +8046,8 @@ impl std::ops::Sub<RoundPointAtOrigin> for QuadNum {
 impl std::ops::SubAssign<RoundPointAtOrigin> for QuadNum {
     fn sub_assign(&mut self, other: RoundPointAtOrigin) {
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] - other.group0()[0]),
-            (self.group0()[1] - other.group0()[1]),
+            (-other.group0()[0] + self.group0()[0]),
+            (-other.group0()[1] + self.group0()[1]),
             self.group0()[2],
             self.group0()[3],
         ]));

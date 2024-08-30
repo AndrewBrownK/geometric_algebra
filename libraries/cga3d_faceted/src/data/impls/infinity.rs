@@ -221,7 +221,7 @@ impl std::ops::Add<AntiDipoleInversion> for Infinity {
             // e235, e315, e125, e4
             other.group2(),
             // e1, e2, e3, e5
-            Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], (self[e5] + other.group3()[3])]),
+            Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], (other.group3()[3] + self[e5])]),
         );
         return addition;
     }
@@ -239,7 +239,7 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for Infinity {
             // e235, e315, e125
             other.group1(),
             // e1, e2, e3, e5
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (self[e5] + other.group2()[3])]),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (other.group2()[3] + self[e5])]),
         );
         return addition;
     }
@@ -268,7 +268,7 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for Infinity {
         use crate::elements::*;
         let addition = AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self[e5] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self[e5])]),
             // e415, e425, e435
             other.group1(),
             // e235, e315, e125, e4
@@ -319,7 +319,7 @@ impl std::ops::Add<AntiFlector> for Infinity {
             // e235, e315, e125, e321
             other.group0(),
             // e1, e2, e3, e5
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self[e5] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self[e5])]),
         );
         return addition;
     }
@@ -547,7 +547,7 @@ impl std::ops::Add<AntiPlane> for Infinity {
         use crate::elements::*;
         let addition = AntiPlane::from_groups(
             // e1, e2, e3, e5
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self[e5] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self[e5])]),
         );
         return addition;
     }
@@ -1554,14 +1554,14 @@ impl std::ops::Add<Infinity> for Infinity {
     // f32        1        0        0
     fn add(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
-        let addition = Infinity::from_groups(/* e5 */ (self[e5] + other[e5]));
+        let addition = Infinity::from_groups(/* e5 */ (other[e5] + self[e5]));
         return addition;
     }
 }
 impl std::ops::AddAssign<Infinity> for Infinity {
     fn add_assign(&mut self, other: Infinity) {
         use crate::elements::*;
-        let addition = Infinity::from_groups(/* e5 */ (self[e5] + other[e5]));
+        let addition = Infinity::from_groups(/* e5 */ (other[e5] + self[e5]));
         *self = addition;
     }
 }
@@ -1610,7 +1610,7 @@ impl std::ops::Add<Motor> for Infinity {
             // e415, e425, e435, e12345
             other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self[e5] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self[e5])]),
         );
         return addition;
     }
@@ -1624,7 +1624,7 @@ impl std::ops::Add<MotorAtInfinity> for Infinity {
         use crate::elements::*;
         let addition = MotorAtInfinity::from_groups(
             // e235, e315, e125, e5
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self[e5] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self[e5])]),
         );
         return addition;
     }
@@ -2020,7 +2020,7 @@ impl std::ops::Add<QuadNum> for Infinity {
         use crate::elements::*;
         let addition = QuadNum::from_groups(
             // e4, e5, e321, e12345
-            Simd32x4::from([other.group0()[0], (self[e5] + other.group0()[1]), other.group0()[2], other.group0()[3]]),
+            Simd32x4::from([other.group0()[0], (other.group0()[1] + self[e5]), other.group0()[2], other.group0()[3]]),
         );
         return addition;
     }
@@ -2032,7 +2032,7 @@ impl std::ops::Add<QuadNumAligningOrigin> for Infinity {
     // f32        1        0        0
     fn add(self, other: QuadNumAligningOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from([other.group0()[0], (self[e5] + other.group0()[1]), other.group0()[2]]));
+        let addition = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from([other.group0()[0], (other.group0()[1] + self[e5]), other.group0()[2]]));
         return addition;
     }
 }
@@ -2043,7 +2043,7 @@ impl std::ops::Add<QuadNumAligningOriginAtInfinity> for Infinity {
     // f32        1        0        0
     fn add(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = QuadNumAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([(self[e5] + other.group0()[0]), other.group0()[1]]));
+        let addition = QuadNumAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([(other.group0()[0] + self[e5]), other.group0()[1]]));
         return addition;
     }
 }
@@ -2054,7 +2054,7 @@ impl std::ops::Add<QuadNumAtInfinity> for Infinity {
     // f32        1        0        0
     fn add(self, other: QuadNumAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([(self[e5] + other.group0()[0]), other.group0()[1], other.group0()[2]]));
+        let addition = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([(other.group0()[0] + self[e5]), other.group0()[1], other.group0()[2]]));
         return addition;
     }
 }
@@ -2073,7 +2073,7 @@ impl std::ops::Add<QuadNumOrthogonalOrigin> for Infinity {
     // f32        1        0        0
     fn add(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = QuadNumOrthogonalOrigin::from_groups(/* e4, e5, e321 */ Simd32x3::from([other.group0()[0], (self[e5] + other.group0()[1]), other.group0()[2]]));
+        let addition = QuadNumOrthogonalOrigin::from_groups(/* e4, e5, e321 */ Simd32x3::from([other.group0()[0], (other.group0()[1] + self[e5]), other.group0()[2]]));
         return addition;
     }
 }
@@ -2095,7 +2095,7 @@ impl std::ops::Add<RoundPointAtOrigin> for Infinity {
     // f32        1        0        0
     fn add(self, other: RoundPointAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = RoundPointAtOrigin::from_groups(/* e4, e5 */ Simd32x2::from([other.group0()[0], (self[e5] + other.group0()[1])]));
+        let addition = RoundPointAtOrigin::from_groups(/* e4, e5 */ Simd32x2::from([other.group0()[0], (other.group0()[1] + self[e5])]));
         return addition;
     }
 }
@@ -2236,7 +2236,7 @@ impl std::ops::Add<VersorEven> for Infinity {
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (self[e5] + other.group2()[3])]),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (other.group2()[3] + self[e5])]),
             // e1, e2, e3, e4
             other.group3(),
         );
@@ -2256,7 +2256,7 @@ impl std::ops::Add<VersorEvenAligningOrigin> for Infinity {
             // e415, e425, e435, e4
             other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (self[e5] + other.group2()[3])]),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (other.group2()[3] + self[e5])]),
         );
         return addition;
     }
@@ -2274,7 +2274,7 @@ impl std::ops::Add<VersorEvenAtInfinity> for Infinity {
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (self[e5] + other.group2()[3])]),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (other.group2()[3] + self[e5])]),
         );
         return addition;
     }
@@ -2290,7 +2290,7 @@ impl std::ops::Add<VersorEvenAtOrigin> for Infinity {
             // e423, e431, e412, e4
             other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self[e5] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self[e5])]),
         );
         return addition;
     }
@@ -2321,7 +2321,7 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for Infinity {
             // e423, e431, e412, e321
             other.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self[e5] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self[e5])]),
             // e1, e2, e3, e4
             other.group2(),
         );
@@ -4899,7 +4899,7 @@ impl std::ops::Sub<AntiDipoleInversion> for Infinity {
             // e235, e315, e125, e4
             (other.group2() * Simd32x4::from(-1.0)),
             // e1, e2, e3, e5
-            Simd32x4::from([(other.group3()[0] * -1.0), (other.group3()[1] * -1.0), (other.group3()[2] * -1.0), (self[e5] - other.group3()[3])]),
+            Simd32x4::from([(other.group3()[0] * -1.0), (other.group3()[1] * -1.0), (other.group3()[2] * -1.0), (-other.group3()[3] + self[e5])]),
         );
         return subtraction;
     }
@@ -4922,7 +4922,7 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for Infinity {
             // e235, e315, e125
             (other.group1() * Simd32x3::from(-1.0)),
             // e1, e2, e3, e5
-            Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), (self[e5] - other.group2()[3])]),
+            Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), (-other.group2()[3] + self[e5])]),
         );
         return subtraction;
     }
@@ -4960,7 +4960,7 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for Infinity {
         use crate::elements::*;
         let subtraction = AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
-            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (self[e5] - other.group0()[3])]),
+            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (-other.group0()[3] + self[e5])]),
             // e415, e425, e435
             (other.group1() * Simd32x3::from(-1.0)),
             // e235, e315, e125, e4
@@ -5031,7 +5031,7 @@ impl std::ops::Sub<AntiFlector> for Infinity {
             // e235, e315, e125, e321
             (other.group0() * Simd32x4::from(-1.0)),
             // e1, e2, e3, e5
-            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (self[e5] - other.group1()[3])]),
+            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (-other.group1()[3] + self[e5])]),
         );
         return subtraction;
     }
@@ -5303,7 +5303,7 @@ impl std::ops::Sub<AntiPlane> for Infinity {
             (other.group0()[0] * -1.0),
             (other.group0()[1] * -1.0),
             (other.group0()[2] * -1.0),
-            (self[e5] - other.group0()[3]),
+            (-other.group0()[3] + self[e5]),
         ]));
         return subtraction;
     }
@@ -6536,14 +6536,14 @@ impl std::ops::Sub<Infinity> for Infinity {
     // f32        1        0        0
     fn sub(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = Infinity::from_groups(/* e5 */ (self[e5] - other[e5]));
+        let subtraction = Infinity::from_groups(/* e5 */ (-other[e5] + self[e5]));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<Infinity> for Infinity {
     fn sub_assign(&mut self, other: Infinity) {
         use crate::elements::*;
-        let subtraction = Infinity::from_groups(/* e5 */ (self[e5] - other[e5]));
+        let subtraction = Infinity::from_groups(/* e5 */ (-other[e5] + self[e5]));
         *self = subtraction;
     }
 }
@@ -6608,7 +6608,7 @@ impl std::ops::Sub<Motor> for Infinity {
             // e415, e425, e435, e12345
             (other.group0() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e5
-            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (self[e5] - other.group1()[3])]),
+            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (-other.group1()[3] + self[e5])]),
         );
         return subtraction;
     }
@@ -6624,7 +6624,7 @@ impl std::ops::Sub<MotorAtInfinity> for Infinity {
             (other.group0()[0] * -1.0),
             (other.group0()[1] * -1.0),
             (other.group0()[2] * -1.0),
-            (self[e5] - other.group0()[3]),
+            (-other.group0()[3] + self[e5]),
         ]));
         return subtraction;
     }
@@ -7094,7 +7094,7 @@ impl std::ops::Sub<QuadNum> for Infinity {
         use crate::elements::*;
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
             (other.group0()[0] * -1.0),
-            (self[e5] - other.group0()[1]),
+            (-other.group0()[1] + self[e5]),
             (other.group0()[2] * -1.0),
             (other.group0()[3] * -1.0),
         ]));
@@ -7110,7 +7110,7 @@ impl std::ops::Sub<QuadNumAligningOrigin> for Infinity {
         use crate::elements::*;
         let subtraction = QuadNumAligningOrigin::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([(other.group0()[0] * -1.0), (self[e5] - other.group0()[1]), (other.group0()[2] * -1.0)]),
+            Simd32x3::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self[e5]), (other.group0()[2] * -1.0)]),
         );
         return subtraction;
     }
@@ -7122,7 +7122,7 @@ impl std::ops::Sub<QuadNumAligningOriginAtInfinity> for Infinity {
     // f32        1        1        0
     fn sub(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = QuadNumAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([(self[e5] - other.group0()[0]), (other.group0()[1] * -1.0)]));
+        let subtraction = QuadNumAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([(-other.group0()[0] + self[e5]), (other.group0()[1] * -1.0)]));
         return subtraction;
     }
 }
@@ -7135,7 +7135,7 @@ impl std::ops::Sub<QuadNumAtInfinity> for Infinity {
         use crate::elements::*;
         let subtraction = QuadNumAtInfinity::from_groups(
             // e5, e321, e12345
-            Simd32x3::from([(self[e5] - other.group0()[0]), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]),
+            Simd32x3::from([(-other.group0()[0] + self[e5]), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]),
         );
         return subtraction;
     }
@@ -7160,7 +7160,7 @@ impl std::ops::Sub<QuadNumOrthogonalOrigin> for Infinity {
         use crate::elements::*;
         let subtraction = QuadNumOrthogonalOrigin::from_groups(
             // e4, e5, e321
-            Simd32x3::from([(other.group0()[0] * -1.0), (self[e5] - other.group0()[1]), (other.group0()[2] * -1.0)]),
+            Simd32x3::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self[e5]), (other.group0()[2] * -1.0)]),
         );
         return subtraction;
     }
@@ -7187,7 +7187,7 @@ impl std::ops::Sub<RoundPointAtOrigin> for Infinity {
     // f32        1        1        0
     fn sub(self, other: RoundPointAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = RoundPointAtOrigin::from_groups(/* e4, e5 */ Simd32x2::from([(other.group0()[0] * -1.0), (self[e5] - other.group0()[1])]));
+        let subtraction = RoundPointAtOrigin::from_groups(/* e4, e5 */ Simd32x2::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self[e5])]));
         return subtraction;
     }
 }
@@ -7349,7 +7349,7 @@ impl std::ops::Sub<VersorEven> for Infinity {
             // e415, e425, e435, e321
             (other.group1() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e5
-            Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), (self[e5] - other.group2()[3])]),
+            Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), (-other.group2()[3] + self[e5])]),
             // e1, e2, e3, e4
             (other.group3() * Simd32x4::from(-1.0)),
         );
@@ -7373,7 +7373,7 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for Infinity {
             // e415, e425, e435, e4
             (other.group1() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e5
-            Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), (self[e5] - other.group2()[3])]),
+            Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), (-other.group2()[3] + self[e5])]),
         );
         return subtraction;
     }
@@ -7395,7 +7395,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for Infinity {
             // e415, e425, e435, e321
             (other.group1() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e5
-            Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), (self[e5] - other.group2()[3])]),
+            Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), (-other.group2()[3] + self[e5])]),
         );
         return subtraction;
     }
@@ -7415,7 +7415,7 @@ impl std::ops::Sub<VersorEvenAtOrigin> for Infinity {
             // e423, e431, e412, e4
             (other.group0() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e5
-            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (self[e5] - other.group1()[3])]),
+            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (-other.group1()[3] + self[e5])]),
         );
         return subtraction;
     }
@@ -7454,7 +7454,7 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for Infinity {
             // e423, e431, e412, e321
             (other.group0() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e5
-            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (self[e5] - other.group1()[3])]),
+            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (-other.group1()[3] + self[e5])]),
             // e1, e2, e3, e4
             (other.group2() * Simd32x4::from(-1.0)),
         );

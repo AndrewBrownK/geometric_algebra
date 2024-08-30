@@ -13,7 +13,7 @@ use crate::traits::Wedge;
 //  Minimum:         0       0       0
 //   Median:         0       3       0
 //  Average:         1       5       0
-//  Maximum:        27      58       0
+//  Maximum:        27      55       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -516,7 +516,7 @@ impl std::ops::Add<AntiMysteryQuadNum> for AntiQuadNumAtInfinity {
     fn add(self, other: AntiMysteryQuadNum) -> Self::Output {
         let addition = AntiQuadNumAtInfinity::from_groups(
             // e3215, e45, scalar
-            Simd32x3::from([self.group0()[0], (self.group0()[1] + other.group0()[0]), (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (other.group0()[0] + self.group0()[1]), (other.group0()[1] + self.group0()[2])]),
         );
         return addition;
     }
@@ -525,7 +525,7 @@ impl std::ops::AddAssign<AntiMysteryQuadNum> for AntiQuadNumAtInfinity {
     fn add_assign(&mut self, other: AntiMysteryQuadNum) {
         let addition = AntiQuadNumAtInfinity::from_groups(
             // e3215, e45, scalar
-            Simd32x3::from([self.group0()[0], (self.group0()[1] + other.group0()[0]), (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (other.group0()[0] + self.group0()[1]), (other.group0()[1] + self.group0()[2])]),
         );
         *self = addition;
     }
@@ -613,9 +613,9 @@ impl std::ops::Add<AntiQuadNumAligningOrigin> for AntiQuadNumAtInfinity {
     fn add(self, other: AntiQuadNumAligningOrigin) -> Self::Output {
         let addition = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
             other.group0()[0],
-            (self.group0()[0] + other.group0()[1]),
+            (other.group0()[1] + self.group0()[0]),
             self.group0()[1],
-            (self.group0()[2] + other.group0()[2]),
+            (other.group0()[2] + self.group0()[2]),
         ]));
         return addition;
     }
@@ -628,7 +628,7 @@ impl std::ops::Add<AntiQuadNumAligningOriginAtInfinity> for AntiQuadNumAtInfinit
     fn add(self, other: AntiQuadNumAligningOriginAtInfinity) -> Self::Output {
         let addition = AntiQuadNumAtInfinity::from_groups(
             // e3215, e45, scalar
-            Simd32x3::from([(self.group0()[0] + other.group0()[0]), self.group0()[1], (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([(other.group0()[0] + self.group0()[0]), self.group0()[1], (other.group0()[1] + self.group0()[2])]),
         );
         return addition;
     }
@@ -637,7 +637,7 @@ impl std::ops::AddAssign<AntiQuadNumAligningOriginAtInfinity> for AntiQuadNumAtI
     fn add_assign(&mut self, other: AntiQuadNumAligningOriginAtInfinity) {
         let addition = AntiQuadNumAtInfinity::from_groups(
             // e3215, e45, scalar
-            Simd32x3::from([(self.group0()[0] + other.group0()[0]), self.group0()[1], (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([(other.group0()[0] + self.group0()[0]), self.group0()[1], (other.group0()[1] + self.group0()[2])]),
         );
         *self = addition;
     }
@@ -649,13 +649,13 @@ impl std::ops::Add<AntiQuadNumAtInfinity> for AntiQuadNumAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: AntiQuadNumAtInfinity) -> Self::Output {
-        let addition = AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ (self.group0() + other.group0()));
+        let addition = AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<AntiQuadNumAtInfinity> for AntiQuadNumAtInfinity {
     fn add_assign(&mut self, other: AntiQuadNumAtInfinity) {
-        let addition = AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ (self.group0() + other.group0()));
+        let addition = AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -667,7 +667,7 @@ impl std::ops::Add<AntiQuadNumOnOrigin> for AntiQuadNumAtInfinity {
     fn add(self, other: AntiQuadNumOnOrigin) -> Self::Output {
         let addition = AntiQuadNum::from_groups(
             // e1234, e3215, e45, scalar
-            Simd32x4::from([other.group0()[0], self.group0()[0], self.group0()[1], (self.group0()[2] + other.group0()[1])]),
+            Simd32x4::from([other.group0()[0], self.group0()[0], self.group0()[1], (other.group0()[1] + self.group0()[2])]),
         );
         return addition;
     }
@@ -1653,7 +1653,7 @@ impl std::ops::Add<MultiVector> for AntiQuadNumAtInfinity {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(self.group0()[2] + other.group0()[0]), other.group0()[1]]),
+            Simd32x2::from([(other.group0()[0] + self.group0()[2]), other.group0()[1]]),
             // e1, e2, e3, e4
             other.group1(),
             // e5
@@ -2302,7 +2302,7 @@ impl std::ops::Add<SphereAtOrigin> for AntiQuadNumAtInfinity {
     fn add(self, other: SphereAtOrigin) -> Self::Output {
         let addition = AntiQuadNum::from_groups(
             // e1234, e3215, e45, scalar
-            Simd32x4::from([other.group0()[1], (self.group0()[0] + other.group0()[0]), self.group0()[1], self.group0()[2]]),
+            Simd32x4::from([other.group0()[1], (other.group0()[0] + self.group0()[0]), self.group0()[1], self.group0()[2]]),
         );
         return addition;
     }
@@ -4686,12 +4686,12 @@ impl std::ops::Mul<MultiVector> for AntiQuadNumAtInfinity {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       34        0
+    //      f32       10       30        0
     //    simd2        2        4        0
     //    simd3        9       13        0
-    //    simd4        6        7        0
+    //    simd4        6        8        0
     // Totals...
-    // yes simd       27       58        0
+    // yes simd       27       55        0
     //  no simd       65      109        0
     fn mul(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -5744,7 +5744,7 @@ impl std::ops::Sub<AntiMysteryQuadNum> for AntiQuadNumAtInfinity {
     fn sub(self, other: AntiMysteryQuadNum) -> Self::Output {
         let subtraction = AntiQuadNumAtInfinity::from_groups(
             // e3215, e45, scalar
-            Simd32x3::from([self.group0()[0], (self.group0()[1] - other.group0()[0]), (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (-other.group0()[0] + self.group0()[1]), (-other.group0()[1] + self.group0()[2])]),
         );
         return subtraction;
     }
@@ -5753,7 +5753,7 @@ impl std::ops::SubAssign<AntiMysteryQuadNum> for AntiQuadNumAtInfinity {
     fn sub_assign(&mut self, other: AntiMysteryQuadNum) {
         let subtraction = AntiQuadNumAtInfinity::from_groups(
             // e3215, e45, scalar
-            Simd32x3::from([self.group0()[0], (self.group0()[1] - other.group0()[0]), (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (-other.group0()[0] + self.group0()[1]), (-other.group0()[1] + self.group0()[2])]),
         );
         *self = subtraction;
     }
@@ -5847,9 +5847,9 @@ impl std::ops::Sub<AntiQuadNumAligningOrigin> for AntiQuadNumAtInfinity {
     fn sub(self, other: AntiQuadNumAligningOrigin) -> Self::Output {
         let subtraction = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
             (other.group0()[0] * -1.0),
-            (self.group0()[0] - other.group0()[1]),
+            (-other.group0()[1] + self.group0()[0]),
             self.group0()[1],
-            (self.group0()[2] - other.group0()[2]),
+            (-other.group0()[2] + self.group0()[2]),
         ]));
         return subtraction;
     }
@@ -5862,7 +5862,7 @@ impl std::ops::Sub<AntiQuadNumAligningOriginAtInfinity> for AntiQuadNumAtInfinit
     fn sub(self, other: AntiQuadNumAligningOriginAtInfinity) -> Self::Output {
         let subtraction = AntiQuadNumAtInfinity::from_groups(
             // e3215, e45, scalar
-            Simd32x3::from([(self.group0()[0] - other.group0()[0]), self.group0()[1], (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([(-other.group0()[0] + self.group0()[0]), self.group0()[1], (-other.group0()[1] + self.group0()[2])]),
         );
         return subtraction;
     }
@@ -5871,7 +5871,7 @@ impl std::ops::SubAssign<AntiQuadNumAligningOriginAtInfinity> for AntiQuadNumAtI
     fn sub_assign(&mut self, other: AntiQuadNumAligningOriginAtInfinity) {
         let subtraction = AntiQuadNumAtInfinity::from_groups(
             // e3215, e45, scalar
-            Simd32x3::from([(self.group0()[0] - other.group0()[0]), self.group0()[1], (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([(-other.group0()[0] + self.group0()[0]), self.group0()[1], (-other.group0()[1] + self.group0()[2])]),
         );
         *self = subtraction;
     }
@@ -5883,13 +5883,13 @@ impl std::ops::Sub<AntiQuadNumAtInfinity> for AntiQuadNumAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn sub(self, other: AntiQuadNumAtInfinity) -> Self::Output {
-        let subtraction = AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ (self.group0() - other.group0()));
+        let subtraction = AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiQuadNumAtInfinity> for AntiQuadNumAtInfinity {
     fn sub_assign(&mut self, other: AntiQuadNumAtInfinity) {
-        let subtraction = AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ (self.group0() - other.group0()));
+        let subtraction = AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }
@@ -5899,10 +5899,12 @@ impl std::ops::Sub<AntiQuadNumOnOrigin> for AntiQuadNumAtInfinity {
     //      add/sub      mul      div
     // f32        1        1        0
     fn sub(self, other: AntiQuadNumOnOrigin) -> Self::Output {
-        let subtraction = AntiQuadNum::from_groups(
-            // e1234, e3215, e45, scalar
-            Simd32x4::from([(other.group0()[0] * -1.0), self.group0()[0], self.group0()[1], (self.group0()[2] - other.group0()[1])]),
-        );
+        let subtraction = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
+            (other.group0()[0] * -1.0),
+            self.group0()[0],
+            self.group0()[1],
+            (-other.group0()[1] + self.group0()[2]),
+        ]));
         return subtraction;
     }
 }
@@ -7079,7 +7081,7 @@ impl std::ops::Sub<MultiVector> for AntiQuadNumAtInfinity {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(self.group0()[2] - other.group0()[0]), (other.group0()[1] * -1.0)]),
+            Simd32x2::from([(-other.group0()[0] + self.group0()[2]), (other.group0()[1] * -1.0)]),
             // e1, e2, e3, e4
             (other.group1() * Simd32x4::from(-1.0)),
             // e5
@@ -7833,10 +7835,12 @@ impl std::ops::Sub<SphereAtOrigin> for AntiQuadNumAtInfinity {
     //      add/sub      mul      div
     // f32        1        1        0
     fn sub(self, other: SphereAtOrigin) -> Self::Output {
-        let subtraction = AntiQuadNum::from_groups(
-            // e1234, e3215, e45, scalar
-            Simd32x4::from([(other.group0()[1] * -1.0), (self.group0()[0] - other.group0()[0]), self.group0()[1], self.group0()[2]]),
-        );
+        let subtraction = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
+            (other.group0()[1] * -1.0),
+            (-other.group0()[0] + self.group0()[0]),
+            self.group0()[1],
+            self.group0()[2],
+        ]));
         return subtraction;
     }
 }

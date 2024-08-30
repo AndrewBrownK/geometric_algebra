@@ -454,7 +454,7 @@ impl std::ops::Add<DualNum321> for TripleNum {
     fn add(self, other: DualNum321) -> Self::Output {
         let addition = QuadNum::from_groups(
             // e4, e5, e321, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], other.group0()[0], (self.group0()[2] + other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], other.group0()[0], (other.group0()[1] + self.group0()[2])]),
         );
         return addition;
     }
@@ -467,7 +467,7 @@ impl std::ops::Add<DualNum4> for TripleNum {
     fn add(self, other: DualNum4) -> Self::Output {
         let addition = TripleNum::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([(self.group0()[0] + other.group0()[0]), self.group0()[1], (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([(other.group0()[0] + self.group0()[0]), self.group0()[1], (other.group0()[1] + self.group0()[2])]),
         );
         return addition;
     }
@@ -476,7 +476,7 @@ impl std::ops::AddAssign<DualNum4> for TripleNum {
     fn add_assign(&mut self, other: DualNum4) {
         let addition = TripleNum::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([(self.group0()[0] + other.group0()[0]), self.group0()[1], (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([(other.group0()[0] + self.group0()[0]), self.group0()[1], (other.group0()[1] + self.group0()[2])]),
         );
         *self = addition;
     }
@@ -489,7 +489,7 @@ impl std::ops::Add<DualNum5> for TripleNum {
     fn add(self, other: DualNum5) -> Self::Output {
         let addition = TripleNum::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([self.group0()[0], (self.group0()[1] + other.group0()[0]), (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (other.group0()[0] + self.group0()[1]), (other.group0()[1] + self.group0()[2])]),
         );
         return addition;
     }
@@ -498,7 +498,7 @@ impl std::ops::AddAssign<DualNum5> for TripleNum {
     fn add_assign(&mut self, other: DualNum5) {
         let addition = TripleNum::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([self.group0()[0], (self.group0()[1] + other.group0()[0]), (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (other.group0()[0] + self.group0()[1]), (other.group0()[1] + self.group0()[2])]),
         );
         *self = addition;
     }
@@ -607,7 +607,7 @@ impl std::ops::Add<MultiVector> for TripleNum {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[0], (self.group0()[2] + other.group0()[1])]),
+            Simd32x2::from([other.group0()[0], (other.group0()[1] + self.group0()[2])]),
             // e1, e2, e3, e4
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[0] + other.group1()[3])]),
             // e5
@@ -766,13 +766,13 @@ impl std::ops::Add<TripleNum> for TripleNum {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: TripleNum) -> Self::Output {
-        let addition = TripleNum::from_groups(/* e4, e5, e12345 */ (self.group0() + other.group0()));
+        let addition = TripleNum::from_groups(/* e4, e5, e12345 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<TripleNum> for TripleNum {
     fn add_assign(&mut self, other: TripleNum) {
-        let addition = TripleNum::from_groups(/* e4, e5, e12345 */ (self.group0() + other.group0()));
+        let addition = TripleNum::from_groups(/* e4, e5, e12345 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -2164,10 +2164,12 @@ impl std::ops::Sub<DualNum321> for TripleNum {
     //      add/sub      mul      div
     // f32        1        1        0
     fn sub(self, other: DualNum321) -> Self::Output {
-        let subtraction = QuadNum::from_groups(
-            // e4, e5, e321, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], (other.group0()[0] * -1.0), (self.group0()[2] - other.group0()[1])]),
-        );
+        let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
+            self.group0()[0],
+            self.group0()[1],
+            (other.group0()[0] * -1.0),
+            (-other.group0()[1] + self.group0()[2]),
+        ]));
         return subtraction;
     }
 }
@@ -2179,7 +2181,7 @@ impl std::ops::Sub<DualNum4> for TripleNum {
     fn sub(self, other: DualNum4) -> Self::Output {
         let subtraction = TripleNum::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([(self.group0()[0] - other.group0()[0]), self.group0()[1], (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([(-other.group0()[0] + self.group0()[0]), self.group0()[1], (-other.group0()[1] + self.group0()[2])]),
         );
         return subtraction;
     }
@@ -2188,7 +2190,7 @@ impl std::ops::SubAssign<DualNum4> for TripleNum {
     fn sub_assign(&mut self, other: DualNum4) {
         let subtraction = TripleNum::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([(self.group0()[0] - other.group0()[0]), self.group0()[1], (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([(-other.group0()[0] + self.group0()[0]), self.group0()[1], (-other.group0()[1] + self.group0()[2])]),
         );
         *self = subtraction;
     }
@@ -2201,7 +2203,7 @@ impl std::ops::Sub<DualNum5> for TripleNum {
     fn sub(self, other: DualNum5) -> Self::Output {
         let subtraction = TripleNum::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([self.group0()[0], (self.group0()[1] - other.group0()[0]), (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (-other.group0()[0] + self.group0()[1]), (-other.group0()[1] + self.group0()[2])]),
         );
         return subtraction;
     }
@@ -2210,7 +2212,7 @@ impl std::ops::SubAssign<DualNum5> for TripleNum {
     fn sub_assign(&mut self, other: DualNum5) {
         let subtraction = TripleNum::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([self.group0()[0], (self.group0()[1] - other.group0()[0]), (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (-other.group0()[0] + self.group0()[1]), (-other.group0()[1] + self.group0()[2])]),
         );
         *self = subtraction;
     }
@@ -2340,7 +2342,7 @@ impl std::ops::Sub<MultiVector> for TripleNum {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group0()[0] * -1.0), (self.group0()[2] - other.group0()[1])]),
+            Simd32x2::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self.group0()[2])]),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other.group1()[0] * -1.0),
@@ -2523,13 +2525,13 @@ impl std::ops::Sub<TripleNum> for TripleNum {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn sub(self, other: TripleNum) -> Self::Output {
-        let subtraction = TripleNum::from_groups(/* e4, e5, e12345 */ (self.group0() - other.group0()));
+        let subtraction = TripleNum::from_groups(/* e4, e5, e12345 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<TripleNum> for TripleNum {
     fn sub_assign(&mut self, other: TripleNum) {
-        let subtraction = TripleNum::from_groups(/* e4, e5, e12345 */ (self.group0() - other.group0()));
+        let subtraction = TripleNum::from_groups(/* e4, e5, e12345 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

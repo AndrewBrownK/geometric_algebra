@@ -45,13 +45,13 @@ impl std::ops::Add<DualNum> for DualNum {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn add(self, other: DualNum) -> Self::Output {
-        let addition = DualNum::from_groups(/* scalar, e1234 */ (self.group0() + other.group0()));
+        let addition = DualNum::from_groups(/* scalar, e1234 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<DualNum> for DualNum {
     fn add_assign(&mut self, other: DualNum) {
-        let addition = DualNum::from_groups(/* scalar, e1234 */ (self.group0() + other.group0()));
+        let addition = DualNum::from_groups(/* scalar, e1234 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -527,13 +527,13 @@ impl std::ops::Sub<DualNum> for DualNum {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn sub(self, other: DualNum) -> Self::Output {
-        let subtraction = DualNum::from_groups(/* scalar, e1234 */ (self.group0() - other.group0()));
+        let subtraction = DualNum::from_groups(/* scalar, e1234 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<DualNum> for DualNum {
     fn sub_assign(&mut self, other: DualNum) {
-        let subtraction = DualNum::from_groups(/* scalar, e1234 */ (self.group0() - other.group0()));
+        let subtraction = DualNum::from_groups(/* scalar, e1234 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

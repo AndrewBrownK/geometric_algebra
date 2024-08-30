@@ -64,7 +64,7 @@ impl std::ops::Add<Flector> for Plane {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: Flector) -> Self::Output {
-        let addition = Flector::from_groups(/* e1, e2, e3, e4 */ other.group0(), /* e423, e431, e412, e321 */ (self.group0() + other.group1()));
+        let addition = Flector::from_groups(/* e1, e2, e3, e4 */ other.group0(), /* e423, e431, e412, e321 */ (other.group1() + self.group0()));
         return addition;
     }
 }
@@ -145,7 +145,7 @@ impl std::ops::Add<MultiVector> for Plane {
             // e23, e31, e12
             other.group3(),
             // e423, e431, e412, e321
-            (self.group0() + other.group4()),
+            (other.group4() + self.group0()),
         );
         return addition;
     }
@@ -165,13 +165,13 @@ impl std::ops::Add<Plane> for Plane {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: Plane) -> Self::Output {
-        let addition = Plane::from_groups(/* e423, e431, e412, e321 */ (self.group0() + other.group0()));
+        let addition = Plane::from_groups(/* e423, e431, e412, e321 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<Plane> for Plane {
     fn add_assign(&mut self, other: Plane) {
-        let addition = Plane::from_groups(/* e423, e431, e412, e321 */ (self.group0() + other.group0()));
+        let addition = Plane::from_groups(/* e423, e431, e412, e321 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -497,7 +497,7 @@ impl std::ops::Sub<Flector> for Plane {
             // e1, e2, e3, e4
             (other.group0() * Simd32x4::from(-1.0)),
             // e423, e431, e412, e321
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
         );
         return subtraction;
     }
@@ -594,7 +594,7 @@ impl std::ops::Sub<MultiVector> for Plane {
             // e23, e31, e12
             (other.group3() * Simd32x3::from(-1.0)),
             // e423, e431, e412, e321
-            (self.group0() - other.group4()),
+            (-other.group4() + self.group0()),
         );
         return subtraction;
     }
@@ -622,13 +622,13 @@ impl std::ops::Sub<Plane> for Plane {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: Plane) -> Self::Output {
-        let subtraction = Plane::from_groups(/* e423, e431, e412, e321 */ (self.group0() - other.group0()));
+        let subtraction = Plane::from_groups(/* e423, e431, e412, e321 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<Plane> for Plane {
     fn sub_assign(&mut self, other: Plane) {
-        let subtraction = Plane::from_groups(/* e423, e431, e412, e321 */ (self.group0() - other.group0()));
+        let subtraction = Plane::from_groups(/* e423, e431, e412, e321 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

@@ -35,7 +35,7 @@ impl std::ops::Add<DualNum> for Scalar {
     // f32        1        0        0
     fn add(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let addition = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([(self[scalar] + other.group0()[0]), other.group0()[1]]));
+        let addition = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([(other.group0()[0] + self[scalar]), other.group0()[1]]));
         return addition;
     }
 }
@@ -101,7 +101,7 @@ impl std::ops::Add<Motor> for Scalar {
             // e41, e42, e43, e1234
             other.group0(),
             // e23, e31, e12, scalar
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self[scalar] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self[scalar])]),
         );
         return addition;
     }
@@ -115,7 +115,7 @@ impl std::ops::Add<MultiVector> for Scalar {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([(self[scalar] + other.group0()[0]), other.group0()[1]]),
+            Simd32x2::from([(other.group0()[0] + self[scalar]), other.group0()[1]]),
             // e1, e2, e3, e4
             other.group1(),
             // e41, e42, e43
@@ -192,14 +192,14 @@ impl std::ops::Add<Scalar> for Scalar {
     // f32        1        0        0
     fn add(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let addition = Scalar::from_groups(/* scalar */ (self[scalar] + other[scalar]));
+        let addition = Scalar::from_groups(/* scalar */ (other[scalar] + self[scalar]));
         return addition;
     }
 }
 impl std::ops::AddAssign<Scalar> for Scalar {
     fn add_assign(&mut self, other: Scalar) {
         use crate::elements::*;
-        let addition = Scalar::from_groups(/* scalar */ (self[scalar] + other[scalar]));
+        let addition = Scalar::from_groups(/* scalar */ (other[scalar] + self[scalar]));
         *self = addition;
     }
 }
@@ -491,7 +491,7 @@ impl std::ops::Sub<DualNum> for Scalar {
     // f32        1        1        0
     fn sub(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let subtraction = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([(self[scalar] - other.group0()[0]), (other.group0()[1] * -1.0)]));
+        let subtraction = DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([(-other.group0()[0] + self[scalar]), (other.group0()[1] * -1.0)]));
         return subtraction;
     }
 }
@@ -571,7 +571,7 @@ impl std::ops::Sub<Motor> for Scalar {
             // e41, e42, e43, e1234
             (other.group0() * Simd32x4::from(-1.0)),
             // e23, e31, e12, scalar
-            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (self[scalar] - other.group1()[3])]),
+            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (-other.group1()[3] + self[scalar])]),
         );
         return subtraction;
     }
@@ -590,7 +590,7 @@ impl std::ops::Sub<MultiVector> for Scalar {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([(self[scalar] - other.group0()[0]), (other.group0()[1] * -1.0)]),
+            Simd32x2::from([(-other.group0()[0] + self[scalar]), (other.group0()[1] * -1.0)]),
             // e1, e2, e3, e4
             (other.group1() * Simd32x4::from(-1.0)),
             // e41, e42, e43
@@ -678,14 +678,14 @@ impl std::ops::Sub<Scalar> for Scalar {
     // f32        1        0        0
     fn sub(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let subtraction = Scalar::from_groups(/* scalar */ (self[scalar] - other[scalar]));
+        let subtraction = Scalar::from_groups(/* scalar */ (-other[scalar] + self[scalar]));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<Scalar> for Scalar {
     fn sub_assign(&mut self, other: Scalar) {
         use crate::elements::*;
-        let subtraction = Scalar::from_groups(/* scalar */ (self[scalar] - other[scalar]));
+        let subtraction = Scalar::from_groups(/* scalar */ (-other[scalar] + self[scalar]));
         *self = subtraction;
     }
 }

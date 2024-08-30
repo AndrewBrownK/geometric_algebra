@@ -1666,7 +1666,7 @@ impl std::ops::Add<MysteryDipoleInversion> for PlaneOnOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: MysteryDipoleInversion) -> Self::Output {
-        let addition = MysteryDipoleInversion::from_groups(/* e23, e31, e12, e45 */ other.group0(), /* e4235, e4315, e4125 */ (self.group0() + other.group1()));
+        let addition = MysteryDipoleInversion::from_groups(/* e23, e31, e12, e45 */ other.group0(), /* e4235, e4315, e4125 */ (other.group1() + self.group0()));
         return addition;
     }
 }
@@ -1898,13 +1898,13 @@ impl std::ops::Add<PlaneOnOrigin> for PlaneOnOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: PlaneOnOrigin) -> Self::Output {
-        let addition = PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ (self.group0() + other.group0()));
+        let addition = PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<PlaneOnOrigin> for PlaneOnOrigin {
     fn add_assign(&mut self, other: PlaneOnOrigin) {
-        let addition = PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ (self.group0() + other.group0()));
+        let addition = PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -6168,7 +6168,7 @@ impl std::ops::Sub<MysteryDipoleInversion> for PlaneOnOrigin {
             // e23, e31, e12, e45
             (other.group0() * Simd32x4::from(-1.0)),
             // e4235, e4315, e4125
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
         );
         return subtraction;
     }
@@ -6438,13 +6438,13 @@ impl std::ops::Sub<PlaneOnOrigin> for PlaneOnOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn sub(self, other: PlaneOnOrigin) -> Self::Output {
-        let subtraction = PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ (self.group0() - other.group0()));
+        let subtraction = PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<PlaneOnOrigin> for PlaneOnOrigin {
     fn sub_assign(&mut self, other: PlaneOnOrigin) {
-        let subtraction = PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ (self.group0() - other.group0()));
+        let subtraction = PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

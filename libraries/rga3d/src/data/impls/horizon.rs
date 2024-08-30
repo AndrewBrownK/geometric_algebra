@@ -69,7 +69,7 @@ impl std::ops::Add<Flector> for Horizon {
             // e1, e2, e3, e4
             other.group0(),
             // e423, e431, e412, e321
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self[e321] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self[e321])]),
         );
         return addition;
     }
@@ -81,14 +81,14 @@ impl std::ops::Add<Horizon> for Horizon {
     // f32        1        0        0
     fn add(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let addition = Horizon::from_groups(/* e321 */ (self[e321] + other[e321]));
+        let addition = Horizon::from_groups(/* e321 */ (other[e321] + self[e321]));
         return addition;
     }
 }
 impl std::ops::AddAssign<Horizon> for Horizon {
     fn add_assign(&mut self, other: Horizon) {
         use crate::elements::*;
-        let addition = Horizon::from_groups(/* e321 */ (self[e321] + other[e321]));
+        let addition = Horizon::from_groups(/* e321 */ (other[e321] + self[e321]));
         *self = addition;
     }
 }
@@ -147,7 +147,7 @@ impl std::ops::Add<MultiVector> for Horizon {
             // e23, e31, e12
             other.group3(),
             // e423, e431, e412, e321
-            Simd32x4::from([other.group4()[0], other.group4()[1], other.group4()[2], (self[e321] + other.group4()[3])]),
+            Simd32x4::from([other.group4()[0], other.group4()[1], other.group4()[2], (other.group4()[3] + self[e321])]),
         );
         return addition;
     }
@@ -174,7 +174,7 @@ impl std::ops::Add<Plane> for Horizon {
         use crate::elements::*;
         let addition = Plane::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self[e321] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self[e321])]),
         );
         return addition;
     }
@@ -498,7 +498,7 @@ impl std::ops::Sub<Flector> for Horizon {
             // e1, e2, e3, e4
             (other.group0() * Simd32x4::from(-1.0)),
             // e423, e431, e412, e321
-            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (self[e321] - other.group1()[3])]),
+            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (-other.group1()[3] + self[e321])]),
         );
         return subtraction;
     }
@@ -510,14 +510,14 @@ impl std::ops::Sub<Horizon> for Horizon {
     // f32        1        0        0
     fn sub(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let subtraction = Horizon::from_groups(/* e321 */ (self[e321] - other[e321]));
+        let subtraction = Horizon::from_groups(/* e321 */ (-other[e321] + self[e321]));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<Horizon> for Horizon {
     fn sub_assign(&mut self, other: Horizon) {
         use crate::elements::*;
-        let subtraction = Horizon::from_groups(/* e321 */ (self[e321] - other[e321]));
+        let subtraction = Horizon::from_groups(/* e321 */ (-other[e321] + self[e321]));
         *self = subtraction;
     }
 }
@@ -593,7 +593,7 @@ impl std::ops::Sub<MultiVector> for Horizon {
             // e23, e31, e12
             (other.group3() * Simd32x3::from(-1.0)),
             // e423, e431, e412, e321
-            Simd32x4::from([(other.group4()[0] * -1.0), (other.group4()[1] * -1.0), (other.group4()[2] * -1.0), (self[e321] - other.group4()[3])]),
+            Simd32x4::from([(other.group4()[0] * -1.0), (other.group4()[1] * -1.0), (other.group4()[2] * -1.0), (-other.group4()[3] + self[e321])]),
         );
         return subtraction;
     }
@@ -625,7 +625,7 @@ impl std::ops::Sub<Plane> for Horizon {
             (other.group0()[0] * -1.0),
             (other.group0()[1] * -1.0),
             (other.group0()[2] * -1.0),
-            (self[e321] - other.group0()[3]),
+            (-other.group0()[3] + self[e321]),
         ]));
         return subtraction;
     }

@@ -5,19 +5,19 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 2
+// Total Implementations: 3
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       1       1
-//   Median:         0       4       1
+//   Median:         0       1       1
 //  Average:         0       2       1
-//  Maximum:         0       4       1
+//  Maximum:         2       4       1
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       1       1
 //   Median:         0       4       1
-//  Average:         0       2       1
-//  Maximum:         0       4       1
+//  Average:         0       3       1
+//  Maximum:         2       4       1
 impl Fix for Horizon {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -25,11 +25,29 @@ impl Fix for Horizon {
     fn fix(self) -> Self {
         use crate::elements::*;
         let reverse = Horizon::from_groups(/* e321 */ (self[e321] * -1.0));
-        let geometric_product = Scalar::from_groups(/* scalar */ (self[e321] * reverse[e321] * -1.0));
+        let geometric_product = Scalar::from_groups(/* scalar */ (reverse[e321] * self[e321] * -1.0));
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         let geometric_product_2 = Horizon::from_groups(/* e321 */ (self[e321] * inverse[scalar]));
+        return geometric_product_2;
+    }
+}
+impl Fix for Point {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        0        1
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        1        1
+    //  no simd        2        4        1
+    fn fix(self) -> Self {
+        use crate::elements::*;
+        let geometric_product = Scalar::from_groups(/* scalar */ (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2)));
+        let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
+        let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
+        let geometric_product_2 = Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
         return geometric_product_2;
     }
 }
@@ -43,7 +61,7 @@ impl Fix for Scalar {
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        let geometric_product_2 = Scalar::from_groups(/* scalar */ (self[scalar] * inverse[scalar]));
+        let geometric_product_2 = Scalar::from_groups(/* scalar */ (inverse[scalar] * self[scalar]));
         return geometric_product_2;
     }
 }

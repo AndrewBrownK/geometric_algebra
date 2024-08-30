@@ -1721,7 +1721,7 @@ impl std::ops::Add<MultiVector> for QuadNumAtInfinity {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[0], (self.group0()[2] + other.group0()[1])]),
+            Simd32x2::from([other.group0()[0], (other.group0()[1] + self.group0()[2])]),
             // e1, e2, e3, e4
             other.group1(),
             // e5
@@ -1849,7 +1849,7 @@ impl std::ops::Add<MysteryQuadNum> for QuadNumAtInfinity {
     fn add(self, other: MysteryQuadNum) -> Self::Output {
         let addition = QuadNumAtInfinity::from_groups(
             // e5, e321, e12345
-            Simd32x3::from([self.group0()[0], (self.group0()[1] + other.group0()[0]), (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (other.group0()[0] + self.group0()[1]), (other.group0()[1] + self.group0()[2])]),
         );
         return addition;
     }
@@ -1858,7 +1858,7 @@ impl std::ops::AddAssign<MysteryQuadNum> for QuadNumAtInfinity {
     fn add_assign(&mut self, other: MysteryQuadNum) {
         let addition = QuadNumAtInfinity::from_groups(
             // e5, e321, e12345
-            Simd32x3::from([self.group0()[0], (self.group0()[1] + other.group0()[0]), (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (other.group0()[0] + self.group0()[1]), (other.group0()[1] + self.group0()[2])]),
         );
         *self = addition;
     }
@@ -2124,9 +2124,9 @@ impl std::ops::Add<QuadNumAligningOrigin> for QuadNumAtInfinity {
     fn add(self, other: QuadNumAligningOrigin) -> Self::Output {
         let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
             other.group0()[0],
-            (self.group0()[0] + other.group0()[1]),
+            (other.group0()[1] + self.group0()[0]),
             self.group0()[1],
-            (self.group0()[2] + other.group0()[2]),
+            (other.group0()[2] + self.group0()[2]),
         ]));
         return addition;
     }
@@ -2139,7 +2139,7 @@ impl std::ops::Add<QuadNumAligningOriginAtInfinity> for QuadNumAtInfinity {
     fn add(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
         let addition = QuadNumAtInfinity::from_groups(
             // e5, e321, e12345
-            Simd32x3::from([(self.group0()[0] + other.group0()[0]), self.group0()[1], (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([(other.group0()[0] + self.group0()[0]), self.group0()[1], (other.group0()[1] + self.group0()[2])]),
         );
         return addition;
     }
@@ -2148,7 +2148,7 @@ impl std::ops::AddAssign<QuadNumAligningOriginAtInfinity> for QuadNumAtInfinity 
     fn add_assign(&mut self, other: QuadNumAligningOriginAtInfinity) {
         let addition = QuadNumAtInfinity::from_groups(
             // e5, e321, e12345
-            Simd32x3::from([(self.group0()[0] + other.group0()[0]), self.group0()[1], (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([(other.group0()[0] + self.group0()[0]), self.group0()[1], (other.group0()[1] + self.group0()[2])]),
         );
         *self = addition;
     }
@@ -2160,13 +2160,13 @@ impl std::ops::Add<QuadNumAtInfinity> for QuadNumAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: QuadNumAtInfinity) -> Self::Output {
-        let addition = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ (self.group0() + other.group0()));
+        let addition = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<QuadNumAtInfinity> for QuadNumAtInfinity {
     fn add_assign(&mut self, other: QuadNumAtInfinity) {
-        let addition = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ (self.group0() + other.group0()));
+        let addition = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -2178,7 +2178,7 @@ impl std::ops::Add<QuadNumOnOrigin> for QuadNumAtInfinity {
     fn add(self, other: QuadNumOnOrigin) -> Self::Output {
         let addition = QuadNum::from_groups(
             // e4, e5, e321, e12345
-            Simd32x4::from([other.group0()[0], self.group0()[0], self.group0()[1], (self.group0()[2] + other.group0()[1])]),
+            Simd32x4::from([other.group0()[0], self.group0()[0], self.group0()[1], (other.group0()[1] + self.group0()[2])]),
         );
         return addition;
     }
@@ -2226,7 +2226,7 @@ impl std::ops::Add<RoundPointAtOrigin> for QuadNumAtInfinity {
     fn add(self, other: RoundPointAtOrigin) -> Self::Output {
         let addition = QuadNum::from_groups(
             // e4, e5, e321, e12345
-            Simd32x4::from([other.group0()[0], (self.group0()[0] + other.group0()[1]), self.group0()[1], self.group0()[2]]),
+            Simd32x4::from([other.group0()[0], (other.group0()[1] + self.group0()[0]), self.group0()[1], self.group0()[2]]),
         );
         return addition;
     }
@@ -3723,10 +3723,10 @@ impl std::ops::Mul<AntiDipoleInversion> for QuadNumAtInfinity {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       26        0
-    //    simd4        5        6        0
+    //      f32        9       22        0
+    //    simd4        5        7        0
     // Totals...
-    // yes simd       14       32        0
+    // yes simd       14       29        0
     //  no simd       29       50        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -4809,11 +4809,11 @@ impl std::ops::Mul<VersorEven> for QuadNumAtInfinity {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       27        0
-    //    simd4        6        6        0
+    //      f32        8       21        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       15       33        0
-    //  no simd       33       51        0
+    // yes simd       15       28        0
+    //  no simd       36       49        0
     fn mul(self, other: VersorEven) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -6976,7 +6976,7 @@ impl std::ops::Sub<MultiVector> for QuadNumAtInfinity {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group0()[0] * -1.0), (self.group0()[2] - other.group0()[1])]),
+            Simd32x2::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self.group0()[2])]),
             // e1, e2, e3, e4
             (other.group1() * Simd32x4::from(-1.0)),
             // e5
@@ -7133,7 +7133,7 @@ impl std::ops::Sub<MysteryQuadNum> for QuadNumAtInfinity {
     fn sub(self, other: MysteryQuadNum) -> Self::Output {
         let subtraction = QuadNumAtInfinity::from_groups(
             // e5, e321, e12345
-            Simd32x3::from([self.group0()[0], (self.group0()[1] - other.group0()[0]), (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (-other.group0()[0] + self.group0()[1]), (-other.group0()[1] + self.group0()[2])]),
         );
         return subtraction;
     }
@@ -7142,7 +7142,7 @@ impl std::ops::SubAssign<MysteryQuadNum> for QuadNumAtInfinity {
     fn sub_assign(&mut self, other: MysteryQuadNum) {
         let subtraction = QuadNumAtInfinity::from_groups(
             // e5, e321, e12345
-            Simd32x3::from([self.group0()[0], (self.group0()[1] - other.group0()[0]), (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (-other.group0()[0] + self.group0()[1]), (-other.group0()[1] + self.group0()[2])]),
         );
         *self = subtraction;
     }
@@ -7452,9 +7452,9 @@ impl std::ops::Sub<QuadNumAligningOrigin> for QuadNumAtInfinity {
     fn sub(self, other: QuadNumAligningOrigin) -> Self::Output {
         let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
             (other.group0()[0] * -1.0),
-            (self.group0()[0] - other.group0()[1]),
+            (-other.group0()[1] + self.group0()[0]),
             self.group0()[1],
-            (self.group0()[2] - other.group0()[2]),
+            (-other.group0()[2] + self.group0()[2]),
         ]));
         return subtraction;
     }
@@ -7467,7 +7467,7 @@ impl std::ops::Sub<QuadNumAligningOriginAtInfinity> for QuadNumAtInfinity {
     fn sub(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
         let subtraction = QuadNumAtInfinity::from_groups(
             // e5, e321, e12345
-            Simd32x3::from([(self.group0()[0] - other.group0()[0]), self.group0()[1], (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([(-other.group0()[0] + self.group0()[0]), self.group0()[1], (-other.group0()[1] + self.group0()[2])]),
         );
         return subtraction;
     }
@@ -7476,7 +7476,7 @@ impl std::ops::SubAssign<QuadNumAligningOriginAtInfinity> for QuadNumAtInfinity 
     fn sub_assign(&mut self, other: QuadNumAligningOriginAtInfinity) {
         let subtraction = QuadNumAtInfinity::from_groups(
             // e5, e321, e12345
-            Simd32x3::from([(self.group0()[0] - other.group0()[0]), self.group0()[1], (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([(-other.group0()[0] + self.group0()[0]), self.group0()[1], (-other.group0()[1] + self.group0()[2])]),
         );
         *self = subtraction;
     }
@@ -7488,13 +7488,13 @@ impl std::ops::Sub<QuadNumAtInfinity> for QuadNumAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn sub(self, other: QuadNumAtInfinity) -> Self::Output {
-        let subtraction = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ (self.group0() - other.group0()));
+        let subtraction = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<QuadNumAtInfinity> for QuadNumAtInfinity {
     fn sub_assign(&mut self, other: QuadNumAtInfinity) {
-        let subtraction = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ (self.group0() - other.group0()));
+        let subtraction = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }
@@ -7504,10 +7504,12 @@ impl std::ops::Sub<QuadNumOnOrigin> for QuadNumAtInfinity {
     //      add/sub      mul      div
     // f32        1        1        0
     fn sub(self, other: QuadNumOnOrigin) -> Self::Output {
-        let subtraction = QuadNum::from_groups(
-            // e4, e5, e321, e12345
-            Simd32x4::from([(other.group0()[0] * -1.0), self.group0()[0], self.group0()[1], (self.group0()[2] - other.group0()[1])]),
-        );
+        let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
+            (other.group0()[0] * -1.0),
+            self.group0()[0],
+            self.group0()[1],
+            (-other.group0()[1] + self.group0()[2]),
+        ]));
         return subtraction;
     }
 }
@@ -7556,10 +7558,12 @@ impl std::ops::Sub<RoundPointAtOrigin> for QuadNumAtInfinity {
     //      add/sub      mul      div
     // f32        1        1        0
     fn sub(self, other: RoundPointAtOrigin) -> Self::Output {
-        let subtraction = QuadNum::from_groups(
-            // e4, e5, e321, e12345
-            Simd32x4::from([(other.group0()[0] * -1.0), (self.group0()[0] - other.group0()[1]), self.group0()[1], self.group0()[2]]),
-        );
+        let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
+            (other.group0()[0] * -1.0),
+            (-other.group0()[1] + self.group0()[0]),
+            self.group0()[1],
+            self.group0()[2],
+        ]));
         return subtraction;
     }
 }

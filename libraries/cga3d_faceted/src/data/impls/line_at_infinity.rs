@@ -235,7 +235,7 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for LineAtInfinity {
             // e415, e425, e435, e321
             other.group0(),
             // e235, e315, e125
-            (self.group0() + other.group1()),
+            (other.group1() + self.group0()),
             // e1, e2, e3, e5
             other.group2(),
         );
@@ -809,7 +809,7 @@ impl std::ops::Add<Circle> for LineAtInfinity {
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125
-            (self.group0() + other.group2()),
+            (other.group2() + self.group0()),
         );
         return addition;
     }
@@ -827,7 +827,7 @@ impl std::ops::Add<CircleAligningOrigin> for LineAtInfinity {
             // e415, e425, e435
             other.group1(),
             // e235, e315, e125
-            (self.group0() + other.group2()),
+            (other.group2() + self.group0()),
         );
         return addition;
     }
@@ -839,7 +839,7 @@ impl std::ops::Add<CircleAtInfinity> for LineAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: CircleAtInfinity) -> Self::Output {
-        let addition = CircleAtInfinity::from_groups(/* e415, e425, e435, e321 */ other.group0(), /* e235, e315, e125 */ (self.group0() + other.group1()));
+        let addition = CircleAtInfinity::from_groups(/* e415, e425, e435, e321 */ other.group0(), /* e235, e315, e125 */ (other.group1() + self.group0()));
         return addition;
     }
 }
@@ -850,7 +850,7 @@ impl std::ops::Add<CircleAtOrigin> for LineAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: CircleAtOrigin) -> Self::Output {
-        let addition = CircleAtOrigin::from_groups(/* e423, e431, e412 */ other.group0(), /* e235, e315, e125 */ (self.group0() + other.group1()));
+        let addition = CircleAtOrigin::from_groups(/* e423, e431, e412 */ other.group0(), /* e235, e315, e125 */ (other.group1() + self.group0()));
         return addition;
     }
 }
@@ -875,7 +875,7 @@ impl std::ops::Add<CircleOrthogonalOrigin> for LineAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        let addition = CircleOrthogonalOrigin::from_groups(/* e423, e431, e412, e321 */ other.group0(), /* e235, e315, e125 */ (self.group0() + other.group1()));
+        let addition = CircleOrthogonalOrigin::from_groups(/* e423, e431, e412, e321 */ other.group0(), /* e235, e315, e125 */ (other.group1() + self.group0()));
         return addition;
     }
 }
@@ -1564,7 +1564,7 @@ impl std::ops::Add<Line> for LineAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: Line) -> Self::Output {
-        let addition = Line::from_groups(/* e415, e425, e435 */ other.group0(), /* e235, e315, e125 */ (self.group0() + other.group1()));
+        let addition = Line::from_groups(/* e415, e425, e435 */ other.group0(), /* e235, e315, e125 */ (other.group1() + self.group0()));
         return addition;
     }
 }
@@ -1575,13 +1575,13 @@ impl std::ops::Add<LineAtInfinity> for LineAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: LineAtInfinity) -> Self::Output {
-        let addition = LineAtInfinity::from_groups(/* e235, e315, e125 */ (self.group0() + other.group0()));
+        let addition = LineAtInfinity::from_groups(/* e235, e315, e125 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<LineAtInfinity> for LineAtInfinity {
     fn add_assign(&mut self, other: LineAtInfinity) {
-        let addition = LineAtInfinity::from_groups(/* e235, e315, e125 */ (self.group0() + other.group0()));
+        let addition = LineAtInfinity::from_groups(/* e235, e315, e125 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -3640,10 +3640,10 @@ impl std::ops::Mul<DipoleInversion> for LineAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       33        0
-    //    simd4        3        3        0
+    //      f32       17       29        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       24       36        0
+    // yes simd       21       33        0
     //  no simd       33       45        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -3666,10 +3666,10 @@ impl std::ops::Mul<DipoleInversionAtInfinity> for LineAtInfinity {
     type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        9        0
-    //    simd4        3        3        0
+    //      f32        1        5        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd        8       12        0
+    // yes simd        5        9        0
     //  no simd       17       21        0
     fn mul(self, other: DipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
@@ -3893,10 +3893,10 @@ impl std::ops::Mul<MysteryDipoleInversion> for LineAtInfinity {
     type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       13        0
-    //    simd4        2        2        0
+    //      f32        5        9        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd       11       15        0
+    // yes simd        8       12        0
     //  no simd       17       21        0
     fn mul(self, other: MysteryDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -4577,7 +4577,7 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for LineAtInfinity {
             // e415, e425, e435, e321
             (other.group0() * Simd32x4::from(-1.0)),
             // e235, e315, e125
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
             // e1, e2, e3, e5
             (other.group2() * Simd32x4::from(-1.0)),
         );
@@ -5258,7 +5258,7 @@ impl std::ops::Sub<Circle> for LineAtInfinity {
             // e415, e425, e435, e321
             (other.group1() * Simd32x4::from(-1.0)),
             // e235, e315, e125
-            (self.group0() - other.group2()),
+            (-other.group2() + self.group0()),
         );
         return subtraction;
     }
@@ -5276,7 +5276,7 @@ impl std::ops::Sub<CircleAligningOrigin> for LineAtInfinity {
             // e415, e425, e435
             (other.group1() * Simd32x3::from(-1.0)),
             // e235, e315, e125
-            (self.group0() - other.group2()),
+            (-other.group2() + self.group0()),
         );
         return subtraction;
     }
@@ -5295,7 +5295,7 @@ impl std::ops::Sub<CircleAtInfinity> for LineAtInfinity {
             // e415, e425, e435, e321
             (other.group0() * Simd32x4::from(-1.0)),
             // e235, e315, e125
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
         );
         return subtraction;
     }
@@ -5311,7 +5311,7 @@ impl std::ops::Sub<CircleAtOrigin> for LineAtInfinity {
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e235, e315, e125
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
         );
         return subtraction;
     }
@@ -5348,7 +5348,7 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for LineAtInfinity {
             // e423, e431, e412, e321
             (other.group0() * Simd32x4::from(-1.0)),
             // e235, e315, e125
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
         );
         return subtraction;
     }
@@ -6186,7 +6186,7 @@ impl std::ops::Sub<Line> for LineAtInfinity {
             // e415, e425, e435
             (other.group0() * Simd32x3::from(-1.0)),
             // e235, e315, e125
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
         );
         return subtraction;
     }
@@ -6198,13 +6198,13 @@ impl std::ops::Sub<LineAtInfinity> for LineAtInfinity {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn sub(self, other: LineAtInfinity) -> Self::Output {
-        let subtraction = LineAtInfinity::from_groups(/* e235, e315, e125 */ (self.group0() - other.group0()));
+        let subtraction = LineAtInfinity::from_groups(/* e235, e315, e125 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<LineAtInfinity> for LineAtInfinity {
     fn sub_assign(&mut self, other: LineAtInfinity) {
-        let subtraction = LineAtInfinity::from_groups(/* e235, e315, e125 */ (self.group0() - other.group0()));
+        let subtraction = LineAtInfinity::from_groups(/* e235, e315, e125 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

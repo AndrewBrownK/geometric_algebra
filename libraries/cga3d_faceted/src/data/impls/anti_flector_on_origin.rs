@@ -210,14 +210,14 @@ impl std::ops::Add<AntiDipoleInversion> for AntiFlectorOnOrigin {
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[0] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self.group0()[0])]),
             // e235, e315, e125, e4
             other.group2(),
             // e1, e2, e3, e5
             Simd32x4::from([
-                (self.group0()[1] + other.group3()[0]),
-                (self.group0()[2] + other.group3()[1]),
-                (self.group0()[3] + other.group3()[2]),
+                (other.group3()[0] + self.group0()[1]),
+                (other.group3()[1] + self.group0()[2]),
+                (other.group3()[2] + self.group0()[3]),
                 other.group3()[3],
             ]),
         );
@@ -232,14 +232,14 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for AntiFlectorOnOrigin {
     fn add(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         let addition = AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[0] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[0])]),
             // e235, e315, e125
             other.group1(),
             // e1, e2, e3, e5
             Simd32x4::from([
-                (self.group0()[1] + other.group2()[0]),
-                (self.group0()[2] + other.group2()[1]),
-                (self.group0()[3] + other.group2()[2]),
+                (other.group2()[0] + self.group0()[1]),
+                (other.group2()[1] + self.group0()[2]),
+                (other.group2()[2] + self.group0()[3]),
                 other.group2()[3],
             ]),
         );
@@ -254,13 +254,13 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for AntiFlectorOnOrigin {
     fn add(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         let addition = AntiDipoleInversionOnOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[0] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[0])]),
             // e4, e1, e2, e3
             Simd32x4::from([
                 other.group1()[0],
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
-                (self.group0()[3] + other.group1()[3]),
+                (other.group1()[1] + self.group0()[1]),
+                (other.group1()[2] + self.group0()[2]),
+                (other.group1()[3] + self.group0()[3]),
             ]),
         );
         return addition;
@@ -290,7 +290,7 @@ impl std::ops::Add<AntiDipoleOnOrigin> for AntiFlectorOnOrigin {
     fn add(self, other: AntiDipoleOnOrigin) -> Self::Output {
         let addition = AntiDipoleInversionOnOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[0] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[0])]),
             // e4, e1, e2, e3
             Simd32x4::from([0.0, self.group0()[1], self.group0()[2], self.group0()[3]]),
         );
@@ -329,7 +329,7 @@ impl std::ops::Add<AntiFlatPoint> for AntiFlectorOnOrigin {
     fn add(self, other: AntiFlatPoint) -> Self::Output {
         let addition = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[0] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[0])]),
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[3], 0.0]),
         );
@@ -344,12 +344,12 @@ impl std::ops::Add<AntiFlector> for AntiFlectorOnOrigin {
     fn add(self, other: AntiFlector) -> Self::Output {
         let addition = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[0] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[0])]),
             // e1, e2, e3, e5
             Simd32x4::from([
-                (self.group0()[1] + other.group1()[0]),
-                (self.group0()[2] + other.group1()[1]),
-                (self.group0()[3] + other.group1()[2]),
+                (other.group1()[0] + self.group0()[1]),
+                (other.group1()[1] + self.group0()[2]),
+                (other.group1()[2] + self.group0()[3]),
                 other.group1()[3],
             ]),
         );
@@ -363,13 +363,13 @@ impl std::ops::Add<AntiFlectorOnOrigin> for AntiFlectorOnOrigin {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        let addition = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ (self.group0() + other.group0()));
+        let addition = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<AntiFlectorOnOrigin> for AntiFlectorOnOrigin {
     fn add_assign(&mut self, other: AntiFlectorOnOrigin) {
-        let addition = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ (self.group0() + other.group0()));
+        let addition = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -538,7 +538,7 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for AntiFlectorOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[0] + other.group0()[3])]),
             // e1, e2, e3
-            (other.group1() + Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]])),
+            (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) + other.group1()),
         );
         return addition;
     }
@@ -601,9 +601,9 @@ impl std::ops::Add<AntiPlaneOnOrigin> for AntiFlectorOnOrigin {
     fn add(self, other: AntiPlaneOnOrigin) -> Self::Output {
         let addition = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] + other.group0()[0]),
-            (self.group0()[2] + other.group0()[1]),
-            (self.group0()[3] + other.group0()[2]),
+            (other.group0()[0] + self.group0()[1]),
+            (other.group0()[1] + self.group0()[2]),
+            (other.group0()[2] + self.group0()[3]),
         ]));
         return addition;
     }
@@ -612,9 +612,9 @@ impl std::ops::AddAssign<AntiPlaneOnOrigin> for AntiFlectorOnOrigin {
     fn add_assign(&mut self, other: AntiPlaneOnOrigin) {
         let addition = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] + other.group0()[0]),
-            (self.group0()[2] + other.group0()[1]),
-            (self.group0()[3] + other.group0()[2]),
+            (other.group0()[0] + self.group0()[1]),
+            (other.group0()[1] + self.group0()[2]),
+            (other.group0()[2] + self.group0()[3]),
         ]));
         *self = addition;
     }
@@ -1844,7 +1844,7 @@ impl std::ops::Add<MysteryQuadNum> for AntiFlectorOnOrigin {
             // e12345, e1, e2, e3
             Simd32x4::from([other.group0()[1], self.group0()[1], self.group0()[2], self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] + other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] + self.group0()[0])]),
         );
         return addition;
     }
@@ -2146,7 +2146,7 @@ impl std::ops::Add<QuadNumAtInfinity> for AntiFlectorOnOrigin {
             // e12345, e1, e2, e3
             Simd32x4::from([other.group0()[2], self.group0()[1], self.group0()[2], self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] + other.group0()[1])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] + self.group0()[0])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
         );
@@ -2177,7 +2177,7 @@ impl std::ops::Add<QuadNumOrthogonalOrigin> for AntiFlectorOnOrigin {
     fn add(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
         let addition = VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] + other.group0()[2])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[2] + self.group0()[0])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
             // e1, e2, e3, e4
@@ -5273,15 +5273,15 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiFlectorOnOrigin {
                 (other.group1()[0] * -1.0),
                 (other.group1()[1] * -1.0),
                 (other.group1()[2] * -1.0),
-                (self.group0()[0] - other.group1()[3]),
+                (-other.group1()[3] + self.group0()[0]),
             ]),
             // e235, e315, e125, e4
             (other.group2() * Simd32x4::from(-1.0)),
             // e1, e2, e3, e5
             Simd32x4::from([
-                (self.group0()[1] - other.group3()[0]),
-                (self.group0()[2] - other.group3()[1]),
-                (self.group0()[3] - other.group3()[2]),
+                (-other.group3()[0] + self.group0()[1]),
+                (-other.group3()[1] + self.group0()[2]),
+                (-other.group3()[2] + self.group0()[3]),
                 (other.group3()[3] * -1.0),
             ]),
         );
@@ -5304,15 +5304,15 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for AntiFlectorOnOrigin {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[0] - other.group0()[3]),
+                (-other.group0()[3] + self.group0()[0]),
             ]),
             // e235, e315, e125
             (other.group1() * Simd32x3::from(-1.0)),
             // e1, e2, e3, e5
             Simd32x4::from([
-                (self.group0()[1] - other.group2()[0]),
-                (self.group0()[2] - other.group2()[1]),
-                (self.group0()[3] - other.group2()[2]),
+                (-other.group2()[0] + self.group0()[1]),
+                (-other.group2()[1] + self.group0()[2]),
+                (-other.group2()[2] + self.group0()[3]),
                 (other.group2()[3] * -1.0),
             ]),
         );
@@ -5331,14 +5331,14 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for AntiFlectorOnOrigin {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[0] - other.group0()[3]),
+                (-other.group0()[3] + self.group0()[0]),
             ]),
             // e4, e1, e2, e3
             Simd32x4::from([
                 (other.group1()[0] * -1.0),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
-                (self.group0()[3] - other.group1()[3]),
+                (-other.group1()[1] + self.group0()[1]),
+                (-other.group1()[2] + self.group0()[2]),
+                (-other.group1()[3] + self.group0()[3]),
             ]),
         );
         return subtraction;
@@ -5380,7 +5380,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for AntiFlectorOnOrigin {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[0] - other.group0()[3]),
+                (-other.group0()[3] + self.group0()[0]),
             ]),
             // e4, e1, e2, e3
             Simd32x4::from([0.0, self.group0()[1], self.group0()[2], self.group0()[3]]),
@@ -5424,7 +5424,7 @@ impl std::ops::Sub<AntiFlatPoint> for AntiFlectorOnOrigin {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[0] - other.group0()[3]),
+                (-other.group0()[3] + self.group0()[0]),
             ]),
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[3], 0.0]),
@@ -5444,13 +5444,13 @@ impl std::ops::Sub<AntiFlector> for AntiFlectorOnOrigin {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[0] - other.group0()[3]),
+                (-other.group0()[3] + self.group0()[0]),
             ]),
             // e1, e2, e3, e5
             Simd32x4::from([
-                (self.group0()[1] - other.group1()[0]),
-                (self.group0()[2] - other.group1()[1]),
-                (self.group0()[3] - other.group1()[2]),
+                (-other.group1()[0] + self.group0()[1]),
+                (-other.group1()[1] + self.group0()[2]),
+                (-other.group1()[2] + self.group0()[3]),
                 (other.group1()[3] * -1.0),
             ]),
         );
@@ -5464,13 +5464,13 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for AntiFlectorOnOrigin {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        let subtraction = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ (self.group0() - other.group0()));
+        let subtraction = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiFlectorOnOrigin> for AntiFlectorOnOrigin {
     fn sub_assign(&mut self, other: AntiFlectorOnOrigin) {
-        let subtraction = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ (self.group0() - other.group0()));
+        let subtraction = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }
@@ -5673,7 +5673,7 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for AntiFlectorOnOrigin {
                 (self.group0()[0] - other.group0()[3]),
             ]),
             // e1, e2, e3
-            (-other.group1() + Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]])),
+            (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) - other.group1()),
         );
         return subtraction;
     }
@@ -5739,9 +5739,9 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for AntiFlectorOnOrigin {
     fn sub(self, other: AntiPlaneOnOrigin) -> Self::Output {
         let subtraction = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] - other.group0()[0]),
-            (self.group0()[2] - other.group0()[1]),
-            (self.group0()[3] - other.group0()[2]),
+            (-other.group0()[0] + self.group0()[1]),
+            (-other.group0()[1] + self.group0()[2]),
+            (-other.group0()[2] + self.group0()[3]),
         ]));
         return subtraction;
     }
@@ -5750,9 +5750,9 @@ impl std::ops::SubAssign<AntiPlaneOnOrigin> for AntiFlectorOnOrigin {
     fn sub_assign(&mut self, other: AntiPlaneOnOrigin) {
         let subtraction = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] - other.group0()[0]),
-            (self.group0()[2] - other.group0()[1]),
-            (self.group0()[3] - other.group0()[2]),
+            (-other.group0()[0] + self.group0()[1]),
+            (-other.group0()[1] + self.group0()[2]),
+            (-other.group0()[2] + self.group0()[3]),
         ]));
         *self = subtraction;
     }
@@ -7259,7 +7259,7 @@ impl std::ops::Sub<MysteryQuadNum> for AntiFlectorOnOrigin {
             // e12345, e1, e2, e3
             Simd32x4::from([(other.group0()[1] * -1.0), self.group0()[1], self.group0()[2], self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] - other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[0] + self.group0()[0])]),
         );
         return subtraction;
     }
@@ -7603,7 +7603,7 @@ impl std::ops::Sub<QuadNumAtInfinity> for AntiFlectorOnOrigin {
             // e12345, e1, e2, e3
             Simd32x4::from([(other.group0()[2] * -1.0), self.group0()[1], self.group0()[2], self.group0()[3]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] - other.group0()[1])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[1] + self.group0()[0])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
         );
@@ -7637,7 +7637,7 @@ impl std::ops::Sub<QuadNumOrthogonalOrigin> for AntiFlectorOnOrigin {
     fn sub(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
         let subtraction = VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] - other.group0()[2])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[2] + self.group0()[0])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
             // e1, e2, e3, e4

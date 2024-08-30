@@ -27,7 +27,7 @@ impl std::ops::Add<AntiCircleOnOrigin> for NullDipoleAtOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: AntiCircleOnOrigin) -> Self::Output {
-        let addition = AntiCircleOnOrigin::from_groups(/* e41, e42, e43 */ (self.group0() + other.group0()), /* e23, e31, e12 */ other.group1());
+        let addition = AntiCircleOnOrigin::from_groups(/* e41, e42, e43 */ (other.group0() + self.group0()), /* e23, e31, e12 */ other.group1());
         return addition;
     }
 }
@@ -40,7 +40,7 @@ impl std::ops::Add<AntiCircleRotor> for NullDipoleAtOrigin {
     fn add(self, other: AntiCircleRotor) -> Self::Output {
         let addition = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e23, e31, e12, e45
             other.group1(),
             // e15, e25, e35, scalar
@@ -58,7 +58,7 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for NullDipoleAtOrigin {
     fn add(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         let addition = AntiCircleRotorAligningOrigin::from_groups(
             // e41, e42, e43
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e23, e31, e12
             other.group1(),
             // e15, e25, e35, scalar
@@ -1052,7 +1052,7 @@ impl std::ops::Add<Dipole> for NullDipoleAtOrigin {
     fn add(self, other: Dipole) -> Self::Output {
         let addition = Dipole::from_groups(
             // e41, e42, e43
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e23, e31, e12, e45
             other.group1(),
             // e15, e25, e35
@@ -1102,7 +1102,7 @@ impl std::ops::Add<DipoleAtOrigin> for NullDipoleAtOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: DipoleAtOrigin) -> Self::Output {
-        let addition = DipoleAtOrigin::from_groups(/* e41, e42, e43 */ (self.group0() + other.group0()), /* e15, e25, e35 */ other.group1());
+        let addition = DipoleAtOrigin::from_groups(/* e41, e42, e43 */ (other.group0() + self.group0()), /* e15, e25, e35 */ other.group1());
         return addition;
     }
 }
@@ -1115,7 +1115,7 @@ impl std::ops::Add<DipoleInversion> for NullDipoleAtOrigin {
     fn add(self, other: DipoleInversion) -> Self::Output {
         let addition = DipoleInversion::from_groups(
             // e41, e42, e43
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e23, e31, e12, e45
             other.group1(),
             // e15, e25, e35, e1234
@@ -1250,7 +1250,7 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for NullDipoleAtOrigin {
     fn add(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         let addition = DipoleOrthogonalOrigin::from_groups(
             // e41, e42, e43
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e23, e31, e12
             other.group1(),
             // e15, e25, e35
@@ -1791,13 +1791,13 @@ impl std::ops::Add<NullDipoleAtOrigin> for NullDipoleAtOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: NullDipoleAtOrigin) -> Self::Output {
-        let addition = NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ (self.group0() + other.group0()));
+        let addition = NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<NullDipoleAtOrigin> for NullDipoleAtOrigin {
     fn add_assign(&mut self, other: NullDipoleAtOrigin) {
-        let addition = NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ (self.group0() + other.group0()));
+        let addition = NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -3492,10 +3492,10 @@ impl std::ops::Mul<AntiMysteryDipoleInversion> for NullDipoleAtOrigin {
     type Output = NullVersorEvenAtOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       13        0
-    //    simd4        2        2        0
+    //      f32        5        9        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd       11       15        0
+    // yes simd        8       12        0
     //  no simd       17       21        0
     fn mul(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -4498,7 +4498,7 @@ impl std::ops::Sub<AntiCircleOnOrigin> for NullDipoleAtOrigin {
     fn sub(self, other: AntiCircleOnOrigin) -> Self::Output {
         let subtraction = AntiCircleOnOrigin::from_groups(
             // e41, e42, e43
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e23, e31, e12
             (other.group1() * Simd32x3::from(-1.0)),
         );
@@ -4517,7 +4517,7 @@ impl std::ops::Sub<AntiCircleRotor> for NullDipoleAtOrigin {
     fn sub(self, other: AntiCircleRotor) -> Self::Output {
         let subtraction = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e23, e31, e12, e45
             (other.group1() * Simd32x4::from(-1.0)),
             // e15, e25, e35, scalar
@@ -4538,7 +4538,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for NullDipoleAtOrigin {
     fn sub(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         let subtraction = AntiCircleRotorAligningOrigin::from_groups(
             // e41, e42, e43
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e23, e31, e12
             (other.group1() * Simd32x3::from(-1.0)),
             // e15, e25, e35, scalar
@@ -5764,7 +5764,7 @@ impl std::ops::Sub<Dipole> for NullDipoleAtOrigin {
     fn sub(self, other: Dipole) -> Self::Output {
         let subtraction = Dipole::from_groups(
             // e41, e42, e43
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e23, e31, e12, e45
             (other.group1() * Simd32x4::from(-1.0)),
             // e15, e25, e35
@@ -5827,7 +5827,7 @@ impl std::ops::Sub<DipoleAtOrigin> for NullDipoleAtOrigin {
     fn sub(self, other: DipoleAtOrigin) -> Self::Output {
         let subtraction = DipoleAtOrigin::from_groups(
             // e41, e42, e43
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e15, e25, e35
             (other.group1() * Simd32x3::from(-1.0)),
         );
@@ -5846,7 +5846,7 @@ impl std::ops::Sub<DipoleInversion> for NullDipoleAtOrigin {
     fn sub(self, other: DipoleInversion) -> Self::Output {
         let subtraction = DipoleInversion::from_groups(
             // e41, e42, e43
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e23, e31, e12, e45
             (other.group1() * Simd32x4::from(-1.0)),
             // e15, e25, e35, e1234
@@ -6005,7 +6005,7 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for NullDipoleAtOrigin {
     fn sub(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         let subtraction = DipoleOrthogonalOrigin::from_groups(
             // e41, e42, e43
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e23, e31, e12
             (other.group1() * Simd32x3::from(-1.0)),
             // e15, e25, e35
@@ -6662,13 +6662,13 @@ impl std::ops::Sub<NullDipoleAtOrigin> for NullDipoleAtOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn sub(self, other: NullDipoleAtOrigin) -> Self::Output {
-        let subtraction = NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ (self.group0() - other.group0()));
+        let subtraction = NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<NullDipoleAtOrigin> for NullDipoleAtOrigin {
     fn sub_assign(&mut self, other: NullDipoleAtOrigin) {
-        let subtraction = NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ (self.group0() - other.group0()));
+        let subtraction = NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

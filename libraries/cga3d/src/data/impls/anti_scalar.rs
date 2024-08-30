@@ -310,14 +310,14 @@ impl std::ops::Add<AntiScalar> for AntiScalar {
     // f32        1        0        0
     fn add(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiScalar::from_groups(/* e12345 */ (self[e12345] + other[e12345]));
+        let addition = AntiScalar::from_groups(/* e12345 */ (other[e12345] + self[e12345]));
         return addition;
     }
 }
 impl std::ops::AddAssign<AntiScalar> for AntiScalar {
     fn add_assign(&mut self, other: AntiScalar) {
         use crate::elements::*;
-        let addition = AntiScalar::from_groups(/* e12345 */ (self[e12345] + other[e12345]));
+        let addition = AntiScalar::from_groups(/* e12345 */ (other[e12345] + self[e12345]));
         *self = addition;
     }
 }
@@ -380,7 +380,7 @@ impl std::ops::Add<CircleRotor> for AntiScalar {
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (self[e12345] + other.group2()[3])]),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (other.group2()[3] + self[e12345])]),
         );
         return addition;
     }
@@ -454,7 +454,7 @@ impl std::ops::Add<DualNum321> for AntiScalar {
     // f32        1        0        0
     fn add(self, other: DualNum321) -> Self::Output {
         use crate::elements::*;
-        let addition = DualNum321::from_groups(/* e321, e12345 */ Simd32x2::from([other.group0()[0], (self[e12345] + other.group0()[1])]));
+        let addition = DualNum321::from_groups(/* e321, e12345 */ Simd32x2::from([other.group0()[0], (other.group0()[1] + self[e12345])]));
         return addition;
     }
 }
@@ -465,7 +465,7 @@ impl std::ops::Add<DualNum4> for AntiScalar {
     // f32        1        0        0
     fn add(self, other: DualNum4) -> Self::Output {
         use crate::elements::*;
-        let addition = DualNum4::from_groups(/* e4, e12345 */ Simd32x2::from([other.group0()[0], (self[e12345] + other.group0()[1])]));
+        let addition = DualNum4::from_groups(/* e4, e12345 */ Simd32x2::from([other.group0()[0], (other.group0()[1] + self[e12345])]));
         return addition;
     }
 }
@@ -476,7 +476,7 @@ impl std::ops::Add<DualNum5> for AntiScalar {
     // f32        1        0        0
     fn add(self, other: DualNum5) -> Self::Output {
         use crate::elements::*;
-        let addition = DualNum5::from_groups(/* e5, e12345 */ Simd32x2::from([other.group0()[0], (self[e12345] + other.group0()[1])]));
+        let addition = DualNum5::from_groups(/* e5, e12345 */ Simd32x2::from([other.group0()[0], (other.group0()[1] + self[e12345])]));
         return addition;
     }
 }
@@ -564,7 +564,7 @@ impl std::ops::Add<Motor> for AntiScalar {
         use crate::elements::*;
         let addition = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self[e12345] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self[e12345])]),
             // e235, e315, e125, e5
             other.group1(),
         );
@@ -580,7 +580,7 @@ impl std::ops::Add<MultiVector> for AntiScalar {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[0], (self[e12345] + other.group0()[1])]),
+            Simd32x2::from([other.group0()[0], (other.group0()[1] + self[e12345])]),
             // e1, e2, e3, e4
             other.group1(),
             // e5
@@ -645,7 +645,7 @@ impl std::ops::Add<QuadNum> for AntiScalar {
         use crate::elements::*;
         let addition = QuadNum::from_groups(
             // e4, e5, e321, e12345
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self[e12345] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self[e12345])]),
         );
         return addition;
     }
@@ -736,7 +736,7 @@ impl std::ops::Add<TripleNum> for AntiScalar {
     // f32        1        0        0
     fn add(self, other: TripleNum) -> Self::Output {
         use crate::elements::*;
-        let addition = TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([other.group0()[0], other.group0()[1], (self[e12345] + other.group0()[2])]));
+        let addition = TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([other.group0()[0], other.group0()[1], (other.group0()[2] + self[e12345])]));
         return addition;
     }
 }
@@ -749,7 +749,7 @@ impl std::ops::Add<VersorEven> for AntiScalar {
         use crate::elements::*;
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self[e12345] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self[e12345])]),
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125, e5
@@ -1712,14 +1712,14 @@ impl std::ops::Sub<AntiScalar> for AntiScalar {
     // f32        1        0        0
     fn sub(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiScalar::from_groups(/* e12345 */ (self[e12345] - other[e12345]));
+        let subtraction = AntiScalar::from_groups(/* e12345 */ (-other[e12345] + self[e12345]));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiScalar> for AntiScalar {
     fn sub_assign(&mut self, other: AntiScalar) {
         use crate::elements::*;
-        let subtraction = AntiScalar::from_groups(/* e12345 */ (self[e12345] - other[e12345]));
+        let subtraction = AntiScalar::from_groups(/* e12345 */ (-other[e12345] + self[e12345]));
         *self = subtraction;
     }
 }
@@ -1798,7 +1798,7 @@ impl std::ops::Sub<CircleRotor> for AntiScalar {
             // e415, e425, e435, e321
             (other.group1() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e12345
-            Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), (self[e12345] - other.group2()[3])]),
+            Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), (-other.group2()[3] + self[e12345])]),
         );
         return subtraction;
     }
@@ -1887,7 +1887,7 @@ impl std::ops::Sub<DualNum321> for AntiScalar {
     // f32        1        1        0
     fn sub(self, other: DualNum321) -> Self::Output {
         use crate::elements::*;
-        let subtraction = DualNum321::from_groups(/* e321, e12345 */ Simd32x2::from([(other.group0()[0] * -1.0), (self[e12345] - other.group0()[1])]));
+        let subtraction = DualNum321::from_groups(/* e321, e12345 */ Simd32x2::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self[e12345])]));
         return subtraction;
     }
 }
@@ -1898,7 +1898,7 @@ impl std::ops::Sub<DualNum4> for AntiScalar {
     // f32        1        1        0
     fn sub(self, other: DualNum4) -> Self::Output {
         use crate::elements::*;
-        let subtraction = DualNum4::from_groups(/* e4, e12345 */ Simd32x2::from([(other.group0()[0] * -1.0), (self[e12345] - other.group0()[1])]));
+        let subtraction = DualNum4::from_groups(/* e4, e12345 */ Simd32x2::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self[e12345])]));
         return subtraction;
     }
 }
@@ -1909,7 +1909,7 @@ impl std::ops::Sub<DualNum5> for AntiScalar {
     // f32        1        1        0
     fn sub(self, other: DualNum5) -> Self::Output {
         use crate::elements::*;
-        let subtraction = DualNum5::from_groups(/* e5, e12345 */ Simd32x2::from([(other.group0()[0] * -1.0), (self[e12345] - other.group0()[1])]));
+        let subtraction = DualNum5::from_groups(/* e5, e12345 */ Simd32x2::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self[e12345])]));
         return subtraction;
     }
 }
@@ -2012,7 +2012,7 @@ impl std::ops::Sub<Motor> for AntiScalar {
         use crate::elements::*;
         let subtraction = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (self[e12345] - other.group0()[3])]),
+            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (-other.group0()[3] + self[e12345])]),
             // e235, e315, e125, e5
             (other.group1() * Simd32x4::from(-1.0)),
         );
@@ -2033,7 +2033,7 @@ impl std::ops::Sub<MultiVector> for AntiScalar {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group0()[0] * -1.0), (self[e12345] - other.group0()[1])]),
+            Simd32x2::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self[e12345])]),
             // e1, e2, e3, e4
             (other.group1() * Simd32x4::from(-1.0)),
             // e5
@@ -2104,7 +2104,7 @@ impl std::ops::Sub<QuadNum> for AntiScalar {
             (other.group0()[0] * -1.0),
             (other.group0()[1] * -1.0),
             (other.group0()[2] * -1.0),
-            (self[e12345] - other.group0()[3]),
+            (-other.group0()[3] + self[e12345]),
         ]));
         return subtraction;
     }
@@ -2214,7 +2214,7 @@ impl std::ops::Sub<TripleNum> for AntiScalar {
         use crate::elements::*;
         let subtraction = TripleNum::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (self[e12345] - other.group0()[2])]),
+            Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (-other.group0()[2] + self[e12345])]),
         );
         return subtraction;
     }
@@ -2232,7 +2232,7 @@ impl std::ops::Sub<VersorEven> for AntiScalar {
         use crate::elements::*;
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (self[e12345] - other.group0()[3])]),
+            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (-other.group0()[3] + self[e12345])]),
             // e415, e425, e435, e321
             (other.group1() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e5

@@ -1699,7 +1699,7 @@ impl std::ops::Add<MultiVector> for QuadNumAligningOrigin {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[0], (self.group0()[2] + other.group0()[1])]),
+            Simd32x2::from([other.group0()[0], (other.group0()[1] + self.group0()[2])]),
             // e1, e2, e3, e4
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[0] + other.group1()[3])]),
             // e5
@@ -1828,7 +1828,7 @@ impl std::ops::Add<MysteryQuadNum> for QuadNumAligningOrigin {
     fn add(self, other: MysteryQuadNum) -> Self::Output {
         let addition = QuadNum::from_groups(
             // e4, e5, e321, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], other.group0()[0], (self.group0()[2] + other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], other.group0()[0], (other.group0()[1] + self.group0()[2])]),
         );
         return addition;
     }
@@ -2104,13 +2104,13 @@ impl std::ops::Add<QuadNumAligningOrigin> for QuadNumAligningOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: QuadNumAligningOrigin) -> Self::Output {
-        let addition = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ (self.group0() + other.group0()));
+        let addition = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<QuadNumAligningOrigin> for QuadNumAligningOrigin {
     fn add_assign(&mut self, other: QuadNumAligningOrigin) {
-        let addition = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ (self.group0() + other.group0()));
+        let addition = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -2122,7 +2122,7 @@ impl std::ops::Add<QuadNumAligningOriginAtInfinity> for QuadNumAligningOrigin {
     fn add(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
         let addition = QuadNumAligningOrigin::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([self.group0()[0], (self.group0()[1] + other.group0()[0]), (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (other.group0()[0] + self.group0()[1]), (other.group0()[1] + self.group0()[2])]),
         );
         return addition;
     }
@@ -2131,7 +2131,7 @@ impl std::ops::AddAssign<QuadNumAligningOriginAtInfinity> for QuadNumAligningOri
     fn add_assign(&mut self, other: QuadNumAligningOriginAtInfinity) {
         let addition = QuadNumAligningOrigin::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([self.group0()[0], (self.group0()[1] + other.group0()[0]), (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (other.group0()[0] + self.group0()[1]), (other.group0()[1] + self.group0()[2])]),
         );
         *self = addition;
     }
@@ -2159,7 +2159,7 @@ impl std::ops::Add<QuadNumOnOrigin> for QuadNumAligningOrigin {
     fn add(self, other: QuadNumOnOrigin) -> Self::Output {
         let addition = QuadNumAligningOrigin::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([(self.group0()[0] + other.group0()[0]), self.group0()[1], (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([(other.group0()[0] + self.group0()[0]), self.group0()[1], (other.group0()[1] + self.group0()[2])]),
         );
         return addition;
     }
@@ -2168,7 +2168,7 @@ impl std::ops::AddAssign<QuadNumOnOrigin> for QuadNumAligningOrigin {
     fn add_assign(&mut self, other: QuadNumOnOrigin) {
         let addition = QuadNumAligningOrigin::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([(self.group0()[0] + other.group0()[0]), self.group0()[1], (self.group0()[2] + other.group0()[1])]),
+            Simd32x3::from([(other.group0()[0] + self.group0()[0]), self.group0()[1], (other.group0()[1] + self.group0()[2])]),
         );
         *self = addition;
     }
@@ -2216,7 +2216,7 @@ impl std::ops::Add<RoundPointAtOrigin> for QuadNumAligningOrigin {
     fn add(self, other: RoundPointAtOrigin) -> Self::Output {
         let addition = QuadNumAligningOrigin::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([(self.group0()[0] + other.group0()[0]), (self.group0()[1] + other.group0()[1]), self.group0()[2]]),
+            Simd32x3::from([(other.group0()[0] + self.group0()[0]), (other.group0()[1] + self.group0()[1]), self.group0()[2]]),
         );
         return addition;
     }
@@ -2225,7 +2225,7 @@ impl std::ops::AddAssign<RoundPointAtOrigin> for QuadNumAligningOrigin {
     fn add_assign(&mut self, other: RoundPointAtOrigin) {
         let addition = QuadNumAligningOrigin::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([(self.group0()[0] + other.group0()[0]), (self.group0()[1] + other.group0()[1]), self.group0()[2]]),
+            Simd32x3::from([(other.group0()[0] + self.group0()[0]), (other.group0()[1] + self.group0()[1]), self.group0()[2]]),
         );
         *self = addition;
     }
@@ -7064,7 +7064,7 @@ impl std::ops::Sub<MultiVector> for QuadNumAligningOrigin {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group0()[0] * -1.0), (self.group0()[2] - other.group0()[1])]),
+            Simd32x2::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self.group0()[2])]),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other.group1()[0] * -1.0),
@@ -7218,10 +7218,12 @@ impl std::ops::Sub<MysteryQuadNum> for QuadNumAligningOrigin {
     //      add/sub      mul      div
     // f32        1        1        0
     fn sub(self, other: MysteryQuadNum) -> Self::Output {
-        let subtraction = QuadNum::from_groups(
-            // e4, e5, e321, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], (other.group0()[0] * -1.0), (self.group0()[2] - other.group0()[1])]),
-        );
+        let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
+            self.group0()[0],
+            self.group0()[1],
+            (other.group0()[0] * -1.0),
+            (-other.group0()[1] + self.group0()[2]),
+        ]));
         return subtraction;
     }
 }
@@ -7525,13 +7527,13 @@ impl std::ops::Sub<QuadNumAligningOrigin> for QuadNumAligningOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn sub(self, other: QuadNumAligningOrigin) -> Self::Output {
-        let subtraction = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ (self.group0() - other.group0()));
+        let subtraction = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<QuadNumAligningOrigin> for QuadNumAligningOrigin {
     fn sub_assign(&mut self, other: QuadNumAligningOrigin) {
-        let subtraction = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ (self.group0() - other.group0()));
+        let subtraction = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }
@@ -7543,7 +7545,7 @@ impl std::ops::Sub<QuadNumAligningOriginAtInfinity> for QuadNumAligningOrigin {
     fn sub(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
         let subtraction = QuadNumAligningOrigin::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([self.group0()[0], (self.group0()[1] - other.group0()[0]), (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (-other.group0()[0] + self.group0()[1]), (-other.group0()[1] + self.group0()[2])]),
         );
         return subtraction;
     }
@@ -7552,7 +7554,7 @@ impl std::ops::SubAssign<QuadNumAligningOriginAtInfinity> for QuadNumAligningOri
     fn sub_assign(&mut self, other: QuadNumAligningOriginAtInfinity) {
         let subtraction = QuadNumAligningOrigin::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([self.group0()[0], (self.group0()[1] - other.group0()[0]), (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (-other.group0()[0] + self.group0()[1]), (-other.group0()[1] + self.group0()[2])]),
         );
         *self = subtraction;
     }
@@ -7580,7 +7582,7 @@ impl std::ops::Sub<QuadNumOnOrigin> for QuadNumAligningOrigin {
     fn sub(self, other: QuadNumOnOrigin) -> Self::Output {
         let subtraction = QuadNumAligningOrigin::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([(self.group0()[0] - other.group0()[0]), self.group0()[1], (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([(-other.group0()[0] + self.group0()[0]), self.group0()[1], (-other.group0()[1] + self.group0()[2])]),
         );
         return subtraction;
     }
@@ -7589,7 +7591,7 @@ impl std::ops::SubAssign<QuadNumOnOrigin> for QuadNumAligningOrigin {
     fn sub_assign(&mut self, other: QuadNumOnOrigin) {
         let subtraction = QuadNumAligningOrigin::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([(self.group0()[0] - other.group0()[0]), self.group0()[1], (self.group0()[2] - other.group0()[1])]),
+            Simd32x3::from([(-other.group0()[0] + self.group0()[0]), self.group0()[1], (-other.group0()[1] + self.group0()[2])]),
         );
         *self = subtraction;
     }
@@ -7642,7 +7644,7 @@ impl std::ops::Sub<RoundPointAtOrigin> for QuadNumAligningOrigin {
     fn sub(self, other: RoundPointAtOrigin) -> Self::Output {
         let subtraction = QuadNumAligningOrigin::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([(self.group0()[0] - other.group0()[0]), (self.group0()[1] - other.group0()[1]), self.group0()[2]]),
+            Simd32x3::from([(-other.group0()[0] + self.group0()[0]), (-other.group0()[1] + self.group0()[1]), self.group0()[2]]),
         );
         return subtraction;
     }
@@ -7651,7 +7653,7 @@ impl std::ops::SubAssign<RoundPointAtOrigin> for QuadNumAligningOrigin {
     fn sub_assign(&mut self, other: RoundPointAtOrigin) {
         let subtraction = QuadNumAligningOrigin::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([(self.group0()[0] - other.group0()[0]), (self.group0()[1] - other.group0()[1]), self.group0()[2]]),
+            Simd32x3::from([(-other.group0()[0] + self.group0()[0]), (-other.group0()[1] + self.group0()[1]), self.group0()[2]]),
         );
         *self = subtraction;
     }

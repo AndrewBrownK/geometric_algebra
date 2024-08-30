@@ -1662,7 +1662,7 @@ impl std::ops::Add<MultiVector> for MysteryQuadNum {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[0], (self.group0()[1] + other.group0()[1])]),
+            Simd32x2::from([other.group0()[0], (other.group0()[1] + self.group0()[1])]),
             // e1, e2, e3, e4
             other.group1(),
             // e5
@@ -1785,13 +1785,13 @@ impl std::ops::Add<MysteryQuadNum> for MysteryQuadNum {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn add(self, other: MysteryQuadNum) -> Self::Output {
-        let addition = MysteryQuadNum::from_groups(/* e321, e12345 */ (self.group0() + other.group0()));
+        let addition = MysteryQuadNum::from_groups(/* e321, e12345 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<MysteryQuadNum> for MysteryQuadNum {
     fn add_assign(&mut self, other: MysteryQuadNum) {
-        let addition = MysteryQuadNum::from_groups(/* e321, e12345 */ (self.group0() + other.group0()));
+        let addition = MysteryQuadNum::from_groups(/* e321, e12345 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -6400,7 +6400,7 @@ impl std::ops::Sub<MultiVector> for MysteryQuadNum {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group0()[0] * -1.0), (self.group0()[1] - other.group0()[1])]),
+            Simd32x2::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self.group0()[1])]),
             // e1, e2, e3, e4
             (other.group1() * Simd32x4::from(-1.0)),
             // e5
@@ -6552,13 +6552,13 @@ impl std::ops::Sub<MysteryQuadNum> for MysteryQuadNum {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn sub(self, other: MysteryQuadNum) -> Self::Output {
-        let subtraction = MysteryQuadNum::from_groups(/* e321, e12345 */ (self.group0() - other.group0()));
+        let subtraction = MysteryQuadNum::from_groups(/* e321, e12345 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<MysteryQuadNum> for MysteryQuadNum {
     fn sub_assign(&mut self, other: MysteryQuadNum) {
-        let subtraction = MysteryQuadNum::from_groups(/* e321, e12345 */ (self.group0() - other.group0()));
+        let subtraction = MysteryQuadNum::from_groups(/* e321, e12345 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

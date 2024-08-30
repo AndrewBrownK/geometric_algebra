@@ -26,7 +26,7 @@ impl AntiWedge<AntiScalar> for AntiScalar {
     // f32        0        1        0
     fn anti_wedge(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        return AntiScalar::from_groups(/* e1234 */ (self[e1234] * other[e1234]));
+        return AntiScalar::from_groups(/* e1234 */ (other[e1234] * self[e1234]));
     }
 }
 impl AntiWedge<DualNum> for AntiScalar {
@@ -175,7 +175,7 @@ impl AntiWedge<AntiScalar> for DualNum {
     // no simd        0        2        0
     fn anti_wedge(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e1234 */ (self.group0() * Simd32x2::from(other[e1234])));
+        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(other[e1234]) * self.group0()));
     }
 }
 impl AntiWedge<DualNum> for DualNum {
@@ -185,8 +185,8 @@ impl AntiWedge<DualNum> for DualNum {
     // f32        1        3        0
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([
-            ((self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])),
-            (self.group0()[1] * other.group0()[1]),
+            ((other.group0()[0] * self.group0()[1]) + (other.group0()[1] * self.group0()[0])),
+            (other.group0()[1] * self.group0()[1]),
         ]));
     }
 }
@@ -332,9 +332,9 @@ impl AntiWedge<AntiScalar> for Flector {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (self.group0() * Simd32x4::from(other[e1234])),
+            (Simd32x4::from(other[e1234]) * self.group0()),
             // e423, e431, e412, e321
-            (self.group1() * Simd32x4::from(other[e1234])),
+            (Simd32x4::from(other[e1234]) * self.group1()),
         );
     }
 }
@@ -347,9 +347,9 @@ impl AntiWedge<DualNum> for Flector {
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (self.group0() * Simd32x4::from(other.group0()[1])),
+            (Simd32x4::from(other.group0()[1]) * self.group0()),
             // e423, e431, e412, e321
-            (self.group1() * Simd32x4::from(other.group0()[1])),
+            (Simd32x4::from(other.group0()[1]) * self.group1()),
         );
     }
 }
@@ -366,23 +366,22 @@ impl AntiWedge<Flector> for Flector {
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                (-(self.group1()[1] * other.group1()[2]) + (self.group1()[2] * other.group1()[1])),
-                ((self.group1()[0] * other.group1()[2]) - (self.group1()[2] * other.group1()[0])),
-                (-(self.group1()[0] * other.group1()[1]) + (self.group1()[1] * other.group1()[0])),
+                ((other.group1()[1] * self.group1()[2]) - (other.group1()[2] * self.group1()[1])),
+                (-(other.group1()[0] * self.group1()[2]) + (other.group1()[2] * self.group1()[0])),
+                ((other.group1()[0] * self.group1()[1]) - (other.group1()[1] * self.group1()[0])),
                 0.0,
             ]),
             // e23, e31, e12, scalar
-            ((Simd32x4::from(other.group1()[3]) * Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[3]]))
-                - (Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[3]]))
-                + Simd32x4::from([
-                    0.0,
-                    0.0,
-                    0.0,
-                    (-(self.group1()[2] * other.group0()[2]) - (self.group1()[1] * other.group0()[1]) - (self.group1()[0] * other.group0()[0])
-                        + (self.group0()[2] * other.group1()[2])
-                        + (self.group0()[0] * other.group1()[0])
-                        + (self.group0()[1] * other.group1()[1])),
-                ])),
+            (Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                (-(other.group0()[1] * self.group1()[1]) - (other.group0()[2] * self.group1()[2]) - (other.group0()[3] * self.group1()[3])
+                    + (other.group1()[1] * self.group0()[1])
+                    + (other.group1()[2] * self.group0()[2])
+                    + (other.group1()[3] * self.group0()[3])),
+            ]) - (Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[0]]) * swizzle!(self.group1(), 3, 3, 3, 0))
+                + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[0]]) * swizzle!(other.group1(), 3, 3, 3, 0))),
         );
     }
 }
@@ -414,13 +413,12 @@ impl AntiWedge<Line> for Flector {
     fn anti_wedge(self, other: Line) -> Self::Output {
         return Point::from_groups(
             // e1, e2, e3, e4
-            (-(swizzle!(self.group1(), 1, 2, 0, 2) * Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[2]]))
-                + Simd32x4::from([
-                    ((self.group1()[3] * other.group0()[0]) + (self.group1()[2] * other.group1()[1])),
-                    ((self.group1()[3] * other.group0()[1]) + (self.group1()[0] * other.group1()[2])),
-                    ((self.group1()[3] * other.group0()[2]) + (self.group1()[1] * other.group1()[0])),
-                    (-(self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
-                ])),
+            (Simd32x4::from([
+                ((other.group0()[0] * self.group1()[3]) + (other.group1()[1] * self.group1()[2])),
+                ((other.group0()[1] * self.group1()[3]) + (other.group1()[2] * self.group1()[0])),
+                ((other.group0()[2] * self.group1()[3]) + (other.group1()[0] * self.group1()[1])),
+                (-(other.group0()[1] * self.group1()[1]) - (other.group0()[2] * self.group1()[2])),
+            ]) - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * swizzle!(self.group1(), 1, 2, 0, 0))),
         );
     }
 }
@@ -436,16 +434,15 @@ impl AntiWedge<Motor> for Flector {
     fn anti_wedge(self, other: Motor) -> Self::Output {
         return Flector::from_groups(
             // e1, e2, e3, e4
-            ((other.group0() * Simd32x4::from([self.group1()[3], self.group1()[3], self.group1()[3], self.group0()[3]]))
-                - (swizzle!(self.group1(), 1, 2, 0, 2) * Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[2]]))
-                + Simd32x4::from([
-                    ((self.group1()[2] * other.group1()[1]) + (self.group0()[0] * other.group0()[3])),
-                    ((self.group0()[1] * other.group0()[3]) + (self.group1()[0] * other.group1()[2])),
-                    ((self.group1()[1] * other.group1()[0]) + (self.group0()[2] * other.group0()[3])),
-                    (-(self.group1()[1] * other.group0()[1]) - (self.group1()[0] * other.group0()[0])),
-                ])),
+            (Simd32x4::from([
+                ((self.group1()[2] * other.group1()[1]) + (self.group1()[3] * other.group0()[0])),
+                ((self.group1()[0] * other.group1()[2]) + (self.group1()[3] * other.group0()[1])),
+                ((self.group1()[1] * other.group1()[0]) + (self.group1()[3] * other.group0()[2])),
+                (-(self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group0()[3]) * self.group0())
+                - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * swizzle!(self.group1(), 1, 2, 0, 0))),
             // e423, e431, e412, e321
-            (self.group1() * Simd32x4::from(other.group0()[3])),
+            (Simd32x4::from(other.group0()[3]) * self.group1()),
         );
     }
 }
@@ -463,25 +460,21 @@ impl AntiWedge<MultiVector> for Flector {
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
-                (-(self.group1()[3] * other.group1()[3])
-                    - (self.group1()[2] * other.group1()[2])
-                    - (self.group1()[1] * other.group1()[1])
+                ((self.group0()[0] * other.group4()[0]) + (self.group0()[1] * other.group4()[1]) + (self.group0()[2] * other.group4()[2]) + (self.group0()[3] * other.group4()[3])
                     - (self.group1()[0] * other.group1()[0])
-                    + (self.group0()[3] * other.group4()[3])
-                    + (self.group0()[2] * other.group4()[2])
-                    + (self.group0()[0] * other.group4()[0])
-                    + (self.group0()[1] * other.group4()[1])),
+                    - (self.group1()[1] * other.group1()[1])
+                    - (self.group1()[2] * other.group1()[2])
+                    - (self.group1()[3] * other.group1()[3])),
                 0.0,
             ]),
             // e1, e2, e3, e4
-            ((self.group0() * Simd32x4::from(other.group0()[1]))
-                - (swizzle!(self.group1(), 1, 2, 0, 2) * Simd32x4::from([other.group3()[2], other.group3()[0], other.group3()[1], other.group2()[2]]))
-                + Simd32x4::from([
-                    ((self.group1()[3] * other.group2()[0]) + (self.group1()[2] * other.group3()[1])),
-                    ((self.group1()[3] * other.group2()[1]) + (self.group1()[0] * other.group3()[2])),
-                    ((self.group1()[3] * other.group2()[2]) + (self.group1()[1] * other.group3()[0])),
-                    (-(self.group1()[1] * other.group2()[1]) - (self.group1()[0] * other.group2()[0])),
-                ])),
+            (Simd32x4::from([
+                ((other.group2()[0] * self.group1()[3]) + (other.group3()[1] * self.group1()[2])),
+                ((other.group2()[1] * self.group1()[3]) + (other.group3()[2] * self.group1()[0])),
+                ((other.group2()[2] * self.group1()[3]) + (other.group3()[0] * self.group1()[1])),
+                (-(other.group2()[1] * self.group1()[1]) - (other.group2()[2] * self.group1()[2])),
+            ]) + (Simd32x4::from(other.group0()[1]) * self.group0())
+                - (Simd32x4::from([other.group3()[2], other.group3()[0], other.group3()[1], other.group2()[0]]) * swizzle!(self.group1(), 1, 2, 0, 0))),
             // e41, e42, e43
             Simd32x3::from([
                 (-(self.group1()[1] * other.group4()[2]) + (self.group1()[2] * other.group4()[1])),
@@ -489,10 +482,10 @@ impl AntiWedge<MultiVector> for Flector {
                 (-(self.group1()[0] * other.group4()[1]) + (self.group1()[1] * other.group4()[0])),
             ]),
             // e23, e31, e12
-            ((Simd32x3::from(other.group4()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
-                - (Simd32x3::from(self.group1()[3]) * Simd32x3::from([other.group4()[0], other.group4()[1], other.group4()[2]]))),
+            (-(Simd32x3::from(self.group1()[3]) * Simd32x3::from([other.group4()[0], other.group4()[1], other.group4()[2]]))
+                + (Simd32x3::from(other.group4()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))),
             // e423, e431, e412, e321
-            (self.group1() * Simd32x4::from(other.group0()[1])),
+            (Simd32x4::from(other.group0()[1]) * self.group1()),
         );
     }
 }
@@ -525,13 +518,12 @@ impl AntiWedge<Plane> for Flector {
                 0.0,
             ]),
             // e23, e31, e12, scalar
-            ((Simd32x4::from(other.group0()[3]) * Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[3]]))
-                + Simd32x4::from([
-                    ((self.group1()[3] * other.group0()[0]) * -1.0),
-                    ((self.group1()[3] * other.group0()[1]) * -1.0),
-                    ((self.group1()[3] * other.group0()[2]) * -1.0),
-                    ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
-                ])),
+            (Simd32x4::from([
+                ((self.group1()[3] * other.group0()[0]) * -1.0),
+                ((self.group1()[3] * other.group0()[1]) * -1.0),
+                ((self.group1()[3] * other.group0()[2]) * -1.0),
+                ((self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[3] * other.group0()[3])),
+            ]) + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[0]]) * swizzle!(other.group0(), 3, 3, 3, 0))),
         );
     }
 }
@@ -543,7 +535,7 @@ impl AntiWedge<Point> for Flector {
     fn anti_wedge(self, other: Point) -> Self::Output {
         return Scalar::from_groups(
             // scalar
-            (-(self.group1()[3] * other.group0()[3]) - (self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
+            (-(self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2]) - (self.group1()[3] * other.group0()[3])),
         );
     }
 }
@@ -555,7 +547,7 @@ impl AntiWedge<AntiScalar> for Horizon {
     // f32        0        1        0
     fn anti_wedge(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        return Horizon::from_groups(/* e321 */ (self[e321] * other[e1234]));
+        return Horizon::from_groups(/* e321 */ (other[e1234] * self[e321]));
     }
 }
 impl AntiWedge<DualNum> for Horizon {
@@ -565,7 +557,7 @@ impl AntiWedge<DualNum> for Horizon {
     // f32        0        1        0
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return Horizon::from_groups(/* e321 */ (self[e321] * other.group0()[1]));
+        return Horizon::from_groups(/* e321 */ (other.group0()[1] * self[e321]));
     }
 }
 impl AntiWedge<Flector> for Horizon {
@@ -592,9 +584,9 @@ impl AntiWedge<Line> for Horizon {
     fn anti_wedge(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([
-            (self[e321] * other.group0()[0]),
-            (self[e321] * other.group0()[1]),
-            (self[e321] * other.group0()[2]),
+            (other.group0()[0] * self[e321]),
+            (other.group0()[1] * self[e321]),
+            (other.group0()[2] * self[e321]),
             0.0,
         ]));
     }
@@ -608,9 +600,9 @@ impl AntiWedge<Motor> for Horizon {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([(self[e321] * other.group0()[0]), (self[e321] * other.group0()[1]), (self[e321] * other.group0()[2]), 0.0]),
+            Simd32x4::from([(other.group0()[0] * self[e321]), (other.group0()[1] * self[e321]), (other.group0()[2] * self[e321]), 0.0]),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self[e321] * other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * self[e321])]),
         );
     }
 }
@@ -627,15 +619,15 @@ impl AntiWedge<MultiVector> for Horizon {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([(self[e321] * other.group1()[3] * -1.0), 0.0]),
+            Simd32x2::from([(other.group1()[3] * self[e321] * -1.0), 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([(self[e321] * other.group2()[0]), (self[e321] * other.group2()[1]), (self[e321] * other.group2()[2]), 0.0]),
+            Simd32x4::from([(other.group2()[0] * self[e321]), (other.group2()[1] * self[e321]), (other.group2()[2] * self[e321]), 0.0]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
             (Simd32x3::from(self[e321]) * Simd32x3::from([other.group4()[0], other.group4()[1], other.group4()[2]]) * Simd32x3::from(-1.0)),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self[e321] * other.group0()[1])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * self[e321])]),
         );
     }
 }
@@ -672,7 +664,7 @@ impl AntiWedge<Point> for Horizon {
     // f32        0        2        0
     fn anti_wedge(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e321] * other.group0()[3] * -1.0));
+        return Scalar::from_groups(/* scalar */ (other.group0()[3] * self[e321] * -1.0));
     }
 }
 impl InfixAntiWedge for Line {}
@@ -686,9 +678,9 @@ impl AntiWedge<AntiScalar> for Line {
         use crate::elements::*;
         return Line::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(other[e1234])),
+            (Simd32x3::from(other[e1234]) * self.group0()),
             // e23, e31, e12
-            (self.group1() * Simd32x3::from(other[e1234])),
+            (Simd32x3::from(other[e1234]) * self.group1()),
         );
     }
 }
@@ -701,9 +693,9 @@ impl AntiWedge<DualNum> for Line {
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return Line::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(other.group0()[1])),
+            (Simd32x3::from(other.group0()[1]) * self.group0()),
             // e23, e31, e12
-            (self.group1() * Simd32x3::from(other.group0()[1])),
+            (Simd32x3::from(other.group0()[1]) * self.group1()),
         );
     }
 }
@@ -719,13 +711,12 @@ impl AntiWedge<Flector> for Line {
     fn anti_wedge(self, other: Flector) -> Self::Output {
         return Point::from_groups(
             // e1, e2, e3, e4
-            (-(swizzle!(other.group1(), 1, 2, 0, 2) * Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[2]]))
-                + Simd32x4::from([
-                    ((self.group0()[0] * other.group1()[3]) + (self.group1()[1] * other.group1()[2])),
-                    ((self.group1()[2] * other.group1()[0]) + (self.group0()[1] * other.group1()[3])),
-                    ((self.group0()[2] * other.group1()[3]) + (self.group1()[0] * other.group1()[1])),
-                    (-(self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
-                ])),
+            (Simd32x4::from([
+                ((self.group0()[0] * other.group1()[3]) + (self.group1()[1] * other.group1()[2])),
+                ((self.group0()[1] * other.group1()[3]) + (self.group1()[2] * other.group1()[0])),
+                ((self.group0()[2] * other.group1()[3]) + (self.group1()[0] * other.group1()[1])),
+                (-(self.group0()[1] * other.group1()[1]) - (self.group0()[2] * other.group1()[2])),
+            ]) - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(other.group1(), 1, 2, 0, 0))),
         );
     }
 }
@@ -752,12 +743,12 @@ impl AntiWedge<Line> for Line {
     fn anti_wedge(self, other: Line) -> Self::Output {
         return Scalar::from_groups(
             // scalar
-            (-(self.group1()[2] * other.group0()[2])
-                - (self.group1()[1] * other.group0()[1])
-                - (self.group1()[0] * other.group0()[0])
-                - (self.group0()[2] * other.group1()[2])
-                - (self.group0()[0] * other.group1()[0])
-                - (self.group0()[1] * other.group1()[1])),
+            (-(other.group0()[0] * self.group1()[0])
+                - (other.group0()[1] * self.group1()[1])
+                - (other.group0()[2] * self.group1()[2])
+                - (other.group1()[0] * self.group0()[0])
+                - (other.group1()[1] * self.group0()[1])
+                - (other.group1()[2] * self.group0()[2])),
         );
     }
 }
@@ -780,12 +771,12 @@ impl AntiWedge<Motor> for Line {
                 (self.group1()[0] * other.group0()[3]),
                 (self.group1()[1] * other.group0()[3]),
                 (self.group1()[2] * other.group0()[3]),
-                (-(self.group1()[2] * other.group0()[2])
-                    - (self.group1()[1] * other.group0()[1])
-                    - (self.group1()[0] * other.group0()[0])
+                (-(self.group0()[0] * other.group1()[0])
+                    - (self.group0()[1] * other.group1()[1])
                     - (self.group0()[2] * other.group1()[2])
-                    - (self.group0()[0] * other.group1()[0])
-                    - (self.group0()[1] * other.group1()[1])),
+                    - (self.group1()[0] * other.group0()[0])
+                    - (self.group1()[1] * other.group0()[1])
+                    - (self.group1()[2] * other.group0()[2])),
             ]),
         );
     }
@@ -804,26 +795,25 @@ impl AntiWedge<MultiVector> for Line {
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
-                (-(self.group1()[2] * other.group2()[2])
-                    - (self.group1()[1] * other.group2()[1])
-                    - (self.group1()[0] * other.group2()[0])
+                (-(self.group0()[0] * other.group3()[0])
+                    - (self.group0()[1] * other.group3()[1])
                     - (self.group0()[2] * other.group3()[2])
-                    - (self.group0()[0] * other.group3()[0])
-                    - (self.group0()[1] * other.group3()[1])),
+                    - (self.group1()[0] * other.group2()[0])
+                    - (self.group1()[1] * other.group2()[1])
+                    - (self.group1()[2] * other.group2()[2])),
                 0.0,
             ]),
             // e1, e2, e3, e4
-            (-(swizzle!(other.group4(), 1, 2, 0, 2) * Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[2]]))
-                + Simd32x4::from([
-                    ((self.group0()[0] * other.group4()[3]) + (self.group1()[1] * other.group4()[2])),
-                    ((self.group1()[2] * other.group4()[0]) + (self.group0()[1] * other.group4()[3])),
-                    ((self.group0()[2] * other.group4()[3]) + (self.group1()[0] * other.group4()[1])),
-                    (-(self.group0()[0] * other.group4()[0]) - (self.group0()[1] * other.group4()[1])),
-                ])),
+            (Simd32x4::from([
+                ((self.group0()[0] * other.group4()[3]) + (self.group1()[1] * other.group4()[2])),
+                ((self.group0()[1] * other.group4()[3]) + (self.group1()[2] * other.group4()[0])),
+                ((self.group0()[2] * other.group4()[3]) + (self.group1()[0] * other.group4()[1])),
+                (-(self.group0()[1] * other.group4()[1]) - (self.group0()[2] * other.group4()[2])),
+            ]) - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(other.group4(), 1, 2, 0, 0))),
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(other.group0()[1])),
+            (Simd32x3::from(other.group0()[1]) * self.group0()),
             // e23, e31, e12
-            (self.group1() * Simd32x3::from(other.group0()[1])),
+            (Simd32x3::from(other.group0()[1]) * self.group1()),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -841,13 +831,12 @@ impl AntiWedge<Plane> for Line {
     fn anti_wedge(self, other: Plane) -> Self::Output {
         return Point::from_groups(
             // e1, e2, e3, e4
-            (-(swizzle!(other.group0(), 1, 2, 0, 2) * Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[2]]))
-                + Simd32x4::from([
-                    ((self.group0()[0] * other.group0()[3]) + (self.group1()[1] * other.group0()[2])),
-                    ((self.group1()[2] * other.group0()[0]) + (self.group0()[1] * other.group0()[3])),
-                    ((self.group0()[2] * other.group0()[3]) + (self.group1()[0] * other.group0()[1])),
-                    (-(self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
-                ])),
+            (Simd32x4::from([
+                ((self.group0()[0] * other.group0()[3]) + (self.group1()[1] * other.group0()[2])),
+                ((self.group0()[1] * other.group0()[3]) + (self.group1()[2] * other.group0()[0])),
+                ((self.group0()[2] * other.group0()[3]) + (self.group1()[0] * other.group0()[1])),
+                (-(self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
         );
     }
 }
@@ -862,9 +851,9 @@ impl AntiWedge<AntiScalar> for Motor {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (self.group0() * Simd32x4::from(other[e1234])),
+            (Simd32x4::from(other[e1234]) * self.group0()),
             // e23, e31, e12, scalar
-            (self.group1() * Simd32x4::from(other[e1234])),
+            (Simd32x4::from(other[e1234]) * self.group1()),
         );
     }
 }
@@ -880,13 +869,13 @@ impl AntiWedge<DualNum> for Motor {
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (self.group0() * Simd32x4::from(other.group0()[1])),
+            (Simd32x4::from(other.group0()[1]) * self.group0()),
             // e23, e31, e12, scalar
             Simd32x4::from([
-                (self.group1()[0] * other.group0()[1]),
-                (self.group1()[1] * other.group0()[1]),
-                (self.group1()[2] * other.group0()[1]),
-                ((self.group0()[3] * other.group0()[0]) + (self.group1()[3] * other.group0()[1])),
+                (other.group0()[1] * self.group1()[0]),
+                (other.group0()[1] * self.group1()[1]),
+                (other.group0()[1] * self.group1()[2]),
+                ((other.group0()[0] * self.group0()[3]) + (other.group0()[1] * self.group1()[3])),
             ]),
         );
     }
@@ -903,14 +892,13 @@ impl AntiWedge<Flector> for Motor {
     fn anti_wedge(self, other: Flector) -> Self::Output {
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (-(swizzle!(other.group1(), 1, 2, 0, 2) * Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[2]]))
-                + (self.group0() * Simd32x4::from([other.group1()[3], other.group1()[3], other.group1()[3], other.group0()[3]]))
-                + Simd32x4::from([
-                    ((self.group1()[1] * other.group1()[2]) + (self.group0()[3] * other.group0()[0])),
-                    ((self.group1()[2] * other.group1()[0]) + (self.group0()[3] * other.group0()[1])),
-                    ((self.group1()[0] * other.group1()[1]) + (self.group0()[3] * other.group0()[2])),
-                    (-(self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
-                ])),
+            (Simd32x4::from([
+                ((other.group1()[2] * self.group1()[1]) + (other.group1()[3] * self.group0()[0])),
+                ((other.group1()[0] * self.group1()[2]) + (other.group1()[3] * self.group0()[1])),
+                ((other.group1()[1] * self.group1()[0]) + (other.group1()[3] * self.group0()[2])),
+                (-(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group0()[3]) * other.group0())
+                - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(other.group1(), 1, 2, 0, 0))),
             // e423, e431, e412, e321
             (Simd32x4::from(self.group0()[3]) * other.group1()),
         );
@@ -940,22 +928,22 @@ impl AntiWedge<Line> for Motor {
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                (self.group0()[3] * other.group0()[0]),
-                (self.group0()[3] * other.group0()[1]),
-                (self.group0()[3] * other.group0()[2]),
+                (other.group0()[0] * self.group0()[3]),
+                (other.group0()[1] * self.group0()[3]),
+                (other.group0()[2] * self.group0()[3]),
                 0.0,
             ]),
             // e23, e31, e12, scalar
             Simd32x4::from([
-                (self.group0()[3] * other.group1()[0]),
-                (self.group0()[3] * other.group1()[1]),
-                (self.group0()[3] * other.group1()[2]),
-                (-(self.group1()[2] * other.group0()[2])
-                    - (self.group1()[1] * other.group0()[1])
-                    - (self.group1()[0] * other.group0()[0])
-                    - (self.group0()[2] * other.group1()[2])
-                    - (self.group0()[0] * other.group1()[0])
-                    - (self.group0()[1] * other.group1()[1])),
+                (other.group1()[0] * self.group0()[3]),
+                (other.group1()[1] * self.group0()[3]),
+                (other.group1()[2] * self.group0()[3]),
+                (-(other.group0()[0] * self.group1()[0])
+                    - (other.group0()[1] * self.group1()[1])
+                    - (other.group0()[2] * self.group1()[2])
+                    - (other.group1()[0] * self.group0()[0])
+                    - (other.group1()[1] * self.group0()[1])
+                    - (other.group1()[2] * self.group0()[2])),
             ]),
         );
     }
@@ -973,25 +961,24 @@ impl AntiWedge<Motor> for Motor {
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                ((self.group0()[0] * other.group0()[3]) + (self.group0()[3] * other.group0()[0])),
-                ((self.group0()[1] * other.group0()[3]) + (self.group0()[3] * other.group0()[1])),
-                ((self.group0()[2] * other.group0()[3]) + (self.group0()[3] * other.group0()[2])),
-                (self.group0()[3] * other.group0()[3]),
+                ((other.group0()[0] * self.group0()[3]) + (other.group0()[3] * self.group0()[0])),
+                ((other.group0()[1] * self.group0()[3]) + (other.group0()[3] * self.group0()[1])),
+                ((other.group0()[2] * self.group0()[3]) + (other.group0()[3] * self.group0()[2])),
+                (other.group0()[3] * self.group0()[3]),
             ]),
             // e23, e31, e12, scalar
-            ((Simd32x4::from(self.group0()[3]) * other.group1())
-                + (self.group1() * Simd32x4::from(other.group0()[3]))
-                + Simd32x4::from([
-                    0.0,
-                    0.0,
-                    0.0,
-                    (-(self.group1()[2] * other.group0()[2])
-                        - (self.group1()[1] * other.group0()[1])
-                        - (self.group1()[0] * other.group0()[0])
-                        - (self.group0()[2] * other.group1()[2])
-                        - (self.group0()[0] * other.group1()[0])
-                        - (self.group0()[1] * other.group1()[1])),
-                ])),
+            (Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                (-(other.group0()[0] * self.group1()[0])
+                    - (other.group0()[1] * self.group1()[1])
+                    - (other.group0()[2] * self.group1()[2])
+                    - (other.group1()[0] * self.group0()[0])
+                    - (other.group1()[1] * self.group0()[1])
+                    - (other.group1()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(other.group0()[3]) * self.group1())
+                + (Simd32x4::from(self.group0()[3]) * other.group1())),
         );
     }
 }
@@ -1009,26 +996,27 @@ impl AntiWedge<MultiVector> for Motor {
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
-                ((self.group1()[3] * other.group0()[1]) - (self.group1()[2] * other.group2()[2]) - (self.group1()[1] * other.group2()[1]) - (self.group1()[0] * other.group2()[0])
-                    + (self.group0()[3] * other.group0()[0])
-                    - (self.group0()[2] * other.group3()[2])
-                    - (self.group0()[0] * other.group3()[0])
-                    - (self.group0()[1] * other.group3()[1])),
-                (self.group0()[3] * other.group0()[1]),
+                ((other.group0()[0] * self.group0()[3]) + (other.group0()[1] * self.group1()[3])
+                    - (other.group2()[0] * self.group1()[0])
+                    - (other.group2()[1] * self.group1()[1])
+                    - (other.group2()[2] * self.group1()[2])
+                    - (other.group3()[0] * self.group0()[0])
+                    - (other.group3()[1] * self.group0()[1])
+                    - (other.group3()[2] * self.group0()[2])),
+                (other.group0()[1] * self.group0()[3]),
             ]),
             // e1, e2, e3, e4
-            (-(swizzle!(other.group4(), 1, 2, 0, 2) * Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[2]]))
-                + (self.group0() * Simd32x4::from([other.group4()[3], other.group4()[3], other.group4()[3], other.group1()[3]]))
-                + Simd32x4::from([
-                    ((self.group1()[1] * other.group4()[2]) + (self.group0()[3] * other.group1()[0])),
-                    ((self.group1()[2] * other.group4()[0]) + (self.group0()[3] * other.group1()[1])),
-                    ((self.group1()[0] * other.group4()[1]) + (self.group0()[3] * other.group1()[2])),
-                    (-(self.group0()[0] * other.group4()[0]) - (self.group0()[1] * other.group4()[1])),
-                ])),
+            (Simd32x4::from([
+                ((self.group0()[3] * other.group1()[0]) + (self.group1()[1] * other.group4()[2])),
+                ((self.group0()[3] * other.group1()[1]) + (self.group1()[2] * other.group4()[0])),
+                ((self.group0()[3] * other.group1()[2]) + (self.group1()[0] * other.group4()[1])),
+                (-(self.group0()[1] * other.group4()[1]) - (self.group0()[2] * other.group4()[2])),
+            ]) - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(other.group4(), 1, 2, 0, 0))
+                + (Simd32x4::from([other.group4()[3], other.group4()[3], other.group4()[3], other.group1()[3]]) * self.group0())),
             // e41, e42, e43
             ((Simd32x3::from(other.group0()[1]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])) + (Simd32x3::from(self.group0()[3]) * other.group2())),
             // e23, e31, e12
-            ((Simd32x3::from(self.group0()[3]) * other.group3()) + (Simd32x3::from(other.group0()[1]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))),
+            ((Simd32x3::from(other.group0()[1]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]])) + (Simd32x3::from(self.group0()[3]) * other.group3())),
             // e423, e431, e412, e321
             (Simd32x4::from(self.group0()[3]) * other.group4()),
         );
@@ -1056,13 +1044,12 @@ impl AntiWedge<Plane> for Motor {
     fn anti_wedge(self, other: Plane) -> Self::Output {
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (-(swizzle!(other.group0(), 1, 2, 0, 2) * Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[2]]))
-                + Simd32x4::from([
-                    ((self.group0()[0] * other.group0()[3]) + (self.group1()[1] * other.group0()[2])),
-                    ((self.group1()[2] * other.group0()[0]) + (self.group0()[1] * other.group0()[3])),
-                    ((self.group0()[2] * other.group0()[3]) + (self.group1()[0] * other.group0()[1])),
-                    (-(self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
-                ])),
+            (Simd32x4::from([
+                ((self.group0()[0] * other.group0()[3]) + (self.group1()[1] * other.group0()[2])),
+                ((self.group0()[1] * other.group0()[3]) + (self.group1()[2] * other.group0()[0])),
+                ((self.group0()[2] * other.group0()[3]) + (self.group1()[0] * other.group0()[1])),
+                (-(self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
             // e423, e431, e412, e321
             (Simd32x4::from(self.group0()[3]) * other.group0()),
         );
@@ -1103,15 +1090,15 @@ impl AntiWedge<AntiScalar> for MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            (self.group0() * Simd32x2::from(other[e1234])),
+            (Simd32x2::from(other[e1234]) * self.group0()),
             // e1, e2, e3, e4
-            (self.group1() * Simd32x4::from(other[e1234])),
+            (Simd32x4::from(other[e1234]) * self.group1()),
             // e41, e42, e43
-            (self.group2() * Simd32x3::from(other[e1234])),
+            (Simd32x3::from(other[e1234]) * self.group2()),
             // e23, e31, e12
-            (self.group3() * Simd32x3::from(other[e1234])),
+            (Simd32x3::from(other[e1234]) * self.group3()),
             // e423, e431, e412, e321
-            (self.group4() * Simd32x4::from(other[e1234])),
+            (Simd32x4::from(other[e1234]) * self.group4()),
         );
     }
 }
@@ -1129,17 +1116,17 @@ impl AntiWedge<DualNum> for MultiVector {
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
-                ((self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])),
-                (self.group0()[1] * other.group0()[1]),
+                ((other.group0()[0] * self.group0()[1]) + (other.group0()[1] * self.group0()[0])),
+                (other.group0()[1] * self.group0()[1]),
             ]),
             // e1, e2, e3, e4
-            (self.group1() * Simd32x4::from(other.group0()[1])),
+            (Simd32x4::from(other.group0()[1]) * self.group1()),
             // e41, e42, e43
-            (self.group2() * Simd32x3::from(other.group0()[1])),
+            (Simd32x3::from(other.group0()[1]) * self.group2()),
             // e23, e31, e12
-            (self.group3() * Simd32x3::from(other.group0()[1])),
+            (Simd32x3::from(other.group0()[1]) * self.group3()),
             // e423, e431, e412, e321
-            (self.group4() * Simd32x4::from(other.group0()[1])),
+            (Simd32x4::from(other.group0()[1]) * self.group4()),
         );
     }
 }
@@ -1157,30 +1144,29 @@ impl AntiWedge<Flector> for MultiVector {
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
-                (-(self.group4()[3] * other.group0()[3])
-                    - (self.group4()[2] * other.group0()[2])
-                    - (self.group4()[1] * other.group0()[1])
-                    - (self.group4()[0] * other.group0()[0])
-                    + (self.group1()[3] * other.group1()[3])
-                    + (self.group1()[2] * other.group1()[2])
-                    + (self.group1()[0] * other.group1()[0])
-                    + (self.group1()[1] * other.group1()[1])),
+                (-(other.group0()[0] * self.group4()[0])
+                    - (other.group0()[1] * self.group4()[1])
+                    - (other.group0()[2] * self.group4()[2])
+                    - (other.group0()[3] * self.group4()[3])
+                    + (other.group1()[0] * self.group1()[0])
+                    + (other.group1()[1] * self.group1()[1])
+                    + (other.group1()[2] * self.group1()[2])
+                    + (other.group1()[3] * self.group1()[3])),
                 0.0,
             ]),
             // e1, e2, e3, e4
-            (-(swizzle!(other.group1(), 1, 2, 0, 2) * Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group2()[2]]))
-                + (Simd32x4::from(self.group0()[1]) * other.group0())
-                + Simd32x4::from([
-                    ((self.group3()[1] * other.group1()[2]) + (self.group2()[0] * other.group1()[3])),
-                    ((self.group3()[2] * other.group1()[0]) + (self.group2()[1] * other.group1()[3])),
-                    ((self.group3()[0] * other.group1()[1]) + (self.group2()[2] * other.group1()[3])),
-                    (-(self.group2()[1] * other.group1()[1]) - (self.group2()[0] * other.group1()[0])),
-                ])),
+            (Simd32x4::from([
+                ((self.group2()[0] * other.group1()[3]) + (self.group3()[1] * other.group1()[2])),
+                ((self.group2()[1] * other.group1()[3]) + (self.group3()[2] * other.group1()[0])),
+                ((self.group2()[2] * other.group1()[3]) + (self.group3()[0] * other.group1()[1])),
+                (-(self.group2()[1] * other.group1()[1]) - (self.group2()[2] * other.group1()[2])),
+            ]) + (Simd32x4::from(self.group0()[1]) * other.group0())
+                - (Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group2()[0]]) * swizzle!(other.group1(), 1, 2, 0, 0))),
             // e41, e42, e43
             Simd32x3::from([
-                (-(self.group4()[1] * other.group1()[2]) + (self.group4()[2] * other.group1()[1])),
-                ((self.group4()[0] * other.group1()[2]) - (self.group4()[2] * other.group1()[0])),
-                (-(self.group4()[0] * other.group1()[1]) + (self.group4()[1] * other.group1()[0])),
+                ((other.group1()[1] * self.group4()[2]) - (other.group1()[2] * self.group4()[1])),
+                (-(other.group1()[0] * self.group4()[2]) + (other.group1()[2] * self.group4()[0])),
+                ((other.group1()[0] * self.group4()[1]) - (other.group1()[1] * self.group4()[0])),
             ]),
             // e23, e31, e12
             ((Simd32x3::from(other.group1()[3]) * Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]))
@@ -1229,22 +1215,21 @@ impl AntiWedge<Line> for MultiVector {
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
-                (-(self.group3()[2] * other.group0()[2])
-                    - (self.group3()[1] * other.group0()[1])
-                    - (self.group3()[0] * other.group0()[0])
-                    - (self.group2()[2] * other.group1()[2])
-                    - (self.group2()[0] * other.group1()[0])
-                    - (self.group2()[1] * other.group1()[1])),
+                (-(other.group0()[0] * self.group3()[0])
+                    - (other.group0()[1] * self.group3()[1])
+                    - (other.group0()[2] * self.group3()[2])
+                    - (other.group1()[0] * self.group2()[0])
+                    - (other.group1()[1] * self.group2()[1])
+                    - (other.group1()[2] * self.group2()[2])),
                 0.0,
             ]),
             // e1, e2, e3, e4
-            (-(swizzle!(self.group4(), 1, 2, 0, 2) * Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[2]]))
-                + Simd32x4::from([
-                    ((self.group4()[3] * other.group0()[0]) + (self.group4()[2] * other.group1()[1])),
-                    ((self.group4()[3] * other.group0()[1]) + (self.group4()[0] * other.group1()[2])),
-                    ((self.group4()[3] * other.group0()[2]) + (self.group4()[1] * other.group1()[0])),
-                    (-(self.group4()[0] * other.group0()[0]) - (self.group4()[1] * other.group0()[1])),
-                ])),
+            (Simd32x4::from([
+                ((other.group0()[0] * self.group4()[3]) + (other.group1()[1] * self.group4()[2])),
+                ((other.group0()[1] * self.group4()[3]) + (other.group1()[2] * self.group4()[0])),
+                ((other.group0()[2] * self.group4()[3]) + (other.group1()[0] * self.group4()[1])),
+                (-(other.group0()[1] * self.group4()[1]) - (other.group0()[2] * self.group4()[2])),
+            ]) - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * swizzle!(self.group4(), 1, 2, 0, 0))),
             // e41, e42, e43
             (Simd32x3::from(self.group0()[1]) * other.group0()),
             // e23, e31, e12
@@ -1268,31 +1253,29 @@ impl AntiWedge<Motor> for MultiVector {
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
-                (-(self.group3()[2] * other.group0()[2])
-                    - (self.group3()[1] * other.group0()[1])
-                    - (self.group3()[0] * other.group0()[0])
-                    - (self.group2()[2] * other.group1()[2])
-                    - (self.group2()[1] * other.group1()[1])
+                ((self.group0()[0] * other.group0()[3]) + (self.group0()[1] * other.group1()[3])
                     - (self.group2()[0] * other.group1()[0])
-                    + (self.group0()[0] * other.group0()[3])
-                    + (self.group0()[1] * other.group1()[3])),
+                    - (self.group2()[1] * other.group1()[1])
+                    - (self.group2()[2] * other.group1()[2])
+                    - (self.group3()[0] * other.group0()[0])
+                    - (self.group3()[1] * other.group0()[1])
+                    - (self.group3()[2] * other.group0()[2])),
                 (self.group0()[1] * other.group0()[3]),
             ]),
             // e1, e2, e3, e4
-            ((other.group0() * Simd32x4::from([self.group4()[3], self.group4()[3], self.group4()[3], self.group1()[3]]))
-                - (swizzle!(self.group4(), 1, 2, 0, 2) * Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[2]]))
-                + Simd32x4::from([
-                    ((self.group4()[2] * other.group1()[1]) + (self.group1()[0] * other.group0()[3])),
-                    ((self.group1()[1] * other.group0()[3]) + (self.group4()[0] * other.group1()[2])),
-                    ((self.group4()[1] * other.group1()[0]) + (self.group1()[2] * other.group0()[3])),
-                    (-(self.group4()[1] * other.group0()[1]) - (self.group4()[0] * other.group0()[0])),
-                ])),
+            (Simd32x4::from([
+                ((other.group0()[3] * self.group1()[0]) + (other.group1()[1] * self.group4()[2])),
+                ((other.group0()[3] * self.group1()[1]) + (other.group1()[2] * self.group4()[0])),
+                ((other.group0()[3] * self.group1()[2]) + (other.group1()[0] * self.group4()[1])),
+                (-(other.group0()[1] * self.group4()[1]) - (other.group0()[2] * self.group4()[2])),
+            ]) - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * swizzle!(self.group4(), 1, 2, 0, 0))
+                + (Simd32x4::from([self.group4()[3], self.group4()[3], self.group4()[3], self.group1()[3]]) * other.group0())),
             // e41, e42, e43
-            ((Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])) + (self.group2() * Simd32x3::from(other.group0()[3]))),
+            ((Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])) + (Simd32x3::from(other.group0()[3]) * self.group2())),
             // e23, e31, e12
-            ((Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])) + (self.group3() * Simd32x3::from(other.group0()[3]))),
+            ((Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])) + (Simd32x3::from(other.group0()[3]) * self.group3())),
             // e423, e431, e412, e321
-            (self.group4() * Simd32x4::from(other.group0()[3])),
+            (Simd32x4::from(other.group0()[3]) * self.group4()),
         );
     }
 }
@@ -1310,62 +1293,50 @@ impl AntiWedge<MultiVector> for MultiVector {
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
-                (-(self.group4()[3] * other.group1()[3])
-                    - (self.group4()[2] * other.group1()[2])
-                    - (self.group4()[1] * other.group1()[1])
-                    - (self.group4()[0] * other.group1()[0])
-                    - (self.group3()[2] * other.group2()[2])
-                    - (self.group3()[1] * other.group2()[1])
-                    - (self.group3()[0] * other.group2()[0])
-                    - (self.group2()[2] * other.group3()[2])
-                    - (self.group2()[1] * other.group3()[1])
-                    - (self.group2()[0] * other.group3()[0])
-                    + (self.group1()[3] * other.group4()[3])
-                    + (self.group1()[2] * other.group4()[2])
-                    + (self.group1()[1] * other.group4()[1])
-                    + (self.group1()[0] * other.group4()[0])
-                    + (self.group0()[0] * other.group0()[1])
-                    + (self.group0()[1] * other.group0()[0])),
-                (self.group0()[1] * other.group0()[1]),
+                ((other.group0()[0] * self.group0()[1]) + (other.group0()[1] * self.group0()[0])
+                    - (other.group2()[0] * self.group3()[0])
+                    - (other.group2()[1] * self.group3()[1])
+                    - (other.group2()[2] * self.group3()[2])
+                    - (other.group3()[0] * self.group2()[0])
+                    - (other.group3()[1] * self.group2()[1])
+                    - (other.group3()[2] * self.group2()[2])
+                    - (other.group1()[0] * self.group4()[0])
+                    - (other.group1()[1] * self.group4()[1])
+                    - (other.group1()[2] * self.group4()[2])
+                    - (other.group1()[3] * self.group4()[3])
+                    + (other.group4()[0] * self.group1()[0])
+                    + (other.group4()[1] * self.group1()[1])
+                    + (other.group4()[2] * self.group1()[2])
+                    + (other.group4()[3] * self.group1()[3])),
+                (other.group0()[1] * self.group0()[1]),
             ]),
             // e1, e2, e3, e4
-            (-(swizzle!(self.group4(), 1, 2, 0, 2) * Simd32x4::from([other.group3()[2], other.group3()[0], other.group3()[1], other.group2()[2]]))
-                - (swizzle!(other.group4(), 1, 2, 0, 2) * Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group2()[2]]))
+            (Simd32x4::from([
+                ((other.group2()[0] * self.group4()[3]) + (other.group3()[1] * self.group4()[2]) + (self.group2()[0] * other.group4()[3]) + (self.group3()[1] * other.group4()[2])),
+                ((other.group2()[1] * self.group4()[3]) + (other.group3()[2] * self.group4()[0]) + (self.group2()[1] * other.group4()[3]) + (self.group3()[2] * other.group4()[0])),
+                ((other.group2()[2] * self.group4()[3]) + (other.group3()[0] * self.group4()[1]) + (self.group2()[2] * other.group4()[3]) + (self.group3()[0] * other.group4()[1])),
+                (-(other.group2()[1] * self.group4()[1])
+                    - (other.group2()[2] * self.group4()[2])
+                    - (self.group2()[1] * other.group4()[1])
+                    - (self.group2()[2] * other.group4()[2])),
+            ]) + (Simd32x4::from(other.group0()[1]) * self.group1())
                 + (Simd32x4::from(self.group0()[1]) * other.group1())
-                + (self.group1() * Simd32x4::from(other.group0()[1]))
-                + Simd32x4::from([
-                    ((self.group4()[3] * other.group2()[0])
-                        + (self.group4()[2] * other.group3()[1])
-                        + (self.group3()[1] * other.group4()[2])
-                        + (self.group2()[0] * other.group4()[3])),
-                    ((self.group4()[3] * other.group2()[1])
-                        + (self.group4()[0] * other.group3()[2])
-                        + (self.group3()[2] * other.group4()[0])
-                        + (self.group2()[1] * other.group4()[3])),
-                    ((self.group4()[3] * other.group2()[2])
-                        + (self.group4()[1] * other.group3()[0])
-                        + (self.group3()[0] * other.group4()[1])
-                        + (self.group2()[2] * other.group4()[3])),
-                    (-(self.group4()[1] * other.group2()[1])
-                        - (self.group4()[0] * other.group2()[0])
-                        - (self.group2()[1] * other.group4()[1])
-                        - (self.group2()[0] * other.group4()[0])),
-                ])),
+                - (Simd32x4::from([other.group3()[2], other.group3()[0], other.group3()[1], other.group2()[0]]) * swizzle!(self.group4(), 1, 2, 0, 0))
+                - (Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group2()[0]]) * swizzle!(other.group4(), 1, 2, 0, 0))),
             // e41, e42, e43
-            ((Simd32x3::from(self.group0()[1]) * other.group2())
-                + (self.group2() * Simd32x3::from(other.group0()[1]))
-                + Simd32x3::from([
-                    ((self.group4()[2] * other.group4()[1]) - (self.group4()[1] * other.group4()[2])),
-                    (-(self.group4()[2] * other.group4()[0]) + (self.group4()[0] * other.group4()[2])),
-                    ((self.group4()[1] * other.group4()[0]) - (self.group4()[0] * other.group4()[1])),
-                ])),
+            (Simd32x3::from([
+                ((other.group4()[1] * self.group4()[2]) - (other.group4()[2] * self.group4()[1])),
+                (-(other.group4()[0] * self.group4()[2]) + (other.group4()[2] * self.group4()[0])),
+                ((other.group4()[0] * self.group4()[1]) - (other.group4()[1] * self.group4()[0])),
+            ]) + (Simd32x3::from(other.group0()[1]) * self.group2())
+                + (Simd32x3::from(self.group0()[1]) * other.group2())),
             // e23, e31, e12
-            (-(Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group4()[0], other.group4()[1], other.group4()[2]]))
-                + (Simd32x3::from(other.group4()[3]) * Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]))
+            ((Simd32x3::from(other.group0()[1]) * self.group3())
                 + (Simd32x3::from(self.group0()[1]) * other.group3())
-                + (self.group3() * Simd32x3::from(other.group0()[1]))),
+                + (Simd32x3::from(other.group4()[3]) * Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]))
+                - (Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group4()[0], other.group4()[1], other.group4()[2]]))),
             // e423, e431, e412, e321
-            ((Simd32x4::from(self.group0()[1]) * other.group4()) + (self.group4() * Simd32x4::from(other.group0()[1]))),
+            ((Simd32x4::from(other.group0()[1]) * self.group4()) + (Simd32x4::from(self.group0()[1]) * other.group4())),
         );
     }
 }
@@ -1404,17 +1375,16 @@ impl AntiWedge<Plane> for MultiVector {
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
-                ((self.group1()[3] * other.group0()[3]) + (self.group1()[2] * other.group0()[2]) + (self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[1])),
+                ((self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[1]) + (self.group1()[2] * other.group0()[2]) + (self.group1()[3] * other.group0()[3])),
                 0.0,
             ]),
             // e1, e2, e3, e4
-            (-(swizzle!(other.group0(), 1, 2, 0, 2) * Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group2()[2]]))
-                + Simd32x4::from([
-                    ((self.group2()[0] * other.group0()[3]) + (self.group3()[1] * other.group0()[2])),
-                    ((self.group3()[2] * other.group0()[0]) + (self.group2()[1] * other.group0()[3])),
-                    ((self.group2()[2] * other.group0()[3]) + (self.group3()[0] * other.group0()[1])),
-                    (-(self.group2()[0] * other.group0()[0]) - (self.group2()[1] * other.group0()[1])),
-                ])),
+            (Simd32x4::from([
+                ((self.group2()[0] * other.group0()[3]) + (self.group3()[1] * other.group0()[2])),
+                ((self.group2()[1] * other.group0()[3]) + (self.group3()[2] * other.group0()[0])),
+                ((self.group2()[2] * other.group0()[3]) + (self.group3()[0] * other.group0()[1])),
+                (-(self.group2()[1] * other.group0()[1]) - (self.group2()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group2()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
             // e41, e42, e43
             Simd32x3::from([
                 (-(self.group4()[1] * other.group0()[2]) + (self.group4()[2] * other.group0()[1])),
@@ -1422,8 +1392,8 @@ impl AntiWedge<Plane> for MultiVector {
                 (-(self.group4()[0] * other.group0()[1]) + (self.group4()[1] * other.group0()[0])),
             ]),
             // e23, e31, e12
-            ((Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]))
-                - (Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))),
+            (-(Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                + (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]))),
             // e423, e431, e412, e321
             (Simd32x4::from(self.group0()[1]) * other.group0()),
         );
@@ -1442,10 +1412,10 @@ impl AntiWedge<Point> for MultiVector {
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
-                (-(self.group4()[3] * other.group0()[3])
+                (-(self.group4()[0] * other.group0()[0])
+                    - (self.group4()[1] * other.group0()[1])
                     - (self.group4()[2] * other.group0()[2])
-                    - (self.group4()[0] * other.group0()[0])
-                    - (self.group4()[1] * other.group0()[1])),
+                    - (self.group4()[3] * other.group0()[3])),
                 0.0,
             ]),
             // e1, e2, e3, e4
@@ -1477,7 +1447,7 @@ impl AntiWedge<AntiScalar> for Origin {
     // f32        0        1        0
     fn anti_wedge(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        return Origin::from_groups(/* e4 */ (self[e4] * other[e1234]));
+        return Origin::from_groups(/* e4 */ (other[e1234] * self[e4]));
     }
 }
 impl AntiWedge<DualNum> for Origin {
@@ -1487,7 +1457,7 @@ impl AntiWedge<DualNum> for Origin {
     // f32        0        1        0
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return Origin::from_groups(/* e4 */ (self[e4] * other.group0()[1]));
+        return Origin::from_groups(/* e4 */ (other.group0()[1] * self[e4]));
     }
 }
 impl AntiWedge<Flector> for Origin {
@@ -1497,7 +1467,7 @@ impl AntiWedge<Flector> for Origin {
     // f32        0        1        0
     fn anti_wedge(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e4] * other.group1()[3]));
+        return Scalar::from_groups(/* scalar */ (other.group1()[3] * self[e4]));
     }
 }
 impl AntiWedge<Horizon> for Origin {
@@ -1507,7 +1477,7 @@ impl AntiWedge<Horizon> for Origin {
     // f32        0        1        0
     fn anti_wedge(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e4] * other[e321]));
+        return Scalar::from_groups(/* scalar */ (other[e321] * self[e4]));
     }
 }
 impl AntiWedge<Motor> for Origin {
@@ -1517,7 +1487,7 @@ impl AntiWedge<Motor> for Origin {
     // f32        0        1        0
     fn anti_wedge(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        return Origin::from_groups(/* e4 */ (self[e4] * other.group0()[3]));
+        return Origin::from_groups(/* e4 */ (other.group0()[3] * self[e4]));
     }
 }
 impl AntiWedge<MultiVector> for Origin {
@@ -1529,9 +1499,9 @@ impl AntiWedge<MultiVector> for Origin {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([(self[e4] * other.group4()[3]), 0.0]),
+            Simd32x2::from([(other.group4()[3] * self[e4]), 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, (self[e4] * other.group0()[1])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * self[e4])]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -1548,7 +1518,7 @@ impl AntiWedge<Plane> for Origin {
     // f32        0        1        0
     fn anti_wedge(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e4] * other.group0()[3]));
+        return Scalar::from_groups(/* scalar */ (other.group0()[3] * self[e4]));
     }
 }
 impl InfixAntiWedge for Plane {}
@@ -1560,7 +1530,7 @@ impl AntiWedge<AntiScalar> for Plane {
     // no simd        0        4        0
     fn anti_wedge(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(other[e1234])));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(other[e1234]) * self.group0()));
     }
 }
 impl AntiWedge<DualNum> for Plane {
@@ -1570,7 +1540,7 @@ impl AntiWedge<DualNum> for Plane {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn anti_wedge(self, other: DualNum) -> Self::Output {
-        return Plane::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(other.group0()[1])));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(other.group0()[1]) * self.group0()));
     }
 }
 impl AntiWedge<Flector> for Plane {
@@ -1586,19 +1556,18 @@ impl AntiWedge<Flector> for Plane {
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                (-(self.group0()[1] * other.group1()[2]) + (self.group0()[2] * other.group1()[1])),
-                ((self.group0()[0] * other.group1()[2]) - (self.group0()[2] * other.group1()[0])),
-                (-(self.group0()[0] * other.group1()[1]) + (self.group0()[1] * other.group1()[0])),
+                ((other.group1()[1] * self.group0()[2]) - (other.group1()[2] * self.group0()[1])),
+                (-(other.group1()[0] * self.group0()[2]) + (other.group1()[2] * self.group0()[0])),
+                ((other.group1()[0] * self.group0()[1]) - (other.group1()[1] * self.group0()[0])),
                 0.0,
             ]),
             // e23, e31, e12, scalar
-            (-(Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[3]]))
-                + Simd32x4::from([
-                    (self.group0()[0] * other.group1()[3]),
-                    (self.group0()[1] * other.group1()[3]),
-                    (self.group0()[2] * other.group1()[3]),
-                    (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
-                ])),
+            (Simd32x4::from([
+                (other.group1()[3] * self.group0()[0]),
+                (other.group1()[3] * self.group0()[1]),
+                (other.group1()[3] * self.group0()[2]),
+                (-(other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2]) - (other.group0()[3] * self.group0()[3])),
+            ]) - (Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[0]]) * swizzle!(self.group0(), 3, 3, 3, 0))),
         );
     }
 }
@@ -1630,13 +1599,12 @@ impl AntiWedge<Line> for Plane {
     fn anti_wedge(self, other: Line) -> Self::Output {
         return Point::from_groups(
             // e1, e2, e3, e4
-            (-(swizzle!(self.group0(), 1, 2, 0, 2) * Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[2]]))
-                + Simd32x4::from([
-                    ((self.group0()[3] * other.group0()[0]) + (self.group0()[2] * other.group1()[1])),
-                    ((self.group0()[3] * other.group0()[1]) + (self.group0()[0] * other.group1()[2])),
-                    ((self.group0()[3] * other.group0()[2]) + (self.group0()[1] * other.group1()[0])),
-                    (-(self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
-                ])),
+            (Simd32x4::from([
+                ((other.group0()[0] * self.group0()[3]) + (other.group1()[1] * self.group0()[2])),
+                ((other.group0()[1] * self.group0()[3]) + (other.group1()[2] * self.group0()[0])),
+                ((other.group0()[2] * self.group0()[3]) + (other.group1()[0] * self.group0()[1])),
+                (-(other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
         );
     }
 }
@@ -1652,15 +1620,14 @@ impl AntiWedge<Motor> for Plane {
     fn anti_wedge(self, other: Motor) -> Self::Output {
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (-(swizzle!(self.group0(), 1, 2, 0, 2) * Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[2]]))
-                + Simd32x4::from([
-                    ((self.group0()[3] * other.group0()[0]) + (self.group0()[2] * other.group1()[1])),
-                    ((self.group0()[3] * other.group0()[1]) + (self.group0()[0] * other.group1()[2])),
-                    ((self.group0()[3] * other.group0()[2]) + (self.group0()[1] * other.group1()[0])),
-                    (-(self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
-                ])),
+            (Simd32x4::from([
+                ((other.group0()[0] * self.group0()[3]) + (other.group1()[1] * self.group0()[2])),
+                ((other.group0()[1] * self.group0()[3]) + (other.group1()[2] * self.group0()[0])),
+                ((other.group0()[2] * self.group0()[3]) + (other.group1()[0] * self.group0()[1])),
+                (-(other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
             // e423, e431, e412, e321
-            (self.group0() * Simd32x4::from(other.group0()[3])),
+            (Simd32x4::from(other.group0()[3]) * self.group0()),
         );
     }
 }
@@ -1678,31 +1645,30 @@ impl AntiWedge<MultiVector> for Plane {
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
-                (-(self.group0()[3] * other.group1()[3])
-                    - (self.group0()[2] * other.group1()[2])
-                    - (self.group0()[0] * other.group1()[0])
-                    - (self.group0()[1] * other.group1()[1])),
+                (-(other.group1()[0] * self.group0()[0])
+                    - (other.group1()[1] * self.group0()[1])
+                    - (other.group1()[2] * self.group0()[2])
+                    - (other.group1()[3] * self.group0()[3])),
                 0.0,
             ]),
             // e1, e2, e3, e4
-            (-(swizzle!(self.group0(), 1, 2, 0, 2) * Simd32x4::from([other.group3()[2], other.group3()[0], other.group3()[1], other.group2()[2]]))
-                + Simd32x4::from([
-                    ((self.group0()[3] * other.group2()[0]) + (self.group0()[2] * other.group3()[1])),
-                    ((self.group0()[3] * other.group2()[1]) + (self.group0()[0] * other.group3()[2])),
-                    ((self.group0()[3] * other.group2()[2]) + (self.group0()[1] * other.group3()[0])),
-                    (-(self.group0()[0] * other.group2()[0]) - (self.group0()[1] * other.group2()[1])),
-                ])),
+            (Simd32x4::from([
+                ((other.group2()[0] * self.group0()[3]) + (other.group3()[1] * self.group0()[2])),
+                ((other.group2()[1] * self.group0()[3]) + (other.group3()[2] * self.group0()[0])),
+                ((other.group2()[2] * self.group0()[3]) + (other.group3()[0] * self.group0()[1])),
+                (-(other.group2()[1] * self.group0()[1]) - (other.group2()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from([other.group3()[2], other.group3()[0], other.group3()[1], other.group2()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
             // e41, e42, e43
             Simd32x3::from([
-                (-(self.group0()[1] * other.group4()[2]) + (self.group0()[2] * other.group4()[1])),
-                ((self.group0()[0] * other.group4()[2]) - (self.group0()[2] * other.group4()[0])),
-                (-(self.group0()[0] * other.group4()[1]) + (self.group0()[1] * other.group4()[0])),
+                ((other.group4()[1] * self.group0()[2]) - (other.group4()[2] * self.group0()[1])),
+                (-(other.group4()[0] * self.group0()[2]) + (other.group4()[2] * self.group0()[0])),
+                ((other.group4()[0] * self.group0()[1]) - (other.group4()[1] * self.group0()[0])),
             ]),
             // e23, e31, e12
             ((Simd32x3::from(other.group4()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
                 - (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group4()[0], other.group4()[1], other.group4()[2]]))),
             // e423, e431, e412, e321
-            (self.group0() * Simd32x4::from(other.group0()[1])),
+            (Simd32x4::from(other.group0()[1]) * self.group0()),
         );
     }
 }
@@ -1729,9 +1695,9 @@ impl AntiWedge<Plane> for Plane {
         return Line::from_groups(
             // e41, e42, e43
             Simd32x3::from([
-                (-(self.group0()[1] * other.group0()[2]) + (self.group0()[2] * other.group0()[1])),
-                ((self.group0()[0] * other.group0()[2]) - (self.group0()[2] * other.group0()[0])),
-                (-(self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])),
+                ((other.group0()[1] * self.group0()[2]) - (other.group0()[2] * self.group0()[1])),
+                (-(other.group0()[0] * self.group0()[2]) + (other.group0()[2] * self.group0()[0])),
+                ((other.group0()[0] * self.group0()[1]) - (other.group0()[1] * self.group0()[0])),
             ]),
             // e23, e31, e12
             ((Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
@@ -1747,7 +1713,7 @@ impl AntiWedge<Point> for Plane {
     fn anti_wedge(self, other: Point) -> Self::Output {
         return Scalar::from_groups(
             // scalar
-            (-(self.group0()[3] * other.group0()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
+            (-(self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[3] * other.group0()[3])),
         );
     }
 }
@@ -1760,7 +1726,7 @@ impl AntiWedge<AntiScalar> for Point {
     // no simd        0        4        0
     fn anti_wedge(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        return Point::from_groups(/* e1, e2, e3, e4 */ (self.group0() * Simd32x4::from(other[e1234])));
+        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(other[e1234]) * self.group0()));
     }
 }
 impl AntiWedge<DualNum> for Point {
@@ -1770,7 +1736,7 @@ impl AntiWedge<DualNum> for Point {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn anti_wedge(self, other: DualNum) -> Self::Output {
-        return Point::from_groups(/* e1, e2, e3, e4 */ (self.group0() * Simd32x4::from(other.group0()[1])));
+        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(other.group0()[1]) * self.group0()));
     }
 }
 impl AntiWedge<Flector> for Point {
@@ -1781,7 +1747,7 @@ impl AntiWedge<Flector> for Point {
     fn anti_wedge(self, other: Flector) -> Self::Output {
         return Scalar::from_groups(
             // scalar
-            ((self.group0()[3] * other.group1()[3]) + (self.group0()[2] * other.group1()[2]) + (self.group0()[0] * other.group1()[0]) + (self.group0()[1] * other.group1()[1])),
+            ((other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group0()[1]) + (other.group1()[2] * self.group0()[2]) + (other.group1()[3] * self.group0()[3])),
         );
     }
 }
@@ -1802,7 +1768,7 @@ impl AntiWedge<Motor> for Point {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn anti_wedge(self, other: Motor) -> Self::Output {
-        return Point::from_groups(/* e1, e2, e3, e4 */ (self.group0() * Simd32x4::from(other.group0()[3])));
+        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(other.group0()[3]) * self.group0()));
     }
 }
 impl AntiWedge<MultiVector> for Point {
@@ -1818,11 +1784,11 @@ impl AntiWedge<MultiVector> for Point {
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([
-                ((self.group0()[3] * other.group4()[3]) + (self.group0()[2] * other.group4()[2]) + (self.group0()[0] * other.group4()[0]) + (self.group0()[1] * other.group4()[1])),
+                ((other.group4()[0] * self.group0()[0]) + (other.group4()[1] * self.group0()[1]) + (other.group4()[2] * self.group0()[2]) + (other.group4()[3] * self.group0()[3])),
                 0.0,
             ]),
             // e1, e2, e3, e4
-            (self.group0() * Simd32x4::from(other.group0()[1])),
+            (Simd32x4::from(other.group0()[1]) * self.group0()),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -1840,7 +1806,7 @@ impl AntiWedge<Plane> for Point {
     fn anti_wedge(self, other: Plane) -> Self::Output {
         return Scalar::from_groups(
             // scalar
-            ((self.group0()[3] * other.group0()[3]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
+            ((other.group0()[0] * self.group0()[0]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2]) + (other.group0()[3] * self.group0()[3])),
         );
     }
 }
@@ -1852,7 +1818,7 @@ impl AntiWedge<AntiScalar> for Scalar {
     // f32        0        1        0
     fn anti_wedge(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[scalar] * other[e1234]));
+        return Scalar::from_groups(/* scalar */ (other[e1234] * self[scalar]));
     }
 }
 impl AntiWedge<DualNum> for Scalar {
@@ -1862,7 +1828,7 @@ impl AntiWedge<DualNum> for Scalar {
     // f32        0        1        0
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[scalar] * other.group0()[1]));
+        return Scalar::from_groups(/* scalar */ (other.group0()[1] * self[scalar]));
     }
 }
 impl AntiWedge<Motor> for Scalar {
@@ -1872,7 +1838,7 @@ impl AntiWedge<Motor> for Scalar {
     // f32        0        1        0
     fn anti_wedge(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[scalar] * other.group0()[3]));
+        return Scalar::from_groups(/* scalar */ (other.group0()[3] * self[scalar]));
     }
 }
 impl AntiWedge<MultiVector> for Scalar {
@@ -1882,6 +1848,6 @@ impl AntiWedge<MultiVector> for Scalar {
     // f32        0        1        0
     fn anti_wedge(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[scalar] * other.group0()[1]));
+        return Scalar::from_groups(/* scalar */ (other.group0()[1] * self[scalar]));
     }
 }

@@ -89,13 +89,13 @@ impl std::ops::Add<Line> for Line {
     //   simd3        2        0        0
     // no simd        6        0        0
     fn add(self, other: Line) -> Self::Output {
-        let addition = Line::from_groups(/* e41, e42, e43 */ (self.group0() + other.group0()), /* e23, e31, e12 */ (self.group1() + other.group1()));
+        let addition = Line::from_groups(/* e41, e42, e43 */ (other.group0() + self.group0()), /* e23, e31, e12 */ (other.group1() + self.group1()));
         return addition;
     }
 }
 impl std::ops::AddAssign<Line> for Line {
     fn add_assign(&mut self, other: Line) {
-        let addition = Line::from_groups(/* e41, e42, e43 */ (self.group0() + other.group0()), /* e23, e31, e12 */ (self.group1() + other.group1()));
+        let addition = Line::from_groups(/* e41, e42, e43 */ (other.group0() + self.group0()), /* e23, e31, e12 */ (other.group1() + self.group1()));
         *self = addition;
     }
 }
@@ -563,13 +563,13 @@ impl std::ops::Sub<Line> for Line {
     //   simd3        2        0        0
     // no simd        6        0        0
     fn sub(self, other: Line) -> Self::Output {
-        let subtraction = Line::from_groups(/* e41, e42, e43 */ (self.group0() - other.group0()), /* e23, e31, e12 */ (self.group1() - other.group1()));
+        let subtraction = Line::from_groups(/* e41, e42, e43 */ (-other.group0() + self.group0()), /* e23, e31, e12 */ (-other.group1() + self.group1()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<Line> for Line {
     fn sub_assign(&mut self, other: Line) {
-        let subtraction = Line::from_groups(/* e41, e42, e43 */ (self.group0() - other.group0()), /* e23, e31, e12 */ (self.group1() - other.group1()));
+        let subtraction = Line::from_groups(/* e41, e42, e43 */ (-other.group0() + self.group0()), /* e23, e31, e12 */ (-other.group1() + self.group1()));
         *self = subtraction;
     }
 }

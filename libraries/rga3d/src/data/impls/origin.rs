@@ -67,7 +67,7 @@ impl std::ops::Add<Flector> for Origin {
         use crate::elements::*;
         let addition = Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self[e4] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self[e4])]),
             // e423, e431, e412, e321
             other.group1(),
         );
@@ -136,7 +136,7 @@ impl std::ops::Add<MultiVector> for Origin {
             // scalar, e1234
             other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self[e4] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self[e4])]),
             // e41, e42, e43
             other.group2(),
             // e23, e31, e12
@@ -154,14 +154,14 @@ impl std::ops::Add<Origin> for Origin {
     // f32        1        0        0
     fn add(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let addition = Origin::from_groups(/* e4 */ (self[e4] + other[e4]));
+        let addition = Origin::from_groups(/* e4 */ (other[e4] + self[e4]));
         return addition;
     }
 }
 impl std::ops::AddAssign<Origin> for Origin {
     fn add_assign(&mut self, other: Origin) {
         use crate::elements::*;
-        let addition = Origin::from_groups(/* e4 */ (self[e4] + other[e4]));
+        let addition = Origin::from_groups(/* e4 */ (other[e4] + self[e4]));
         *self = addition;
     }
 }
@@ -182,7 +182,7 @@ impl std::ops::Add<Point> for Origin {
         use crate::elements::*;
         let addition = Point::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self[e4] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self[e4])]),
         );
         return addition;
     }
@@ -490,7 +490,7 @@ impl std::ops::Sub<Flector> for Origin {
         use crate::elements::*;
         let subtraction = Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (self[e4] - other.group0()[3])]),
+            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (-other.group0()[3] + self[e4])]),
             // e423, e431, e412, e321
             (other.group1() * Simd32x4::from(-1.0)),
         );
@@ -579,7 +579,7 @@ impl std::ops::Sub<MultiVector> for Origin {
             // scalar, e1234
             (other.group0() * Simd32x2::from(-1.0)),
             // e1, e2, e3, e4
-            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (self[e4] - other.group1()[3])]),
+            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (-other.group1()[3] + self[e4])]),
             // e41, e42, e43
             (other.group2() * Simd32x3::from(-1.0)),
             // e23, e31, e12
@@ -597,14 +597,14 @@ impl std::ops::Sub<Origin> for Origin {
     // f32        1        0        0
     fn sub(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = Origin::from_groups(/* e4 */ (self[e4] - other[e4]));
+        let subtraction = Origin::from_groups(/* e4 */ (-other[e4] + self[e4]));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<Origin> for Origin {
     fn sub_assign(&mut self, other: Origin) {
         use crate::elements::*;
-        let subtraction = Origin::from_groups(/* e4 */ (self[e4] - other[e4]));
+        let subtraction = Origin::from_groups(/* e4 */ (-other[e4] + self[e4]));
         *self = subtraction;
     }
 }
@@ -636,7 +636,7 @@ impl std::ops::Sub<Point> for Origin {
             (other.group0()[0] * -1.0),
             (other.group0()[1] * -1.0),
             (other.group0()[2] * -1.0),
-            (self[e4] - other.group0()[3]),
+            (-other.group0()[3] + self[e4]),
         ]));
         return subtraction;
     }

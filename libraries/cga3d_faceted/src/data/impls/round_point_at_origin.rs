@@ -2045,7 +2045,7 @@ impl std::ops::Add<QuadNumAligningOriginAtInfinity> for RoundPointAtOrigin {
     //      add/sub      mul      div
     // f32        1        0        0
     fn add(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
-        let addition = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from([self.group0()[0], (self.group0()[1] + other.group0()[0]), other.group0()[1]]));
+        let addition = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from([self.group0()[0], (other.group0()[0] + self.group0()[1]), other.group0()[1]]));
         return addition;
     }
 }
@@ -2068,7 +2068,7 @@ impl std::ops::Add<QuadNumOnOrigin> for RoundPointAtOrigin {
     //      add/sub      mul      div
     // f32        1        0        0
     fn add(self, other: QuadNumOnOrigin) -> Self::Output {
-        let addition = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from([(self.group0()[0] + other.group0()[0]), self.group0()[1], other.group0()[1]]));
+        let addition = QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from([(other.group0()[0] + self.group0()[0]), self.group0()[1], other.group0()[1]]));
         return addition;
     }
 }
@@ -2108,13 +2108,13 @@ impl std::ops::Add<RoundPointAtOrigin> for RoundPointAtOrigin {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn add(self, other: RoundPointAtOrigin) -> Self::Output {
-        let addition = RoundPointAtOrigin::from_groups(/* e4, e5 */ (self.group0() + other.group0()));
+        let addition = RoundPointAtOrigin::from_groups(/* e4, e5 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<RoundPointAtOrigin> for RoundPointAtOrigin {
     fn add_assign(&mut self, other: RoundPointAtOrigin) {
-        let addition = RoundPointAtOrigin::from_groups(/* e4, e5 */ (self.group0() + other.group0()));
+        let addition = RoundPointAtOrigin::from_groups(/* e4, e5 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -4637,9 +4637,12 @@ impl std::ops::Mul<RoundPoint> for RoundPointAtOrigin {
 impl std::ops::Mul<RoundPointAtOrigin> for RoundPointAtOrigin {
     type Output = AntiMysteryQuadNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        1        3        0
-    // no simd        2        6        0
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd2        1        1        0
+    // Totals...
+    // yes simd        1        3        0
+    //  no simd        2        4        0
     fn mul(self, other: RoundPointAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -7335,7 +7338,7 @@ impl std::ops::Sub<QuadNumAligningOriginAtInfinity> for RoundPointAtOrigin {
     fn sub(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
         let subtraction = QuadNumAligningOrigin::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([self.group0()[0], (self.group0()[1] - other.group0()[0]), (other.group0()[1] * -1.0)]),
+            Simd32x3::from([self.group0()[0], (-other.group0()[0] + self.group0()[1]), (other.group0()[1] * -1.0)]),
         );
         return subtraction;
     }
@@ -7363,7 +7366,7 @@ impl std::ops::Sub<QuadNumOnOrigin> for RoundPointAtOrigin {
     fn sub(self, other: QuadNumOnOrigin) -> Self::Output {
         let subtraction = QuadNumAligningOrigin::from_groups(
             // e4, e5, e12345
-            Simd32x3::from([(self.group0()[0] - other.group0()[0]), self.group0()[1], (other.group0()[1] * -1.0)]),
+            Simd32x3::from([(-other.group0()[0] + self.group0()[0]), self.group0()[1], (other.group0()[1] * -1.0)]),
         );
         return subtraction;
     }
@@ -7410,13 +7413,13 @@ impl std::ops::Sub<RoundPointAtOrigin> for RoundPointAtOrigin {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn sub(self, other: RoundPointAtOrigin) -> Self::Output {
-        let subtraction = RoundPointAtOrigin::from_groups(/* e4, e5 */ (self.group0() - other.group0()));
+        let subtraction = RoundPointAtOrigin::from_groups(/* e4, e5 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<RoundPointAtOrigin> for RoundPointAtOrigin {
     fn sub_assign(&mut self, other: RoundPointAtOrigin) {
-        let subtraction = RoundPointAtOrigin::from_groups(/* e4, e5 */ (self.group0() - other.group0()));
+        let subtraction = RoundPointAtOrigin::from_groups(/* e4, e5 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

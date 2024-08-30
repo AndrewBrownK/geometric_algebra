@@ -31,9 +31,9 @@ impl std::ops::Add<AntiCircleOnOrigin> for DipoleAtInfinity {
             other.group0(),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group0()[0]),
+                (other.group1()[1] + self.group0()[1]),
+                (other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35
@@ -56,7 +56,7 @@ impl std::ops::Add<AntiCircleRotor> for DipoleAtInfinity {
             // e41, e42, e43
             other.group0(),
             // e23, e31, e12, e45
-            (self.group0() + other.group1()),
+            (other.group1() + self.group0()),
             // e15, e25, e35, scalar
             Simd32x4::from([
                 (self.group1()[0] + other.group2()[0]),
@@ -79,9 +79,9 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for DipoleAtInfinity {
             other.group0(),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group0()[0]),
+                (other.group1()[1] + self.group0()[1]),
+                (other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35, scalar
@@ -104,9 +104,9 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for DipoleAtInfinity
         let addition = AntiCircleRotorAtInfinity::from_groups(
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35, scalar
@@ -132,7 +132,7 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for DipoleAtInfinity {
     fn add(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         let addition = AntiCircleRotorAtInfinity::from_groups(
             // e23, e31, e12, e45
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e15, e25, e35, scalar
             Simd32x4::from([
                 (self.group1()[0] + other.group1()[0]),
@@ -155,9 +155,9 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for DipoleAtInfinity {
             Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group0()[0]),
+                (other.group1()[1] + self.group0()[1]),
+                (other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35, scalar
@@ -450,13 +450,13 @@ impl std::ops::Add<AntiLine> for DipoleAtInfinity {
         let addition = DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
         );
         return addition;
     }
@@ -466,13 +466,13 @@ impl std::ops::AddAssign<AntiLine> for DipoleAtInfinity {
         let addition = DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
         );
         *self = addition;
     }
@@ -486,9 +486,9 @@ impl std::ops::Add<AntiLineOnOrigin> for DipoleAtInfinity {
         let addition = DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35
@@ -502,9 +502,9 @@ impl std::ops::AddAssign<AntiLineOnOrigin> for DipoleAtInfinity {
         let addition = DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35
@@ -529,9 +529,9 @@ impl std::ops::Add<AntiMotor> for DipoleAtInfinity {
             ]),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -549,9 +549,9 @@ impl std::ops::Add<AntiMotorOnOrigin> for DipoleAtInfinity {
         let addition = AntiCircleRotorAtInfinity::from_groups(
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35, scalar
@@ -570,7 +570,7 @@ impl std::ops::Add<AntiMysteryCircleRotor> for DipoleAtInfinity {
         use crate::elements::*;
         let addition = AntiCircleRotorAtInfinity::from_groups(
             // e23, e31, e12, e45
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e15, e25, e35, scalar
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other[e31]]),
         );
@@ -615,7 +615,7 @@ impl std::ops::Add<AntiMysteryQuadNum> for DipoleAtInfinity {
     fn add(self, other: AntiMysteryQuadNum) -> Self::Output {
         let addition = AntiCircleRotorAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[0])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[0] + self.group0()[3])]),
             // e15, e25, e35, scalar
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[1]]),
         );
@@ -692,7 +692,7 @@ impl std::ops::Add<AntiQuadNum> for DipoleAtInfinity {
             // e41, e42, e43, scalar
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[2])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[2] + self.group0()[3])]),
             // e15, e25, e35, e1234
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[0]]),
             // e4235, e4315, e4125, e3215
@@ -741,7 +741,7 @@ impl std::ops::Add<AntiQuadNumAtInfinity> for DipoleAtInfinity {
             // scalar, e15, e25, e35
             Simd32x4::from([other.group0()[2], self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
         );
@@ -774,7 +774,7 @@ impl std::ops::Add<AntiQuadNumOrthogonalOrigin> for DipoleAtInfinity {
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[2])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[2] + self.group0()[3])]),
             // e15, e25, e35, e1234
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[0]]),
             // e4235, e4315, e4125, e3215
@@ -855,9 +855,9 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for DipoleAtInfinity {
             other.group0(),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group0()[0]),
+                (other.group1()[1] + self.group0()[1]),
+                (other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35, e1234
@@ -1212,9 +1212,9 @@ impl std::ops::Add<Dipole> for DipoleAtInfinity {
             // e41, e42, e43
             other.group0(),
             // e23, e31, e12, e45
-            (self.group0() + other.group1()),
+            (other.group1() + self.group0()),
             // e15, e25, e35
-            (self.group1() + other.group2()),
+            (other.group2() + self.group1()),
         );
         return addition;
     }
@@ -1233,9 +1233,9 @@ impl std::ops::Add<DipoleAligningOrigin> for DipoleAtInfinity {
             // e41, e42, e43
             Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] + self.group0()[3])]),
             // e15, e25, e35
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
         );
         return addition;
     }
@@ -1252,9 +1252,9 @@ impl std::ops::Add<DipoleAtInfinity> for DipoleAtInfinity {
     fn add(self, other: DipoleAtInfinity) -> Self::Output {
         let addition = DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e15, e25, e35
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
         );
         return addition;
     }
@@ -1263,9 +1263,9 @@ impl std::ops::AddAssign<DipoleAtInfinity> for DipoleAtInfinity {
     fn add_assign(&mut self, other: DipoleAtInfinity) {
         let addition = DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e15, e25, e35
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
         );
         *self = addition;
     }
@@ -1415,9 +1415,9 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for DipoleAtInfinity {
             Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group0()[0]),
+                (other.group1()[1] + self.group0()[1]),
+                (other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35, e1234
@@ -1465,9 +1465,9 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for DipoleAtInfinity {
             other.group0(),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group0()[0]),
+                (other.group1()[1] + self.group0()[1]),
+                (other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35
@@ -1518,7 +1518,7 @@ impl std::ops::Add<FlatPoint> for DipoleAtInfinity {
             // e23, e31, e12, e45
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[3])]),
             // e15, e25, e35
-            (self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
         );
         return addition;
     }
@@ -1529,7 +1529,7 @@ impl std::ops::AddAssign<FlatPoint> for DipoleAtInfinity {
             // e23, e31, e12, e45
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[3])]),
             // e15, e25, e35
-            (self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
         );
         *self = addition;
     }
@@ -1565,7 +1565,7 @@ impl std::ops::Add<Flector> for DipoleAtInfinity {
             // e23, e31, e12, e45
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[3])]),
             // e15, e25, e35
-            (self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
             // e4235, e4315, e4125, e3215
             other.group1(),
         );
@@ -1583,7 +1583,7 @@ impl std::ops::Add<FlectorAtInfinity> for DipoleAtInfinity {
             // e23, e31, e12, e45
             self.group0(),
             // e15, e25, e35
-            (self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
         );
@@ -1856,7 +1856,7 @@ impl std::ops::Add<MultiVector> for DipoleAtInfinity {
             // e15, e25, e35
             (self.group1() + other.group4()),
             // e23, e31, e12
-            (other.group5() + Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])),
+            (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group5()),
             // e415, e425, e435, e321
             other.group6(),
             // e423, e431, e412
@@ -4065,11 +4065,11 @@ impl std::ops::Mul<AntiDipoleInversionOrthogonalOrigin> for DipoleAtInfinity {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       49        0
-    //    simd4        7        7        0
+    //      f32       29       41        0
+    //    simd4        8       10        0
     // Totals...
-    // yes simd       40       56        0
-    //  no simd       61       77        0
+    // yes simd       37       51        0
+    //  no simd       61       81        0
     fn mul(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4575,10 +4575,10 @@ impl std::ops::Mul<DipoleInversion> for DipoleAtInfinity {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       57       73        0
-    //    simd4        8        8        0
+    //      f32       61       77        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       65       81        0
+    // yes simd       68       84        0
     //  no simd       89      105        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -4601,10 +4601,10 @@ impl std::ops::Mul<DipoleInversionAtInfinity> for DipoleAtInfinity {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       33        0
-    //    simd4        8        8        0
+    //      f32       26       37        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       30       41        0
+    // yes simd       33       44        0
     //  no simd       54       65        0
     fn mul(self, other: DipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
@@ -5243,11 +5243,11 @@ impl std::ops::Mul<VersorEvenAligningOrigin> for DipoleAtInfinity {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4       10       10        0
+    //      f32       24       36        0
+    //    simd4       11       13        0
     // Totals...
-    // yes simd       38       54        0
-    //  no simd       68       84        0
+    // yes simd       35       49        0
+    //  no simd       68       88        0
     fn mul(self, other: VersorEvenAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -5282,11 +5282,11 @@ impl std::ops::Mul<VersorEvenOnOrigin> for DipoleAtInfinity {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       36        0
-    //    simd4        8        8        0
+    //      f32       16       28        0
+    //    simd4        9       11        0
     // Totals...
-    // yes simd       28       44        0
-    //  no simd       52       68        0
+    // yes simd       25       39        0
+    //  no simd       52       72        0
     fn mul(self, other: VersorEvenOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -5308,10 +5308,10 @@ impl std::ops::Mul<VersorOdd> for DipoleAtInfinity {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       72        0
-    //    simd4       10       10        0
+    //      f32       60       76        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       66       82        0
+    // yes simd       69       85        0
     //  no simd       96      112        0
     fn mul(self, other: VersorOdd) -> Self::Output {
         return self.geometric_product(other);
@@ -5321,10 +5321,10 @@ impl std::ops::Mul<VersorOddAtInfinity> for DipoleAtInfinity {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       36        0
-    //    simd4        9        9        0
+    //      f32       29       40        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       34       45        0
+    // yes simd       37       48        0
     //  no simd       61       72        0
     fn mul(self, other: VersorOddAtInfinity) -> Self::Output {
         return self.geometric_product(other);
@@ -5395,9 +5395,9 @@ impl std::ops::Sub<AntiCircleOnOrigin> for DipoleAtInfinity {
             (other.group0() * Simd32x3::from(-1.0)),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group0()[0]),
+                (-other.group1()[1] + self.group0()[1]),
+                (-other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35
@@ -5421,7 +5421,7 @@ impl std::ops::Sub<AntiCircleRotor> for DipoleAtInfinity {
             // e41, e42, e43
             (other.group0() * Simd32x3::from(-1.0)),
             // e23, e31, e12, e45
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
             // e15, e25, e35, scalar
             Simd32x4::from([
                 (self.group1()[0] - other.group2()[0]),
@@ -5448,9 +5448,9 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for DipoleAtInfinity {
             (other.group0() * Simd32x3::from(-1.0)),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group0()[0]),
+                (-other.group1()[1] + self.group0()[1]),
+                (-other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35, scalar
@@ -5473,9 +5473,9 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for DipoleAtInfinity
         let subtraction = AntiCircleRotorAtInfinity::from_groups(
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35, scalar
@@ -5501,7 +5501,7 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for DipoleAtInfinity {
     fn sub(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         let subtraction = AntiCircleRotorAtInfinity::from_groups(
             // e23, e31, e12, e45
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e15, e25, e35, scalar
             Simd32x4::from([
                 (self.group1()[0] - other.group1()[0]),
@@ -5528,9 +5528,9 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for DipoleAtInfinity {
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group0()[0]),
+                (-other.group1()[1] + self.group0()[1]),
+                (-other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35, scalar
@@ -5881,13 +5881,13 @@ impl std::ops::Sub<AntiLine> for DipoleAtInfinity {
         let subtraction = DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
         );
         return subtraction;
     }
@@ -5897,13 +5897,13 @@ impl std::ops::SubAssign<AntiLine> for DipoleAtInfinity {
         let subtraction = DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
         );
         *self = subtraction;
     }
@@ -5917,9 +5917,9 @@ impl std::ops::Sub<AntiLineOnOrigin> for DipoleAtInfinity {
         let subtraction = DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35
@@ -5933,9 +5933,9 @@ impl std::ops::SubAssign<AntiLineOnOrigin> for DipoleAtInfinity {
         let subtraction = DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35
@@ -5960,9 +5960,9 @@ impl std::ops::Sub<AntiMotor> for DipoleAtInfinity {
             ]),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -5980,9 +5980,9 @@ impl std::ops::Sub<AntiMotorOnOrigin> for DipoleAtInfinity {
         let subtraction = AntiCircleRotorAtInfinity::from_groups(
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35, scalar
@@ -6004,7 +6004,7 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for DipoleAtInfinity {
         use crate::elements::*;
         let subtraction = AntiCircleRotorAtInfinity::from_groups(
             // e23, e31, e12, e45
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e15, e25, e35, scalar
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other[e31] * -1.0)]),
         );
@@ -6056,7 +6056,7 @@ impl std::ops::Sub<AntiMysteryQuadNum> for DipoleAtInfinity {
     fn sub(self, other: AntiMysteryQuadNum) -> Self::Output {
         let subtraction = AntiCircleRotorAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[0])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[0] + self.group0()[3])]),
             // e15, e25, e35, scalar
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[1] * -1.0)]),
         );
@@ -6139,7 +6139,7 @@ impl std::ops::Sub<AntiQuadNum> for DipoleAtInfinity {
             // e41, e42, e43, scalar
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[2])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[2] + self.group0()[3])]),
             // e15, e25, e35, e1234
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] * -1.0)]),
             // e4235, e4315, e4125, e3215
@@ -6194,7 +6194,7 @@ impl std::ops::Sub<AntiQuadNumAtInfinity> for DipoleAtInfinity {
             // scalar, e15, e25, e35
             Simd32x4::from([(other.group0()[2] * -1.0), self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[1] + self.group0()[3])]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
         );
@@ -6230,7 +6230,7 @@ impl std::ops::Sub<AntiQuadNumOrthogonalOrigin> for DipoleAtInfinity {
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[2])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[2] + self.group0()[3])]),
             // e15, e25, e35, e1234
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] * -1.0)]),
             // e4235, e4315, e4125, e3215
@@ -6322,9 +6322,9 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for DipoleAtInfinity {
             (other.group0() * Simd32x4::from(-1.0)),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group0()[0]),
+                (-other.group1()[1] + self.group0()[1]),
+                (-other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35, e1234
@@ -6755,9 +6755,9 @@ impl std::ops::Sub<Dipole> for DipoleAtInfinity {
             // e41, e42, e43
             (other.group0() * Simd32x3::from(-1.0)),
             // e23, e31, e12, e45
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
             // e15, e25, e35
-            (self.group1() - other.group2()),
+            (-other.group2() + self.group1()),
         );
         return subtraction;
     }
@@ -6776,9 +6776,9 @@ impl std::ops::Sub<DipoleAligningOrigin> for DipoleAtInfinity {
             // e41, e42, e43
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[3] + self.group0()[3])]),
             // e15, e25, e35
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
         );
         return subtraction;
     }
@@ -6795,9 +6795,9 @@ impl std::ops::Sub<DipoleAtInfinity> for DipoleAtInfinity {
     fn sub(self, other: DipoleAtInfinity) -> Self::Output {
         let subtraction = DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e15, e25, e35
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
         );
         return subtraction;
     }
@@ -6806,9 +6806,9 @@ impl std::ops::SubAssign<DipoleAtInfinity> for DipoleAtInfinity {
     fn sub_assign(&mut self, other: DipoleAtInfinity) {
         let subtraction = DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e15, e25, e35
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
         );
         *self = subtraction;
     }
@@ -6976,9 +6976,9 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for DipoleAtInfinity {
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group0()[0]),
+                (-other.group1()[1] + self.group0()[1]),
+                (-other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35, e1234
@@ -7030,9 +7030,9 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for DipoleAtInfinity {
             (other.group0() * Simd32x3::from(-1.0)),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group0()[0]),
+                (-other.group1()[1] + self.group0()[1]),
+                (-other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e15, e25, e35
@@ -7083,7 +7083,7 @@ impl std::ops::Sub<FlatPoint> for DipoleAtInfinity {
             // e23, e31, e12, e45
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[3])]),
             // e15, e25, e35
-            (self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
         );
         return subtraction;
     }
@@ -7094,7 +7094,7 @@ impl std::ops::SubAssign<FlatPoint> for DipoleAtInfinity {
             // e23, e31, e12, e45
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[3])]),
             // e15, e25, e35
-            (self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
         );
         *self = subtraction;
     }
@@ -7131,7 +7131,7 @@ impl std::ops::Sub<Flector> for DipoleAtInfinity {
             // e23, e31, e12, e45
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[3])]),
             // e15, e25, e35
-            (self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
             // e4235, e4315, e4125, e3215
             (other.group1() * Simd32x4::from(-1.0)),
         );
@@ -7152,7 +7152,7 @@ impl std::ops::Sub<FlectorAtInfinity> for DipoleAtInfinity {
             // e23, e31, e12, e45
             self.group0(),
             // e15, e25, e35
-            (self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
         );
@@ -7469,7 +7469,7 @@ impl std::ops::Sub<MultiVector> for DipoleAtInfinity {
             // e15, e25, e35
             (self.group1() - other.group4()),
             // e23, e31, e12
-            (-other.group5() + Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])),
+            (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group5()),
             // e415, e425, e435, e321
             (other.group6() * Simd32x4::from(-1.0)),
             // e423, e431, e412

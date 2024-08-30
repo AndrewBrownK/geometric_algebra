@@ -27,7 +27,7 @@ impl std::ops::Add<AntiCircleOnOrigin> for AntiLineOnOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: AntiCircleOnOrigin) -> Self::Output {
-        let addition = AntiCircleOnOrigin::from_groups(/* e41, e42, e43 */ other.group0(), /* e23, e31, e12 */ (self.group0() + other.group1()));
+        let addition = AntiCircleOnOrigin::from_groups(/* e41, e42, e43 */ other.group0(), /* e23, e31, e12 */ (other.group1() + self.group0()));
         return addition;
     }
 }
@@ -64,7 +64,7 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for AntiLineOnOrigin {
             // e41, e42, e43
             other.group0(),
             // e23, e31, e12
-            (self.group0() + other.group1()),
+            (other.group1() + self.group0()),
             // e15, e25, e35, scalar
             other.group2(),
         );
@@ -79,7 +79,7 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for AntiLineOnOrigin
     // no simd        3        0        0
     fn add(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         let addition =
-            AntiCircleRotorAligningOriginAtInfinity::from_groups(/* e23, e31, e12 */ (self.group0() + other.group0()), /* e15, e25, e35, scalar */ other.group1());
+            AntiCircleRotorAligningOriginAtInfinity::from_groups(/* e23, e31, e12 */ (other.group0() + self.group0()), /* e15, e25, e35, scalar */ other.group1());
         return addition;
     }
 }
@@ -110,7 +110,7 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for AntiLineOnOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
-        let addition = AntiCircleRotorOnOrigin::from_groups(/* e41, e42, e43, scalar */ other.group0(), /* e23, e31, e12 */ (self.group0() + other.group1()));
+        let addition = AntiCircleRotorOnOrigin::from_groups(/* e41, e42, e43, scalar */ other.group0(), /* e23, e31, e12 */ (other.group1() + self.group0()));
         return addition;
     }
 }
@@ -392,7 +392,7 @@ impl std::ops::Add<AntiLine> for AntiLineOnOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: AntiLine) -> Self::Output {
-        let addition = AntiLine::from_groups(/* e23, e31, e12 */ (self.group0() + other.group0()), /* e15, e25, e35 */ other.group1());
+        let addition = AntiLine::from_groups(/* e23, e31, e12 */ (other.group0() + self.group0()), /* e15, e25, e35 */ other.group1());
         return addition;
     }
 }
@@ -403,13 +403,13 @@ impl std::ops::Add<AntiLineOnOrigin> for AntiLineOnOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: AntiLineOnOrigin) -> Self::Output {
-        let addition = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (self.group0() + other.group0()));
+        let addition = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<AntiLineOnOrigin> for AntiLineOnOrigin {
     fn add_assign(&mut self, other: AntiLineOnOrigin) {
-        let addition = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (self.group0() + other.group0()));
+        let addition = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -4539,7 +4539,7 @@ impl std::ops::Sub<AntiCircleOnOrigin> for AntiLineOnOrigin {
             // e41, e42, e43
             (other.group0() * Simd32x3::from(-1.0)),
             // e23, e31, e12
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
         );
         return subtraction;
     }
@@ -4585,7 +4585,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for AntiLineOnOrigin {
             // e41, e42, e43
             (other.group0() * Simd32x3::from(-1.0)),
             // e23, e31, e12
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
             // e15, e25, e35, scalar
             (other.group2() * Simd32x4::from(-1.0)),
         );
@@ -4604,7 +4604,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for AntiLineOnOrigin
     fn sub(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         let subtraction = AntiCircleRotorAligningOriginAtInfinity::from_groups(
             // e23, e31, e12
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e15, e25, e35, scalar
             (other.group1() * Simd32x4::from(-1.0)),
         );
@@ -4649,7 +4649,7 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for AntiLineOnOrigin {
             // e41, e42, e43, scalar
             (other.group0() * Simd32x4::from(-1.0)),
             // e23, e31, e12
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
         );
         return subtraction;
     }
@@ -4992,7 +4992,7 @@ impl std::ops::Sub<AntiLine> for AntiLineOnOrigin {
     fn sub(self, other: AntiLine) -> Self::Output {
         let subtraction = AntiLine::from_groups(
             // e23, e31, e12
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e15, e25, e35
             (other.group1() * Simd32x3::from(-1.0)),
         );
@@ -5006,13 +5006,13 @@ impl std::ops::Sub<AntiLineOnOrigin> for AntiLineOnOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn sub(self, other: AntiLineOnOrigin) -> Self::Output {
-        let subtraction = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (self.group0() - other.group0()));
+        let subtraction = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiLineOnOrigin> for AntiLineOnOrigin {
     fn sub_assign(&mut self, other: AntiLineOnOrigin) {
-        let subtraction = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (self.group0() - other.group0()));
+        let subtraction = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

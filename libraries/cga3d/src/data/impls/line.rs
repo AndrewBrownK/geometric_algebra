@@ -182,7 +182,7 @@ impl std::ops::Add<AntiFlatPoint> for Line {
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[3]]),
             // e235, e315, e125
-            (self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
         );
         return addition;
     }
@@ -381,7 +381,7 @@ impl std::ops::Add<Circle> for Line {
                 other.group1()[3],
             ]),
             // e235, e315, e125
-            (self.group1() + other.group2()),
+            (other.group2() + self.group1()),
         );
         return addition;
     }
@@ -584,9 +584,9 @@ impl std::ops::Add<Line> for Line {
     fn add(self, other: Line) -> Self::Output {
         let addition = Line::from_groups(
             // e415, e425, e435
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e235, e315, e125
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
         );
         return addition;
     }
@@ -595,9 +595,9 @@ impl std::ops::AddAssign<Line> for Line {
     fn add_assign(&mut self, other: Line) {
         let addition = Line::from_groups(
             // e415, e425, e435
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e235, e315, e125
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
         );
         *self = addition;
     }
@@ -1742,7 +1742,7 @@ impl std::ops::Sub<AntiFlatPoint> for Line {
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] * -1.0)]),
             // e235, e315, e125
-            (self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
         );
         return subtraction;
     }
@@ -1972,7 +1972,7 @@ impl std::ops::Sub<Circle> for Line {
                 (other.group1()[3] * -1.0),
             ]),
             // e235, e315, e125
-            (self.group1() - other.group2()),
+            (-other.group2() + self.group1()),
         );
         return subtraction;
     }
@@ -2211,9 +2211,9 @@ impl std::ops::Sub<Line> for Line {
     fn sub(self, other: Line) -> Self::Output {
         let subtraction = Line::from_groups(
             // e415, e425, e435
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e235, e315, e125
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
         );
         return subtraction;
     }
@@ -2222,9 +2222,9 @@ impl std::ops::SubAssign<Line> for Line {
     fn sub_assign(&mut self, other: Line) {
         let subtraction = Line::from_groups(
             // e415, e425, e435
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e235, e315, e125
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
         );
         *self = subtraction;
     }

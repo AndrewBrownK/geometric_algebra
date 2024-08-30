@@ -209,7 +209,7 @@ impl std::ops::Add<AntiDipoleInversion> for NullCircleAtOrigin {
     fn add(self, other: AntiDipoleInversion) -> Self::Output {
         let addition = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125, e4
@@ -806,7 +806,7 @@ impl std::ops::Add<Circle> for NullCircleAtOrigin {
     fn add(self, other: Circle) -> Self::Output {
         let addition = Circle::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125
@@ -824,7 +824,7 @@ impl std::ops::Add<CircleAligningOrigin> for NullCircleAtOrigin {
     fn add(self, other: CircleAligningOrigin) -> Self::Output {
         let addition = CircleAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435
             other.group1(),
             // e235, e315, e125
@@ -854,7 +854,7 @@ impl std::ops::Add<CircleAtOrigin> for NullCircleAtOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: CircleAtOrigin) -> Self::Output {
-        let addition = CircleAtOrigin::from_groups(/* e423, e431, e412 */ (self.group0() + other.group0()), /* e235, e315, e125 */ other.group1());
+        let addition = CircleAtOrigin::from_groups(/* e423, e431, e412 */ (other.group0() + self.group0()), /* e235, e315, e125 */ other.group1());
         return addition;
     }
 }
@@ -865,7 +865,7 @@ impl std::ops::Add<CircleOnOrigin> for NullCircleAtOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: CircleOnOrigin) -> Self::Output {
-        let addition = CircleOnOrigin::from_groups(/* e423, e431, e412 */ (self.group0() + other.group0()), /* e415, e425, e435 */ other.group1());
+        let addition = CircleOnOrigin::from_groups(/* e423, e431, e412 */ (other.group0() + self.group0()), /* e415, e425, e435 */ other.group1());
         return addition;
     }
 }
@@ -898,7 +898,7 @@ impl std::ops::Add<CircleRotor> for NullCircleAtOrigin {
     fn add(self, other: CircleRotor) -> Self::Output {
         let addition = CircleRotor::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125, e12345
@@ -916,7 +916,7 @@ impl std::ops::Add<CircleRotorAligningOrigin> for NullCircleAtOrigin {
     fn add(self, other: CircleRotorAligningOrigin) -> Self::Output {
         let addition = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e415, e425, e435
             other.group1(),
             // e235, e315, e125, e12345
@@ -1648,7 +1648,7 @@ impl std::ops::Add<MultiVector> for NullCircleAtOrigin {
             // e415, e425, e435, e321
             other.group6(),
             // e423, e431, e412
-            (self.group0() + other.group7()),
+            (other.group7() + self.group0()),
             // e235, e315, e125
             other.group8(),
             // e1234, e4235, e4315, e4125
@@ -1815,13 +1815,13 @@ impl std::ops::Add<NullCircleAtOrigin> for NullCircleAtOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: NullCircleAtOrigin) -> Self::Output {
-        let addition = NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ (self.group0() + other.group0()));
+        let addition = NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<NullCircleAtOrigin> for NullCircleAtOrigin {
     fn add_assign(&mut self, other: NullCircleAtOrigin) {
-        let addition = NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ (self.group0() + other.group0()));
+        let addition = NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -3345,10 +3345,10 @@ impl std::ops::Mul<AntiMysteryDipoleInversion> for NullCircleAtOrigin {
     type Output = NullDipoleInversionAtOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       13        0
-    //    simd4        2        2        0
+    //      f32        5        9        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd       11       15        0
+    // yes simd        8       12        0
     //  no simd       17       21        0
     fn mul(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -4569,7 +4569,7 @@ impl std::ops::Sub<AntiDipoleInversion> for NullCircleAtOrigin {
     fn sub(self, other: AntiDipoleInversion) -> Self::Output {
         let subtraction = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435, e321
             (other.group1() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e4
@@ -5285,7 +5285,7 @@ impl std::ops::Sub<Circle> for NullCircleAtOrigin {
     fn sub(self, other: Circle) -> Self::Output {
         let subtraction = Circle::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435, e321
             (other.group1() * Simd32x4::from(-1.0)),
             // e235, e315, e125
@@ -5303,7 +5303,7 @@ impl std::ops::Sub<CircleAligningOrigin> for NullCircleAtOrigin {
     fn sub(self, other: CircleAligningOrigin) -> Self::Output {
         let subtraction = CircleAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435
             (other.group1() * Simd32x3::from(-1.0)),
             // e235, e315, e125
@@ -5342,7 +5342,7 @@ impl std::ops::Sub<CircleAtOrigin> for NullCircleAtOrigin {
     fn sub(self, other: CircleAtOrigin) -> Self::Output {
         let subtraction = CircleAtOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e235, e315, e125
             (other.group1() * Simd32x3::from(-1.0)),
         );
@@ -5358,7 +5358,7 @@ impl std::ops::Sub<CircleOnOrigin> for NullCircleAtOrigin {
     fn sub(self, other: CircleOnOrigin) -> Self::Output {
         let subtraction = CircleOnOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435
             (other.group1() * Simd32x3::from(-1.0)),
         );
@@ -5401,7 +5401,7 @@ impl std::ops::Sub<CircleRotor> for NullCircleAtOrigin {
     fn sub(self, other: CircleRotor) -> Self::Output {
         let subtraction = CircleRotor::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435, e321
             (other.group1() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e12345
@@ -5422,7 +5422,7 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for NullCircleAtOrigin {
     fn sub(self, other: CircleRotorAligningOrigin) -> Self::Output {
         let subtraction = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e415, e425, e435
             (other.group1() * Simd32x3::from(-1.0)),
             // e235, e315, e125, e12345
@@ -6321,7 +6321,7 @@ impl std::ops::Sub<MultiVector> for NullCircleAtOrigin {
             // e415, e425, e435, e321
             (other.group6() * Simd32x4::from(-1.0)),
             // e423, e431, e412
-            (self.group0() - other.group7()),
+            (-other.group7() + self.group0()),
             // e235, e315, e125
             (other.group8() * Simd32x3::from(-1.0)),
             // e1234, e4235, e4315, e4125
@@ -6530,13 +6530,13 @@ impl std::ops::Sub<NullCircleAtOrigin> for NullCircleAtOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn sub(self, other: NullCircleAtOrigin) -> Self::Output {
-        let subtraction = NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ (self.group0() - other.group0()));
+        let subtraction = NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<NullCircleAtOrigin> for NullCircleAtOrigin {
     fn sub_assign(&mut self, other: NullCircleAtOrigin) {
-        let subtraction = NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ (self.group0() - other.group0()));
+        let subtraction = NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

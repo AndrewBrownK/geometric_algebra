@@ -28,9 +28,9 @@ impl std::ops::Add<AntiCircleRotor> for AntiQuadNum {
     fn add(self, other: AntiCircleRotor) -> Self::Output {
         let addition = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[3] + other.group2()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group2()[3] + self.group0()[3])]),
             // e23, e31, e12, e45
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[2] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self.group0()[2])]),
             // e15, e25, e35, e1234
             Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], self.group0()[0]]),
             // e4235, e4315, e4125, e3215
@@ -78,8 +78,8 @@ impl std::ops::Add<AntiDualNum321> for AntiQuadNum {
         let addition = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
             self.group0()[0],
             self.group0()[1],
-            (self.group0()[2] + other.group0()[0]),
-            (self.group0()[3] + other.group0()[1]),
+            (other.group0()[0] + self.group0()[2]),
+            (other.group0()[1] + self.group0()[3]),
         ]));
         return addition;
     }
@@ -89,8 +89,8 @@ impl std::ops::AddAssign<AntiDualNum321> for AntiQuadNum {
         let addition = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
             self.group0()[0],
             self.group0()[1],
-            (self.group0()[2] + other.group0()[0]),
-            (self.group0()[3] + other.group0()[1]),
+            (other.group0()[0] + self.group0()[2]),
+            (other.group0()[1] + self.group0()[3]),
         ]));
         *self = addition;
     }
@@ -102,10 +102,10 @@ impl std::ops::Add<AntiDualNum4> for AntiQuadNum {
     // f32        2        0        0
     fn add(self, other: AntiDualNum4) -> Self::Output {
         let addition = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
-            (self.group0()[0] + other.group0()[0]),
+            (other.group0()[0] + self.group0()[0]),
             self.group0()[1],
             self.group0()[2],
-            (self.group0()[3] + other.group0()[1]),
+            (other.group0()[1] + self.group0()[3]),
         ]));
         return addition;
     }
@@ -113,10 +113,10 @@ impl std::ops::Add<AntiDualNum4> for AntiQuadNum {
 impl std::ops::AddAssign<AntiDualNum4> for AntiQuadNum {
     fn add_assign(&mut self, other: AntiDualNum4) {
         let addition = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
-            (self.group0()[0] + other.group0()[0]),
+            (other.group0()[0] + self.group0()[0]),
             self.group0()[1],
             self.group0()[2],
-            (self.group0()[3] + other.group0()[1]),
+            (other.group0()[1] + self.group0()[3]),
         ]));
         *self = addition;
     }
@@ -129,9 +129,9 @@ impl std::ops::Add<AntiDualNum5> for AntiQuadNum {
     fn add(self, other: AntiDualNum5) -> Self::Output {
         let addition = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] + other.group0()[0]),
+            (other.group0()[0] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] + other.group0()[1]),
+            (other.group0()[1] + self.group0()[3]),
         ]));
         return addition;
     }
@@ -140,9 +140,9 @@ impl std::ops::AddAssign<AntiDualNum5> for AntiQuadNum {
     fn add_assign(&mut self, other: AntiDualNum5) {
         let addition = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] + other.group0()[0]),
+            (other.group0()[0] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] + other.group0()[1]),
+            (other.group0()[1] + self.group0()[3]),
         ]));
         *self = addition;
     }
@@ -231,13 +231,13 @@ impl std::ops::Add<AntiMotor> for AntiQuadNum {
     fn add(self, other: AntiMotor) -> Self::Output {
         let addition = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] + other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] + self.group0()[3])]),
             // e23, e31, e12, e45
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[2]]),
             // e15, e25, e35, e1234
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[0]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] + other.group1()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[3] + self.group0()[1])]),
         );
         return addition;
     }
@@ -279,13 +279,13 @@ impl std::ops::Add<AntiQuadNum> for AntiQuadNum {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: AntiQuadNum) -> Self::Output {
-        let addition = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ (self.group0() + other.group0()));
+        let addition = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<AntiQuadNum> for AntiQuadNum {
     fn add_assign(&mut self, other: AntiQuadNum) {
-        let addition = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ (self.group0() + other.group0()));
+        let addition = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -327,10 +327,10 @@ impl std::ops::Add<AntiTripleNum> for AntiQuadNum {
     // f32        3        0        0
     fn add(self, other: AntiTripleNum) -> Self::Output {
         let addition = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
-            (self.group0()[0] + other.group0()[0]),
-            (self.group0()[1] + other.group0()[1]),
+            (other.group0()[0] + self.group0()[0]),
+            (other.group0()[1] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] + other.group0()[2]),
+            (other.group0()[2] + self.group0()[3]),
         ]));
         return addition;
     }
@@ -338,10 +338,10 @@ impl std::ops::Add<AntiTripleNum> for AntiQuadNum {
 impl std::ops::AddAssign<AntiTripleNum> for AntiQuadNum {
     fn add_assign(&mut self, other: AntiTripleNum) {
         let addition = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
-            (self.group0()[0] + other.group0()[0]),
-            (self.group0()[1] + other.group0()[1]),
+            (other.group0()[0] + self.group0()[0]),
+            (other.group0()[1] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] + other.group0()[2]),
+            (other.group0()[2] + self.group0()[3]),
         ]));
         *self = addition;
     }
@@ -641,7 +641,7 @@ impl std::ops::Add<MultiVector> for AntiQuadNum {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(self.group0()[3] + other.group0()[0]), other.group0()[1]]),
+            Simd32x2::from([(other.group0()[0] + self.group0()[3]), other.group0()[1]]),
             // e1, e2, e3, e4
             other.group1(),
             // e5
@@ -1748,14 +1748,14 @@ impl std::ops::Sub<AntiCircleRotor> for AntiQuadNum {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[3] - other.group2()[3]),
+                (-other.group2()[3] + self.group0()[3]),
             ]),
             // e23, e31, e12, e45
             Simd32x4::from([
                 (other.group1()[0] * -1.0),
                 (other.group1()[1] * -1.0),
                 (other.group1()[2] * -1.0),
-                (self.group0()[2] - other.group1()[3]),
+                (-other.group1()[3] + self.group0()[2]),
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), self.group0()[0]]),
@@ -1812,8 +1812,8 @@ impl std::ops::Sub<AntiDualNum321> for AntiQuadNum {
         let subtraction = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
             self.group0()[0],
             self.group0()[1],
-            (self.group0()[2] - other.group0()[0]),
-            (self.group0()[3] - other.group0()[1]),
+            (-other.group0()[0] + self.group0()[2]),
+            (-other.group0()[1] + self.group0()[3]),
         ]));
         return subtraction;
     }
@@ -1823,8 +1823,8 @@ impl std::ops::SubAssign<AntiDualNum321> for AntiQuadNum {
         let subtraction = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
             self.group0()[0],
             self.group0()[1],
-            (self.group0()[2] - other.group0()[0]),
-            (self.group0()[3] - other.group0()[1]),
+            (-other.group0()[0] + self.group0()[2]),
+            (-other.group0()[1] + self.group0()[3]),
         ]));
         *self = subtraction;
     }
@@ -1836,10 +1836,10 @@ impl std::ops::Sub<AntiDualNum4> for AntiQuadNum {
     // f32        2        0        0
     fn sub(self, other: AntiDualNum4) -> Self::Output {
         let subtraction = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
-            (self.group0()[0] - other.group0()[0]),
+            (-other.group0()[0] + self.group0()[0]),
             self.group0()[1],
             self.group0()[2],
-            (self.group0()[3] - other.group0()[1]),
+            (-other.group0()[1] + self.group0()[3]),
         ]));
         return subtraction;
     }
@@ -1847,10 +1847,10 @@ impl std::ops::Sub<AntiDualNum4> for AntiQuadNum {
 impl std::ops::SubAssign<AntiDualNum4> for AntiQuadNum {
     fn sub_assign(&mut self, other: AntiDualNum4) {
         let subtraction = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
-            (self.group0()[0] - other.group0()[0]),
+            (-other.group0()[0] + self.group0()[0]),
             self.group0()[1],
             self.group0()[2],
-            (self.group0()[3] - other.group0()[1]),
+            (-other.group0()[1] + self.group0()[3]),
         ]));
         *self = subtraction;
     }
@@ -1863,9 +1863,9 @@ impl std::ops::Sub<AntiDualNum5> for AntiQuadNum {
     fn sub(self, other: AntiDualNum5) -> Self::Output {
         let subtraction = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] - other.group0()[0]),
+            (-other.group0()[0] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] - other.group0()[1]),
+            (-other.group0()[1] + self.group0()[3]),
         ]));
         return subtraction;
     }
@@ -1874,9 +1874,9 @@ impl std::ops::SubAssign<AntiDualNum5> for AntiQuadNum {
     fn sub_assign(&mut self, other: AntiDualNum5) {
         let subtraction = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
             self.group0()[0],
-            (self.group0()[1] - other.group0()[0]),
+            (-other.group0()[0] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] - other.group0()[1]),
+            (-other.group0()[1] + self.group0()[3]),
         ]));
         *self = subtraction;
     }
@@ -1982,13 +1982,13 @@ impl std::ops::Sub<AntiMotor> for AntiQuadNum {
     fn sub(self, other: AntiMotor) -> Self::Output {
         let subtraction = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] - other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[3] + self.group0()[3])]),
             // e23, e31, e12, e45
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[2]]),
             // e15, e25, e35, e1234
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self.group0()[0]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] - other.group1()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group1()[3] + self.group0()[1])]),
         );
         return subtraction;
     }
@@ -2033,13 +2033,13 @@ impl std::ops::Sub<AntiQuadNum> for AntiQuadNum {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: AntiQuadNum) -> Self::Output {
-        let subtraction = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ (self.group0() - other.group0()));
+        let subtraction = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiQuadNum> for AntiQuadNum {
     fn sub_assign(&mut self, other: AntiQuadNum) {
-        let subtraction = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ (self.group0() - other.group0()));
+        let subtraction = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }
@@ -2084,10 +2084,10 @@ impl std::ops::Sub<AntiTripleNum> for AntiQuadNum {
     // f32        3        0        0
     fn sub(self, other: AntiTripleNum) -> Self::Output {
         let subtraction = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
-            (self.group0()[0] - other.group0()[0]),
-            (self.group0()[1] - other.group0()[1]),
+            (-other.group0()[0] + self.group0()[0]),
+            (-other.group0()[1] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] - other.group0()[2]),
+            (-other.group0()[2] + self.group0()[3]),
         ]));
         return subtraction;
     }
@@ -2095,10 +2095,10 @@ impl std::ops::Sub<AntiTripleNum> for AntiQuadNum {
 impl std::ops::SubAssign<AntiTripleNum> for AntiQuadNum {
     fn sub_assign(&mut self, other: AntiTripleNum) {
         let subtraction = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
-            (self.group0()[0] - other.group0()[0]),
-            (self.group0()[1] - other.group0()[1]),
+            (-other.group0()[0] + self.group0()[0]),
+            (-other.group0()[1] + self.group0()[1]),
             self.group0()[2],
-            (self.group0()[3] - other.group0()[2]),
+            (-other.group0()[2] + self.group0()[3]),
         ]));
         *self = subtraction;
     }
@@ -2466,7 +2466,7 @@ impl std::ops::Sub<MultiVector> for AntiQuadNum {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(self.group0()[3] - other.group0()[0]), (other.group0()[1] * -1.0)]),
+            Simd32x2::from([(-other.group0()[0] + self.group0()[3]), (other.group0()[1] * -1.0)]),
             // e1, e2, e3, e4
             (other.group1() * Simd32x4::from(-1.0)),
             // e5

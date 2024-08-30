@@ -214,7 +214,7 @@ impl std::ops::Add<AntiDipoleInversion> for CircleAtInfinity {
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
-            (self.group0() + other.group1()),
+            (other.group1() + self.group0()),
             // e235, e315, e125, e4
             Simd32x4::from([
                 (self.group1()[0] + other.group2()[0]),
@@ -240,9 +240,9 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for CircleAtInfinity {
     fn add(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         let addition = AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e235, e315, e125
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
             // e1, e2, e3, e5
             other.group2(),
         );
@@ -259,7 +259,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for CircleAtInfinity {
             // e423, e431, e412
             Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] + self.group0()[3])]),
             // e235, e315, e125, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group1()[0]]),
             // e1, e2, e3, e5
@@ -279,9 +279,9 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for CircleAtInfinity {
             Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group0()[0]),
+                (other.group1()[1] + self.group0()[1]),
+                (other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125, e4
@@ -307,7 +307,7 @@ impl std::ops::Add<AntiDipoleOnOrigin> for CircleAtInfinity {
             // e423, e431, e412
             Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] + self.group0()[3])]),
             // e235, e315, e125
             self.group1(),
         );
@@ -354,9 +354,9 @@ impl std::ops::Add<AntiFlatPoint> for CircleAtInfinity {
     fn add(self, other: AntiFlatPoint) -> Self::Output {
         let addition = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] + self.group0()[3])]),
             // e235, e315, e125
-            (self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
         );
         return addition;
     }
@@ -365,9 +365,9 @@ impl std::ops::AddAssign<AntiFlatPoint> for CircleAtInfinity {
     fn add_assign(&mut self, other: AntiFlatPoint) {
         let addition = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] + self.group0()[3])]),
             // e235, e315, e125
-            (self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
         );
         *self = addition;
     }
@@ -384,9 +384,9 @@ impl std::ops::Add<AntiFlector> for CircleAtInfinity {
     fn add(self, other: AntiFlector) -> Self::Output {
         let addition = AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] + self.group0()[3])]),
             // e235, e315, e125
-            (self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
             // e1, e2, e3, e5
             other.group1(),
         );
@@ -401,7 +401,7 @@ impl std::ops::Add<AntiFlectorOnOrigin> for CircleAtInfinity {
     fn add(self, other: AntiFlectorOnOrigin) -> Self::Output {
         let addition = AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[0])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[0] + self.group0()[3])]),
             // e235, e315, e125
             self.group1(),
             // e1, e2, e3, e5
@@ -570,7 +570,7 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for CircleAtInfinity {
     fn add(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         let addition = AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e235, e315, e125
             self.group1(),
             // e1, e2, e3, e5
@@ -890,9 +890,9 @@ impl std::ops::Add<Circle> for CircleAtInfinity {
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
-            (self.group0() + other.group1()),
+            (other.group1() + self.group0()),
             // e235, e315, e125
-            (self.group1() + other.group2()),
+            (other.group2() + self.group1()),
         );
         return addition;
     }
@@ -912,13 +912,13 @@ impl std::ops::Add<CircleAligningOrigin> for CircleAtInfinity {
             other.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group0()[0]),
+                (other.group1()[1] + self.group0()[1]),
+                (other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125
-            (self.group1() + other.group2()),
+            (other.group2() + self.group1()),
         );
         return addition;
     }
@@ -935,9 +935,9 @@ impl std::ops::Add<CircleAtInfinity> for CircleAtInfinity {
     fn add(self, other: CircleAtInfinity) -> Self::Output {
         let addition = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e235, e315, e125
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
         );
         return addition;
     }
@@ -946,9 +946,9 @@ impl std::ops::AddAssign<CircleAtInfinity> for CircleAtInfinity {
     fn add_assign(&mut self, other: CircleAtInfinity) {
         let addition = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e235, e315, e125
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
         );
         *self = addition;
     }
@@ -982,9 +982,9 @@ impl std::ops::Add<CircleOnOrigin> for CircleAtInfinity {
             other.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group0()[0]),
+                (other.group1()[1] + self.group0()[1]),
+                (other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125
@@ -1051,9 +1051,9 @@ impl std::ops::Add<CircleRotorAligningOrigin> for CircleAtInfinity {
             other.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group0()[0]),
+                (other.group1()[1] + self.group0()[1]),
+                (other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125, e12345
@@ -1076,9 +1076,9 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for CircleAtInfinity {
         let addition = CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125, e12345
@@ -1127,9 +1127,9 @@ impl std::ops::Add<CircleRotorOnOrigin> for CircleAtInfinity {
             Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group0()[0]),
+                (other.group1()[1] + self.group0()[1]),
+                (other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125, e12345
@@ -1738,9 +1738,9 @@ impl std::ops::Add<Line> for CircleAtInfinity {
         let addition = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125
@@ -1754,9 +1754,9 @@ impl std::ops::AddAssign<Line> for CircleAtInfinity {
         let addition = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125
@@ -1791,9 +1791,9 @@ impl std::ops::Add<LineOnOrigin> for CircleAtInfinity {
         let addition = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125
@@ -1807,9 +1807,9 @@ impl std::ops::AddAssign<LineOnOrigin> for CircleAtInfinity {
         let addition = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                (other.group0()[0] + self.group0()[0]),
+                (other.group0()[1] + self.group0()[1]),
+                (other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125
@@ -1856,7 +1856,7 @@ impl std::ops::Add<MotorAtInfinity> for CircleAtInfinity {
             // e415, e425, e435, e321
             self.group0(),
             // e235, e315, e125
-            (self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
             // e1, e2, e3, e5
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
         );
@@ -2023,7 +2023,7 @@ impl std::ops::Add<MysteryQuadNum> for CircleAtInfinity {
     fn add(self, other: MysteryQuadNum) -> Self::Output {
         let addition = CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[0])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[0] + self.group0()[3])]),
             // e235, e315, e125, e12345
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[1]]),
         );
@@ -2335,7 +2335,7 @@ impl std::ops::Add<QuadNumAtInfinity> for CircleAtInfinity {
             // e12345, e1, e2, e3
             Simd32x4::from([other.group0()[2], 0.0, 0.0, 0.0]),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] + self.group0()[3])]),
             // e235, e315, e125, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[0]]),
         );
@@ -2368,7 +2368,7 @@ impl std::ops::Add<QuadNumOrthogonalOrigin> for CircleAtInfinity {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[2])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[2] + self.group0()[3])]),
             // e235, e315, e125, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[0]]),
             // e1, e2, e3, e5
@@ -3783,10 +3783,10 @@ impl std::ops::Mul<AntiCircleRotorOnOrigin> for CircleAtInfinity {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       26       42        0
-    //    simd4        4        4        0
+    //      f32       22       38        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       30       46        0
+    // yes simd       27       43        0
     //  no simd       42       58        0
     fn mul(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -3835,10 +3835,10 @@ impl std::ops::Mul<AntiDipoleInversionOrthogonalOrigin> for CircleAtInfinity {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       49        0
-    //    simd4        7        7        0
+    //      f32       37       53        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       40       56        0
+    // yes simd       43       59        0
     //  no simd       61       77        0
     fn mul(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -4133,10 +4133,10 @@ impl std::ops::Mul<AntiVersorEvenOnOrigin> for CircleAtInfinity {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        6        6        0
+    //      f32       24       40        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       34       50        0
+    // yes simd       31       47        0
     //  no simd       52       68        0
     fn mul(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -4670,10 +4670,10 @@ impl std::ops::Mul<MysteryDipoleInversion> for CircleAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       29        0
-    //    simd4        5        5        0
+    //      f32       13       25        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       22       34        0
+    // yes simd       19       31        0
     //  no simd       37       49        0
     fn mul(self, other: MysteryDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -5378,7 +5378,7 @@ impl std::ops::Sub<AntiDipoleInversion> for CircleAtInfinity {
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
             // e235, e315, e125, e4
             Simd32x4::from([
                 (self.group1()[0] - other.group2()[0]),
@@ -5404,9 +5404,9 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for CircleAtInfinity {
     fn sub(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         let subtraction = AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e235, e315, e125
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
             // e1, e2, e3, e5
             (other.group2() * Simd32x4::from(-1.0)),
         );
@@ -5427,7 +5427,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for CircleAtInfinity {
             // e423, e431, e412
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[3] + self.group0()[3])]),
             // e235, e315, e125, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group1()[0] * -1.0)]),
             // e1, e2, e3, e5
@@ -5451,9 +5451,9 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for CircleAtInfinity {
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group0()[0]),
+                (-other.group1()[1] + self.group0()[1]),
+                (-other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125, e4
@@ -5483,7 +5483,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for CircleAtInfinity {
             // e423, e431, e412
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[3] + self.group0()[3])]),
             // e235, e315, e125
             self.group1(),
         );
@@ -5530,9 +5530,9 @@ impl std::ops::Sub<AntiFlatPoint> for CircleAtInfinity {
     fn sub(self, other: AntiFlatPoint) -> Self::Output {
         let subtraction = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[3] + self.group0()[3])]),
             // e235, e315, e125
-            (self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
         );
         return subtraction;
     }
@@ -5541,9 +5541,9 @@ impl std::ops::SubAssign<AntiFlatPoint> for CircleAtInfinity {
     fn sub_assign(&mut self, other: AntiFlatPoint) {
         let subtraction = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[3] + self.group0()[3])]),
             // e235, e315, e125
-            (self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
         );
         *self = subtraction;
     }
@@ -5561,9 +5561,9 @@ impl std::ops::Sub<AntiFlector> for CircleAtInfinity {
     fn sub(self, other: AntiFlector) -> Self::Output {
         let subtraction = AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[3] + self.group0()[3])]),
             // e235, e315, e125
-            (self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
             // e1, e2, e3, e5
             (other.group1() * Simd32x4::from(-1.0)),
         );
@@ -5578,7 +5578,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for CircleAtInfinity {
     fn sub(self, other: AntiFlectorOnOrigin) -> Self::Output {
         let subtraction = AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[0])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[0] + self.group0()[3])]),
             // e235, e315, e125
             self.group1(),
             // e1, e2, e3, e5
@@ -5779,7 +5779,7 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for CircleAtInfinity {
     fn sub(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         let subtraction = AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e235, e315, e125
             self.group1(),
             // e1, e2, e3, e5
@@ -6140,9 +6140,9 @@ impl std::ops::Sub<Circle> for CircleAtInfinity {
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
             // e235, e315, e125
-            (self.group1() - other.group2()),
+            (-other.group2() + self.group1()),
         );
         return subtraction;
     }
@@ -6162,13 +6162,13 @@ impl std::ops::Sub<CircleAligningOrigin> for CircleAtInfinity {
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group0()[0]),
+                (-other.group1()[1] + self.group0()[1]),
+                (-other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125
-            (self.group1() - other.group2()),
+            (-other.group2() + self.group1()),
         );
         return subtraction;
     }
@@ -6185,9 +6185,9 @@ impl std::ops::Sub<CircleAtInfinity> for CircleAtInfinity {
     fn sub(self, other: CircleAtInfinity) -> Self::Output {
         let subtraction = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e235, e315, e125
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
         );
         return subtraction;
     }
@@ -6196,9 +6196,9 @@ impl std::ops::SubAssign<CircleAtInfinity> for CircleAtInfinity {
     fn sub_assign(&mut self, other: CircleAtInfinity) {
         let subtraction = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e235, e315, e125
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
         );
         *self = subtraction;
     }
@@ -6236,9 +6236,9 @@ impl std::ops::Sub<CircleOnOrigin> for CircleAtInfinity {
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group0()[0]),
+                (-other.group1()[1] + self.group0()[1]),
+                (-other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125
@@ -6310,9 +6310,9 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for CircleAtInfinity {
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group0()[0]),
+                (-other.group1()[1] + self.group0()[1]),
+                (-other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125, e12345
@@ -6335,9 +6335,9 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for CircleAtInfinity {
         let subtraction = CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125, e12345
@@ -6390,9 +6390,9 @@ impl std::ops::Sub<CircleRotorOnOrigin> for CircleAtInfinity {
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group0()[0]),
+                (-other.group1()[1] + self.group0()[1]),
+                (-other.group1()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125, e12345
@@ -7118,9 +7118,9 @@ impl std::ops::Sub<Line> for CircleAtInfinity {
         let subtraction = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125
@@ -7134,9 +7134,9 @@ impl std::ops::SubAssign<Line> for CircleAtInfinity {
         let subtraction = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125
@@ -7171,9 +7171,9 @@ impl std::ops::Sub<LineOnOrigin> for CircleAtInfinity {
         let subtraction = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125
@@ -7187,9 +7187,9 @@ impl std::ops::SubAssign<LineOnOrigin> for CircleAtInfinity {
         let subtraction = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
+                (-other.group0()[0] + self.group0()[0]),
+                (-other.group0()[1] + self.group0()[1]),
+                (-other.group0()[2] + self.group0()[2]),
                 self.group0()[3],
             ]),
             // e235, e315, e125
@@ -7239,7 +7239,7 @@ impl std::ops::Sub<MotorAtInfinity> for CircleAtInfinity {
             // e415, e425, e435, e321
             self.group0(),
             // e235, e315, e125
-            (self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
             // e1, e2, e3, e5
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
         );
@@ -7425,7 +7425,7 @@ impl std::ops::Sub<MysteryQuadNum> for CircleAtInfinity {
     fn sub(self, other: MysteryQuadNum) -> Self::Output {
         let subtraction = CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[0])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[0] + self.group0()[3])]),
             // e235, e315, e125, e12345
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[1] * -1.0)]),
         );
@@ -7779,7 +7779,7 @@ impl std::ops::Sub<QuadNumAtInfinity> for CircleAtInfinity {
             // e12345, e1, e2, e3
             Simd32x4::from([(other.group0()[2] * -1.0), 0.0, 0.0, 0.0]),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[1] + self.group0()[3])]),
             // e235, e315, e125, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] * -1.0)]),
         );
@@ -7815,7 +7815,7 @@ impl std::ops::Sub<QuadNumOrthogonalOrigin> for CircleAtInfinity {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[2])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[2] + self.group0()[3])]),
             // e235, e315, e125, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] * -1.0)]),
             // e1, e2, e3, e5

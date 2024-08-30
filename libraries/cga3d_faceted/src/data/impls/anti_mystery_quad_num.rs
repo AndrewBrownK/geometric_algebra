@@ -495,13 +495,13 @@ impl std::ops::Add<AntiMysteryQuadNum> for AntiMysteryQuadNum {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn add(self, other: AntiMysteryQuadNum) -> Self::Output {
-        let addition = AntiMysteryQuadNum::from_groups(/* e45, scalar */ (self.group0() + other.group0()));
+        let addition = AntiMysteryQuadNum::from_groups(/* e45, scalar */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<AntiMysteryQuadNum> for AntiMysteryQuadNum {
     fn add_assign(&mut self, other: AntiMysteryQuadNum) {
-        let addition = AntiMysteryQuadNum::from_groups(/* e45, scalar */ (self.group0() + other.group0()));
+        let addition = AntiMysteryQuadNum::from_groups(/* e45, scalar */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -5513,13 +5513,13 @@ impl std::ops::Sub<AntiMysteryQuadNum> for AntiMysteryQuadNum {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn sub(self, other: AntiMysteryQuadNum) -> Self::Output {
-        let subtraction = AntiMysteryQuadNum::from_groups(/* e45, scalar */ (self.group0() - other.group0()));
+        let subtraction = AntiMysteryQuadNum::from_groups(/* e45, scalar */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiMysteryQuadNum> for AntiMysteryQuadNum {
     fn sub_assign(&mut self, other: AntiMysteryQuadNum) {
-        let subtraction = AntiMysteryQuadNum::from_groups(/* e45, scalar */ (self.group0() - other.group0()));
+        let subtraction = AntiMysteryQuadNum::from_groups(/* e45, scalar */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

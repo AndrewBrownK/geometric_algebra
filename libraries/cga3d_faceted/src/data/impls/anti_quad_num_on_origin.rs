@@ -506,7 +506,7 @@ impl std::ops::Add<AntiMysteryQuadNum> for AntiQuadNumOnOrigin {
     fn add(self, other: AntiMysteryQuadNum) -> Self::Output {
         let addition = AntiQuadNum::from_groups(
             // e1234, e3215, e45, scalar
-            Simd32x4::from([self.group0()[0], 0.0, other.group0()[0], (self.group0()[1] + other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], 0.0, other.group0()[0], (other.group0()[1] + self.group0()[1])]),
         );
         return addition;
     }
@@ -607,7 +607,7 @@ impl std::ops::Add<AntiQuadNumAligningOriginAtInfinity> for AntiQuadNumOnOrigin 
     fn add(self, other: AntiQuadNumAligningOriginAtInfinity) -> Self::Output {
         let addition = AntiQuadNumAligningOrigin::from_groups(
             // e1234, e3215, scalar
-            Simd32x3::from([self.group0()[0], other.group0()[0], (self.group0()[1] + other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], other.group0()[0], (other.group0()[1] + self.group0()[1])]),
         );
         return addition;
     }
@@ -632,13 +632,13 @@ impl std::ops::Add<AntiQuadNumOnOrigin> for AntiQuadNumOnOrigin {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn add(self, other: AntiQuadNumOnOrigin) -> Self::Output {
-        let addition = AntiQuadNumOnOrigin::from_groups(/* e1234, scalar */ (self.group0() + other.group0()));
+        let addition = AntiQuadNumOnOrigin::from_groups(/* e1234, scalar */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<AntiQuadNumOnOrigin> for AntiQuadNumOnOrigin {
     fn add_assign(&mut self, other: AntiQuadNumOnOrigin) {
-        let addition = AntiQuadNumOnOrigin::from_groups(/* e1234, scalar */ (self.group0() + other.group0()));
+        let addition = AntiQuadNumOnOrigin::from_groups(/* e1234, scalar */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -5546,7 +5546,7 @@ impl std::ops::Sub<AntiMysteryQuadNum> for AntiQuadNumOnOrigin {
     fn sub(self, other: AntiMysteryQuadNum) -> Self::Output {
         let subtraction = AntiQuadNum::from_groups(
             // e1234, e3215, e45, scalar
-            Simd32x4::from([self.group0()[0], 0.0, (other.group0()[0] * -1.0), (self.group0()[1] - other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], 0.0, (other.group0()[0] * -1.0), (-other.group0()[1] + self.group0()[1])]),
         );
         return subtraction;
     }
@@ -5654,7 +5654,7 @@ impl std::ops::Sub<AntiQuadNumAligningOriginAtInfinity> for AntiQuadNumOnOrigin 
     fn sub(self, other: AntiQuadNumAligningOriginAtInfinity) -> Self::Output {
         let subtraction = AntiQuadNumAligningOrigin::from_groups(
             // e1234, e3215, scalar
-            Simd32x3::from([self.group0()[0], (other.group0()[0] * -1.0), (self.group0()[1] - other.group0()[1])]),
+            Simd32x3::from([self.group0()[0], (other.group0()[0] * -1.0), (-other.group0()[1] + self.group0()[1])]),
         );
         return subtraction;
     }
@@ -5681,13 +5681,13 @@ impl std::ops::Sub<AntiQuadNumOnOrigin> for AntiQuadNumOnOrigin {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn sub(self, other: AntiQuadNumOnOrigin) -> Self::Output {
-        let subtraction = AntiQuadNumOnOrigin::from_groups(/* e1234, scalar */ (self.group0() - other.group0()));
+        let subtraction = AntiQuadNumOnOrigin::from_groups(/* e1234, scalar */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiQuadNumOnOrigin> for AntiQuadNumOnOrigin {
     fn sub_assign(&mut self, other: AntiQuadNumOnOrigin) {
-        let subtraction = AntiQuadNumOnOrigin::from_groups(/* e1234, scalar */ (self.group0() - other.group0()));
+        let subtraction = AntiQuadNumOnOrigin::from_groups(/* e1234, scalar */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

@@ -507,7 +507,7 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for AntiPlaneOnOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: AntiMysteryDipoleInversion) -> Self::Output {
-        let addition = AntiMysteryDipoleInversion::from_groups(/* e415, e425, e435, e321 */ other.group0(), /* e1, e2, e3 */ (self.group0() + other.group1()));
+        let addition = AntiMysteryDipoleInversion::from_groups(/* e415, e425, e435, e321 */ other.group0(), /* e1, e2, e3 */ (other.group1() + self.group0()));
         return addition;
     }
 }
@@ -563,13 +563,13 @@ impl std::ops::Add<AntiPlaneOnOrigin> for AntiPlaneOnOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        let addition = AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() + other.group0()));
+        let addition = AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<AntiPlaneOnOrigin> for AntiPlaneOnOrigin {
     fn add_assign(&mut self, other: AntiPlaneOnOrigin) {
-        let addition = AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() + other.group0()));
+        let addition = AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -5369,7 +5369,7 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for AntiPlaneOnOrigin {
             // e415, e425, e435, e321
             (other.group0() * Simd32x4::from(-1.0)),
             // e1, e2, e3
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
         );
         return subtraction;
     }
@@ -5429,13 +5429,13 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for AntiPlaneOnOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn sub(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        let subtraction = AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() - other.group0()));
+        let subtraction = AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiPlaneOnOrigin> for AntiPlaneOnOrigin {
     fn sub_assign(&mut self, other: AntiPlaneOnOrigin) {
-        let subtraction = AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() - other.group0()));
+        let subtraction = AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

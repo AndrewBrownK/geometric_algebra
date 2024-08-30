@@ -64,7 +64,7 @@ impl std::ops::Add<Flector> for Point {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: Flector) -> Self::Output {
-        let addition = Flector::from_groups(/* e1, e2, e3, e4 */ (self.group0() + other.group0()), /* e423, e431, e412, e321 */ other.group1());
+        let addition = Flector::from_groups(/* e1, e2, e3, e4 */ (other.group0() + self.group0()), /* e423, e431, e412, e321 */ other.group1());
         return addition;
     }
 }
@@ -123,7 +123,7 @@ impl std::ops::Add<MultiVector> for Point {
             // scalar, e1234
             other.group0(),
             // e1, e2, e3, e4
-            (self.group0() + other.group1()),
+            (other.group1() + self.group0()),
             // e41, e42, e43
             other.group2(),
             // e23, e31, e12
@@ -172,13 +172,13 @@ impl std::ops::Add<Point> for Point {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: Point) -> Self::Output {
-        let addition = Point::from_groups(/* e1, e2, e3, e4 */ (self.group0() + other.group0()));
+        let addition = Point::from_groups(/* e1, e2, e3, e4 */ (other.group0() + self.group0()));
         return addition;
     }
 }
 impl std::ops::AddAssign<Point> for Point {
     fn add_assign(&mut self, other: Point) {
-        let addition = Point::from_groups(/* e1, e2, e3, e4 */ (self.group0() + other.group0()));
+        let addition = Point::from_groups(/* e1, e2, e3, e4 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
@@ -547,7 +547,7 @@ impl std::ops::Sub<Flector> for Point {
     fn sub(self, other: Flector) -> Self::Output {
         let subtraction = Flector::from_groups(
             // e1, e2, e3, e4
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e423, e431, e412, e321
             (other.group1() * Simd32x4::from(-1.0)),
         );
@@ -632,7 +632,7 @@ impl std::ops::Sub<MultiVector> for Point {
             // scalar, e1234
             (other.group0() * Simd32x2::from(-1.0)),
             // e1, e2, e3, e4
-            (self.group0() - other.group1()),
+            (-other.group1() + self.group0()),
             // e41, e42, e43
             (other.group2() * Simd32x3::from(-1.0)),
             // e23, e31, e12
@@ -685,13 +685,13 @@ impl std::ops::Sub<Point> for Point {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: Point) -> Self::Output {
-        let subtraction = Point::from_groups(/* e1, e2, e3, e4 */ (self.group0() - other.group0()));
+        let subtraction = Point::from_groups(/* e1, e2, e3, e4 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
 impl std::ops::SubAssign<Point> for Point {
     fn sub_assign(&mut self, other: Point) {
-        let subtraction = Point::from_groups(/* e1, e2, e3, e4 */ (self.group0() - other.group0()));
+        let subtraction = Point::from_groups(/* e1, e2, e3, e4 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }

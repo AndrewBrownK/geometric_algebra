@@ -13,7 +13,7 @@ use crate::traits::Wedge;
 //  Minimum:         0       0       0
 //   Median:         1       3       0
 //  Average:         6      11       0
-//  Maximum:       119     148       0
+//  Maximum:       123     152       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -64,16 +64,16 @@ impl std::ops::Add<AntiDipoleInversion> for AntiFlector {
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[3] + other.group1()[3])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self.group0()[3])]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group0()[0] + other.group2()[0]),
-                (self.group0()[1] + other.group2()[1]),
-                (self.group0()[2] + other.group2()[2]),
+                (other.group2()[0] + self.group0()[0]),
+                (other.group2()[1] + self.group0()[1]),
+                (other.group2()[2] + self.group0()[2]),
                 other.group2()[3],
             ]),
             // e1, e2, e3, e5
-            (self.group1() + other.group3()),
+            (other.group3() + self.group1()),
         );
         return addition;
     }
@@ -175,13 +175,13 @@ impl std::ops::Add<AntiFlatPoint> for AntiFlector {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: AntiFlatPoint) -> Self::Output {
-        let addition = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (self.group0() + other.group0()), /* e1, e2, e3, e5 */ self.group1());
+        let addition = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (other.group0() + self.group0()), /* e1, e2, e3, e5 */ self.group1());
         return addition;
     }
 }
 impl std::ops::AddAssign<AntiFlatPoint> for AntiFlector {
     fn add_assign(&mut self, other: AntiFlatPoint) {
-        let addition = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (self.group0() + other.group0()), /* e1, e2, e3, e5 */ self.group1());
+        let addition = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (other.group0() + self.group0()), /* e1, e2, e3, e5 */ self.group1());
         *self = addition;
     }
 }
@@ -194,9 +194,9 @@ impl std::ops::Add<AntiFlector> for AntiFlector {
     fn add(self, other: AntiFlector) -> Self::Output {
         let addition = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e1, e2, e3, e5
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
         );
         return addition;
     }
@@ -205,9 +205,9 @@ impl std::ops::AddAssign<AntiFlector> for AntiFlector {
     fn add_assign(&mut self, other: AntiFlector) {
         let addition = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            (self.group0() + other.group0()),
+            (other.group0() + self.group0()),
             // e1, e2, e3, e5
-            (self.group1() + other.group1()),
+            (other.group1() + self.group1()),
         );
         *self = addition;
     }
@@ -379,9 +379,9 @@ impl std::ops::Add<Circle> for AntiFlector {
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[3] + other.group1()[3])]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group0()[0] + other.group2()[0]),
-                (self.group0()[1] + other.group2()[1]),
-                (self.group0()[2] + other.group2()[2]),
+                (other.group2()[0] + self.group0()[0]),
+                (other.group2()[1] + self.group0()[1]),
+                (other.group2()[2] + self.group0()[2]),
                 0.0,
             ]),
             // e1, e2, e3, e5
@@ -484,7 +484,7 @@ impl std::ops::Add<DualNum321> for AntiFlector {
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] + other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] + self.group0()[3])]),
             // e235, e315, e125, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
             // e1, e2, e3, e4
@@ -521,7 +521,7 @@ impl std::ops::Add<DualNum5> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e235, e315, e125, e5
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group1()[3] + other.group0()[0])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[0] + self.group1()[3])]),
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
@@ -601,9 +601,9 @@ impl std::ops::Add<Line> for AntiFlector {
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                (other.group1()[0] + self.group0()[0]),
+                (other.group1()[1] + self.group0()[1]),
+                (other.group1()[2] + self.group0()[2]),
                 0.0,
             ]),
             // e1, e2, e3, e5
@@ -625,7 +625,7 @@ impl std::ops::Add<Motor> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e235, e315, e125, e5
-            (other.group1() + Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]])),
+            (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]) + other.group1()),
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
@@ -666,7 +666,7 @@ impl std::ops::Add<MultiVector> for AntiFlector {
             // e423, e431, e412
             other.group7(),
             // e235, e315, e125
-            (other.group8() + Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])),
+            (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group8()),
             // e4235, e4315, e4125, e3215
             other.group9(),
             // e1234
@@ -740,7 +740,7 @@ impl std::ops::Add<RoundPoint> for AntiFlector {
             // e235, e315, e125, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[3]]),
             // e1, e2, e3, e5
-            (self.group1() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]])),
+            (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]]) + self.group1()),
         );
         return addition;
     }
@@ -819,7 +819,7 @@ impl std::ops::Add<TripleNum> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e235, e315, e125, e5
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group1()[3] + other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] + self.group1()[3])]),
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[0]]),
         );
@@ -842,7 +842,7 @@ impl std::ops::Add<VersorEven> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[3] + other.group1()[3])]),
             // e235, e315, e125, e5
-            (other.group2() + Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]])),
+            (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]) + other.group2()),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (self.group1()[0] + other.group3()[0]),
@@ -1338,10 +1338,10 @@ impl std::ops::Mul<AntiDipoleInversion> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       62        0
-    //    simd4       16       16        0
+    //      f32       36       58        0
+    //    simd4       17       17        0
     // Totals...
-    // yes simd       56       78        0
+    // yes simd       53       75        0
     //  no simd      104      126        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -1435,11 +1435,11 @@ impl std::ops::Mul<AntiMotor> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       20        0
-    //    simd4        7        7        0
+    //      f32       12       16        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       20       27        0
-    //  no simd       41       48        0
+    // yes simd       20       24        0
+    //  no simd       44       48        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1642,12 +1642,12 @@ impl std::ops::Mul<MultiVector> for AntiFlector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       74      101        0
+    //      f32       80      107        0
     //    simd2        4        4        0
-    //    simd3       22       24        0
+    //    simd3       20       22        0
     //    simd4       19       19        0
     // Totals...
-    // yes simd      119      148        0
+    // yes simd      123      152        0
     //  no simd      224      257        0
     fn mul(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -1738,10 +1738,10 @@ impl std::ops::Mul<VersorEven> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       71        0
-    //    simd4       15       15        0
+    //      f32       44       63        0
+    //    simd4       17       17        0
     // Totals...
-    // yes simd       67       86        0
+    // yes simd       61       80        0
     //  no simd      112      131        0
     fn mul(self, other: VersorEven) -> Self::Output {
         return self.geometric_product(other);
@@ -1847,17 +1847,17 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiFlector {
                 (other.group1()[0] * -1.0),
                 (other.group1()[1] * -1.0),
                 (other.group1()[2] * -1.0),
-                (self.group0()[3] - other.group1()[3]),
+                (-other.group1()[3] + self.group0()[3]),
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group0()[0] - other.group2()[0]),
-                (self.group0()[1] - other.group2()[1]),
-                (self.group0()[2] - other.group2()[2]),
+                (-other.group2()[0] + self.group0()[0]),
+                (-other.group2()[1] + self.group0()[1]),
+                (-other.group2()[2] + self.group0()[2]),
                 (other.group2()[3] * -1.0),
             ]),
             // e1, e2, e3, e5
-            (self.group1() - other.group3()),
+            (-other.group3() + self.group1()),
         );
         return subtraction;
     }
@@ -1968,13 +1968,13 @@ impl std::ops::Sub<AntiFlatPoint> for AntiFlector {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: AntiFlatPoint) -> Self::Output {
-        let subtraction = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (self.group0() - other.group0()), /* e1, e2, e3, e5 */ self.group1());
+        let subtraction = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (-other.group0() + self.group0()), /* e1, e2, e3, e5 */ self.group1());
         return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiFlatPoint> for AntiFlector {
     fn sub_assign(&mut self, other: AntiFlatPoint) {
-        let subtraction = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (self.group0() - other.group0()), /* e1, e2, e3, e5 */ self.group1());
+        let subtraction = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (-other.group0() + self.group0()), /* e1, e2, e3, e5 */ self.group1());
         *self = subtraction;
     }
 }
@@ -1987,9 +1987,9 @@ impl std::ops::Sub<AntiFlector> for AntiFlector {
     fn sub(self, other: AntiFlector) -> Self::Output {
         let subtraction = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e1, e2, e3, e5
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
         );
         return subtraction;
     }
@@ -1998,9 +1998,9 @@ impl std::ops::SubAssign<AntiFlector> for AntiFlector {
     fn sub_assign(&mut self, other: AntiFlector) {
         let subtraction = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            (self.group0() - other.group0()),
+            (-other.group0() + self.group0()),
             // e1, e2, e3, e5
-            (self.group1() - other.group1()),
+            (-other.group1() + self.group1()),
         );
         *self = subtraction;
     }
@@ -2204,9 +2204,9 @@ impl std::ops::Sub<Circle> for AntiFlector {
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group0()[0] - other.group2()[0]),
-                (self.group0()[1] - other.group2()[1]),
-                (self.group0()[2] - other.group2()[2]),
+                (-other.group2()[0] + self.group0()[0]),
+                (-other.group2()[1] + self.group0()[1]),
+                (-other.group2()[2] + self.group0()[2]),
                 0.0,
             ]),
             // e1, e2, e3, e5
@@ -2333,7 +2333,7 @@ impl std::ops::Sub<DualNum321> for AntiFlector {
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] - other.group0()[0])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[0] + self.group0()[3])]),
             // e235, e315, e125, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
             // e1, e2, e3, e4
@@ -2373,7 +2373,7 @@ impl std::ops::Sub<DualNum5> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e235, e315, e125, e5
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group1()[3] - other.group0()[0])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[0] + self.group1()[3])]),
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
@@ -2461,9 +2461,9 @@ impl std::ops::Sub<Line> for AntiFlector {
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
+                (-other.group1()[0] + self.group0()[0]),
+                (-other.group1()[1] + self.group0()[1]),
+                (-other.group1()[2] + self.group0()[2]),
                 0.0,
             ]),
             // e1, e2, e3, e5
@@ -2488,7 +2488,7 @@ impl std::ops::Sub<Motor> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e235, e315, e125, e5
-            (-other.group1() + Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]])),
+            (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]) - other.group1()),
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
@@ -2536,7 +2536,7 @@ impl std::ops::Sub<MultiVector> for AntiFlector {
             // e423, e431, e412
             (other.group7() * Simd32x3::from(-1.0)),
             // e235, e315, e125
-            (-other.group8() + Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])),
+            (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group8()),
             // e4235, e4315, e4125, e3215
             (other.group9() * Simd32x4::from(-1.0)),
             // e1234
@@ -2617,7 +2617,7 @@ impl std::ops::Sub<RoundPoint> for AntiFlector {
             // e235, e315, e125, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] * -1.0)]),
             // e1, e2, e3, e5
-            (self.group1() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]])),
+            (-Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]]) + self.group1()),
         );
         return subtraction;
     }
@@ -2706,7 +2706,7 @@ impl std::ops::Sub<TripleNum> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e235, e315, e125, e5
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group1()[3] - other.group0()[1])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[1] + self.group1()[3])]),
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] * -1.0)]),
         );
@@ -2734,7 +2734,7 @@ impl std::ops::Sub<VersorEven> for AntiFlector {
                 (self.group0()[3] - other.group1()[3]),
             ]),
             // e235, e315, e125, e5
-            (-other.group2() + Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]])),
+            (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]) - other.group2()),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (self.group1()[0] - other.group3()[0]),
