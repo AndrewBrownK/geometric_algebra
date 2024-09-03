@@ -132,6 +132,8 @@ pub(crate) trait TrackOperations {
 pub(crate) struct TraitOperationsLookup<'a> {
     pub(crate) traits10: &'a HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
     pub(crate) traits11: &'a HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
+    pub(crate) traits12i: &'a HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
+    pub(crate) traits12f: &'a HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
     pub(crate) traits21: &'a HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
     pub(crate) traits22: &'a HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
 }
@@ -170,6 +172,24 @@ impl<'a> TraitOperationsLookup<'a> {
         }
         panic!(
             "Attempted to look up the VectorOperationsTracker of a trait_22 that was not \
+            found as a dependency. This is probably a bug in forgetting to record a dependency."
+        )
+    }
+    pub fn trait_12i_ops(&self, k: &TraitKey, a: &MultiVector) -> VectoredOperationsTracker {
+        if let Some(rti) = self.traits12i.get(&(*k, *a)) {
+            return rti.statistics;
+        }
+        panic!(
+            "Attempted to look up the VectorOperationsTracker of a trait_12i that was not \
+            found as a dependency. This is probably a bug in forgetting to record a dependency."
+        )
+    }
+    pub fn trait_12f_ops(&self, k: &TraitKey, a: &MultiVector) -> VectoredOperationsTracker {
+        if let Some(rti) = self.traits12f.get(&(*k, *a)) {
+            return rti.statistics;
+        }
+        panic!(
+            "Attempted to look up the VectorOperationsTracker of a trait_12f that was not \
             found as a dependency. This is probably a bug in forgetting to record a dependency."
         )
     }

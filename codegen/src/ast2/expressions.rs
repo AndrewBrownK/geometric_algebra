@@ -29,6 +29,20 @@ pub trait TraitResultType: Clone + Debug + Sized + Send + Sync + 'static {
         panic!("inlined_expr_11 is needed (but not supported)")
     }
     #[allow(unused)]
+    fn expr_12i(trait_name: TraitKey, owner: MultiVectorExpr, other: IntExpr, mv_out: Option<MultiVector>) -> Self::Expr {
+        panic!("expr_12i is needed (but not supported) for {trait_name:?}")
+    }
+    fn inlined_expr_12i(_var: Variable<Self>) -> Self::Expr {
+        panic!("inlined_expr_12i is needed (but not supported)")
+    }
+    #[allow(unused)]
+    fn expr_12f(trait_name: TraitKey, owner: MultiVectorExpr, other: FloatExpr, mv_out: Option<MultiVector>) -> Self::Expr {
+        panic!("expr_12f is needed (but not supported) for {trait_name:?}")
+    }
+    fn inlined_expr_12f(_var: Variable<Self>) -> Self::Expr {
+        panic!("inlined_expr_12f is needed (but not supported)")
+    }
+    #[allow(unused)]
     fn expr_21(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVector, mv_out: Option<MultiVector>) -> Self::Expr {
         panic!("expr_21 is needed (but not supported) for {trait_name:?}")
     }
@@ -115,6 +129,18 @@ impl TraitResultType for MultiVector {
             mv_class: var.expr_type,
             expr: Box::new(MultiVectorVia::Variable(RawVariableInvocation { decl: var.decl.clone() })),
         }
+    }
+    fn expr_12i(trait_name: TraitKey, owner: MultiVectorExpr, other: IntExpr, mv_out: Option<MultiVector>) -> Self::Expr {
+        todo!()
+    }
+    fn inlined_expr_12i(_var: Variable<Self>) -> Self::Expr {
+        todo!()
+    }
+    fn expr_12f(trait_name: TraitKey, owner: MultiVectorExpr, other: FloatExpr, mv_out: Option<MultiVector>) -> Self::Expr {
+        todo!()
+    }
+    fn inlined_expr_12f(_var: Variable<Self>) -> Self::Expr {
+        todo!()
     }
     fn expr_21(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVector, mv_out: Option<MultiVector>) -> MultiVectorExpr {
         let mv_class = mv_out.expect("Confused Trait output: Expected MultiVector, but None provided.");
@@ -231,6 +257,10 @@ pub enum MultiVectorVia {
     Construct(Vec<MultiVectorGroupExpr>),
     // e.g. Involutions
     TraitInvoke11ToClass(TraitKey, MultiVectorExpr),
+    // e.g. Powi
+    TraitInvoke12iToClass(TraitKey, MultiVectorExpr, IntExpr),
+    // e.g. Powf
+    TraitInvoke12fToClass(TraitKey, MultiVectorExpr, FloatExpr),
     // e.g. Into
     TraitInvoke21ToClass(TraitKey, MultiVectorExpr, MultiVector),
     // e.g. Wedge
@@ -296,6 +326,22 @@ pub fn extract_multivector_expr<Expr: Expression<MultiVector>>(expr: Expr) -> Mu
     match expr.into_any_expression() {
         AnyExpression::Class(mve) => mve,
         _ => unreachable!("Expression<MultiVector> will always create AnyExpression::Class"),
+    }
+}
+
+/// This helps unify Variable<Float> and FloatExpr
+pub fn extract_float_expr<Expr: Expression<Float>>(expr: Expr) -> FloatExpr {
+    match expr.into_any_expression() {
+        AnyExpression::Float(f) => f,
+        _ => unreachable!("Expression<Float> will always create AnyExpression::Float"),
+    }
+}
+
+/// This helps unify Variable<Float> and FloatExpr
+pub fn extract_integer_expr<Expr: Expression<Integer>>(expr: Expr) -> IntExpr {
+    match expr.into_any_expression() {
+        AnyExpression::Int(i) => i,
+        _ => unreachable!("Expression<Integer> will always create AnyExpression::Int"),
     }
 }
 
@@ -640,6 +686,14 @@ impl Expression<MultiVector> for MultiVectorExpr {
             MultiVectorVia::TraitInvoke11ToClass(_, a) => a.substitute_variable(old.clone(), new.clone()),
             MultiVectorVia::TraitInvoke21ToClass(_, a, _) => a.substitute_variable(old.clone(), new.clone()),
             MultiVectorVia::TraitInvoke22ToClass(_, a, b) => {
+                a.substitute_variable(old.clone(), new.clone());
+                b.substitute_variable(old.clone(), new.clone());
+            }
+            MultiVectorVia::TraitInvoke12iToClass(_, a, b) => {
+                a.substitute_variable(old.clone(), new.clone());
+                b.substitute_variable(old.clone(), new.clone());
+            }
+            MultiVectorVia::TraitInvoke12fToClass(_, a, b) => {
                 a.substitute_variable(old.clone(), new.clone());
                 b.substitute_variable(old.clone(), new.clone());
             }
@@ -1052,6 +1106,27 @@ impl From<Variable<MultiVector>> for MultiVectorExpr {
     }
 }
 
+impl Display for IntExpr {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            IntExpr::Variable(v) => {
+                let (n, i) = &v.decl.name;
+                if *i == 0 {
+                    write!(f, "{n}")?;
+                } else {
+                    let i = i + 1;
+                    write!(f, "{n}_{i}")?;
+                }
+            }
+            IntExpr::Literal(l) => write!(f, "{l}")?,
+            IntExpr::TraitInvoke10ToInt(t, mv) => {
+                let n = t.as_lower_snake();
+                write!(f, "({mv} {n})")?
+            }
+        }
+        Ok(())
+    }
+}
 impl Display for FloatExpr {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -1103,6 +1178,14 @@ impl Display for FloatExpr {
                     MultiVectorVia::TraitInvoke22ToClass(t, mva, mvb) => {
                         let n = t.as_lower_snake();
                         write!(f, "({mva} {n} {mvb})[{be0}]")?
+                    }
+                    MultiVectorVia::TraitInvoke12iToClass(t, mva, i) => {
+                        let n = t.as_lower_snake();
+                        write!(f, "({mva} {n} {i})[{be0}]")?
+                    }
+                    MultiVectorVia::TraitInvoke12fToClass(t, mva, fe) => {
+                        let n = t.as_lower_snake();
+                        write!(f, "({mva} {n} {fe})[{be0}]")?
                     }
                 }
             }
@@ -1228,6 +1311,14 @@ impl Display for Vec2Expr {
                         let n = t.as_lower_snake();
                         write!(f, "({mva} {n} {mvb})[{be0}, {be1}]")?
                     }
+                    MultiVectorVia::TraitInvoke12iToClass(t, mva, i) => {
+                        let n = t.as_lower_snake();
+                        write!(f, "({mva} {n} {i})[{be0}, {be1}]")?
+                    }
+                    MultiVectorVia::TraitInvoke12fToClass(t, mva, fe) => {
+                        let n = t.as_lower_snake();
+                        write!(f, "({mva} {n} {fe})[{be0}, {be1}]")?
+                    }
                 }
             }
             Vec2Expr::Product(v, last_factor) => {
@@ -1342,6 +1433,14 @@ impl Display for Vec3Expr {
                     MultiVectorVia::TraitInvoke22ToClass(t, mva, mvb) => {
                         let n = t.as_lower_snake();
                         write!(f, "({mva} {n} {mvb})[{be0}, {be1}, {be2}]")?
+                    }
+                    MultiVectorVia::TraitInvoke12iToClass(t, mva, i) => {
+                        let n = t.as_lower_snake();
+                        write!(f, "({mva} {n} {i})[{be0}, {be1}, {be2}]")?
+                    }
+                    MultiVectorVia::TraitInvoke12fToClass(t, mva, fe) => {
+                        let n = t.as_lower_snake();
+                        write!(f, "({mva} {n} {fe})[{be0}, {be1}, {be2}]")?
                     }
                 }
             }
@@ -1460,6 +1559,14 @@ impl Display for Vec4Expr {
                         let n = t.as_lower_snake();
                         write!(f, "({mva} {n} {mvb})[{be0}, {be1}, {be2}, {be3}]")?
                     }
+                    MultiVectorVia::TraitInvoke12iToClass(t, mva, i) => {
+                        let n = t.as_lower_snake();
+                        write!(f, "({mva} {n} {i})[{be0}, {be1}, {be2}, {be3}]")?
+                    }
+                    MultiVectorVia::TraitInvoke12fToClass(t, mva, fe) => {
+                        let n = t.as_lower_snake();
+                        write!(f, "({mva} {n} {fe})[{be0}, {be1}, {be2}, {be3}]")?
+                    }
                 }
             }
             Vec4Expr::Product(v, last_factor) => {
@@ -1572,6 +1679,14 @@ impl Display for MultiVectorExpr {
             MultiVectorVia::TraitInvoke22ToClass(t, mva, mvb) => {
                 let n = t.as_lower_snake();
                 write!(f, "({mva} {n} {mvb})")?
+            }
+            MultiVectorVia::TraitInvoke12iToClass(t, mva, i) => {
+                let n = t.as_lower_snake();
+                write!(f, "({mva} {n} {i})")?
+            }
+            MultiVectorVia::TraitInvoke12fToClass(t, mva, fe) => {
+                let n = t.as_lower_snake();
+                write!(f, "({mva} {n} {fe})")?
             }
         }
         write!(f, " )")?;
@@ -1831,6 +1946,8 @@ impl MultiVectorExpr {
             MultiVectorVia::TraitInvoke11ToClass(_, _) => false,
             MultiVectorVia::TraitInvoke21ToClass(_, _, _) => false,
             MultiVectorVia::TraitInvoke22ToClass(_, _, _) => false,
+            MultiVectorVia::TraitInvoke12iToClass(_, _, _) => false,
+            MultiVectorVia::TraitInvoke12fToClass(_, _, _) => false,
         };
         if result {
             self.simplify_nuanced(true);
@@ -3162,6 +3279,8 @@ impl MultiVectorExpr {
             MultiVectorVia::TraitInvoke11ToClass(_, _) => {}
             MultiVectorVia::TraitInvoke21ToClass(_, _, _) => {}
             MultiVectorVia::TraitInvoke22ToClass(_, _, _) => {}
+            MultiVectorVia::TraitInvoke12iToClass(_, _, _) => {}
+            MultiVectorVia::TraitInvoke12fToClass(_, _, _) => {}
         }
     }
 }
@@ -4215,6 +4334,8 @@ impl TrackOperations for MultiVectorExpr {
             MultiVectorVia::TraitInvoke11ToClass(t, m) => m.count_operations(lookup) + lookup.trait_11_ops(t, &m.mv_class),
             MultiVectorVia::TraitInvoke21ToClass(t, a, b) => a.count_operations(lookup) + lookup.trait_21_ops(t, &a.mv_class, b),
             MultiVectorVia::TraitInvoke22ToClass(t, a, b) => a.count_operations(lookup) + b.count_operations(lookup) + lookup.trait_22_ops(t, &a.mv_class, &b.mv_class),
+            MultiVectorVia::TraitInvoke12iToClass(t, a, b) => a.count_operations(lookup) + b.count_operations(lookup) + lookup.trait_12i_ops(t, &a.mv_class),
+            MultiVectorVia::TraitInvoke12fToClass(t, a, b) => a.count_operations(lookup) + b.count_operations(lookup) + lookup.trait_12f_ops(t, &a.mv_class),
         }
     }
 }

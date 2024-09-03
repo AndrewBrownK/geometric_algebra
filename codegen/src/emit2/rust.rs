@@ -1702,6 +1702,50 @@ postgres-types = "0.2.7""#
                     }
                 }
             }
+            MultiVectorVia::TraitInvoke12iToClass(t, a, b) => {
+                let method = t.as_lower_snake();
+                // TODO fancy infix can conflict with variable names
+                match (&self.fancy_infix, self.prefer_fancy_infix) {
+                    (Some(infix), true) => {
+                        let op = infix.rust_operator();
+                        write!(w, "(")?;
+                        self.write_multi_vec(w, a)?;
+                        write!(w, " {op}")?;
+                        write!(w, "{method}")?;
+                        write!(w, "{op} ")?;
+                        self.write_int(w, b)?;
+                        write!(w, ")")?;
+                    }
+                    _ => {
+                        self.write_multi_vec(w, a)?;
+                        write!(w, ".{method}(")?;
+                        self.write_int(w, b)?;
+                        write!(w, ")")?;
+                    }
+                }
+            }
+            MultiVectorVia::TraitInvoke12fToClass(t, a, b) => {
+                let method = t.as_lower_snake();
+                // TODO fancy infix can conflict with variable names
+                match (&self.fancy_infix, self.prefer_fancy_infix) {
+                    (Some(infix), true) => {
+                        let op = infix.rust_operator();
+                        write!(w, "(")?;
+                        self.write_multi_vec(w, a)?;
+                        write!(w, " {op}")?;
+                        write!(w, "{method}")?;
+                        write!(w, "{op} ")?;
+                        self.write_float(w, b)?;
+                        write!(w, ")")?;
+                    }
+                    _ => {
+                        self.write_multi_vec(w, a)?;
+                        write!(w, ".{method}(")?;
+                        self.write_float(w, b)?;
+                        write!(w, ")")?;
+                    }
+                }
+            }
         }
         Ok(())
     }
@@ -1748,7 +1792,7 @@ impl From<{other}> for {owner} {{
             bail!("Owner of Into (Other of From) impl is not a MultiVector")
         };
         let Some(ExpressionType::Class(owner)) = impls.other_type_params.get(0) else {
-            bail!("Other of Into (Owner of From) impl is not a MultiVector")
+            bail!("Other of TryInto (Owner of TryFrom) impl is not a MultiVector")
         };
         let destination_elements: BTreeSet<_> = owner.elements().into_iter().collect();
         let misfit_elements: Vec<_> = other.elements().into_iter().enumerate().filter(|(_, el)| !destination_elements.contains(el)).collect();
@@ -2302,12 +2346,14 @@ impl std::hash::Hash for {ucc} {{
 
         let mut var_param = None;
         if !impls.other_var_params.is_empty() {
-            let ty_param = &impls.other_type_params[0];
             let v_param = &impls.other_var_params[0];
-            if ty_param != v_param {
-                // TODO I feel like this is a representation problem, need to review and maybe
-                //  refactor the algebraic data types involved here
-                bail!("Type of trait implementation does not agree");
+            if !impls.other_type_params.is_empty() {
+                let ty_param = &impls.other_type_params[0];
+                if ty_param != v_param {
+                    // TODO I feel like this is a representation problem, need to review and maybe
+                    //  refactor the algebraic data types involved here
+                    bail!("Type of trait implementation does not agree");
+                }
             }
             var_param = Some(v_param);
         }

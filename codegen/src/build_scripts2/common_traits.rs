@@ -232,6 +232,44 @@ mod impls {
             }
         };
     }
+    #[macro_export]
+    macro_rules! trait_impl_1_type_1_arg_i32 {
+        ($trait_impl:ident($builder:ident, $slf:ident, $other:ident) -> $output:ident $the_impl:tt) => {
+            #[derive(Clone, Copy)]
+            pub struct $trait_impl;
+            #[async_trait]
+            impl $crate::ast2::traits::TraitImpl_12i for $trait_impl {
+                type Output = $output;
+                async fn general_implementation<const AntiScalar: $crate::algebra2::basis::BasisElement>(
+                    self,
+                    mut $builder: $crate::ast2::traits::TraitImplBuilder<AntiScalar, $crate::ast2::traits::HasNotReturned>,
+                    $slf: $crate::ast2::Variable<$crate::ast2::datatype::MultiVector>,
+                    $other: $crate::ast2::Variable<$crate::ast2::datatype::Integer>,
+                ) -> Option<$crate::ast2::traits::TraitImplBuilder<AntiScalar, Self::Output>> {
+                    $the_impl
+                }
+            }
+        };
+    }
+    #[macro_export]
+    macro_rules! trait_impl_1_type_1_arg_f32 {
+        ($trait_impl:ident($builder:ident, $slf:ident, $other:ident) -> $output:ident $the_impl:tt) => {
+            #[derive(Clone, Copy)]
+            pub struct $trait_impl;
+            #[async_trait]
+            impl $crate::ast2::traits::TraitImpl_12f for $trait_impl {
+                type Output = $output;
+                async fn general_implementation<const AntiScalar: $crate::algebra2::basis::BasisElement>(
+                    self,
+                    mut $builder: $crate::ast2::traits::TraitImplBuilder<AntiScalar, $crate::ast2::traits::HasNotReturned>,
+                    $slf: $crate::ast2::Variable<$crate::ast2::datatype::MultiVector>,
+                    $other: $crate::ast2::Variable<$crate::ast2::datatype::Float>,
+                ) -> Option<$crate::ast2::traits::TraitImplBuilder<AntiScalar, Self::Output>> {
+                    $the_impl
+                }
+            }
+        };
+    }
 
     trait_impl_1_type_0_args!(ZeroImpl(builder, owner) -> MultiVector {
         builder.return_expr(owner.construct(|_| FloatExpr::Literal(0.0)))
@@ -677,8 +715,10 @@ mod impls {
     // TODO this is just a placeholder to help me figure out powi and then powf and then sqrt
     trait_impl_1_type_1_arg!(SquareImpl(builder, slf) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
+        // let r = Reverse.inline(&builder, slf.clone()).await?;
+        let r = slf.clone();
         for (a, a_el) in slf.elements_flat() {
-            for (b, b_el) in slf.elements_flat() {
+            for (b, b_el) in r.elements_flat() {
                 let sop = builder.ga.product(a_el, b_el);
                 for p in sop.sum {
                     let el = p.element;
@@ -692,8 +732,10 @@ mod impls {
     });
     trait_impl_1_type_1_arg!(AntiSquareImpl(builder, slf) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
+        // let r = AntiReverse.inline(&builder, slf.clone()).await?;
+        let r = slf.clone();
         for (a, a_el) in slf.elements_flat() {
-            for (b, b_el) in slf.elements_flat() {
+            for (b, b_el) in r.elements_flat() {
                 let sop = builder.ga.anti_product(a_el, b_el);
                 for p in sop.sum {
                     let el = p.element;
@@ -706,26 +748,65 @@ mod impls {
         builder.return_expr(result)
     });
 
-    /* AntiSquare QuadNum */
-    /*
-
-    TODO looks like I need to implement Ord on expressions
+/*
 impl AntiSquare for QuadNum {
     type Output = QuadNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       14        0
     fn anti_square(self) -> Self::Output {
         use crate::elements::*;
         return QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            ((self[e12345] * self[e4]) - (self[e321] * self[e4]) + (self[e4] * self[e321]) + (self[e4] * self[e12345])),
-            ((self[e12345] * self[e5]) + (self[e321] * self[e5]) - (self[e5] * self[e321]) + (self[e5] * self[e12345])),
-            ((self[e12345] * self[e321]) + (self[e321] * self[e12345]) - (self[e4] * self[e5]) + (self[e5] * self[e4])),
-            (f32::powi(self[e12345], 2) + f32::powi(self[e321], 2) + (self[e4] * self[e5]) + (self[e5] * self[e4])),
+            (self[e4] * self[e12345] * 2.0),
+            (self[e5] * self[e12345] * 2.0),
+            (self[e321] * self[e12345] * 2.0),
+            (f32::powi(self[e321], 2) + f32::powi(self[e12345], 2) + 2.0 * (self[e4] * self[e5])),
         ]));
     }
 }
-    */
+impl AntiSquare for DualNum5 {
+    type Output = DualNum5;
+    fn anti_square(self) -> Self::Output {
+        use crate::elements::*;
+        return DualNum5::from_groups(
+            // e5, e12345
+            (Simd32x2::from([
+                (self[e5] * self[e12345]),
+                f32::powi(self[e12345], 2)
+            ]) * Simd32x2::from([2.0, 1.0])),
+        );
+    }
+}
+impl AntiSquare for DualNum4 {
+    type Output = DualNum4;
+    fn anti_square(self) -> Self::Output {
+        use crate::elements::*;
+        return DualNum4::from_groups(
+            // e4, e12345
+            (Simd32x2::from([(self[e4] * self[e12345]),
+            f32::powi(self[e12345], 2)]) * Simd32x2::from([2.0, 1.0])),
+        );
+    }
+}
+impl AntiSquare for DualNum321 {
+    type Output = DualNum321;
+    fn anti_square(self) -> Self::Output {
+        use crate::elements::*;
+        return DualNum321::from_groups(
+            // e321, e12345
+            Simd32x2::from([(self[e321] * self[e12345] * 2.0),
+            (f32::powi(self[e321], 2) + f32::powi(self[e12345], 2))]),
+        );
+    }
+}impl AntiSquare for TripleNum {
+    type Output = TripleNum;
+    fn anti_square(self) -> Self::Output {
+        use crate::elements::*;
+        return TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([
+            (self[e4] * self[e12345] * 2.0),
+            (self[e5] * self[e12345] * 2.0),
+            (f32::powi(self[e12345], 2) + 2.0 * (self[e4] * self[e5])),
+        ]));
+    }
+}
+*/
 
     trait_impl_1_type_1_arg!(SquareRootImpl(builder, slf) -> MultiVector {
         let scalar_mv = MultiVector::from(builder.mvs.scalar());
