@@ -198,6 +198,7 @@ pub enum IntExpr {
 pub enum FloatExpr {
     Variable(RawVariableInvocation),
     Literal(f32),
+    FromInt(IntExpr),
     AccessVec2(Box<Vec2Expr>, u8),
     AccessVec3(Box<Vec3Expr>, u8),
     AccessVec4(Box<Vec4Expr>, u8),
@@ -207,6 +208,7 @@ pub enum FloatExpr {
     TraitInvoke11ToFloat(TraitKey, MultiVectorExpr),
     Product(Vec<(FloatExpr, f32)>, f32),
     Sum(Vec<(FloatExpr, f32)>, f32),
+    Exp(Box<FloatExpr>, Option<Box<FloatExpr>>, f32),
     // TODO trig? floor? log? round? trunc? mix? step? smoothstep? fma? fract? modf?
 }
 #[derive(Clone, Debug)]
@@ -447,6 +449,13 @@ impl Expression<Float> for FloatExpr {
                     v.substitute_variable(old.clone(), new.clone());
                 }
             }
+            FloatExpr::Exp(a, b, _) => {
+                a.substitute_variable(old.clone(), new.clone());
+                if let Some(b) = b {
+                    b.substitute_variable(old.clone(), new.clone());
+                }
+            }
+            FloatExpr::FromInt(a) => a.substitute_variable(old.clone(), new.clone()),
         }
     }
 }
@@ -1051,6 +1060,11 @@ impl MultiVectorExpr {
     }
 }
 
+impl From<Variable<Integer>> for IntExpr {
+    fn from(value: Variable<Integer>) -> Self {
+        IntExpr::Variable(RawVariableInvocation { decl: value.decl.clone() })
+    }
+}
 impl From<Variable<Float>> for FloatExpr {
     fn from(value: Variable<Float>) -> Self {
         FloatExpr::Variable(RawVariableInvocation { decl: value.decl.clone() })
@@ -1140,6 +1154,7 @@ impl Display for FloatExpr {
                 }
             }
             FloatExpr::Literal(l) => write!(f, "{l}")?,
+            FloatExpr::FromInt(i) => write!(f, "{i}")?,
             FloatExpr::AccessVec2(box v, i) => write!(f, "{v}[{i}]")?,
             FloatExpr::AccessVec3(box v, i) => write!(f, "{v}[{i}]")?,
             FloatExpr::AccessVec4(box v, i) => write!(f, "{v}[{i}]")?,
@@ -1249,6 +1264,19 @@ impl Display for FloatExpr {
                         write!(f, " - {fl}")?;
                     }
                     _ => {}
+                }
+                write!(f, ")")?;
+            }
+            FloatExpr::Exp(box factor, exponent, last_exponent) => {
+                write!(f, "({factor} ^ ")?;
+                if let Some(box exponent) = exponent {
+                    write!(f, "{exponent}")?;
+                    if *last_exponent != 1.0 {
+                        write!(f, " * ")?;
+                    }
+                }
+                if *last_exponent != 1.0 {
+                    write!(f, "{last_exponent}")?;
                 }
                 write!(f, ")")?;
             }
@@ -1752,6 +1780,14 @@ impl FloatExpr {
                 }
                 result
             }
+            FloatExpr::Exp(a, b, _) => {
+                let mut result = a.deep_inline_variables();
+                if let Some(b) = b {
+                    result |= b.deep_inline_variables();
+                }
+                result
+            }
+            FloatExpr::FromInt(a) => a.deep_inline_variables(),
         };
         if result {
             self.simplify_nuanced(true);
@@ -2010,7 +2046,9 @@ impl<Expr: Ord> SortVecDespiteF32 for Vec<(Expr, f32)> {
     }
 }
 
-
+impl IntExpr {
+    fn simplify(&mut self) {}
+}
 impl FloatExpr {
     pub(crate) fn simplify(&mut self) {
         self.simplify_nuanced(false);
@@ -2019,6 +2057,19 @@ impl FloatExpr {
         match self {
             FloatExpr::Variable(_) => {}
             FloatExpr::Literal(_) => {}
+            FloatExpr::FromInt(a) => {
+                if !insides_already_done {
+                    a.simplify();
+                }
+                match a {
+                    IntExpr::Variable(_) => {}
+                    IntExpr::Literal(i) => {
+                        *self = FloatExpr::Literal(*i as f32);
+                        return
+                    }
+                    IntExpr::TraitInvoke10ToInt(_, _) => {}
+                }
+            },
             FloatExpr::AccessVec2(av2, idx) => {
                 if !insides_already_done {
                     av2.simplify();
@@ -2318,6 +2369,30 @@ impl FloatExpr {
                 }
                 if sum.is_empty() {
                     *self = FloatExpr::Literal(*last_addend);
+                }
+            }
+            FloatExpr::Exp(a, b, c) => {
+                if !insides_already_done {
+                    a.simplify();
+                }
+                if let Some(d) = b {
+                    if !insides_already_done {
+                        d.simplify();
+                    }
+                    if let box FloatExpr::Literal(l) = d {
+                        *c *= *l;
+                        *b = None;
+                    }
+                }
+                if b.is_none() {
+                    if *c == 1.0 {
+                        *self = a.take_as_owned();
+                        return
+                    }
+                    if *c == 0.0 {
+                        *self = FloatExpr::Literal(1.0);
+                        return
+                    }
                 }
             }
         }
@@ -3347,6 +3422,7 @@ impl Ord for FloatExpr {
         match (self, other) {
             (Variable(a), Variable(b)) => a.cmp(b),
             (Literal(a), Literal(b)) => FloatOrd(*a).cmp(&FloatOrd(*b)),
+            (FromInt(a), FromInt(b)) => a.cmp(&b),
             (AccessVec2(a, ai), AccessVec2(b, bi)) => a.cmp(b).then_with(|| ai.cmp(bi)),
             (AccessVec3(a, ai), AccessVec3(b, bi)) => a.cmp(b).then_with(|| ai.cmp(bi)),
             (AccessVec4(a, ai), AccessVec4(b, bi)) => a.cmp(b).then_with(|| ai.cmp(bi)),
@@ -3379,10 +3455,19 @@ impl Ord for FloatExpr {
                 }
                 return Ordering::Equal
             }
+            (Exp(a_factor, a_exp, a_lexp), Exp(b_factor, b_exp, b_lexp)) => {
+                let c = a_factor.cmp(&b_factor);
+                if c != Ordering::Equal { return c }
+                let c = a_exp.cmp(&b_exp);
+                if c != Ordering::Equal { return c }
+                return FloatOrd(*a_lexp).cmp(&FloatOrd(*b_lexp));
+            }
             (Variable(_), _) => Ordering::Less,
             (_, Variable(_)) => Ordering::Greater,
             (Literal(_), _) => Ordering::Less,
             (_, Literal(_)) => Ordering::Greater,
+            (FromInt(_), _) => Ordering::Less,
+            (_, FromInt(_)) => Ordering::Greater,
             (AccessVec2(_, _), _) => Ordering::Less,
             (_, AccessVec2(_, _)) => Ordering::Greater,
             (AccessVec3(_, _), _) => Ordering::Less,
@@ -3399,6 +3484,8 @@ impl Ord for FloatExpr {
             (_, Product(_, _)) => Ordering::Greater,
             (Sum(_, _), _) => Ordering::Less,
             (_, Sum(_, _)) => Ordering::Greater,
+            (Exp(_, _, _), _) => Ordering::Less,
+            (_, Exp(_, _, _)) => Ordering::Greater,
         }
     }
 }
@@ -4157,6 +4244,20 @@ impl TrackOperations for FloatExpr {
                 }
                 result
             }
+            FloatExpr::Exp(a, b, c) => {
+                let mut result = a.count_operations(lookup);
+                if *c != 1.0 && b.is_some() {
+                    result.floats.mul += 1;
+                }
+                if *c != 1.0 || b.is_some() {
+                    result.floats.pow += 1;
+                }
+                if let Some(b) = b {
+                    result += b.count_operations(lookup);
+                }
+                result
+            }
+            FloatExpr::FromInt(a) => a.count_operations(lookup)
         }
     }
 }

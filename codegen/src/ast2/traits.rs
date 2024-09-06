@@ -2205,7 +2205,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
     }
 
     // TODO put a wrapper type on this maybe... or rename it to be independent of trait building.
-    pub(crate) fn new_sandbox(ga: Arc<GeometricAlgebra<AntiScalar>>, mvs: Arc<MultiVecRepository<AntiScalar>>) -> Self {
+    pub fn new_sandbox(ga: Arc<GeometricAlgebra<AntiScalar>>, mvs: Arc<MultiVecRepository<AntiScalar>>) -> Self {
         let trait_def = Arc::new(RawTraitDefinition {
             documentation: "Sandbox".to_string(),
             names: TraitNames::just("Sandbox"),

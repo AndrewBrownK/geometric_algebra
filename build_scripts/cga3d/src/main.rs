@@ -5,6 +5,17 @@
 #![feature(adt_const_params)]
 
 use codegen::algebra2::multivector::DeclareMultiVecs;
+use codegen::ast2::datatype::{Float, MultiVector};
+use codegen::ast2::expressions::{FloatExpr, IntExpr};
+use codegen::ast2::traits::{
+    TraitDef_2_Types_2_Args,
+    TraitDef_1_Type_2_Args_i32,
+    TraitDef_1_Type_2_Args_f32,
+    TraitDef_1_Type_1_Arg,
+    TraitImplBuilder,
+};
+use codegen::ast2::Variable;
+use codegen::build_scripts2::common_traits::{AntiPowi, AntiSquare, GeometricAntiProduct};
 use codegen::elements::e12345;
 
 codegen::multi_vecs! { e12345;
@@ -143,4 +154,38 @@ pub mod custom_traits {
         let result = result.construct(&builder)?;
         builder.return_expr(result)
     });
+}
+
+#[test]
+fn test_powf() {
+    let cga3d = codegen::ga! { e12345;
+        1 => e1, e2, e3, eP;
+        -1 => eM;
+        where
+        e4 => 0.5 * (eM - eP);
+        e5 => eP + eM;
+    };
+    fn float_var_expr(n: &str) -> FloatExpr {
+        Variable::quick_var(n, Float).into()
+    }
+    let repo = base_documentation(register_multi_vecs(cga3d.clone())).finished();
+    let builder = TraitImplBuilder::new_sandbox(cga3d.clone(), repo);
+    let rt = tokio::runtime::Runtime::new().expect("tokio works");
+    let result: Option<()> = rt.block_on(async move {
+        let qn = MultiVector::from(&QuadNum);
+        let qn = qn.construct(|el| {
+            let mut n = format!("{el}");
+            n = n.replace("e", "a");
+            float_var_expr(n.as_str())
+        });
+        println!("Basic QuadNum: {qn}");
+        let qn_1 = GeometricAntiProduct.deep_inline(&builder, qn.clone(), qn.clone()).await?;
+        println!("Manually Squared: {qn_1}");
+        let qn_2 = AntiSquare.deep_inline(&builder, qn.clone()).await?;
+        println!("Trait Squared: {qn_2}");
+        let qn_3 = AntiPowi.deep_inline(&builder, qn.clone(), IntExpr::Literal(2)).await?;
+        println!("Powi Squared: {qn_3}");
+        Some(())
+    });
+    result.expect("Entire script must complete")
 }

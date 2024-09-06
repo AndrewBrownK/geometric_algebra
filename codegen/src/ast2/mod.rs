@@ -19,7 +19,7 @@ pub struct Variable<ExprType> {
 // TODO see if this can be used generally, or if I need a more formal solution
 impl<ExprType> Variable<ExprType> {
     // For quick testing purposes
-    pub(crate) fn quick_var(name: &str, e: ExprType) -> Self {
+    pub fn quick_var(name: &str, e: ExprType) -> Self {
         Variable {
             expr_type: e,
             decl: Arc::new(RawVariableDeclaration {

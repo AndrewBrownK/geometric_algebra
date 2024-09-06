@@ -859,6 +859,11 @@ postgres-types = "0.2.7""#
                 }
             }
             FloatExpr::Literal(l) => self.write_f32(w, *l)?,
+            FloatExpr::FromInt(i) => {
+                write!(w, "(")?;
+                self.write_int(w, i)?;
+                write!(w, " as f32)")?;
+            }
             FloatExpr::AccessVec2(v, i) => {
                 self.write_vec2(w, v.as_ref())?;
                 write!(w, "[{i}]")?;
@@ -1032,6 +1037,26 @@ postgres-types = "0.2.7""#
                 if len > 1 {
                     write!(w, ")")?;
                 }
+            }
+            FloatExpr::Exp(factor, exponent, last_exponent) => {
+
+                if exponent.is_none() && last_exponent.fract() == 0.0 {
+                    write!(w, "f32::powi(")?;
+                } else {
+                    write!(w, "f32::powf(")?;
+                }
+                self.write_float(w, factor)?;
+                write!(w, ", ")?;
+                if let Some(exponent) = exponent {
+                    self.write_float(w, exponent)?;
+                    if *last_exponent != 1.0 {
+                        write!(w, " * ")?;
+                    }
+                }
+                if *last_exponent != 1.0 {
+                    write!(w, "{last_exponent}")?;
+                }
+                write!(w, ")")?;
             }
         }
         Ok(())

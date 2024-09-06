@@ -8,12 +8,9 @@ use async_trait::async_trait;
 
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::MultiVec;
-use crate::ast2::datatype::{AnyClasses, MultiVector, Specifically};
+use crate::ast2::datatype::{AnyClasses, Float, Integer, MultiVector, Specifically};
 use crate::ast2::expressions::{Expression, TraitResultType};
-use crate::ast2::traits::{
-    HasNotReturned, ProvideTraitNames, TraitAlias, TraitDef_1_Type_0_Args, TraitDef_1_Type_1_Arg, TraitDef_2_Types_1_Arg, TraitDef_2_Types_2_Args, TraitImplBuilder, TraitImpl_10,
-    TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitKey, TraitNames,
-};
+use crate::ast2::traits::{HasNotReturned, ProvideTraitNames, TraitAlias, TraitDef_1_Type_0_Args, TraitDef_1_Type_1_Arg, TraitDef_2_Types_1_Arg, TraitDef_2_Types_2_Args, TraitImplBuilder, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitKey, TraitNames, TraitImpl_12f, TraitDef_1_Type_2_Args_f32, TraitImpl_12i, TraitDef_1_Type_2_Args_i32};
 use crate::ast2::Variable;
 
 #[derive(Clone, Copy)]
@@ -202,6 +199,51 @@ impl<Impl: TraitImpl_22> TraitDef_2_Types_2_Args for Elaborated<Impl> {
         (AnyClasses, AnyClasses)
     }
 }
+#[async_trait]
+impl<Impl: TraitImpl_12f> TraitImpl_12f for Elaborated<Impl> {
+    type Output = Impl::Output;
+
+    async fn general_implementation<const AntiScalar: BasisElement>(
+        self, builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        slf: Variable<MultiVector>,
+        other: Variable<Float>,
+    ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+        self.the_impl.general_implementation(builder, slf, other).await
+    }
+}
+#[async_trait]
+impl<Impl: TraitImpl_12f> TraitDef_1_Type_2_Args_f32 for Elaborated<Impl> {
+    type Owner = AnyClasses;
+    fn general_documentation(&self) -> String {
+        standard_documentation(<Elaborated<Impl> as ProvideTraitNames>::trait_names(self), self.blurb)
+    }
+    fn domain(&self) -> Self::Owner {
+        AnyClasses
+    }
+}
+#[async_trait]
+impl<Impl: TraitImpl_12i> TraitImpl_12i for Elaborated<Impl> {
+    type Output = Impl::Output;
+
+    async fn general_implementation<const AntiScalar: BasisElement>(
+        self,
+        builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        slf: Variable<MultiVector>,
+        other: Variable<Integer>,
+    ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+        self.the_impl.general_implementation(builder, slf, other).await
+    }
+}
+#[async_trait]
+impl<Impl: TraitImpl_12i> TraitDef_1_Type_2_Args_i32 for Elaborated<Impl> {
+    type Owner = AnyClasses;
+    fn general_documentation(&self) -> String {
+        standard_documentation(<Elaborated<Impl> as ProvideTraitNames>::trait_names(self), self.blurb)
+    }
+    fn domain(&self) -> Self::Owner {
+        AnyClasses
+    }
+}
 
 #[derive(Clone, Copy)]
 pub struct InlineOnly<Impl> {
@@ -347,6 +389,10 @@ impl<Impl: TraitImpl_22> TraitDef_2_Types_2_Args for InlineOnly<Impl> {
         return Some(<Self::Output as TraitResultType>::inlined_expr_22(return_as_var));
     }
 }
+
+// TODO InlineOnly 12f and 12i
+
+
 
 pub type SpecializedImpl_10<const AntiScalar: BasisElement, Output> = &'static (dyn Fn(TraitImplBuilder<AntiScalar, HasNotReturned>, MultiVector) -> Pin<Box<dyn Future<Output = Option<TraitImplBuilder<AntiScalar, Output>>> + Send>>
               + Send
@@ -667,6 +713,11 @@ where
     }
 }
 
+
+// TODO Specialize 12f and 12i
+
+
+
 #[derive(Clone, Copy)]
 pub struct OvertDelegate<Impl> {
     name: &'static str,
@@ -775,3 +826,5 @@ impl<Impl: TraitDef_2_Types_2_Args> TraitDef_2_Types_2_Args for OvertDelegate<Im
         self.domain()
     }
 }
+
+// TODO OvertDelgate 12f and 12i

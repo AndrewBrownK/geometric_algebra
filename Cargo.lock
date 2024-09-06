@@ -231,6 +231,7 @@ version = "0.3.0"
 dependencies = [
  "async-trait",
  "codegen",
+ "tokio",
 ]
 
 [[package]]
