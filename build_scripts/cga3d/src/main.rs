@@ -181,10 +181,12 @@ fn test_powf() {
         println!("Basic QuadNum: {qn}");
         let qn_1 = GeometricAntiProduct.deep_inline(&builder, qn.clone(), qn.clone()).await?;
         println!("Manually Squared: {qn_1}");
+        println!("Manually Squared: {qn_1:?}");
         let qn_2 = AntiSquare.deep_inline(&builder, qn.clone()).await?;
         println!("Trait Squared: {qn_2}");
         let qn_3 = AntiPowi.deep_inline(&builder, qn.clone(), IntExpr::Literal(2)).await?;
         println!("Powi Squared: {qn_3}");
+        println!("Powi Squared: {qn_3:?}");
         Some(())
     });
     result.expect("Entire script must complete")
