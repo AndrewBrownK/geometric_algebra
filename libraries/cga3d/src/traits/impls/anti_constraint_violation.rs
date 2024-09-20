@@ -5,18 +5,18 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 33
+// Total Implementations: 35
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:        10      13       0
-//  Average:        44      51       0
+//   Median:         4      10       0
+//  Average:        41      48       0
 //  Maximum:       575     601       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:        12      15       0
-//  Average:        78      87       0
+//   Median:         4      13       0
+//  Average:        73      83       0
 //  Maximum:      1016    1060       0
 impl AntiConstraintViolation for AntiCircleRotor {
     type Output = VersorEven;
@@ -2427,6 +2427,54 @@ impl AntiConstraintViolation for VersorOdd {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+        return subtraction;
+    }
+}
+impl AntiConstraintViolation for VersorRoundPoint {
+    type Output = RoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        4        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        4        6        0
+    //  no simd        4       12        0
+    fn anti_constraint_violation(self) -> Self::Output {
+        let geometric_anti_product = VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(self.group1()[1]) * self.group0() * Simd32x4::from(2.0)),
+            // e5, e12345
+            Simd32x2::from([
+                (self.group1()[0] * self.group1()[1] * 2.0),
+                (f32::powi(self.group1()[1], 2) - f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2)
+                    + 2.0 * (self.group1()[0] * self.group0()[3])),
+            ]),
+        );
+        let subtraction = RoundPoint::from_groups(/* e1, e2, e3, e4 */ geometric_anti_product.group0(), /* e5 */ geometric_anti_product.group1()[0]);
+        return subtraction;
+    }
+}
+impl AntiConstraintViolation for VersorSphere {
+    type Output = RoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        4        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        4        6        0
+    //  no simd        4       12        0
+    fn anti_constraint_violation(self) -> Self::Output {
+        let geometric_anti_product = VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(self.group1()[1]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]]) * Simd32x4::from([2.0, 2.0, 2.0, -2.0])),
+            // e5, e12345
+            Simd32x2::from([
+                (self.group1()[1] * self.group0()[3] * -2.0),
+                (-f32::powi(self.group1()[1], 2) + f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2)
+                    - 2.0 * (self.group1()[0] * self.group0()[3])),
+            ]),
+        );
+        let subtraction = RoundPoint::from_groups(/* e1, e2, e3, e4 */ geometric_anti_product.group0(), /* e5 */ geometric_anti_product.group1()[0]);
         return subtraction;
     }
 }

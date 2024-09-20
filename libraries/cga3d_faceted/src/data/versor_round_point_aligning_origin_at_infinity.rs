@@ -1,27 +1,27 @@
 use crate::data::*;
 use crate::simd::*;
 
-/// QuadNumOnOrigin.
-/// This variant of QuadNum intersects the Origin.
+/// VersorRoundPointAligningOriginAtInfinity.
+/// This variant of VersorRoundPointAligningOrigin exists at the Horizon.
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
-pub union QuadNumOnOrigin {
-    groups: QuadNumOnOriginGroups,
-    /// e4, e12345, 0, 0
+pub union VersorRoundPointAligningOriginAtInfinity {
+    groups: VersorRoundPointAligningOriginAtInfinityGroups,
+    /// e5, e12345, 0, 0
     elements: [f32; 4],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
-pub struct QuadNumOnOriginGroups {
-    /// e4, e12345
+pub struct VersorRoundPointAligningOriginAtInfinityGroups {
+    /// e5, e12345
     g0: Simd32x2,
 }
-impl QuadNumOnOrigin {
+impl VersorRoundPointAligningOriginAtInfinity {
     #[allow(clippy::too_many_arguments)]
-    pub const fn from_elements(e4: f32, e12345: f32) -> Self {
-        Self { elements: [e4, e12345, 0.0, 0.0] }
+    pub const fn from_elements(e5: f32, e12345: f32) -> Self {
+        Self { elements: [e5, e12345, 0.0, 0.0] }
     }
     pub const fn from_groups(g0: Simd32x2) -> Self {
         Self {
-            groups: QuadNumOnOriginGroups { g0 },
+            groups: VersorRoundPointAligningOriginAtInfinityGroups { g0 },
         }
     }
     #[inline(always)]
@@ -33,41 +33,45 @@ impl QuadNumOnOrigin {
         unsafe { &mut self.groups.g0 }
     }
 }
-const QUAD_NUM_ON_ORIGIN_INDEX_REMAP: [usize; 2] = [0, 1];
-impl std::ops::Index<usize> for QuadNumOnOrigin {
+const VERSOR_ROUND_POINT_ALIGNING_ORIGIN_AT_INFINITY_INDEX_REMAP: [usize; 2] = [0, 1];
+impl std::ops::Index<usize> for VersorRoundPointAligningOriginAtInfinity {
     type Output = f32;
     fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[QUAD_NUM_ON_ORIGIN_INDEX_REMAP[index]] }
+        unsafe { &self.elements[VERSOR_ROUND_POINT_ALIGNING_ORIGIN_AT_INFINITY_INDEX_REMAP[index]] }
     }
 }
-impl std::ops::IndexMut<usize> for QuadNumOnOrigin {
+impl std::ops::IndexMut<usize> for VersorRoundPointAligningOriginAtInfinity {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[QUAD_NUM_ON_ORIGIN_INDEX_REMAP[index]] }
+        unsafe { &mut self.elements[VERSOR_ROUND_POINT_ALIGNING_ORIGIN_AT_INFINITY_INDEX_REMAP[index]] }
     }
 }
-impl From<QuadNumOnOrigin> for [f32; 2] {
-    fn from(vector: QuadNumOnOrigin) -> Self {
+impl From<VersorRoundPointAligningOriginAtInfinity> for [f32; 2] {
+    fn from(vector: VersorRoundPointAligningOriginAtInfinity) -> Self {
         unsafe { [vector.elements[0], vector.elements[1]] }
     }
 }
-impl From<[f32; 2]> for QuadNumOnOrigin {
+impl From<[f32; 2]> for VersorRoundPointAligningOriginAtInfinity {
     fn from(array: [f32; 2]) -> Self {
         Self {
             elements: [array[0], array[1], 0.0, 0.0],
         }
     }
 }
-impl std::fmt::Debug for QuadNumOnOrigin {
+impl std::fmt::Debug for VersorRoundPointAligningOriginAtInfinity {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter.debug_struct("QuadNumOnOrigin").field("e4", &self[0]).field("e12345", &self[1]).finish()
+        formatter
+            .debug_struct("VersorRoundPointAligningOriginAtInfinity")
+            .field("e5", &self[0])
+            .field("e12345", &self[1])
+            .finish()
     }
 }
 
-impl QuadNumOnOrigin {
+impl VersorRoundPointAligningOriginAtInfinity {
     pub const LEN: usize = 2;
 }
 
-impl QuadNumOnOrigin {
+impl VersorRoundPointAligningOriginAtInfinity {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
             let f = self[i];
@@ -79,7 +83,7 @@ impl QuadNumOnOrigin {
     }
 }
 
-impl PartialOrd for QuadNumOnOrigin {
+impl PartialOrd for VersorRoundPointAligningOriginAtInfinity {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         for i in 0..Self::LEN {
             let a = float_ord::FloatOrd(self[i]);
@@ -92,7 +96,7 @@ impl PartialOrd for QuadNumOnOrigin {
         Some(std::cmp::Ordering::Equal)
     }
 }
-impl Ord for QuadNumOnOrigin {
+impl Ord for VersorRoundPointAligningOriginAtInfinity {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         for i in 0..Self::LEN {
             let a = float_ord::FloatOrd(self[i]);
@@ -105,7 +109,7 @@ impl Ord for QuadNumOnOrigin {
         std::cmp::Ordering::Equal
     }
 }
-impl PartialEq for QuadNumOnOrigin {
+impl PartialEq for VersorRoundPointAligningOriginAtInfinity {
     fn eq(&self, other: &Self) -> bool {
         for i in 0..Self::LEN {
             let a = float_ord::FloatOrd(self[i]);
@@ -117,8 +121,8 @@ impl PartialEq for QuadNumOnOrigin {
         true
     }
 }
-impl Eq for QuadNumOnOrigin {}
-impl std::hash::Hash for QuadNumOnOrigin {
+impl Eq for VersorRoundPointAligningOriginAtInfinity {}
+impl std::hash::Hash for VersorRoundPointAligningOriginAtInfinity {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         for i in 0..Self::LEN {
             self[i].to_bits().hash(state);
@@ -126,26 +130,26 @@ impl std::hash::Hash for QuadNumOnOrigin {
     }
 }
 
-impl std::ops::Index<crate::elements::e4> for QuadNumOnOrigin {
+impl std::ops::Index<crate::elements::e5> for VersorRoundPointAligningOriginAtInfinity {
     type Output = f32;
-    fn index(&self, _: crate::elements::e4) -> &Self::Output {
+    fn index(&self, _: crate::elements::e5) -> &Self::Output {
         &self[0]
     }
 }
-impl std::ops::Index<crate::elements::e12345> for QuadNumOnOrigin {
+impl std::ops::Index<crate::elements::e12345> for VersorRoundPointAligningOriginAtInfinity {
     type Output = f32;
     fn index(&self, _: crate::elements::e12345) -> &Self::Output {
         &self[1]
     }
 }
-impl std::ops::IndexMut<crate::elements::e4> for QuadNumOnOrigin {
-    fn index_mut(&self, _: crate::elements::e4) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e5> for VersorRoundPointAligningOriginAtInfinity {
+    fn index_mut(&self, _: crate::elements::e5) -> &mut Self::Output {
         &mut self[0]
     }
 }
-impl std::ops::IndexMut<crate::elements::e12345> for QuadNumOnOrigin {
+impl std::ops::IndexMut<crate::elements::e12345> for VersorRoundPointAligningOriginAtInfinity {
     fn index_mut(&self, _: crate::elements::e12345) -> &mut Self::Output {
         &mut self[1]
     }
 }
-include!("./impls/quad_num_on_origin.rs");
+include!("./impls/versor_round_point_aligning_origin_at_infinity.rs");

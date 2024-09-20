@@ -54,6 +54,8 @@
 ./libraries/cga3d/src/data/impls/triple_num.rs
 ./libraries/cga3d/src/data/impls/versor_even.rs
 ./libraries/cga3d/src/data/impls/versor_odd.rs
+./libraries/cga3d/src/data/impls/versor_round_point.rs
+./libraries/cga3d/src/data/impls/versor_sphere.rs
 ./libraries/cga3d/src/data/line.rs
 ./libraries/cga3d/src/data/motor.rs
 ./libraries/cga3d/src/data/multi_vector.rs
@@ -65,6 +67,8 @@
 ./libraries/cga3d/src/data/triple_num.rs
 ./libraries/cga3d/src/data/versor_even.rs
 ./libraries/cga3d/src/data/versor_odd.rs
+./libraries/cga3d/src/data/versor_round_point.rs
+./libraries/cga3d/src/data/versor_sphere.rs
 ./libraries/cga3d/src/lib.rs
 ./libraries/cga3d/src/simd.rs
 ./libraries/cga3d/src/traits.rs

@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 33
+// Total Implementations: 35
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -451,6 +451,38 @@ impl RightAntiDual for VersorOdd {
             Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group3()[3]]),
             // e1, e2, e3, e4
             Simd32x4::from([(self.group3()[0] * -1.0), (self.group3()[1] * -1.0), (self.group3()[2] * -1.0), self.group2()[3]]),
+        );
+    }
+}
+impl RightAntiDual for VersorRoundPoint {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        3        0
+    fn right_anti_dual(self) -> Self::Output {
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group1()[0] * -1.0)]),
+            // e1234, scalar
+            (Simd32x2::from([self.group0()[3], self.group1()[1]]) * Simd32x2::from(-1.0)),
+        );
+    }
+}
+impl RightAntiDual for VersorSphere {
+    type Output = VersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn right_anti_dual(self) -> Self::Output {
+        return VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group1()[0]]),
+            // e5, e12345
+            Simd32x2::from([self.group0()[3], self.group1()[1]]),
         );
     }
 }

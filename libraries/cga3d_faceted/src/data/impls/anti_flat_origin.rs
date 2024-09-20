@@ -1,4 +1,5 @@
 use crate::traits::GeometricProduct;
+use crate::traits::RightDual;
 use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -7,7 +8,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 409
+// Total Implementations: 432
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -602,68 +603,6 @@ impl std::ops::Add<AntiQuadNum> for AntiFlatOrigin {
         return addition;
     }
 }
-impl std::ops::Add<AntiQuadNumAligningOrigin> for AntiFlatOrigin {
-    type Output = MultiVector;
-    fn add(self, other: AntiQuadNumAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group0()[2], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([other.group0()[0], 0.0, 0.0, 0.0]),
-            // e3215
-            other.group0()[1],
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<AntiQuadNumAligningOriginAtInfinity> for AntiFlatOrigin {
-    type Output = MultiVector;
-    fn add(self, other: AntiQuadNumAligningOriginAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group0()[1], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            other.group0()[0],
-        );
-        return addition;
-    }
-}
 impl std::ops::Add<AntiQuadNumAtInfinity> for AntiFlatOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiQuadNumAtInfinity) -> Self::Output {
@@ -691,37 +630,6 @@ impl std::ops::Add<AntiQuadNumAtInfinity> for AntiFlatOrigin {
             Simd32x4::from(0.0),
             // e3215
             other.group0()[0],
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<AntiQuadNumOnOrigin> for AntiFlatOrigin {
-    type Output = MultiVector;
-    fn add(self, other: AntiQuadNumOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group0()[1], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([other.group0()[0], 0.0, 0.0, 0.0]),
-            // e3215
-            0.0,
         );
         return addition;
     }
@@ -803,6 +711,68 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for AntiFlatOrigin {
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other.group1()[3], 0.0, 0.0, 0.0]),
+            // e3215
+            0.0,
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiVersorRoundPointAligningOriginAtInfinity> for AntiFlatOrigin {
+    type Output = MultiVector;
+    fn add(self, other: AntiVersorRoundPointAligningOriginAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group0()[1], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            other.group0()[0],
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<AntiVersorRoundPointOnOrigin> for AntiFlatOrigin {
+    type Output = MultiVector;
+    fn add(self, other: AntiVersorRoundPointOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group0()[1], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([other.group0()[0], 0.0, 0.0, 0.0]),
             // e3215
             0.0,
         );
@@ -1830,6 +1800,50 @@ impl std::ops::Add<MysteryVersorOdd> for AntiFlatOrigin {
         return addition;
     }
 }
+impl std::ops::Add<MysteryVersorRoundPoint> for AntiFlatOrigin {
+    type Output = MysteryVersorEven;
+    fn add(self, other: MysteryVersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        let addition = MysteryVersorEven::from_groups(
+            // e12345, e1, e2, e3
+            Simd32x4::from([other.group0()[3], other.group0()[0], other.group0()[1], other.group0()[2]]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<MysteryVersorSphere> for AntiFlatOrigin {
+    type Output = MultiVector;
+    fn add(self, other: MysteryVersorSphere) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group0()[3], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([0.0, other.group0()[0], other.group0()[1], other.group0()[2]]),
+            // e3215
+            0.0,
+        );
+        return addition;
+    }
+}
 impl std::ops::Add<NullCircleAtOrigin> for AntiFlatOrigin {
     type Output = AntiDipoleOnOrigin;
     fn add(self, other: NullCircleAtOrigin) -> Self::Output {
@@ -2028,22 +2042,6 @@ impl std::ops::Add<QuadNum> for AntiFlatOrigin {
         return addition;
     }
 }
-impl std::ops::Add<QuadNumAligningOrigin> for AntiFlatOrigin {
-    type Output = QuadNum;
-    fn add(self, other: QuadNumAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([other.group0()[0], other.group0()[1], self[e321], other.group0()[2]]));
-        return addition;
-    }
-}
-impl std::ops::Add<QuadNumAligningOriginAtInfinity> for AntiFlatOrigin {
-    type Output = QuadNumAtInfinity;
-    fn add(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let addition = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([other.group0()[0], self[e321], other.group0()[1]]));
-        return addition;
-    }
-}
 impl std::ops::Add<QuadNumAtInfinity> for AntiFlatOrigin {
     type Output = QuadNumAtInfinity;
     // Operative Statistics for this implementation:
@@ -2052,14 +2050,6 @@ impl std::ops::Add<QuadNumAtInfinity> for AntiFlatOrigin {
     fn add(self, other: QuadNumAtInfinity) -> Self::Output {
         use crate::elements::*;
         let addition = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([other.group0()[0], (other.group0()[1] + self[e321]), other.group0()[2]]));
-        return addition;
-    }
-}
-impl std::ops::Add<QuadNumOnOrigin> for AntiFlatOrigin {
-    type Output = QuadNum;
-    fn add(self, other: QuadNumOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([other.group0()[0], 0.0, self[e321], other.group0()[1]]));
         return addition;
     }
 }
@@ -2419,6 +2409,155 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for AntiFlatOrigin {
         return addition;
     }
 }
+impl std::ops::Add<VersorRoundPoint> for AntiFlatOrigin {
+    type Output = VersorEven;
+    fn add(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        let addition = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, other.group1()[1]]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, other.group1()[0]]),
+            // e1, e2, e3, e4
+            other.group0(),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<VersorRoundPointAligningOrigin> for AntiFlatOrigin {
+    type Output = QuadNum;
+    fn add(self, other: VersorRoundPointAligningOrigin) -> Self::Output {
+        use crate::elements::*;
+        let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([other.group0()[0], other.group0()[1], self[e321], other.group0()[2]]));
+        return addition;
+    }
+}
+impl std::ops::Add<VersorRoundPointAligningOriginAtInfinity> for AntiFlatOrigin {
+    type Output = QuadNumAtInfinity;
+    fn add(self, other: VersorRoundPointAligningOriginAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let addition = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([other.group0()[0], self[e321], other.group0()[1]]));
+        return addition;
+    }
+}
+impl std::ops::Add<VersorRoundPointAtInfinity> for AntiFlatOrigin {
+    type Output = VersorEvenAtInfinity;
+    fn add(self, other: VersorRoundPointAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let addition = VersorEvenAtInfinity::from_groups(
+            // e12345, e1, e2, e3
+            Simd32x4::from([other.group1()[1], other.group0()[0], other.group0()[1], other.group0()[2]]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, other.group1()[0]]),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<VersorRoundPointOnOrigin> for AntiFlatOrigin {
+    type Output = QuadNum;
+    fn add(self, other: VersorRoundPointOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([other.group0()[0], 0.0, self[e321], other.group0()[1]]));
+        return addition;
+    }
+}
+impl std::ops::Add<VersorSphere> for AntiFlatOrigin {
+    type Output = MultiVector;
+    fn add(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group1()[1], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([other.group1()[0], other.group0()[0], other.group0()[1], other.group0()[2]]),
+            // e3215
+            other.group0()[3],
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<VersorSphereAtInfinity> for AntiFlatOrigin {
+    type Output = MultiVector;
+    fn add(self, other: VersorSphereAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other[e4315], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([0.0, other.group0()[0], other.group0()[1], other.group0()[2]]),
+            // e3215
+            other.group0()[3],
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<VersorSphereOrthogonalOrigin> for AntiFlatOrigin {
+    type Output = MultiVector;
+    fn add(self, other: VersorSphereOrthogonalOrigin) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group0()[2], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([other.group0()[1], 0.0, 0.0, 0.0]),
+            // e3215
+            other.group0()[0],
+        );
+        return addition;
+    }
+}
 impl std::ops::BitXor<AntiCircleRotor> for AntiFlatOrigin {
     type Output = MysteryQuadNum;
     // Operative Statistics for this implementation:
@@ -2616,38 +2755,6 @@ impl std::ops::BitXor<AntiQuadNum> for AntiFlatOrigin {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<AntiQuadNumAligningOrigin> for AntiFlatOrigin {
-    type Output = AntiFlatOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiQuadNumAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiQuadNumAligningOrigin> for AntiFlatOrigin {
-    fn bitxor_assign(&mut self, other: AntiQuadNumAligningOrigin) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiQuadNumAligningOriginAtInfinity> for AntiFlatOrigin {
-    type Output = AntiFlatOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiQuadNumAligningOriginAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiQuadNumAligningOriginAtInfinity> for AntiFlatOrigin {
-    fn bitxor_assign(&mut self, other: AntiQuadNumAligningOriginAtInfinity) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
 impl std::ops::BitXor<AntiQuadNumAtInfinity> for AntiFlatOrigin {
     type Output = MysteryQuadNum;
     // Operative Statistics for this implementation:
@@ -2657,22 +2764,6 @@ impl std::ops::BitXor<AntiQuadNumAtInfinity> for AntiFlatOrigin {
     fn bitxor(self, other: AntiQuadNumAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiQuadNumOnOrigin> for AntiFlatOrigin {
-    type Output = AntiFlatOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: AntiQuadNumOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiQuadNumOnOrigin> for AntiFlatOrigin {
-    fn bitxor_assign(&mut self, other: AntiQuadNumOnOrigin) {
-        use crate::elements::*;
-        *self = self.wedge(other);
     }
 }
 impl std::ops::BitXor<AntiQuadNumOrthogonalOrigin> for AntiFlatOrigin {
@@ -2707,6 +2798,38 @@ impl std::ops::BitXor<AntiVersorEvenOnOrigin> for AntiFlatOrigin {
 }
 impl std::ops::BitXorAssign<AntiVersorEvenOnOrigin> for AntiFlatOrigin {
     fn bitxor_assign(&mut self, other: AntiVersorEvenOnOrigin) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiVersorRoundPointAligningOriginAtInfinity> for AntiFlatOrigin {
+    type Output = AntiFlatOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn bitxor(self, other: AntiVersorRoundPointAligningOriginAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiVersorRoundPointAligningOriginAtInfinity> for AntiFlatOrigin {
+    fn bitxor_assign(&mut self, other: AntiVersorRoundPointAligningOriginAtInfinity) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiVersorRoundPointOnOrigin> for AntiFlatOrigin {
+    type Output = AntiFlatOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn bitxor(self, other: AntiVersorRoundPointOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiVersorRoundPointOnOrigin> for AntiFlatOrigin {
+    fn bitxor_assign(&mut self, other: AntiVersorRoundPointOnOrigin) {
         use crate::elements::*;
         *self = self.wedge(other);
     }
@@ -2902,6 +3025,22 @@ impl std::ops::BitXor<MysteryVersorOdd> for AntiFlatOrigin {
         return self.wedge(other);
     }
 }
+impl std::ops::BitXor<MysteryVersorSphere> for AntiFlatOrigin {
+    type Output = AntiFlatOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn bitxor(self, other: MysteryVersorSphere) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<MysteryVersorSphere> for AntiFlatOrigin {
+    fn bitxor_assign(&mut self, other: MysteryVersorSphere) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
 impl std::ops::BitXor<NullVersorEvenAtOrigin> for AntiFlatOrigin {
     type Output = NullSphereAtOrigin;
     // Operative Statistics for this implementation:
@@ -2933,43 +3072,12 @@ impl std::ops::BitXor<QuadNum> for AntiFlatOrigin {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<QuadNumAligningOrigin> for AntiFlatOrigin {
-    type Output = SphereAtOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        2        0
-    // no simd        0        4        0
-    fn bitxor(self, other: QuadNumAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<QuadNumAligningOriginAtInfinity> for AntiFlatOrigin {
-    type Output = Horizon;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
 impl std::ops::BitXor<QuadNumAtInfinity> for AntiFlatOrigin {
     type Output = Horizon;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
     fn bitxor(self, other: QuadNumAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<QuadNumOnOrigin> for AntiFlatOrigin {
-    type Output = NullSphereAtOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn bitxor(self, other: QuadNumOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
     }
@@ -3121,6 +3229,106 @@ impl std::ops::BitXor<VersorOddOrthogonalOrigin> for AntiFlatOrigin {
 }
 impl std::ops::BitXorAssign<VersorOddOrthogonalOrigin> for AntiFlatOrigin {
     fn bitxor_assign(&mut self, other: VersorOddOrthogonalOrigin) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorRoundPoint> for AntiFlatOrigin {
+    type Output = SphereAtOrigin;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd2        0        2        0
+    // no simd        0        4        0
+    fn bitxor(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorRoundPointAligningOrigin> for AntiFlatOrigin {
+    type Output = SphereAtOrigin;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd2        0        2        0
+    // no simd        0        4        0
+    fn bitxor(self, other: VersorRoundPointAligningOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorRoundPointAligningOriginAtInfinity> for AntiFlatOrigin {
+    type Output = Horizon;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn bitxor(self, other: VersorRoundPointAligningOriginAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorRoundPointAtInfinity> for AntiFlatOrigin {
+    type Output = Horizon;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn bitxor(self, other: VersorRoundPointAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorRoundPointOnOrigin> for AntiFlatOrigin {
+    type Output = NullSphereAtOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn bitxor(self, other: VersorRoundPointOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorSphere> for AntiFlatOrigin {
+    type Output = AntiFlatOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn bitxor(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<VersorSphere> for AntiFlatOrigin {
+    fn bitxor_assign(&mut self, other: VersorSphere) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorSphereAtInfinity> for AntiFlatOrigin {
+    type Output = AntiFlatOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn bitxor(self, other: VersorSphereAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<VersorSphereAtInfinity> for AntiFlatOrigin {
+    fn bitxor_assign(&mut self, other: VersorSphereAtInfinity) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorSphereOrthogonalOrigin> for AntiFlatOrigin {
+    type Output = AntiFlatOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn bitxor(self, other: VersorSphereOrthogonalOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<VersorSphereOrthogonalOrigin> for AntiFlatOrigin {
+    fn bitxor_assign(&mut self, other: VersorSphereOrthogonalOrigin) {
         use crate::elements::*;
         *self = self.wedge(other);
     }
@@ -3426,27 +3634,6 @@ impl std::ops::Mul<AntiQuadNum> for AntiFlatOrigin {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiQuadNumAligningOrigin> for AntiFlatOrigin {
-    type Output = QuadNumOrthogonalOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
-    fn mul(self, other: AntiQuadNumAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<AntiQuadNumAligningOriginAtInfinity> for AntiFlatOrigin {
-    type Output = QuadNumOrthogonalOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
-    fn mul(self, other: AntiQuadNumAligningOriginAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
 impl std::ops::Mul<AntiQuadNumAtInfinity> for AntiFlatOrigin {
     type Output = QuadNumAtInfinity;
     // Operative Statistics for this implementation:
@@ -3458,18 +3645,8 @@ impl std::ops::Mul<AntiQuadNumAtInfinity> for AntiFlatOrigin {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiQuadNumOnOrigin> for AntiFlatOrigin {
-    type Output = QuadNumOrthogonalOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn mul(self, other: AntiQuadNumOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
 impl std::ops::Mul<AntiQuadNumOrthogonalOrigin> for AntiFlatOrigin {
-    type Output = QuadNumAligningOrigin;
+    type Output = VersorRoundPointAligningOrigin;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd3        0        2        0
@@ -3507,6 +3684,26 @@ impl std::ops::Mul<AntiVersorEvenOnOrigin> for AntiFlatOrigin {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn mul(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiVersorRoundPointAligningOriginAtInfinity> for AntiFlatOrigin {
+    type Output = QuadNumOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn mul(self, other: AntiVersorRoundPointAligningOriginAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiVersorRoundPointOnOrigin> for AntiFlatOrigin {
+    type Output = QuadNumOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn mul(self, other: AntiVersorRoundPointOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
@@ -3970,7 +4167,7 @@ impl std::ops::Mul<MultiVector> for AntiFlatOrigin {
     }
 }
 impl std::ops::Mul<MysteryCircle> for AntiFlatOrigin {
-    type Output = MysteryVersorOdd;
+    type Output = MysteryVersorSphere;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd4        0        2        0
@@ -3995,7 +4192,7 @@ impl std::ops::Mul<MysteryCircleRotor> for AntiFlatOrigin {
     }
 }
 impl std::ops::Mul<MysteryDipole> for AntiFlatOrigin {
-    type Output = MysteryVersorEven;
+    type Output = MysteryVersorRoundPoint;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd4        0        2        0
@@ -4048,6 +4245,28 @@ impl std::ops::Mul<MysteryVersorOdd> for AntiFlatOrigin {
     //   simd4        0        4        0
     // no simd        0       16        0
     fn mul(self, other: MysteryVersorOdd) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<MysteryVersorRoundPoint> for AntiFlatOrigin {
+    type Output = MysteryDipole;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
+    fn mul(self, other: MysteryVersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<MysteryVersorSphere> for AntiFlatOrigin {
+    type Output = MysteryCircle;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
+    fn mul(self, other: MysteryVersorSphere) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
@@ -4148,27 +4367,6 @@ impl std::ops::Mul<QuadNum> for AntiFlatOrigin {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<QuadNumAligningOrigin> for AntiFlatOrigin {
-    type Output = AntiQuadNumOrthogonalOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
-    fn mul(self, other: QuadNumAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<QuadNumAligningOriginAtInfinity> for AntiFlatOrigin {
-    type Output = AntiQuadNumOrthogonalOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn mul(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
 impl std::ops::Mul<QuadNumAtInfinity> for AntiFlatOrigin {
     type Output = AntiQuadNumAtInfinity;
     // Operative Statistics for this implementation:
@@ -4180,18 +4378,8 @@ impl std::ops::Mul<QuadNumAtInfinity> for AntiFlatOrigin {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<QuadNumOnOrigin> for AntiFlatOrigin {
-    type Output = AntiQuadNumOrthogonalOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
-    fn mul(self, other: QuadNumOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
 impl std::ops::Mul<QuadNumOrthogonalOrigin> for AntiFlatOrigin {
-    type Output = AntiQuadNumAligningOrigin;
+    type Output = VersorSphereOrthogonalOrigin;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd3        0        2        0
@@ -4377,6 +4565,104 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for AntiFlatOrigin {
         return self.geometric_product(other);
     }
 }
+impl std::ops::Mul<VersorRoundPoint> for AntiFlatOrigin {
+    type Output = DipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0       11        0
+    fn mul(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<VersorRoundPointAligningOrigin> for AntiFlatOrigin {
+    type Output = AntiQuadNumOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
+    fn mul(self, other: VersorRoundPointAligningOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<VersorRoundPointAligningOriginAtInfinity> for AntiFlatOrigin {
+    type Output = AntiQuadNumOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn mul(self, other: VersorRoundPointAligningOriginAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<VersorRoundPointAtInfinity> for AntiFlatOrigin {
+    type Output = DipoleInversionAtInfinity;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        9        0
+    fn mul(self, other: VersorRoundPointAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<VersorRoundPointOnOrigin> for AntiFlatOrigin {
+    type Output = AntiQuadNumOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn mul(self, other: VersorRoundPointOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<VersorSphere> for AntiFlatOrigin {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0       11        0
+    fn mul(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<VersorSphereAtInfinity> for AntiFlatOrigin {
+    type Output = AntiDipoleInversionAtInfinity;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0       10        0
+    fn mul(self, other: VersorSphereAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<VersorSphereOrthogonalOrigin> for AntiFlatOrigin {
+    type Output = QuadNumOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
+    fn mul(self, other: VersorSphereOrthogonalOrigin) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
 impl std::ops::Neg for AntiFlatOrigin {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -4394,8 +4680,7 @@ impl std::ops::Not for AntiFlatOrigin {
     // f32        0        1        0
     fn not(self) -> Self::Output {
         use crate::elements::*;
-        let right_dual = FlatOrigin::from_groups(/* e45 */ (self[e321] * -1.0));
-        return right_dual;
+        return self.right_dual();
     }
 }
 impl std::ops::Sub<AntiCircleOnOrigin> for AntiFlatOrigin {
@@ -5109,74 +5394,6 @@ impl std::ops::Sub<AntiQuadNum> for AntiFlatOrigin {
         return subtraction;
     }
 }
-impl std::ops::Sub<AntiQuadNumAligningOrigin> for AntiFlatOrigin {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
-    fn sub(self, other: AntiQuadNumAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[2] * -1.0), 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(other.group0()[0] * -1.0), 0.0, 0.0, 0.0]),
-            // e3215
-            (other.group0()[1] * -1.0),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<AntiQuadNumAligningOriginAtInfinity> for AntiFlatOrigin {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn sub(self, other: AntiQuadNumAligningOriginAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[1] * -1.0), 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            (other.group0()[0] * -1.0),
-        );
-        return subtraction;
-    }
-}
 impl std::ops::Sub<AntiQuadNumAtInfinity> for AntiFlatOrigin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -5207,40 +5424,6 @@ impl std::ops::Sub<AntiQuadNumAtInfinity> for AntiFlatOrigin {
             Simd32x4::from(0.0),
             // e3215
             (other.group0()[0] * -1.0),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<AntiQuadNumOnOrigin> for AntiFlatOrigin {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn sub(self, other: AntiQuadNumOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[1] * -1.0), 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(other.group0()[0] * -1.0), 0.0, 0.0, 0.0]),
-            // e3215
-            0.0,
         );
         return subtraction;
     }
@@ -5339,6 +5522,74 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for AntiFlatOrigin {
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([(other.group1()[3] * -1.0), 0.0, 0.0, 0.0]),
+            // e3215
+            0.0,
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiVersorRoundPointAligningOriginAtInfinity> for AntiFlatOrigin {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn sub(self, other: AntiVersorRoundPointAligningOriginAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group0()[1] * -1.0), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            (other.group0()[0] * -1.0),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<AntiVersorRoundPointOnOrigin> for AntiFlatOrigin {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn sub(self, other: AntiVersorRoundPointOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group0()[1] * -1.0), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([(other.group0()[0] * -1.0), 0.0, 0.0, 0.0]),
             // e3215
             0.0,
         );
@@ -6612,6 +6863,57 @@ impl std::ops::Sub<MysteryVersorOdd> for AntiFlatOrigin {
         return subtraction;
     }
 }
+impl std::ops::Sub<MysteryVersorRoundPoint> for AntiFlatOrigin {
+    type Output = MysteryVersorEven;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn sub(self, other: MysteryVersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MysteryVersorEven::from_groups(
+            // e12345, e1, e2, e3
+            (swizzle!(other.group0(), 3, 0, 1, 2) * Simd32x4::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<MysteryVersorSphere> for AntiFlatOrigin {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        4        0
+    fn sub(self, other: MysteryVersorSphere) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([0.0, (other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]),
+            // e3215
+            0.0,
+        );
+        return subtraction;
+    }
+}
 impl std::ops::Sub<NullCircleAtOrigin> for AntiFlatOrigin {
     type Output = AntiDipoleOnOrigin;
     // Operative Statistics for this implementation:
@@ -6839,31 +7141,6 @@ impl std::ops::Sub<QuadNum> for AntiFlatOrigin {
         return subtraction;
     }
 }
-impl std::ops::Sub<QuadNumAligningOrigin> for AntiFlatOrigin {
-    type Output = QuadNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
-    fn sub(self, other: QuadNumAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = QuadNum::from_groups(
-            // e4, e5, e321, e12345
-            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), self[e321], (other.group0()[2] * -1.0)]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<QuadNumAligningOriginAtInfinity> for AntiFlatOrigin {
-    type Output = QuadNumAtInfinity;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn sub(self, other: QuadNumAligningOriginAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([(other.group0()[0] * -1.0), self[e321], (other.group0()[1] * -1.0)]));
-        return subtraction;
-    }
-}
 impl std::ops::Sub<QuadNumAtInfinity> for AntiFlatOrigin {
     type Output = QuadNumAtInfinity;
     // Operative Statistics for this implementation:
@@ -6874,20 +7151,6 @@ impl std::ops::Sub<QuadNumAtInfinity> for AntiFlatOrigin {
         let subtraction = QuadNumAtInfinity::from_groups(
             // e5, e321, e12345
             Simd32x3::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self[e321]), (other.group0()[2] * -1.0)]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<QuadNumOnOrigin> for AntiFlatOrigin {
-    type Output = QuadNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn sub(self, other: QuadNumOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = QuadNum::from_groups(
-            // e4, e5, e321, e12345
-            Simd32x4::from([(other.group0()[0] * -1.0), 0.0, self[e321], (other.group0()[1] * -1.0)]),
         );
         return subtraction;
     }
@@ -7329,6 +7592,197 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for AntiFlatOrigin {
             Simd32x4::from([(other.group2()[3] * -1.0), 0.0, 0.0, 0.0]),
             // e3215
             (other.group1()[3] * -1.0),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<VersorRoundPoint> for AntiFlatOrigin {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        6        0
+    fn sub(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[1] * -1.0)]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[0] * -1.0)]),
+            // e1, e2, e3, e4
+            (other.group0() * Simd32x4::from(-1.0)),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<VersorRoundPointAligningOrigin> for AntiFlatOrigin {
+    type Output = QuadNum;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn sub(self, other: VersorRoundPointAligningOrigin) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = QuadNum::from_groups(
+            // e4, e5, e321, e12345
+            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), self[e321], (other.group0()[2] * -1.0)]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<VersorRoundPointAligningOriginAtInfinity> for AntiFlatOrigin {
+    type Output = QuadNumAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn sub(self, other: VersorRoundPointAligningOriginAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([(other.group0()[0] * -1.0), self[e321], (other.group0()[1] * -1.0)]));
+        return subtraction;
+    }
+}
+impl std::ops::Sub<VersorRoundPointAtInfinity> for AntiFlatOrigin {
+    type Output = VersorEvenAtInfinity;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
+    fn sub(self, other: VersorRoundPointAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = VersorEvenAtInfinity::from_groups(
+            // e12345, e1, e2, e3
+            (Simd32x4::from([other.group1()[1], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[0] * -1.0)]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<VersorRoundPointOnOrigin> for AntiFlatOrigin {
+    type Output = QuadNum;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn sub(self, other: VersorRoundPointOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = QuadNum::from_groups(
+            // e4, e5, e321, e12345
+            Simd32x4::from([(other.group0()[0] * -1.0), 0.0, self[e321], (other.group0()[1] * -1.0)]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<VersorSphere> for AntiFlatOrigin {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        6        0
+    fn sub(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group1()[1] * -1.0), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            (Simd32x4::from([other.group1()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from(-1.0)),
+            // e3215
+            (other.group0()[3] * -1.0),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<VersorSphereAtInfinity> for AntiFlatOrigin {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        5        0
+    fn sub(self, other: VersorSphereAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other[e4315] * -1.0), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([0.0, (other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]),
+            // e3215
+            (other.group0()[3] * -1.0),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<VersorSphereOrthogonalOrigin> for AntiFlatOrigin {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn sub(self, other: VersorSphereOrthogonalOrigin) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group0()[2] * -1.0), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([(other.group0()[1] * -1.0), 0.0, 0.0, 0.0]),
+            // e3215
+            (other.group0()[0] * -1.0),
         );
         return subtraction;
     }

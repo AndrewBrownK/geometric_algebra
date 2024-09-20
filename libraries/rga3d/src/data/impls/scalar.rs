@@ -1,4 +1,5 @@
 use crate::traits::GeometricProduct;
+use crate::traits::RightDual;
 use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -470,7 +471,7 @@ impl std::ops::Neg for Scalar {
 impl std::ops::Not for Scalar {
     type Output = Scalar;
     fn not(self) -> Self::Output {
-        return self;
+        return self.right_dual();
     }
 }
 impl std::ops::Sub<AntiScalar> for Scalar {

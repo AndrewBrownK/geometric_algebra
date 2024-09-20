@@ -1,4 +1,5 @@
 use crate::traits::GeometricProduct;
+use crate::traits::RightDual;
 use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -498,8 +499,7 @@ impl std::ops::Neg for DualNum {
 impl std::ops::Not for DualNum {
     type Output = AntiScalar;
     fn not(self) -> Self::Output {
-        let right_dual = AntiScalar::from_groups(/* e1234 */ self.group0()[0]);
-        return right_dual;
+        return self.right_dual();
     }
 }
 impl std::ops::Sub<AntiScalar> for DualNum {

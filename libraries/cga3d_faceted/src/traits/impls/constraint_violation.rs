@@ -5,18 +5,18 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 95
+// Total Implementations: 101
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:        16      24       0
-//  Average:        31      38       0
+//   Median:        14      17       0
+//  Average:        30      36       0
 //  Maximum:       529     555       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:        22      33       0
-//  Average:        52      62       0
+//   Median:        22      29       0
+//  Average:        49      59       0
 //  Maximum:      1016    1060       0
 impl ConstraintViolation for AntiCircleOnOrigin {
     type Output = AntiVersorEvenOnOrigin;
@@ -1207,7 +1207,7 @@ impl ConstraintViolation for AntiLineOnOrigin {
     }
 }
 impl ConstraintViolation for AntiMotor {
-    type Output = AntiQuadNumAligningOriginAtInfinity;
+    type Output = AntiVersorRoundPointAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       10        0
@@ -1223,7 +1223,7 @@ impl ConstraintViolation for AntiMotor {
             // e15, e25, e35, e3215
             Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
         );
-        let geometric_product = AntiQuadNumAligningOriginAtInfinity::from_groups(
+        let geometric_product = AntiVersorRoundPointAligningOriginAtInfinity::from_groups(
             // e3215, scalar
             (Simd32x2::from([
                 (-(reverse.group1()[0] * self.group0()[0]) - (reverse.group1()[1] * self.group0()[1]) - (reverse.group1()[2] * self.group0()[2])
@@ -1239,7 +1239,7 @@ impl ConstraintViolation for AntiMotor {
             (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)),
         );
         let subtraction =
-            AntiQuadNumAligningOriginAtInfinity::from_groups(
+            AntiVersorRoundPointAligningOriginAtInfinity::from_groups(
                 // e3215, scalar
                 Simd32x2::from([geometric_product.group0()[0], (geometric_product.group0()[1] - scalar_product[scalar])]),
             );
@@ -1403,7 +1403,7 @@ impl ConstraintViolation for AntiPlaneOnOrigin {
     }
 }
 impl ConstraintViolation for AntiQuadNum {
-    type Output = AntiQuadNumAligningOrigin;
+    type Output = VersorSphereOrthogonalOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       12        0
@@ -1417,19 +1417,19 @@ impl ConstraintViolation for AntiQuadNum {
             // e1234, e3215, e45, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], (self.group0()[2] * -1.0), self.group0()[3]]),
         );
-        let geometric_product = AntiQuadNumAligningOrigin::from_groups(
-            // e1234, e3215, scalar
+        let geometric_product = VersorSphereOrthogonalOrigin::from_groups(
+            // e3215, e1234, scalar
             (Simd32x3::from([
-                (-(reverse.group0()[0] * self.group0()[2]) + (reverse.group0()[2] * self.group0()[0]) + (reverse.group0()[3] * self.group0()[0])),
                 ((reverse.group0()[1] * self.group0()[2]) - (reverse.group0()[2] * self.group0()[1]) + (reverse.group0()[3] * self.group0()[1])),
+                (-(reverse.group0()[0] * self.group0()[2]) + (reverse.group0()[2] * self.group0()[0]) + (reverse.group0()[3] * self.group0()[0])),
                 ((reverse.group0()[0] * self.group0()[1]) + (reverse.group0()[1] * self.group0()[0]) + (reverse.group0()[2] * self.group0()[2])),
-            ]) + (Simd32x3::from(self.group0()[3]) * Simd32x3::from([reverse.group0()[0], reverse.group0()[1], reverse.group0()[3]]))),
+            ]) + (Simd32x3::from(self.group0()[3]) * Simd32x3::from([reverse.group0()[1], reverse.group0()[0], reverse.group0()[3]]))),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
             (f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2) + 2.0 * (self.group0()[0] * self.group0()[1])),
         );
-        let subtraction = AntiQuadNumAligningOrigin::from_groups(/* e1234, e3215, scalar */ Simd32x3::from([
+        let subtraction = VersorSphereOrthogonalOrigin::from_groups(/* e3215, e1234, scalar */ Simd32x3::from([
             geometric_product.group0()[0],
             geometric_product.group0()[1],
             (geometric_product.group0()[2] - scalar_product[scalar]),
@@ -1437,47 +1437,8 @@ impl ConstraintViolation for AntiQuadNum {
         return subtraction;
     }
 }
-impl ConstraintViolation for AntiQuadNumAligningOrigin {
-    type Output = SphereAtOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        6        0
-    fn constraint_violation(self) -> Self::Output {
-        let geometric_product = AntiQuadNumAligningOrigin::from_groups(/* e1234, e3215, scalar */ Simd32x3::from([
-            (self.group0()[0] * self.group0()[2] * 2.0),
-            (self.group0()[1] * self.group0()[2] * 2.0),
-            (f32::powi(self.group0()[2], 2) + 2.0 * (self.group0()[0] * self.group0()[1])),
-        ]));
-        let subtraction = SphereAtOrigin::from_groups(/* e3215, e1234 */ Simd32x2::from([geometric_product.group0()[1], geometric_product.group0()[0]]));
-        return subtraction;
-    }
-}
-impl ConstraintViolation for AntiQuadNumAligningOriginAtInfinity {
-    type Output = AntiQuadNumAligningOriginAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        1        0
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        1        2        0
-    //  no simd        1        3        0
-    fn constraint_violation(self) -> Self::Output {
-        use crate::elements::*;
-        let geometric_product = AntiQuadNumAligningOriginAtInfinity::from_groups(
-            // e3215, scalar
-            (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([2.0, 1.0])),
-        );
-        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self.group0()[1], 2));
-        let subtraction =
-            AntiQuadNumAligningOriginAtInfinity::from_groups(
-                // e3215, scalar
-                Simd32x2::from([geometric_product.group0()[0], (geometric_product.group0()[1] - scalar_product[scalar])]),
-            );
-        return subtraction;
-    }
-}
 impl ConstraintViolation for AntiQuadNumAtInfinity {
-    type Output = AntiQuadNumAligningOriginAtInfinity;
+    type Output = AntiVersorRoundPointAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        3        0
@@ -1488,7 +1449,7 @@ impl ConstraintViolation for AntiQuadNumAtInfinity {
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ Simd32x3::from([self.group0()[0], (self.group0()[1] * -1.0), self.group0()[2]]));
-        let geometric_product = AntiQuadNumAligningOriginAtInfinity::from_groups(
+        let geometric_product = AntiVersorRoundPointAligningOriginAtInfinity::from_groups(
             // e3215, scalar
             (Simd32x2::from([(-(reverse.group0()[1] * self.group0()[0]) + (reverse.group0()[2] * self.group0()[0])), 0.0])
                 + (Simd32x2::from(self.group0()[1]) * Simd32x2::from([reverse.group0()[0], reverse.group0()[1]]))
@@ -1496,38 +1457,15 @@ impl ConstraintViolation for AntiQuadNumAtInfinity {
         );
         let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2)));
         let subtraction =
-            AntiQuadNumAligningOriginAtInfinity::from_groups(
+            AntiVersorRoundPointAligningOriginAtInfinity::from_groups(
                 // e3215, scalar
                 Simd32x2::from([geometric_product.group0()[0], (geometric_product.group0()[1] - scalar_product[scalar])]),
             );
         return subtraction;
     }
 }
-impl ConstraintViolation for AntiQuadNumOnOrigin {
-    type Output = AntiQuadNumOnOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        1        0
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        1        2        0
-    //  no simd        1        3        0
-    fn constraint_violation(self) -> Self::Output {
-        use crate::elements::*;
-        let geometric_product = AntiQuadNumOnOrigin::from_groups(
-            // e1234, scalar
-            (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([2.0, 1.0])),
-        );
-        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self.group0()[1], 2));
-        let subtraction = AntiQuadNumOnOrigin::from_groups(
-            // e1234, scalar
-            Simd32x2::from([geometric_product.group0()[0], (geometric_product.group0()[1] - scalar_product[scalar])]),
-        );
-        return subtraction;
-    }
-}
 impl ConstraintViolation for AntiQuadNumOrthogonalOrigin {
-    type Output = AntiQuadNumAligningOrigin;
+    type Output = VersorSphereOrthogonalOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        9        0
@@ -1538,16 +1476,16 @@ impl ConstraintViolation for AntiQuadNumOrthogonalOrigin {
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = AntiQuadNumOrthogonalOrigin::from_groups(/* e1234, e3215, e45 */ Simd32x3::from([self.group0()[0], self.group0()[1], (self.group0()[2] * -1.0)]));
-        let geometric_product = AntiQuadNumAligningOrigin::from_groups(
-            // e1234, e3215, scalar
+        let geometric_product = VersorSphereOrthogonalOrigin::from_groups(
+            // e3215, e1234, scalar
             (Simd32x3::from([
-                ((reverse.group0()[0] * self.group0()[2]) * -1.0),
                 ((reverse.group0()[2] * self.group0()[1]) * -1.0),
+                ((reverse.group0()[0] * self.group0()[2]) * -1.0),
                 ((reverse.group0()[1] * self.group0()[0]) + (reverse.group0()[2] * self.group0()[2])),
-            ]) + (swizzle!(reverse.group0(), 2, 1, 0) * swizzle!(self.group0(), 0, 2, 1))),
+            ]) + (swizzle!(reverse.group0(), 1, 2, 0) * swizzle!(self.group0(), 2, 0, 1))),
         );
         let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(self.group0()[2], 2) + 2.0 * (self.group0()[0] * self.group0()[1])));
-        let subtraction = AntiQuadNumAligningOrigin::from_groups(/* e1234, e3215, scalar */ Simd32x3::from([
+        let subtraction = VersorSphereOrthogonalOrigin::from_groups(/* e3215, e1234, scalar */ Simd32x3::from([
             geometric_product.group0()[0],
             geometric_product.group0()[1],
             (geometric_product.group0()[2] - scalar_product[scalar]),
@@ -1570,7 +1508,7 @@ impl ConstraintViolation for AntiSphereOnOrigin {
     }
 }
 impl ConstraintViolation for AntiVersorEvenOnOrigin {
-    type Output = AntiQuadNumOnOrigin;
+    type Output = AntiVersorRoundPointOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       10        0
@@ -1586,7 +1524,7 @@ impl ConstraintViolation for AntiVersorEvenOnOrigin {
             // e23, e31, e12, e1234
             Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
         );
-        let geometric_product = AntiQuadNumOnOrigin::from_groups(
+        let geometric_product = AntiVersorRoundPointOnOrigin::from_groups(
             // e1234, scalar
             (Simd32x2::from([
                 (-(reverse.group1()[0] * self.group0()[0]) - (reverse.group1()[1] * self.group0()[1]) - (reverse.group1()[2] * self.group0()[2])
@@ -1601,7 +1539,54 @@ impl ConstraintViolation for AntiVersorEvenOnOrigin {
             // scalar
             (f32::powi(self.group0()[3], 2) - f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2)),
         );
-        let subtraction = AntiQuadNumOnOrigin::from_groups(
+        let subtraction = AntiVersorRoundPointOnOrigin::from_groups(
+            // e1234, scalar
+            Simd32x2::from([geometric_product.group0()[0], (geometric_product.group0()[1] - scalar_product[scalar])]),
+        );
+        return subtraction;
+    }
+}
+impl ConstraintViolation for AntiVersorRoundPointAligningOriginAtInfinity {
+    type Output = AntiVersorRoundPointAligningOriginAtInfinity;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        1        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        1        2        0
+    //  no simd        1        3        0
+    fn constraint_violation(self) -> Self::Output {
+        use crate::elements::*;
+        let geometric_product = AntiVersorRoundPointAligningOriginAtInfinity::from_groups(
+            // e3215, scalar
+            (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([2.0, 1.0])),
+        );
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self.group0()[1], 2));
+        let subtraction =
+            AntiVersorRoundPointAligningOriginAtInfinity::from_groups(
+                // e3215, scalar
+                Simd32x2::from([geometric_product.group0()[0], (geometric_product.group0()[1] - scalar_product[scalar])]),
+            );
+        return subtraction;
+    }
+}
+impl ConstraintViolation for AntiVersorRoundPointOnOrigin {
+    type Output = AntiVersorRoundPointOnOrigin;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        1        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        1        2        0
+    //  no simd        1        3        0
+    fn constraint_violation(self) -> Self::Output {
+        use crate::elements::*;
+        let geometric_product = AntiVersorRoundPointOnOrigin::from_groups(
+            // e1234, scalar
+            (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([2.0, 1.0])),
+        );
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self.group0()[1], 2));
+        let subtraction = AntiVersorRoundPointOnOrigin::from_groups(
             // e1234, scalar
             Simd32x2::from([geometric_product.group0()[0], (geometric_product.group0()[1] - scalar_product[scalar])]),
         );
@@ -3253,7 +3238,7 @@ impl ConstraintViolation for DipoleInversionAtInfinity {
     }
 }
 impl ConstraintViolation for DipoleInversionAtOrigin {
-    type Output = MysteryVersorOdd;
+    type Output = MysteryVersorSphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        8       22        0
@@ -3269,38 +3254,31 @@ impl ConstraintViolation for DipoleInversionAtOrigin {
             // e15, e25, e35, e1234
             Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
         );
-        let geometric_product = MysteryVersorOdd::from_groups(
-            // scalar, e4235, e4315, e4125
+        let geometric_product = MysteryVersorSphere::from_groups(
+            // e4235, e4315, e4125, scalar
             (Simd32x4::from([
-                (-(reverse.group1()[1] * self.group0()[1]) - (reverse.group1()[2] * self.group0()[2])),
                 ((reverse.group0()[1] * self.group1()[2]) + (reverse.group1()[3] * self.group1()[0])),
                 ((reverse.group0()[2] * self.group1()[0]) + (reverse.group1()[3] * self.group1()[1])),
                 ((reverse.group1()[1] * self.group0()[0]) + (reverse.group1()[3] * self.group1()[2])),
-            ]) - (Simd32x4::from([reverse.group0()[2], reverse.group1()[0], reverse.group1()[1], reverse.group1()[2]]) * swizzle!(self.group1(), 2, 3, 3, 3))
-                + (Simd32x4::from([reverse.group1()[3], reverse.group1()[2], reverse.group1()[0], reverse.group0()[2]]) * swizzle!(self.group0(), 3, 1, 2, 3))
-                - (Simd32x4::from([self.group1()[1], self.group0()[0], self.group0()[1], self.group0()[2]]) * swizzle!(reverse.group0(), 1, 3, 3, 3))
-                + (Simd32x4::from([self.group1()[3], self.group0()[3], self.group0()[3], self.group1()[1]]) * swizzle!(reverse.group0(), 3, 0, 1, 0))
-                - (swizzle!(reverse.group0(), 0, 2, 0, 1) * swizzle!(self.group1(), 0, 1, 2, 0))
-                - (swizzle!(reverse.group1(), 0, 1, 2, 0) * swizzle!(self.group0(), 0, 2, 0, 1))),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
+                (-(reverse.group0()[2] * self.group1()[2]) - (reverse.group1()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from([reverse.group1()[2], reverse.group1()[0], reverse.group0()[2], reverse.group1()[3]]) * swizzle!(self.group0(), 1, 2, 3, 3))
+                - (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]]) * swizzle!(reverse.group0(), 3, 3, 3, 1))
+                - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group1()[3], self.group0()[1]]) * swizzle!(reverse.group1(), 1, 2, 2, 1))
+                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group1()[1], self.group1()[3]]) * swizzle!(reverse.group0(), 0, 1, 0, 3))
+                - (Simd32x4::from([self.group1()[3], self.group1()[3], self.group0()[1], self.group0()[0]]) * swizzle!(reverse.group1(), 0, 1, 0, 0))
+                - (swizzle!(reverse.group0(), 2, 0, 1, 0) * swizzle!(self.group1(), 1, 2, 0, 0))),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
             (-2.0 * (self.group0()[0] * self.group1()[0]) - 2.0 * (self.group0()[1] * self.group1()[1]) - 2.0 * (self.group0()[2] * self.group1()[2])
                 + 2.0 * (self.group0()[3] * self.group1()[3])),
         );
-        let subtraction = MysteryVersorOdd::from_groups(
-            // scalar, e4235, e4315, e4125
-            Simd32x4::from([
-                (geometric_product.group0()[0] - scalar_product[scalar]),
-                geometric_product.group0()[1],
-                geometric_product.group0()[2],
-                geometric_product.group0()[3],
-            ]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-        );
+        let subtraction = MysteryVersorSphere::from_groups(/* e4235, e4315, e4125, scalar */ Simd32x4::from([
+            geometric_product.group0()[0],
+            geometric_product.group0()[1],
+            geometric_product.group0()[2],
+            (geometric_product.group0()[3] - scalar_product[scalar]),
+        ]));
         return subtraction;
     }
 }
@@ -3878,7 +3856,7 @@ impl ConstraintViolation for LineOnOrigin {
     }
 }
 impl ConstraintViolation for Motor {
-    type Output = AntiQuadNumAligningOriginAtInfinity;
+    type Output = AntiVersorRoundPointAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       10        0
@@ -3894,7 +3872,7 @@ impl ConstraintViolation for Motor {
             // e235, e315, e125, e5
             Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
         );
-        let geometric_product = AntiQuadNumAligningOriginAtInfinity::from_groups(
+        let geometric_product = AntiVersorRoundPointAligningOriginAtInfinity::from_groups(
             // e3215, scalar
             (Simd32x2::from([
                 ((reverse.group1()[0] * self.group0()[0]) + (reverse.group1()[1] * self.group0()[1]) + (reverse.group1()[2] * self.group0()[2])
@@ -3910,7 +3888,7 @@ impl ConstraintViolation for Motor {
             (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2)),
         );
         let subtraction =
-            AntiQuadNumAligningOriginAtInfinity::from_groups(
+            AntiVersorRoundPointAligningOriginAtInfinity::from_groups(
                 // e3215, scalar
                 Simd32x2::from([geometric_product.group0()[0], (geometric_product.group0()[1] - scalar_product[scalar])]),
             );
@@ -4910,6 +4888,44 @@ impl ConstraintViolation for MysteryVersorOdd {
         return subtraction;
     }
 }
+impl ConstraintViolation for MysteryVersorRoundPoint {
+    type Output = PlaneOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3        6        0
+    fn constraint_violation(self) -> Self::Output {
+        let geometric_product = MysteryVersorSphere::from_groups(/* e4235, e4315, e4125, scalar */ Simd32x4::from([
+            (self.group0()[0] * self.group0()[3] * 2.0),
+            (self.group0()[1] * self.group0()[3] * 2.0),
+            (self.group0()[2] * self.group0()[3] * 2.0),
+            (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2)),
+        ]));
+        let subtraction = PlaneOnOrigin::from_groups(
+            // e4235, e4315, e4125
+            Simd32x3::from([geometric_product.group0()[0], geometric_product.group0()[1], geometric_product.group0()[2]]),
+        );
+        return subtraction;
+    }
+}
+impl ConstraintViolation for MysteryVersorSphere {
+    type Output = PlaneOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3        6        0
+    fn constraint_violation(self) -> Self::Output {
+        let geometric_product = MysteryVersorSphere::from_groups(/* e4235, e4315, e4125, scalar */ Simd32x4::from([
+            (self.group0()[0] * self.group0()[3] * 2.0),
+            (self.group0()[1] * self.group0()[3] * 2.0),
+            (self.group0()[2] * self.group0()[3] * 2.0),
+            (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)),
+        ]));
+        let subtraction = PlaneOnOrigin::from_groups(
+            // e4235, e4315, e4125
+            Simd32x3::from([geometric_product.group0()[0], geometric_product.group0()[1], geometric_product.group0()[2]]),
+        );
+        return subtraction;
+    }
+}
 impl ConstraintViolation for Plane {
     type Output = Scalar;
     fn constraint_violation(self) -> Self::Output {
@@ -4925,7 +4941,7 @@ impl ConstraintViolation for PlaneOnOrigin {
     }
 }
 impl ConstraintViolation for QuadNum {
-    type Output = AntiQuadNumAligningOrigin;
+    type Output = VersorSphereOrthogonalOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        9       12        0
@@ -4939,19 +4955,19 @@ impl ConstraintViolation for QuadNum {
             // e4, e5, e321, e12345
             Simd32x4::from([self.group0()[0], self.group0()[1], (self.group0()[2] * -1.0), self.group0()[3]]),
         );
-        let geometric_product = AntiQuadNumAligningOrigin::from_groups(
-            // e1234, e3215, scalar
+        let geometric_product = VersorSphereOrthogonalOrigin::from_groups(
+            // e3215, e1234, scalar
             (Simd32x3::from([
-                (-(reverse.group0()[0] * self.group0()[2]) + (reverse.group0()[2] * self.group0()[0]) - (reverse.group0()[3] * self.group0()[0])),
                 ((reverse.group0()[1] * self.group0()[2]) - (reverse.group0()[2] * self.group0()[1]) - (reverse.group0()[3] * self.group0()[1])),
+                (-(reverse.group0()[0] * self.group0()[2]) + (reverse.group0()[2] * self.group0()[0]) - (reverse.group0()[3] * self.group0()[0])),
                 (-(reverse.group0()[0] * self.group0()[1]) - (reverse.group0()[1] * self.group0()[0]) - (reverse.group0()[2] * self.group0()[2])),
-            ]) - (Simd32x3::from(self.group0()[3]) * Simd32x3::from([reverse.group0()[0], reverse.group0()[1], reverse.group0()[3]]))),
+            ]) - (Simd32x3::from(self.group0()[3]) * Simd32x3::from([reverse.group0()[1], reverse.group0()[0], reverse.group0()[3]]))),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
             (-f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2) - 2.0 * (self.group0()[0] * self.group0()[1])),
         );
-        let subtraction = AntiQuadNumAligningOrigin::from_groups(/* e1234, e3215, scalar */ Simd32x3::from([
+        let subtraction = VersorSphereOrthogonalOrigin::from_groups(/* e3215, e1234, scalar */ Simd32x3::from([
             geometric_product.group0()[0],
             geometric_product.group0()[1],
             (geometric_product.group0()[2] - scalar_product[scalar]),
@@ -4959,47 +4975,8 @@ impl ConstraintViolation for QuadNum {
         return subtraction;
     }
 }
-impl ConstraintViolation for QuadNumAligningOrigin {
-    type Output = SphereAtOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        6        0
-    fn constraint_violation(self) -> Self::Output {
-        let geometric_product = AntiQuadNumAligningOrigin::from_groups(/* e1234, e3215, scalar */ Simd32x3::from([
-            (self.group0()[0] * self.group0()[2] * -2.0),
-            (self.group0()[1] * self.group0()[2] * -2.0),
-            (-f32::powi(self.group0()[2], 2) - 2.0 * (self.group0()[0] * self.group0()[1])),
-        ]));
-        let subtraction = SphereAtOrigin::from_groups(/* e3215, e1234 */ Simd32x2::from([geometric_product.group0()[1], geometric_product.group0()[0]]));
-        return subtraction;
-    }
-}
-impl ConstraintViolation for QuadNumAligningOriginAtInfinity {
-    type Output = AntiQuadNumAligningOriginAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        2        0
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        1        3        0
-    //  no simd        1        4        0
-    fn constraint_violation(self) -> Self::Output {
-        use crate::elements::*;
-        let geometric_product = AntiQuadNumAligningOriginAtInfinity::from_groups(
-            // e3215, scalar
-            (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([-2.0, -1.0])),
-        );
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(self.group0()[1], 2) * -1.0));
-        let subtraction =
-            AntiQuadNumAligningOriginAtInfinity::from_groups(
-                // e3215, scalar
-                Simd32x2::from([geometric_product.group0()[0], (geometric_product.group0()[1] - scalar_product[scalar])]),
-            );
-        return subtraction;
-    }
-}
 impl ConstraintViolation for QuadNumAtInfinity {
-    type Output = AntiQuadNumAligningOriginAtInfinity;
+    type Output = AntiVersorRoundPointAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        3        0
@@ -5010,7 +4987,7 @@ impl ConstraintViolation for QuadNumAtInfinity {
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([self.group0()[0], (self.group0()[1] * -1.0), self.group0()[2]]));
-        let geometric_product = AntiQuadNumAligningOriginAtInfinity::from_groups(
+        let geometric_product = AntiVersorRoundPointAligningOriginAtInfinity::from_groups(
             // e3215, scalar
             (Simd32x2::from([((reverse.group0()[0] * self.group0()[1]) - (reverse.group0()[2] * self.group0()[0])), 0.0])
                 - (Simd32x2::from(reverse.group0()[1]) * Simd32x2::from([self.group0()[0], self.group0()[1]]))
@@ -5018,38 +4995,15 @@ impl ConstraintViolation for QuadNumAtInfinity {
         );
         let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2)));
         let subtraction =
-            AntiQuadNumAligningOriginAtInfinity::from_groups(
+            AntiVersorRoundPointAligningOriginAtInfinity::from_groups(
                 // e3215, scalar
                 Simd32x2::from([geometric_product.group0()[0], (geometric_product.group0()[1] - scalar_product[scalar])]),
             );
         return subtraction;
     }
 }
-impl ConstraintViolation for QuadNumOnOrigin {
-    type Output = AntiQuadNumOnOrigin;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        2        0
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        1        3        0
-    //  no simd        1        4        0
-    fn constraint_violation(self) -> Self::Output {
-        use crate::elements::*;
-        let geometric_product = AntiQuadNumOnOrigin::from_groups(
-            // e1234, scalar
-            (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([-2.0, -1.0])),
-        );
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(self.group0()[1], 2) * -1.0));
-        let subtraction = AntiQuadNumOnOrigin::from_groups(
-            // e1234, scalar
-            Simd32x2::from([geometric_product.group0()[0], (geometric_product.group0()[1] - scalar_product[scalar])]),
-        );
-        return subtraction;
-    }
-}
 impl ConstraintViolation for QuadNumOrthogonalOrigin {
-    type Output = AntiQuadNumAligningOrigin;
+    type Output = VersorSphereOrthogonalOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        3        7        0
@@ -5060,16 +5014,16 @@ impl ConstraintViolation for QuadNumOrthogonalOrigin {
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = QuadNumOrthogonalOrigin::from_groups(/* e4, e5, e321 */ Simd32x3::from([self.group0()[0], self.group0()[1], (self.group0()[2] * -1.0)]));
-        let geometric_product = AntiQuadNumAligningOrigin::from_groups(
-            // e1234, e3215, scalar
+        let geometric_product = VersorSphereOrthogonalOrigin::from_groups(
+            // e3215, e1234, scalar
             (Simd32x3::from([
-                (reverse.group0()[2] * self.group0()[0]),
                 (reverse.group0()[1] * self.group0()[2]),
+                (reverse.group0()[2] * self.group0()[0]),
                 (-(reverse.group0()[1] * self.group0()[0]) - (reverse.group0()[2] * self.group0()[2])),
-            ]) - (swizzle!(reverse.group0(), 0, 2, 0) * swizzle!(self.group0(), 2, 1, 1))),
+            ]) - (swizzle!(reverse.group0(), 2, 0, 0) * swizzle!(self.group0(), 1, 2, 1))),
         );
         let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(self.group0()[2], 2) - 2.0 * (self.group0()[0] * self.group0()[1])));
-        let subtraction = AntiQuadNumAligningOrigin::from_groups(/* e1234, e3215, scalar */ Simd32x3::from([
+        let subtraction = VersorSphereOrthogonalOrigin::from_groups(/* e3215, e1234, scalar */ Simd32x3::from([
             geometric_product.group0()[0],
             geometric_product.group0()[1],
             (geometric_product.group0()[2] - scalar_product[scalar]),
@@ -5283,14 +5237,15 @@ impl ConstraintViolation for VersorEven {
     }
 }
 impl ConstraintViolation for VersorEvenAligningOrigin {
-    type Output = VersorOdd;
+    type Output = VersorSphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       30       45        0
+    //      f32       15       29        0
+    //    simd2        8        8        0
     //    simd4        6        6        0
     // Totals...
-    // yes simd       36       51        0
-    //  no simd       54       69        0
+    // yes simd       29       43        0
+    //  no simd       55       69        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = VersorEvenAligningOrigin::from_groups(
@@ -5301,37 +5256,7 @@ impl ConstraintViolation for VersorEvenAligningOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
         );
-        let geometric_product = VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                ((reverse.group0()[0] * self.group2()[0]) + (reverse.group0()[1] * self.group2()[1]) + (reverse.group0()[2] * self.group2()[2])
-                    - (reverse.group0()[3] * self.group0()[3])
-                    + (reverse.group1()[0] * self.group1()[0])
-                    + (reverse.group1()[1] * self.group1()[1])
-                    + (reverse.group1()[2] * self.group1()[2])
-                    - (reverse.group1()[3] * self.group2()[3])
-                    + (reverse.group2()[0] * self.group0()[0])
-                    + (reverse.group2()[1] * self.group0()[1])
-                    + (reverse.group2()[2] * self.group0()[2])
-                    - (reverse.group2()[3] * self.group1()[3])),
-            ]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                ((reverse.group0()[0] * self.group1()[0]) + (reverse.group0()[1] * self.group1()[1]) + (reverse.group0()[2] * self.group1()[2])
-                    - (reverse.group0()[3] * self.group1()[3])
-                    + (reverse.group1()[0] * self.group0()[0])
-                    + (reverse.group1()[1] * self.group0()[1])
-                    + (reverse.group1()[2] * self.group0()[2])
-                    - (reverse.group1()[3] * self.group0()[3])),
-            ]),
+        let geometric_product = VersorSphere::from_groups(
             // e4235, e4315, e4125, e3215
             (Simd32x4::from([
                 (-(reverse.group0()[1] * self.group2()[2]) - (reverse.group1()[3] * self.group2()[0])),
@@ -5344,6 +5269,19 @@ impl ConstraintViolation for VersorEvenAligningOrigin {
                 + (Simd32x4::from([self.group1()[3], self.group1()[3], self.group0()[1], self.group1()[0]]) * swizzle!(reverse.group2(), 0, 1, 0, 0))
                 - (swizzle!(reverse.group0(), 0, 1, 0, 3) * swizzle!(self.group2(), 3, 3, 1, 3))
                 - (swizzle!(reverse.group2(), 2, 0, 1, 3) * swizzle!(self.group0(), 1, 2, 0, 3))),
+            // e1234, scalar
+            (Simd32x2::from([
+                0.0,
+                ((reverse.group2()[0] * self.group0()[0]) + (reverse.group2()[1] * self.group0()[1]) + (reverse.group2()[2] * self.group0()[2])
+                    - (reverse.group2()[3] * self.group1()[3])),
+            ]) + (Simd32x2::from(reverse.group0()[0]) * Simd32x2::from([self.group1()[0], self.group2()[0]]))
+                + (Simd32x2::from(reverse.group0()[1]) * Simd32x2::from([self.group1()[1], self.group2()[1]]))
+                + (Simd32x2::from(reverse.group0()[2]) * Simd32x2::from([self.group1()[2], self.group2()[2]]))
+                - (Simd32x2::from(reverse.group0()[3]) * Simd32x2::from([self.group1()[3], self.group0()[3]]))
+                + (Simd32x2::from(reverse.group1()[0]) * Simd32x2::from([self.group0()[0], self.group1()[0]]))
+                + (Simd32x2::from(reverse.group1()[1]) * Simd32x2::from([self.group0()[1], self.group1()[1]]))
+                + (Simd32x2::from(reverse.group1()[2]) * Simd32x2::from([self.group0()[2], self.group1()[2]]))
+                - (Simd32x2::from(reverse.group1()[3]) * Simd32x2::from([self.group0()[3], self.group2()[3]]))),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
@@ -5356,15 +5294,11 @@ impl ConstraintViolation for VersorEvenAligningOrigin {
                 + 2.0 * (self.group0()[2] * self.group2()[2])
                 - 2.0 * (self.group1()[3] * self.group2()[3])),
         );
-        let subtraction = VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group2()[3]]),
+        let subtraction = VersorSphere::from_groups(
             // e4235, e4315, e4125, e3215
-            geometric_product.group3(),
+            geometric_product.group0(),
+            // e1234, scalar
+            Simd32x2::from([geometric_product.group1()[0], (geometric_product.group1()[1] - scalar_product[scalar])]),
         );
         return subtraction;
     }
@@ -5481,7 +5415,7 @@ impl ConstraintViolation for VersorEvenAtInfinity {
     }
 }
 impl ConstraintViolation for VersorEvenAtOrigin {
-    type Output = MysteryVersorOdd;
+    type Output = MysteryVersorSphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        8       22        0
@@ -5497,43 +5431,36 @@ impl ConstraintViolation for VersorEvenAtOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
         );
-        let geometric_product = MysteryVersorOdd::from_groups(
-            // scalar, e4235, e4315, e4125
+        let geometric_product = MysteryVersorSphere::from_groups(
+            // e4235, e4315, e4125, scalar
             (Simd32x4::from([
-                ((reverse.group0()[1] * self.group1()[1]) + (reverse.group0()[2] * self.group1()[2])),
                 (-(reverse.group0()[1] * self.group1()[2]) - (reverse.group0()[3] * self.group1()[0])),
                 (-(reverse.group0()[2] * self.group1()[0]) - (reverse.group0()[3] * self.group1()[1])),
                 (-(reverse.group0()[2] * self.group1()[3]) - (reverse.group0()[3] * self.group1()[2])),
-            ]) + (swizzle!(reverse.group0(), 0, 2, 0, 1) * swizzle!(self.group1(), 0, 1, 2, 0))
-                - (swizzle!(reverse.group0(), 3, 0, 1, 0) * swizzle!(self.group1(), 3, 3, 3, 1))
-                + (swizzle!(reverse.group1(), 0, 0, 1, 0) * swizzle!(self.group0(), 0, 3, 3, 1))
-                + (swizzle!(reverse.group1(), 1, 1, 2, 2) * swizzle!(self.group0(), 1, 2, 0, 3))
-                + (swizzle!(reverse.group1(), 2, 3, 3, 3) * swizzle!(self.group0(), 2, 0, 1, 2))
-                - (swizzle!(reverse.group1(), 3, 2, 0, 1) * swizzle!(self.group0(), 3, 1, 2, 0))),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
+                ((reverse.group0()[1] * self.group1()[1]) + (reverse.group0()[2] * self.group1()[2])),
+            ]) - (swizzle!(reverse.group0(), 0, 1, 0, 3) * swizzle!(self.group1(), 3, 3, 1, 3))
+                + (swizzle!(reverse.group0(), 2, 0, 1, 0) * swizzle!(self.group1(), 1, 2, 0, 0))
+                + (swizzle!(reverse.group1(), 0, 1, 0, 0) * swizzle!(self.group0(), 3, 3, 1, 0))
+                + (swizzle!(reverse.group1(), 1, 2, 2, 1) * swizzle!(self.group0(), 2, 0, 3, 1))
+                - (swizzle!(reverse.group1(), 2, 0, 1, 3) * swizzle!(self.group0(), 1, 2, 0, 3))
+                + (swizzle!(reverse.group1(), 3, 3, 3, 2) * swizzle!(self.group0(), 0, 1, 2, 2))),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
             (2.0 * (self.group0()[0] * self.group1()[0]) + 2.0 * (self.group0()[1] * self.group1()[1]) + 2.0 * (self.group0()[2] * self.group1()[2])
                 - 2.0 * (self.group0()[3] * self.group1()[3])),
         );
-        let subtraction = MysteryVersorOdd::from_groups(
-            // scalar, e4235, e4315, e4125
-            Simd32x4::from([
-                (geometric_product.group0()[0] - scalar_product[scalar]),
-                geometric_product.group0()[1],
-                geometric_product.group0()[2],
-                geometric_product.group0()[3],
-            ]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-        );
+        let subtraction = MysteryVersorSphere::from_groups(/* e4235, e4315, e4125, scalar */ Simd32x4::from([
+            geometric_product.group0()[0],
+            geometric_product.group0()[1],
+            geometric_product.group0()[2],
+            (geometric_product.group0()[3] - scalar_product[scalar]),
+        ]));
         return subtraction;
     }
 }
 impl ConstraintViolation for VersorEvenOnOrigin {
-    type Output = AntiQuadNumOnOrigin;
+    type Output = AntiVersorRoundPointOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        7       10        0
@@ -5549,7 +5476,7 @@ impl ConstraintViolation for VersorEvenOnOrigin {
             // e415, e425, e435, e4
             Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
         );
-        let geometric_product = AntiQuadNumOnOrigin::from_groups(
+        let geometric_product = AntiVersorRoundPointOnOrigin::from_groups(
             // e1234, scalar
             (Simd32x2::from([
                 ((reverse.group1()[0] * self.group0()[0]) + (reverse.group1()[1] * self.group0()[1]) + (reverse.group1()[2] * self.group0()[2])
@@ -5564,7 +5491,7 @@ impl ConstraintViolation for VersorEvenOnOrigin {
             // scalar
             (-f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2)),
         );
-        let subtraction = AntiQuadNumOnOrigin::from_groups(
+        let subtraction = AntiVersorRoundPointOnOrigin::from_groups(
             // e1234, scalar
             Simd32x2::from([geometric_product.group0()[0], (geometric_product.group0()[1] - scalar_product[scalar])]),
         );
@@ -6001,14 +5928,15 @@ impl ConstraintViolation for VersorOddAtInfinity {
     }
 }
 impl ConstraintViolation for VersorOddOrthogonalOrigin {
-    type Output = VersorOdd;
+    type Output = VersorSphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       30       45        0
+    //      f32       15       29        0
+    //    simd2        8        8        0
     //    simd4        6        6        0
     // Totals...
-    // yes simd       36       51        0
-    //  no simd       54       69        0
+    // yes simd       29       43        0
+    //  no simd       55       69        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = VersorOddOrthogonalOrigin::from_groups(
@@ -6019,37 +5947,7 @@ impl ConstraintViolation for VersorOddOrthogonalOrigin {
             // e15, e25, e35, e1234
             Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
         );
-        let geometric_product = VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                (-(reverse.group0()[0] * self.group2()[0]) - (reverse.group0()[1] * self.group2()[1]) - (reverse.group0()[2] * self.group2()[2])
-                    + (reverse.group0()[3] * self.group0()[3])
-                    - (reverse.group1()[0] * self.group1()[0])
-                    - (reverse.group1()[1] * self.group1()[1])
-                    - (reverse.group1()[2] * self.group1()[2])
-                    + (reverse.group1()[3] * self.group2()[3])
-                    - (reverse.group2()[0] * self.group0()[0])
-                    - (reverse.group2()[1] * self.group0()[1])
-                    - (reverse.group2()[2] * self.group0()[2])
-                    + (reverse.group2()[3] * self.group1()[3])),
-            ]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                (-(reverse.group0()[0] * self.group1()[0]) - (reverse.group0()[1] * self.group1()[1]) - (reverse.group0()[2] * self.group1()[2])
-                    + (reverse.group0()[3] * self.group2()[3])
-                    - (reverse.group1()[0] * self.group0()[0])
-                    - (reverse.group1()[1] * self.group0()[1])
-                    - (reverse.group1()[2] * self.group0()[2])
-                    + (reverse.group2()[3] * self.group0()[3])),
-            ]),
+        let geometric_product = VersorSphere::from_groups(
             // e4235, e4315, e4125, e3215
             (Simd32x4::from([
                 ((reverse.group0()[1] * self.group2()[2]) + (reverse.group2()[3] * self.group2()[0])),
@@ -6062,6 +5960,21 @@ impl ConstraintViolation for VersorOddOrthogonalOrigin {
                 - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group2()[3], self.group1()[1]]) * swizzle!(reverse.group2(), 1, 2, 2, 1))
                 + (Simd32x4::from([self.group1()[3], self.group1()[3], self.group2()[1], self.group1()[3]]) * swizzle!(reverse.group0(), 0, 1, 0, 3))
                 - (Simd32x4::from([self.group2()[3], self.group2()[3], self.group0()[1], self.group1()[0]]) * swizzle!(reverse.group2(), 0, 1, 0, 0))),
+            // e1234, scalar
+            (Simd32x2::from([
+                0.0,
+                ((reverse.group1()[3] * self.group2()[3])
+                    - (reverse.group2()[0] * self.group0()[0])
+                    - (reverse.group2()[1] * self.group0()[1])
+                    - (reverse.group2()[2] * self.group0()[2])),
+            ]) - (Simd32x2::from(reverse.group0()[0]) * Simd32x2::from([self.group1()[0], self.group2()[0]]))
+                - (Simd32x2::from(reverse.group0()[1]) * Simd32x2::from([self.group1()[1], self.group2()[1]]))
+                - (Simd32x2::from(reverse.group0()[2]) * Simd32x2::from([self.group1()[2], self.group2()[2]]))
+                + (Simd32x2::from(reverse.group0()[3]) * Simd32x2::from([self.group2()[3], self.group0()[3]]))
+                - (Simd32x2::from(reverse.group1()[0]) * Simd32x2::from([self.group0()[0], self.group1()[0]]))
+                - (Simd32x2::from(reverse.group1()[1]) * Simd32x2::from([self.group0()[1], self.group1()[1]]))
+                - (Simd32x2::from(reverse.group1()[2]) * Simd32x2::from([self.group0()[2], self.group1()[2]]))
+                + (Simd32x2::from(reverse.group2()[3]) * Simd32x2::from([self.group0()[3], self.group1()[3]]))),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
@@ -6074,16 +5987,176 @@ impl ConstraintViolation for VersorOddOrthogonalOrigin {
                 - 2.0 * (self.group0()[2] * self.group2()[2])
                 + 2.0 * (self.group1()[3] * self.group2()[3])),
         );
-        let subtraction = VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group2()[3]]),
+        let subtraction = VersorSphere::from_groups(
             // e4235, e4315, e4125, e3215
-            geometric_product.group3(),
+            geometric_product.group0(),
+            // e1234, scalar
+            Simd32x2::from([geometric_product.group1()[0], (geometric_product.group1()[1] - scalar_product[scalar])]),
         );
+        return subtraction;
+    }
+}
+impl ConstraintViolation for VersorRoundPoint {
+    type Output = Sphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        4        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        4        6        0
+    //  no simd        4       12        0
+    fn constraint_violation(self) -> Self::Output {
+        let geometric_product = VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]]) * Simd32x4::from([2.0, 2.0, 2.0, -2.0])),
+            // e1234, scalar
+            Simd32x2::from([
+                (self.group1()[1] * self.group0()[3] * -2.0),
+                (-f32::powi(self.group1()[1], 2) + f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2)
+                    - 2.0 * (self.group1()[0] * self.group0()[3])),
+            ]),
+        );
+        let subtraction = Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ geometric_product.group0(), /* e1234 */ geometric_product.group1()[0]);
+        return subtraction;
+    }
+}
+impl ConstraintViolation for VersorRoundPointAligningOrigin {
+    type Output = SphereAtOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        6        0
+    fn constraint_violation(self) -> Self::Output {
+        let geometric_product = VersorSphereOrthogonalOrigin::from_groups(/* e3215, e1234, scalar */ Simd32x3::from([
+            (self.group0()[1] * self.group0()[2] * -2.0),
+            (self.group0()[0] * self.group0()[2] * -2.0),
+            (-f32::powi(self.group0()[2], 2) - 2.0 * (self.group0()[0] * self.group0()[1])),
+        ]));
+        let subtraction = SphereAtOrigin::from_groups(/* e3215, e1234 */ Simd32x2::from([geometric_product.group0()[0], geometric_product.group0()[1]]));
+        return subtraction;
+    }
+}
+impl ConstraintViolation for VersorRoundPointAligningOriginAtInfinity {
+    type Output = AntiVersorRoundPointAligningOriginAtInfinity;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        2        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        1        3        0
+    //  no simd        1        4        0
+    fn constraint_violation(self) -> Self::Output {
+        use crate::elements::*;
+        let geometric_product = AntiVersorRoundPointAligningOriginAtInfinity::from_groups(
+            // e3215, scalar
+            (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([-2.0, -1.0])),
+        );
+        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(self.group0()[1], 2) * -1.0));
+        let subtraction =
+            AntiVersorRoundPointAligningOriginAtInfinity::from_groups(
+                // e3215, scalar
+                Simd32x2::from([geometric_product.group0()[0], (geometric_product.group0()[1] - scalar_product[scalar])]),
+            );
+        return subtraction;
+    }
+}
+impl ConstraintViolation for VersorRoundPointAtInfinity {
+    type Output = VersorSphereAtInfinity;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3        0        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        3        2        0
+    //  no simd        3        8        0
+    fn constraint_violation(self) -> Self::Output {
+        let geometric_product = VersorSphereAtInfinity::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]]) * Simd32x4::from([2.0, 2.0, 2.0, -2.0])),
+            // scalar
+            (-f32::powi(self.group1()[1], 2) + f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2)),
+        );
+        return geometric_product;
+    }
+}
+impl ConstraintViolation for VersorRoundPointOnOrigin {
+    type Output = AntiVersorRoundPointOnOrigin;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        2        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        1        3        0
+    //  no simd        1        4        0
+    fn constraint_violation(self) -> Self::Output {
+        use crate::elements::*;
+        let geometric_product = AntiVersorRoundPointOnOrigin::from_groups(
+            // e1234, scalar
+            (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([-2.0, -1.0])),
+        );
+        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(self.group0()[1], 2) * -1.0));
+        let subtraction = AntiVersorRoundPointOnOrigin::from_groups(
+            // e1234, scalar
+            Simd32x2::from([geometric_product.group0()[0], (geometric_product.group0()[1] - scalar_product[scalar])]),
+        );
+        return subtraction;
+    }
+}
+impl ConstraintViolation for VersorSphere {
+    type Output = Sphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        4        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        4        6        0
+    //  no simd        4       12        0
+    fn constraint_violation(self) -> Self::Output {
+        let geometric_product = VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * self.group0() * Simd32x4::from(2.0)),
+            // e1234, scalar
+            Simd32x2::from([
+                (self.group1()[0] * self.group1()[1] * 2.0),
+                (f32::powi(self.group1()[1], 2) - f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2)
+                    + 2.0 * (self.group1()[0] * self.group0()[3])),
+            ]),
+        );
+        let subtraction = Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ geometric_product.group0(), /* e1234 */ geometric_product.group1()[0]);
+        return subtraction;
+    }
+}
+impl ConstraintViolation for VersorSphereAtInfinity {
+    type Output = VersorSphereAtInfinity;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3        0        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        3        2        0
+    //  no simd        3        8        0
+    fn constraint_violation(self) -> Self::Output {
+        use crate::elements::*;
+        let geometric_product = VersorSphereAtInfinity::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self[e4315]) * self.group0() * Simd32x4::from(2.0)),
+            // scalar
+            (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self[e4315], 2)),
+        );
+        return geometric_product;
+    }
+}
+impl ConstraintViolation for VersorSphereOrthogonalOrigin {
+    type Output = SphereAtOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        6        0
+    fn constraint_violation(self) -> Self::Output {
+        let geometric_product = VersorSphereOrthogonalOrigin::from_groups(/* e3215, e1234, scalar */ Simd32x3::from([
+            (self.group0()[0] * self.group0()[2] * 2.0),
+            (self.group0()[1] * self.group0()[2] * 2.0),
+            (f32::powi(self.group0()[2], 2) + 2.0 * (self.group0()[0] * self.group0()[1])),
+        ]));
+        let subtraction = SphereAtOrigin::from_groups(/* e3215, e1234 */ Simd32x2::from([geometric_product.group0()[0], geometric_product.group0()[1]]));
         return subtraction;
     }
 }

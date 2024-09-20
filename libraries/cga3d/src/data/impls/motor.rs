@@ -1,4 +1,5 @@
 use crate::traits::GeometricProduct;
+use crate::traits::RightDual;
 use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -7,7 +8,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 143
+// Total Implementations: 152
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -945,6 +946,55 @@ impl std::ops::Add<VersorOdd> for Motor {
         return addition;
     }
 }
+impl std::ops::Add<VersorRoundPoint> for Motor {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn add(self, other: VersorRoundPoint) -> Self::Output {
+        let addition = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[1] + self.group0()[3])]),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+            // e235, e315, e125, e5
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group1()[0] + self.group1()[3])]),
+            // e1, e2, e3, e4
+            other.group0(),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<VersorSphere> for Motor {
+    type Output = MultiVector;
+    fn add(self, other: VersorSphere) -> Self::Output {
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group1()[1], self.group0()[3]]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self.group1()[3],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+            // e4235, e4315, e4125, e3215
+            other.group0(),
+            // e1234
+            other.group1()[0],
+        );
+        return addition;
+    }
+}
 impl std::ops::BitXor<AntiCircleRotor> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
@@ -1294,6 +1344,37 @@ impl std::ops::BitXor<VersorOdd> for Motor {
 }
 impl std::ops::BitXorAssign<VersorOdd> for Motor {
     fn bitxor_assign(&mut self, other: VersorOdd) {
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorRoundPoint> for Motor {
+    type Output = Flector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        3        0
+    // Totals...
+    // yes simd        5       11        0
+    //  no simd        8       20        0
+    fn bitxor(self, other: VersorRoundPoint) -> Self::Output {
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorSphere> for Motor {
+    type Output = Motor;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        1        6        0
+    //  no simd        1        9        0
+    fn bitxor(self, other: VersorSphere) -> Self::Output {
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<VersorSphere> for Motor {
+    fn bitxor_assign(&mut self, other: VersorSphere) {
         *self = self.wedge(other);
     }
 }
@@ -1765,6 +1846,32 @@ impl std::ops::Mul<VersorOdd> for Motor {
         return self.geometric_product(other);
     }
 }
+impl std::ops::Mul<VersorRoundPoint> for Motor {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       14       28        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       20       34        0
+    //  no simd       38       52        0
+    fn mul(self, other: VersorRoundPoint) -> Self::Output {
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<VersorSphere> for Motor {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       16       32        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       20       36        0
+    //  no simd       32       48        0
+    fn mul(self, other: VersorSphere) -> Self::Output {
+        return self.geometric_product(other);
+    }
+}
 impl std::ops::Neg for Motor {
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
@@ -1786,13 +1893,7 @@ impl std::ops::Not for Motor {
     //      add/sub      mul      div
     // f32        0        2        0
     fn not(self) -> Self::Output {
-        let right_dual = AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
-            // e15, e25, e35, e3215
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] * -1.0)]),
-        );
-        return right_dual;
+        return self.right_dual();
     }
 }
 impl std::ops::Sub<AntiCircleRotor> for Motor {
@@ -2820,6 +2921,66 @@ impl std::ops::Sub<VersorOdd> for Motor {
         return subtraction;
     }
 }
+impl std::ops::Sub<VersorRoundPoint> for Motor {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        0        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        1        0
+    //  no simd        2        4        0
+    fn sub(self, other: VersorRoundPoint) -> Self::Output {
+        let subtraction = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group1()[1] + self.group0()[3])]),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+            // e235, e315, e125, e5
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group1()[0] + self.group1()[3])]),
+            // e1, e2, e3, e4
+            (other.group0() * Simd32x4::from(-1.0)),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<VersorSphere> for Motor {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        6        0
+    fn sub(self, other: VersorSphere) -> Self::Output {
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group1()[1] * -1.0), self.group0()[3]]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            self.group1()[3],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+            // e4235, e4315, e4125, e3215
+            (other.group0() * Simd32x4::from(-1.0)),
+            // e1234
+            (other.group1()[0] * -1.0),
+        );
+        return subtraction;
+    }
+}
 
 impl TryFrom<AntiDipoleInversion> for Motor {
     type Error = String;
@@ -3545,6 +3706,55 @@ impl TryFrom<VersorEven> for Motor {
             Simd32x4::from([versor_even[e415], versor_even[e425], versor_even[e435], versor_even[e12345]]),
             // e235, e315, e125, e5
             Simd32x4::from([versor_even[e235], versor_even[e315], versor_even[e125], versor_even[e5]]),
+        ));
+    }
+}
+
+impl TryFrom<VersorRoundPoint> for Motor {
+    type Error = String;
+    fn try_from(versor_round_point: VersorRoundPoint) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_round_point[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_round_point[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e2: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_round_point[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_round_point[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorRoundPoint do not fit into Motor { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(Motor::from_groups(
+            // e415, e425, e435, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, versor_round_point[e12345]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, versor_round_point[e5]]),
         ));
     }
 }

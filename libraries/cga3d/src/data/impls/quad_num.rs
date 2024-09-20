@@ -1,4 +1,5 @@
 use crate::traits::GeometricProduct;
+use crate::traits::RightDual;
 use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -7,7 +8,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 148
+// Total Implementations: 157
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -869,6 +870,55 @@ impl std::ops::Add<VersorOdd> for QuadNum {
         return addition;
     }
 }
+impl std::ops::Add<VersorRoundPoint> for QuadNum {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3        0        0
+    fn add(self, other: VersorRoundPoint) -> Self::Output {
+        let addition = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[1] + self.group0()[3])]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[2]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[0] + self.group0()[1])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[0] + other.group0()[3])]),
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<VersorSphere> for QuadNum {
+    type Output = MultiVector;
+    fn add(self, other: VersorSphere) -> Self::Output {
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group1()[1], self.group0()[3]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+            // e5
+            self.group0()[1],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[2]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            other.group0(),
+            // e1234
+            other.group1()[0],
+        );
+        return addition;
+    }
+}
 impl std::ops::BitXor<AntiCircleRotor> for QuadNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
@@ -1254,6 +1304,34 @@ impl std::ops::BitXor<VersorOdd> for QuadNum {
     //  no simd        6       19        0
     fn bitxor(self, other: VersorOdd) -> Self::Output {
         return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorRoundPoint> for QuadNum {
+    type Output = DipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        3        0
+    //    simd3        0        1        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        1        6        0
+    //  no simd        1       14        0
+    fn bitxor(self, other: VersorRoundPoint) -> Self::Output {
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorSphere> for QuadNum {
+    type Output = QuadNum;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        6        0
+    fn bitxor(self, other: VersorSphere) -> Self::Output {
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<VersorSphere> for QuadNum {
+    fn bitxor_assign(&mut self, other: VersorSphere) {
+        *self = self.wedge(other);
     }
 }
 
@@ -1710,6 +1788,24 @@ impl std::ops::Mul<VersorOdd> for QuadNum {
         return self.geometric_product(other);
     }
 }
+impl std::ops::Mul<VersorRoundPoint> for QuadNum {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        8       30        0
+    fn mul(self, other: VersorRoundPoint) -> Self::Output {
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<VersorSphere> for QuadNum {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        8       33        0
+    fn mul(self, other: VersorSphere) -> Self::Output {
+        return self.geometric_product(other);
+    }
+}
 impl std::ops::Neg for QuadNum {
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
@@ -1727,8 +1823,7 @@ impl std::ops::Not for QuadNum {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn not(self) -> Self::Output {
-        let right_dual = AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ (self.group0() * Simd32x4::from(-1.0)));
-        return right_dual;
+        return self.right_dual();
     }
 }
 impl std::ops::Sub<AntiCircleRotor> for QuadNum {
@@ -2745,6 +2840,67 @@ impl std::ops::Sub<VersorOdd> for QuadNum {
         return subtraction;
     }
 }
+impl std::ops::Sub<VersorRoundPoint> for QuadNum {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3        3        0
+    fn sub(self, other: VersorRoundPoint) -> Self::Output {
+        let subtraction = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group1()[1] + self.group0()[3])]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[2]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (-other.group1()[0] + self.group0()[1])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (other.group0()[0] * -1.0),
+                (other.group0()[1] * -1.0),
+                (other.group0()[2] * -1.0),
+                (self.group0()[0] - other.group0()[3]),
+            ]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<VersorSphere> for QuadNum {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        6        0
+    fn sub(self, other: VersorSphere) -> Self::Output {
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group1()[1] * -1.0), self.group0()[3]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+            // e5
+            self.group0()[1],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[2]]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            (other.group0() * Simd32x4::from(-1.0)),
+            // e1234
+            (other.group1()[0] * -1.0),
+        );
+        return subtraction;
+    }
+}
 
 impl TryFrom<AntiDipoleInversion> for QuadNum {
     type Error = String;
@@ -3553,6 +3709,46 @@ impl TryFrom<VersorEven> for QuadNum {
         return Ok(QuadNum::from_groups(
             // e4, e5, e321, e12345
             Simd32x4::from([versor_even[e4], versor_even[e5], versor_even[e321], versor_even[e12345]]),
+        ));
+    }
+}
+
+impl TryFrom<VersorRoundPoint> for QuadNum {
+    type Error = String;
+    fn try_from(versor_round_point: VersorRoundPoint) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_round_point[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_round_point[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e2: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_round_point[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorRoundPoint do not fit into QuadNum { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(QuadNum::from_groups(
+            // e4, e5, e321, e12345
+            Simd32x4::from([versor_round_point[e4], versor_round_point[e5], 0.0, versor_round_point[e12345]]),
         ));
     }
 }

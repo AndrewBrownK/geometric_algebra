@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 88
+// Total Implementations: 94
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -192,33 +192,15 @@ impl Carrier for AntiPlaneOnOrigin {
     }
 }
 impl Carrier for AntiQuadNum {
-    type Output = QuadNumAligningOriginAtInfinity;
+    type Output = VersorRoundPointAligningOriginAtInfinity;
     fn carrier(self) -> Self::Output {
-        return QuadNumAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([self.group0()[3], self.group0()[0]]));
-    }
-}
-impl Carrier for AntiQuadNumAligningOrigin {
-    type Output = QuadNumAligningOriginAtInfinity;
-    fn carrier(self) -> Self::Output {
-        return QuadNumAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([self.group0()[2], self.group0()[0]]));
-    }
-}
-impl Carrier for AntiQuadNumAligningOriginAtInfinity {
-    type Output = Infinity;
-    fn carrier(self) -> Self::Output {
-        return Infinity::from_groups(/* e5 */ self.group0()[1]);
+        return VersorRoundPointAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([self.group0()[3], self.group0()[0]]));
     }
 }
 impl Carrier for AntiQuadNumAtInfinity {
     type Output = Infinity;
     fn carrier(self) -> Self::Output {
         return Infinity::from_groups(/* e5 */ self.group0()[2]);
-    }
-}
-impl Carrier for AntiQuadNumOnOrigin {
-    type Output = QuadNumAligningOriginAtInfinity;
-    fn carrier(self) -> Self::Output {
-        return QuadNumAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([self.group0()[1], self.group0()[0]]));
     }
 }
 impl Carrier for AntiQuadNumOrthogonalOrigin {
@@ -242,6 +224,18 @@ impl Carrier for AntiVersorEvenOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[3]]),
         );
+    }
+}
+impl Carrier for AntiVersorRoundPointAligningOriginAtInfinity {
+    type Output = Infinity;
+    fn carrier(self) -> Self::Output {
+        return Infinity::from_groups(/* e5 */ self.group0()[1]);
+    }
+}
+impl Carrier for AntiVersorRoundPointOnOrigin {
+    type Output = VersorRoundPointAligningOriginAtInfinity;
+    fn carrier(self) -> Self::Output {
+        return VersorRoundPointAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([self.group0()[1], self.group0()[0]]));
     }
 }
 impl Carrier for Circle {
@@ -477,6 +471,18 @@ impl Carrier for MysteryVersorOdd {
         return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[0]]));
     }
 }
+impl Carrier for MysteryVersorRoundPoint {
+    type Output = FlatPointAtInfinity;
+    fn carrier(self) -> Self::Output {
+        return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]));
+    }
+}
+impl Carrier for MysteryVersorSphere {
+    type Output = Infinity;
+    fn carrier(self) -> Self::Output {
+        return Infinity::from_groups(/* e5 */ self.group0()[3]);
+    }
+}
 impl Carrier for NullCircleAtOrigin {
     type Output = NullCircleAtOrigin;
     fn carrier(self) -> Self::Output {
@@ -522,22 +528,10 @@ impl Carrier for QuadNum {
         return AntiQuadNumOrthogonalOrigin::from_groups(/* e1234, e3215, e45 */ Simd32x3::from([0.0, self.group0()[2], self.group0()[0]]));
     }
 }
-impl Carrier for QuadNumAligningOrigin {
-    type Output = FlatOrigin;
-    fn carrier(self) -> Self::Output {
-        return FlatOrigin::from_groups(/* e45 */ self.group0()[0]);
-    }
-}
 impl Carrier for QuadNumAtInfinity {
     type Output = Horizon;
     fn carrier(self) -> Self::Output {
         return Horizon::from_groups(/* e3215 */ self.group0()[1]);
-    }
-}
-impl Carrier for QuadNumOnOrigin {
-    type Output = FlatOrigin;
-    fn carrier(self) -> Self::Output {
-        return FlatOrigin::from_groups(/* e45 */ self.group0()[0]);
     }
 }
 impl Carrier for QuadNumOrthogonalOrigin {
@@ -659,5 +653,48 @@ impl Carrier for VersorOddOrthogonalOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[3]]),
         );
+    }
+}
+impl Carrier for VersorRoundPoint {
+    type Output = VersorRoundPoint;
+    fn carrier(self) -> Self::Output {
+        return self;
+    }
+}
+impl Carrier for VersorRoundPointAligningOrigin {
+    type Output = FlatOrigin;
+    fn carrier(self) -> Self::Output {
+        return FlatOrigin::from_groups(/* e45 */ self.group0()[0]);
+    }
+}
+impl Carrier for VersorRoundPointAtInfinity {
+    type Output = VersorRoundPointAtInfinity;
+    fn carrier(self) -> Self::Output {
+        return self;
+    }
+}
+impl Carrier for VersorRoundPointOnOrigin {
+    type Output = FlatOrigin;
+    fn carrier(self) -> Self::Output {
+        return FlatOrigin::from_groups(/* e45 */ self.group0()[0]);
+    }
+}
+impl Carrier for VersorSphere {
+    type Output = VersorRoundPointAligningOriginAtInfinity;
+    fn carrier(self) -> Self::Output {
+        return VersorRoundPointAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([self.group1()[1], self.group1()[0]]));
+    }
+}
+impl Carrier for VersorSphereAtInfinity {
+    type Output = Infinity;
+    fn carrier(self) -> Self::Output {
+        use crate::elements::*;
+        return Infinity::from_groups(/* e5 */ self[e4315]);
+    }
+}
+impl Carrier for VersorSphereOrthogonalOrigin {
+    type Output = VersorRoundPointAligningOriginAtInfinity;
+    fn carrier(self) -> Self::Output {
+        return VersorRoundPointAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([self.group0()[2], self.group0()[1]]));
     }
 }

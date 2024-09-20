@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 33
+// Total Implementations: 35
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -15,7 +15,7 @@
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         0       4       0
+//   Median:         0       1       0
 //  Average:         0       4       0
 //  Maximum:         0      20       0
 impl AntiReverse for AntiCircleRotor {
@@ -409,5 +409,15 @@ impl AntiReverse for VersorOdd {
             // e4235, e4315, e4125, e3215
             self.group3(),
         );
+    }
+}
+impl AntiReverse for VersorRoundPoint {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for VersorSphere {
+    fn anti_reverse(self) -> Self {
+        return self;
     }
 }

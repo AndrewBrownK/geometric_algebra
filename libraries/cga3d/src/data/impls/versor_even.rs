@@ -1,4 +1,5 @@
 use crate::traits::GeometricProduct;
+use crate::traits::RightDual;
 use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -7,7 +8,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 149
+// Total Implementations: 158
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -1214,6 +1215,74 @@ impl std::ops::Add<VersorOdd> for VersorEven {
         return addition;
     }
 }
+impl std::ops::Add<VersorRoundPoint> for VersorEven {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd        6        0        0
+    fn add(self, other: VersorRoundPoint) -> Self::Output {
+        let addition = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group1()[1] + self.group0()[3])]),
+            // e415, e425, e435, e321
+            self.group1(),
+            // e235, e315, e125, e5
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (other.group1()[0] + self.group2()[3])]),
+            // e1, e2, e3, e4
+            (self.group3() + other.group0()),
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<VersorRoundPoint> for VersorEven {
+    fn add_assign(&mut self, other: VersorRoundPoint) {
+        let addition = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group1()[1] + self.group0()[3])]),
+            // e415, e425, e435, e321
+            self.group1(),
+            // e235, e315, e125, e5
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (other.group1()[0] + self.group2()[3])]),
+            // e1, e2, e3, e4
+            (self.group3() + other.group0()),
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<VersorSphere> for VersorEven {
+    type Output = MultiVector;
+    fn add(self, other: VersorSphere) -> Self::Output {
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group1()[1], self.group0()[3]]),
+            // e1, e2, e3, e4
+            self.group3(),
+            // e5
+            self.group2()[3],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            self.group1(),
+            // e423, e431, e412
+            Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            // e235, e315, e125
+            Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]),
+            // e4235, e4315, e4125, e3215
+            other.group0(),
+            // e1234
+            other.group1()[0],
+        );
+        return addition;
+    }
+}
 impl std::ops::BitXor<AntiCircleRotor> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
@@ -1668,6 +1737,38 @@ impl std::ops::BitXorAssign<VersorOdd> for VersorEven {
         *self = self.wedge(other);
     }
 }
+impl std::ops::BitXor<VersorRoundPoint> for VersorEven {
+    type Output = DipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       14        0
+    //    simd3        1        2        0
+    //    simd4        4        5        0
+    // Totals...
+    // yes simd       11       21        0
+    //  no simd       25       40        0
+    fn bitxor(self, other: VersorRoundPoint) -> Self::Output {
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorSphere> for VersorEven {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        5        9        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        5       12        0
+    //  no simd        5       21        0
+    fn bitxor(self, other: VersorSphere) -> Self::Output {
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<VersorSphere> for VersorEven {
+    fn bitxor_assign(&mut self, other: VersorSphere) {
+        *self = self.wedge(other);
+    }
+}
 
 impl From<AntiDipoleInversion> for VersorEven {
     fn from(anti_dipole_inversion: AntiDipoleInversion) -> Self {
@@ -1905,6 +2006,22 @@ impl From<TripleNum> for VersorEven {
             Simd32x4::from([0.0, 0.0, 0.0, triple_num[e5]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, triple_num[e4]]),
+        );
+    }
+}
+
+impl From<VersorRoundPoint> for VersorEven {
+    fn from(versor_round_point: VersorRoundPoint) -> Self {
+        use crate::elements::*;
+        return VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, versor_round_point[e12345]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, versor_round_point[e5]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([versor_round_point[e1], versor_round_point[e2], versor_round_point[e3], versor_round_point[e4]]),
         );
     }
 }
@@ -2417,6 +2534,37 @@ impl std::ops::MulAssign<VersorOdd> for VersorEven {
         *self = self.geometric_product(other);
     }
 }
+impl std::ops::Mul<VersorRoundPoint> for VersorEven {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        8       20        0
+    //    simd4       18       21        0
+    // Totals...
+    // yes simd       26       41        0
+    //  no simd       80      104        0
+    fn mul(self, other: VersorRoundPoint) -> Self::Output {
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<VersorSphere> for VersorEven {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       12       24        0
+    //    simd4       17       19        0
+    // Totals...
+    // yes simd       29       43        0
+    //  no simd       80      100        0
+    fn mul(self, other: VersorSphere) -> Self::Output {
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<VersorSphere> for VersorEven {
+    fn mul_assign(&mut self, other: VersorSphere) {
+        *self = self.geometric_product(other);
+    }
+}
 impl std::ops::Neg for VersorEven {
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
@@ -2442,17 +2590,7 @@ impl std::ops::Not for VersorEven {
     //      add/sub      mul      div
     // f32        0        4        0
     fn not(self) -> Self::Output {
-        let right_dual = VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
-            // e23, e31, e12, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] * -1.0)]),
-            // e15, e25, e35, e1234
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group3()[3] * -1.0)]),
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group2()[3] * -1.0)]),
-        );
-        return right_dual;
+        return self.right_dual();
     }
 }
 impl std::ops::Sub<AntiCircleRotor> for VersorEven {
@@ -3727,6 +3865,81 @@ impl std::ops::Sub<VersorOdd> for VersorEven {
             (other.group3() * Simd32x4::from(-1.0)),
             // e1234
             (other.group2()[3] * -1.0),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<VersorRoundPoint> for VersorEven {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd        6        0        0
+    fn sub(self, other: VersorRoundPoint) -> Self::Output {
+        let subtraction = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group1()[1] + self.group0()[3])]),
+            // e415, e425, e435, e321
+            self.group1(),
+            // e235, e315, e125, e5
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (-other.group1()[0] + self.group2()[3])]),
+            // e1, e2, e3, e4
+            (self.group3() - other.group0()),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<VersorRoundPoint> for VersorEven {
+    fn sub_assign(&mut self, other: VersorRoundPoint) {
+        let subtraction = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group1()[1] + self.group0()[3])]),
+            // e415, e425, e435, e321
+            self.group1(),
+            // e235, e315, e125, e5
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (-other.group1()[0] + self.group2()[3])]),
+            // e1, e2, e3, e4
+            (self.group3() - other.group0()),
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<VersorSphere> for VersorEven {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        6        0
+    fn sub(self, other: VersorSphere) -> Self::Output {
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group1()[1] * -1.0), self.group0()[3]]),
+            // e1, e2, e3, e4
+            self.group3(),
+            // e5
+            self.group2()[3],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            self.group1(),
+            // e423, e431, e412
+            Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            // e235, e315, e125
+            Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]),
+            // e4235, e4315, e4125, e3215
+            (other.group0() * Simd32x4::from(-1.0)),
+            // e1234
+            (other.group1()[0] * -1.0),
         );
         return subtraction;
     }

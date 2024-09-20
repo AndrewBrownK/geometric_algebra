@@ -5,18 +5,18 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 33
+// Total Implementations: 35
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:        10      13       0
-//  Average:        42      49       0
+//   Median:         4      10       0
+//  Average:        40      47       0
 //  Maximum:       550     576       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:        12      15       0
-//  Average:        78      87       0
+//   Median:         4      13       0
+//  Average:        73      83       0
 //  Maximum:      1016    1060       0
 impl ConstraintViolation for AntiCircleRotor {
     type Output = VersorOdd;
@@ -2370,6 +2370,54 @@ impl ConstraintViolation for VersorOdd {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
+        return subtraction;
+    }
+}
+impl ConstraintViolation for VersorRoundPoint {
+    type Output = Sphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        4        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        4        6        0
+    //  no simd        4       12        0
+    fn constraint_violation(self) -> Self::Output {
+        let geometric_product = VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]]) * Simd32x4::from([2.0, 2.0, 2.0, -2.0])),
+            // e1234, scalar
+            Simd32x2::from([
+                (self.group1()[1] * self.group0()[3] * -2.0),
+                (-f32::powi(self.group1()[1], 2) + f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2)
+                    - 2.0 * (self.group1()[0] * self.group0()[3])),
+            ]),
+        );
+        let subtraction = Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ geometric_product.group0(), /* e1234 */ geometric_product.group1()[0]);
+        return subtraction;
+    }
+}
+impl ConstraintViolation for VersorSphere {
+    type Output = Sphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        4        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        4        6        0
+    //  no simd        4       12        0
+    fn constraint_violation(self) -> Self::Output {
+        let geometric_product = VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * self.group0() * Simd32x4::from(2.0)),
+            // e1234, scalar
+            Simd32x2::from([
+                (self.group1()[0] * self.group1()[1] * 2.0),
+                (f32::powi(self.group1()[1], 2) - f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2)
+                    + 2.0 * (self.group1()[0] * self.group0()[3])),
+            ]),
+        );
+        let subtraction = Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ geometric_product.group0(), /* e1234 */ geometric_product.group1()[0]);
         return subtraction;
     }
 }

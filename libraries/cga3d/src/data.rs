@@ -70,6 +70,7 @@ pub mod reflection_4 {
     pub use crate::data::round_point::RoundPoint;
     pub use crate::data::triple_num::TripleNum;
     pub use crate::data::versor_even::VersorEven;
+    pub use crate::data::versor_round_point::VersorRoundPoint;
 }
 pub mod reflection_5 {
     pub use crate::data::anti_circle_rotor::AntiCircleRotor;
@@ -81,6 +82,7 @@ pub mod reflection_5 {
     pub use crate::data::anti_triple_num::AntiTripleNum;
     pub use crate::data::scalar::Scalar;
     pub use crate::data::versor_odd::VersorOdd;
+    pub use crate::data::versor_sphere::VersorSphere;
 }
 pub mod vector_0 {
     pub use crate::data::scalar::Scalar;
@@ -128,6 +130,8 @@ pub mod vector_mixed {
     pub use crate::data::triple_num::TripleNum;
     pub use crate::data::versor_even::VersorEven;
     pub use crate::data::versor_odd::VersorOdd;
+    pub use crate::data::versor_round_point::VersorRoundPoint;
+    pub use crate::data::versor_sphere::VersorSphere;
 }
 mod anti_circle_rotor;
 pub use anti_circle_rotor::AntiCircleRotor;
@@ -195,3 +199,7 @@ mod versor_even;
 pub use versor_even::VersorEven;
 mod versor_odd;
 pub use versor_odd::VersorOdd;
+mod versor_round_point;
+pub use versor_round_point::VersorRoundPoint;
+mod versor_sphere;
+pub use versor_sphere::VersorSphere;

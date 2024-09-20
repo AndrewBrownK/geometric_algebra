@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 107
+// Total Implementations: 113
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -333,27 +333,12 @@ impl AntiReverse for AntiQuadNum {
         );
     }
 }
-impl AntiReverse for AntiQuadNumAligningOrigin {
-    fn anti_reverse(self) -> Self {
-        return self;
-    }
-}
-impl AntiReverse for AntiQuadNumAligningOriginAtInfinity {
-    fn anti_reverse(self) -> Self {
-        return self;
-    }
-}
 impl AntiReverse for AntiQuadNumAtInfinity {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
     fn anti_reverse(self) -> Self {
         return AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ Simd32x3::from([self.group0()[0], (self.group0()[1] * -1.0), self.group0()[2]]));
-    }
-}
-impl AntiReverse for AntiQuadNumOnOrigin {
-    fn anti_reverse(self) -> Self {
-        return self;
     }
 }
 impl AntiReverse for AntiQuadNumOrthogonalOrigin {
@@ -385,6 +370,16 @@ impl AntiReverse for AntiVersorEvenOnOrigin {
             // e23, e31, e12, e1234
             Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
         );
+    }
+}
+impl AntiReverse for AntiVersorRoundPointAligningOriginAtInfinity {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for AntiVersorRoundPointOnOrigin {
+    fn anti_reverse(self) -> Self {
+        return self;
     }
 }
 impl AntiReverse for Circle {
@@ -1016,6 +1011,16 @@ impl AntiReverse for MysteryVersorOdd {
         );
     }
 }
+impl AntiReverse for MysteryVersorRoundPoint {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for MysteryVersorSphere {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
 impl AntiReverse for NullCircleAtOrigin {
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
@@ -1087,27 +1092,12 @@ impl AntiReverse for QuadNum {
         );
     }
 }
-impl AntiReverse for QuadNumAligningOrigin {
-    fn anti_reverse(self) -> Self {
-        return self;
-    }
-}
-impl AntiReverse for QuadNumAligningOriginAtInfinity {
-    fn anti_reverse(self) -> Self {
-        return self;
-    }
-}
 impl AntiReverse for QuadNumAtInfinity {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
     fn anti_reverse(self) -> Self {
         return QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([self.group0()[0], (self.group0()[1] * -1.0), self.group0()[2]]));
-    }
-}
-impl AntiReverse for QuadNumOnOrigin {
-    fn anti_reverse(self) -> Self {
-        return self;
     }
 }
 impl AntiReverse for QuadNumOrthogonalOrigin {
@@ -1301,5 +1291,45 @@ impl AntiReverse for VersorOddOrthogonalOrigin {
             // e15, e25, e35, e1234
             Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
         );
+    }
+}
+impl AntiReverse for VersorRoundPoint {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for VersorRoundPointAligningOrigin {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for VersorRoundPointAligningOriginAtInfinity {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for VersorRoundPointAtInfinity {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for VersorRoundPointOnOrigin {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for VersorSphere {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for VersorSphereAtInfinity {
+    fn anti_reverse(self) -> Self {
+        return self;
+    }
+}
+impl AntiReverse for VersorSphereOrthogonalOrigin {
+    fn anti_reverse(self) -> Self {
+        return self;
     }
 }

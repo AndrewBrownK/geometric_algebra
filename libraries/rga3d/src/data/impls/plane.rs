@@ -1,4 +1,5 @@
 use crate::traits::GeometricProduct;
+use crate::traits::RightDual;
 use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -438,8 +439,7 @@ impl std::ops::Not for Plane {
     //      add/sub      mul      div
     // f32        0        1        0
     fn not(self) -> Self::Output {
-        let right_dual = Origin::from_groups(/* e4 */ (self.group0()[3] * -1.0));
-        return right_dual;
+        return self.right_dual();
     }
 }
 impl std::ops::Sub<AntiScalar> for Plane {

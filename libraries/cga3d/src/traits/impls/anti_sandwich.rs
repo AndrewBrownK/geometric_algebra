@@ -7,18 +7,18 @@ use crate::traits::GeometricAntiProduct;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 1089
+// Total Implementations: 1225
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       2       0
-//   Median:        32      56       0
-//  Average:        74     100       0
+//   Median:        34      60       0
+//  Average:        73      98       0
 //  Maximum:      1102    1164       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       2       0
-//   Median:        64     100       0
-//  Average:       141     176       0
+//   Median:        69     108       0
+//  Average:       139     174       0
 //  Maximum:      1984    2068       0
 impl InfixAntiSandwich for AntiCircleRotor {}
 impl AntiSandwich<AntiCircleRotor> for AntiCircleRotor {
@@ -2027,6 +2027,107 @@ impl AntiSandwich<VersorOdd> for AntiCircleRotor {
                 + (Simd32x4::from([other.group1()[3], other.group1()[3], other.group3()[1], other.group0()[0]]) * swizzle!(self.group1(), 0, 1, 0, 0))
                 - (Simd32x4::from([other.group2()[3], other.group2()[3], other.group0()[1], other.group2()[3]]) * swizzle!(self.group2(), 0, 1, 0, 3))
                 + (Simd32x4::from([other.group3()[2], other.group3()[0], other.group1()[3], other.group0()[1]]) * swizzle!(self.group1(), 1, 2, 2, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for AntiCircleRotor {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       58       93        0
+    //    simd3        0        1        0
+    //    simd4       38       39        0
+    // Totals...
+    // yes simd       96      133        0
+    //  no simd      210      252        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                ((other.group1()[1] * self.group0()[0]) + (self.group0()[1] * other.group0()[2]) - (self.group0()[2] * other.group0()[1]) + (self.group1()[0] * other.group0()[3])),
+                ((other.group1()[1] * self.group0()[1]) - (self.group0()[0] * other.group0()[2]) + (self.group0()[2] * other.group0()[0]) + (self.group1()[1] * other.group0()[3])),
+                ((other.group1()[1] * self.group0()[2]) + (self.group0()[0] * other.group0()[1]) - (self.group0()[1] * other.group0()[0]) + (self.group1()[2] * other.group0()[3])),
+                (other.group1()[1] * self.group2()[3]),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group0()[0]) - (self.group1()[3] * other.group0()[0])),
+                ((other.group1()[0] * self.group0()[1]) - (self.group1()[3] * other.group0()[1])),
+                ((other.group1()[0] * self.group0()[2]) - (self.group1()[3] * other.group0()[2])),
+                ((self.group1()[1] * other.group0()[1]) + (self.group1()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[1]) * self.group1())
+                + (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[0]]) * swizzle!(other.group0(), 3, 3, 3, 0))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                (self.group2()[2] * other.group0()[1]),
+                (self.group2()[0] * other.group0()[2]),
+                (self.group2()[1] * other.group0()[0]),
+                (-(self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[0], other.group0()[3]]) * self.group1())
+                + (Simd32x4::from([other.group1()[1], other.group1()[1], other.group1()[1], other.group0()[3]]) * self.group2())
+                - (Simd32x4::from([self.group2()[1], self.group2()[2], self.group2()[0], self.group0()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(self.group2()[0] * other.group0()[3]) - (self.group2()[3] * other.group0()[0])),
+                (-(self.group2()[1] * other.group0()[3]) - (self.group2()[3] * other.group0()[1])),
+                (-(self.group2()[2] * other.group0()[3]) - (self.group2()[3] * other.group0()[2])),
+                ((self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]))
+                + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group2()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group1(), 1, 2, 0, 3))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for AntiCircleRotor {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       78      114        0
+    //    simd3        0        1        0
+    //    simd4       33       35        0
+    // Totals...
+    // yes simd      111      150        0
+    //  no simd      210      257        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (-(other.group1()[0] * self.group1()[0]) - (other.group1()[1] * self.group0()[0]) + (self.group0()[1] * other.group0()[2])
+                    - (self.group0()[2] * other.group0()[1])),
+                (-(other.group1()[0] * self.group1()[1]) - (other.group1()[1] * self.group0()[1]) - (self.group0()[0] * other.group0()[2])
+                    + (self.group0()[2] * other.group0()[0])),
+                (-(other.group1()[0] * self.group1()[2]) - (other.group1()[1] * self.group0()[2]) + (self.group0()[0] * other.group0()[1])
+                    - (self.group0()[1] * other.group0()[0])),
+                (other.group1()[1] * self.group2()[3] * -1.0),
+            ]),
+            // e415, e425, e435, e321
+            ((Simd32x4::from([
+                (other.group1()[0] * self.group2()[0]),
+                (other.group1()[0] * self.group2()[1]),
+                (other.group1()[0] * self.group2()[2]),
+                (other.group1()[1] * self.group1()[3]),
+            ]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                - (Simd32x4::from([other.group1()[1], other.group1()[1], other.group1()[1], other.group0()[0]]) * swizzle!(self.group1(), 0, 1, 2, 0))
+                - (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]]) * swizzle!(other.group0(), 3, 3, 3, 1))
+                - (swizzle!(self.group1(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2))),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                (-(self.group1()[0] * other.group0()[3]) - (self.group2()[1] * other.group0()[2])),
+                (-(self.group1()[1] * other.group0()[3]) - (self.group2()[2] * other.group0()[0])),
+                (-(self.group1()[2] * other.group0()[3]) - (self.group2()[0] * other.group0()[1])),
+                ((self.group2()[0] * other.group0()[0]) + (self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from([other.group1()[1], other.group1()[1], other.group1()[1], other.group0()[3]]) * self.group2())
+                + (Simd32x4::from([self.group2()[2], self.group2()[0], self.group2()[1], self.group1()[3]]) * swizzle!(other.group0(), 1, 2, 0, 3))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                ((self.group0()[0] * other.group0()[3]) + (self.group1()[1] * other.group0()[2]) + (self.group2()[3] * other.group0()[0])),
+                ((self.group0()[1] * other.group0()[3]) + (self.group1()[2] * other.group0()[0]) + (self.group2()[3] * other.group0()[1])),
+                ((self.group0()[2] * other.group0()[3]) + (self.group1()[0] * other.group0()[1]) + (self.group2()[3] * other.group0()[2])),
+                (-(other.group1()[0] * self.group2()[3]) - (self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]))
+                - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -4469,6 +4570,117 @@ impl AntiSandwich<VersorOdd> for AntiDipoleInversion {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
+impl AntiSandwich<VersorRoundPoint> for AntiDipoleInversion {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32      110      146        0
+    //    simd3        0        1        0
+    //    simd4       47       48        0
+    // Totals...
+    // yes simd      157      195        0
+    //  no simd      298      341        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            (Simd32x4::from([
+                ((other.group1()[1] * self.group0()[0]) + (self.group1()[0] * other.group0()[3])),
+                ((other.group1()[1] * self.group0()[1]) + (self.group1()[1] * other.group0()[3])),
+                ((other.group1()[1] * self.group0()[2]) + (self.group1()[2] * other.group0()[3])),
+                ((self.group3()[2] * other.group0()[2]) * -1.0),
+            ]) + (Simd32x4::from(self.group2()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]))
+                + (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group3()[3]]) * swizzle!(other.group0(), 2, 0, 1, 3))
+                - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group3()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))
+                - (swizzle!(self.group3(), 0, 1, 2, 1) * swizzle!(other.group0(), 3, 3, 3, 1))),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group0()[0]) + (self.group2()[0] * other.group0()[3]) + (self.group3()[1] * other.group0()[2])),
+                ((other.group1()[0] * self.group0()[1]) + (self.group2()[1] * other.group0()[3]) + (self.group3()[2] * other.group0()[0])),
+                ((other.group1()[0] * self.group0()[2]) + (self.group2()[2] * other.group0()[3]) + (self.group3()[0] * other.group0()[1])),
+                (-(other.group1()[0] * self.group2()[3]) - (self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[1]) * self.group1())
+                + (Simd32x4::from([self.group1()[3], self.group1()[3], self.group1()[3], self.group3()[3]]) * other.group0())
+                - (Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group1()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                (-(self.group2()[1] * other.group0()[2]) - (self.group3()[3] * other.group0()[0])),
+                (-(self.group2()[2] * other.group0()[0]) - (self.group3()[3] * other.group0()[1])),
+                (-(self.group2()[0] * other.group0()[1]) - (self.group3()[3] * other.group0()[2])),
+                (self.group2()[2] * other.group0()[2]),
+            ]) + (Simd32x4::from(other.group1()[0]) * self.group1())
+                + (Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[0], other.group1()[1]]) * self.group3())
+                + (Simd32x4::from([other.group1()[1], other.group1()[1], other.group1()[1], other.group0()[0]]) * swizzle!(self.group2(), 0, 1, 2, 0))
+                + (swizzle!(self.group2(), 2, 0, 1, 1) * swizzle!(other.group0(), 1, 2, 0, 1))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group0()[0]) + (self.group1()[1] * other.group0()[2]) + (self.group2()[0] * other.group0()[3])),
+                (-(other.group1()[0] * self.group0()[1]) + (self.group1()[2] * other.group0()[0]) + (self.group2()[1] * other.group0()[3])),
+                (-(other.group1()[0] * self.group0()[2]) + (self.group1()[0] * other.group0()[1]) + (self.group2()[2] * other.group0()[3])),
+                (-(self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2]) - (self.group1()[3] * other.group0()[3])),
+            ]) + (Simd32x4::from(other.group1()[1]) * Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3]]))
+                - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for AntiDipoleInversion {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       82      118        0
+    //    simd3        0        1        0
+    //    simd4       54       55        0
+    // Totals...
+    // yes simd      136      174        0
+    //  no simd      298      341        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group3()[0]) + (other.group1()[1] * self.group0()[0])
+                    - (self.group0()[1] * other.group0()[2])
+                    - (self.group2()[3] * other.group0()[0])),
+                (-(other.group1()[0] * self.group3()[1]) + (other.group1()[1] * self.group0()[1])
+                    - (self.group0()[2] * other.group0()[0])
+                    - (self.group2()[3] * other.group0()[1])),
+                (-(other.group1()[0] * self.group3()[2]) + (other.group1()[1] * self.group0()[2])
+                    - (self.group0()[0] * other.group0()[1])
+                    - (self.group2()[3] * other.group0()[2])),
+                ((self.group3()[0] * other.group0()[0]) + (self.group3()[1] * other.group0()[1]) + (self.group3()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group3()[3]]))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group2()[3]]) * swizzle!(other.group0(), 1, 2, 0, 3))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((other.group1()[1] * self.group1()[0]) + (self.group0()[0] * other.group0()[3]) + (self.group3()[2] * other.group0()[1])),
+                ((other.group1()[1] * self.group1()[1]) + (self.group0()[1] * other.group0()[3]) + (self.group3()[0] * other.group0()[2])),
+                ((other.group1()[1] * self.group1()[2]) + (self.group0()[2] * other.group0()[3]) + (self.group3()[1] * other.group0()[0])),
+                (-(self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]]))
+                + (Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[0], other.group0()[3]]) * self.group2())
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group3(), 1, 2, 0, 3))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                (-(self.group2()[2] * other.group0()[1]) + (self.group3()[3] * other.group0()[0])),
+                (-(self.group2()[0] * other.group0()[2]) + (self.group3()[3] * other.group0()[1])),
+                (-(self.group2()[1] * other.group0()[0]) + (self.group3()[3] * other.group0()[2])),
+                ((other.group1()[0] * self.group1()[3]) * -1.0),
+            ]) + (Simd32x4::from(other.group1()[1]) * self.group2())
+                + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[0]]) * swizzle!(other.group0(), 3, 3, 3, 0))
+                + (Simd32x4::from([self.group2()[1], self.group2()[2], self.group2()[0], self.group0()[1]]) * swizzle!(other.group0(), 2, 0, 1, 1))
+                + (Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group0()[2]]) * swizzle!(other.group0(), 3, 3, 3, 2))),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(other.group1()[1] * self.group3()[0]) + (self.group1()[1] * other.group0()[2])),
+                (-(other.group1()[1] * self.group3()[1]) + (self.group1()[2] * other.group0()[0])),
+                (-(other.group1()[1] * self.group3()[2]) + (self.group1()[0] * other.group0()[1])),
+                ((other.group1()[1] * self.group3()[3]) - (self.group2()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group0()[3]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]))
+                - (Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[0], other.group0()[0]]) * swizzle!(self.group2(), 0, 1, 2, 0))
+                - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group2()[1]]) * swizzle!(other.group0(), 1, 2, 0, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
 impl InfixAntiSandwich for AntiDualNum321 {}
 impl AntiSandwich<AntiCircleRotor> for AntiDualNum321 {
     type Output = VersorOdd;
@@ -5444,6 +5656,66 @@ impl AntiSandwich<VersorOdd> for AntiDualNum321 {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
+impl AntiSandwich<VersorRoundPoint> for AntiDualNum321 {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       20        0
+    //    simd4        3       10        0
+    // Totals...
+    // yes simd        9       30        0
+    //  no simd       18       60        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other.group1()[1])]),
+            // e23, e31, e12, e45
+            (Simd32x4::from(self.group0()[0])
+                * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]])
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, ((self.group0()[0] * other.group0()[3]) + (self.group0()[1] * other.group0()[3]))]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0] * -1.0),
+                (self.group0()[1] * other.group0()[1] * -1.0),
+                (self.group0()[1] * other.group0()[2] * -1.0),
+                (-(self.group0()[0] * other.group1()[0]) + (self.group0()[1] * other.group1()[0])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for AntiDualNum321 {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       18        0
+    //    simd4        3       10        0
+    // Totals...
+    // yes simd        9       28        0
+    //  no simd       18       58        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other.group1()[1] * -1.0)]),
+            // e415, e425, e435, e321
+            (Simd32x4::from(self.group0()[0])
+                * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]])
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, ((self.group0()[0] * other.group0()[3]) - (self.group0()[1] * other.group0()[3]))]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0]),
+                (self.group0()[1] * other.group0()[1]),
+                (self.group0()[1] * other.group0()[2]),
+                (-(self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[0])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
 impl InfixAntiSandwich for AntiDualNum4 {}
 impl AntiSandwich<AntiCircleRotor> for AntiDualNum4 {
     type Output = VersorOdd;
@@ -6375,6 +6647,69 @@ impl AntiSandwich<VersorOdd> for AntiDualNum4 {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
+impl AntiSandwich<VersorRoundPoint> for AntiDualNum4 {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3       19        0
+    //    simd4        4       10        0
+    // Totals...
+    // yes simd        7       29        0
+    //  no simd       19       59        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0]),
+                (self.group0()[0] * other.group0()[1]),
+                (self.group0()[0] * other.group0()[2]),
+                ((self.group0()[0] * other.group1()[0]) + (self.group0()[1] * other.group1()[1])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other.group1()[0])]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, ((self.group0()[0] * other.group1()[1]) + (self.group0()[1] * other.group0()[3]))]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group0()[1])
+                * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]])
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for AntiDualNum4 {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       11       40        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       13       42        0
+    //  no simd       19       48        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0]),
+                (self.group0()[0] * other.group0()[1]),
+                (self.group0()[0] * other.group0()[2]),
+                (-(self.group0()[0] * other.group0()[3]) - (self.group0()[1] * other.group1()[1])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other.group0()[3])]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other.group0()[3] * -1.0)]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0]),
+                (self.group0()[1] * other.group0()[1]),
+                (self.group0()[1] * other.group0()[2]),
+                (-(self.group0()[0] * other.group1()[1]) - (self.group0()[1] * other.group1()[0])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
 impl InfixAntiSandwich for AntiDualNum5 {}
 impl AntiSandwich<AntiCircleRotor> for AntiDualNum5 {
     type Output = VersorOdd;
@@ -7155,6 +7490,64 @@ impl AntiSandwich<VersorOdd> for AntiDualNum5 {
                 (-(self.group0()[0] * other.group0()[2]) + (self.group0()[1] * other.group3()[2])),
                 (self.group0()[1] * other.group2()[3] * -1.0),
             ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for AntiDualNum5 {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       10       36        0
+    //    simd4        2        5        0
+    // Totals...
+    // yes simd       12       41        0
+    //  no simd       18       56        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, ((self.group0()[0] * other.group0()[3]) + (self.group0()[1] * other.group1()[1]))]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other.group0()[3] * -1.0)]),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]]) * other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0] * -1.0),
+                (self.group0()[1] * other.group0()[1] * -1.0),
+                (self.group0()[1] * other.group0()[2] * -1.0),
+                ((self.group0()[0] * other.group1()[1]) + (self.group0()[1] * other.group1()[0])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for AntiDualNum5 {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       10       35        0
+    //    simd4        2        6        0
+    // Totals...
+    // yes simd       12       41        0
+    //  no simd       18       59        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (-(self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1]))]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other.group1()[0] * -1.0)]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0] * -1.0),
+                (self.group0()[0] * other.group0()[1] * -1.0),
+                (self.group0()[0] * other.group0()[2] * -1.0),
+                (-(self.group0()[0] * other.group1()[1]) - (self.group0()[1] * other.group0()[3])),
+            ]),
+            // e1, e2, e3, e4
+            (Simd32x4::from(self.group0()[1])
+                * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -8284,6 +8677,83 @@ impl AntiSandwich<VersorOdd> for AntiFlatPoint {
                 - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group2()[3], other.group3()[0]]) * swizzle!(self.group0(), 1, 2, 2, 0))
                 - (Simd32x4::from([other.group2()[3], other.group2()[3], other.group0()[1], other.group1()[0]]) * swizzle!(self.group0(), 0, 1, 0, 0))
                 - (swizzle!(self.group0(), 3, 3, 3, 1) * swizzle!(other.group1(), 0, 1, 2, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for AntiFlatPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       33       64        0
+    //    simd4        6        7        0
+    // Totals...
+    // yes simd       39       71        0
+    //  no simd       57       92        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                ((self.group0()[0] * other.group0()[3]) + (self.group0()[3] * other.group0()[0])),
+                ((self.group0()[1] * other.group0()[3]) + (self.group0()[3] * other.group0()[1])),
+                ((self.group0()[2] * other.group0()[3]) + (self.group0()[3] * other.group0()[2])),
+                (other.group1()[1] * self.group0()[3]),
+            ]),
+            // e235, e315, e125, e4
+            Simd32x4::from([
+                ((other.group1()[1] * self.group0()[0]) - (self.group0()[1] * other.group0()[2]) + (self.group0()[2] * other.group0()[1])),
+                ((other.group1()[1] * self.group0()[1]) + (self.group0()[0] * other.group0()[2]) - (self.group0()[2] * other.group0()[0])),
+                ((other.group1()[1] * self.group0()[2]) - (self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])),
+                (self.group0()[3] * other.group0()[3] * -1.0),
+            ]),
+            // e1, e2, e3, e5
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[3]),
+                (self.group0()[1] * other.group0()[3]),
+                (self.group0()[2] * other.group0()[3]),
+                ((other.group1()[0] * self.group0()[3]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for AntiFlatPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       35       66        0
+    //    simd4        6        7        0
+    // Totals...
+    // yes simd       41       73        0
+    //  no simd       59       94        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = DipoleInversion::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                ((other.group1()[0] * self.group0()[0]) - (self.group0()[3] * other.group0()[0])),
+                ((other.group1()[0] * self.group0()[1]) - (self.group0()[3] * other.group0()[1])),
+                ((other.group1()[0] * self.group0()[2]) - (self.group0()[3] * other.group0()[2])),
+                (other.group1()[1] * self.group0()[3] * -1.0),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((other.group1()[1] * self.group0()[0]) + (self.group0()[1] * other.group0()[2]) - (self.group0()[2] * other.group0()[1])),
+                ((other.group1()[1] * self.group0()[1]) - (self.group0()[0] * other.group0()[2]) + (self.group0()[2] * other.group0()[0])),
+                ((other.group1()[1] * self.group0()[2]) + (self.group0()[0] * other.group0()[1]) - (self.group0()[1] * other.group0()[0])),
+                (other.group1()[0] * self.group0()[3] * -1.0),
+            ]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (other.group1()[0] * self.group0()[0] * -1.0),
+                (other.group1()[0] * self.group0()[1] * -1.0),
+                (other.group1()[0] * self.group0()[2] * -1.0),
+                (-(self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])
+                    + (self.group0()[3] * other.group0()[3])),
+            ]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -9759,6 +10229,104 @@ impl AntiSandwich<VersorOdd> for AntiFlector {
                 - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group0()[3], other.group2()[1]]) * swizzle!(self.group1(), 1, 2, 2, 1))
                 - (Simd32x4::from([other.group2()[3], other.group2()[3], other.group0()[1], other.group1()[0]]) * swizzle!(self.group0(), 0, 1, 0, 0))
                 - (swizzle!(self.group0(), 3, 3, 3, 1) * swizzle!(other.group1(), 0, 1, 2, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for AntiFlector {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       42       76        0
+    //    simd4       26       27        0
+    // Totals...
+    // yes simd       68      103        0
+    //  no simd      146      184        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (self.group1()[0] * other.group0()[3] * -1.0),
+                (self.group1()[1] * other.group0()[3] * -1.0),
+                (self.group1()[2] * other.group0()[3] * -1.0),
+                (-(self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])
+                    + (self.group1()[3] * other.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                ((self.group1()[1] * other.group0()[2]) - (self.group1()[2] * other.group0()[1])),
+                (-(self.group1()[0] * other.group0()[2]) + (self.group1()[2] * other.group0()[0])),
+                ((self.group1()[0] * other.group0()[1]) - (self.group1()[1] * other.group0()[0])),
+                0.0,
+            ]) + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[3]]) * other.group0())
+                + (Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], other.group1()[1]]) * self.group0())),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                (-(self.group0()[1] * other.group0()[2]) - (self.group1()[3] * other.group0()[0])),
+                (-(self.group0()[2] * other.group0()[0]) - (self.group1()[3] * other.group0()[1])),
+                (-(self.group0()[0] * other.group0()[1]) - (self.group1()[3] * other.group0()[2])),
+                ((self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[3]]))
+                + (Simd32x4::from(other.group1()[1]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]))
+                + (swizzle!(self.group0(), 2, 0, 1, 0) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                ((other.group1()[1] * self.group1()[0]) + (self.group0()[0] * other.group0()[3])),
+                ((other.group1()[1] * self.group1()[1]) + (self.group0()[1] * other.group0()[3])),
+                ((other.group1()[1] * self.group1()[2]) + (self.group0()[2] * other.group0()[3])),
+                (self.group0()[3] * other.group0()[3] * -1.0),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for AntiFlector {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       58       98        0
+    //    simd4       22       23        0
+    // Totals...
+    // yes simd       80      121        0
+    //  no simd      146      190        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (other.group1()[0] * self.group1()[0] * -1.0),
+                (other.group1()[0] * self.group1()[1] * -1.0),
+                (other.group1()[0] * self.group1()[2] * -1.0),
+                ((other.group1()[0] * self.group1()[3]) + (self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[1]) + (self.group1()[2] * other.group0()[2])),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group0()[0]) + (self.group1()[2] * other.group0()[1])),
+                ((other.group1()[0] * self.group0()[1]) + (self.group1()[0] * other.group0()[2])),
+                ((other.group1()[0] * self.group0()[2]) + (self.group1()[1] * other.group0()[0])),
+                0.0,
+            ]) - (Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]]))
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group1(), 1, 2, 0, 3))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((other.group1()[1] * self.group0()[0]) + (self.group0()[1] * other.group0()[2]) - (self.group0()[2] * other.group0()[1])
+                    + (self.group1()[0] * other.group0()[3])
+                    + (self.group1()[3] * other.group0()[0])),
+                ((other.group1()[1] * self.group0()[1]) - (self.group0()[0] * other.group0()[2])
+                    + (self.group0()[2] * other.group0()[0])
+                    + (self.group1()[1] * other.group0()[3])
+                    + (self.group1()[3] * other.group0()[1])),
+                ((other.group1()[1] * self.group0()[2]) + (self.group0()[0] * other.group0()[1]) - (self.group0()[1] * other.group0()[0])
+                    + (self.group1()[2] * other.group0()[3])
+                    + (self.group1()[3] * other.group0()[2])),
+                (other.group1()[0] * self.group0()[3] * -1.0),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                ((other.group1()[1] * self.group1()[0]) * -1.0),
+                ((other.group1()[1] * self.group1()[1]) * -1.0),
+                ((other.group1()[1] * self.group1()[2]) * -1.0),
+                ((other.group1()[1] * self.group1()[3]) - (self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2]) + (self.group0()[3] * other.group0()[3])),
+            ]) - (Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[0], other.group0()[0]]) * swizzle!(self.group0(), 0, 1, 2, 0))),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -11285,6 +11853,87 @@ impl AntiSandwich<VersorOdd> for AntiLine {
                     - (self.group1()[2] * other.group2()[3])),
                 ((self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2])),
             ]) + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for AntiLine {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       64       91        0
+    //    simd3        0        3        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       72      102        0
+    //  no simd       96      132        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = DipoleInversion::from_groups(
+            // e41, e42, e43
+            (Simd32x3::from(other.group0()[3]) * self.group0()),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                (other.group1()[1] * self.group0()[0]),
+                (other.group1()[1] * self.group0()[1]),
+                (other.group1()[1] * self.group0()[2]),
+                ((self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[0]]) * swizzle!(other.group0(), 3, 3, 3, 0))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group1()[0]) - (self.group1()[1] * other.group0()[2]) + (self.group1()[2] * other.group0()[1])),
+                ((other.group1()[0] * self.group0()[1]) + (other.group1()[1] * self.group1()[1]) + (self.group1()[0] * other.group0()[2]) - (self.group1()[2] * other.group0()[0])),
+                ((other.group1()[0] * self.group0()[2]) + (other.group1()[1] * self.group1()[2]) - (self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[0])),
+                0.0,
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(self.group0()[1] * other.group0()[2]) - (self.group1()[0] * other.group0()[3])),
+                (-(self.group0()[2] * other.group0()[0]) - (self.group1()[1] * other.group0()[3])),
+                (-(self.group0()[0] * other.group0()[1]) - (self.group1()[2] * other.group0()[3])),
+                ((self.group1()[1] * other.group0()[1]) + (self.group1()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for AntiLine {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       84      111        0
+    //    simd3        0        4        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       87      118        0
+    //  no simd       96      135        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(other.group1()[0]) * self.group0() * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                (-(other.group1()[0] * self.group1()[0]) - (other.group1()[1] * self.group0()[0])),
+                (-(other.group1()[0] * self.group1()[1]) - (other.group1()[1] * self.group0()[1])),
+                (-(other.group1()[0] * self.group1()[2]) - (other.group1()[1] * self.group0()[2])),
+                (-(self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]),
+            // e235, e315, e125, e4
+            Simd32x4::from([
+                (-(other.group1()[1] * self.group1()[0]) - (self.group0()[0] * other.group0()[3]) - (self.group1()[1] * other.group0()[2])
+                    + (self.group1()[2] * other.group0()[1])),
+                (-(other.group1()[1] * self.group1()[1]) - (self.group0()[1] * other.group0()[3]) + (self.group1()[0] * other.group0()[2])
+                    - (self.group1()[2] * other.group0()[0])),
+                (-(other.group1()[1] * self.group1()[2]) - (self.group0()[2] * other.group0()[3]) - (self.group1()[0] * other.group0()[1])
+                    + (self.group1()[1] * other.group0()[0])),
+                0.0,
+            ]),
+            // e1, e2, e3, e5
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group1()[0]) - (self.group0()[2] * other.group0()[1])),
+                (-(other.group1()[0] * self.group1()[1]) - (self.group0()[0] * other.group0()[2])),
+                (-(other.group1()[0] * self.group1()[2]) - (self.group0()[1] * other.group0()[0])),
+                ((self.group1()[1] * other.group0()[1]) + (self.group1()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group1()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -12826,6 +13475,96 @@ impl AntiSandwich<VersorOdd> for AntiMotor {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
+impl AntiSandwich<VersorRoundPoint> for AntiMotor {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       44       74        0
+    //    simd4       26       27        0
+    // Totals...
+    // yes simd       70      101        0
+    //  no simd      148      182        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[3]),
+                (self.group0()[1] * other.group0()[3]),
+                (self.group0()[2] * other.group0()[3]),
+                ((other.group1()[1] * self.group0()[3]) + (self.group1()[3] * other.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from([0.0, 0.0, 0.0, ((self.group0()[2] * other.group0()[2]) - (self.group1()[3] * other.group0()[3]))])
+                + (Simd32x4::from([other.group1()[1], other.group1()[1], other.group1()[1], other.group0()[0]]) * swizzle!(self.group0(), 0, 1, 2, 0))
+                + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[1]]) * swizzle!(other.group0(), 3, 3, 3, 1))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group1()[0]) - (self.group1()[1] * other.group0()[2]) + (self.group1()[2] * other.group0()[1])
+                    - (self.group1()[3] * other.group0()[0])),
+                ((other.group1()[0] * self.group0()[1]) + (other.group1()[1] * self.group1()[1]) + (self.group1()[0] * other.group0()[2])
+                    - (self.group1()[2] * other.group0()[0])
+                    - (self.group1()[3] * other.group0()[1])),
+                ((other.group1()[0] * self.group0()[2]) + (other.group1()[1] * self.group1()[2]) - (self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[0])
+                    - (self.group1()[3] * other.group0()[2])),
+                (self.group0()[3] * other.group0()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(self.group0()[1] * other.group0()[2]) - (self.group0()[3] * other.group0()[0]) - (self.group1()[0] * other.group0()[3])),
+                (-(self.group0()[2] * other.group0()[0]) - (self.group0()[3] * other.group0()[1]) - (self.group1()[1] * other.group0()[3])),
+                (-(self.group0()[0] * other.group0()[1]) - (self.group0()[3] * other.group0()[2]) - (self.group1()[2] * other.group0()[3])),
+                ((other.group1()[1] * self.group1()[3]) + (self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[1]) + (self.group1()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group1()[0]]) * swizzle!(self.group0(), 2, 0, 1, 3))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for AntiMotor {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       59       98        0
+    //    simd4       22       22        0
+    // Totals...
+    // yes simd       81      120        0
+    //  no simd      147      186        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (other.group1()[0] * self.group0()[0] * -1.0),
+                (other.group1()[0] * self.group0()[1] * -1.0),
+                (other.group1()[0] * self.group0()[2] * -1.0),
+                (-(other.group1()[0] * self.group1()[3]) - (other.group1()[1] * self.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            (Simd32x4::from([0.0, 0.0, 0.0, (-(self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2]))])
+                - (Simd32x4::from(other.group1()[0]) * self.group1())
+                - (Simd32x4::from([other.group1()[1], other.group1()[1], other.group1()[1], other.group0()[0]]) * swizzle!(self.group0(), 0, 1, 2, 0))),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                (-(self.group1()[1] * other.group0()[2]) - (self.group1()[3] * other.group0()[0])),
+                (-(self.group1()[2] * other.group0()[0]) - (self.group1()[3] * other.group0()[1])),
+                (-(self.group1()[0] * other.group0()[1]) - (self.group1()[3] * other.group0()[2])),
+                ((self.group1()[1] * other.group0()[1]) + (self.group1()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from(other.group1()[1]) * self.group1())
+                - (Simd32x4::from(other.group0()[3]) * self.group0())
+                + (swizzle!(self.group1(), 2, 0, 1, 0) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (-(other.group1()[0] * self.group1()[0]) + (self.group0()[1] * other.group0()[2]) - (self.group0()[2] * other.group0()[1])
+                    + (self.group0()[3] * other.group0()[0])),
+                (-(other.group1()[0] * self.group1()[1]) - (self.group0()[0] * other.group0()[2])
+                    + (self.group0()[2] * other.group0()[0])
+                    + (self.group0()[3] * other.group0()[1])),
+                (-(other.group1()[0] * self.group1()[2]) + (self.group0()[0] * other.group0()[1]) - (self.group0()[1] * other.group0()[0])
+                    + (self.group0()[3] * other.group0()[2])),
+                (other.group1()[0] * self.group0()[3] * -1.0),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
 impl InfixAntiSandwich for AntiPlane {}
 impl AntiSandwich<AntiCircleRotor> for AntiPlane {
     type Output = VersorOdd;
@@ -13906,6 +14645,88 @@ impl AntiSandwich<VersorOdd> for AntiPlane {
                 - (Simd32x4::from([other.group0()[3], other.group0()[3], other.group1()[1], other.group2()[0]]) * swizzle!(self.group0(), 0, 1, 0, 0))
                 + (Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[0], other.group0()[3]]) * swizzle!(self.group0(), 2, 0, 1, 3))
                 - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group0()[3], other.group2()[1]]) * swizzle!(self.group0(), 1, 2, 2, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for AntiPlane {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       25       60        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       33       68        0
+    //  no simd       57       92        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[3] * -1.0),
+                (self.group0()[1] * other.group0()[3] * -1.0),
+                (self.group0()[2] * other.group0()[3] * -1.0),
+                (-(self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])
+                    + (self.group0()[3] * other.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                ((self.group0()[1] * other.group0()[2]) - (self.group0()[2] * other.group0()[1])),
+                (-(self.group0()[0] * other.group0()[2]) + (self.group0()[2] * other.group0()[0])),
+                ((self.group0()[0] * other.group0()[1]) - (self.group0()[1] * other.group0()[0])),
+                (self.group0()[3] * other.group0()[3]),
+            ]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                ((other.group1()[0] * self.group0()[0]) - (self.group0()[3] * other.group0()[0])),
+                ((other.group1()[0] * self.group0()[1]) - (self.group0()[3] * other.group0()[1])),
+                ((other.group1()[0] * self.group0()[2]) - (self.group0()[3] * other.group0()[2])),
+                (other.group1()[1] * self.group0()[3]),
+            ]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (other.group1()[1] * self.group0()[0]),
+                (other.group1()[1] * self.group0()[1]),
+                (other.group1()[1] * self.group0()[2]),
+                0.0,
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for AntiPlane {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       18       54        0
+    //    simd4       10       12        0
+    // Totals...
+    // yes simd       28       66        0
+    //  no simd       58      102        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (other.group1()[0] * self.group0()[0] * -1.0),
+                (other.group1()[0] * self.group0()[1] * -1.0),
+                (other.group1()[0] * self.group0()[2] * -1.0),
+                ((other.group1()[0] * self.group0()[3]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                (-(self.group0()[1] * other.group0()[2]) + (self.group0()[2] * other.group0()[1])),
+                ((self.group0()[0] * other.group0()[2]) - (self.group0()[2] * other.group0()[0])),
+                (-(self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])),
+                (other.group1()[0] * self.group0()[3] * -1.0),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((self.group0()[0] * other.group0()[3]) + (self.group0()[3] * other.group0()[0])),
+                ((self.group0()[1] * other.group0()[3]) + (self.group0()[3] * other.group0()[1])),
+                ((self.group0()[2] * other.group0()[3]) + (self.group0()[3] * other.group0()[2])),
+                0.0,
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group1()[1]) * self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -15009,6 +15830,92 @@ impl AntiSandwich<VersorOdd> for AntiQuadNum {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
+impl AntiSandwich<VersorRoundPoint> for AntiQuadNum {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       20       54        0
+    //    simd4        9       12        0
+    // Totals...
+    // yes simd       29       66        0
+    //  no simd       56      102        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0]),
+                (self.group0()[0] * other.group0()[1]),
+                (self.group0()[0] * other.group0()[2]),
+                ((other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group0()[3]) + (self.group0()[1] * other.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                (self.group0()[2] * other.group0()[0] * -1.0),
+                (self.group0()[2] * other.group0()[1] * -1.0),
+                (self.group0()[2] * other.group0()[2] * -1.0),
+                ((other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group0()[2]) - (self.group0()[1] * other.group0()[3])),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0] * -1.0),
+                (self.group0()[1] * other.group0()[1] * -1.0),
+                (self.group0()[1] * other.group0()[2] * -1.0),
+                ((other.group1()[1] * self.group0()[0]) + (self.group0()[2] * other.group0()[3]) + (self.group0()[3] * other.group0()[3])),
+            ]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (self.group0()[3] * other.group0()[0] * -1.0),
+                (self.group0()[3] * other.group0()[1] * -1.0),
+                (self.group0()[3] * other.group0()[2] * -1.0),
+                (-(other.group1()[0] * self.group0()[2]) + (other.group1()[0] * self.group0()[3]) + (other.group1()[1] * self.group0()[1])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for AntiQuadNum {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       16       47        0
+    //    simd4       10       14        0
+    // Totals...
+    // yes simd       26       61        0
+    //  no simd       56      103        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0]),
+                (self.group0()[0] * other.group0()[1]),
+                (self.group0()[0] * other.group0()[2]),
+                (-(other.group1()[0] * self.group0()[1]) - (other.group1()[1] * self.group0()[3]) - (self.group0()[0] * other.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                (self.group0()[2] * other.group0()[0] * -1.0),
+                (self.group0()[2] * other.group0()[1] * -1.0),
+                (self.group0()[2] * other.group0()[2] * -1.0),
+                (-(other.group1()[0] * self.group0()[1]) + (other.group1()[1] * self.group0()[2]) + (self.group0()[0] * other.group0()[3])),
+            ]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0] * -1.0),
+                (self.group0()[1] * other.group0()[1] * -1.0),
+                (self.group0()[1] * other.group0()[2] * -1.0),
+                (-(other.group1()[1] * self.group0()[1]) + (self.group0()[2] * other.group0()[3]) - (self.group0()[3] * other.group0()[3])),
+            ]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group0()[3] * other.group0()[0]),
+                (self.group0()[3] * other.group0()[1]),
+                (self.group0()[3] * other.group0()[2]),
+                (-(other.group1()[0] * self.group0()[2]) - (other.group1()[0] * self.group0()[3]) - (other.group1()[1] * self.group0()[0])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
 impl InfixAntiSandwich for AntiScalar {}
 impl AntiSandwich<AntiCircleRotor> for AntiScalar {
     type Output = AntiCircleRotor;
@@ -15551,6 +16458,46 @@ impl AntiSandwich<VersorOdd> for AntiScalar {
             (Simd32x4::from(self[e12345]) * other.group2()),
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(self[e12345]) * other.group3()),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for AntiScalar {
+    type Output = VersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd2        0        2        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0       12        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(self[e12345]) * other.group0()),
+            // e5, e12345
+            (Simd32x2::from(self[e12345]) * other.group1()),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for AntiScalar {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd2        0        2        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0       12        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self[e12345]) * other.group0()),
+            // e1234, scalar
+            (Simd32x2::from(self[e12345]) * other.group1()),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -16560,6 +17507,82 @@ impl AntiSandwich<VersorOdd> for AntiTripleNum {
                 * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))
                 + (Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]))
                 - (Simd32x4::from([self.group0()[1], self.group0()[1], self.group0()[1], self.group0()[0]]) * other.group0())),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for AntiTripleNum {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       13       44        0
+    //    simd4        6        7        0
+    // Totals...
+    // yes simd       19       51        0
+    //  no simd       37       72        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0]),
+                (self.group0()[0] * other.group0()[1]),
+                (self.group0()[0] * other.group0()[2]),
+                ((other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group0()[2]) + (self.group0()[1] * other.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, ((other.group1()[0] * self.group0()[0]) - (self.group0()[1] * other.group0()[3]))]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0] * -1.0),
+                (self.group0()[1] * other.group0()[1] * -1.0),
+                (self.group0()[1] * other.group0()[2] * -1.0),
+                ((other.group1()[1] * self.group0()[0]) + (self.group0()[2] * other.group0()[3])),
+            ]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (self.group0()[2] * other.group0()[0] * -1.0),
+                (self.group0()[2] * other.group0()[1] * -1.0),
+                (self.group0()[2] * other.group0()[2] * -1.0),
+                ((other.group1()[0] * self.group0()[2]) + (other.group1()[1] * self.group0()[1])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for AntiTripleNum {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       17       45        0
+    //    simd4        5        7        0
+    // Totals...
+    // yes simd       22       52        0
+    //  no simd       37       73        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0]),
+                (self.group0()[0] * other.group0()[1]),
+                (self.group0()[0] * other.group0()[2]),
+                (-(other.group1()[0] * self.group0()[1]) - (other.group1()[1] * self.group0()[2]) - (self.group0()[0] * other.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (-(other.group1()[0] * self.group0()[1]) + (self.group0()[0] * other.group0()[3]))]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0] * -1.0),
+                (self.group0()[1] * other.group0()[1] * -1.0),
+                (self.group0()[1] * other.group0()[2] * -1.0),
+                (-(other.group1()[1] * self.group0()[1]) - (self.group0()[2] * other.group0()[3])),
+            ]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group0()[2] * other.group0()[0]),
+                (self.group0()[2] * other.group0()[1]),
+                (self.group0()[2] * other.group0()[2]),
+                (-(other.group1()[0] * self.group0()[2]) - (other.group1()[1] * self.group0()[0])),
+            ]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -18548,6 +19571,92 @@ impl AntiSandwich<VersorOdd> for Circle {
                 - (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[1]]) * swizzle!(other.group2(), 3, 3, 3, 1))
                 - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group2()[0]]) * swizzle!(other.group3(), 1, 2, 0, 0))
                 - (Simd32x4::from([self.group1()[3], self.group1()[3], self.group1()[3], self.group2()[0]]) * swizzle!(other.group1(), 0, 1, 2, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for Circle {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       94      122        0
+    //    simd3        3        6        0
+    //    simd4       19       20        0
+    // Totals...
+    // yes simd      116      148        0
+    //  no simd      179      220        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            ((Simd32x3::from(other.group1()[1]) * self.group0()) + (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
+                - (Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[0]]) * swizzle!(self.group0(), 2, 0, 1))
+                + (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * swizzle!(self.group0(), 1, 2, 0))),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group0()[0]) + (self.group2()[0] * other.group0()[3]) + (self.group1()[3] * other.group0()[0])),
+                ((other.group1()[0] * self.group0()[1]) + (self.group2()[1] * other.group0()[3]) + (self.group1()[3] * other.group0()[1])),
+                ((other.group1()[0] * self.group0()[2]) + (self.group2()[2] * other.group0()[3]) + (self.group1()[3] * other.group0()[2])),
+                (-(self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[1]) * self.group1())),
+            // e235, e315, e125, e4
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group1()[0]) + (other.group1()[1] * self.group2()[0]) + (self.group2()[2] * other.group0()[1])),
+                ((other.group1()[0] * self.group1()[1]) + (other.group1()[1] * self.group2()[1]) + (self.group2()[0] * other.group0()[2])),
+                ((other.group1()[0] * self.group1()[2]) + (other.group1()[1] * self.group2()[2]) + (self.group2()[1] * other.group0()[0])),
+                (-(self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2]) - (self.group1()[3] * other.group0()[3])),
+            ]) - (Simd32x4::from([self.group2()[1], self.group2()[2], self.group2()[0], self.group0()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))),
+            // e1, e2, e3, e5
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group0()[0]) - (self.group1()[2] * other.group0()[1])),
+                (-(other.group1()[0] * self.group0()[1]) - (self.group1()[0] * other.group0()[2])),
+                (-(other.group1()[0] * self.group0()[2]) - (self.group1()[1] * other.group0()[0])),
+                ((self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[0]]) * swizzle!(other.group0(), 3, 3, 3, 0))
+                + (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group1(), 1, 2, 0, 3))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for Circle {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       82      110        0
+    //    simd3        3        6        0
+    //    simd4       22       23        0
+    // Totals...
+    // yes simd      107      139        0
+    //  no simd      179      220        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = DipoleInversion::from_groups(
+            // e41, e42, e43
+            ((Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
+                + (Simd32x3::from(other.group1()[1]) * self.group0())
+                + (Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[0]]) * swizzle!(self.group0(), 2, 0, 1))
+                - (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * swizzle!(self.group0(), 1, 2, 0))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group2()[0]) + (other.group1()[1] * self.group1()[0]) + (self.group0()[0] * other.group0()[3])),
+                ((other.group1()[0] * self.group2()[1]) + (other.group1()[1] * self.group1()[1]) + (self.group0()[1] * other.group0()[3])),
+                ((other.group1()[0] * self.group2()[2]) + (other.group1()[1] * self.group1()[2]) + (self.group0()[2] * other.group0()[3])),
+                (-(self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]]))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                ((other.group1()[1] * self.group2()[0]) - (self.group2()[2] * other.group0()[1])),
+                ((other.group1()[1] * self.group2()[1]) - (self.group2()[0] * other.group0()[2])),
+                ((other.group1()[1] * self.group2()[2]) - (self.group2()[1] * other.group0()[0])),
+                (-(other.group1()[0] * self.group1()[3]) + (self.group0()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from([self.group2()[1], self.group2()[2], self.group2()[0], self.group0()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))
+                + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[1]]) * swizzle!(other.group0(), 3, 3, 3, 1))),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group2()[0]) + (self.group1()[1] * other.group0()[2])),
+                (-(other.group1()[0] * self.group2()[1]) + (self.group1()[2] * other.group0()[0])),
+                (-(other.group1()[0] * self.group2()[2]) + (self.group1()[0] * other.group0()[1])),
+                (-(self.group2()[1] * other.group0()[1]) - (self.group2()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group0()[3]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]))
+                - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group2()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -20630,6 +21739,98 @@ impl AntiSandwich<VersorOdd> for CircleRotor {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
+impl AntiSandwich<VersorRoundPoint> for CircleRotor {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       94      132        0
+    //    simd3        0        1        0
+    //    simd4       29       30        0
+    // Totals...
+    // yes simd      123      163        0
+    //  no simd      210      255        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                ((other.group1()[1] * self.group0()[0]) + (self.group0()[1] * other.group0()[2]) - (self.group0()[2] * other.group0()[1]) + (self.group1()[0] * other.group0()[3])),
+                ((other.group1()[1] * self.group0()[1]) - (self.group0()[0] * other.group0()[2]) + (self.group0()[2] * other.group0()[0]) + (self.group1()[1] * other.group0()[3])),
+                ((other.group1()[1] * self.group0()[2]) + (self.group0()[0] * other.group0()[1]) - (self.group0()[1] * other.group0()[0]) + (self.group1()[2] * other.group0()[3])),
+                (other.group1()[1] * self.group2()[3]),
+            ]),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group0()[0]) + (self.group1()[3] * other.group0()[0]) + (self.group2()[0] * other.group0()[3])),
+                ((other.group1()[0] * self.group0()[1]) + (self.group1()[3] * other.group0()[1]) + (self.group2()[1] * other.group0()[3])),
+                ((other.group1()[0] * self.group0()[2]) + (self.group1()[3] * other.group0()[2]) + (self.group2()[2] * other.group0()[3])),
+                (-(self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[1]) * self.group1())),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                ((self.group2()[1] * other.group0()[2]) * -1.0),
+                ((self.group2()[2] * other.group0()[0]) * -1.0),
+                ((self.group2()[0] * other.group0()[1]) * -1.0),
+                ((self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[0]) * self.group1())
+                + (Simd32x4::from([other.group1()[1], other.group1()[1], other.group1()[1], other.group1()[0]]) * self.group2())
+                + (swizzle!(self.group2(), 2, 0, 1, 0) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group0()[0]) + (self.group2()[0] * other.group0()[3]) + (self.group2()[3] * other.group0()[0])),
+                (-(other.group1()[0] * self.group0()[1]) + (self.group2()[1] * other.group0()[3]) + (self.group2()[3] * other.group0()[1])),
+                (-(other.group1()[0] * self.group0()[2]) + (self.group2()[2] * other.group0()[3]) + (self.group2()[3] * other.group0()[2])),
+                (-(self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2]) - (self.group1()[3] * other.group0()[3])),
+            ]) + (Simd32x4::from([self.group1()[1], self.group1()[2], self.group1()[0], self.group2()[3]]) * swizzle!(other.group0(), 2, 0, 1, 3))
+                - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for CircleRotor {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       78      112        0
+    //    simd3        0        1        0
+    //    simd4       33       36        0
+    // Totals...
+    // yes simd      111      149        0
+    //  no simd      210      259        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                ((other.group1()[0] * self.group1()[0]) + (other.group1()[1] * self.group0()[0]) - (self.group0()[1] * other.group0()[2]) + (self.group0()[2] * other.group0()[1])),
+                ((other.group1()[0] * self.group1()[1]) + (other.group1()[1] * self.group0()[1]) + (self.group0()[0] * other.group0()[2]) - (self.group0()[2] * other.group0()[0])),
+                ((other.group1()[0] * self.group1()[2]) + (other.group1()[1] * self.group0()[2]) - (self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])),
+                (other.group1()[1] * self.group2()[3]),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group2()[0]) + (other.group1()[1] * self.group1()[0]) + (self.group0()[0] * other.group0()[3])),
+                ((other.group1()[0] * self.group2()[1]) + (other.group1()[1] * self.group1()[1]) + (self.group0()[1] * other.group0()[3])),
+                ((other.group1()[0] * self.group2()[2]) + (other.group1()[1] * self.group1()[2]) + (self.group0()[2] * other.group0()[3])),
+                (-(self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]]))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                ((self.group2()[2] * other.group0()[1]) * -1.0),
+                ((self.group2()[0] * other.group0()[2]) * -1.0),
+                ((self.group2()[1] * other.group0()[0]) * -1.0),
+                (-(other.group1()[0] * self.group1()[3]) + (self.group0()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from([other.group1()[1], other.group1()[1], other.group1()[1], other.group1()[0]]) * self.group2())
+                + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[0]]) * swizzle!(other.group0(), 3, 3, 3, 0))
+                + (Simd32x4::from([self.group2()[1], self.group2()[2], self.group2()[0], self.group0()[1]]) * swizzle!(other.group0(), 2, 0, 1, 1))),
+            // e4235, e4315, e4125, e3215
+            ((swizzle!(self.group2(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))
+                + (Simd32x4::from(other.group0()[3]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]))
+                - (Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[0], other.group0()[0]]) * swizzle!(self.group2(), 0, 1, 2, 0))
+                + (Simd32x4::from([self.group1()[1], self.group1()[2], self.group1()[0], self.group2()[3]]) * swizzle!(other.group0(), 2, 0, 1, 3))
+                - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group2()[1]]) * swizzle!(other.group0(), 1, 2, 0, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
 impl InfixAntiSandwich for Dipole {}
 impl AntiSandwich<AntiCircleRotor> for Dipole {
     type Output = VersorOdd;
@@ -22568,6 +23769,97 @@ impl AntiSandwich<VersorOdd> for Dipole {
                 + (Simd32x4::from([self.group1()[3], self.group1()[3], self.group1()[3], self.group0()[0]]) * swizzle!(other.group1(), 0, 1, 2, 0))
                 + (Simd32x4::from([other.group1()[3], other.group1()[3], other.group3()[1], other.group0()[1]]) * swizzle!(self.group1(), 0, 1, 0, 1))
                 + (Simd32x4::from([other.group3()[2], other.group3()[0], other.group1()[3], other.group0()[2]]) * swizzle!(self.group1(), 1, 2, 2, 2))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for Dipole {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       74      102        0
+    //    simd3        3        6        0
+    //    simd4       24       25        0
+    // Totals...
+    // yes simd      101      133        0
+    //  no simd      179      220        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = DipoleInversion::from_groups(
+            // e41, e42, e43
+            ((Simd32x3::from(other.group1()[1]) * self.group0()) + (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
+                - (Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[0]]) * swizzle!(self.group0(), 2, 0, 1))
+                + (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * swizzle!(self.group0(), 1, 2, 0))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group0()[0]) - (self.group1()[3] * other.group0()[0])),
+                ((other.group1()[0] * self.group0()[1]) - (self.group1()[3] * other.group0()[1])),
+                ((other.group1()[0] * self.group0()[2]) - (self.group1()[3] * other.group0()[2])),
+                ((self.group1()[1] * other.group0()[1]) + (self.group1()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[1]) * self.group1())
+                + (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[0]]) * swizzle!(other.group0(), 3, 3, 3, 0))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                ((other.group1()[1] * self.group2()[0]) + (self.group2()[2] * other.group0()[1])),
+                ((other.group1()[1] * self.group2()[1]) + (self.group2()[0] * other.group0()[2])),
+                ((other.group1()[1] * self.group2()[2]) + (self.group2()[1] * other.group0()[0])),
+                (-(self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[0], other.group0()[3]]) * self.group1())
+                - (Simd32x4::from([self.group2()[1], self.group2()[2], self.group2()[0], self.group0()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group0()[0]) - (self.group2()[0] * other.group0()[3])),
+                ((other.group1()[0] * self.group0()[1]) - (self.group2()[1] * other.group0()[3])),
+                ((other.group1()[0] * self.group0()[2]) - (self.group2()[2] * other.group0()[3])),
+                ((self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group2()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group1(), 1, 2, 0, 3))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for Dipole {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       70       98        0
+    //    simd3        3        6        0
+    //    simd4       25       27        0
+    // Totals...
+    // yes simd       98      131        0
+    //  no simd      179      224        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (-(Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
+                - (Simd32x3::from(other.group1()[1]) * self.group0())
+                - (Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[0]]) * swizzle!(self.group0(), 2, 0, 1))
+                + (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * swizzle!(self.group0(), 1, 2, 0))),
+            // e415, e425, e435, e321
+            ((Simd32x4::from([
+                (other.group1()[0] * self.group2()[0]),
+                (other.group1()[0] * self.group2()[1]),
+                (other.group1()[0] * self.group2()[2]),
+                (other.group1()[1] * self.group1()[3]),
+            ]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                - (Simd32x4::from([other.group1()[1], other.group1()[1], other.group1()[1], other.group0()[0]]) * swizzle!(self.group1(), 0, 1, 2, 0))
+                - (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]]) * swizzle!(other.group0(), 3, 3, 3, 1))
+                - (swizzle!(self.group1(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2))),
+            // e235, e315, e125, e4
+            (Simd32x4::from([
+                (-(other.group1()[1] * self.group2()[0]) + (self.group2()[2] * other.group0()[1])),
+                (-(other.group1()[1] * self.group2()[1]) + (self.group2()[0] * other.group0()[2])),
+                (-(other.group1()[1] * self.group2()[2]) + (self.group2()[1] * other.group0()[0])),
+                (-(self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from([self.group2()[1], self.group2()[2], self.group2()[0], self.group0()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))
+                - (Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], other.group1()[0]]) * self.group1())),
+            // e1, e2, e3, e5
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group2()[0]) - (self.group1()[2] * other.group0()[1])),
+                (-(other.group1()[0] * self.group2()[1]) - (self.group1()[0] * other.group0()[2])),
+                (-(other.group1()[0] * self.group2()[2]) - (self.group1()[1] * other.group0()[0])),
+                ((self.group2()[2] * other.group0()[2]) + (self.group1()[3] * other.group0()[3])),
+            ]) + (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[0]]) * swizzle!(other.group0(), 3, 3, 3, 0))
+                + (Simd32x4::from([self.group1()[1], self.group1()[2], self.group1()[0], self.group2()[1]]) * swizzle!(other.group0(), 2, 0, 1, 1))),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -24855,6 +26147,115 @@ impl AntiSandwich<VersorOdd> for DipoleInversion {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
+impl AntiSandwich<VersorRoundPoint> for DipoleInversion {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       66       98        0
+    //    simd3        0        1        0
+    //    simd4       58       61        0
+    // Totals...
+    // yes simd      124      160        0
+    //  no simd      298      345        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            (Simd32x4::from([
+                ((other.group1()[1] * self.group0()[0]) - (self.group0()[2] * other.group0()[1])),
+                ((other.group1()[1] * self.group0()[1]) - (self.group0()[0] * other.group0()[2])),
+                ((other.group1()[1] * self.group0()[2]) - (self.group0()[1] * other.group0()[0])),
+                (self.group3()[3] * other.group0()[3]),
+            ]) + (Simd32x4::from(self.group2()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]))
+                + (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group3()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))
+                + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group3()[1]]) * swizzle!(other.group0(), 3, 3, 3, 1))
+                + (swizzle!(self.group3(), 0, 1, 2, 2) * swizzle!(other.group0(), 3, 3, 3, 2))),
+            // e23, e31, e12, e45
+            ((Simd32x4::from([self.group3()[1], self.group3()[2], self.group3()[0], self.group1()[2]])
+                * swizzle!(other.group0(), 2, 0, 1, 2)
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                + (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]))
+                + (Simd32x4::from(other.group1()[1]) * self.group1())
+                - (Simd32x4::from([self.group1()[3], self.group1()[3], self.group1()[3], self.group3()[3]]) * other.group0())
+                + (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[0]]) * swizzle!(other.group0(), 3, 3, 3, 0))
+                + (Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group1()[1]]) * swizzle!(other.group0(), 1, 2, 0, 1))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group3()[0]) + (self.group2()[2] * other.group0()[1])),
+                (-(other.group1()[0] * self.group3()[1]) + (self.group2()[0] * other.group0()[2])),
+                (-(other.group1()[0] * self.group3()[2]) + (self.group2()[1] * other.group0()[0])),
+                ((self.group0()[2] * other.group0()[2]) * -1.0),
+            ]) + (Simd32x4::from(other.group1()[1]) * self.group2())
+                + (Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[0], other.group0()[3]]) * self.group1())
+                - (Simd32x4::from([self.group2()[1], self.group2()[2], self.group2()[0], self.group0()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))
+                - (Simd32x4::from([self.group3()[3], self.group3()[3], self.group3()[3], self.group0()[1]]) * swizzle!(other.group0(), 0, 1, 2, 1))),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group0()[0]) - (self.group2()[0] * other.group0()[3])),
+                ((other.group1()[0] * self.group0()[1]) - (self.group2()[1] * other.group0()[3])),
+                ((other.group1()[0] * self.group0()[2]) - (self.group2()[2] * other.group0()[3])),
+                ((self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[1]) * self.group3())
+                + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group2()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group1(), 1, 2, 0, 3))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for DipoleInversion {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       74      109        0
+    //    simd3        0        1        0
+    //    simd4       56       58        0
+    // Totals...
+    // yes simd      130      168        0
+    //  no simd      298      344        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group3()[0]) - (other.group1()[1] * self.group0()[0])),
+                (-(other.group1()[0] * self.group3()[1]) - (other.group1()[1] * self.group0()[1])),
+                (-(other.group1()[0] * self.group3()[2]) - (other.group1()[1] * self.group0()[2])),
+                (self.group3()[2] * other.group0()[2]),
+            ]) - (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group3()[3]]))
+                + (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group3()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))
+                - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group2()[3]]) * swizzle!(other.group0(), 1, 2, 0, 3))
+                + (Simd32x4::from([self.group2()[3], self.group2()[3], self.group2()[3], self.group3()[1]]) * swizzle!(other.group0(), 0, 1, 2, 1))),
+            // e415, e425, e435, e321
+            ((Simd32x4::from([
+                (self.group3()[1] * other.group0()[2]),
+                (self.group3()[2] * other.group0()[0]),
+                (self.group3()[0] * other.group0()[1]),
+                (other.group1()[1] * self.group1()[3]),
+            ]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                - (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]))
+                - (Simd32x4::from([other.group1()[1], other.group1()[1], other.group1()[1], other.group0()[0]]) * swizzle!(self.group1(), 0, 1, 2, 0))
+                - (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]]) * swizzle!(other.group0(), 3, 3, 3, 1))
+                + (Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group2()[3]]) * swizzle!(other.group0(), 1, 2, 0, 3))
+                - (swizzle!(self.group1(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2))),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                (-(self.group1()[0] * other.group0()[3]) - (self.group2()[1] * other.group0()[2]) - (self.group3()[3] * other.group0()[0])),
+                (-(self.group1()[1] * other.group0()[3]) - (self.group2()[2] * other.group0()[0]) - (self.group3()[3] * other.group0()[1])),
+                (-(self.group1()[2] * other.group0()[3]) - (self.group2()[0] * other.group0()[1]) - (self.group3()[3] * other.group0()[2])),
+                ((self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from(other.group1()[1]) * Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]))
+                + (Simd32x4::from([self.group2()[2], self.group2()[0], self.group2()[1], self.group1()[3]]) * swizzle!(other.group0(), 1, 2, 0, 3))
+                + (Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[0]]) * swizzle!(other.group0(), 3, 3, 3, 0))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                ((other.group1()[1] * self.group3()[0]) + (self.group0()[0] * other.group0()[3]) + (self.group1()[1] * other.group0()[2])),
+                ((other.group1()[1] * self.group3()[1]) + (self.group0()[1] * other.group0()[3]) + (self.group1()[2] * other.group0()[0])),
+                ((other.group1()[1] * self.group3()[2]) + (self.group0()[2] * other.group0()[3]) + (self.group1()[0] * other.group0()[1])),
+                (-(other.group1()[1] * self.group2()[3]) - (self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]))
+                - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
 impl InfixAntiSandwich for DualNum321 {}
 impl AntiSandwich<AntiCircleRotor> for DualNum321 {
     type Output = VersorOdd;
@@ -25819,6 +27220,62 @@ impl AntiSandwich<VersorOdd> for DualNum321 {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
+impl AntiSandwich<VersorRoundPoint> for DualNum321 {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        9        0
+    //    simd4        4        9        0
+    // Totals...
+    // yes simd        6       18        0
+    //  no simd       18       45        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other.group1()[1])]),
+            // e415, e425, e435, e321
+            (Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]])),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, ((self.group0()[0] * other.group1()[0]) + (self.group0()[1] * other.group1()[0]))]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0]),
+                (self.group0()[1] * other.group0()[1]),
+                (self.group0()[1] * other.group0()[2]),
+                (-(self.group0()[0] * other.group0()[3]) + (self.group0()[1] * other.group0()[3])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for DualNum321 {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2       13        0
+    //    simd4        4       11        0
+    // Totals...
+    // yes simd        6       24        0
+    //  no simd       18       57        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other.group1()[1])]),
+            // e23, e31, e12, e45
+            (Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]]) * Simd32x4::from(-1.0)),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (-(self.group0()[0] * other.group1()[0]) + (self.group0()[1] * other.group1()[0]))]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0]),
+                (self.group0()[1] * other.group0()[1]),
+                (self.group0()[1] * other.group0()[2]),
+                ((self.group0()[0] * other.group0()[3]) + (self.group0()[1] * other.group0()[3])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
 impl InfixAntiSandwich for DualNum4 {}
 impl AntiSandwich<AntiCircleRotor> for DualNum4 {
     type Output = VersorOdd;
@@ -26739,6 +28196,67 @@ impl AntiSandwich<VersorOdd> for DualNum4 {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
+impl AntiSandwich<VersorRoundPoint> for DualNum4 {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2       21        0
+    //    simd4        5        7        0
+    // Totals...
+    // yes simd        7       28        0
+    //  no simd       22       49        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0]),
+                (self.group0()[0] * other.group0()[1]),
+                (self.group0()[0] * other.group0()[2]),
+                ((self.group0()[0] * other.group1()[0]) + (self.group0()[1] * other.group1()[1])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other.group1()[0] * -1.0)]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other.group1()[0])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0]),
+                (self.group0()[1] * other.group0()[1]),
+                (self.group0()[1] * other.group0()[2]),
+                ((self.group0()[0] * other.group1()[1]) + (self.group0()[1] * other.group0()[3])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for DualNum4 {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        7       27        0
+    //    simd4        3        6        0
+    // Totals...
+    // yes simd       10       33        0
+    //  no simd       19       51        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0] * -1.0),
+                (self.group0()[0] * other.group0()[1] * -1.0),
+                (self.group0()[0] * other.group0()[2] * -1.0),
+                ((self.group0()[0] * other.group0()[3]) + (self.group0()[1] * other.group1()[1])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other.group0()[3])]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, ((self.group0()[0] * other.group1()[1]) + (self.group0()[1] * other.group1()[0]))]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group0()[1]) * other.group0()),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
 impl InfixAntiSandwich for DualNum5 {}
 impl AntiSandwich<AntiCircleRotor> for DualNum5 {
     type Output = VersorOdd;
@@ -27533,6 +29051,67 @@ impl AntiSandwich<VersorOdd> for DualNum5 {
                 ((self.group0()[0] * other.group0()[2]) * -1.0),
                 ((self.group0()[0] * other.group0()[3]) + (self.group0()[0] * other.group1()[3])),
             ]) + (Simd32x4::from(self.group0()[1]) * other.group3())),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for DualNum5 {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       23        0
+    //    simd4        3        7        0
+    // Totals...
+    // yes simd        9       30        0
+    //  no simd       18       51        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, ((self.group0()[0] * other.group0()[3]) + (self.group0()[1] * other.group1()[1]))]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other.group0()[3])]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0] * -1.0),
+                (self.group0()[0] * other.group0()[1] * -1.0),
+                (self.group0()[0] * other.group0()[2] * -1.0),
+                ((self.group0()[0] * other.group1()[1]) + (self.group0()[1] * other.group1()[0])),
+            ]),
+            // e1, e2, e3, e4
+            (Simd32x4::from(self.group0()[1]) * other.group0()),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for DualNum5 {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        9       30        0
+    //    simd4        3        4        0
+    // Totals...
+    // yes simd       12       34        0
+    //  no simd       21       46        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, ((self.group0()[0] * other.group1()[0]) + (self.group0()[1] * other.group1()[1]))]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other.group1()[0] * -1.0)]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0]),
+                (self.group0()[0] * other.group0()[1]),
+                (self.group0()[0] * other.group0()[2]),
+                (self.group0()[1] * other.group1()[0]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0]),
+                (self.group0()[1] * other.group0()[1]),
+                (self.group0()[1] * other.group0()[2]),
+                ((self.group0()[0] * other.group1()[1]) + (self.group0()[1] * other.group0()[3])),
+            ]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -28679,6 +30258,85 @@ impl AntiSandwich<VersorOdd> for FlatPoint {
                 (-(self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0]) - (self.group0()[2] * other.group2()[3])
                     + (self.group0()[3] * other.group1()[2])),
                 (self.group0()[3] * other.group2()[3] * -1.0),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for FlatPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       24       52        0
+    //    simd4        9       10        0
+    // Totals...
+    // yes simd       33       62        0
+    //  no simd       60       92        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = DipoleInversion::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                ((self.group0()[0] * other.group0()[3]) - (self.group0()[3] * other.group0()[0])),
+                ((self.group0()[1] * other.group0()[3]) - (self.group0()[3] * other.group0()[1])),
+                ((self.group0()[2] * other.group0()[3]) - (self.group0()[3] * other.group0()[2])),
+                (other.group1()[1] * self.group0()[3]),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((other.group1()[1] * self.group0()[0]) - (self.group0()[1] * other.group0()[2]) + (self.group0()[2] * other.group0()[1])),
+                ((other.group1()[1] * self.group0()[1]) + (self.group0()[0] * other.group0()[2]) - (self.group0()[2] * other.group0()[0])),
+                ((other.group1()[1] * self.group0()[2]) - (self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])),
+                (self.group0()[3] * other.group0()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[3] * -1.0),
+                (self.group0()[1] * other.group0()[3] * -1.0),
+                (self.group0()[2] * other.group0()[3] * -1.0),
+                (-(other.group1()[0] * self.group0()[3])
+                    + (self.group0()[0] * other.group0()[0])
+                    + (self.group0()[1] * other.group0()[1])
+                    + (self.group0()[2] * other.group0()[2])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for FlatPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       40       77        0
+    //    simd4        4        5        0
+    // Totals...
+    // yes simd       44       82        0
+    //  no simd       56       97        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                (-(other.group1()[0] * self.group0()[0]) - (self.group0()[3] * other.group0()[0])),
+                (-(other.group1()[0] * self.group0()[1]) - (self.group0()[3] * other.group0()[1])),
+                (-(other.group1()[0] * self.group0()[2]) - (self.group0()[3] * other.group0()[2])),
+                (other.group1()[1] * self.group0()[3]),
+            ]),
+            // e235, e315, e125, e4
+            Simd32x4::from([
+                (-(other.group1()[1] * self.group0()[0]) - (self.group0()[1] * other.group0()[2]) + (self.group0()[2] * other.group0()[1])),
+                (-(other.group1()[1] * self.group0()[1]) + (self.group0()[0] * other.group0()[2]) - (self.group0()[2] * other.group0()[0])),
+                (-(other.group1()[1] * self.group0()[2]) - (self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])),
+                (other.group1()[0] * self.group0()[3] * -1.0),
+            ]),
+            // e1, e2, e3, e5
+            Simd32x4::from([
+                (other.group1()[0] * self.group0()[0] * -1.0),
+                (other.group1()[0] * self.group0()[1] * -1.0),
+                (other.group1()[0] * self.group0()[2] * -1.0),
+                ((self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[3] * other.group0()[3])),
             ]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
@@ -30136,6 +31794,105 @@ impl AntiSandwich<VersorOdd> for Flector {
                 + (Simd32x4::from([other.group0()[3], other.group0()[3], other.group1()[1], other.group0()[1]]) * swizzle!(self.group1(), 0, 1, 0, 1))
                 + (Simd32x4::from([other.group1()[2], other.group1()[0], other.group0()[3], other.group0()[2]]) * swizzle!(self.group1(), 1, 2, 2, 2))
                 - (Simd32x4::from([other.group2()[3], other.group2()[3], other.group0()[1], other.group2()[3]]) * swizzle!(self.group0(), 0, 1, 0, 3))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for Flector {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       39       61        0
+    //    simd4       28       30        0
+    // Totals...
+    // yes simd       67       91        0
+    //  no simd      151      181        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (self.group1()[0] * other.group0()[3]),
+                (self.group1()[1] * other.group0()[3]),
+                (self.group1()[2] * other.group0()[3]),
+                ((self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[1]) + (self.group1()[2] * other.group0()[2]) + (self.group1()[3] * other.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                (-(self.group1()[1] * other.group0()[2]) + (self.group1()[2] * other.group0()[1])),
+                ((self.group1()[0] * other.group0()[2]) - (self.group1()[2] * other.group0()[0])),
+                (-(self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[0])),
+                0.0,
+            ]) - (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[3]]) * other.group0())
+                + (Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], other.group1()[1]]) * self.group0())),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (-(other.group1()[0] * self.group1()[0]) + (other.group1()[1] * self.group0()[0]) - (self.group0()[1] * other.group0()[2])
+                    + (self.group0()[2] * other.group0()[1])
+                    - (self.group1()[3] * other.group0()[0])),
+                (-(other.group1()[0] * self.group1()[1]) + (other.group1()[1] * self.group0()[1]) + (self.group0()[0] * other.group0()[2])
+                    - (self.group0()[2] * other.group0()[0])
+                    - (self.group1()[3] * other.group0()[1])),
+                (-(other.group1()[0] * self.group1()[2]) + (other.group1()[1] * self.group0()[2]) - (self.group0()[0] * other.group0()[1])
+                    + (self.group0()[1] * other.group0()[0])
+                    - (self.group1()[3] * other.group0()[2])),
+                (self.group0()[3] * other.group0()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                ((self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[1]) * self.group1())
+                - (Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], other.group1()[0]]) * self.group0())),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for Flector {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       57       95        0
+    //    simd4       22       23        0
+    // Totals...
+    // yes simd       79      118        0
+    //  no simd      145      187        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (other.group1()[0] * self.group1()[0] * -1.0),
+                (other.group1()[0] * self.group1()[1] * -1.0),
+                (other.group1()[0] * self.group1()[2] * -1.0),
+                (-(other.group1()[0] * self.group1()[3])
+                    + (self.group1()[0] * other.group0()[0])
+                    + (self.group1()[1] * other.group0()[1])
+                    + (self.group1()[2] * other.group0()[2])),
+            ]),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                (-(self.group0()[3] * other.group0()[0]) - (self.group1()[1] * other.group0()[2]) + (self.group1()[2] * other.group0()[1])),
+                (-(self.group0()[3] * other.group0()[1]) + (self.group1()[0] * other.group0()[2]) - (self.group1()[2] * other.group0()[0])),
+                (-(self.group0()[3] * other.group0()[2]) - (self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[0])),
+                (other.group1()[1] * self.group0()[3]),
+            ]) - (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]))),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                (-(self.group0()[1] * other.group0()[2]) - (self.group1()[3] * other.group0()[0])),
+                (-(self.group0()[2] * other.group0()[0]) - (self.group1()[3] * other.group0()[1])),
+                (-(self.group0()[0] * other.group0()[1]) - (self.group1()[3] * other.group0()[2])),
+                ((self.group0()[2] * other.group0()[2]) + (self.group0()[3] * other.group0()[3])),
+            ]) - (Simd32x4::from(other.group1()[1]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]))
+                + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[1]]) * swizzle!(other.group0(), 3, 3, 3, 1))
+                + (swizzle!(self.group0(), 2, 0, 1, 0) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (-(other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group1()[0])),
+                (-(other.group1()[0] * self.group0()[1]) + (other.group1()[1] * self.group1()[1])),
+                (-(other.group1()[0] * self.group0()[2]) + (other.group1()[1] * self.group1()[2])),
+                (other.group1()[0] * self.group0()[3] * -1.0),
+            ]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -31645,6 +33402,83 @@ impl AntiSandwich<VersorOdd> for Line {
                     - (self.group1()[2] * other.group3()[2])),
             ]) - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group3(), 1, 2, 0, 0))
                 - (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[0]]) * swizzle!(other.group2(), 3, 3, 3, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for Line {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       76       99        0
+    //    simd3        0        3        0
+    //    simd4        5        7        0
+    // Totals...
+    // yes simd       81      109        0
+    //  no simd       96      136        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(other.group0()[3]) * self.group0()),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                ((other.group1()[1] * self.group0()[0]) + (self.group1()[0] * other.group0()[3])),
+                ((other.group1()[1] * self.group0()[1]) + (self.group1()[1] * other.group0()[3])),
+                ((other.group1()[1] * self.group0()[2]) + (self.group1()[2] * other.group0()[3])),
+                (-(self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]),
+            // e235, e315, e125, e4
+            Simd32x4::from([
+                ((other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group1()[0]) - (self.group1()[1] * other.group0()[2]) + (self.group1()[2] * other.group0()[1])),
+                ((other.group1()[0] * self.group0()[1]) + (other.group1()[1] * self.group1()[1]) + (self.group1()[0] * other.group0()[2]) - (self.group1()[2] * other.group0()[0])),
+                ((other.group1()[0] * self.group0()[2]) + (other.group1()[1] * self.group1()[2]) - (self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[0])),
+                0.0,
+            ]),
+            // e1, e2, e3, e5
+            ((Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[2]])
+                * swizzle!(other.group0(), 1, 2, 0, 2)
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                + (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group1()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))
+                + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[1]]) * swizzle!(other.group0(), 3, 3, 3, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for Line {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       88      115        0
+    //    simd3        0        3        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       90      120        0
+    //  no simd       96      132        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = DipoleInversion::from_groups(
+            // e41, e42, e43
+            (Simd32x3::from(other.group1()[0]) * self.group0()),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                ((other.group1()[0] * self.group1()[0]) + (other.group1()[1] * self.group0()[0])),
+                ((other.group1()[0] * self.group1()[1]) + (other.group1()[1] * self.group0()[1])),
+                ((other.group1()[0] * self.group1()[2]) + (other.group1()[1] * self.group0()[2])),
+                (-(self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((other.group1()[1] * self.group1()[0]) + (self.group0()[0] * other.group0()[3]) + (self.group1()[1] * other.group0()[2]) - (self.group1()[2] * other.group0()[1])),
+                ((other.group1()[1] * self.group1()[1]) + (self.group0()[1] * other.group0()[3]) - (self.group1()[0] * other.group0()[2]) + (self.group1()[2] * other.group0()[0])),
+                ((other.group1()[1] * self.group1()[2]) + (self.group0()[2] * other.group0()[3]) + (self.group1()[0] * other.group0()[1]) - (self.group1()[1] * other.group0()[0])),
+                0.0,
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group1()[0]) + (self.group0()[1] * other.group0()[2])),
+                (-(other.group1()[0] * self.group1()[1]) + (self.group0()[2] * other.group0()[0])),
+                (-(other.group1()[0] * self.group1()[2]) + (self.group0()[0] * other.group0()[1])),
+                (-(self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -33166,6 +35000,106 @@ impl AntiSandwich<VersorOdd> for Motor {
                 - (Simd32x4::from([other.group2()[3], other.group2()[3], other.group0()[1], other.group1()[0]]) * swizzle!(self.group1(), 0, 1, 0, 0))
                 - (Simd32x4::from([other.group3()[1], other.group3()[2], other.group3()[0], other.group2()[0]]) * swizzle!(self.group0(), 2, 0, 1, 0))
                 + (swizzle!(self.group1(), 2, 0, 1, 3) * swizzle!(other.group0(), 1, 2, 0, 3))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for Motor {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       57       94        0
+    //    simd4       22       22        0
+    // Totals...
+    // yes simd       79      116        0
+    //  no simd      145      182        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[3]),
+                (self.group0()[1] * other.group0()[3]),
+                (self.group0()[2] * other.group0()[3]),
+                ((other.group1()[1] * self.group0()[3]) + (self.group1()[3] * other.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                (other.group1()[1] * self.group0()[0]),
+                (other.group1()[1] * self.group0()[1]),
+                (other.group1()[1] * self.group0()[2]),
+                (-(self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group0()[3]) * self.group1())),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                (-(self.group1()[1] * other.group0()[2]) - (self.group1()[3] * other.group0()[0])),
+                (-(self.group1()[2] * other.group0()[0]) - (self.group1()[3] * other.group0()[1])),
+                (-(self.group1()[0] * other.group0()[1]) - (self.group1()[3] * other.group0()[2])),
+                ((self.group1()[1] * other.group0()[1]) + (self.group1()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[0]) * self.group0())
+                + (Simd32x4::from(other.group1()[1]) * self.group1())
+                + (swizzle!(self.group1(), 2, 0, 1, 0) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                ((self.group0()[1] * other.group0()[2]) - (self.group0()[2] * other.group0()[1]) + (self.group0()[3] * other.group0()[0]) + (self.group1()[0] * other.group0()[3])),
+                (-(self.group0()[0] * other.group0()[2])
+                    + (self.group0()[2] * other.group0()[0])
+                    + (self.group0()[3] * other.group0()[1])
+                    + (self.group1()[1] * other.group0()[3])),
+                ((self.group0()[0] * other.group0()[1]) - (self.group0()[1] * other.group0()[0]) + (self.group0()[3] * other.group0()[2]) + (self.group1()[2] * other.group0()[3])),
+                (self.group0()[3] * other.group0()[3]),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for Motor {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       72      110        0
+    //    simd4       18       18        0
+    // Totals...
+    // yes simd       90      128        0
+    //  no simd      144      182        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (other.group1()[0] * self.group0()[0]),
+                (other.group1()[0] * self.group0()[1]),
+                (other.group1()[0] * self.group0()[2]),
+                ((other.group1()[0] * self.group1()[3]) + (other.group1()[1] * self.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                ((other.group1()[0] * self.group1()[0]) + (other.group1()[1] * self.group0()[0])),
+                ((other.group1()[0] * self.group1()[1]) + (other.group1()[1] * self.group0()[1])),
+                ((other.group1()[0] * self.group1()[2]) + (other.group1()[1] * self.group0()[2])),
+                (-(other.group1()[0] * self.group1()[3])
+                    - (self.group0()[0] * other.group0()[0])
+                    - (self.group0()[1] * other.group0()[1])
+                    - (self.group0()[2] * other.group0()[2])),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((other.group1()[1] * self.group1()[0]) + (self.group0()[0] * other.group0()[3]) + (self.group1()[1] * other.group0()[2]) - (self.group1()[2] * other.group0()[1])
+                    + (self.group1()[3] * other.group0()[0])),
+                ((other.group1()[1] * self.group1()[1]) + (self.group0()[1] * other.group0()[3]) - (self.group1()[0] * other.group0()[2])
+                    + (self.group1()[2] * other.group0()[0])
+                    + (self.group1()[3] * other.group0()[1])),
+                ((other.group1()[1] * self.group1()[2]) + (self.group0()[2] * other.group0()[3]) + (self.group1()[0] * other.group0()[1]) - (self.group1()[1] * other.group0()[0])
+                    + (self.group1()[3] * other.group0()[2])),
+                (other.group1()[0] * self.group0()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (self.group0()[3] * other.group0()[0]),
+                (self.group0()[3] * other.group0()[1]),
+                (self.group0()[3] * other.group0()[2]),
+                ((other.group1()[1] * self.group1()[3]) - (self.group1()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[0], other.group0()[0]]) * swizzle!(self.group1(), 0, 1, 2, 0))
+                - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[1]]) * swizzle!(other.group0(), 1, 2, 0, 1))
+                + (swizzle!(self.group0(), 1, 2, 0, 3) * swizzle!(other.group0(), 2, 0, 1, 3))),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -37626,6 +39560,214 @@ impl AntiSandwich<VersorOdd> for MultiVector {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
+impl AntiSandwich<VersorRoundPoint> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32      395      444        0
+    //    simd2       19       19        0
+    //    simd3      137      146        0
+    //    simd4       77       79        0
+    // Totals...
+    // yes simd      628      688        0
+    //  no simd     1152     1236        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = MultiVector::from_groups(
+            // scalar, e12345
+            (Simd32x2::from([
+                ((self.group9()[0] * other.group0()[0]) + (self.group9()[1] * other.group0()[1]) + (self.group9()[2] * other.group0()[2])),
+                (-(self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])),
+            ]) + (Simd32x2::from(other.group1()[0]) * Simd32x2::from([self[e45], self.group1()[3]]))
+                + (Simd32x2::from(other.group1()[1]) * self.group0())
+                + (Simd32x2::from(other.group0()[3]) * Simd32x2::from([self.group9()[3], self[e1]]))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group7()[0]) + (self.group8()[0] * other.group0()[3]) + (self.group6()[1] * other.group0()[2])),
+                (-(other.group1()[0] * self.group7()[1]) + (self.group8()[1] * other.group0()[3]) + (self.group6()[2] * other.group0()[0])),
+                (-(other.group1()[0] * self.group7()[2]) + (self.group8()[2] * other.group0()[3]) + (self.group6()[0] * other.group0()[1])),
+                (-(self.group7()[1] * other.group0()[1]) - (self.group7()[2] * other.group0()[2]) - (self.group6()[3] * other.group0()[3])),
+            ]) + (Simd32x4::from(self.group0()[1]) * other.group0())
+                + (Simd32x4::from(other.group1()[1]) * self.group1())
+                - (Simd32x4::from([self.group6()[2], self.group6()[0], self.group6()[1], self.group7()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e5
+            ((self.group0()[1] * other.group1()[0])
+                + (other.group1()[0] * self.group6()[3])
+                + (other.group1()[1] * self[e1])
+                + (self.group8()[0] * other.group0()[0])
+                + (self.group8()[1] * other.group0()[1])
+                + (self.group8()[2] * other.group0()[2])),
+            // e15, e25, e35, e45
+            (Simd32x4::from([
+                (-(self.group3()[1] * other.group0()[2]) - (self.group9()[3] * other.group0()[0])),
+                (-(self.group3()[2] * other.group0()[0]) - (self.group9()[3] * other.group0()[1])),
+                (-(self.group3()[0] * other.group0()[1]) - (self.group9()[3] * other.group0()[2])),
+                ((self.group5()[1] * other.group0()[1]) + (self.group5()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group5()[0], self.group5()[1], self.group5()[2], self[e45]]))
+                + (Simd32x4::from(other.group1()[1]) * self.group3())
+                - (Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[0], other.group0()[3]]) * self.group9())
+                + (Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group5()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e41, e42, e43
+            ((Simd32x3::from(other.group1()[1]) * self.group4())
+                + (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group9()[0], self.group9()[1], self.group9()[2]]))
+                + (Simd32x3::from(other.group0()[3]) * self.group5())
+                + (Simd32x3::from(self[e45]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                - (Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[0]]) * swizzle!(self.group4(), 2, 0, 1))
+                + (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * swizzle!(self.group4(), 1, 2, 0))),
+            // e23, e31, e12
+            (Simd32x3::from([
+                (-(self.group9()[1] * other.group0()[2]) + (self.group9()[2] * other.group0()[1])),
+                ((self.group9()[0] * other.group0()[2]) - (self.group9()[2] * other.group0()[0])),
+                (-(self.group9()[0] * other.group0()[1]) + (self.group9()[1] * other.group0()[0])),
+            ]) + (Simd32x3::from(other.group1()[0]) * self.group4())
+                + (Simd32x3::from(other.group1()[1]) * self.group5())
+                - (Simd32x3::from(self.group3()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                + (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]))),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group7()[0]) + (self.group1()[1] * other.group0()[2]) + (self.group6()[3] * other.group0()[0])),
+                ((other.group1()[0] * self.group7()[1]) + (self.group1()[2] * other.group0()[0]) + (self.group6()[3] * other.group0()[1])),
+                ((other.group1()[0] * self.group7()[2]) + (self.group1()[0] * other.group0()[1]) + (self.group6()[3] * other.group0()[2])),
+                (-(self.group6()[0] * other.group0()[0]) - (self.group6()[1] * other.group0()[1]) - (self.group6()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[1]) * self.group6())
+                + (Simd32x4::from(other.group0()[3]) * Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], self[e1]]))
+                - (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group1()[0]]) * swizzle!(self.group1(), 2, 0, 1, 3))),
+            // e423, e431, e412
+            ((Simd32x3::from(other.group1()[1]) * self.group7()) + (Simd32x3::from(self.group1()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                - (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
+                + (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]))
+                - (Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[0]]) * swizzle!(self.group7(), 2, 0, 1))
+                + (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * swizzle!(self.group7(), 1, 2, 0))),
+            // e235, e315, e125
+            ((Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
+                + (Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]))
+                + (Simd32x3::from(other.group1()[1]) * self.group8())
+                - (Simd32x3::from(self[e1]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                + (Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[0]]) * swizzle!(self.group8(), 2, 0, 1))
+                - (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * swizzle!(self.group8(), 1, 2, 0))),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(self.group0()[0] * other.group0()[0]) - (self.group5()[1] * other.group0()[2])),
+                (-(self.group0()[0] * other.group0()[1]) - (self.group5()[2] * other.group0()[0])),
+                (-(self.group0()[0] * other.group0()[2]) - (self.group5()[0] * other.group0()[1])),
+                ((self.group3()[1] * other.group0()[1]) + (self.group3()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group4()[0], self.group4()[1], self.group4()[2], self.group0()[0]]))
+                + (Simd32x4::from(other.group1()[1]) * self.group9())
+                + (Simd32x4::from([self.group5()[2], self.group5()[0], self.group5()[1], self.group3()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))
+                - (Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], other.group1()[0]]) * self.group3())),
+            // e1234
+            ((self.group0()[0] * other.group0()[3]) + (other.group1()[1] * self[e45])
+                - (self.group4()[0] * other.group0()[0])
+                - (self.group4()[1] * other.group0()[1])
+                - (self.group4()[2] * other.group0()[2])
+                + (self.group3()[3] * other.group0()[3])),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32      406      454        0
+    //    simd2       19       19        0
+    //    simd3      136      144        0
+    //    simd4       75       79        0
+    // Totals...
+    // yes simd      636      696        0
+    //  no simd     1152     1240        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = MultiVector::from_groups(
+            // scalar, e12345
+            (Simd32x2::from([
+                ((self.group0()[1] * other.group1()[1]) + (other.group1()[0] * self[e1]) + (self.group1()[3] * other.group0()[3])),
+                (-(self.group0()[0] * other.group1()[1]) - (other.group1()[0] * self.group9()[3]) - (other.group0()[3] * self[e45])),
+            ]) + (Simd32x2::from(other.group0()[0]) * Simd32x2::from([self.group1()[0], self.group9()[0]]))
+                + (Simd32x2::from(other.group0()[1]) * Simd32x2::from([self.group1()[1], self.group9()[1]]))
+                + (Simd32x2::from(other.group0()[2]) * Simd32x2::from([self.group1()[2], self.group9()[2]]))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                ((self.group0()[0] * other.group0()[0]) + (other.group1()[1] * self.group9()[0]) + (self.group4()[0] * other.group0()[3]) + (self.group5()[1] * other.group0()[2])),
+                ((self.group0()[0] * other.group0()[1]) + (other.group1()[1] * self.group9()[1]) + (self.group4()[1] * other.group0()[3]) + (self.group5()[2] * other.group0()[0])),
+                ((self.group0()[0] * other.group0()[2]) + (other.group1()[1] * self.group9()[2]) + (self.group4()[2] * other.group0()[3]) + (self.group5()[0] * other.group0()[1])),
+                (-(other.group1()[0] * self.group3()[3]) - (other.group1()[1] * self[e45]) - (self.group4()[1] * other.group0()[1]) - (self.group4()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group0()[0]]))
+                - (Simd32x4::from([self.group5()[2], self.group5()[0], self.group5()[1], self.group4()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e5
+            (-(self.group0()[0] * other.group0()[3]) - (other.group1()[1] * self.group9()[3])
+                + (self.group3()[0] * other.group0()[0])
+                + (self.group3()[1] * other.group0()[1])
+                + (self.group3()[2] * other.group0()[2])
+                + (self.group3()[3] * other.group0()[3])),
+            // e15, e25, e35, e45
+            (Simd32x4::from([
+                ((other.group1()[1] * self.group8()[0]) + (self.group1()[0] * other.group0()[3]) + (self.group6()[0] * other.group0()[3]) + (other.group0()[0] * self[e1])),
+                ((other.group1()[1] * self.group8()[1]) + (self.group1()[1] * other.group0()[3]) + (self.group6()[1] * other.group0()[3]) + (other.group0()[1] * self[e1])),
+                ((other.group1()[1] * self.group8()[2]) + (self.group1()[2] * other.group0()[3]) + (self.group6()[2] * other.group0()[3]) + (other.group0()[2] * self[e1])),
+                (-(other.group1()[0] * self[e1]) - (other.group1()[1] * self.group6()[3]) - (self.group6()[1] * other.group0()[1]) - (self.group6()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from([self.group8()[1], self.group8()[2], self.group8()[0], self.group1()[3]]) * swizzle!(other.group0(), 2, 0, 1, 3))
+                - (Simd32x4::from([self.group8()[2], self.group8()[0], self.group8()[1], self.group6()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e41, e42, e43
+            (-(Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
+                + (Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]))
+                + (Simd32x3::from(other.group1()[1]) * self.group7())
+                - (Simd32x3::from(self.group1()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                + (Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[0]]) * swizzle!(self.group7(), 2, 0, 1))
+                - (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * swizzle!(self.group7(), 1, 2, 0))),
+            // e23, e31, e12
+            (Simd32x3::from([
+                (-(self.group1()[1] * other.group0()[2]) + (self.group1()[2] * other.group0()[1])),
+                ((self.group1()[0] * other.group0()[2]) - (self.group1()[2] * other.group0()[0])),
+                (-(self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[0])),
+            ]) + (Simd32x3::from(other.group1()[0]) * self.group8())
+                + (Simd32x3::from(other.group1()[1]) * Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]))
+                - (Simd32x3::from(self.group6()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                + (Simd32x3::from(other.group0()[3]) * self.group7())),
+            // e415, e425, e435, e321
+            ((Simd32x4::from(other.group1()[1])
+                * Simd32x4::from([self.group5()[0], self.group5()[1], self.group5()[2], self.group3()[3]])
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                - (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group9()[3]]))
+                - (Simd32x4::from([self.group4()[0], self.group4()[1], self.group4()[2], self.group5()[0]]) * swizzle!(other.group0(), 3, 3, 3, 0))
+                - (Simd32x4::from([self.group3()[3], self.group3()[3], self.group3()[3], self.group5()[1]]) * swizzle!(other.group0(), 0, 1, 2, 1))
+                - (Simd32x4::from([self.group9()[1], self.group9()[2], self.group9()[0], self.group5()[2]]) * swizzle!(other.group0(), 2, 0, 1, 2))
+                + (Simd32x4::from([self.group9()[2], self.group9()[0], self.group9()[1], self[e45]]) * swizzle!(other.group0(), 1, 2, 0, 3))),
+            // e423, e431, e412
+            (-(Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group9()[0], self.group9()[1], self.group9()[2]]))
+                - (Simd32x3::from(other.group1()[0]) * self.group5())
+                - (Simd32x3::from(other.group1()[1]) * self.group4())
+                + (Simd32x3::from(self[e45]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                - (Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[0]]) * swizzle!(self.group4(), 2, 0, 1))
+                + (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * swizzle!(self.group4(), 1, 2, 0))),
+            // e235, e315, e125
+            (Simd32x3::from([
+                (-(self.group3()[1] * other.group0()[2]) + (self.group3()[2] * other.group0()[1])),
+                ((self.group3()[0] * other.group0()[2]) - (self.group3()[2] * other.group0()[0])),
+                (-(self.group3()[0] * other.group0()[1]) + (self.group3()[1] * other.group0()[0])),
+            ]) - (Simd32x3::from(other.group1()[1]) * Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]))
+                - (Simd32x3::from(self.group9()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                + (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group9()[0], self.group9()[1], self.group9()[2]]))
+                - (Simd32x3::from(other.group0()[3]) * self.group5())),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group8()[0]) - (other.group1()[1] * self.group1()[0]) + (self.group6()[1] * other.group0()[2])),
+                (-(other.group1()[0] * self.group8()[1]) - (other.group1()[1] * self.group1()[1]) + (self.group6()[2] * other.group0()[0])),
+                (-(other.group1()[0] * self.group8()[2]) - (other.group1()[1] * self.group1()[2]) + (self.group6()[0] * other.group0()[1])),
+                ((other.group1()[1] * self[e1]) - (self.group8()[1] * other.group0()[1]) - (self.group8()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(self.group0()[1]) * other.group0())
+                + (Simd32x4::from(other.group0()[3]) * Simd32x4::from([self.group7()[0], self.group7()[1], self.group7()[2], self.group6()[3]]))
+                - (Simd32x4::from([self.group6()[2], self.group6()[0], self.group6()[1], self.group8()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e1234
+            ((self.group0()[1] * other.group1()[0]) - (other.group1()[0] * self.group6()[3])
+                + (other.group1()[1] * self.group1()[3])
+                + (self.group7()[0] * other.group0()[0])
+                + (self.group7()[1] * other.group0()[1])
+                + (self.group7()[2] * other.group0()[2])),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
 impl InfixAntiSandwich for Plane {}
 impl AntiSandwich<AntiCircleRotor> for Plane {
     type Output = VersorOdd;
@@ -38732,6 +40874,90 @@ impl AntiSandwich<VersorOdd> for Plane {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
+impl AntiSandwich<VersorRoundPoint> for Plane {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       20       41        0
+    //    simd4       10       12        0
+    // Totals...
+    // yes simd       30       53        0
+    //  no simd       60       89        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[3]),
+                (self.group0()[1] * other.group0()[3]),
+                (self.group0()[2] * other.group0()[3]),
+                ((self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[3] * other.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                (-(self.group0()[1] * other.group0()[2]) + (self.group0()[2] * other.group0()[1])),
+                ((self.group0()[0] * other.group0()[2]) - (self.group0()[2] * other.group0()[0])),
+                (-(self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])),
+                (self.group0()[3] * other.group0()[3] * -1.0),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (-(other.group1()[0] * self.group0()[0]) - (self.group0()[3] * other.group0()[0])),
+                (-(other.group1()[0] * self.group0()[1]) - (self.group0()[3] * other.group0()[1])),
+                (-(other.group1()[0] * self.group0()[2]) - (self.group0()[3] * other.group0()[2])),
+                0.0,
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group1()[1]) * self.group0()),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for Plane {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       18       49        0
+    //    simd4       10       12        0
+    // Totals...
+    // yes simd       28       61        0
+    //  no simd       58       97        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (other.group1()[0] * self.group0()[0] * -1.0),
+                (other.group1()[0] * self.group0()[1] * -1.0),
+                (other.group1()[0] * self.group0()[2] * -1.0),
+                (-(other.group1()[0] * self.group0()[3])
+                    + (self.group0()[0] * other.group0()[0])
+                    + (self.group0()[1] * other.group0()[1])
+                    + (self.group0()[2] * other.group0()[2])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                (-(self.group0()[1] * other.group0()[2]) + (self.group0()[2] * other.group0()[1])),
+                ((self.group0()[0] * other.group0()[2]) - (self.group0()[2] * other.group0()[0])),
+                (-(self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])),
+                (other.group1()[0] * self.group0()[3] * -1.0),
+            ]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                ((self.group0()[0] * other.group0()[3]) - (self.group0()[3] * other.group0()[0])),
+                ((self.group0()[1] * other.group0()[3]) - (self.group0()[3] * other.group0()[1])),
+                ((self.group0()[2] * other.group0()[3]) - (self.group0()[3] * other.group0()[2])),
+                (other.group1()[1] * self.group0()[3] * -1.0),
+            ]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (other.group1()[1] * self.group0()[0]),
+                (other.group1()[1] * self.group0()[1]),
+                (other.group1()[1] * self.group0()[2]),
+                0.0,
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
 impl InfixAntiSandwich for QuadNum {}
 impl AntiSandwich<AntiCircleRotor> for QuadNum {
     type Output = VersorOdd;
@@ -39819,6 +42045,92 @@ impl AntiSandwich<VersorOdd> for QuadNum {
                 ((self.group0()[2] * other.group3()[3]) + (self.group0()[3] * other.group3()[3])),
             ]) + (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group0()[3]]) * swizzle!(self.group0(), 0, 0, 0, 1))
                 + (Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group1()[3]]) * swizzle!(self.group0(), 3, 3, 3, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for QuadNum {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        8       28        0
+    //    simd4       12       18        0
+    // Totals...
+    // yes simd       20       46        0
+    //  no simd       56      100        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0]),
+                (self.group0()[0] * other.group0()[1]),
+                (self.group0()[0] * other.group0()[2]),
+                ((other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group0()[3]) + (self.group0()[1] * other.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                (self.group0()[2] * other.group0()[0]),
+                (self.group0()[2] * other.group0()[1]),
+                (self.group0()[2] * other.group0()[2]),
+                (-(other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group0()[2]) + (self.group0()[1] * other.group0()[3])),
+            ]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0] * -1.0),
+                (self.group0()[1] * other.group0()[1] * -1.0),
+                (self.group0()[1] * other.group0()[2] * -1.0),
+                ((other.group1()[0] * self.group0()[2]) + (other.group1()[0] * self.group0()[3]) + (other.group1()[1] * self.group0()[1])),
+            ]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group0()[3] * other.group0()[0]),
+                (self.group0()[3] * other.group0()[1]),
+                (self.group0()[3] * other.group0()[2]),
+                ((other.group1()[1] * self.group0()[0]) - (self.group0()[2] * other.group0()[3]) + (self.group0()[3] * other.group0()[3])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for QuadNum {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       12       39        0
+    //    simd4       11       16        0
+    // Totals...
+    // yes simd       23       55        0
+    //  no simd       56      103        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0] * -1.0),
+                (self.group0()[0] * other.group0()[1] * -1.0),
+                (self.group0()[0] * other.group0()[2] * -1.0),
+                ((other.group1()[0] * self.group0()[1]) + (other.group1()[1] * self.group0()[3]) + (self.group0()[0] * other.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                (self.group0()[2] * other.group0()[0] * -1.0),
+                (self.group0()[2] * other.group0()[1] * -1.0),
+                (self.group0()[2] * other.group0()[2] * -1.0),
+                (-(other.group1()[0] * self.group0()[1]) - (other.group1()[1] * self.group0()[2]) + (self.group0()[0] * other.group0()[3])),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0]),
+                (self.group0()[1] * other.group0()[1]),
+                (self.group0()[1] * other.group0()[2]),
+                (-(other.group1()[0] * self.group0()[2]) + (other.group1()[0] * self.group0()[3]) + (other.group1()[1] * self.group0()[0])),
+            ]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (self.group0()[3] * other.group0()[0]),
+                (self.group0()[3] * other.group0()[1]),
+                (self.group0()[3] * other.group0()[2]),
+                ((other.group1()[1] * self.group0()[1]) + (self.group0()[2] * other.group0()[3]) + (self.group0()[3] * other.group0()[3])),
+            ]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -41099,6 +43411,85 @@ impl AntiSandwich<VersorOdd> for RoundPoint {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
+impl AntiSandwich<VersorRoundPoint> for RoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       25       46        0
+    //    simd4       14       16        0
+    // Totals...
+    // yes simd       39       62        0
+    //  no simd       81      110        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            (Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                (-(self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2]) + (other.group0()[3] * self[e2])),
+            ]) + (Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]))
+                - (swizzle!(self.group0(), 0, 1, 2, 0) * swizzle!(other.group0(), 3, 3, 3, 0))),
+            // e415, e425, e435, e321
+            ((Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self[e2]]) * swizzle!(other.group0(), 2, 0, 1, 3))
+                - (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group1()[0]]) * swizzle!(self.group0(), 2, 0, 1, 3))),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                ((other.group1()[0] * self.group0()[0]) - (other.group0()[0] * self[e2])),
+                ((other.group1()[0] * self.group0()[1]) - (other.group0()[1] * self[e2])),
+                ((other.group1()[0] * self.group0()[2]) - (other.group0()[2] * self[e2])),
+                (other.group1()[1] * self[e2]),
+            ]),
+            // e1, e2, e3, e4
+            (Simd32x4::from(other.group1()[1]) * self.group0()),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for RoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       14       38        0
+    //    simd4       16       21        0
+    // Totals...
+    // yes simd       30       59        0
+    //  no simd       78      122        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (-(other.group1()[0] * self.group0()[0]) - (self.group0()[3] * other.group0()[0])),
+                (-(other.group1()[0] * self.group0()[1]) - (self.group0()[3] * other.group0()[1])),
+                (-(other.group1()[0] * self.group0()[2]) - (self.group0()[3] * other.group0()[2])),
+                ((other.group1()[0] * self[e2])
+                    + (self.group0()[0] * other.group0()[0])
+                    + (self.group0()[1] * other.group0()[1])
+                    + (self.group0()[2] * other.group0()[2])
+                    + (self.group0()[3] * other.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            (-Simd32x4::from([
+                (self.group0()[1] * other.group0()[2]),
+                (self.group0()[2] * other.group0()[0]),
+                (self.group0()[0] * other.group0()[1]),
+                (other.group1()[0] * self[e2]),
+            ]) + (swizzle!(self.group0(), 2, 0, 1, 3) * swizzle!(other.group0(), 1, 2, 0, 3))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((self.group0()[0] * other.group0()[3]) + (other.group0()[0] * self[e2])),
+                ((self.group0()[1] * other.group0()[3]) + (other.group0()[1] * self[e2])),
+                ((self.group0()[2] * other.group0()[3]) + (other.group0()[2] * self[e2])),
+                (other.group1()[1] * self.group0()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group1()[1]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
 impl InfixAntiSandwich for Scalar {}
 impl AntiSandwich<AntiCircleRotor> for Scalar {
     type Output = AntiCircleRotor;
@@ -41658,6 +44049,46 @@ impl AntiSandwich<VersorOdd> for Scalar {
             (Simd32x4::from(self[scalar]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group3()[3]]) * Simd32x4::from(-1.0)),
             // e1, e2, e3, e4
             (Simd32x4::from(self[scalar]) * Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0])),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for Scalar {
+    type Output = VersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd2        0        3        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        0        7        0
+    //  no simd        0       22        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self[scalar]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])),
+            // e1234, scalar
+            (Simd32x2::from(self[scalar]) * Simd32x2::from([other.group0()[3], other.group1()[1]])),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for Scalar {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd2        0        3        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        0        7        0
+    //  no simd        0       22        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(self[scalar]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0])),
+            // e5, e12345
+            (Simd32x2::from(self[scalar]) * Simd32x2::from([other.group0()[3], other.group1()[1]]) * Simd32x2::from(-1.0)),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -42949,6 +45380,82 @@ impl AntiSandwich<VersorOdd> for Sphere {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
+impl AntiSandwich<VersorRoundPoint> for Sphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       17       34        0
+    //    simd4       16       20        0
+    // Totals...
+    // yes simd       33       54        0
+    //  no simd       81      114        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            (Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                ((self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[3] * other.group0()[3])),
+            ]) + (Simd32x4::from(self[e4315]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]))
+                + (swizzle!(self.group0(), 0, 1, 2, 0) * swizzle!(other.group0(), 3, 3, 3, 0))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                (self.group0()[2] * other.group0()[1]),
+                (self.group0()[0] * other.group0()[2]),
+                (self.group0()[1] * other.group0()[0]),
+                (other.group1()[0] * self[e4315]),
+            ]) - (swizzle!(self.group0(), 1, 2, 0, 3) * swizzle!(other.group0(), 2, 0, 1, 3))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (-(other.group1()[0] * self.group0()[0]) - (self.group0()[3] * other.group0()[0])),
+                (-(other.group1()[0] * self.group0()[1]) - (self.group0()[3] * other.group0()[1])),
+                (-(other.group1()[0] * self.group0()[2]) - (self.group0()[3] * other.group0()[2])),
+                (other.group1()[1] * self[e4315]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group1()[1]) * self.group0()),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for Sphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       21       39        0
+    //    simd4       15       20        0
+    // Totals...
+    // yes simd       36       59        0
+    //  no simd       81      119        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            (Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                ((self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2]) - (other.group0()[3] * self[e4315])),
+            ]) - (Simd32x4::from(other.group1()[0]) * self.group0())
+                + (Simd32x4::from([self[e4315], self[e4315], self[e4315], self.group0()[0]]) * swizzle!(other.group0(), 0, 1, 2, 0))),
+            // e415, e425, e435, e321
+            ((Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self[e4315]]) * swizzle!(other.group0(), 1, 2, 0, 3))
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group0(), 1, 2, 0, 3))),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                ((self.group0()[0] * other.group0()[3]) - (self.group0()[3] * other.group0()[0])),
+                ((self.group0()[1] * other.group0()[3]) - (self.group0()[3] * other.group0()[1])),
+                ((self.group0()[2] * other.group0()[3]) - (self.group0()[3] * other.group0()[2])),
+                (other.group1()[1] * self.group0()[3] * -1.0),
+            ]),
+            // e1, e2, e3, e4
+            (Simd32x4::from(other.group1()[1]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e4315]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0])),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
 impl InfixAntiSandwich for TripleNum {}
 impl AntiSandwich<AntiCircleRotor> for TripleNum {
     type Output = VersorOdd;
@@ -43941,6 +46448,82 @@ impl AntiSandwich<VersorOdd> for TripleNum {
                 ((self.group0()[0] * other.group2()[2]) - (self.group0()[1] * other.group0()[2])),
                 ((self.group0()[1] * other.group0()[3]) + (self.group0()[1] * other.group1()[3])),
             ]) + (Simd32x4::from(self.group0()[2]) * other.group3())),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for TripleNum {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        5       25        0
+    //    simd4        8       13        0
+    // Totals...
+    // yes simd       13       38        0
+    //  no simd       37       77        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0]),
+                (self.group0()[0] * other.group0()[1]),
+                (self.group0()[0] * other.group0()[2]),
+                ((other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group0()[2]) + (self.group0()[1] * other.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (-(other.group1()[0] * self.group0()[0]) + (self.group0()[1] * other.group0()[3]))]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0] * -1.0),
+                (self.group0()[1] * other.group0()[1] * -1.0),
+                (self.group0()[1] * other.group0()[2] * -1.0),
+                ((other.group1()[0] * self.group0()[2]) + (other.group1()[1] * self.group0()[1])),
+            ]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group0()[2] * other.group0()[0]),
+                (self.group0()[2] * other.group0()[1]),
+                (self.group0()[2] * other.group0()[2]),
+                ((other.group1()[1] * self.group0()[0]) + (self.group0()[2] * other.group0()[3])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for TripleNum {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        5       37        0
+    //    simd4        8       10        0
+    // Totals...
+    // yes simd       13       47        0
+    //  no simd       37       77        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0] * -1.0),
+                (self.group0()[0] * other.group0()[1] * -1.0),
+                (self.group0()[0] * other.group0()[2] * -1.0),
+                ((other.group1()[0] * self.group0()[1]) + (other.group1()[1] * self.group0()[2]) + (self.group0()[0] * other.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (-(other.group1()[0] * self.group0()[1]) + (self.group0()[0] * other.group0()[3]))]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0]),
+                (self.group0()[1] * other.group0()[1]),
+                (self.group0()[1] * other.group0()[2]),
+                ((other.group1()[0] * self.group0()[2]) + (other.group1()[1] * self.group0()[0])),
+            ]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (self.group0()[2] * other.group0()[0]),
+                (self.group0()[2] * other.group0()[1]),
+                (self.group0()[2] * other.group0()[2]),
+                ((other.group1()[1] * self.group0()[1]) + (self.group0()[2] * other.group0()[3])),
+            ]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -46365,6 +48948,112 @@ impl AntiSandwich<VersorOdd> for VersorEven {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
+impl AntiSandwich<VersorRoundPoint> for VersorEven {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       88      122        0
+    //    simd4       58       61        0
+    // Totals...
+    // yes simd      146      183        0
+    //  no simd      320      366        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            ((Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group3()[2]])
+                * swizzle!(other.group0(), 3, 3, 3, 2)
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))
+                + (Simd32x4::from(other.group1()[1]) * self.group0())
+                + (Simd32x4::from(self.group3()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]))
+                + (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group2()[3]]) * swizzle!(other.group0(), 2, 0, 1, 3))
+                - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group3()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))
+                - (swizzle!(self.group3(), 0, 1, 2, 1) * swizzle!(other.group0(), 3, 3, 3, 1))),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group0()[0]) + (self.group2()[0] * other.group0()[3]) + (self.group3()[1] * other.group0()[2])),
+                ((other.group1()[0] * self.group0()[1]) + (self.group2()[1] * other.group0()[3]) + (self.group3()[2] * other.group0()[0])),
+                ((other.group1()[0] * self.group0()[2]) + (self.group2()[2] * other.group0()[3]) + (self.group3()[0] * other.group0()[1])),
+                (-(self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[1]) * self.group1())
+                + (Simd32x4::from([self.group1()[3], self.group1()[3], self.group1()[3], self.group2()[3]]) * other.group0())
+                - (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group1()[0]]) * swizzle!(self.group3(), 2, 0, 1, 3))),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                (-(self.group2()[1] * other.group0()[2]) - (self.group2()[3] * other.group0()[0])),
+                (-(self.group2()[2] * other.group0()[0]) - (self.group2()[3] * other.group0()[1])),
+                (-(self.group2()[0] * other.group0()[1]) - (self.group2()[3] * other.group0()[2])),
+                ((self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[3]]))
+                + (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group1()[3]]))
+                + (Simd32x4::from(other.group1()[1]) * self.group2())
+                + (swizzle!(self.group2(), 2, 0, 1, 0) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                ((self.group1()[1] * other.group0()[2]) + (self.group2()[0] * other.group0()[3])),
+                ((self.group1()[2] * other.group0()[0]) + (self.group2()[1] * other.group0()[3])),
+                ((self.group1()[0] * other.group0()[1]) + (self.group2()[2] * other.group0()[3])),
+                (-(self.group0()[2] * other.group0()[2]) - (self.group1()[3] * other.group0()[3])),
+            ]) + (Simd32x4::from(other.group1()[1]) * self.group3())
+                + (Simd32x4::from(self.group0()[3]) * other.group0())
+                - (Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[0], other.group0()[0]]) * swizzle!(self.group0(), 0, 1, 2, 0))
+                - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[1]]) * swizzle!(other.group0(), 1, 2, 0, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for VersorEven {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       84      122        0
+    //    simd4       59       60        0
+    // Totals...
+    // yes simd      143      182        0
+    //  no simd      320      362        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group3()[0]) - (self.group0()[1] * other.group0()[2]) - (self.group3()[3] * other.group0()[0])),
+                (-(other.group1()[0] * self.group3()[1]) - (self.group0()[2] * other.group0()[0]) - (self.group3()[3] * other.group0()[1])),
+                (-(other.group1()[0] * self.group3()[2]) - (self.group0()[0] * other.group0()[1]) - (self.group3()[3] * other.group0()[2])),
+                ((self.group3()[1] * other.group0()[1]) + (self.group3()[2] * other.group0()[2]) + (self.group3()[3] * other.group0()[3])),
+            ]) + (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group2()[3]]))
+                + (Simd32x4::from(other.group1()[1]) * self.group0())
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group3()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group2()[0]) + (other.group1()[1] * self.group1()[0]) + (self.group3()[2] * other.group0()[1])),
+                ((other.group1()[0] * self.group2()[1]) + (other.group1()[1] * self.group1()[1]) + (self.group3()[0] * other.group0()[2])),
+                ((other.group1()[0] * self.group2()[2]) + (other.group1()[1] * self.group1()[2]) + (self.group3()[1] * other.group0()[0])),
+                (-(other.group1()[0] * self.group2()[3]) - (self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]]))
+                + (Simd32x4::from(other.group0()[3]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group3()[3]]))
+                - (Simd32x4::from([self.group3()[1], self.group3()[2], self.group3()[0], self.group1()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                (-(self.group2()[2] * other.group0()[1]) + (self.group3()[0] * other.group0()[3])),
+                (-(self.group2()[0] * other.group0()[2]) + (self.group3()[1] * other.group0()[3])),
+                (-(self.group2()[1] * other.group0()[0]) + (self.group3()[2] * other.group0()[3])),
+                ((other.group1()[0] * self.group0()[3]) - (other.group1()[0] * self.group1()[3])),
+            ]) + (Simd32x4::from(other.group1()[1]) * Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]))
+                + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[0]]) * swizzle!(other.group0(), 3, 3, 3, 0))
+                + (Simd32x4::from([self.group2()[1], self.group2()[2], self.group2()[0], self.group0()[1]]) * swizzle!(other.group0(), 2, 0, 1, 1))
+                + (Simd32x4::from([self.group2()[3], self.group2()[3], self.group2()[3], self.group0()[2]]) * swizzle!(other.group0(), 0, 1, 2, 2))),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(other.group1()[1] * self.group3()[0]) + (self.group1()[1] * other.group0()[2])),
+                (-(other.group1()[1] * self.group3()[1]) + (self.group1()[2] * other.group0()[0])),
+                (-(other.group1()[1] * self.group3()[2]) + (self.group1()[0] * other.group0()[1])),
+                ((other.group1()[1] * self.group2()[3]) - (self.group2()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group0()[3]) * self.group0())
+                - (Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[0], other.group0()[0]]) * swizzle!(self.group2(), 0, 1, 2, 0))
+                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[3]]) * other.group0())
+                - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group2()[1]]) * swizzle!(other.group0(), 1, 2, 0, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
 impl InfixAntiSandwich for VersorOdd {}
 impl AntiSandwich<AntiCircleRotor> for VersorOdd {
     type Output = VersorOdd;
@@ -48653,6 +51342,3073 @@ impl AntiSandwich<VersorOdd> for VersorOdd {
                 - (Simd32x4::from([self.group3()[3], self.group2()[2], self.group2()[0], self.group2()[3]]) * swizzle!(other.group0(), 0, 0, 1, 3))
                 + (swizzle!(other.group0(), 3, 3, 3, 0) * swizzle!(self.group3(), 0, 1, 2, 0))
                 - (swizzle!(other.group2(), 1, 2, 0, 3) * swizzle!(self.group0(), 2, 0, 1, 3))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for VersorOdd {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       52       82        0
+    //    simd4       67       72        0
+    // Totals...
+    // yes simd      119      154        0
+    //  no simd      320      370        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            ((Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group3()[3]])
+                * swizzle!(other.group0(), 1, 2, 0, 3)
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                + (Simd32x4::from(other.group1()[1]) * self.group0())
+                + (Simd32x4::from(self.group2()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]))
+                + (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group3()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))
+                + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group3()[1]]) * swizzle!(other.group0(), 3, 3, 3, 1))
+                + (swizzle!(self.group3(), 0, 1, 2, 2) * swizzle!(other.group0(), 3, 3, 3, 2))),
+            // e23, e31, e12, e45
+            ((Simd32x4::from([self.group3()[1], self.group3()[2], self.group3()[0], self.group1()[2]])
+                * swizzle!(other.group0(), 2, 0, 1, 2)
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                + (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]))
+                + (Simd32x4::from(other.group1()[1]) * self.group1())
+                - (Simd32x4::from([self.group1()[3], self.group1()[3], self.group1()[3], self.group3()[3]]) * other.group0())
+                + (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[0]]) * swizzle!(other.group0(), 3, 3, 3, 0))
+                + (Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group1()[1]]) * swizzle!(other.group0(), 1, 2, 0, 1))),
+            // e15, e25, e35, e1234
+            (-Simd32x4::from([
+                (other.group1()[0] * self.group3()[0]),
+                (other.group1()[0] * self.group3()[1]),
+                (other.group1()[0] * self.group3()[2]),
+                (self.group0()[2] * other.group0()[2]),
+            ]) + (Simd32x4::from(other.group1()[1]) * self.group2())
+                + (Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[0], other.group0()[3]]) * self.group1())
+                - (Simd32x4::from([self.group2()[1], self.group2()[2], self.group2()[0], self.group0()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))
+                + (Simd32x4::from([self.group2()[2], self.group2()[0], self.group2()[1], self.group0()[3]]) * swizzle!(other.group0(), 1, 2, 0, 3))
+                - (Simd32x4::from([self.group3()[3], self.group3()[3], self.group3()[3], self.group0()[1]]) * swizzle!(other.group0(), 0, 1, 2, 1))),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(self.group0()[3] * other.group0()[0]) - (self.group2()[0] * other.group0()[3])),
+                (-(self.group0()[3] * other.group0()[1]) - (self.group2()[1] * other.group0()[3])),
+                (-(self.group0()[3] * other.group0()[2]) - (self.group2()[2] * other.group0()[3])),
+                ((self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[0]) * self.group0())
+                + (Simd32x4::from(other.group1()[1]) * self.group3())
+                + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group2()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group1(), 1, 2, 0, 3))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for VersorOdd {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       76      110        0
+    //    simd4       61       65        0
+    // Totals...
+    // yes simd      137      175        0
+    //  no simd      320      370        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            ((Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[0], other.group0()[2]])
+                * swizzle!(self.group3(), 0, 1, 2, 2)
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                - (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group3()[3]]))
+                - (Simd32x4::from(other.group1()[1]) * self.group0())
+                + (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group3()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))
+                - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group2()[3]]) * swizzle!(other.group0(), 1, 2, 0, 3))
+                + (Simd32x4::from([self.group2()[3], self.group2()[3], self.group2()[3], self.group3()[1]]) * swizzle!(other.group0(), 0, 1, 2, 1))),
+            // e415, e425, e435, e321
+            ((Simd32x4::from([
+                (self.group3()[1] * other.group0()[2]),
+                (self.group3()[2] * other.group0()[0]),
+                (self.group3()[0] * other.group0()[1]),
+                (other.group1()[1] * self.group1()[3]),
+            ]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                - (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]))
+                - (Simd32x4::from([other.group1()[1], other.group1()[1], other.group1()[1], other.group0()[0]]) * swizzle!(self.group1(), 0, 1, 2, 0))
+                - (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]]) * swizzle!(other.group0(), 3, 3, 3, 1))
+                + (Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group2()[3]]) * swizzle!(other.group0(), 1, 2, 0, 3))
+                - (swizzle!(self.group1(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2))),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                (-(self.group2()[1] * other.group0()[2]) - (self.group3()[3] * other.group0()[0])),
+                (-(self.group2()[2] * other.group0()[0]) - (self.group3()[3] * other.group0()[1])),
+                (-(self.group2()[0] * other.group0()[1]) - (self.group3()[3] * other.group0()[2])),
+                ((self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from(other.group1()[1]) * Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3]]))
+                - (Simd32x4::from(other.group0()[3]) * Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[3]]))
+                + (Simd32x4::from([self.group2()[2], self.group2()[0], self.group2()[1], self.group1()[3]]) * swizzle!(other.group0(), 1, 2, 0, 3))
+                + (Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[0]]) * swizzle!(other.group0(), 3, 3, 3, 0))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                ((other.group1()[1] * self.group3()[0]) + (self.group0()[0] * other.group0()[3]) + (self.group0()[3] * other.group0()[0]) + (self.group1()[1] * other.group0()[2])),
+                ((other.group1()[1] * self.group3()[1]) + (self.group0()[1] * other.group0()[3]) + (self.group0()[3] * other.group0()[1]) + (self.group1()[2] * other.group0()[0])),
+                ((other.group1()[1] * self.group3()[2]) + (self.group0()[2] * other.group0()[3]) + (self.group0()[3] * other.group0()[2]) + (self.group1()[0] * other.group0()[1])),
+                (-(other.group1()[1] * self.group2()[3])
+                    - (self.group0()[0] * other.group0()[0])
+                    - (self.group0()[1] * other.group0()[1])
+                    - (self.group0()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group0()[3]]))
+                - (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group1()[0]]) * swizzle!(self.group1(), 2, 0, 1, 3))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl InfixAntiSandwich for VersorRoundPoint {}
+impl AntiSandwich<AntiCircleRotor> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       18       42        0
+    //    simd4       28       32        0
+    // Totals...
+    // yes simd       46       74        0
+    //  no simd      130      170        0
+    fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                ((self.group1()[1] * other.group0()[0]) + (other.group0()[1] * self.group0()[2]) - (other.group0()[2] * self.group0()[1]) + (other.group1()[0] * self.group0()[3])),
+                ((self.group1()[1] * other.group0()[1]) - (other.group0()[0] * self.group0()[2]) + (other.group0()[2] * self.group0()[0]) + (other.group1()[1] * self.group0()[3])),
+                ((self.group1()[1] * other.group0()[2]) + (other.group0()[0] * self.group0()[1]) - (other.group0()[1] * self.group0()[0]) + (other.group1()[2] * self.group0()[3])),
+                (self.group1()[1] * other.group2()[3]),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) - (other.group1()[3] * self.group0()[0])),
+                ((self.group1()[0] * other.group0()[1]) - (other.group1()[3] * self.group0()[1])),
+                ((self.group1()[0] * other.group0()[2]) - (other.group1()[3] * self.group0()[2])),
+                ((other.group1()[1] * self.group0()[1]) + (other.group1()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group1())
+                + (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[0]]) * swizzle!(self.group0(), 3, 3, 3, 0))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                (self.group1()[0] * other.group1()[0]),
+                (self.group1()[0] * other.group1()[1]),
+                (self.group1()[0] * other.group1()[2]),
+                ((other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from([self.group1()[1], self.group1()[1], self.group1()[1], self.group0()[3]]) * other.group2())
+                - (Simd32x4::from([other.group2()[1], other.group2()[2], other.group2()[0], other.group1()[3]]) * swizzle!(self.group0(), 2, 0, 1, 3))
+                + (Simd32x4::from([other.group2()[2], other.group2()[0], other.group2()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+            // e4235, e4315, e4125, e3215
+            (-Simd32x4::from([
+                (self.group1()[0] * other.group0()[0]),
+                (self.group1()[0] * other.group0()[1]),
+                (self.group1()[0] * other.group0()[2]),
+                (other.group2()[2] * self.group0()[2]),
+            ]) - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group2()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group1(), 1, 2, 0, 3))
+                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[0]]) * other.group2())
+                - (swizzle!(other.group2(), 3, 3, 3, 1) * swizzle!(self.group0(), 0, 1, 2, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiDipoleInversion> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       46       74        0
+    //    simd4       27       29        0
+    // Totals...
+    // yes simd       73      103        0
+    //  no simd      154      190        0
+    fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            (Simd32x4::from([
+                ((self.group1()[1] * other.group0()[0]) + (other.group1()[0] * self.group0()[3]) + (other.group3()[0] * self.group0()[3])),
+                ((self.group1()[1] * other.group0()[1]) + (other.group1()[1] * self.group0()[3]) + (other.group3()[1] * self.group0()[3])),
+                ((self.group1()[1] * other.group0()[2]) + (other.group1()[2] * self.group0()[3]) + (other.group3()[2] * self.group0()[3])),
+                ((self.group1()[0] * other.group2()[3]) - (other.group3()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group3()[3]]) * swizzle!(self.group0(), 2, 0, 1, 3))
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group3()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
+                - (Simd32x4::from([other.group2()[3], other.group2()[3], other.group2()[3], other.group3()[1]]) * swizzle!(self.group0(), 0, 1, 2, 1))),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                ((other.group1()[3] * self.group0()[0]) + (other.group2()[0] * self.group0()[3]) + (other.group3()[2] * self.group0()[1])),
+                ((other.group1()[3] * self.group0()[1]) + (other.group2()[1] * self.group0()[3]) + (other.group3()[0] * self.group0()[2])),
+                ((other.group1()[3] * self.group0()[2]) + (other.group2()[2] * self.group0()[3]) + (other.group3()[1] * self.group0()[0])),
+                (-(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2]) - (other.group3()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]))
+                + (Simd32x4::from(self.group1()[1]) * other.group1())
+                - (Simd32x4::from([other.group3()[1], other.group3()[2], other.group3()[0], other.group1()[0]]) * swizzle!(self.group0(), 2, 0, 1, 0))),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group1()[0]) + (other.group2()[2] * self.group0()[1]) + (other.group3()[3] * self.group0()[0])),
+                ((self.group1()[0] * other.group1()[1]) + (other.group2()[0] * self.group0()[2]) + (other.group3()[3] * self.group0()[1])),
+                ((self.group1()[0] * other.group1()[2]) + (other.group2()[1] * self.group0()[0]) + (other.group3()[3] * self.group0()[2])),
+                (-(other.group2()[1] * self.group0()[1]) - (other.group2()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group1()[3]]))
+                + (Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group3()[3]]))
+                - (swizzle!(other.group2(), 1, 2, 0, 0) * swizzle!(self.group0(), 2, 0, 1, 0))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) - (other.group1()[1] * self.group0()[2]) - (other.group2()[0] * self.group0()[3])),
+                ((self.group1()[0] * other.group0()[1]) - (other.group1()[2] * self.group0()[0]) - (other.group2()[1] * self.group0()[3])),
+                ((self.group1()[0] * other.group0()[2]) - (other.group1()[0] * self.group0()[1]) - (other.group2()[2] * self.group0()[3])),
+                ((other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2]) + (other.group1()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]]))
+                + (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiDualNum321> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       23        0
+    //    simd4       19       25        0
+    // Totals...
+    // yes simd       25       48        0
+    //  no simd       82      123        0
+    fn anti_sandwich(self, other: AntiDualNum321) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * self.group1()[1])]),
+            // e23, e31, e12, e45
+            (Simd32x4::from(other.group0()[0])
+                * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]])
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (-(other.group0()[0] * self.group0()[3]) + (other.group0()[1] * self.group0()[3]))]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0] * -1.0),
+                (other.group0()[1] * self.group0()[1] * -1.0),
+                (other.group0()[1] * self.group0()[2] * -1.0),
+                ((other.group0()[0] * self.group1()[0]) + (other.group0()[1] * self.group1()[0])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiDualNum4> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       24        0
+    //    simd4       19       25        0
+    // Totals...
+    // yes simd       25       49        0
+    //  no simd       82      124        0
+    fn anti_sandwich(self, other: AntiDualNum4) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[0] * -1.0),
+                (other.group0()[0] * self.group0()[1] * -1.0),
+                (other.group0()[0] * self.group0()[2] * -1.0),
+                ((other.group0()[0] * self.group1()[0]) + (other.group0()[1] * self.group1()[1])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * self.group1()[0] * -1.0)]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, ((other.group0()[0] * self.group1()[1]) + (other.group0()[1] * self.group0()[3]))]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group0()[1])
+                * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]])
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiDualNum5> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       23        0
+    //    simd4       19       24        0
+    // Totals...
+    // yes simd       25       47        0
+    //  no simd       82      119        0
+    fn anti_sandwich(self, other: AntiDualNum5) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, ((other.group0()[0] * self.group0()[3]) + (other.group0()[1] * self.group1()[1]))]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * self.group0()[3])]),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[0], other.group0()[1]]) * self.group0()),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0] * -1.0),
+                (other.group0()[1] * self.group0()[1] * -1.0),
+                (other.group0()[1] * self.group0()[2] * -1.0),
+                ((other.group0()[0] * self.group1()[1]) + (other.group0()[1] * self.group1()[0])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiFlatPoint> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       34       66        0
+    //    simd4       13       13        0
+    // Totals...
+    // yes simd       47       79        0
+    //  no simd       86      118        0
+    fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
+        let geometric_anti_product = AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                ((other.group0()[0] * self.group0()[3]) + (other.group0()[3] * self.group0()[0])),
+                ((other.group0()[1] * self.group0()[3]) + (other.group0()[3] * self.group0()[1])),
+                ((other.group0()[2] * self.group0()[3]) + (other.group0()[3] * self.group0()[2])),
+                (self.group1()[1] * other.group0()[3]),
+            ]),
+            // e235, e315, e125, e4
+            Simd32x4::from([
+                ((self.group1()[1] * other.group0()[0]) - (other.group0()[1] * self.group0()[2]) + (other.group0()[2] * self.group0()[1])),
+                ((self.group1()[1] * other.group0()[1]) + (other.group0()[0] * self.group0()[2]) - (other.group0()[2] * self.group0()[0])),
+                ((self.group1()[1] * other.group0()[2]) - (other.group0()[0] * self.group0()[1]) + (other.group0()[1] * self.group0()[0])),
+                (other.group0()[3] * self.group0()[3]),
+            ]),
+            // e1, e2, e3, e5
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[3] * -1.0),
+                (other.group0()[1] * self.group0()[3] * -1.0),
+                (other.group0()[2] * self.group0()[3] * -1.0),
+                (-(self.group1()[0] * other.group0()[3])
+                    - (other.group0()[0] * self.group0()[0])
+                    - (other.group0()[1] * self.group0()[1])
+                    - (other.group0()[2] * self.group0()[2])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiFlector> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       29       56        0
+    //    simd4       21       23        0
+    // Totals...
+    // yes simd       50       79        0
+    //  no simd      113      148        0
+    fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (other.group1()[0] * self.group0()[3]),
+                (other.group1()[1] * self.group0()[3]),
+                (other.group1()[2] * self.group0()[3]),
+                (-(other.group1()[0] * self.group0()[0]) - (other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])
+                    + (other.group1()[3] * self.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                ((other.group0()[3] * self.group0()[0]) + (other.group1()[2] * self.group0()[1])),
+                ((other.group0()[3] * self.group0()[1]) + (other.group1()[0] * self.group0()[2])),
+                ((other.group0()[3] * self.group0()[2]) + (other.group1()[1] * self.group0()[0])),
+                0.0,
+            ]) + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[1]]) * other.group0())
+                - (swizzle!(other.group1(), 1, 2, 0, 3) * swizzle!(self.group0(), 2, 0, 1, 3))),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                ((other.group0()[2] * self.group0()[1]) + (other.group1()[3] * self.group0()[0])),
+                ((other.group0()[0] * self.group0()[2]) + (other.group1()[3] * self.group0()[1])),
+                ((other.group0()[1] * self.group0()[0]) + (other.group1()[3] * self.group0()[2])),
+                (-(other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[3]]))
+                + (Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]))
+                - (swizzle!(other.group0(), 1, 2, 0, 0) * swizzle!(self.group0(), 2, 0, 1, 0))),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                ((self.group1()[1] * other.group1()[0]) - (other.group0()[0] * self.group0()[3])),
+                ((self.group1()[1] * other.group1()[1]) - (other.group0()[1] * self.group0()[3])),
+                ((self.group1()[1] * other.group1()[2]) - (other.group0()[2] * self.group0()[3])),
+                (other.group0()[3] * self.group0()[3]),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiLine> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       24       48        0
+    //    simd3        0        1        0
+    //    simd4       18       20        0
+    // Totals...
+    // yes simd       42       69        0
+    //  no simd       96      131        0
+    fn anti_sandwich(self, other: AntiLine) -> Self::Output {
+        let geometric_anti_product = DipoleInversion::from_groups(
+            // e41, e42, e43
+            (Simd32x3::from(self.group0()[3]) * other.group0()),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                (self.group1()[1] * other.group0()[0]),
+                (self.group1()[1] * other.group0()[1]),
+                (self.group1()[1] * other.group0()[2]),
+                ((other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[0]]) * swizzle!(self.group0(), 3, 3, 3, 0))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group1()[0]) - (other.group1()[1] * self.group0()[2]) + (other.group1()[2] * self.group0()[1])),
+                ((self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group1()[1]) + (other.group1()[0] * self.group0()[2]) - (other.group1()[2] * self.group0()[0])),
+                ((self.group1()[0] * other.group0()[2]) + (self.group1()[1] * other.group1()[2]) - (other.group1()[0] * self.group0()[1]) + (other.group1()[1] * self.group0()[0])),
+                0.0,
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                ((other.group0()[1] * self.group0()[2]) + (other.group1()[0] * self.group0()[3])),
+                ((other.group0()[2] * self.group0()[0]) + (other.group1()[1] * self.group0()[3])),
+                ((other.group0()[0] * self.group0()[1]) + (other.group1()[2] * self.group0()[3])),
+                (-(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiMotor> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       18       37        0
+    //    simd4       25       29        0
+    // Totals...
+    // yes simd       43       66        0
+    //  no simd      118      153        0
+    fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[3]),
+                (other.group0()[1] * self.group0()[3]),
+                (other.group0()[2] * self.group0()[3]),
+                ((self.group1()[1] * other.group0()[3]) + (other.group1()[3] * self.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from([0.0, 0.0, 0.0, ((other.group0()[2] * self.group0()[2]) + (other.group1()[3] * self.group0()[3]))])
+                + (Simd32x4::from([self.group1()[1], self.group1()[1], self.group1()[1], self.group0()[0]]) * swizzle!(other.group0(), 0, 1, 2, 0))
+                + (Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[1]]) * swizzle!(self.group0(), 3, 3, 3, 1))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group1()[0]) - (other.group1()[1] * self.group0()[2])
+                    + (other.group1()[2] * self.group0()[1])
+                    + (other.group1()[3] * self.group0()[0])),
+                ((self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group1()[1]) + (other.group1()[0] * self.group0()[2]) - (other.group1()[2] * self.group0()[0])
+                    + (other.group1()[3] * self.group0()[1])),
+                ((self.group1()[0] * other.group0()[2]) + (self.group1()[1] * other.group1()[2]) - (other.group1()[0] * self.group0()[1])
+                    + (other.group1()[1] * self.group0()[0])
+                    + (other.group1()[3] * self.group0()[2])),
+                (other.group0()[3] * self.group0()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([0.0, 0.0, 0.0, ((other.group1()[2] * self.group0()[2]) * -1.0)])
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
+                - (Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], other.group1()[1]]) * swizzle!(self.group0(), 0, 1, 2, 1))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group0(), 1, 2, 0, 3))
+                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[1]]) * other.group1())),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiPlane> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       25       53        0
+    //    simd4       16       18        0
+    // Totals...
+    // yes simd       41       71        0
+    //  no simd       89      125        0
+    fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[3]),
+                (other.group0()[1] * self.group0()[3]),
+                (other.group0()[2] * self.group0()[3]),
+                (-(other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])
+                    + (other.group0()[3] * self.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                (-(other.group0()[1] * self.group0()[2]) + (other.group0()[2] * self.group0()[1])),
+                ((other.group0()[0] * self.group0()[2]) - (other.group0()[2] * self.group0()[0])),
+                (-(other.group0()[0] * self.group0()[1]) + (other.group0()[1] * self.group0()[0])),
+                (other.group0()[3] * self.group0()[3] * -1.0),
+            ]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (-(self.group1()[0] * other.group0()[0]) + (other.group0()[3] * self.group0()[0])),
+                (-(self.group1()[0] * other.group0()[1]) + (other.group0()[3] * self.group0()[1])),
+                (-(self.group1()[0] * other.group0()[2]) + (other.group0()[3] * self.group0()[2])),
+                (self.group1()[1] * other.group0()[3]),
+            ]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group1()[1] * other.group0()[0]),
+                (self.group1()[1] * other.group0()[1]),
+                (self.group1()[1] * other.group0()[2]),
+                0.0,
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiQuadNum> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       12       45        0
+    //    simd4       19       23        0
+    // Totals...
+    // yes simd       31       68        0
+    //  no simd       88      137        0
+    fn anti_sandwich(self, other: AntiQuadNum) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[0] * -1.0),
+                (other.group0()[0] * self.group0()[1] * -1.0),
+                (other.group0()[0] * self.group0()[2] * -1.0),
+                ((self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[3]) + (other.group0()[1] * self.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                (other.group0()[2] * self.group0()[0] * -1.0),
+                (other.group0()[2] * self.group0()[1] * -1.0),
+                (other.group0()[2] * self.group0()[2] * -1.0),
+                (-(self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[2]) + (other.group0()[1] * self.group0()[3])),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0]),
+                (other.group0()[1] * self.group0()[1]),
+                (other.group0()[1] * self.group0()[2]),
+                ((self.group1()[1] * other.group0()[0]) - (other.group0()[2] * self.group0()[3]) + (other.group0()[3] * self.group0()[3])),
+            ]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (other.group0()[3] * self.group0()[0] * -1.0),
+                (other.group0()[3] * self.group0()[1] * -1.0),
+                (other.group0()[3] * self.group0()[2] * -1.0),
+                ((self.group1()[0] * other.group0()[2]) + (self.group1()[0] * other.group0()[3]) + (self.group1()[1] * other.group0()[1])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiScalar> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3        4        0
+    //    simd2        0        1        0
+    //    simd4        5       10        0
+    // Totals...
+    // yes simd        8       15        0
+    //  no simd       23       46        0
+    fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(other[e12345]) * self.group0()),
+            // e5, e12345
+            (Simd32x2::from(other[e12345]) * self.group1()),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiTripleNum> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        9       36        0
+    //    simd4       19       23        0
+    // Totals...
+    // yes simd       28       59        0
+    //  no simd       85      128        0
+    fn anti_sandwich(self, other: AntiTripleNum) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[0] * -1.0),
+                (other.group0()[0] * self.group0()[1] * -1.0),
+                (other.group0()[0] * self.group0()[2] * -1.0),
+                ((self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[2]) + (other.group0()[1] * self.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (-(self.group1()[0] * other.group0()[0]) + (other.group0()[1] * self.group0()[3]))]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0]),
+                (other.group0()[1] * self.group0()[1]),
+                (other.group0()[1] * self.group0()[2]),
+                ((self.group1()[1] * other.group0()[0]) + (other.group0()[2] * self.group0()[3])),
+            ]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (other.group0()[2] * self.group0()[0] * -1.0),
+                (other.group0()[2] * self.group0()[1] * -1.0),
+                (other.group0()[2] * self.group0()[2] * -1.0),
+                ((self.group1()[0] * other.group0()[2]) + (self.group1()[1] * other.group0()[1])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Circle> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       38       67        0
+    //    simd3        3        4        0
+    //    simd4       18       18        0
+    // Totals...
+    // yes simd       59       89        0
+    //  no simd      119      151        0
+    fn anti_sandwich(self, other: Circle) -> Self::Output {
+        let geometric_anti_product = AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            ((Simd32x3::from(self.group1()[1]) * other.group0()) + (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
+                - (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(other.group0(), 2, 0, 1))
+                + (Simd32x3::from([self.group0()[2], self.group0()[0], self.group0()[1]]) * swizzle!(other.group0(), 1, 2, 0))),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) + (other.group2()[0] * self.group0()[3]) + (other.group1()[3] * self.group0()[0])),
+                ((self.group1()[0] * other.group0()[1]) + (other.group2()[1] * self.group0()[3]) + (other.group1()[3] * self.group0()[1])),
+                ((self.group1()[0] * other.group0()[2]) + (other.group2()[2] * self.group0()[3]) + (other.group1()[3] * self.group0()[2])),
+                (-(other.group1()[0] * self.group0()[0]) - (other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group1())),
+            // e235, e315, e125, e4
+            (Simd32x4::from([
+                ((self.group1()[1] * other.group2()[0]) - (other.group2()[1] * self.group0()[2])),
+                ((self.group1()[1] * other.group2()[1]) - (other.group2()[2] * self.group0()[0])),
+                ((self.group1()[1] * other.group2()[2]) - (other.group2()[0] * self.group0()[1])),
+                ((other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group0()[3]]) * other.group1())
+                + (Simd32x4::from([other.group2()[2], other.group2()[0], other.group2()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+            // e1, e2, e3, e5
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) + (other.group1()[2] * self.group0()[1])),
+                ((self.group1()[0] * other.group0()[1]) + (other.group1()[0] * self.group0()[2])),
+                ((self.group1()[0] * other.group0()[2]) + (other.group1()[1] * self.group0()[0])),
+                (-(other.group2()[1] * self.group0()[1]) - (other.group2()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group2()[0]]) * swizzle!(self.group0(), 3, 3, 3, 0))
+                - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group1(), 1, 2, 0, 3))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<CircleRotor> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       46       74        0
+    //    simd4       21       23        0
+    // Totals...
+    // yes simd       67       97        0
+    //  no simd      130      166        0
+    fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                ((self.group1()[1] * other.group0()[0]) + (other.group0()[1] * self.group0()[2]) - (other.group0()[2] * self.group0()[1]) + (other.group1()[0] * self.group0()[3])),
+                ((self.group1()[1] * other.group0()[1]) - (other.group0()[0] * self.group0()[2]) + (other.group0()[2] * self.group0()[0]) + (other.group1()[1] * self.group0()[3])),
+                ((self.group1()[1] * other.group0()[2]) + (other.group0()[0] * self.group0()[1]) - (other.group0()[1] * self.group0()[0]) + (other.group1()[2] * self.group0()[3])),
+                (self.group1()[1] * other.group2()[3]),
+            ]),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) + (other.group1()[3] * self.group0()[0]) + (other.group2()[0] * self.group0()[3])),
+                ((self.group1()[0] * other.group0()[1]) + (other.group1()[3] * self.group0()[1]) + (other.group2()[1] * self.group0()[3])),
+                ((self.group1()[0] * other.group0()[2]) + (other.group1()[3] * self.group0()[2]) + (other.group2()[2] * self.group0()[3])),
+                (-(other.group1()[0] * self.group0()[0]) - (other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group1())),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                ((self.group1()[1] * other.group2()[0]) + (other.group2()[2] * self.group0()[1])),
+                ((self.group1()[1] * other.group2()[1]) + (other.group2()[0] * self.group0()[2])),
+                ((self.group1()[1] * other.group2()[2]) + (other.group2()[1] * self.group0()[0])),
+                (-(self.group1()[0] * other.group1()[3]) - (other.group2()[1] * self.group0()[1]) - (other.group2()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group2()[3]]))
+                - (swizzle!(other.group2(), 1, 2, 0, 0) * swizzle!(self.group0(), 2, 0, 1, 0))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) - (other.group1()[1] * self.group0()[2]) - (other.group2()[0] * self.group0()[3])),
+                ((self.group1()[0] * other.group0()[1]) - (other.group1()[2] * self.group0()[0]) - (other.group2()[1] * self.group0()[3])),
+                ((self.group1()[0] * other.group0()[2]) - (other.group1()[0] * self.group0()[1]) - (other.group2()[2] * self.group0()[3])),
+                ((other.group0()[2] * self.group0()[2]) + (other.group1()[3] * self.group0()[3]) + (other.group2()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
+                + (Simd32x4::from([other.group2()[3], other.group2()[3], other.group2()[3], other.group0()[1]]) * swizzle!(self.group0(), 0, 1, 2, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Dipole> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       22       47        0
+    //    simd3        3        4        0
+    //    simd4       22       24        0
+    // Totals...
+    // yes simd       47       75        0
+    //  no simd      119      155        0
+    fn anti_sandwich(self, other: Dipole) -> Self::Output {
+        let geometric_anti_product = DipoleInversion::from_groups(
+            // e41, e42, e43
+            ((Simd32x3::from(self.group1()[1]) * other.group0()) + (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
+                - (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(other.group0(), 2, 0, 1))
+                + (Simd32x3::from([self.group0()[2], self.group0()[0], self.group0()[1]]) * swizzle!(other.group0(), 1, 2, 0))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) - (other.group1()[3] * self.group0()[0])),
+                ((self.group1()[0] * other.group0()[1]) - (other.group1()[3] * self.group0()[1])),
+                ((self.group1()[0] * other.group0()[2]) - (other.group1()[3] * self.group0()[2])),
+                ((other.group1()[1] * self.group0()[1]) + (other.group1()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group1())
+                + (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[0]]) * swizzle!(self.group0(), 3, 3, 3, 0))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group1()[0]) + (self.group1()[1] * other.group2()[0])),
+                ((self.group1()[0] * other.group1()[1]) + (self.group1()[1] * other.group2()[1])),
+                ((self.group1()[0] * other.group1()[2]) + (self.group1()[1] * other.group2()[2])),
+                ((other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from([other.group2()[1], other.group2()[2], other.group2()[0], other.group1()[3]]) * swizzle!(self.group0(), 2, 0, 1, 3))
+                + (Simd32x4::from([other.group2()[2], other.group2()[0], other.group2()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(self.group1()[0] * other.group0()[0]) + (other.group2()[0] * self.group0()[3])),
+                (-(self.group1()[0] * other.group0()[1]) + (other.group2()[1] * self.group0()[3])),
+                (-(self.group1()[0] * other.group0()[2]) + (other.group2()[2] * self.group0()[3])),
+                (-(other.group2()[1] * self.group0()[1]) - (other.group2()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group2()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group1(), 1, 2, 0, 3))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<DipoleInversion> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       30       54        0
+    //    simd4       31       35        0
+    // Totals...
+    // yes simd       61       89        0
+    //  no simd      154      194        0
+    fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            (Simd32x4::from([
+                ((self.group1()[1] * other.group0()[0]) - (other.group0()[2] * self.group0()[1]) - (other.group2()[3] * self.group0()[0]) - (other.group3()[0] * self.group0()[3])),
+                ((self.group1()[1] * other.group0()[1]) - (other.group0()[0] * self.group0()[2]) - (other.group2()[3] * self.group0()[1]) - (other.group3()[1] * self.group0()[3])),
+                ((self.group1()[1] * other.group0()[2]) - (other.group0()[1] * self.group0()[0]) - (other.group2()[3] * self.group0()[2]) - (other.group3()[2] * self.group0()[3])),
+                ((self.group1()[0] * other.group2()[3]) + (other.group3()[2] * self.group0()[2]) + (other.group3()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group3()[0]]) * swizzle!(self.group0(), 2, 0, 1, 0))
+                + (Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group3()[1]]) * swizzle!(self.group0(), 3, 3, 3, 1))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) - (other.group1()[3] * self.group0()[0]) - (other.group3()[2] * self.group0()[1])),
+                ((self.group1()[0] * other.group0()[1]) - (other.group1()[3] * self.group0()[1]) - (other.group3()[0] * self.group0()[2])),
+                ((self.group1()[0] * other.group0()[2]) - (other.group1()[3] * self.group0()[2]) - (other.group3()[1] * self.group0()[0])),
+                (-(self.group1()[0] * other.group2()[3]) + (other.group1()[2] * self.group0()[2]) + (other.group3()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group1())
+                + (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[0]]) * swizzle!(self.group0(), 3, 3, 3, 0))
+                + (Simd32x4::from([other.group3()[1], other.group3()[2], other.group3()[0], other.group1()[1]]) * swizzle!(self.group0(), 2, 0, 1, 1))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group1()[0]) + (self.group1()[0] * other.group3()[0])),
+                ((self.group1()[0] * other.group1()[1]) + (self.group1()[0] * other.group3()[1])),
+                ((self.group1()[0] * other.group1()[2]) + (self.group1()[0] * other.group3()[2])),
+                (other.group0()[2] * self.group0()[2]),
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group2())
+                - (Simd32x4::from([other.group2()[1], other.group2()[2], other.group2()[0], other.group1()[3]]) * swizzle!(self.group0(), 2, 0, 1, 3))
+                + (Simd32x4::from([other.group2()[2], other.group2()[0], other.group2()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
+                + (Simd32x4::from([other.group3()[3], other.group3()[3], other.group3()[3], other.group0()[1]]) * swizzle!(self.group0(), 0, 1, 2, 1))),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(self.group1()[0] * other.group0()[0]) + (other.group2()[0] * self.group0()[3])),
+                (-(self.group1()[0] * other.group0()[1]) + (other.group2()[1] * self.group0()[3])),
+                (-(self.group1()[0] * other.group0()[2]) + (other.group2()[2] * self.group0()[3])),
+                (-(other.group2()[1] * self.group0()[1]) - (other.group2()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group3())
+                - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group2()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group1(), 1, 2, 0, 3))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<DualNum321> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       18       36        0
+    //    simd4       16       19        0
+    // Totals...
+    // yes simd       34       55        0
+    //  no simd       82      112        0
+    fn anti_sandwich(self, other: DualNum321) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * self.group1()[1])]),
+            // e415, e425, e435, e321
+            (Simd32x4::from(other.group0()[0]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]])),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (-(other.group0()[0] * self.group1()[0]) + (other.group0()[1] * self.group1()[0]))]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0]),
+                (other.group0()[1] * self.group0()[1]),
+                (other.group0()[1] * self.group0()[2]),
+                ((other.group0()[0] * self.group0()[3]) + (other.group0()[1] * self.group0()[3])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<DualNum4> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       18       43        0
+    //    simd4       16       18        0
+    // Totals...
+    // yes simd       34       61        0
+    //  no simd       82      115        0
+    fn anti_sandwich(self, other: DualNum4) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[0] * -1.0),
+                (other.group0()[0] * self.group0()[1] * -1.0),
+                (other.group0()[0] * self.group0()[2] * -1.0),
+                ((other.group0()[0] * self.group1()[0]) + (other.group0()[1] * self.group1()[1])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * self.group1()[0])]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * self.group1()[0])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0]),
+                (other.group0()[1] * self.group0()[1]),
+                (other.group0()[1] * self.group0()[2]),
+                ((other.group0()[0] * self.group1()[1]) + (other.group0()[1] * self.group0()[3])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<DualNum5> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       18       37        0
+    //    simd4       16       19        0
+    // Totals...
+    // yes simd       34       56        0
+    //  no simd       82      113        0
+    fn anti_sandwich(self, other: DualNum5) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, ((other.group0()[0] * self.group0()[3]) + (other.group0()[1] * self.group1()[1]))]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * self.group0()[3] * -1.0)]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[0]),
+                (other.group0()[0] * self.group0()[1]),
+                (other.group0()[0] * self.group0()[2]),
+                ((other.group0()[0] * self.group1()[1]) + (other.group0()[1] * self.group1()[0])),
+            ]),
+            // e1, e2, e3, e4
+            (Simd32x4::from(other.group0()[1]) * self.group0()),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<FlatPoint> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       22       48        0
+    //    simd4       16       18        0
+    // Totals...
+    // yes simd       38       66        0
+    //  no simd       86      120        0
+    fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
+        let geometric_anti_product = DipoleInversion::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                ((other.group0()[0] * self.group0()[3]) - (other.group0()[3] * self.group0()[0])),
+                ((other.group0()[1] * self.group0()[3]) - (other.group0()[3] * self.group0()[1])),
+                ((other.group0()[2] * self.group0()[3]) - (other.group0()[3] * self.group0()[2])),
+                (self.group1()[1] * other.group0()[3]),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((self.group1()[1] * other.group0()[0]) - (other.group0()[1] * self.group0()[2]) + (other.group0()[2] * self.group0()[1])),
+                ((self.group1()[1] * other.group0()[1]) + (other.group0()[0] * self.group0()[2]) - (other.group0()[2] * self.group0()[0])),
+                ((self.group1()[1] * other.group0()[2]) - (other.group0()[0] * self.group0()[1]) + (other.group0()[1] * self.group0()[0])),
+                (other.group0()[3] * self.group0()[3] * -1.0),
+            ]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[3]),
+                (other.group0()[1] * self.group0()[3]),
+                (other.group0()[2] * self.group0()[3]),
+                ((self.group1()[0] * other.group0()[3]) - (other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Flector> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       24       48        0
+    //    simd4       23       27        0
+    // Totals...
+    // yes simd       47       75        0
+    //  no simd      116      156        0
+    fn anti_sandwich(self, other: Flector) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (other.group1()[0] * self.group0()[3] * -1.0),
+                (other.group1()[1] * self.group0()[3] * -1.0),
+                (other.group1()[2] * self.group0()[3] * -1.0),
+                ((other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group0()[1]) + (other.group1()[2] * self.group0()[2]) + (other.group1()[3] * self.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                (-(other.group0()[3] * self.group0()[0]) - (other.group1()[2] * self.group0()[1])),
+                (-(other.group0()[3] * self.group0()[1]) - (other.group1()[0] * self.group0()[2])),
+                (-(other.group0()[3] * self.group0()[2]) - (other.group1()[1] * self.group0()[0])),
+                0.0,
+            ]) + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[1]]) * other.group0())
+                + (swizzle!(other.group1(), 1, 2, 0, 3) * swizzle!(self.group0(), 2, 0, 1, 3))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((self.group1()[0] * other.group1()[0]) + (self.group1()[1] * other.group0()[0]) - (other.group0()[1] * self.group0()[2])
+                    + (other.group0()[2] * self.group0()[1])
+                    + (other.group1()[3] * self.group0()[0])),
+                ((self.group1()[0] * other.group1()[1]) + (self.group1()[1] * other.group0()[1]) + (other.group0()[0] * self.group0()[2]) - (other.group0()[2] * self.group0()[0])
+                    + (other.group1()[3] * self.group0()[1])),
+                ((self.group1()[0] * other.group1()[2]) + (self.group1()[1] * other.group0()[2]) - (other.group0()[0] * self.group0()[1])
+                    + (other.group0()[1] * self.group0()[0])
+                    + (other.group1()[3] * self.group0()[2])),
+                (other.group0()[3] * self.group0()[3] * -1.0),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                (-(other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group1())
+                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[0]]) * other.group0())),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Line> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       36       60        0
+    //    simd3        0        1        0
+    //    simd4       15       17        0
+    // Totals...
+    // yes simd       51       78        0
+    //  no simd       96      131        0
+    fn anti_sandwich(self, other: Line) -> Self::Output {
+        let geometric_anti_product = AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(self.group0()[3]) * other.group0()),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                ((self.group1()[1] * other.group0()[0]) + (other.group1()[0] * self.group0()[3])),
+                ((self.group1()[1] * other.group0()[1]) + (other.group1()[1] * self.group0()[3])),
+                ((self.group1()[1] * other.group0()[2]) + (other.group1()[2] * self.group0()[3])),
+                (-(other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])),
+            ]),
+            // e235, e315, e125, e4
+            Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group1()[0]) - (other.group1()[1] * self.group0()[2]) + (other.group1()[2] * self.group0()[1])),
+                ((self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group1()[1]) + (other.group1()[0] * self.group0()[2]) - (other.group1()[2] * self.group0()[0])),
+                ((self.group1()[0] * other.group0()[2]) + (self.group1()[1] * other.group1()[2]) - (other.group1()[0] * self.group0()[1]) + (other.group1()[1] * self.group0()[0])),
+                0.0,
+            ]),
+            // e1, e2, e3, e5
+            ((Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[2]])
+                * swizzle!(self.group0(), 1, 2, 0, 2)
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))
+                - (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group1()[0]]) * swizzle!(self.group0(), 2, 0, 1, 0))
+                - (Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group1()[1]]) * swizzle!(self.group0(), 3, 3, 3, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Motor> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       36       64        0
+    //    simd4       19       21        0
+    // Totals...
+    // yes simd       55       85        0
+    //  no simd      112      148        0
+    fn anti_sandwich(self, other: Motor) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[3]),
+                (other.group0()[1] * self.group0()[3]),
+                (other.group0()[2] * self.group0()[3]),
+                ((self.group1()[1] * other.group0()[3]) + (other.group1()[3] * self.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                ((self.group1()[1] * other.group0()[0]) + (other.group1()[0] * self.group0()[3])),
+                ((self.group1()[1] * other.group0()[1]) + (other.group1()[1] * self.group0()[3])),
+                ((self.group1()[1] * other.group0()[2]) + (other.group1()[2] * self.group0()[3])),
+                (-(other.group0()[0] * self.group0()[0])
+                    - (other.group0()[1] * self.group0()[1])
+                    - (other.group0()[2] * self.group0()[2])
+                    - (other.group1()[3] * self.group0()[3])),
+            ]),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                ((other.group1()[2] * self.group0()[1]) + (other.group1()[3] * self.group0()[0])),
+                ((other.group1()[0] * self.group0()[2]) + (other.group1()[3] * self.group0()[1])),
+                ((other.group1()[1] * self.group0()[0]) + (other.group1()[3] * self.group0()[2])),
+                (-(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[0]) * other.group0())
+                + (Simd32x4::from(self.group1()[1]) * other.group1())
+                - (swizzle!(other.group1(), 1, 2, 0, 0) * swizzle!(self.group0(), 2, 0, 1, 0))),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (-(other.group0()[1] * self.group0()[2]) + (other.group0()[2] * self.group0()[1]) + (other.group0()[3] * self.group0()[0])
+                    - (other.group1()[0] * self.group0()[3])),
+                ((other.group0()[0] * self.group0()[2]) - (other.group0()[2] * self.group0()[0]) + (other.group0()[3] * self.group0()[1]) - (other.group1()[1] * self.group0()[3])),
+                (-(other.group0()[0] * self.group0()[1]) + (other.group0()[1] * self.group0()[0]) + (other.group0()[3] * self.group0()[2])
+                    - (other.group1()[2] * self.group0()[3])),
+                (other.group0()[3] * self.group0()[3]),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<MultiVector> for VersorRoundPoint {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       82      128        0
+    //    simd2        6        6        0
+    //    simd3       38       44        0
+    //    simd4       28       28        0
+    // Totals...
+    // yes simd      154      206        0
+    //  no simd      320      384        0
+    fn anti_sandwich(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = MultiVector::from_groups(
+            // scalar, e12345
+            (Simd32x2::from([
+                ((other.group9()[0] * self.group0()[0]) + (other.group9()[1] * self.group0()[1]) + (other.group9()[2] * self.group0()[2])),
+                (-(other.group1()[0] * self.group0()[0]) - (other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) + (Simd32x2::from(self.group1()[0]) * Simd32x2::from([other[e45], other.group1()[3]]))
+                + (Simd32x2::from(self.group1()[1]) * other.group0())
+                + (Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group9()[3], other[e1]]))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group7()[0]) - (other.group8()[0] * self.group0()[3]) - (other.group6()[1] * self.group0()[2])),
+                ((self.group1()[0] * other.group7()[1]) - (other.group8()[1] * self.group0()[3]) - (other.group6()[2] * self.group0()[0])),
+                ((self.group1()[0] * other.group7()[2]) - (other.group8()[2] * self.group0()[3]) - (other.group6()[0] * self.group0()[1])),
+                ((other.group7()[1] * self.group0()[1]) + (other.group7()[2] * self.group0()[2]) + (other.group6()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from(other.group0()[1]) * self.group0())
+                + (Simd32x4::from(self.group1()[1]) * other.group1())
+                + (Simd32x4::from([other.group6()[2], other.group6()[0], other.group6()[1], other.group7()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+            // e5
+            ((other.group0()[1] * self.group1()[0]) - (self.group1()[0] * other.group6()[3]) + (self.group1()[1] * other[e1])
+                - (other.group8()[0] * self.group0()[0])
+                - (other.group8()[1] * self.group0()[1])
+                - (other.group8()[2] * self.group0()[2])),
+            // e15, e25, e35, e45
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group5()[0]) - (other.group3()[1] * self.group0()[2])),
+                ((self.group1()[0] * other.group5()[1]) - (other.group3()[2] * self.group0()[0])),
+                ((self.group1()[0] * other.group5()[2]) - (other.group3()[0] * self.group0()[1])),
+                (-(self.group1()[0] * other[e45]) + (other.group5()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group3())
+                + (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group0()[3]]) * other.group9())
+                + (Simd32x4::from([other.group3()[2], other.group3()[0], other.group3()[1], other.group5()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
+                + (Simd32x4::from([other.group9()[3], other.group9()[3], other.group9()[3], other.group5()[1]]) * swizzle!(self.group0(), 0, 1, 2, 1))),
+            // e41, e42, e43
+            ((Simd32x3::from(self.group1()[1]) * other.group4()) - (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group9()[0], other.group9()[1], other.group9()[2]]))
+                + (Simd32x3::from(self.group0()[3]) * other.group5())
+                - (Simd32x3::from(other[e45]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                - (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(other.group4(), 2, 0, 1))
+                + (Simd32x3::from([self.group0()[2], self.group0()[0], self.group0()[1]]) * swizzle!(other.group4(), 1, 2, 0))),
+            // e23, e31, e12
+            (Simd32x3::from([
+                ((other.group9()[1] * self.group0()[2]) - (other.group9()[2] * self.group0()[1])),
+                (-(other.group9()[0] * self.group0()[2]) + (other.group9()[2] * self.group0()[0])),
+                ((other.group9()[0] * self.group0()[1]) - (other.group9()[1] * self.group0()[0])),
+            ]) + (Simd32x3::from(self.group1()[0]) * other.group4())
+                + (Simd32x3::from(self.group1()[1]) * other.group5())
+                - (Simd32x3::from(other.group3()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                + (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group3()[0], other.group3()[1], other.group3()[2]]))),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                ((other.group8()[0] * self.group0()[3]) + (other.group1()[2] * self.group0()[1]) + (other.group6()[3] * self.group0()[0])),
+                ((other.group8()[1] * self.group0()[3]) + (other.group1()[0] * self.group0()[2]) + (other.group6()[3] * self.group0()[1])),
+                ((other.group8()[2] * self.group0()[3]) + (other.group1()[1] * self.group0()[0]) + (other.group6()[3] * self.group0()[2])),
+                (-(other.group6()[1] * self.group0()[1]) - (other.group6()[2] * self.group0()[2]) - (self.group0()[3] * other[e1])),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group7()[0], other.group7()[1], other.group7()[2], other.group1()[3]]))
+                + (Simd32x4::from(self.group1()[1]) * other.group6())
+                - (Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[0], other.group6()[0]]) * swizzle!(self.group0(), 2, 0, 1, 0))),
+            // e423, e431, e412
+            ((Simd32x3::from(self.group1()[1]) * other.group7()) - (Simd32x3::from(other.group1()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                + (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
+                + (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]))
+                - (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(other.group7(), 2, 0, 1))
+                + (Simd32x3::from([self.group0()[2], self.group0()[0], self.group0()[1]]) * swizzle!(other.group7(), 1, 2, 0))),
+            // e235, e315, e125
+            (-(Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
+                + (Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]))
+                + (Simd32x3::from(self.group1()[1]) * other.group8())
+                + (Simd32x3::from(other[e1]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                + (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(other.group8(), 2, 0, 1))
+                - (Simd32x3::from([self.group0()[2], self.group0()[0], self.group0()[1]]) * swizzle!(other.group8(), 1, 2, 0))),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(self.group1()[0] * other.group4()[0]) + (other.group5()[1] * self.group0()[2])),
+                (-(self.group1()[0] * other.group4()[1]) + (other.group5()[2] * self.group0()[0])),
+                (-(self.group1()[0] * other.group4()[2]) + (other.group5()[0] * self.group0()[1])),
+                ((other.group0()[0] * self.group1()[0]) - (other.group3()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group9())
+                - (Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[0], other.group3()[0]]) * swizzle!(self.group0(), 0, 1, 2, 0))
+                - (Simd32x4::from([other.group5()[2], other.group5()[0], other.group5()[1], other.group3()[1]]) * swizzle!(self.group0(), 1, 2, 0, 1))
+                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[0]]) * other.group3())),
+            // e1234
+            ((other.group0()[0] * self.group0()[3])
+                + (self.group1()[1] * other[e45])
+                + (other.group4()[0] * self.group0()[0])
+                + (other.group4()[1] * self.group0()[1])
+                + (other.group4()[2] * self.group0()[2])
+                - (other.group3()[3] * self.group0()[3])),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Plane> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       13       35        0
+    //    simd4       19       24        0
+    // Totals...
+    // yes simd       32       59        0
+    //  no simd       89      131        0
+    fn anti_sandwich(self, other: Plane) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[3] * -1.0),
+                (other.group0()[1] * self.group0()[3] * -1.0),
+                (other.group0()[2] * self.group0()[3] * -1.0),
+                ((other.group0()[0] * self.group0()[0]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2]) + (other.group0()[3] * self.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                ((other.group0()[1] * self.group0()[2]) - (other.group0()[2] * self.group0()[1])),
+                (-(other.group0()[0] * self.group0()[2]) + (other.group0()[2] * self.group0()[0])),
+                ((other.group0()[0] * self.group0()[1]) - (other.group0()[1] * self.group0()[0])),
+                (other.group0()[3] * self.group0()[3]),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) + (other.group0()[3] * self.group0()[0])),
+                ((self.group1()[0] * other.group0()[1]) + (other.group0()[3] * self.group0()[1])),
+                ((self.group1()[0] * other.group0()[2]) + (other.group0()[3] * self.group0()[2])),
+                0.0,
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * other.group0()),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<QuadNum> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       24       55        0
+    //    simd4       16       18        0
+    // Totals...
+    // yes simd       40       73        0
+    //  no simd       88      127        0
+    fn anti_sandwich(self, other: QuadNum) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[0] * -1.0),
+                (other.group0()[0] * self.group0()[1] * -1.0),
+                (other.group0()[0] * self.group0()[2] * -1.0),
+                ((self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[3]) + (other.group0()[1] * self.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                (other.group0()[2] * self.group0()[0]),
+                (other.group0()[2] * self.group0()[1]),
+                (other.group0()[2] * self.group0()[2]),
+                ((self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[2]) - (other.group0()[1] * self.group0()[3])),
+            ]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0]),
+                (other.group0()[1] * self.group0()[1]),
+                (other.group0()[1] * self.group0()[2]),
+                (-(self.group1()[0] * other.group0()[2]) + (self.group1()[0] * other.group0()[3]) + (self.group1()[1] * other.group0()[1])),
+            ]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (other.group0()[3] * self.group0()[0]),
+                (other.group0()[3] * self.group0()[1]),
+                (other.group0()[3] * self.group0()[2]),
+                ((self.group1()[1] * other.group0()[0]) + (other.group0()[2] * self.group0()[3]) + (other.group0()[3] * self.group0()[3])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<RoundPoint> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       21       38        0
+    //    simd4       19       23        0
+    // Totals...
+    // yes simd       40       61        0
+    //  no simd       97      130        0
+    fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            (Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                (-(other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2]) + (self.group0()[3] * other[e2])),
+            ]) + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[0]]) * other.group0())
+                - (swizzle!(other.group0(), 3, 3, 3, 0) * swizzle!(self.group0(), 0, 1, 2, 0))),
+            // e415, e425, e435, e321
+            (-(Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other[e2]]) * swizzle!(self.group0(), 2, 0, 1, 3))
+                + (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group1()[0]]) * swizzle!(other.group0(), 2, 0, 1, 3))),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (-(self.group1()[0] * other.group0()[0]) + (self.group0()[0] * other[e2])),
+                (-(self.group1()[0] * other.group0()[1]) + (self.group0()[1] * other[e2])),
+                (-(self.group1()[0] * other.group0()[2]) + (self.group0()[2] * other[e2])),
+                (self.group1()[1] * other[e2]),
+            ]),
+            // e1, e2, e3, e4
+            (Simd32x4::from(self.group1()[1]) * other.group0()),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Scalar> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        7       16        0
+    //    simd2        0        1        0
+    //    simd4        4        8        0
+    // Totals...
+    // yes simd       11       25        0
+    //  no simd       23       50        0
+    fn anti_sandwich(self, other: Scalar) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other[scalar]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])),
+            // e1234, scalar
+            (Simd32x2::from(other[scalar]) * Simd32x2::from([self.group0()[3], self.group1()[1]])),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Sphere> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       14       34        0
+    //    simd4       20       25        0
+    // Totals...
+    // yes simd       34       59        0
+    //  no simd       94      134        0
+    fn anti_sandwich(self, other: Sphere) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (-(other.group0()[0] * self.group0()[3]) - (self.group0()[0] * other[e4315])),
+                (-(other.group0()[1] * self.group0()[3]) - (self.group0()[1] * other[e4315])),
+                (-(other.group0()[2] * self.group0()[3]) - (self.group0()[2] * other[e4315])),
+                ((self.group1()[0] * other[e4315])
+                    + (other.group0()[0] * self.group0()[0])
+                    + (other.group0()[1] * self.group0()[1])
+                    + (other.group0()[2] * self.group0()[2])
+                    + (other.group0()[3] * self.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            (-Simd32x4::from([
+                (other.group0()[2] * self.group0()[1]),
+                (other.group0()[0] * self.group0()[2]),
+                (other.group0()[1] * self.group0()[0]),
+                (self.group1()[0] * other[e4315]),
+            ]) + (swizzle!(other.group0(), 1, 2, 0, 3) * swizzle!(self.group0(), 2, 0, 1, 3))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) + (other.group0()[3] * self.group0()[0])),
+                ((self.group1()[0] * other.group0()[1]) + (other.group0()[3] * self.group0()[1])),
+                ((self.group1()[0] * other.group0()[2]) + (other.group0()[3] * self.group0()[2])),
+                (self.group1()[1] * other[e4315]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * other.group0()),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<TripleNum> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       21       49        0
+    //    simd4       16       18        0
+    // Totals...
+    // yes simd       37       67        0
+    //  no simd       85      121        0
+    fn anti_sandwich(self, other: TripleNum) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[0] * -1.0),
+                (other.group0()[0] * self.group0()[1] * -1.0),
+                (other.group0()[0] * self.group0()[2] * -1.0),
+                ((self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[2]) + (other.group0()[1] * self.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, ((self.group1()[0] * other.group0()[0]) - (other.group0()[1] * self.group0()[3]))]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0]),
+                (other.group0()[1] * self.group0()[1]),
+                (other.group0()[1] * self.group0()[2]),
+                ((self.group1()[0] * other.group0()[2]) + (self.group1()[1] * other.group0()[1])),
+            ]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (other.group0()[2] * self.group0()[0]),
+                (other.group0()[2] * self.group0()[1]),
+                (other.group0()[2] * self.group0()[2]),
+                ((self.group1()[1] * other.group0()[0]) + (other.group0()[2] * self.group0()[3])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorEven> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       32       56        0
+    //    simd4       32       36        0
+    // Totals...
+    // yes simd       64       92        0
+    //  no simd      160      200        0
+    fn anti_sandwich(self, other: VersorEven) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            ((Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group3()[2]])
+                * swizzle!(self.group0(), 3, 3, 3, 2)
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))
+                + (Simd32x4::from(self.group1()[1]) * other.group0())
+                + (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group2()[3]]) * swizzle!(self.group0(), 2, 0, 1, 3))
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group3()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
+                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[0]]) * other.group3())
+                - (swizzle!(other.group3(), 3, 3, 3, 1) * swizzle!(self.group0(), 0, 1, 2, 1))),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                ((other.group1()[3] * self.group0()[0]) + (other.group2()[0] * self.group0()[3]) + (other.group3()[2] * self.group0()[1])),
+                ((other.group1()[3] * self.group0()[1]) + (other.group2()[1] * self.group0()[3]) + (other.group3()[0] * self.group0()[2])),
+                ((other.group1()[3] * self.group0()[2]) + (other.group2()[2] * self.group0()[3]) + (other.group3()[1] * self.group0()[0])),
+                (-(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2]) - (other.group2()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group3()[3]]))
+                + (Simd32x4::from(self.group1()[1]) * other.group1())
+                - (Simd32x4::from([other.group3()[1], other.group3()[2], other.group3()[0], other.group1()[0]]) * swizzle!(self.group0(), 2, 0, 1, 0))),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                ((other.group2()[2] * self.group0()[1]) + (other.group2()[3] * self.group0()[0])),
+                ((other.group2()[0] * self.group0()[2]) + (other.group2()[3] * self.group0()[1])),
+                ((other.group2()[1] * self.group0()[0]) + (other.group2()[3] * self.group0()[2])),
+                (-(other.group2()[1] * self.group0()[1]) - (other.group2()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[3]]))
+                - (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group1()[3]]))
+                + (Simd32x4::from(self.group1()[1]) * other.group2())
+                - (swizzle!(other.group2(), 1, 2, 0, 0) * swizzle!(self.group0(), 2, 0, 1, 0))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                (-(other.group1()[1] * self.group0()[2]) - (other.group2()[0] * self.group0()[3])),
+                (-(other.group1()[2] * self.group0()[0]) - (other.group2()[1] * self.group0()[3])),
+                (-(other.group1()[0] * self.group0()[1]) - (other.group2()[2] * self.group0()[3])),
+                ((other.group0()[3] * self.group0()[3]) + (other.group1()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group3())
+                + (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group0()[0]]) * swizzle!(other.group0(), 0, 1, 2, 0))
+                + (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[2]]) * swizzle!(self.group0(), 1, 2, 0, 2))
+                + (swizzle!(other.group0(), 3, 3, 3, 1) * swizzle!(self.group0(), 0, 1, 2, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorOdd> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       28       52        0
+    //    simd4       33       37        0
+    // Totals...
+    // yes simd       61       89        0
+    //  no simd      160      200        0
+    fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            (Simd32x4::from([
+                (-(other.group0()[2] * self.group0()[1]) - (other.group2()[3] * self.group0()[0]) - (other.group3()[0] * self.group0()[3])),
+                (-(other.group0()[0] * self.group0()[2]) - (other.group2()[3] * self.group0()[1]) - (other.group3()[1] * self.group0()[3])),
+                (-(other.group0()[1] * self.group0()[0]) - (other.group2()[3] * self.group0()[2]) - (other.group3()[2] * self.group0()[3])),
+                ((self.group1()[0] * other.group2()[3]) + (other.group3()[2] * self.group0()[2]) + (other.group3()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group0())
+                + (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group3()[0]]) * swizzle!(self.group0(), 2, 0, 1, 0))
+                + (Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group3()[1]]) * swizzle!(self.group0(), 3, 3, 3, 1))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) - (other.group1()[3] * self.group0()[0]) - (other.group3()[2] * self.group0()[1])),
+                ((self.group1()[0] * other.group0()[1]) - (other.group1()[3] * self.group0()[1]) - (other.group3()[0] * self.group0()[2])),
+                ((self.group1()[0] * other.group0()[2]) - (other.group1()[3] * self.group0()[2]) - (other.group3()[1] * self.group0()[0])),
+                (-(self.group1()[0] * other.group2()[3]) + (other.group1()[2] * self.group0()[2]) + (other.group3()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group1())
+                + (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[0]]) * swizzle!(self.group0(), 3, 3, 3, 0))
+                + (Simd32x4::from([other.group3()[1], other.group3()[2], other.group3()[0], other.group1()[1]]) * swizzle!(self.group0(), 2, 0, 1, 1))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group1()[0]) + (self.group1()[0] * other.group3()[0])),
+                ((self.group1()[0] * other.group1()[1]) + (self.group1()[0] * other.group3()[1])),
+                ((self.group1()[0] * other.group1()[2]) + (self.group1()[0] * other.group3()[2])),
+                ((other.group0()[2] * self.group0()[2]) + (other.group0()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group2())
+                - (Simd32x4::from([other.group2()[1], other.group2()[2], other.group2()[0], other.group1()[3]]) * swizzle!(self.group0(), 2, 0, 1, 3))
+                + (Simd32x4::from([other.group2()[2], other.group2()[0], other.group2()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
+                + (Simd32x4::from([other.group3()[3], other.group3()[3], other.group3()[3], other.group0()[1]]) * swizzle!(self.group0(), 0, 1, 2, 1))),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(self.group1()[0] * other.group0()[0]) + (other.group2()[0] * self.group0()[3])),
+                (-(self.group1()[0] * other.group0()[1]) + (other.group2()[1] * self.group0()[3])),
+                (-(self.group1()[0] * other.group0()[2]) + (other.group2()[2] * self.group0()[3])),
+                ((self.group1()[0] * other.group0()[3]) - (other.group2()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group3())
+                - (Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], other.group2()[0]]) * swizzle!(self.group0(), 0, 1, 2, 0))
+                - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group2()[1]]) * swizzle!(self.group0(), 1, 2, 0, 1))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group1(), 1, 2, 0, 3))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       19       32        0
+    //    simd4       21       27        0
+    // Totals...
+    // yes simd       40       59        0
+    //  no simd      103      140        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            (Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                ((other.group1()[1] * self.group1()[1]) + (self.group1()[0] * other.group0()[3]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]))
+                - (swizzle!(other.group0(), 3, 3, 3, 0) * swizzle!(self.group0(), 0, 1, 2, 0))),
+            // e415, e425, e435, e321
+            (-(Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group1()[0]]) * swizzle!(self.group0(), 2, 0, 1, 3))
+                + (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group1()[0]]) * swizzle!(other.group0(), 2, 0, 1, 3))),
+            // e235, e315, e125, e5
+            ((Simd32x4::from(self.group1()[0])
+                * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]])
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                + (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]]))),
+            // e1, e2, e3, e4
+            ((Simd32x4::from(other.group1()[1]) * self.group0()) + (Simd32x4::from(self.group1()[1]) * other.group0())),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       12       32        0
+    //    simd4       22       28        0
+    // Totals...
+    // yes simd       34       60        0
+    //  no simd      100      144        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (-(other.group1()[0] * self.group0()[0]) - (self.group0()[3] * other.group0()[0])),
+                (-(other.group1()[0] * self.group0()[1]) - (self.group0()[3] * other.group0()[1])),
+                (-(other.group1()[0] * self.group0()[2]) - (self.group0()[3] * other.group0()[2])),
+                ((self.group1()[0] * other.group1()[0])
+                    + (self.group1()[1] * other.group1()[1])
+                    + (self.group0()[0] * other.group0()[0])
+                    + (self.group0()[1] * other.group0()[1])
+                    + (self.group0()[2] * other.group0()[2])
+                    + (self.group0()[3] * other.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            (-Simd32x4::from([
+                (self.group0()[1] * other.group0()[2]),
+                (self.group0()[2] * other.group0()[0]),
+                (self.group0()[0] * other.group0()[1]),
+                (self.group1()[0] * other.group1()[0]),
+            ]) + (swizzle!(self.group0(), 2, 0, 1, 3) * swizzle!(other.group0(), 1, 2, 0, 3))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                (self.group1()[0] * other.group0()[0]),
+                (self.group1()[0] * other.group0()[1]),
+                (self.group1()[0] * other.group0()[2]),
+                (self.group1()[1] * other.group1()[0]),
+            ]) + (Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], other.group1()[1]]) * self.group0())),
+            // e4235, e4315, e4125, e3215
+            ((Simd32x4::from(other.group1()[1])
+                * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]])
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                + (Simd32x4::from(self.group1()[1]) * other.group0())),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl InfixAntiSandwich for VersorSphere {}
+impl AntiSandwich<AntiCircleRotor> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       38       71        0
+    //    simd4       23       24        0
+    // Totals...
+    // yes simd       61       95        0
+    //  no simd      130      167        0
+    fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (-(self.group1()[0] * other.group1()[0]) - (self.group1()[1] * other.group0()[0]) + (other.group0()[1] * self.group0()[2])
+                    - (other.group0()[2] * self.group0()[1])),
+                (-(self.group1()[0] * other.group1()[1]) - (self.group1()[1] * other.group0()[1]) - (other.group0()[0] * self.group0()[2])
+                    + (other.group0()[2] * self.group0()[0])),
+                (-(self.group1()[0] * other.group1()[2]) - (self.group1()[1] * other.group0()[2]) + (other.group0()[0] * self.group0()[1])
+                    - (other.group0()[1] * self.group0()[0])),
+                (self.group1()[1] * other.group2()[3] * -1.0),
+            ]),
+            // e415, e425, e435, e321
+            ((Simd32x4::from([
+                (self.group1()[0] * other.group2()[0]),
+                (self.group1()[0] * other.group2()[1]),
+                (self.group1()[0] * other.group2()[2]),
+                (self.group1()[1] * other.group1()[3]),
+            ]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                - (Simd32x4::from([self.group1()[1], self.group1()[1], self.group1()[1], self.group0()[0]]) * swizzle!(other.group1(), 0, 1, 2, 0))
+                - (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]]) * swizzle!(self.group0(), 3, 3, 3, 1))
+                - (swizzle!(other.group1(), 3, 3, 3, 2) * swizzle!(self.group0(), 0, 1, 2, 2))),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                (other.group2()[2] * self.group0()[1]),
+                (other.group2()[0] * self.group0()[2]),
+                (other.group2()[1] * self.group0()[0]),
+                (-(other.group2()[2] * self.group0()[2]) - (other.group2()[3] * self.group0()[3])),
+            ]) - (Simd32x4::from(self.group0()[3]) * other.group1())
+                - (Simd32x4::from([self.group1()[1], self.group1()[1], self.group1()[1], self.group0()[0]]) * swizzle!(other.group2(), 0, 1, 2, 0))
+                - (swizzle!(other.group2(), 1, 2, 0, 1) * swizzle!(self.group0(), 2, 0, 1, 1))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                (-(other.group0()[0] * self.group0()[3]) - (other.group1()[1] * self.group0()[2])),
+                (-(other.group0()[1] * self.group0()[3]) - (other.group1()[2] * self.group0()[0])),
+                (-(other.group0()[2] * self.group0()[3]) - (other.group1()[0] * self.group0()[1])),
+                (-(self.group1()[0] * other.group2()[3]) + (other.group0()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]))
+                + (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
+                + (Simd32x4::from([other.group2()[3], other.group2()[3], other.group2()[3], other.group0()[1]]) * swizzle!(self.group0(), 0, 1, 2, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiDipoleInversion> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       31       58        0
+    //    simd4       31       34        0
+    // Totals...
+    // yes simd       62       92        0
+    //  no simd      155      194        0
+    fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            (Simd32x4::from([
+                ((self.group1()[1] * other.group0()[0]) - (other.group0()[1] * self.group0()[2])),
+                ((self.group1()[1] * other.group0()[1]) - (other.group0()[2] * self.group0()[0])),
+                ((self.group1()[1] * other.group0()[2]) - (other.group0()[0] * self.group0()[1])),
+                (other.group3()[2] * self.group0()[2]),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group3()[3]]))
+                + (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group0()[0]]) * swizzle!(other.group3(), 0, 1, 2, 0))
+                + (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group2()[3]]) * swizzle!(self.group0(), 1, 2, 0, 3))
+                + (Simd32x4::from([other.group2()[3], other.group2()[3], other.group2()[3], other.group3()[1]]) * swizzle!(self.group0(), 0, 1, 2, 1))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((self.group1()[1] * other.group1()[0]) + (other.group0()[0] * self.group0()[3]) + (other.group3()[1] * self.group0()[2])),
+                ((self.group1()[1] * other.group1()[1]) + (other.group0()[1] * self.group0()[3]) + (other.group3()[2] * self.group0()[0])),
+                ((self.group1()[1] * other.group1()[2]) + (other.group0()[2] * self.group0()[3]) + (other.group3()[0] * self.group0()[1])),
+                (-(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2]) - (other.group2()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group3()[3]]))
+                - (Simd32x4::from(other.group1()[3]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]]))
+                - (Simd32x4::from([other.group3()[2], other.group3()[0], other.group3()[1], other.group1()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                (other.group2()[1] * self.group0()[2]),
+                (other.group2()[2] * self.group0()[0]),
+                (other.group2()[0] * self.group0()[1]),
+                0.0,
+            ]) + (Simd32x4::from(self.group1()[1]) * other.group2())
+                - (Simd32x4::from([other.group2()[2], other.group2()[0], other.group2()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
+                - (Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group0()[1]]) * swizzle!(self.group0(), 3, 3, 3, 1))
+                - (Simd32x4::from([other.group3()[3], other.group3()[3], other.group3()[3], other.group0()[2]]) * swizzle!(self.group0(), 0, 1, 2, 2))
+                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[0]]) * other.group1())),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(self.group1()[1] * other.group3()[0]) - (other.group1()[1] * self.group0()[2])),
+                (-(self.group1()[1] * other.group3()[1]) - (other.group1()[2] * self.group0()[0])),
+                (-(self.group1()[1] * other.group3()[2]) - (other.group1()[0] * self.group0()[1])),
+                ((self.group1()[1] * other.group3()[3]) + (other.group2()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]))
+                + (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group0()[0]]) * swizzle!(other.group2(), 0, 1, 2, 0))
+                + (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group2()[1]]) * swizzle!(self.group0(), 1, 2, 0, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiDualNum321> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       26       49        0
+    //    simd4       14       16        0
+    // Totals...
+    // yes simd       40       65        0
+    //  no simd       82      113        0
+    fn anti_sandwich(self, other: AntiDualNum321) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * self.group1()[1] * -1.0)]),
+            // e415, e425, e435, e321
+            (Simd32x4::from(other.group0()[0])
+                * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]])
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (-(other.group0()[0] * self.group0()[3]) - (other.group0()[1] * self.group0()[3]))]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0]),
+                (other.group0()[1] * self.group0()[1]),
+                (other.group0()[1] * self.group0()[2]),
+                ((other.group0()[0] * self.group1()[0]) - (other.group0()[1] * self.group1()[0])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiDualNum4> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       26       57        0
+    //    simd4       14       14        0
+    // Totals...
+    // yes simd       40       71        0
+    //  no simd       82      113        0
+    fn anti_sandwich(self, other: AntiDualNum4) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[0] * -1.0),
+                (other.group0()[0] * self.group0()[1] * -1.0),
+                (other.group0()[0] * self.group0()[2] * -1.0),
+                (-(other.group0()[0] * self.group0()[3]) - (other.group0()[1] * self.group1()[1])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * self.group0()[3] * -1.0)]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * self.group0()[3] * -1.0)]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0]),
+                (other.group0()[1] * self.group0()[1]),
+                (other.group0()[1] * self.group0()[2]),
+                (-(other.group0()[0] * self.group1()[1]) - (other.group0()[1] * self.group1()[0])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiDualNum5> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       26       48        0
+    //    simd4       14       16        0
+    // Totals...
+    // yes simd       40       64        0
+    //  no simd       82      112        0
+    fn anti_sandwich(self, other: AntiDualNum5) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (-(other.group0()[0] * self.group1()[0]) - (other.group0()[1] * self.group1()[1]))]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * self.group1()[0])]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[0]),
+                (other.group0()[0] * self.group0()[1]),
+                (other.group0()[0] * self.group0()[2]),
+                (-(other.group0()[0] * self.group1()[1]) - (other.group0()[1] * self.group0()[3])),
+            ]),
+            // e1, e2, e3, e4
+            (Simd32x4::from(other.group0()[1]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0])),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiFlatPoint> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       30       59        0
+    //    simd4       14       15        0
+    // Totals...
+    // yes simd       44       74        0
+    //  no simd       86      119        0
+    fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
+        let geometric_anti_product = DipoleInversion::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) - (other.group0()[3] * self.group0()[0])),
+                ((self.group1()[0] * other.group0()[1]) - (other.group0()[3] * self.group0()[1])),
+                ((self.group1()[0] * other.group0()[2]) - (other.group0()[3] * self.group0()[2])),
+                (self.group1()[1] * other.group0()[3] * -1.0),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((self.group1()[1] * other.group0()[0]) + (other.group0()[1] * self.group0()[2]) - (other.group0()[2] * self.group0()[1])),
+                ((self.group1()[1] * other.group0()[1]) - (other.group0()[0] * self.group0()[2]) + (other.group0()[2] * self.group0()[0])),
+                ((self.group1()[1] * other.group0()[2]) + (other.group0()[0] * self.group0()[1]) - (other.group0()[1] * self.group0()[0])),
+                (self.group1()[0] * other.group0()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (self.group1()[0] * other.group0()[0]),
+                (self.group1()[0] * other.group0()[1]),
+                (self.group1()[0] * other.group0()[2]),
+                ((other.group0()[0] * self.group0()[0]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2]) - (other.group0()[3] * self.group0()[3])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiFlector> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       37       67        0
+    //    simd4       19       22        0
+    // Totals...
+    // yes simd       56       89        0
+    //  no simd      113      155        0
+    fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (self.group1()[0] * other.group1()[0]),
+                (self.group1()[0] * other.group1()[1]),
+                (self.group1()[0] * other.group1()[2]),
+                ((self.group1()[0] * other.group1()[3]) + (other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group0()[1]) + (other.group1()[2] * self.group0()[2])),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((other.group1()[1] * self.group0()[2]) - (other.group1()[2] * self.group0()[1])),
+                (-(other.group1()[0] * self.group0()[2]) + (other.group1()[2] * self.group0()[0])),
+                ((other.group1()[0] * self.group0()[1]) - (other.group1()[1] * self.group0()[0])),
+                0.0,
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]))
+                - (Simd32x4::from(other.group0()[3]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]]))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((self.group1()[1] * other.group0()[0]) + (other.group0()[1] * self.group0()[2])
+                    - (other.group0()[2] * self.group0()[1])
+                    - (other.group1()[0] * self.group0()[3])
+                    - (other.group1()[3] * self.group0()[0])),
+                ((self.group1()[1] * other.group0()[1]) - (other.group0()[0] * self.group0()[2]) + (other.group0()[2] * self.group0()[0])
+                    - (other.group1()[1] * self.group0()[3])
+                    - (other.group1()[3] * self.group0()[1])),
+                ((self.group1()[1] * other.group0()[2]) + (other.group0()[0] * self.group0()[1])
+                    - (other.group0()[1] * self.group0()[0])
+                    - (other.group1()[2] * self.group0()[3])
+                    - (other.group1()[3] * self.group0()[2])),
+                (self.group1()[0] * other.group0()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                ((self.group1()[1] * other.group1()[0]) * -1.0),
+                ((self.group1()[1] * other.group1()[1]) * -1.0),
+                ((self.group1()[1] * other.group1()[2]) * -1.0),
+                ((self.group1()[1] * other.group1()[3]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2]) - (other.group0()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group0()[0]]) * swizzle!(other.group0(), 0, 1, 2, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiLine> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       44       72        0
+    //    simd3        0        2        0
+    //    simd4       13       13        0
+    // Totals...
+    // yes simd       57       87        0
+    //  no simd       96      130        0
+    fn anti_sandwich(self, other: AntiLine) -> Self::Output {
+        let geometric_anti_product = AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(self.group1()[0]) * other.group0() * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                (-(self.group1()[0] * other.group1()[0]) - (self.group1()[1] * other.group0()[0])),
+                (-(self.group1()[0] * other.group1()[1]) - (self.group1()[1] * other.group0()[1])),
+                (-(self.group1()[0] * other.group1()[2]) - (self.group1()[1] * other.group0()[2])),
+                (-(other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])),
+            ]),
+            // e235, e315, e125, e4
+            Simd32x4::from([
+                (-(self.group1()[1] * other.group1()[0]) - (other.group0()[0] * self.group0()[3]) - (other.group1()[1] * self.group0()[2])
+                    + (other.group1()[2] * self.group0()[1])),
+                (-(self.group1()[1] * other.group1()[1]) - (other.group0()[1] * self.group0()[3]) + (other.group1()[0] * self.group0()[2])
+                    - (other.group1()[2] * self.group0()[0])),
+                (-(self.group1()[1] * other.group1()[2]) - (other.group0()[2] * self.group0()[3]) - (other.group1()[0] * self.group0()[1])
+                    + (other.group1()[1] * self.group0()[0])),
+                0.0,
+            ]),
+            // e1, e2, e3, e5
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group1()[0]) + (other.group0()[2] * self.group0()[1])),
+                ((self.group1()[0] * other.group1()[1]) + (other.group0()[0] * self.group0()[2])),
+                ((self.group1()[0] * other.group1()[2]) + (other.group0()[1] * self.group0()[0])),
+                (-(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group1()[0]]) * swizzle!(self.group0(), 2, 0, 1, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiMotor> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       40       79        0
+    //    simd4       18       18        0
+    // Totals...
+    // yes simd       58       97        0
+    //  no simd      112      151        0
+    fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (self.group1()[0] * other.group0()[0] * -1.0),
+                (self.group1()[0] * other.group0()[1] * -1.0),
+                (self.group1()[0] * other.group0()[2] * -1.0),
+                (-(self.group1()[0] * other.group1()[3]) - (self.group1()[1] * other.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group1()[0]) * -1.0),
+                ((self.group1()[0] * other.group1()[1]) * -1.0),
+                ((self.group1()[0] * other.group1()[2]) * -1.0),
+                ((self.group1()[0] * other.group1()[3]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from([self.group1()[1], self.group1()[1], self.group1()[1], self.group0()[0]]) * swizzle!(other.group0(), 0, 1, 2, 0))),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                ((other.group1()[2] * self.group0()[1]) + (other.group1()[3] * self.group0()[0])),
+                ((other.group1()[0] * self.group0()[2]) + (other.group1()[3] * self.group0()[1])),
+                ((other.group1()[1] * self.group0()[0]) + (other.group1()[3] * self.group0()[2])),
+                (-(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from(self.group1()[1]) * other.group1())
+                - (Simd32x4::from(self.group0()[3]) * other.group0())
+                - (swizzle!(other.group1(), 1, 2, 0, 0) * swizzle!(self.group0(), 2, 0, 1, 0))),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                ((self.group1()[0] * other.group1()[0]) - (other.group0()[1] * self.group0()[2]) + (other.group0()[2] * self.group0()[1]) + (other.group0()[3] * self.group0()[0])),
+                ((self.group1()[0] * other.group1()[1]) + (other.group0()[0] * self.group0()[2]) - (other.group0()[2] * self.group0()[0]) + (other.group0()[3] * self.group0()[1])),
+                ((self.group1()[0] * other.group1()[2]) - (other.group0()[0] * self.group0()[1]) + (other.group0()[1] * self.group0()[0]) + (other.group0()[3] * self.group0()[2])),
+                (self.group1()[0] * other.group0()[3] * -1.0),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiPlane> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       25       48        0
+    //    simd4       16       21        0
+    // Totals...
+    // yes simd       41       69        0
+    //  no simd       89      132        0
+    fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (self.group1()[0] * other.group0()[0]),
+                (self.group1()[0] * other.group0()[1]),
+                (self.group1()[0] * other.group0()[2]),
+                ((self.group1()[0] * other.group0()[3]) + (other.group0()[0] * self.group0()[0]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                ((other.group0()[1] * self.group0()[2]) - (other.group0()[2] * self.group0()[1])),
+                (-(other.group0()[0] * self.group0()[2]) + (other.group0()[2] * self.group0()[0])),
+                ((other.group0()[0] * self.group0()[1]) - (other.group0()[1] * self.group0()[0])),
+                (self.group1()[0] * other.group0()[3]),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (-(other.group0()[0] * self.group0()[3]) - (other.group0()[3] * self.group0()[0])),
+                (-(other.group0()[1] * self.group0()[3]) - (other.group0()[3] * self.group0()[1])),
+                (-(other.group0()[2] * self.group0()[3]) - (other.group0()[3] * self.group0()[2])),
+                0.0,
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiQuadNum> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       32       70        0
+    //    simd4       14       14        0
+    // Totals...
+    // yes simd       46       84        0
+    //  no simd       88      126        0
+    fn anti_sandwich(self, other: AntiQuadNum) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[0] * -1.0),
+                (other.group0()[0] * self.group0()[1] * -1.0),
+                (other.group0()[0] * self.group0()[2] * -1.0),
+                (-(self.group1()[0] * other.group0()[1]) - (self.group1()[1] * other.group0()[3]) - (other.group0()[0] * self.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                (other.group0()[2] * self.group0()[0] * -1.0),
+                (other.group0()[2] * self.group0()[1] * -1.0),
+                (other.group0()[2] * self.group0()[2] * -1.0),
+                ((self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[2]) - (other.group0()[0] * self.group0()[3])),
+            ]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0]),
+                (other.group0()[1] * self.group0()[1]),
+                (other.group0()[1] * self.group0()[2]),
+                (-(self.group1()[1] * other.group0()[1]) - (other.group0()[2] * self.group0()[3]) - (other.group0()[3] * self.group0()[3])),
+            ]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (other.group0()[3] * self.group0()[0]),
+                (other.group0()[3] * self.group0()[1]),
+                (other.group0()[3] * self.group0()[2]),
+                ((self.group1()[0] * other.group0()[2]) - (self.group1()[0] * other.group0()[3]) - (self.group1()[1] * other.group0()[0])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiScalar> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        7       12        0
+    //    simd2        0        1        0
+    //    simd4        4        8        0
+    // Totals...
+    // yes simd       11       21        0
+    //  no simd       23       46        0
+    fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other[e12345]) * self.group0()),
+            // e1234, scalar
+            (Simd32x2::from(other[e12345]) * self.group1()),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<AntiTripleNum> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       29       61        0
+    //    simd4       14       14        0
+    // Totals...
+    // yes simd       43       75        0
+    //  no simd       85      117        0
+    fn anti_sandwich(self, other: AntiTripleNum) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[0] * -1.0),
+                (other.group0()[0] * self.group0()[1] * -1.0),
+                (other.group0()[0] * self.group0()[2] * -1.0),
+                (-(self.group1()[0] * other.group0()[1]) - (self.group1()[1] * other.group0()[2]) - (other.group0()[0] * self.group0()[3])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, ((self.group1()[0] * other.group0()[1]) - (other.group0()[0] * self.group0()[3]))]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0]),
+                (other.group0()[1] * self.group0()[1]),
+                (other.group0()[1] * self.group0()[2]),
+                (-(self.group1()[1] * other.group0()[1]) - (other.group0()[2] * self.group0()[3])),
+            ]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (other.group0()[2] * self.group0()[0]),
+                (other.group0()[2] * self.group0()[1]),
+                (other.group0()[2] * self.group0()[2]),
+                (-(self.group1()[0] * other.group0()[2]) - (self.group1()[1] * other.group0()[0])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Circle> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       34       62        0
+    //    simd3        3        4        0
+    //    simd4       19       20        0
+    // Totals...
+    // yes simd       56       86        0
+    //  no simd      119      154        0
+    fn anti_sandwich(self, other: Circle) -> Self::Output {
+        let geometric_anti_product = DipoleInversion::from_groups(
+            // e41, e42, e43
+            ((Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
+                + (Simd32x3::from(self.group1()[1]) * other.group0())
+                + (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(other.group0(), 2, 0, 1))
+                - (Simd32x3::from([self.group0()[2], self.group0()[0], self.group0()[1]]) * swizzle!(other.group0(), 1, 2, 0))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group2()[0]) + (self.group1()[1] * other.group1()[0]) + (other.group0()[0] * self.group0()[3])),
+                ((self.group1()[0] * other.group2()[1]) + (self.group1()[1] * other.group1()[1]) + (other.group0()[1] * self.group0()[3])),
+                ((self.group1()[0] * other.group2()[2]) + (self.group1()[1] * other.group1()[2]) + (other.group0()[2] * self.group0()[3])),
+                (-(other.group1()[0] * self.group0()[0]) - (other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from(other.group1()[3]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]]))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                ((self.group1()[1] * other.group2()[0]) + (other.group2()[1] * self.group0()[2])),
+                ((self.group1()[1] * other.group2()[1]) + (other.group2()[2] * self.group0()[0])),
+                ((self.group1()[1] * other.group2()[2]) + (other.group2()[0] * self.group0()[1])),
+                (-(other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from([other.group2()[2], other.group2()[0], other.group2()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
+                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[0]]) * other.group1())),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group2()[0]) - (other.group1()[1] * self.group0()[2])),
+                ((self.group1()[0] * other.group2()[1]) - (other.group1()[2] * self.group0()[0])),
+                ((self.group1()[0] * other.group2()[2]) - (other.group1()[0] * self.group0()[1])),
+                ((other.group2()[1] * self.group0()[1]) + (other.group2()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]))
+                + (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group2()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<CircleRotor> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       34       58        0
+    //    simd4       24       29        0
+    // Totals...
+    // yes simd       58       87        0
+    //  no simd      130      174        0
+    fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                ((self.group1()[0] * other.group1()[0]) + (self.group1()[1] * other.group0()[0]) - (other.group0()[1] * self.group0()[2]) + (other.group0()[2] * self.group0()[1])),
+                ((self.group1()[0] * other.group1()[1]) + (self.group1()[1] * other.group0()[1]) + (other.group0()[0] * self.group0()[2]) - (other.group0()[2] * self.group0()[0])),
+                ((self.group1()[0] * other.group1()[2]) + (self.group1()[1] * other.group0()[2]) - (other.group0()[0] * self.group0()[1]) + (other.group0()[1] * self.group0()[0])),
+                (self.group1()[1] * other.group2()[3]),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group2()[0]) + (self.group1()[1] * other.group1()[0]) + (other.group0()[0] * self.group0()[3])),
+                ((self.group1()[0] * other.group2()[1]) + (self.group1()[1] * other.group1()[1]) + (other.group0()[1] * self.group0()[3])),
+                ((self.group1()[0] * other.group2()[2]) + (self.group1()[1] * other.group1()[2]) + (other.group0()[2] * self.group0()[3])),
+                (-(other.group1()[0] * self.group0()[0]) - (other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from(other.group1()[3]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]]))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                (other.group2()[1] * self.group0()[2]),
+                (other.group2()[2] * self.group0()[0]),
+                (other.group2()[0] * self.group0()[1]),
+                (-(other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from([self.group1()[1], self.group1()[1], self.group1()[1], self.group1()[0]]) * other.group2())
+                - (Simd32x4::from([other.group2()[2], other.group2()[0], other.group2()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
+                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[0]]) * other.group1())),
+            // e4235, e4315, e4125, e3215
+            ((Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[0], other.group2()[3]])
+                * swizzle!(self.group0(), 2, 0, 1, 3)
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                - (Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]))
+                + (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group0()[0]]) * swizzle!(other.group2(), 0, 1, 2, 0))
+                + (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group2()[1]]) * swizzle!(self.group0(), 1, 2, 0, 1))
+                + (swizzle!(other.group2(), 3, 3, 3, 2) * swizzle!(self.group0(), 0, 1, 2, 2))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Dipole> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       38       67        0
+    //    simd3        3        4        0
+    //    simd4       18       19        0
+    // Totals...
+    // yes simd       59       90        0
+    //  no simd      119      155        0
+    fn anti_sandwich(self, other: Dipole) -> Self::Output {
+        let geometric_anti_product = AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (-(Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
+                - (Simd32x3::from(self.group1()[1]) * other.group0())
+                - (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(other.group0(), 2, 0, 1))
+                + (Simd32x3::from([self.group0()[2], self.group0()[0], self.group0()[1]]) * swizzle!(other.group0(), 1, 2, 0))),
+            // e415, e425, e435, e321
+            ((Simd32x4::from([
+                (self.group1()[0] * other.group2()[0]),
+                (self.group1()[0] * other.group2()[1]),
+                (self.group1()[0] * other.group2()[2]),
+                (self.group1()[1] * other.group1()[3]),
+            ]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                - (Simd32x4::from([self.group1()[1], self.group1()[1], self.group1()[1], self.group0()[0]]) * swizzle!(other.group1(), 0, 1, 2, 0))
+                - (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]]) * swizzle!(self.group0(), 3, 3, 3, 1))
+                - (swizzle!(other.group1(), 3, 3, 3, 2) * swizzle!(self.group0(), 0, 1, 2, 2))),
+            // e235, e315, e125, e4
+            (Simd32x4::from([
+                (-(self.group1()[1] * other.group2()[0]) - (other.group2()[1] * self.group0()[2]) - (other.group1()[0] * self.group0()[3])),
+                (-(self.group1()[1] * other.group2()[1]) - (other.group2()[2] * self.group0()[0]) - (other.group1()[1] * self.group0()[3])),
+                (-(self.group1()[1] * other.group2()[2]) - (other.group2()[0] * self.group0()[1]) - (other.group1()[2] * self.group0()[3])),
+                ((self.group1()[0] * other.group1()[3]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from([other.group2()[2], other.group2()[0], other.group2()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+            // e1, e2, e3, e5
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group2()[0]) + (other.group1()[2] * self.group0()[1])),
+                ((self.group1()[0] * other.group2()[1]) + (other.group1()[0] * self.group0()[2])),
+                ((self.group1()[0] * other.group2()[2]) + (other.group1()[1] * self.group0()[0])),
+                (-(other.group2()[2] * self.group0()[2]) - (other.group1()[3] * self.group0()[3])),
+            ]) - (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[0]]) * swizzle!(self.group0(), 3, 3, 3, 0))
+                - (Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[0], other.group2()[1]]) * swizzle!(self.group0(), 2, 0, 1, 1))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<DipoleInversion> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       38       71        0
+    //    simd4       29       30        0
+    // Totals...
+    // yes simd       67      101        0
+    //  no simd      154      191        0
+    fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            (Simd32x4::from([
+                (-(self.group1()[1] * other.group0()[0]) - (other.group2()[3] * self.group0()[0])),
+                (-(self.group1()[1] * other.group0()[1]) - (other.group2()[3] * self.group0()[1])),
+                (-(self.group1()[1] * other.group0()[2]) - (other.group2()[3] * self.group0()[2])),
+                (other.group3()[2] * self.group0()[2]),
+            ]) - (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group3()[3]]))
+                + (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group0()[0]]) * swizzle!(other.group3(), 0, 1, 2, 0))
+                + (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group3()[1]]) * swizzle!(self.group0(), 2, 0, 1, 1))
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group2()[3]]) * swizzle!(self.group0(), 1, 2, 0, 3))),
+            // e415, e425, e435, e321
+            ((Simd32x4::from([
+                (other.group3()[2] * self.group0()[1]),
+                (other.group3()[0] * self.group0()[2]),
+                (other.group3()[1] * self.group0()[0]),
+                (self.group1()[1] * other.group1()[3]),
+            ]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                - (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group0()[3]]) * other.group2())
+                - (Simd32x4::from([self.group1()[1], self.group1()[1], self.group1()[1], self.group0()[0]]) * swizzle!(other.group1(), 0, 1, 2, 0))
+                - (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]]) * swizzle!(self.group0(), 3, 3, 3, 1))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group3(), 1, 2, 0, 3))
+                - (swizzle!(other.group1(), 3, 3, 3, 2) * swizzle!(self.group0(), 0, 1, 2, 2))),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                ((other.group2()[2] * self.group0()[1]) + (other.group3()[3] * self.group0()[0])),
+                ((other.group2()[0] * self.group0()[2]) + (other.group3()[3] * self.group0()[1])),
+                ((other.group2()[1] * self.group0()[0]) + (other.group3()[3] * self.group0()[2])),
+                ((other.group2()[2] * self.group0()[2]) * -1.0),
+            ]) - (Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group3()[3]]))
+                - (Simd32x4::from(self.group0()[3]) * other.group1())
+                - (Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[1]]) * swizzle!(self.group0(), 3, 3, 3, 1))
+                - (swizzle!(other.group2(), 1, 2, 0, 0) * swizzle!(self.group0(), 2, 0, 1, 0))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                ((self.group1()[1] * other.group3()[0]) - (other.group0()[0] * self.group0()[3]) - (other.group1()[1] * self.group0()[2])),
+                ((self.group1()[1] * other.group3()[1]) - (other.group0()[1] * self.group0()[3]) - (other.group1()[2] * self.group0()[0])),
+                ((self.group1()[1] * other.group3()[2]) - (other.group0()[2] * self.group0()[3]) - (other.group1()[0] * self.group0()[1])),
+                (-(self.group1()[1] * other.group2()[3]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]))
+                + (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<DualNum321> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       18       36        0
+    //    simd4       16       21        0
+    // Totals...
+    // yes simd       34       57        0
+    //  no simd       82      120        0
+    fn anti_sandwich(self, other: DualNum321) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * self.group1()[1])]),
+            // e23, e31, e12, e45
+            (Simd32x4::from(other.group0()[0]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]]) * Simd32x4::from(-1.0)),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, ((other.group0()[0] * self.group1()[0]) + (other.group0()[1] * self.group1()[0]))]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0]),
+                (other.group0()[1] * self.group0()[1]),
+                (other.group0()[1] * self.group0()[2]),
+                (-(other.group0()[0] * self.group0()[3]) + (other.group0()[1] * self.group0()[3])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<DualNum4> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       18       37        0
+    //    simd4       16       20        0
+    // Totals...
+    // yes simd       34       57        0
+    //  no simd       82      117        0
+    fn anti_sandwich(self, other: DualNum4) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[0]),
+                (other.group0()[0] * self.group0()[1]),
+                (other.group0()[0] * self.group0()[2]),
+                ((other.group0()[0] * self.group0()[3]) + (other.group0()[1] * self.group1()[1])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * self.group0()[3] * -1.0)]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, ((other.group0()[0] * self.group1()[1]) + (other.group0()[1] * self.group1()[0]))]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group0()[1]) * self.group0()),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<DualNum5> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       18       40        0
+    //    simd4       16       20        0
+    // Totals...
+    // yes simd       34       60        0
+    //  no simd       82      120        0
+    fn anti_sandwich(self, other: DualNum5) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, ((other.group0()[0] * self.group1()[0]) + (other.group0()[1] * self.group1()[1]))]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * self.group1()[0])]),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                (other.group0()[0] * self.group0()[0]),
+                (other.group0()[0] * self.group0()[1]),
+                (other.group0()[0] * self.group0()[2]),
+                (other.group0()[1] * self.group1()[0]),
+            ]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0]),
+                (other.group0()[1] * self.group0()[1]),
+                (other.group0()[1] * self.group0()[2]),
+                ((other.group0()[0] * self.group1()[1]) + (other.group0()[1] * self.group0()[3])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<FlatPoint> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       38       67        0
+    //    simd4       12       12        0
+    // Totals...
+    // yes simd       50       79        0
+    //  no simd       86      115        0
+    fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
+        let geometric_anti_product = AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                (-(self.group1()[0] * other.group0()[0]) - (other.group0()[3] * self.group0()[0])),
+                (-(self.group1()[0] * other.group0()[1]) - (other.group0()[3] * self.group0()[1])),
+                (-(self.group1()[0] * other.group0()[2]) - (other.group0()[3] * self.group0()[2])),
+                (self.group1()[1] * other.group0()[3]),
+            ]),
+            // e235, e315, e125, e4
+            Simd32x4::from([
+                (-(self.group1()[1] * other.group0()[0]) - (other.group0()[1] * self.group0()[2]) + (other.group0()[2] * self.group0()[1])),
+                (-(self.group1()[1] * other.group0()[1]) + (other.group0()[0] * self.group0()[2]) - (other.group0()[2] * self.group0()[0])),
+                (-(self.group1()[1] * other.group0()[2]) - (other.group0()[0] * self.group0()[1]) + (other.group0()[1] * self.group0()[0])),
+                (self.group1()[0] * other.group0()[3]),
+            ]),
+            // e1, e2, e3, e5
+            Simd32x4::from([
+                (self.group1()[0] * other.group0()[0]),
+                (self.group1()[0] * other.group0()[1]),
+                (self.group1()[0] * other.group0()[2]),
+                (-(other.group0()[0] * self.group0()[0])
+                    - (other.group0()[1] * self.group0()[1])
+                    - (other.group0()[2] * self.group0()[2])
+                    - (other.group0()[3] * self.group0()[3])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Flector> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       40       72        0
+    //    simd4       18       18        0
+    // Totals...
+    // yes simd       58       90        0
+    //  no simd      112      144        0
+    fn anti_sandwich(self, other: Flector) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (self.group1()[0] * other.group1()[0]),
+                (self.group1()[0] * other.group1()[1]),
+                (self.group1()[0] * other.group1()[2]),
+                (-(self.group1()[0] * other.group1()[3])
+                    + (other.group1()[0] * self.group0()[0])
+                    + (other.group1()[1] * self.group0()[1])
+                    + (other.group1()[2] * self.group0()[2])),
+            ]),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                (-(self.group1()[0] * other.group0()[0]) - (other.group0()[3] * self.group0()[0]) - (other.group1()[2] * self.group0()[1])),
+                (-(self.group1()[0] * other.group0()[1]) - (other.group0()[3] * self.group0()[1]) - (other.group1()[0] * self.group0()[2])),
+                (-(self.group1()[0] * other.group0()[2]) - (other.group0()[3] * self.group0()[2]) - (other.group1()[1] * self.group0()[0])),
+                (self.group1()[1] * other.group0()[3]),
+            ]) + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group1(), 1, 2, 0, 3))),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                ((other.group0()[2] * self.group0()[1]) + (other.group1()[3] * self.group0()[0])),
+                ((other.group0()[0] * self.group0()[2]) + (other.group1()[3] * self.group0()[1])),
+                ((other.group0()[1] * self.group0()[0]) + (other.group1()[3] * self.group0()[2])),
+                (-(other.group0()[2] * self.group0()[2]) - (other.group0()[3] * self.group0()[3])),
+            ]) - (Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]))
+                - (Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[1]]) * swizzle!(self.group0(), 3, 3, 3, 1))
+                - (swizzle!(other.group0(), 1, 2, 0, 0) * swizzle!(self.group0(), 2, 0, 1, 0))),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                ((self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group1()[0])),
+                ((self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group1()[1])),
+                ((self.group1()[0] * other.group0()[2]) + (self.group1()[1] * other.group1()[2])),
+                (self.group1()[0] * other.group0()[3]),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Line> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       36       63        0
+    //    simd3        0        1        0
+    //    simd4       15       16        0
+    // Totals...
+    // yes simd       51       80        0
+    //  no simd       96      130        0
+    fn anti_sandwich(self, other: Line) -> Self::Output {
+        let geometric_anti_product = DipoleInversion::from_groups(
+            // e41, e42, e43
+            (Simd32x3::from(self.group1()[0]) * other.group0()),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                ((self.group1()[0] * other.group1()[0]) + (self.group1()[1] * other.group0()[0])),
+                ((self.group1()[0] * other.group1()[1]) + (self.group1()[1] * other.group0()[1])),
+                ((self.group1()[0] * other.group1()[2]) + (self.group1()[1] * other.group0()[2])),
+                (-(other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((self.group1()[1] * other.group1()[0]) + (other.group0()[0] * self.group0()[3]) + (other.group1()[1] * self.group0()[2]) - (other.group1()[2] * self.group0()[1])),
+                ((self.group1()[1] * other.group1()[1]) + (other.group0()[1] * self.group0()[3]) - (other.group1()[0] * self.group0()[2]) + (other.group1()[2] * self.group0()[0])),
+                ((self.group1()[1] * other.group1()[2]) + (other.group0()[2] * self.group0()[3]) + (other.group1()[0] * self.group0()[1]) - (other.group1()[1] * self.group0()[0])),
+                0.0,
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group1()[0]) - (other.group0()[1] * self.group0()[2])),
+                ((self.group1()[0] * other.group1()[1]) - (other.group0()[2] * self.group0()[0])),
+                ((self.group1()[0] * other.group1()[2]) - (other.group0()[0] * self.group0()[1])),
+                ((other.group1()[1] * self.group0()[1]) + (other.group1()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Motor> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       32       63        0
+    //    simd4       20       23        0
+    // Totals...
+    // yes simd       52       86        0
+    //  no simd      112      155        0
+    fn anti_sandwich(self, other: Motor) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (self.group1()[0] * other.group0()[0]),
+                (self.group1()[0] * other.group0()[1]),
+                (self.group1()[0] * other.group0()[2]),
+                ((self.group1()[0] * other.group1()[3]) + (self.group1()[1] * other.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                (self.group1()[1] * other.group0()[0]),
+                (self.group1()[1] * other.group0()[1]),
+                (self.group1()[1] * other.group0()[2]),
+                (-(other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[0]) * other.group1())),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((self.group1()[1] * other.group1()[0]) + (other.group0()[0] * self.group0()[3]) + (other.group1()[1] * self.group0()[2])
+                    - (other.group1()[2] * self.group0()[1])
+                    - (other.group1()[3] * self.group0()[0])),
+                ((self.group1()[1] * other.group1()[1]) + (other.group0()[1] * self.group0()[3]) - (other.group1()[0] * self.group0()[2]) + (other.group1()[2] * self.group0()[0])
+                    - (other.group1()[3] * self.group0()[1])),
+                ((self.group1()[1] * other.group1()[2]) + (other.group0()[2] * self.group0()[3]) + (other.group1()[0] * self.group0()[1])
+                    - (other.group1()[1] * self.group0()[0])
+                    - (other.group1()[3] * self.group0()[2])),
+                (self.group1()[0] * other.group0()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                ((other.group0()[1] * self.group0()[2]) * -1.0),
+                ((other.group0()[2] * self.group0()[0]) * -1.0),
+                ((other.group0()[0] * self.group0()[1]) * -1.0),
+                ((other.group1()[1] * self.group0()[1]) + (other.group1()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group1()[1]]) * other.group1())
+                + (Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], other.group1()[0]]) * swizzle!(self.group0(), 0, 1, 2, 0))
+                + (swizzle!(other.group0(), 2, 0, 1, 3) * swizzle!(self.group0(), 1, 2, 0, 3))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<MultiVector> for VersorSphere {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32      100      148        0
+    //    simd2        6        6        0
+    //    simd3       36       40        0
+    //    simd4       25       27        0
+    // Totals...
+    // yes simd      167      221        0
+    //  no simd      320      388        0
+    fn anti_sandwich(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = MultiVector::from_groups(
+            // scalar, e12345
+            (Simd32x2::from([
+                ((other.group0()[1] * self.group1()[1]) + (self.group1()[0] * other[e1]) + (other.group1()[3] * self.group0()[3])),
+                (-(other.group0()[0] * self.group1()[1]) - (self.group1()[0] * other.group9()[3]) - (self.group0()[3] * other[e45])),
+            ]) + (Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group1()[0], other.group9()[0]]))
+                + (Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group1()[1], other.group9()[1]]))
+                + (Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group1()[2], other.group9()[2]]))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                ((self.group1()[1] * other.group9()[0]) - (other.group4()[0] * self.group0()[3]) - (other.group5()[1] * self.group0()[2])),
+                ((self.group1()[1] * other.group9()[1]) - (other.group4()[1] * self.group0()[3]) - (other.group5()[2] * self.group0()[0])),
+                ((self.group1()[1] * other.group9()[2]) - (other.group4()[2] * self.group0()[3]) - (other.group5()[0] * self.group0()[1])),
+                (-(other.group0()[0] * self.group1()[0]) - (self.group1()[1] * other[e45]) + (other.group4()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[0]) * other.group3())
+                + (Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[0], other.group4()[0]]) * swizzle!(self.group0(), 0, 1, 2, 0))
+                + (Simd32x4::from([other.group5()[2], other.group5()[0], other.group5()[1], other.group4()[1]]) * swizzle!(self.group0(), 1, 2, 0, 1))),
+            // e5
+            (-(other.group0()[0] * self.group0()[3])
+                - (self.group1()[1] * other.group9()[3])
+                - (other.group3()[0] * self.group0()[0])
+                - (other.group3()[1] * self.group0()[1])
+                - (other.group3()[2] * self.group0()[2])
+                - (other.group3()[3] * self.group0()[3])),
+            // e15, e25, e35, e45
+            (Simd32x4::from([
+                ((self.group1()[1] * other.group8()[0]) + (other.group8()[1] * self.group0()[2]) + (other.group6()[0] * self.group0()[3])),
+                ((self.group1()[1] * other.group8()[1]) + (other.group8()[2] * self.group0()[0]) + (other.group6()[1] * self.group0()[3])),
+                ((self.group1()[1] * other.group8()[2]) + (other.group8()[0] * self.group0()[1]) + (other.group6()[2] * self.group0()[3])),
+                ((self.group1()[0] * other[e1]) - (self.group1()[1] * other.group6()[3]) - (other.group6()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from([other.group8()[2], other.group8()[0], other.group8()[1], other.group1()[3]]) * swizzle!(self.group0(), 1, 2, 0, 3))
+                - (Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group6()[0]]) * swizzle!(self.group0(), 3, 3, 3, 0))
+                - (Simd32x4::from([other[e1], other[e1], other[e1], other.group6()[1]]) * swizzle!(self.group0(), 0, 1, 2, 1))),
+            // e41, e42, e43
+            ((Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
+                + (Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]))
+                + (Simd32x3::from(self.group1()[1]) * other.group7())
+                + (Simd32x3::from(other.group1()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                + (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(other.group7(), 2, 0, 1))
+                - (Simd32x3::from([self.group0()[2], self.group0()[0], self.group0()[1]]) * swizzle!(other.group7(), 1, 2, 0))),
+            // e23, e31, e12
+            (Simd32x3::from([
+                ((other.group1()[1] * self.group0()[2]) - (other.group1()[2] * self.group0()[1])),
+                (-(other.group1()[0] * self.group0()[2]) + (other.group1()[2] * self.group0()[0])),
+                ((other.group1()[0] * self.group0()[1]) - (other.group1()[1] * self.group0()[0])),
+            ]) + (Simd32x3::from(self.group1()[0]) * other.group8())
+                + (Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]))
+                - (Simd32x3::from(other.group6()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                + (Simd32x3::from(self.group0()[3]) * other.group7())),
+            // e415, e425, e435, e321
+            (Simd32x4::from([
+                (-(self.group1()[0] * other.group3()[0]) - (self.group1()[1] * other.group5()[0])),
+                (-(self.group1()[0] * other.group3()[1]) - (self.group1()[1] * other.group5()[1])),
+                (-(self.group1()[0] * other.group3()[2]) - (self.group1()[1] * other.group5()[2])),
+                ((self.group1()[1] * other.group3()[3]) - (self.group0()[3] * other[e45])),
+            ]) - (Simd32x4::from([other.group4()[0], other.group4()[1], other.group4()[2], other.group5()[0]]) * swizzle!(self.group0(), 3, 3, 3, 0))
+                - (Simd32x4::from([other.group3()[3], other.group3()[3], other.group3()[3], other.group5()[1]]) * swizzle!(self.group0(), 0, 1, 2, 1))
+                - (Simd32x4::from([other.group9()[2], other.group9()[0], other.group9()[1], other.group5()[2]]) * swizzle!(self.group0(), 1, 2, 0, 2))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group9(), 1, 2, 0, 3))),
+            // e423, e431, e412
+            ((Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group9()[0], other.group9()[1], other.group9()[2]]))
+                - (Simd32x3::from(self.group1()[0]) * other.group5())
+                - (Simd32x3::from(self.group1()[1]) * other.group4())
+                - (Simd32x3::from(other[e45]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                - (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(other.group4(), 2, 0, 1))
+                + (Simd32x3::from([self.group0()[2], self.group0()[0], self.group0()[1]]) * swizzle!(other.group4(), 1, 2, 0))),
+            // e235, e315, e125
+            (Simd32x3::from([
+                (-(other.group3()[1] * self.group0()[2]) + (other.group3()[2] * self.group0()[1])),
+                ((other.group3()[0] * self.group0()[2]) - (other.group3()[2] * self.group0()[0])),
+                (-(other.group3()[0] * self.group0()[1]) + (other.group3()[1] * self.group0()[0])),
+            ]) - (Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group3()[0], other.group3()[1], other.group3()[2]]))
+                + (Simd32x3::from(other.group9()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                - (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group9()[0], other.group9()[1], other.group9()[2]]))
+                - (Simd32x3::from(self.group0()[3]) * other.group5())),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group8()[0]) - (self.group1()[1] * other.group1()[0]) - (other.group6()[1] * self.group0()[2])),
+                ((self.group1()[0] * other.group8()[1]) - (self.group1()[1] * other.group1()[1]) - (other.group6()[2] * self.group0()[0])),
+                ((self.group1()[0] * other.group8()[2]) - (self.group1()[1] * other.group1()[2]) - (other.group6()[0] * self.group0()[1])),
+                ((self.group1()[1] * other[e1]) + (other.group8()[1] * self.group0()[1]) + (other.group8()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(other.group0()[1]) * self.group0())
+                - (Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group7()[0], other.group7()[1], other.group7()[2], other.group6()[3]]))
+                + (Simd32x4::from([other.group6()[2], other.group6()[0], other.group6()[1], other.group8()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+            // e1234
+            ((other.group0()[1] * self.group1()[0]) + (self.group1()[0] * other.group6()[3]) + (self.group1()[1] * other.group1()[3])
+                - (other.group7()[0] * self.group0()[0])
+                - (other.group7()[1] * self.group0()[1])
+                - (other.group7()[2] * self.group0()[2])),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Plane> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       33       65        0
+    //    simd4       14       14        0
+    // Totals...
+    // yes simd       47       79        0
+    //  no simd       89      121        0
+    fn anti_sandwich(self, other: Plane) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([
+                (self.group1()[0] * other.group0()[0]),
+                (self.group1()[0] * other.group0()[1]),
+                (self.group1()[0] * other.group0()[2]),
+                (-(self.group1()[0] * other.group0()[3])
+                    + (other.group0()[0] * self.group0()[0])
+                    + (other.group0()[1] * self.group0()[1])
+                    + (other.group0()[2] * self.group0()[2])),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                ((other.group0()[1] * self.group0()[2]) - (other.group0()[2] * self.group0()[1])),
+                (-(other.group0()[0] * self.group0()[2]) + (other.group0()[2] * self.group0()[0])),
+                ((other.group0()[0] * self.group0()[1]) - (other.group0()[1] * self.group0()[0])),
+                (self.group1()[0] * other.group0()[3]),
+            ]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (-(other.group0()[0] * self.group0()[3]) + (other.group0()[3] * self.group0()[0])),
+                (-(other.group0()[1] * self.group0()[3]) + (other.group0()[3] * self.group0()[1])),
+                (-(other.group0()[2] * self.group0()[3]) + (other.group0()[3] * self.group0()[2])),
+                (self.group1()[1] * other.group0()[3] * -1.0),
+            ]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group1()[1] * other.group0()[0]),
+                (self.group1()[1] * other.group0()[1]),
+                (self.group1()[1] * other.group0()[2]),
+                0.0,
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<QuadNum> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       24       58        0
+    //    simd4       16       19        0
+    // Totals...
+    // yes simd       40       77        0
+    //  no simd       88      134        0
+    fn anti_sandwich(self, other: QuadNum) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[0]),
+                (other.group0()[0] * self.group0()[1]),
+                (other.group0()[0] * self.group0()[2]),
+                ((self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[3]) + (other.group0()[0] * self.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                (other.group0()[2] * self.group0()[0] * -1.0),
+                (other.group0()[2] * self.group0()[1] * -1.0),
+                (other.group0()[2] * self.group0()[2] * -1.0),
+                ((self.group1()[0] * other.group0()[1]) - (self.group1()[1] * other.group0()[2]) - (other.group0()[0] * self.group0()[3])),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0] * -1.0),
+                (other.group0()[1] * self.group0()[1] * -1.0),
+                (other.group0()[1] * self.group0()[2] * -1.0),
+                ((self.group1()[0] * other.group0()[2]) + (self.group1()[0] * other.group0()[3]) + (self.group1()[1] * other.group0()[0])),
+            ]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (other.group0()[3] * self.group0()[0]),
+                (other.group0()[3] * self.group0()[1]),
+                (other.group0()[3] * self.group0()[2]),
+                ((self.group1()[1] * other.group0()[1]) - (other.group0()[2] * self.group0()[3]) + (other.group0()[3] * self.group0()[3])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<RoundPoint> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       21       42        0
+    //    simd4       19       24        0
+    // Totals...
+    // yes simd       40       66        0
+    //  no simd       97      138        0
+    fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            (Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                ((other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2]) + (other.group0()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]]))
+                + (swizzle!(other.group0(), 3, 3, 3, 0) * swizzle!(self.group0(), 0, 1, 2, 0))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                (other.group0()[1] * self.group0()[2]),
+                (other.group0()[2] * self.group0()[0]),
+                (other.group0()[0] * self.group0()[1]),
+                (self.group1()[0] * other[e2]),
+            ]) - (swizzle!(other.group0(), 2, 0, 1, 3) * swizzle!(self.group0(), 1, 2, 0, 3))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (-(other.group0()[0] * self.group0()[3]) - (self.group0()[0] * other[e2])),
+                (-(other.group0()[1] * self.group0()[3]) - (self.group0()[1] * other[e2])),
+                (-(other.group0()[2] * self.group0()[3]) - (self.group0()[2] * other[e2])),
+                (self.group1()[1] * other.group0()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Scalar> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        8       20        0
+    //    simd2        0        2        0
+    //    simd4        3        7        0
+    // Totals...
+    // yes simd       11       29        0
+    //  no simd       20       52        0
+    fn anti_sandwich(self, other: Scalar) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(other[scalar]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0])),
+            // e5, e12345
+            (Simd32x2::from(other[scalar]) * Simd32x2::from([self.group0()[3], self.group1()[1]]) * Simd32x2::from(-1.0)),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<Sphere> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       29       51        0
+    //    simd4       17       20        0
+    // Totals...
+    // yes simd       46       71        0
+    //  no simd       97      131        0
+    fn anti_sandwich(self, other: Sphere) -> Self::Output {
+        use crate::elements::*;
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            (Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                (-(self.group1()[0] * other.group0()[3]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from(other[e4315]) * self.group0())
+                + (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group0()[0]]) * swizzle!(other.group0(), 0, 1, 2, 0))),
+            // e415, e425, e435, e321
+            (-(Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other[e4315]]) * swizzle!(self.group0(), 1, 2, 0, 3))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group0(), 1, 2, 0, 3))),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (-(other.group0()[0] * self.group0()[3]) + (other.group0()[3] * self.group0()[0])),
+                (-(other.group0()[1] * self.group0()[3]) + (other.group0()[3] * self.group0()[1])),
+                (-(other.group0()[2] * self.group0()[3]) + (other.group0()[3] * self.group0()[2])),
+                (self.group1()[1] * other.group0()[3] * -1.0),
+            ]),
+            // e1, e2, e3, e4
+            (Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e4315]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0])),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<TripleNum> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       21       49        0
+    //    simd4       16       19        0
+    // Totals...
+    // yes simd       37       68        0
+    //  no simd       85      125        0
+    fn anti_sandwich(self, other: TripleNum) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[0]),
+                (other.group0()[0] * self.group0()[1]),
+                (other.group0()[0] * self.group0()[2]),
+                ((self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[2]) + (other.group0()[0] * self.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, ((self.group1()[0] * other.group0()[1]) - (other.group0()[0] * self.group0()[3]))]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0] * -1.0),
+                (other.group0()[1] * self.group0()[1] * -1.0),
+                (other.group0()[1] * self.group0()[2] * -1.0),
+                ((self.group1()[0] * other.group0()[2]) + (self.group1()[1] * other.group0()[0])),
+            ]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (other.group0()[2] * self.group0()[0]),
+                (other.group0()[2] * self.group0()[1]),
+                (other.group0()[2] * self.group0()[2]),
+                ((self.group1()[1] * other.group0()[1]) + (other.group0()[2] * self.group0()[3])),
+            ]),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorEven> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       28       52        0
+    //    simd4       33       38        0
+    // Totals...
+    // yes simd       61       90        0
+    //  no simd      160      204        0
+    fn anti_sandwich(self, other: VersorEven) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            ((Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group3()[3]])
+                * swizzle!(self.group0(), 2, 0, 1, 3)
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group2()[3]]))
+                + (Simd32x4::from(self.group1()[1]) * other.group0())
+                + (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group0()[0]]) * swizzle!(other.group3(), 0, 1, 2, 0))
+                + (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group3()[1]]) * swizzle!(self.group0(), 1, 2, 0, 1))
+                + (swizzle!(other.group3(), 3, 3, 3, 2) * swizzle!(self.group0(), 0, 1, 2, 2))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((self.group1()[1] * other.group1()[0]) + (other.group0()[0] * self.group0()[3]) + (other.group3()[1] * self.group0()[2])),
+                ((self.group1()[1] * other.group1()[1]) + (other.group0()[1] * self.group0()[3]) + (other.group3()[2] * self.group0()[0])),
+                ((self.group1()[1] * other.group1()[2]) + (other.group0()[2] * self.group0()[3]) + (other.group3()[0] * self.group0()[1])),
+                (-(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2]) - (other.group3()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from(self.group1()[0]) * other.group2())
+                - (Simd32x4::from(other.group1()[3]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]]))
+                - (Simd32x4::from([other.group3()[2], other.group3()[0], other.group3()[1], other.group1()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+            // e15, e25, e35, e1234
+            (Simd32x4::from([
+                (other.group2()[1] * self.group0()[2]),
+                (other.group2()[2] * self.group0()[0]),
+                (other.group2()[0] * self.group0()[1]),
+                (self.group1()[0] * other.group0()[3]),
+            ]) + (Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group3()[3]]))
+                - (Simd32x4::from([other.group2()[2], other.group2()[0], other.group2()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
+                - (Simd32x4::from([other.group2()[3], other.group2()[3], other.group2()[3], other.group0()[1]]) * swizzle!(self.group0(), 0, 1, 2, 1))
+                - (Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group0()[2]]) * swizzle!(self.group0(), 3, 3, 3, 2))
+                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[0]]) * other.group1())),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from([
+                (-(self.group1()[1] * other.group3()[0]) - (other.group1()[1] * self.group0()[2])),
+                (-(self.group1()[1] * other.group3()[1]) - (other.group1()[2] * self.group0()[0])),
+                (-(self.group1()[1] * other.group3()[2]) - (other.group1()[0] * self.group0()[1])),
+                ((other.group2()[1] * self.group0()[1]) + (other.group2()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(other.group0()[3]) * self.group0())
+                - (Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]))
+                + (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group1()[1]]) * other.group2())
+                + (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group2()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorOdd> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       32       60        0
+    //    simd4       32       35        0
+    // Totals...
+    // yes simd       64       95        0
+    //  no simd      160      200        0
+    fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            ((Simd32x4::from([other.group2()[3], other.group2()[3], other.group2()[3], other.group3()[2]])
+                * swizzle!(self.group0(), 0, 1, 2, 2)
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                - (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group3()[3]]))
+                - (Simd32x4::from(self.group1()[1]) * other.group0())
+                + (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group0()[0]]) * swizzle!(other.group3(), 0, 1, 2, 0))
+                + (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group3()[1]]) * swizzle!(self.group0(), 2, 0, 1, 1))
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group2()[3]]) * swizzle!(self.group0(), 1, 2, 0, 3))),
+            // e415, e425, e435, e321
+            ((Simd32x4::from([
+                (other.group3()[2] * self.group0()[1]),
+                (other.group3()[0] * self.group0()[2]),
+                (other.group3()[1] * self.group0()[0]),
+                (self.group1()[1] * other.group1()[3]),
+            ]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                - (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group0()[3]]) * other.group2())
+                - (Simd32x4::from([self.group1()[1], self.group1()[1], self.group1()[1], self.group0()[0]]) * swizzle!(other.group1(), 0, 1, 2, 0))
+                - (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]]) * swizzle!(self.group0(), 3, 3, 3, 1))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group3(), 1, 2, 0, 3))
+                - (swizzle!(other.group1(), 3, 3, 3, 2) * swizzle!(self.group0(), 0, 1, 2, 2))),
+            // e235, e315, e125, e5
+            (Simd32x4::from([
+                ((other.group2()[2] * self.group0()[1]) + (other.group3()[3] * self.group0()[0])),
+                ((other.group2()[0] * self.group0()[2]) + (other.group3()[3] * self.group0()[1])),
+                ((other.group2()[1] * self.group0()[0]) + (other.group3()[3] * self.group0()[2])),
+                (-(other.group2()[1] * self.group0()[1]) - (other.group2()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group3()[3]]))
+                - (Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[3]]))
+                - (Simd32x4::from([other.group2()[1], other.group2()[2], other.group2()[0], other.group1()[3]]) * swizzle!(self.group0(), 2, 0, 1, 3))
+                - (Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[0]]) * swizzle!(self.group0(), 3, 3, 3, 0))),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                ((self.group1()[1] * other.group3()[0]) - (other.group1()[1] * self.group0()[2])),
+                ((self.group1()[1] * other.group3()[1]) - (other.group1()[2] * self.group0()[0])),
+                ((self.group1()[1] * other.group3()[2]) - (other.group1()[0] * self.group0()[1])),
+                (-(self.group1()[1] * other.group2()[3]) + (other.group0()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]))
+                + (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[1]]) * swizzle!(self.group0(), 1, 2, 0, 1))
+                - (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[0]]) * other.group0())
+                + (swizzle!(other.group0(), 3, 3, 3, 0) * swizzle!(self.group0(), 0, 1, 2, 0))),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorRoundPoint> for VersorSphere {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       23       44        0
+    //    simd4       20       25        0
+    // Totals...
+    // yes simd       43       69        0
+    //  no simd      103      144        0
+    fn anti_sandwich(self, other: VersorRoundPoint) -> Self::Output {
+        let geometric_anti_product = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            (Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                ((other.group1()[1] * self.group1()[1]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2]) + (other.group0()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]))
+                + (swizzle!(other.group0(), 3, 3, 3, 0) * swizzle!(self.group0(), 0, 1, 2, 0))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                (other.group0()[1] * self.group0()[2]),
+                (other.group0()[2] * self.group0()[0]),
+                (other.group0()[0] * self.group0()[1]),
+                (other.group1()[0] * self.group1()[0]),
+            ]) - (swizzle!(other.group0(), 2, 0, 1, 3) * swizzle!(self.group0(), 1, 2, 0, 3))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (-(other.group1()[0] * self.group0()[0]) - (other.group0()[0] * self.group0()[3])),
+                (-(other.group1()[0] * self.group0()[1]) - (other.group0()[1] * self.group0()[3])),
+                (-(other.group1()[0] * self.group0()[2]) - (other.group0()[2] * self.group0()[3])),
+                ((other.group1()[1] * self.group1()[0]) + (self.group1()[1] * other.group0()[3])),
+            ]),
+            // e4235, e4315, e4125, e3215
+            ((Simd32x4::from(self.group1()[1])
+                * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]])
+                * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]))
+                + (Simd32x4::from(other.group1()[1]) * self.group0())),
+        );
+        return geometric_anti_product.geometric_anti_product(self.anti_reverse());
+    }
+}
+impl AntiSandwich<VersorSphere> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       31       52        0
+    //    simd4       18       21        0
+    // Totals...
+    // yes simd       49       73        0
+    //  no simd      103      136        0
+    fn anti_sandwich(self, other: VersorSphere) -> Self::Output {
+        let geometric_anti_product = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            (Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                (-(other.group1()[1] * self.group1()[1]) - (self.group1()[0] * other.group0()[3])
+                    + (other.group0()[1] * self.group0()[1])
+                    + (other.group0()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from(other.group1()[0]) * self.group0())
+                + (Simd32x4::from([self.group1()[0], self.group1()[0], self.group1()[0], self.group0()[0]]) * swizzle!(other.group0(), 0, 1, 2, 0))),
+            // e415, e425, e435, e321
+            (-(Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group0(), 1, 2, 0, 3))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group0(), 1, 2, 0, 3))),
+            // e235, e315, e125, e5
+            ((Simd32x4::from(other.group0()[3])
+                * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]))
+                - (Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]]))),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                ((other.group1()[1] * self.group0()[0]) + (self.group1()[1] * other.group0()[0])),
+                ((other.group1()[1] * self.group0()[1]) + (self.group1()[1] * other.group0()[1])),
+                ((other.group1()[1] * self.group0()[2]) + (self.group1()[1] * other.group0()[2])),
+                (-(other.group1()[0] * self.group1()[1]) - (other.group1()[1] * self.group1()[0])),
+            ]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }

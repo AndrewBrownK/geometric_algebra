@@ -1,4 +1,5 @@
 use crate::traits::GeometricProduct;
+use crate::traits::RightDual;
 use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -7,7 +8,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 140
+// Total Implementations: 149
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -880,6 +881,56 @@ impl std::ops::Add<VersorOdd> for Flector {
         return addition;
     }
 }
+impl std::ops::Add<VersorRoundPoint> for Flector {
+    type Output = MultiVector;
+    fn add(self, other: VersorRoundPoint) -> Self::Output {
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, other.group1()[1]]),
+            // e1, e2, e3, e4
+            other.group0(),
+            // e5
+            other.group1()[0],
+            // e15, e25, e35, e45
+            self.group0(),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            self.group1(),
+            // e1234
+            0.0,
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<VersorSphere> for Flector {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
+    fn add(self, other: VersorSphere) -> Self::Output {
+        let addition = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, other.group1()[1]]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group1()[0]]),
+            // e4235, e4315, e4125, e3215
+            (self.group1() + other.group0()),
+        );
+        return addition;
+    }
+}
 impl std::ops::BitXor<AntiCircleRotor> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
@@ -1193,6 +1244,34 @@ impl std::ops::BitXor<VersorOdd> for Flector {
 }
 impl std::ops::BitXorAssign<VersorOdd> for Flector {
     fn bitxor_assign(&mut self, other: VersorOdd) {
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorRoundPoint> for Flector {
+    type Output = Motor;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        5       15        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        6       16        0
+    //  no simd        9       19        0
+    fn bitxor(self, other: VersorRoundPoint) -> Self::Output {
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorSphere> for Flector {
+    type Output = Flector;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
+    fn bitxor(self, other: VersorSphere) -> Self::Output {
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<VersorSphere> for Flector {
+    fn bitxor_assign(&mut self, other: VersorSphere) {
         *self = self.wedge(other);
     }
 }
@@ -1655,6 +1734,32 @@ impl std::ops::Mul<VersorOdd> for Flector {
         return self.geometric_product(other);
     }
 }
+impl std::ops::Mul<VersorRoundPoint> for Flector {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       13       32        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       18       37        0
+    //  no simd       33       52        0
+    fn mul(self, other: VersorRoundPoint) -> Self::Output {
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<VersorSphere> for Flector {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       20       36        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       24       40        0
+    //  no simd       36       52        0
+    fn mul(self, other: VersorSphere) -> Self::Output {
+        return self.geometric_product(other);
+    }
+}
 impl std::ops::Neg for Flector {
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
@@ -1676,13 +1781,7 @@ impl std::ops::Not for Flector {
     //      add/sub      mul      div
     // f32        0        6        0
     fn not(self) -> Self::Output {
-        let right_dual = AntiFlector::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
-            // e1, e2, e3, e5
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
-        );
-        return right_dual;
+        return self.right_dual();
     }
 }
 impl std::ops::Sub<AntiCircleRotor> for Flector {
@@ -2675,6 +2774,66 @@ impl std::ops::Sub<VersorOdd> for Flector {
         return subtraction;
     }
 }
+impl std::ops::Sub<VersorRoundPoint> for Flector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        6        0
+    fn sub(self, other: VersorRoundPoint) -> Self::Output {
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, (other.group1()[1] * -1.0)]),
+            // e1, e2, e3, e4
+            (other.group0() * Simd32x4::from(-1.0)),
+            // e5
+            (other.group1()[0] * -1.0),
+            // e15, e25, e35, e45
+            self.group0(),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            self.group1(),
+            // e1234
+            0.0,
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<VersorSphere> for Flector {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        1        2        0
+    //  no simd        4        2        0
+    fn sub(self, other: VersorSphere) -> Self::Output {
+        let subtraction = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[1] * -1.0)]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group1()[0] * -1.0)]),
+            // e4235, e4315, e4125, e3215
+            (self.group1() - other.group0()),
+        );
+        return subtraction;
+    }
+}
 
 impl TryFrom<AntiCircleRotor> for Flector {
     type Error = String;
@@ -3386,6 +3545,41 @@ impl TryFrom<VersorOdd> for Flector {
             Simd32x4::from([versor_odd[e15], versor_odd[e25], versor_odd[e35], versor_odd[e45]]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([versor_odd[e4235], versor_odd[e4315], versor_odd[e4125], versor_odd[e3215]]),
+        ));
+    }
+}
+
+impl TryFrom<VersorSphere> for Flector {
+    type Error = String;
+    fn try_from(versor_sphere: VersorSphere) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_sphere[4];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1234: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = versor_sphere[5];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorSphere do not fit into Flector { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(Flector::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([versor_sphere[e4235], versor_sphere[e4315], versor_sphere[e4125], versor_sphere[e3215]]),
         ));
     }
 }

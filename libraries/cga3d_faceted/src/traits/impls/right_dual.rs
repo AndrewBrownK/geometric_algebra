@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 107
+// Total Implementations: 113
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -357,26 +357,8 @@ impl RightDual for AntiQuadNum {
         return self;
     }
 }
-impl RightDual for AntiQuadNumAligningOrigin {
-    type Output = AntiQuadNumAligningOrigin;
-    fn right_dual(self) -> Self::Output {
-        return self;
-    }
-}
-impl RightDual for AntiQuadNumAligningOriginAtInfinity {
-    type Output = AntiQuadNumAligningOriginAtInfinity;
-    fn right_dual(self) -> Self::Output {
-        return self;
-    }
-}
 impl RightDual for AntiQuadNumAtInfinity {
     type Output = AntiQuadNumAtInfinity;
-    fn right_dual(self) -> Self::Output {
-        return self;
-    }
-}
-impl RightDual for AntiQuadNumOnOrigin {
-    type Output = AntiQuadNumOnOrigin;
     fn right_dual(self) -> Self::Output {
         return self;
     }
@@ -421,6 +403,18 @@ impl RightDual for AntiVersorEvenOnOrigin {
             // e415, e425, e435, e4
             Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
         );
+    }
+}
+impl RightDual for AntiVersorRoundPointAligningOriginAtInfinity {
+    type Output = AntiVersorRoundPointAligningOriginAtInfinity;
+    fn right_dual(self) -> Self::Output {
+        return self;
+    }
+}
+impl RightDual for AntiVersorRoundPointOnOrigin {
+    type Output = AntiVersorRoundPointOnOrigin;
+    fn right_dual(self) -> Self::Output {
+        return self;
     }
 }
 impl RightDual for Circle {
@@ -1035,6 +1029,30 @@ impl RightDual for MysteryVersorOdd {
         );
     }
 }
+impl RightDual for MysteryVersorRoundPoint {
+    type Output = MysteryVersorSphere;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn right_dual(self) -> Self::Output {
+        return MysteryVersorSphere::from_groups(
+            // e4235, e4315, e4125, scalar
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
+        );
+    }
+}
+impl RightDual for MysteryVersorSphere {
+    type Output = MysteryVersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn right_dual(self) -> Self::Output {
+        return MysteryVersorRoundPoint::from_groups(
+            // e1, e2, e3, e12345
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+        );
+    }
+}
 impl RightDual for NullCircleAtOrigin {
     type Output = NullCircleAtOrigin;
     fn right_dual(self) -> Self::Output {
@@ -1123,26 +1141,6 @@ impl RightDual for QuadNum {
         return AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ (self.group0() * Simd32x4::from(-1.0)));
     }
 }
-impl RightDual for QuadNumAligningOrigin {
-    type Output = AntiQuadNumAligningOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        1        0
-    // no simd        0        3        0
-    fn right_dual(self) -> Self::Output {
-        return AntiQuadNumAligningOrigin::from_groups(/* e1234, e3215, scalar */ (self.group0() * Simd32x3::from(-1.0)));
-    }
-}
-impl RightDual for QuadNumAligningOriginAtInfinity {
-    type Output = AntiQuadNumAligningOriginAtInfinity;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        1        0
-    // no simd        0        2        0
-    fn right_dual(self) -> Self::Output {
-        return AntiQuadNumAligningOriginAtInfinity::from_groups(/* e3215, scalar */ (self.group0() * Simd32x2::from(-1.0)));
-    }
-}
 impl RightDual for QuadNumAtInfinity {
     type Output = AntiQuadNumAtInfinity;
     // Operative Statistics for this implementation:
@@ -1151,16 +1149,6 @@ impl RightDual for QuadNumAtInfinity {
     // no simd        0        3        0
     fn right_dual(self) -> Self::Output {
         return AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ (self.group0() * Simd32x3::from(-1.0)));
-    }
-}
-impl RightDual for QuadNumOnOrigin {
-    type Output = AntiQuadNumOnOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        1        0
-    // no simd        0        2        0
-    fn right_dual(self) -> Self::Output {
-        return AntiQuadNumOnOrigin::from_groups(/* e1234, scalar */ (self.group0() * Simd32x2::from(-1.0)));
     }
 }
 impl RightDual for QuadNumOrthogonalOrigin {
@@ -1379,5 +1367,103 @@ impl RightDual for VersorOddOrthogonalOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group1()[3]]),
         );
+    }
+}
+impl RightDual for VersorRoundPoint {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        3        0
+    fn right_dual(self) -> Self::Output {
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group1()[0] * -1.0)]),
+            // e1234, scalar
+            (Simd32x2::from([self.group0()[3], self.group1()[1]]) * Simd32x2::from(-1.0)),
+        );
+    }
+}
+impl RightDual for VersorRoundPointAligningOrigin {
+    type Output = VersorSphereOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        1        0
+    // no simd        0        3        0
+    fn right_dual(self) -> Self::Output {
+        return VersorSphereOrthogonalOrigin::from_groups(/* e3215, e1234, scalar */ (swizzle!(self.group0(), 1, 0, 2) * Simd32x3::from(-1.0)));
+    }
+}
+impl RightDual for VersorRoundPointAligningOriginAtInfinity {
+    type Output = AntiVersorRoundPointAligningOriginAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
+    fn right_dual(self) -> Self::Output {
+        return AntiVersorRoundPointAligningOriginAtInfinity::from_groups(/* e3215, scalar */ (self.group0() * Simd32x2::from(-1.0)));
+    }
+}
+impl RightDual for VersorRoundPointAtInfinity {
+    type Output = VersorSphereAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn right_dual(self) -> Self::Output {
+        return VersorSphereAtInfinity::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group1()[0] * -1.0)]),
+            // scalar
+            (self.group1()[1] * -1.0),
+        );
+    }
+}
+impl RightDual for VersorRoundPointOnOrigin {
+    type Output = AntiVersorRoundPointOnOrigin;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
+    fn right_dual(self) -> Self::Output {
+        return AntiVersorRoundPointOnOrigin::from_groups(/* e1234, scalar */ (self.group0() * Simd32x2::from(-1.0)));
+    }
+}
+impl RightDual for VersorSphere {
+    type Output = VersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn right_dual(self) -> Self::Output {
+        return VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group1()[0]]),
+            // e5, e12345
+            Simd32x2::from([self.group0()[3], self.group1()[1]]),
+        );
+    }
+}
+impl RightDual for VersorSphereAtInfinity {
+    type Output = VersorRoundPointAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        1        0
+    // no simd        0        3        0
+    fn right_dual(self) -> Self::Output {
+        use crate::elements::*;
+        return VersorRoundPointAtInfinity::from_groups(
+            // e1, e2, e3
+            (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(-1.0)),
+            // e5, e12345
+            Simd32x2::from([self.group0()[3], self[e4315]]),
+        );
+    }
+}
+impl RightDual for VersorSphereOrthogonalOrigin {
+    type Output = VersorRoundPointAligningOrigin;
+    fn right_dual(self) -> Self::Output {
+        return VersorRoundPointAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from([self.group0()[1], self.group0()[0], self.group0()[2]]));
     }
 }

@@ -5,12 +5,12 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 107
+// Total Implementations: 113
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       1       0
-//  Average:         0       2       0
+//  Average:         0       1       0
 //  Maximum:         0      12       0
 //
 //  No SIMD:   add/sub     mul     div
@@ -273,33 +273,12 @@ impl ConformalConjugate for AntiQuadNum {
         );
     }
 }
-impl ConformalConjugate for AntiQuadNumAligningOrigin {
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn conformal_conjugate(self) -> Self {
-        return AntiQuadNumAligningOrigin::from_groups(/* e1234, e3215, scalar */ Simd32x3::from([self.group0()[0], (self.group0()[1] * -1.0), self.group0()[2]]));
-    }
-}
-impl ConformalConjugate for AntiQuadNumAligningOriginAtInfinity {
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn conformal_conjugate(self) -> Self {
-        return AntiQuadNumAligningOriginAtInfinity::from_groups(/* e3215, scalar */ Simd32x2::from([(self.group0()[0] * -1.0), self.group0()[1]]));
-    }
-}
 impl ConformalConjugate for AntiQuadNumAtInfinity {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        2        0
     fn conformal_conjugate(self) -> Self {
         return AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ Simd32x3::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), self.group0()[2]]));
-    }
-}
-impl ConformalConjugate for AntiQuadNumOnOrigin {
-    fn conformal_conjugate(self) -> Self {
-        return self;
     }
 }
 impl ConformalConjugate for AntiQuadNumOrthogonalOrigin {
@@ -325,6 +304,19 @@ impl ConformalConjugate for AntiSphereOnOrigin {
     }
 }
 impl ConformalConjugate for AntiVersorEvenOnOrigin {
+    fn conformal_conjugate(self) -> Self {
+        return self;
+    }
+}
+impl ConformalConjugate for AntiVersorRoundPointAligningOriginAtInfinity {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn conformal_conjugate(self) -> Self {
+        return AntiVersorRoundPointAligningOriginAtInfinity::from_groups(/* e3215, scalar */ Simd32x2::from([(self.group0()[0] * -1.0), self.group0()[1]]));
+    }
+}
+impl ConformalConjugate for AntiVersorRoundPointOnOrigin {
     fn conformal_conjugate(self) -> Self {
         return self;
     }
@@ -951,6 +943,28 @@ impl ConformalConjugate for MysteryVersorOdd {
         );
     }
 }
+impl ConformalConjugate for MysteryVersorRoundPoint {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn conformal_conjugate(self) -> Self {
+        return MysteryVersorRoundPoint::from_groups(
+            // e1, e2, e3, e12345
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] * -1.0)]),
+        );
+    }
+}
+impl ConformalConjugate for MysteryVersorSphere {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn conformal_conjugate(self) -> Self {
+        return MysteryVersorSphere::from_groups(
+            // e4235, e4315, e4125, scalar
+            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+        );
+    }
+}
 impl ConformalConjugate for NullCircleAtOrigin {
     fn conformal_conjugate(self) -> Self {
         return self;
@@ -1010,37 +1024,12 @@ impl ConformalConjugate for QuadNum {
         );
     }
 }
-impl ConformalConjugate for QuadNumAligningOrigin {
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn conformal_conjugate(self) -> Self {
-        return QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from([self.group0()[0], (self.group0()[1] * -1.0), (self.group0()[2] * -1.0)]));
-    }
-}
-impl ConformalConjugate for QuadNumAligningOriginAtInfinity {
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        1        0
-    // no simd        0        2        0
-    fn conformal_conjugate(self) -> Self {
-        return QuadNumAligningOriginAtInfinity::from_groups(/* e5, e12345 */ (self.group0() * Simd32x2::from(-1.0)));
-    }
-}
 impl ConformalConjugate for QuadNumAtInfinity {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        2        0
     fn conformal_conjugate(self) -> Self {
         return QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([(self.group0()[0] * -1.0), self.group0()[1], (self.group0()[2] * -1.0)]));
-    }
-}
-impl ConformalConjugate for QuadNumOnOrigin {
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn conformal_conjugate(self) -> Self {
-        return QuadNumOnOrigin::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[0], (self.group0()[1] * -1.0)]));
     }
 }
 impl ConformalConjugate for QuadNumOrthogonalOrigin {
@@ -1252,5 +1241,75 @@ impl ConformalConjugate for VersorOddOrthogonalOrigin {
             // e15, e25, e35, e1234
             Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
         );
+    }
+}
+impl ConformalConjugate for VersorRoundPoint {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
+    fn conformal_conjugate(self) -> Self {
+        return VersorRoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e5, e12345 */ (self.group1() * Simd32x2::from(-1.0)));
+    }
+}
+impl ConformalConjugate for VersorRoundPointAligningOrigin {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn conformal_conjugate(self) -> Self {
+        return VersorRoundPointAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from([self.group0()[0], (self.group0()[1] * -1.0), (self.group0()[2] * -1.0)]));
+    }
+}
+impl ConformalConjugate for VersorRoundPointAligningOriginAtInfinity {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
+    fn conformal_conjugate(self) -> Self {
+        return VersorRoundPointAligningOriginAtInfinity::from_groups(/* e5, e12345 */ (self.group0() * Simd32x2::from(-1.0)));
+    }
+}
+impl ConformalConjugate for VersorRoundPointAtInfinity {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
+    fn conformal_conjugate(self) -> Self {
+        return VersorRoundPointAtInfinity::from_groups(/* e1, e2, e3 */ self.group0(), /* e5, e12345 */ (self.group1() * Simd32x2::from(-1.0)));
+    }
+}
+impl ConformalConjugate for VersorRoundPointOnOrigin {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn conformal_conjugate(self) -> Self {
+        return VersorRoundPointOnOrigin::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[0], (self.group0()[1] * -1.0)]));
+    }
+}
+impl ConformalConjugate for VersorSphere {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn conformal_conjugate(self) -> Self {
+        return VersorSphere::from_groups(/* e4235, e4315, e4125, e3215 */ (self.group0() * Simd32x4::from(-1.0)), /* e1234, scalar */ self.group1());
+    }
+}
+impl ConformalConjugate for VersorSphereAtInfinity {
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn conformal_conjugate(self) -> Self {
+        use crate::elements::*;
+        return VersorSphereAtInfinity::from_groups(/* e4235, e4315, e4125, e3215 */ (self.group0() * Simd32x4::from(-1.0)), /* scalar */ self[e4315]);
+    }
+}
+impl ConformalConjugate for VersorSphereOrthogonalOrigin {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn conformal_conjugate(self) -> Self {
+        return VersorSphereOrthogonalOrigin::from_groups(/* e3215, e1234, scalar */ Simd32x3::from([(self.group0()[0] * -1.0), self.group0()[1], self.group0()[2]]));
     }
 }

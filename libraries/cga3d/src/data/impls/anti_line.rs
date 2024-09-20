@@ -1,4 +1,5 @@
 use crate::traits::GeometricProduct;
+use crate::traits::RightDual;
 use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -7,12 +8,12 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 137
+// Total Implementations: 145
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       3       0
-//  Average:         7      11       0
+//  Average:         7      10       0
 //  Maximum:       109     132       0
 //
 //  No SIMD:   add/sub     mul     div
@@ -860,6 +861,52 @@ impl std::ops::Add<VersorOdd> for AntiLine {
         return addition;
     }
 }
+impl std::ops::Add<VersorRoundPoint> for AntiLine {
+    type Output = MultiVector;
+    fn add(self, other: VersorRoundPoint) -> Self::Output {
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, other.group1()[1]]),
+            // e1, e2, e3, e4
+            other.group0(),
+            // e5
+            other.group1()[0],
+            // e15, e25, e35, e45
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            self.group0(),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+            // e1234
+            0.0,
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<VersorSphere> for AntiLine {
+    type Output = VersorOdd;
+    fn add(self, other: VersorSphere) -> Self::Output {
+        let addition = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, other.group1()[1]]),
+            // e23, e31, e12, e45
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group1()[0]]),
+            // e4235, e4315, e4125, e3215
+            other.group0(),
+        );
+        return addition;
+    }
+}
 impl std::ops::BitXor<AntiCircleRotor> for AntiLine {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
@@ -1174,6 +1221,34 @@ impl std::ops::BitXor<VersorOdd> for AntiLine {
     // f32       13       24        0
     fn bitxor(self, other: VersorOdd) -> Self::Output {
         return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorRoundPoint> for AntiLine {
+    type Output = Circle;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        6        0
+    //    simd3        2        4        0
+    // Totals...
+    // yes simd        4       10        0
+    //  no simd        8       18        0
+    fn bitxor(self, other: VersorRoundPoint) -> Self::Output {
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorSphere> for AntiLine {
+    type Output = AntiLine;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
+    fn bitxor(self, other: VersorSphere) -> Self::Output {
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<VersorSphere> for AntiLine {
+    fn bitxor_assign(&mut self, other: VersorSphere) {
+        *self = self.wedge(other);
     }
 }
 impl std::ops::Mul<AntiCircleRotor> for AntiLine {
@@ -1581,6 +1656,34 @@ impl std::ops::Mul<VersorOdd> for AntiLine {
         return self.geometric_product(other);
     }
 }
+impl std::ops::Mul<VersorRoundPoint> for AntiLine {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       14       21        0
+    //    simd3        0        1        0
+    //    simd4        2        4        0
+    // Totals...
+    // yes simd       16       26        0
+    //  no simd       22       40        0
+    fn mul(self, other: VersorRoundPoint) -> Self::Output {
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<VersorSphere> for AntiLine {
+    type Output = DipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       18       29        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       19       31        0
+    //  no simd       22       36        0
+    fn mul(self, other: VersorSphere) -> Self::Output {
+        return self.geometric_product(other);
+    }
+}
 impl std::ops::Neg for AntiLine {
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
@@ -1603,13 +1706,7 @@ impl std::ops::Not for AntiLine {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn not(self) -> Self::Output {
-        let right_dual = Line::from_groups(
-            // e415, e425, e435
-            (self.group0() * Simd32x3::from(-1.0)),
-            // e235, e315, e125
-            (self.group1() * Simd32x3::from(-1.0)),
-        );
-        return right_dual;
+        return self.right_dual();
     }
 }
 impl std::ops::Sub<AntiCircleRotor> for AntiLine {
@@ -2586,6 +2683,66 @@ impl std::ops::Sub<VersorOdd> for AntiLine {
             ]),
             // e4235, e4315, e4125, e3215
             (other.group3() * Simd32x4::from(-1.0)),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<VersorRoundPoint> for AntiLine {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        6        0
+    fn sub(self, other: VersorRoundPoint) -> Self::Output {
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, (other.group1()[1] * -1.0)]),
+            // e1, e2, e3, e4
+            (other.group0() * Simd32x4::from(-1.0)),
+            // e5
+            (other.group1()[0] * -1.0),
+            // e15, e25, e35, e45
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            self.group0(),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+            // e1234
+            0.0,
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<VersorSphere> for AntiLine {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        6        0
+    fn sub(self, other: VersorSphere) -> Self::Output {
+        let subtraction = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[1] * -1.0)]),
+            // e23, e31, e12, e45
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group1()[0] * -1.0)]),
+            // e4235, e4315, e4125, e3215
+            (other.group0() * Simd32x4::from(-1.0)),
         );
         return subtraction;
     }

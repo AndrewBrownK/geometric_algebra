@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 10
+// Total Implementations: 11
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -110,5 +110,10 @@ impl One for VersorOdd {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
+    }
+}
+impl One for VersorSphere {
+    fn one() -> Self {
+        return VersorSphere::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(0.0), /* e1234, scalar */ Simd32x2::from([0.0, 1.0]));
     }
 }

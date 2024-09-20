@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 107
+// Total Implementations: 113
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -333,27 +333,12 @@ impl Reverse for AntiQuadNum {
         );
     }
 }
-impl Reverse for AntiQuadNumAligningOrigin {
-    fn reverse(self) -> Self {
-        return self;
-    }
-}
-impl Reverse for AntiQuadNumAligningOriginAtInfinity {
-    fn reverse(self) -> Self {
-        return self;
-    }
-}
 impl Reverse for AntiQuadNumAtInfinity {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
     fn reverse(self) -> Self {
         return AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ Simd32x3::from([self.group0()[0], (self.group0()[1] * -1.0), self.group0()[2]]));
-    }
-}
-impl Reverse for AntiQuadNumOnOrigin {
-    fn reverse(self) -> Self {
-        return self;
     }
 }
 impl Reverse for AntiQuadNumOrthogonalOrigin {
@@ -385,6 +370,16 @@ impl Reverse for AntiVersorEvenOnOrigin {
             // e23, e31, e12, e1234
             Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
         );
+    }
+}
+impl Reverse for AntiVersorRoundPointAligningOriginAtInfinity {
+    fn reverse(self) -> Self {
+        return self;
+    }
+}
+impl Reverse for AntiVersorRoundPointOnOrigin {
+    fn reverse(self) -> Self {
+        return self;
     }
 }
 impl Reverse for Circle {
@@ -1016,6 +1011,16 @@ impl Reverse for MysteryVersorOdd {
         );
     }
 }
+impl Reverse for MysteryVersorRoundPoint {
+    fn reverse(self) -> Self {
+        return self;
+    }
+}
+impl Reverse for MysteryVersorSphere {
+    fn reverse(self) -> Self {
+        return self;
+    }
+}
 impl Reverse for NullCircleAtOrigin {
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
@@ -1087,27 +1092,12 @@ impl Reverse for QuadNum {
         );
     }
 }
-impl Reverse for QuadNumAligningOrigin {
-    fn reverse(self) -> Self {
-        return self;
-    }
-}
-impl Reverse for QuadNumAligningOriginAtInfinity {
-    fn reverse(self) -> Self {
-        return self;
-    }
-}
 impl Reverse for QuadNumAtInfinity {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
     fn reverse(self) -> Self {
         return QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([self.group0()[0], (self.group0()[1] * -1.0), self.group0()[2]]));
-    }
-}
-impl Reverse for QuadNumOnOrigin {
-    fn reverse(self) -> Self {
-        return self;
     }
 }
 impl Reverse for QuadNumOrthogonalOrigin {
@@ -1301,5 +1291,45 @@ impl Reverse for VersorOddOrthogonalOrigin {
             // e15, e25, e35, e1234
             Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
         );
+    }
+}
+impl Reverse for VersorRoundPoint {
+    fn reverse(self) -> Self {
+        return self;
+    }
+}
+impl Reverse for VersorRoundPointAligningOrigin {
+    fn reverse(self) -> Self {
+        return self;
+    }
+}
+impl Reverse for VersorRoundPointAligningOriginAtInfinity {
+    fn reverse(self) -> Self {
+        return self;
+    }
+}
+impl Reverse for VersorRoundPointAtInfinity {
+    fn reverse(self) -> Self {
+        return self;
+    }
+}
+impl Reverse for VersorRoundPointOnOrigin {
+    fn reverse(self) -> Self {
+        return self;
+    }
+}
+impl Reverse for VersorSphere {
+    fn reverse(self) -> Self {
+        return self;
+    }
+}
+impl Reverse for VersorSphereAtInfinity {
+    fn reverse(self) -> Self {
+        return self;
+    }
+}
+impl Reverse for VersorSphereOrthogonalOrigin {
+    fn reverse(self) -> Self {
+        return self;
     }
 }

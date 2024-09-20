@@ -1,4 +1,5 @@
 use crate::traits::GeometricProduct;
+use crate::traits::RightDual;
 use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -1091,19 +1092,7 @@ impl std::ops::Not for MultiVector {
     // yes simd        0        2        0
     //  no simd        0        4        0
     fn not(self) -> Self::Output {
-        let right_dual = MultiVector::from_groups(
-            // scalar, e1234
-            Simd32x2::from([0.0, self.group0()[0]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group4()[3] * -1.0)]),
-            // e41, e42, e43
-            (self.group3() * Simd32x3::from(-1.0)),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e423, e431, e412, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
-        );
-        return right_dual;
+        return self.right_dual();
     }
 }
 impl std::ops::Sub<AntiScalar> for MultiVector {

@@ -1,4 +1,5 @@
 use crate::traits::GeometricProduct;
+use crate::traits::RightDual;
 use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -7,18 +8,18 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 166
+// Total Implementations: 176
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         4       0       0
-//  Average:        26      32       0
+//  Average:        25      32       0
 //  Maximum:       526     554       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         6       0       0
-//  Average:        48      57       0
+//  Average:        47      56       0
 //  Maximum:       992    1024       0
 impl std::ops::Add<AntiCircleRotor> for MultiVector {
     type Output = MultiVector;
@@ -2271,6 +2272,142 @@ impl std::ops::AddAssign<VersorOdd> for MultiVector {
         *self = addition;
     }
 }
+impl std::ops::Add<VersorRoundPoint> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd        6        0        0
+    fn add(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group1()[1])]),
+            // e1, e2, e3, e4
+            (self.group1() + other.group0()),
+            // e5
+            (other.group1()[0] + self[e1]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<VersorRoundPoint> for MultiVector {
+    fn add_assign(&mut self, other: VersorRoundPoint) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group1()[1])]),
+            // e1, e2, e3, e4
+            (self.group1() + other.group0()),
+            // e5
+            (other.group1()[0] + self[e1]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = addition;
+    }
+}
+impl std::ops::Add<VersorSphere> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd        6        0        0
+    fn add(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group1()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            (self.group9() + other.group0()),
+            // e1234
+            (other.group1()[0] + self[e45]),
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<VersorSphere> for MultiVector {
+    fn add_assign(&mut self, other: VersorSphere) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] + other.group1()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            (self.group9() + other.group0()),
+            // e1234
+            (other.group1()[0] + self[e45]),
+        );
+        *self = addition;
+    }
+}
 impl std::ops::BitXor<AntiCircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -2929,6 +3066,48 @@ impl std::ops::BitXor<VersorOdd> for MultiVector {
 }
 impl std::ops::BitXorAssign<VersorOdd> for MultiVector {
     fn bitxor_assign(&mut self, other: VersorOdd) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorRoundPoint> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       22       39        0
+    //    simd3        4        6        0
+    //    simd4        4        6        0
+    // Totals...
+    // yes simd       30       51        0
+    //  no simd       50       81        0
+    fn bitxor(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<VersorRoundPoint> for MultiVector {
+    fn bitxor_assign(&mut self, other: VersorRoundPoint) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorSphere> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       10        0
+    //    simd3        0        4        0
+    //    simd4        1        5        0
+    // Totals...
+    // yes simd        7       19        0
+    //  no simd       10       42        0
+    fn bitxor(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<VersorSphere> for MultiVector {
+    fn bitxor_assign(&mut self, other: VersorSphere) {
         use crate::elements::*;
         *self = self.wedge(other);
     }
@@ -3893,6 +4072,66 @@ impl From<VersorOdd> for MultiVector {
         );
     }
 }
+
+impl From<VersorRoundPoint> for MultiVector {
+    fn from(versor_round_point: VersorRoundPoint) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, versor_round_point[e12345]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([versor_round_point[e1], versor_round_point[e2], versor_round_point[e3], versor_round_point[e4]]),
+            // e5
+            versor_round_point[e5],
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
+            // e1234
+            0.0,
+        );
+    }
+}
+
+impl From<VersorSphere> for MultiVector {
+    fn from(versor_sphere: VersorSphere) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([versor_sphere[scalar], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e15, e25, e35, e45
+            Simd32x4::from(0.0),
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([versor_sphere[e4235], versor_sphere[e4315], versor_sphere[e4125], versor_sphere[e3215]]),
+            // e1234
+            versor_sphere[e1234],
+        );
+    }
+}
 impl std::ops::Mul<AntiCircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -4613,6 +4852,50 @@ impl std::ops::MulAssign<VersorOdd> for MultiVector {
         *self = self.geometric_product(other);
     }
 }
+impl std::ops::Mul<VersorRoundPoint> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       48       74        0
+    //    simd2        3        3        0
+    //    simd3       18       20        0
+    //    simd4       13       13        0
+    // Totals...
+    // yes simd       82      110        0
+    //  no simd      160      192        0
+    fn mul(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<VersorRoundPoint> for MultiVector {
+    fn mul_assign(&mut self, other: VersorRoundPoint) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<VersorSphere> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       37       60        0
+    //    simd2        3        3        0
+    //    simd3       19       22        0
+    //    simd4       15       15        0
+    // Totals...
+    // yes simd       74      100        0
+    //  no simd      160      192        0
+    fn mul(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<VersorSphere> for MultiVector {
+    fn mul_assign(&mut self, other: VersorSphere) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
 impl std::ops::Neg for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -4663,31 +4946,7 @@ impl std::ops::Not for MultiVector {
     //  no simd        0       16        0
     fn not(self) -> Self::Output {
         use crate::elements::*;
-        let right_dual = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[1] * -1.0), self.group0()[0]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([(self.group9()[0] * -1.0), (self.group9()[1] * -1.0), (self.group9()[2] * -1.0), self[e45]]),
-            // e5
-            self.group9()[3],
-            // e15, e25, e35, e45
-            Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], (self.group6()[3] * -1.0)]),
-            // e41, e42, e43
-            self.group7(),
-            // e23, e31, e12
-            Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]),
-            // e415, e425, e435, e321
-            Simd32x4::from([(self.group5()[0] * -1.0), (self.group5()[1] * -1.0), (self.group5()[2] * -1.0), self.group3()[3]]),
-            // e423, e431, e412
-            (self.group4() * Simd32x3::from(-1.0)),
-            // e235, e315, e125
-            (Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]) * Simd32x3::from(-1.0)),
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self[e1] * -1.0)]),
-            // e1234
-            (self.group1()[3] * -1.0),
-        );
-        return right_dual;
+        return self.right_dual();
     }
 }
 impl std::ops::Sub<AntiCircleRotor> for MultiVector {
@@ -6937,6 +7196,142 @@ impl std::ops::SubAssign<VersorOdd> for MultiVector {
             (self.group9() - other.group3()),
             // e1234
             (-other.group2()[3] + self[e45]),
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<VersorRoundPoint> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd        6        0        0
+    fn sub(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group1()[1])]),
+            // e1, e2, e3, e4
+            (self.group1() - other.group0()),
+            // e5
+            (-other.group1()[0] + self[e1]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<VersorRoundPoint> for MultiVector {
+    fn sub_assign(&mut self, other: VersorRoundPoint) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group1()[1])]),
+            // e1, e2, e3, e4
+            (self.group1() - other.group0()),
+            // e5
+            (-other.group1()[0] + self[e1]),
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            self.group9(),
+            // e1234
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<VersorSphere> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd        6        0        0
+    fn sub(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group1()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            (self.group9() - other.group0()),
+            // e1234
+            (-other.group1()[0] + self[e45]),
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<VersorSphere> for MultiVector {
+    fn sub_assign(&mut self, other: VersorSphere) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] - other.group1()[1]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e15, e25, e35, e45
+            self.group3(),
+            // e41, e42, e43
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e4235, e4315, e4125, e3215
+            (self.group9() - other.group0()),
+            // e1234
+            (-other.group1()[0] + self[e45]),
         );
         *self = subtraction;
     }

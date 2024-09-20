@@ -1,34 +1,27 @@
 use crate::data::*;
 use crate::simd::*;
 
-/// AntiQuadNumAligningOrigin.
-/// This variant of VersorOddOrthogonalOrigin is the Dual to QuadNumAligningOrigin. It is common for
-/// objects of this type to not intersect the null cone, which also prevents them from
-/// projecting onto the horosphere in the usual manner. When this happens, this
-/// object has behavioral and operative similarity to a VersorOddOrthogonalOrigin,
-/// but an imaginary radius, and a spacial presence in the shape of a
-/// QuadNumAligningOrigin with a real radius.
+/// VersorRoundPointAligningOrigin.
+/// This variant of VersorRoundPoint has a Carrier that intersects the Origin.
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
-pub union AntiQuadNumAligningOrigin {
-    groups: AntiQuadNumAligningOriginGroups,
-    /// e1234, e3215, scalar, 0
+pub union VersorRoundPointAligningOrigin {
+    groups: VersorRoundPointAligningOriginGroups,
+    /// e4, e5, e12345, 0
     elements: [f32; 4],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
-pub struct AntiQuadNumAligningOriginGroups {
-    /// e1234, e3215, scalar
+pub struct VersorRoundPointAligningOriginGroups {
+    /// e4, e5, e12345
     g0: Simd32x3,
 }
-impl AntiQuadNumAligningOrigin {
+impl VersorRoundPointAligningOrigin {
     #[allow(clippy::too_many_arguments)]
-    pub const fn from_elements(e1234: f32, e3215: f32, scalar: f32) -> Self {
-        Self {
-            elements: [e1234, e3215, scalar, 0.0],
-        }
+    pub const fn from_elements(e4: f32, e5: f32, e12345: f32) -> Self {
+        Self { elements: [e4, e5, e12345, 0.0] }
     }
     pub const fn from_groups(g0: Simd32x3) -> Self {
         Self {
-            groups: AntiQuadNumAligningOriginGroups { g0 },
+            groups: VersorRoundPointAligningOriginGroups { g0 },
         }
     }
     #[inline(always)]
@@ -40,46 +33,46 @@ impl AntiQuadNumAligningOrigin {
         unsafe { &mut self.groups.g0 }
     }
 }
-const ANTI_QUAD_NUM_ALIGNING_ORIGIN_INDEX_REMAP: [usize; 3] = [0, 1, 2];
-impl std::ops::Index<usize> for AntiQuadNumAligningOrigin {
+const VERSOR_ROUND_POINT_ALIGNING_ORIGIN_INDEX_REMAP: [usize; 3] = [0, 1, 2];
+impl std::ops::Index<usize> for VersorRoundPointAligningOrigin {
     type Output = f32;
     fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[ANTI_QUAD_NUM_ALIGNING_ORIGIN_INDEX_REMAP[index]] }
+        unsafe { &self.elements[VERSOR_ROUND_POINT_ALIGNING_ORIGIN_INDEX_REMAP[index]] }
     }
 }
-impl std::ops::IndexMut<usize> for AntiQuadNumAligningOrigin {
+impl std::ops::IndexMut<usize> for VersorRoundPointAligningOrigin {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[ANTI_QUAD_NUM_ALIGNING_ORIGIN_INDEX_REMAP[index]] }
+        unsafe { &mut self.elements[VERSOR_ROUND_POINT_ALIGNING_ORIGIN_INDEX_REMAP[index]] }
     }
 }
-impl From<AntiQuadNumAligningOrigin> for [f32; 3] {
-    fn from(vector: AntiQuadNumAligningOrigin) -> Self {
+impl From<VersorRoundPointAligningOrigin> for [f32; 3] {
+    fn from(vector: VersorRoundPointAligningOrigin) -> Self {
         unsafe { [vector.elements[0], vector.elements[1], vector.elements[2]] }
     }
 }
-impl From<[f32; 3]> for AntiQuadNumAligningOrigin {
+impl From<[f32; 3]> for VersorRoundPointAligningOrigin {
     fn from(array: [f32; 3]) -> Self {
         Self {
             elements: [array[0], array[1], array[2], 0.0],
         }
     }
 }
-impl std::fmt::Debug for AntiQuadNumAligningOrigin {
+impl std::fmt::Debug for VersorRoundPointAligningOrigin {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
-            .debug_struct("AntiQuadNumAligningOrigin")
-            .field("e1234", &self[0])
-            .field("e3215", &self[1])
-            .field("scalar", &self[2])
+            .debug_struct("VersorRoundPointAligningOrigin")
+            .field("e4", &self[0])
+            .field("e5", &self[1])
+            .field("e12345", &self[2])
             .finish()
     }
 }
 
-impl AntiQuadNumAligningOrigin {
+impl VersorRoundPointAligningOrigin {
     pub const LEN: usize = 3;
 }
 
-impl AntiQuadNumAligningOrigin {
+impl VersorRoundPointAligningOrigin {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
             let f = self[i];
@@ -91,7 +84,7 @@ impl AntiQuadNumAligningOrigin {
     }
 }
 
-impl PartialOrd for AntiQuadNumAligningOrigin {
+impl PartialOrd for VersorRoundPointAligningOrigin {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         for i in 0..Self::LEN {
             let a = float_ord::FloatOrd(self[i]);
@@ -104,7 +97,7 @@ impl PartialOrd for AntiQuadNumAligningOrigin {
         Some(std::cmp::Ordering::Equal)
     }
 }
-impl Ord for AntiQuadNumAligningOrigin {
+impl Ord for VersorRoundPointAligningOrigin {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         for i in 0..Self::LEN {
             let a = float_ord::FloatOrd(self[i]);
@@ -117,7 +110,7 @@ impl Ord for AntiQuadNumAligningOrigin {
         std::cmp::Ordering::Equal
     }
 }
-impl PartialEq for AntiQuadNumAligningOrigin {
+impl PartialEq for VersorRoundPointAligningOrigin {
     fn eq(&self, other: &Self) -> bool {
         for i in 0..Self::LEN {
             let a = float_ord::FloatOrd(self[i]);
@@ -129,8 +122,8 @@ impl PartialEq for AntiQuadNumAligningOrigin {
         true
     }
 }
-impl Eq for AntiQuadNumAligningOrigin {}
-impl std::hash::Hash for AntiQuadNumAligningOrigin {
+impl Eq for VersorRoundPointAligningOrigin {}
+impl std::hash::Hash for VersorRoundPointAligningOrigin {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         for i in 0..Self::LEN {
             self[i].to_bits().hash(state);
@@ -138,37 +131,37 @@ impl std::hash::Hash for AntiQuadNumAligningOrigin {
     }
 }
 
-impl std::ops::Index<crate::elements::e1234> for AntiQuadNumAligningOrigin {
+impl std::ops::Index<crate::elements::e4> for VersorRoundPointAligningOrigin {
     type Output = f32;
-    fn index(&self, _: crate::elements::e1234) -> &Self::Output {
+    fn index(&self, _: crate::elements::e4) -> &Self::Output {
         &self[0]
     }
 }
-impl std::ops::Index<crate::elements::e3215> for AntiQuadNumAligningOrigin {
+impl std::ops::Index<crate::elements::e5> for VersorRoundPointAligningOrigin {
     type Output = f32;
-    fn index(&self, _: crate::elements::e3215) -> &Self::Output {
+    fn index(&self, _: crate::elements::e5) -> &Self::Output {
         &self[1]
     }
 }
-impl std::ops::Index<crate::elements::scalar> for AntiQuadNumAligningOrigin {
+impl std::ops::Index<crate::elements::e12345> for VersorRoundPointAligningOrigin {
     type Output = f32;
-    fn index(&self, _: crate::elements::scalar) -> &Self::Output {
+    fn index(&self, _: crate::elements::e12345) -> &Self::Output {
         &self[2]
     }
 }
-impl std::ops::IndexMut<crate::elements::e1234> for AntiQuadNumAligningOrigin {
-    fn index_mut(&self, _: crate::elements::e1234) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e4> for VersorRoundPointAligningOrigin {
+    fn index_mut(&self, _: crate::elements::e4) -> &mut Self::Output {
         &mut self[0]
     }
 }
-impl std::ops::IndexMut<crate::elements::e3215> for AntiQuadNumAligningOrigin {
-    fn index_mut(&self, _: crate::elements::e3215) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e5> for VersorRoundPointAligningOrigin {
+    fn index_mut(&self, _: crate::elements::e5) -> &mut Self::Output {
         &mut self[1]
     }
 }
-impl std::ops::IndexMut<crate::elements::scalar> for AntiQuadNumAligningOrigin {
-    fn index_mut(&self, _: crate::elements::scalar) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e12345> for VersorRoundPointAligningOrigin {
+    fn index_mut(&self, _: crate::elements::e12345) -> &mut Self::Output {
         &mut self[2]
     }
 }
-include!("./impls/anti_quad_num_aligning_origin.rs");
+include!("./impls/versor_round_point_aligning_origin.rs");

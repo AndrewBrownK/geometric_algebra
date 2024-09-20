@@ -1,4 +1,5 @@
 use crate::traits::GeometricProduct;
+use crate::traits::RightDual;
 use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -7,11 +8,11 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 146
+// Total Implementations: 155
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         3       4       0
+//   Median:         2       3       0
 //  Average:        13      18       0
 //  Maximum:       216     244       0
 //
@@ -1051,6 +1052,59 @@ impl std::ops::Add<VersorOdd> for DipoleInversion {
         return addition;
     }
 }
+impl std::ops::Add<VersorRoundPoint> for DipoleInversion {
+    type Output = MultiVector;
+    fn add(self, other: VersorRoundPoint) -> Self::Output {
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, other.group1()[1]]),
+            // e1, e2, e3, e4
+            other.group0(),
+            // e5
+            other.group1()[0],
+            // e15, e25, e35, e45
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]),
+            // e41, e42, e43
+            self.group0(),
+            // e23, e31, e12
+            Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            self.group3(),
+            // e1234
+            self.group2()[3],
+        );
+        return addition;
+    }
+}
+impl std::ops::Add<VersorSphere> for DipoleInversion {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        5        0        0
+    fn add(self, other: VersorSphere) -> Self::Output {
+        let addition = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group1()[1]]),
+            // e23, e31, e12, e45
+            self.group1(),
+            // e15, e25, e35, e1234
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (other.group1()[0] + self.group2()[3])]),
+            // e4235, e4315, e4125, e3215
+            (self.group3() + other.group0()),
+        );
+        return addition;
+    }
+}
 impl std::ops::BitXor<AntiCircleRotor> for DipoleInversion {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
@@ -1470,6 +1524,38 @@ impl std::ops::BitXor<VersorOdd> for DipoleInversion {
 }
 impl std::ops::BitXorAssign<VersorOdd> for DipoleInversion {
     fn bitxor_assign(&mut self, other: VersorOdd) {
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorRoundPoint> for DipoleInversion {
+    type Output = CircleRotor;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       17        0
+    //    simd3        2        3        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       11       23        0
+    //  no simd       24       38        0
+    fn bitxor(self, other: VersorRoundPoint) -> Self::Output {
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<VersorSphere> for DipoleInversion {
+    type Output = DipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0       15        0
+    fn bitxor(self, other: VersorSphere) -> Self::Output {
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<VersorSphere> for DipoleInversion {
+    fn bitxor_assign(&mut self, other: VersorSphere) {
         *self = self.wedge(other);
     }
 }
@@ -2011,6 +2097,32 @@ impl std::ops::Mul<VersorOdd> for DipoleInversion {
         return self.geometric_product(other);
     }
 }
+impl std::ops::Mul<VersorRoundPoint> for DipoleInversion {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       34       50        0
+    //    simd4       10       10        0
+    // Totals...
+    // yes simd       44       60        0
+    //  no simd       74       90        0
+    fn mul(self, other: VersorRoundPoint) -> Self::Output {
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<VersorSphere> for DipoleInversion {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       22       39        0
+    //    simd4       13       13        0
+    // Totals...
+    // yes simd       35       52        0
+    //  no simd       74       91        0
+    fn mul(self, other: VersorSphere) -> Self::Output {
+        return self.geometric_product(other);
+    }
+}
 impl std::ops::Neg for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -2043,17 +2155,7 @@ impl std::ops::Not for DipoleInversion {
     // yes simd        0       10        0
     //  no simd        0       12        0
     fn not(self) -> Self::Output {
-        let right_dual = AntiDipoleInversion::from_groups(
-            // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
-            // e415, e425, e435, e321
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
-            // e235, e315, e125, e4
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
-            // e1, e2, e3, e5
-            Simd32x4::from([(self.group3()[0] * -1.0), (self.group3()[1] * -1.0), (self.group3()[2] * -1.0), self.group3()[3]]),
-        );
-        return right_dual;
+        return self.right_dual();
     }
 }
 impl std::ops::Sub<AntiCircleRotor> for DipoleInversion {
@@ -3178,6 +3280,66 @@ impl std::ops::Sub<VersorOdd> for DipoleInversion {
         return subtraction;
     }
 }
+impl std::ops::Sub<VersorRoundPoint> for DipoleInversion {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        6        0
+    fn sub(self, other: VersorRoundPoint) -> Self::Output {
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, (other.group1()[1] * -1.0)]),
+            // e1, e2, e3, e4
+            (other.group0() * Simd32x4::from(-1.0)),
+            // e5
+            (other.group1()[0] * -1.0),
+            // e15, e25, e35, e45
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]),
+            // e41, e42, e43
+            self.group0(),
+            // e23, e31, e12
+            Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e3215
+            self.group3(),
+            // e1234
+            self.group2()[3],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::Sub<VersorSphere> for DipoleInversion {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        1        0
+    //  no simd        5        1        0
+    fn sub(self, other: VersorSphere) -> Self::Output {
+        let subtraction = VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group1()[1] * -1.0)]),
+            // e23, e31, e12, e45
+            self.group1(),
+            // e15, e25, e35, e1234
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (-other.group1()[0] + self.group2()[3])]),
+            // e4235, e4315, e4125, e3215
+            (self.group3() - other.group0()),
+        );
+        return subtraction;
+    }
+}
 
 impl TryFrom<AntiCircleRotor> for DipoleInversion {
     type Error = String;
@@ -3575,6 +3737,38 @@ impl TryFrom<VersorOdd> for DipoleInversion {
             Simd32x4::from([versor_odd[e15], versor_odd[e25], versor_odd[e35], versor_odd[e1234]]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([versor_odd[e4235], versor_odd[e4315], versor_odd[e4125], versor_odd[e3215]]),
+        ));
+    }
+}
+
+impl TryFrom<VersorSphere> for DipoleInversion {
+    type Error = String;
+    fn try_from(versor_sphere: VersorSphere) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = versor_sphere[5];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from VersorSphere do not fit into DipoleInversion { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(DipoleInversion::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(0.0),
+            // e23, e31, e12, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, versor_sphere[e1234]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([versor_sphere[e4235], versor_sphere[e4315], versor_sphere[e4125], versor_sphere[e3215]]),
         ));
     }
 }

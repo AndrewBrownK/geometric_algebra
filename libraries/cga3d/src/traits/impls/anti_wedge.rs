@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 942
+// Total Implementations: 1076
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       1       0
@@ -591,6 +591,50 @@ impl AntiWedge<VersorOdd> for AntiCircleRotor {
                 - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(other.group3(), 1, 2, 0, 0))),
             // e5
             ((self.group1()[3] * other.group3()[3]) + (self.group2()[0] * other.group3()[0]) + (self.group2()[1] * other.group3()[1]) + (self.group2()[2] * other.group3()[2])),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for AntiCircleRotor {
+    type Output = AntiCircleRotor;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0       11        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return AntiCircleRotor::from_groups(
+            // e41, e42, e43
+            (Simd32x3::from(other.group1()[1]) * self.group0()),
+            // e23, e31, e12, e45
+            (Simd32x4::from(other.group1()[1]) * self.group1()),
+            // e15, e25, e35, scalar
+            (Simd32x4::from(other.group1()[1]) * self.group2()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for AntiCircleRotor {
+    type Output = RoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        7       12        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        9       14        0
+    //  no simd       15       20        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return RoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                ((self.group0()[0] * other.group0()[3]) + (self.group1()[1] * other.group0()[2])),
+                ((self.group0()[1] * other.group0()[3]) + (self.group1()[2] * other.group0()[0])),
+                ((self.group0()[2] * other.group0()[3]) + (self.group1()[0] * other.group0()[1])),
+                (-(self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]))
+                - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e5
+            ((self.group1()[3] * other.group0()[3]) + (self.group2()[0] * other.group0()[0]) + (self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2])),
         );
     }
 }
@@ -1511,6 +1555,62 @@ impl AntiWedge<VersorOdd> for AntiDipoleInversion {
         );
     }
 }
+impl AntiWedge<VersorRoundPoint> for AntiDipoleInversion {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0       15        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(other.group1()[1]) * self.group0()),
+            // e415, e425, e435, e321
+            (Simd32x4::from(other.group1()[1]) * self.group1()),
+            // e235, e315, e125, e4
+            (Simd32x4::from(other.group1()[1]) * self.group2()),
+            // e1, e2, e3, e5
+            (Simd32x4::from(other.group1()[1]) * self.group3()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for AntiDipoleInversion {
+    type Output = AntiCircleRotor;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       17        0
+    //    simd3        2        3        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       11       23        0
+    //  no simd       24       38        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return AntiCircleRotor::from_groups(
+            // e41, e42, e43
+            ((Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
+                + (Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[0]]) * swizzle!(self.group0(), 2, 0, 1))
+                - (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * swizzle!(self.group0(), 1, 2, 0))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group2()[0]) + (self.group0()[0] * other.group0()[3])),
+                ((other.group1()[0] * self.group2()[1]) + (self.group0()[1] * other.group0()[3])),
+                ((other.group1()[0] * self.group2()[2]) + (self.group0()[2] * other.group0()[3])),
+                (-(self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])),
+            ]) - (swizzle!(self.group1(), 3, 3, 3, 0) * swizzle!(other.group0(), 0, 1, 2, 0))),
+            // e15, e25, e35, scalar
+            (Simd32x4::from([
+                ((self.group2()[2] * other.group0()[1]) * -1.0),
+                ((self.group2()[0] * other.group0()[2]) * -1.0),
+                ((self.group2()[1] * other.group0()[0]) * -1.0),
+                ((other.group1()[0] * self.group3()[3]) + (self.group3()[1] * other.group0()[1]) + (self.group3()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group0()[3]) * Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group2()[3]]))
+                + (Simd32x4::from([self.group2()[1], self.group2()[2], self.group2()[0], self.group3()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))),
+        );
+    }
+}
 impl InfixAntiWedge for AntiDualNum321 {}
 impl AntiWedge<AntiDipoleInversion> for AntiDualNum321 {
     type Output = Scalar;
@@ -1783,6 +1883,28 @@ impl AntiWedge<VersorOdd> for AntiDualNum321 {
         return TripleNum::from_groups(
             // e4, e5, e12345
             Simd32x3::from([(self.group0()[0] * other.group2()[3] * -1.0), (self.group0()[0] * other.group3()[3]), 0.0]),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for AntiDualNum321 {
+    type Output = AntiDualNum321;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return AntiDualNum321::from_groups(/* e45, scalar */ (Simd32x2::from(other.group1()[1]) * self.group0()));
+    }
+}
+impl AntiWedge<VersorSphere> for AntiDualNum321 {
+    type Output = TripleNum;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return TripleNum::from_groups(
+            // e4, e5, e12345
+            Simd32x3::from([(self.group0()[0] * other.group1()[0] * -1.0), (self.group0()[0] * other.group0()[3]), 0.0]),
         );
     }
 }
@@ -2333,6 +2455,38 @@ impl AntiWedge<VersorOdd> for AntiDualNum4 {
         );
     }
 }
+impl AntiWedge<VersorRoundPoint> for AntiDualNum4 {
+    type Output = AntiDualNum4;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        3        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return AntiDualNum4::from_groups(/* e1234, scalar */ Simd32x2::from([
+            (self.group0()[0] * other.group1()[1]),
+            ((self.group0()[0] * other.group1()[0]) + (self.group0()[1] * other.group1()[1])),
+        ]));
+    }
+}
+impl AntiWedge<VersorSphere> for AntiDualNum4 {
+    type Output = Circle;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        4        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return Circle::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other.group0()[3])]),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+        );
+    }
+}
 impl InfixAntiWedge for AntiDualNum5 {}
 impl AntiWedge<AntiCircleRotor> for AntiDualNum5 {
     type Output = AntiPlane;
@@ -2721,6 +2875,31 @@ impl AntiWedge<VersorOdd> for AntiDualNum5 {
             (Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]]) * Simd32x4::from(-1.0)),
             // e1, e2, e3, e5
             (Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]) * Simd32x4::from(-1.0)),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for AntiDualNum5 {
+    type Output = AntiDualNum5;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        3        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return AntiDualNum5::from_groups(/* e3215, scalar */ Simd32x2::from([
+            (self.group0()[0] * other.group1()[1]),
+            ((self.group0()[0] * other.group0()[3]) + (self.group0()[1] * other.group1()[1])),
+        ]));
+    }
+}
+impl AntiWedge<VersorSphere> for AntiDualNum5 {
+    type Output = AntiFlatPoint;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            (Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]) * Simd32x4::from(-1.0)),
         );
     }
 }
@@ -3173,6 +3352,39 @@ impl AntiWedge<VersorOdd> for AntiFlatPoint {
                 (-(self.group0()[0] * other.group3()[2]) + (self.group0()[2] * other.group3()[0])),
                 ((self.group0()[0] * other.group3()[1]) - (self.group0()[1] * other.group3()[0])),
                 0.0,
+            ]),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for AntiFlatPoint {
+    type Output = AntiFlatPoint;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (Simd32x4::from(other.group1()[1]) * self.group0()));
+    }
+}
+impl AntiWedge<VersorSphere> for AntiFlatPoint {
+    type Output = AntiLine;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3        6        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        4        8        0
+    //  no simd        6       12        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return AntiLine::from_groups(
+            // e23, e31, e12
+            ((Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                - (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))),
+            // e15, e25, e35
+            Simd32x3::from([
+                ((self.group0()[1] * other.group0()[2]) - (self.group0()[2] * other.group0()[1])),
+                (-(self.group0()[0] * other.group0()[2]) + (self.group0()[2] * other.group0()[0])),
+                ((self.group0()[0] * other.group0()[1]) - (self.group0()[1] * other.group0()[0])),
             ]),
         );
     }
@@ -3689,6 +3901,49 @@ impl AntiWedge<VersorOdd> for AntiFlector {
         );
     }
 }
+impl AntiWedge<VersorRoundPoint> for AntiFlector {
+    type Output = AntiFlector;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return AntiFlector::from_groups(
+            // e235, e315, e125, e321
+            (Simd32x4::from(other.group1()[1]) * self.group0()),
+            // e1, e2, e3, e5
+            (Simd32x4::from(other.group1()[1]) * self.group1()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for AntiFlector {
+    type Output = AntiMotor;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        5       15        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        6       16        0
+    //  no simd        9       19        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return AntiMotor::from_groups(
+            // e23, e31, e12, scalar
+            (Simd32x4::from([
+                ((self.group0()[3] * other.group0()[0]) * -1.0),
+                ((self.group0()[3] * other.group0()[1]) * -1.0),
+                ((self.group0()[3] * other.group0()[2]) * -1.0),
+                ((self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[1]) + (self.group1()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]))),
+            // e15, e25, e35, e3215
+            Simd32x4::from([
+                ((self.group0()[1] * other.group0()[2]) - (self.group0()[2] * other.group0()[1])),
+                (-(self.group0()[0] * other.group0()[2]) + (self.group0()[2] * other.group0()[0])),
+                ((self.group0()[0] * other.group0()[1]) - (self.group0()[1] * other.group0()[0])),
+                0.0,
+            ]),
+        );
+    }
+}
 impl InfixAntiWedge for AntiLine {}
 impl AntiWedge<AntiDipoleInversion> for AntiLine {
     type Output = Scalar;
@@ -4109,6 +4364,42 @@ impl AntiWedge<VersorOdd> for AntiLine {
                 (-(self.group0()[1] * other.group3()[0]) - (self.group1()[2] * other.group2()[3])),
                 ((self.group1()[1] * other.group3()[1]) + (self.group1()[2] * other.group3()[2])),
             ]) + (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group1()[0]]) * swizzle!(other.group3(), 2, 0, 1, 0))),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for AntiLine {
+    type Output = AntiLine;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return AntiLine::from_groups(
+            // e23, e31, e12
+            (Simd32x3::from(other.group1()[1]) * self.group0()),
+            // e15, e25, e35
+            (Simd32x3::from(other.group1()[1]) * self.group1()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for AntiLine {
+    type Output = AntiPlane;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group1()[0]) - (self.group0()[2] * other.group0()[1])),
+                (-(other.group1()[0] * self.group1()[1]) - (self.group0()[0] * other.group0()[2])),
+                (-(other.group1()[0] * self.group1()[2]) - (self.group0()[1] * other.group0()[0])),
+                ((self.group1()[1] * other.group0()[1]) + (self.group1()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group1()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))),
         );
     }
 }
@@ -4697,6 +4988,52 @@ impl AntiWedge<VersorOdd> for AntiMotor {
         );
     }
 }
+impl AntiWedge<VersorRoundPoint> for AntiMotor {
+    type Output = AntiMotor;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        1        6        0
+    //  no simd        1        9        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return AntiMotor::from_groups(
+            // e23, e31, e12, scalar
+            Simd32x4::from([
+                (other.group1()[1] * self.group0()[0]),
+                (other.group1()[1] * self.group0()[1]),
+                (other.group1()[1] * self.group0()[2]),
+                ((other.group1()[1] * self.group0()[3]) + (self.group1()[3] * other.group0()[3])),
+            ]),
+            // e15, e25, e35, e3215
+            (Simd32x4::from(other.group1()[1]) * self.group1()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for AntiMotor {
+    type Output = AntiFlector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        3        0
+    // Totals...
+    // yes simd        5       11        0
+    //  no simd        8       20        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return AntiFlector::from_groups(
+            // e235, e315, e125, e321
+            (Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]) * Simd32x4::from(-1.0)),
+            // e1, e2, e3, e5
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group1()[0]) - (self.group0()[2] * other.group0()[1])),
+                (-(other.group1()[0] * self.group1()[1]) - (self.group0()[0] * other.group0()[2])),
+                (-(other.group1()[0] * self.group1()[2]) - (self.group0()[1] * other.group0()[0])),
+                ((self.group1()[1] * other.group0()[1]) + (self.group1()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group1()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))),
+        );
+    }
+}
 impl InfixAntiWedge for AntiPlane {}
 impl AntiWedge<AntiDualNum4> for AntiPlane {
     type Output = Scalar;
@@ -4915,6 +5252,28 @@ impl AntiWedge<VersorOdd> for AntiPlane {
         return Scalar::from_groups(
             // scalar
             ((self.group0()[0] * other.group3()[0]) + (self.group0()[1] * other.group3()[1]) + (self.group0()[2] * other.group3()[2]) + (self.group0()[3] * other.group2()[3])),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for AntiPlane {
+    type Output = AntiPlane;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ (Simd32x4::from(other.group1()[1]) * self.group0()));
+    }
+}
+impl AntiWedge<VersorSphere> for AntiPlane {
+    type Output = Scalar;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3        4        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return Scalar::from_groups(
+            // scalar
+            ((other.group1()[0] * self.group0()[3]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2])),
         );
     }
 }
@@ -5558,6 +5917,43 @@ impl AntiWedge<VersorOdd> for AntiQuadNum {
         );
     }
 }
+impl AntiWedge<VersorRoundPoint> for AntiQuadNum {
+    type Output = AntiQuadNum;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        6        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
+            (other.group1()[1] * self.group0()[0]),
+            (other.group1()[1] * self.group0()[1]),
+            (other.group1()[1] * self.group0()[2]),
+            ((other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group0()[3]) + (self.group0()[1] * other.group0()[3])),
+        ]));
+    }
+}
+impl AntiWedge<VersorSphere> for AntiQuadNum {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        3        0
+    //    simd3        0        1        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        1        6        0
+    //  no simd        1       14        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (-(other.group1()[0] * self.group0()[1]) + (self.group0()[0] * other.group0()[3]))]),
+            // e235, e315, e125, e4
+            (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]) * swizzle!(self.group0(), 1, 1, 1, 2) * Simd32x4::from(-1.0)),
+            // e1, e2, e3, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] * other.group0()[3])]),
+        );
+    }
+}
 impl InfixAntiWedge for AntiScalar {}
 impl AntiWedge<AntiCircleRotor> for AntiScalar {
     type Output = AntiCircleRotor;
@@ -6068,6 +6464,44 @@ impl AntiWedge<VersorOdd> for AntiScalar {
             (Simd32x4::from(self[e12345]) * other.group2()),
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(self[e12345]) * other.group3()),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for AntiScalar {
+    type Output = VersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd2        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        6        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        return VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(self[e12345]) * other.group0()),
+            // e5, e12345
+            (Simd32x2::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for AntiScalar {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd2        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        6        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self[e12345]) * other.group0()),
+            // e1234, scalar
+            (Simd32x2::from(self[e12345]) * other.group1()),
         );
     }
 }
@@ -6696,6 +7130,39 @@ impl AntiWedge<VersorOdd> for AntiTripleNum {
                 ((self.group0()[0] * other.group2()[2]) - (self.group0()[1] * other.group0()[2])),
                 (self.group0()[1] * other.group1()[3] * -1.0),
             ]),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for AntiTripleNum {
+    type Output = AntiTripleNum;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        5        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return AntiTripleNum::from_groups(/* e1234, e3215, scalar */ Simd32x3::from([
+            (other.group1()[1] * self.group0()[0]),
+            (other.group1()[1] * self.group0()[1]),
+            ((other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group0()[2]) + (self.group0()[1] * other.group0()[3])),
+        ]));
+    }
+}
+impl AntiWedge<VersorSphere> for AntiTripleNum {
+    type Output = Circle;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        2        0
+    //    simd3        0        3        0
+    // Totals...
+    // yes simd        1        5        0
+    //  no simd        1       11        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return Circle::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (-(other.group1()[0] * self.group0()[1]) + (self.group0()[0] * other.group0()[3]))]),
+            // e235, e315, e125
+            (Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
         );
     }
 }
@@ -7582,6 +8049,56 @@ impl AntiWedge<VersorOdd> for Circle {
                     - (self.group1()[2] * other.group1()[2])
                     - (self.group1()[3] * other.group1()[3])),
             ]),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for Circle {
+    type Output = Circle;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0       10        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return Circle::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(other.group1()[1]) * self.group0()),
+            // e415, e425, e435, e321
+            (Simd32x4::from(other.group1()[1]) * self.group1()),
+            // e235, e315, e125
+            (Simd32x3::from(other.group1()[1]) * self.group2()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for Circle {
+    type Output = Dipole;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd3        4        6        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        9       15        0
+    //  no simd       20       30        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return Dipole::from_groups(
+            // e41, e42, e43
+            ((Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
+                + (Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[0]]) * swizzle!(self.group0(), 2, 0, 1))
+                - (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * swizzle!(self.group0(), 1, 2, 0))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group2()[0]) + (self.group0()[0] * other.group0()[3])),
+                ((other.group1()[0] * self.group2()[1]) + (self.group0()[1] * other.group0()[3])),
+                ((other.group1()[0] * self.group2()[2]) + (self.group0()[2] * other.group0()[3])),
+                (-(self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])),
+            ]) - (swizzle!(self.group1(), 3, 3, 3, 0) * swizzle!(other.group0(), 0, 1, 2, 0))),
+            // e15, e25, e35
+            ((Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
+                - (Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[0]]) * swizzle!(self.group2(), 2, 0, 1))
+                + (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * swizzle!(self.group2(), 1, 2, 0))),
         );
     }
 }
@@ -8694,6 +9211,62 @@ impl AntiWedge<VersorOdd> for CircleRotor {
         );
     }
 }
+impl AntiWedge<VersorRoundPoint> for CircleRotor {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            (Simd32x4::from(other.group1()[1]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]])),
+            // e415, e425, e435, e321
+            (Simd32x4::from(other.group1()[1]) * self.group1()),
+            // e235, e315, e125, e5
+            (Simd32x4::from([other.group1()[1], other.group1()[1], other.group1()[1], other.group1()[0]]) * self.group2()),
+            // e1, e2, e3, e4
+            (Simd32x4::from(self.group2()[3]) * other.group0()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for CircleRotor {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       16       28        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd       17       30        0
+    //  no simd       20       36        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                ((other.group1()[0] * self.group1()[0]) - (self.group0()[1] * other.group0()[2]) + (self.group0()[2] * other.group0()[1])),
+                ((other.group1()[0] * self.group1()[1]) + (self.group0()[0] * other.group0()[2]) - (self.group0()[2] * other.group0()[0])),
+                ((other.group1()[0] * self.group1()[2]) - (self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])),
+                (other.group1()[1] * self.group2()[3]),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group2()[0]) + (self.group0()[0] * other.group0()[3])),
+                ((other.group1()[0] * self.group2()[1]) + (self.group0()[1] * other.group0()[3])),
+                ((other.group1()[0] * self.group2()[2]) + (self.group0()[2] * other.group0()[3])),
+                (-(self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])),
+            ]) - (swizzle!(self.group1(), 3, 3, 3, 0) * swizzle!(other.group0(), 0, 1, 2, 0))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((self.group1()[0] * other.group0()[3]) + (self.group2()[1] * other.group0()[2]) - (self.group2()[2] * other.group0()[1])),
+                ((self.group1()[1] * other.group0()[3]) - (self.group2()[0] * other.group0()[2]) + (self.group2()[2] * other.group0()[0])),
+                ((self.group1()[2] * other.group0()[3]) + (self.group2()[0] * other.group0()[1]) - (self.group2()[1] * other.group0()[0])),
+                (other.group1()[0] * self.group2()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group2()[3]) * other.group0()),
+        );
+    }
+}
 impl InfixAntiWedge for Dipole {}
 impl AntiWedge<AntiDipoleInversion> for Dipole {
     type Output = Scalar;
@@ -9259,6 +9832,50 @@ impl AntiWedge<VersorOdd> for Dipole {
                 - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(other.group3(), 1, 2, 0, 0))),
             // e5
             ((self.group2()[0] * other.group3()[0]) + (self.group2()[1] * other.group3()[1]) + (self.group2()[2] * other.group3()[2]) + (self.group1()[3] * other.group3()[3])),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for Dipole {
+    type Output = Dipole;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0       10        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return Dipole::from_groups(
+            // e41, e42, e43
+            (Simd32x3::from(other.group1()[1]) * self.group0()),
+            // e23, e31, e12, e45
+            (Simd32x4::from(other.group1()[1]) * self.group1()),
+            // e15, e25, e35
+            (Simd32x3::from(other.group1()[1]) * self.group2()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for Dipole {
+    type Output = RoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        7       12        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        9       14        0
+    //  no simd       15       20        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return RoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                ((self.group0()[0] * other.group0()[3]) + (self.group1()[1] * other.group0()[2])),
+                ((self.group0()[1] * other.group0()[3]) + (self.group1()[2] * other.group0()[0])),
+                ((self.group0()[2] * other.group0()[3]) + (self.group1()[0] * other.group0()[1])),
+                (-(self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]))
+                - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e5
+            ((self.group2()[0] * other.group0()[0]) + (self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2]) + (self.group1()[3] * other.group0()[3])),
         );
     }
 }
@@ -10307,6 +10924,73 @@ impl AntiWedge<VersorOdd> for DipoleInversion {
         );
     }
 }
+impl AntiWedge<VersorRoundPoint> for DipoleInversion {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        4       11        0
+    //  no simd        4       20        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (other.group1()[1] * self.group0()[0]),
+                (other.group1()[1] * self.group0()[1]),
+                (other.group1()[1] * self.group0()[2]),
+                ((other.group1()[0] * self.group2()[3])
+                    + (self.group3()[0] * other.group0()[0])
+                    + (self.group3()[1] * other.group0()[1])
+                    + (self.group3()[2] * other.group0()[2])
+                    + (self.group3()[3] * other.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from(other.group1()[1]) * self.group1()),
+            // e15, e25, e35, e1234
+            (Simd32x4::from(other.group1()[1]) * self.group2()),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group1()[1]) * self.group3()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for DipoleInversion {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       14        0
+    //    simd3        1        2        0
+    //    simd4        4        5        0
+    // Totals...
+    // yes simd       11       21        0
+    //  no simd       25       40        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (-(Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]))
+                + (Simd32x3::from(self.group2()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))),
+            // e415, e425, e435, e321
+            ((Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group2()[3]]) * swizzle!(other.group0(), 1, 2, 0, 3))
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group3(), 1, 2, 0, 3))),
+            // e235, e315, e125, e4
+            (Simd32x4::from([
+                (self.group3()[0] * other.group0()[3]),
+                (self.group3()[1] * other.group0()[3]),
+                (self.group3()[2] * other.group0()[3]),
+                (-(other.group1()[0] * self.group1()[3]) - (self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from([self.group3()[3], self.group3()[3], self.group3()[3], self.group0()[0]]) * swizzle!(other.group0(), 0, 1, 2, 0))),
+            // e1, e2, e3, e5
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group2()[0]) - (self.group1()[2] * other.group0()[1])),
+                (-(other.group1()[0] * self.group2()[1]) - (self.group1()[0] * other.group0()[2])),
+                (-(other.group1()[0] * self.group2()[2]) - (self.group1()[1] * other.group0()[0])),
+                ((self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group0()[3]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]))
+                + (Simd32x4::from([self.group1()[1], self.group1()[2], self.group1()[0], self.group2()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))),
+        );
+    }
+}
 impl InfixAntiWedge for DualNum321 {}
 impl AntiWedge<AntiCircleRotor> for DualNum321 {
     type Output = AntiCircleRotor;
@@ -11001,6 +11685,55 @@ impl AntiWedge<VersorOdd> for DualNum321 {
         );
     }
 }
+impl AntiWedge<VersorRoundPoint> for DualNum321 {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other.group1()[1])]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other.group1()[1])]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other.group1()[0])]),
+            // e1, e2, e3, e4
+            (Simd32x4::from(self.group0()[1]) * other.group0()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for DualNum321 {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        8        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        9        0
+    //  no simd        0       12        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other.group1()[1])]),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                (self.group0()[0] * other.group0()[0] * -1.0),
+                (self.group0()[0] * other.group0()[1] * -1.0),
+                (self.group0()[0] * other.group0()[2] * -1.0),
+                0.0,
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other.group1()[0])]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group0()[1]) * other.group0()),
+        );
+    }
+}
 impl InfixAntiWedge for DualNum4 {}
 impl AntiWedge<AntiCircleRotor> for DualNum4 {
     type Output = AntiCircleRotor;
@@ -11446,7 +12179,7 @@ impl AntiWedge<MultiVector> for DualNum4 {
     }
 }
 impl AntiWedge<Plane> for DualNum4 {
-    type Output = VersorOdd;
+    type Output = VersorSphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
@@ -11455,15 +12188,11 @@ impl AntiWedge<Plane> for DualNum4 {
     // yes simd        0        2        0
     //  no simd        0        5        0
     fn anti_wedge(self, other: Plane) -> Self::Output {
-        return VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other.group0()[3])]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            Simd32x4::from(0.0),
+        return VersorSphere::from_groups(
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(self.group0()[1]) * other.group0()),
+            // e1234, scalar
+            Simd32x2::from([0.0, (self.group0()[0] * other.group0()[3])]),
         );
     }
 }
@@ -11511,25 +12240,21 @@ impl AntiWedge<Scalar> for DualNum4 {
     }
 }
 impl AntiWedge<Sphere> for DualNum4 {
-    type Output = VersorOdd;
+    type Output = VersorSphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //    simd2        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        2        0
     //  no simd        0        6        0
     fn anti_wedge(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        return VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other.group0()[3])]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other[e4315])]),
+        return VersorSphere::from_groups(
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(self.group0()[1]) * other.group0()),
+            // e1234, scalar
+            (Simd32x2::from([other[e4315], other.group0()[3]]) * swizzle!(self.group0(), 1, 0)),
         );
     }
 }
@@ -11597,6 +12322,50 @@ impl AntiWedge<VersorOdd> for DualNum4 {
             (Simd32x4::from(self.group0()[1]) * other.group2()),
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(self.group0()[1]) * other.group3()),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for DualNum4 {
+    type Output = VersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        1        6        0
+    //  no simd        1        7        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group0()[1] * other.group0()[0]),
+                (self.group0()[1] * other.group0()[1]),
+                (self.group0()[1] * other.group0()[2]),
+                ((self.group0()[0] * other.group1()[1]) + (self.group0()[1] * other.group0()[3])),
+            ]),
+            // e5, e12345
+            (Simd32x2::from(self.group0()[1]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for DualNum4 {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        1        4        0
+    //  no simd        1        7        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group0()[1]) * other.group0()),
+            // e1234, scalar
+            Simd32x2::from([
+                (self.group0()[1] * other.group1()[0]),
+                ((self.group0()[0] * other.group0()[3]) + (self.group0()[1] * other.group1()[1])),
+            ]),
         );
     }
 }
@@ -12058,25 +12827,21 @@ impl AntiWedge<Scalar> for DualNum5 {
     }
 }
 impl AntiWedge<Sphere> for DualNum5 {
-    type Output = VersorOdd;
+    type Output = VersorSphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //    simd2        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        2        0
     //  no simd        0        6        0
     fn anti_wedge(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        return VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other[e4315])]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other[e4315])]),
+        return VersorSphere::from_groups(
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(self.group0()[1]) * other.group0()),
+            // e1234, scalar
+            (Simd32x2::from(other[e4315]) * swizzle!(self.group0(), 1, 0)),
         );
     }
 }
@@ -12144,6 +12909,48 @@ impl AntiWedge<VersorOdd> for DualNum5 {
             (Simd32x4::from(self.group0()[1]) * other.group2()),
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(self.group0()[1]) * other.group3()),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for DualNum5 {
+    type Output = VersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        1        4        0
+    //  no simd        1        7        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(self.group0()[1]) * other.group0()),
+            // e5, e12345
+            Simd32x2::from([
+                ((self.group0()[0] * other.group1()[1]) + (self.group0()[1] * other.group1()[0])),
+                (self.group0()[1] * other.group1()[1]),
+            ]),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for DualNum5 {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        1        4        0
+    //  no simd        1        7        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group0()[1]) * other.group0()),
+            // e1234, scalar
+            Simd32x2::from([
+                (self.group0()[1] * other.group1()[0]),
+                ((self.group0()[0] * other.group1()[0]) + (self.group0()[1] * other.group1()[1])),
+            ]),
         );
     }
 }
@@ -12512,6 +13319,34 @@ impl AntiWedge<VersorOdd> for FlatPoint {
             (Simd32x4::from(other.group2()[3]) * self.group0() * Simd32x4::from(-1.0)),
             // e5
             ((self.group0()[0] * other.group3()[0]) + (self.group0()[1] * other.group3()[1]) + (self.group0()[2] * other.group3()[2]) + (self.group0()[3] * other.group3()[3])),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for FlatPoint {
+    type Output = FlatPoint;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ (Simd32x4::from(other.group1()[1]) * self.group0()));
+    }
+}
+impl AntiWedge<VersorSphere> for FlatPoint {
+    type Output = RoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3        4        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        3        6        0
+    //  no simd        3       12        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return RoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(other.group1()[0]) * self.group0() * Simd32x4::from(-1.0)),
+            // e5
+            ((self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[3] * other.group0()[3])),
         );
     }
 }
@@ -13406,6 +14241,75 @@ impl AntiWedge<VersorOdd> for Flector {
         );
     }
 }
+impl AntiWedge<VersorRoundPoint> for Flector {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3        8        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        3        9        0
+    //  no simd        3       12        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                ((self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[1]) + (self.group1()[2] * other.group0()[2]) + (self.group1()[3] * other.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[1] * self.group0()[3])]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (other.group1()[1] * self.group0()[0]),
+                (other.group1()[1] * self.group0()[1]),
+                (other.group1()[1] * self.group0()[2]),
+                0.0,
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group1()[1]) * self.group1()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for Flector {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        9       26        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        9       28        0
+    //  no simd        9       32        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                (-(self.group1()[1] * other.group0()[2]) + (self.group1()[2] * other.group0()[1])),
+                ((self.group1()[0] * other.group0()[2]) - (self.group1()[2] * other.group0()[0])),
+                (-(self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[0])),
+                (other.group1()[0] * self.group1()[3] * -1.0),
+            ]),
+            // e235, e315, e125, e4
+            Simd32x4::from([
+                ((self.group1()[0] * other.group0()[3]) - (self.group1()[3] * other.group0()[0])),
+                ((self.group1()[1] * other.group0()[3]) - (self.group1()[3] * other.group0()[1])),
+                ((self.group1()[2] * other.group0()[3]) - (self.group1()[3] * other.group0()[2])),
+                (other.group1()[0] * self.group0()[3] * -1.0),
+            ]),
+            // e1, e2, e3, e5
+            Simd32x4::from([
+                (other.group1()[0] * self.group0()[0] * -1.0),
+                (other.group1()[0] * self.group0()[1] * -1.0),
+                (other.group1()[0] * self.group0()[2] * -1.0),
+                ((self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[3] * other.group0()[3])),
+            ]),
+        );
+    }
+}
 impl InfixAntiWedge for Line {}
 impl AntiWedge<AntiCircleRotor> for Line {
     type Output = Scalar;
@@ -14093,6 +14997,47 @@ impl AntiWedge<VersorOdd> for Line {
                     - (self.group1()[1] * other.group0()[1])
                     - (self.group1()[2] * other.group0()[2])),
             ]),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for Line {
+    type Output = Line;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return Line::from_groups(
+            // e415, e425, e435
+            (Simd32x3::from(other.group1()[1]) * self.group0()),
+            // e235, e315, e125
+            (Simd32x3::from(other.group1()[1]) * self.group1()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for Line {
+    type Output = Dipole;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        6        0
+    //    simd3        2        4        0
+    // Totals...
+    // yes simd        4       10        0
+    //  no simd        8       18        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return Dipole::from_groups(
+            // e41, e42, e43
+            (Simd32x3::from(other.group1()[0]) * self.group0()),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                (other.group1()[0] * self.group1()[0]),
+                (other.group1()[0] * self.group1()[1]),
+                (other.group1()[0] * self.group1()[2]),
+                (-(self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]),
+            // e15, e25, e35
+            ((Simd32x3::from(other.group0()[3]) * self.group0()) - (Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[0]]) * swizzle!(self.group1(), 2, 0, 1))
+                + (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * swizzle!(self.group1(), 1, 2, 0))),
         );
     }
 }
@@ -15022,6 +15967,75 @@ impl AntiWedge<VersorOdd> for Motor {
             ]),
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(self.group0()[3]) * other.group3()),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for Motor {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        9        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        1       10        0
+    //  no simd        1       13        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[1] * self.group0()[3])]),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                (other.group1()[1] * self.group0()[0]),
+                (other.group1()[1] * self.group0()[1]),
+                (other.group1()[1] * self.group0()[2]),
+                0.0,
+            ]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (other.group1()[1] * self.group1()[0]),
+                (other.group1()[1] * self.group1()[1]),
+                (other.group1()[1] * self.group1()[2]),
+                ((other.group1()[0] * self.group0()[3]) + (other.group1()[1] * self.group1()[3])),
+            ]),
+            // e1, e2, e3, e4
+            (Simd32x4::from(self.group0()[3]) * other.group0()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for Motor {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        9       21        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        9       22        0
+    //  no simd        9       25        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (other.group1()[0] * self.group0()[0]),
+                (other.group1()[0] * self.group0()[1]),
+                (other.group1()[0] * self.group0()[2]),
+                ((other.group1()[0] * self.group1()[3]) + (other.group1()[1] * self.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                (other.group1()[0] * self.group1()[0]),
+                (other.group1()[0] * self.group1()[1]),
+                (other.group1()[0] * self.group1()[2]),
+                (-(self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((self.group0()[0] * other.group0()[3]) + (self.group1()[1] * other.group0()[2]) - (self.group1()[2] * other.group0()[1])),
+                ((self.group0()[1] * other.group0()[3]) - (self.group1()[0] * other.group0()[2]) + (self.group1()[2] * other.group0()[0])),
+                ((self.group0()[2] * other.group0()[3]) + (self.group1()[0] * other.group0()[1]) - (self.group1()[1] * other.group0()[0])),
+                (other.group1()[0] * self.group0()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group0()[3]) * other.group0()),
         );
     }
 }
@@ -16983,6 +17997,115 @@ impl AntiWedge<VersorOdd> for MultiVector {
         );
     }
 }
+impl AntiWedge<VersorRoundPoint> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       10        0
+    //    simd3        0        4        0
+    //    simd4        1        5        0
+    // Totals...
+    // yes simd        7       19        0
+    //  no simd       10       42        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([
+                ((self.group0()[0] * other.group1()[1])
+                    + (other.group1()[0] * self[e45])
+                    + (self.group9()[0] * other.group0()[0])
+                    + (self.group9()[1] * other.group0()[1])
+                    + (self.group9()[2] * other.group0()[2])
+                    + (self.group9()[3] * other.group0()[3])),
+                (self.group0()[1] * other.group1()[1]),
+            ]),
+            // e1, e2, e3, e4
+            ((Simd32x4::from(self.group0()[1]) * other.group0()) + (Simd32x4::from(other.group1()[1]) * self.group1())),
+            // e5
+            ((self.group0()[1] * other.group1()[0]) + (other.group1()[1] * self[e1])),
+            // e15, e25, e35, e45
+            (Simd32x4::from(other.group1()[1]) * self.group3()),
+            // e41, e42, e43
+            (Simd32x3::from(other.group1()[1]) * self.group4()),
+            // e23, e31, e12
+            (Simd32x3::from(other.group1()[1]) * self.group5()),
+            // e415, e425, e435, e321
+            (Simd32x4::from(other.group1()[1]) * self.group6()),
+            // e423, e431, e412
+            (Simd32x3::from(other.group1()[1]) * self.group7()),
+            // e235, e315, e125
+            (Simd32x3::from(other.group1()[1]) * self.group8()),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group1()[1]) * self.group9()),
+            // e1234
+            (other.group1()[1] * self[e45]),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       16       27        0
+    //    simd3        6       10        0
+    //    simd4        4        6        0
+    // Totals...
+    // yes simd       26       43        0
+    //  no simd       50       81        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([
+                ((self.group0()[1] * other.group1()[1])
+                    + (other.group1()[0] * self[e1])
+                    + (self.group1()[0] * other.group0()[0])
+                    + (self.group1()[1] * other.group0()[1])
+                    + (self.group1()[2] * other.group0()[2])
+                    + (self.group1()[3] * other.group0()[3])),
+                0.0,
+            ]),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                ((self.group4()[0] * other.group0()[3]) + (self.group5()[1] * other.group0()[2])),
+                ((self.group4()[1] * other.group0()[3]) + (self.group5()[2] * other.group0()[0])),
+                ((self.group4()[2] * other.group0()[3]) + (self.group5()[0] * other.group0()[1])),
+                (-(self.group4()[1] * other.group0()[1]) - (self.group4()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from(other.group1()[0]) * self.group3())
+                - (Simd32x4::from([self.group5()[2], self.group5()[0], self.group5()[1], self.group4()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e5
+            ((self.group3()[0] * other.group0()[0]) + (self.group3()[1] * other.group0()[1]) + (self.group3()[2] * other.group0()[2]) + (self.group3()[3] * other.group0()[3])),
+            // e15, e25, e35, e45
+            (Simd32x4::from([
+                ((self.group8()[1] * other.group0()[2]) + (self.group6()[0] * other.group0()[3])),
+                ((self.group8()[2] * other.group0()[0]) + (self.group6()[1] * other.group0()[3])),
+                ((self.group8()[0] * other.group0()[1]) + (self.group6()[2] * other.group0()[3])),
+                (-(self.group6()[1] * other.group0()[1]) - (self.group6()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from([self.group8()[2], self.group8()[0], self.group8()[1], self.group6()[0]]) * swizzle!(other.group0(), 1, 2, 0, 0))),
+            // e41, e42, e43
+            ((Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]))
+                + (Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[0]]) * swizzle!(self.group7(), 2, 0, 1))
+                - (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * swizzle!(self.group7(), 1, 2, 0))),
+            // e23, e31, e12
+            ((Simd32x3::from(other.group1()[0]) * self.group8()) - (Simd32x3::from(self.group6()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                + (Simd32x3::from(other.group0()[3]) * self.group7())),
+            // e415, e425, e435, e321
+            ((Simd32x4::from([self.group9()[2], self.group9()[0], self.group9()[1], self[e45]]) * swizzle!(other.group0(), 1, 2, 0, 3))
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group9(), 1, 2, 0, 3))),
+            // e423, e431, e412
+            (-(Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group9()[0], self.group9()[1], self.group9()[2]]))
+                + (Simd32x3::from(self[e45]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))),
+            // e235, e315, e125
+            (-(Simd32x3::from(self.group9()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                + (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group9()[0], self.group9()[1], self.group9()[2]]))),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group0()[1]) * other.group0()),
+            // e1234
+            (self.group0()[1] * other.group1()[0]),
+        );
+    }
+}
 impl InfixAntiWedge for Plane {}
 impl AntiWedge<AntiCircleRotor> for Plane {
     type Output = RoundPoint;
@@ -17401,7 +18524,7 @@ impl AntiWedge<DualNum321> for Plane {
     }
 }
 impl AntiWedge<DualNum4> for Plane {
-    type Output = VersorOdd;
+    type Output = VersorSphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
@@ -17410,15 +18533,11 @@ impl AntiWedge<DualNum4> for Plane {
     // yes simd        0        2        0
     //  no simd        0        5        0
     fn anti_wedge(self, other: DualNum4) -> Self::Output {
-        return VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * self.group0()[3])]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            Simd32x4::from(0.0),
+        return VersorSphere::from_groups(
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(other.group0()[1]) * self.group0()),
+            // e1234, scalar
+            Simd32x2::from([0.0, (other.group0()[0] * self.group0()[3])]),
         );
     }
 }
@@ -17664,7 +18783,7 @@ impl AntiWedge<Sphere> for Plane {
     }
 }
 impl AntiWedge<TripleNum> for Plane {
-    type Output = VersorOdd;
+    type Output = VersorSphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
@@ -17673,15 +18792,11 @@ impl AntiWedge<TripleNum> for Plane {
     // yes simd        0        2        0
     //  no simd        0        5        0
     fn anti_wedge(self, other: TripleNum) -> Self::Output {
-        return VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * self.group0()[3])]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            Simd32x4::from(0.0),
+        return VersorSphere::from_groups(
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(other.group0()[2]) * self.group0()),
+            // e1234, scalar
+            Simd32x2::from([0.0, (other.group0()[0] * self.group0()[3])]),
         );
     }
 }
@@ -17758,6 +18873,53 @@ impl AntiWedge<VersorOdd> for Plane {
                 (-(self.group0()[2] * other.group2()[2]) - (self.group0()[3] * other.group1()[3])),
             ]) - (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[1]]) * swizzle!(self.group0(), 3, 3, 3, 1))
                 - (Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[0], other.group2()[0]]) * swizzle!(self.group0(), 2, 0, 1, 0))),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for Plane {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        3        5        0
+    //  no simd        3        8        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group1()[1]) * self.group0()),
+            // e1234, scalar
+            Simd32x2::from([
+                0.0,
+                ((self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[3] * other.group0()[3])),
+            ]),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for Plane {
+    type Output = Circle;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3        8        0
+    //    simd3        1        4        0
+    // Totals...
+    // yes simd        4       12        0
+    //  no simd        6       20        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return Circle::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                (-(self.group0()[1] * other.group0()[2]) + (self.group0()[2] * other.group0()[1])),
+                ((self.group0()[0] * other.group0()[2]) - (self.group0()[2] * other.group0()[0])),
+                (-(self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])),
+                (other.group1()[0] * self.group0()[3] * -1.0),
+            ]),
+            // e235, e315, e125
+            (-(Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                + (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))),
         );
     }
 }
@@ -18452,6 +19614,61 @@ impl AntiWedge<VersorOdd> for QuadNum {
         );
     }
 }
+impl AntiWedge<VersorRoundPoint> for QuadNum {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        9        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[1] * self.group0()[3])]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[1] * self.group0()[2])]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, ((other.group1()[0] * self.group0()[3]) + (other.group1()[1] * self.group0()[1]))]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group0()[3] * other.group0()[0]),
+                (self.group0()[3] * other.group0()[1]),
+                (self.group0()[3] * other.group0()[2]),
+                ((other.group1()[1] * self.group0()[0]) + (self.group0()[3] * other.group0()[3])),
+            ]),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for QuadNum {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2       10        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2       11        0
+    //  no simd        2       14        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                ((other.group1()[0] * self.group0()[1]) + (other.group1()[1] * self.group0()[3]) + (self.group0()[0] * other.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                (self.group0()[2] * other.group0()[0] * -1.0),
+                (self.group0()[2] * other.group0()[1] * -1.0),
+                (self.group0()[2] * other.group0()[2] * -1.0),
+                0.0,
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[0] * self.group0()[3])]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group0()[3]) * other.group0()),
+        );
+    }
+}
 impl InfixAntiWedge for RoundPoint {}
 impl AntiWedge<AntiDualNum4> for RoundPoint {
     type Output = Scalar;
@@ -18786,6 +20003,42 @@ impl AntiWedge<VersorOdd> for RoundPoint {
         );
     }
 }
+impl AntiWedge<VersorRoundPoint> for RoundPoint {
+    type Output = RoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        return RoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(other.group1()[1]) * self.group0()),
+            // e5
+            (other.group1()[1] * self[e2]),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for RoundPoint {
+    type Output = Scalar;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        4        5        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(
+            // scalar
+            ((other.group1()[0] * self[e2])
+                + (self.group0()[0] * other.group0()[0])
+                + (self.group0()[1] * other.group0()[1])
+                + (self.group0()[2] * other.group0()[2])
+                + (self.group0()[3] * other.group0()[3])),
+        );
+    }
+}
 impl InfixAntiWedge for Scalar {}
 impl AntiWedge<AntiScalar> for Scalar {
     type Output = Scalar;
@@ -18885,6 +20138,16 @@ impl AntiWedge<VersorEven> for Scalar {
     fn anti_wedge(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         return Scalar::from_groups(/* scalar */ (other.group0()[3] * self[scalar]));
+    }
+}
+impl AntiWedge<VersorRoundPoint> for Scalar {
+    type Output = Scalar;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */ (other.group1()[1] * self[scalar]));
     }
 }
 impl InfixAntiWedge for Sphere {}
@@ -19329,48 +20592,40 @@ impl AntiWedge<DualNum321> for Sphere {
     }
 }
 impl AntiWedge<DualNum4> for Sphere {
-    type Output = VersorOdd;
+    type Output = VersorSphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //    simd2        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        2        0
     //  no simd        0        6        0
     fn anti_wedge(self, other: DualNum4) -> Self::Output {
         use crate::elements::*;
-        return VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * self.group0()[3])]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * self[e4315])]),
+        return VersorSphere::from_groups(
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(other.group0()[1]) * self.group0()),
+            // e1234, scalar
+            (Simd32x2::from([self[e4315], self.group0()[3]]) * swizzle!(other.group0(), 1, 0)),
         );
     }
 }
 impl AntiWedge<DualNum5> for Sphere {
-    type Output = VersorOdd;
+    type Output = VersorSphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //    simd2        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
+    // yes simd        0        2        0
     //  no simd        0        6        0
     fn anti_wedge(self, other: DualNum5) -> Self::Output {
         use crate::elements::*;
-        return VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * self[e4315])]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * self[e4315])]),
+        return VersorSphere::from_groups(
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(other.group0()[1]) * self.group0()),
+            // e1234, scalar
+            (Simd32x2::from(self[e4315]) * swizzle!(other.group0(), 1, 0)),
         );
     }
 }
@@ -19654,7 +20909,7 @@ impl AntiWedge<Sphere> for Sphere {
     }
 }
 impl AntiWedge<TripleNum> for Sphere {
-    type Output = VersorOdd;
+    type Output = VersorSphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        3        0
@@ -19664,15 +20919,11 @@ impl AntiWedge<TripleNum> for Sphere {
     //  no simd        1        7        0
     fn anti_wedge(self, other: TripleNum) -> Self::Output {
         use crate::elements::*;
-        return VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, ((other.group0()[0] * self.group0()[3]) + (other.group0()[1] * self[e4315]))]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[2] * self[e4315])]),
+        return VersorSphere::from_groups(
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(other.group0()[2]) * self.group0()),
+            // e1234, scalar
+            Simd32x2::from([(other.group0()[2] * self[e4315]), ((other.group0()[0] * self.group0()[3]) + (other.group0()[1] * self[e4315]))]),
         );
     }
 }
@@ -19749,6 +21000,56 @@ impl AntiWedge<VersorOdd> for Sphere {
                 (-(self.group0()[2] * other.group2()[2]) - (self.group0()[3] * other.group1()[3])),
             ]) - (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[1]]) * swizzle!(self.group0(), 3, 3, 3, 1))
                 - (Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[0], other.group2()[0]]) * swizzle!(self.group0(), 2, 0, 1, 0))),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for Sphere {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        6        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        4        7        0
+    //  no simd        4       10        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        use crate::elements::*;
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group1()[1]) * self.group0()),
+            // e1234, scalar
+            Simd32x2::from([
+                (other.group1()[1] * self[e4315]),
+                ((other.group1()[0] * self[e4315])
+                    + (self.group0()[0] * other.group0()[0])
+                    + (self.group0()[1] * other.group0()[1])
+                    + (self.group0()[2] * other.group0()[2])
+                    + (self.group0()[3] * other.group0()[3])),
+            ]),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for Sphere {
+    type Output = Circle;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        2        4        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd        3        6        0
+    //  no simd       10       20        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        use crate::elements::*;
+        return Circle::from_groups(
+            // e423, e431, e412
+            (-(Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                + (Simd32x3::from(self[e4315]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))),
+            // e415, e425, e435, e321
+            ((Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self[e4315]]) * swizzle!(other.group0(), 1, 2, 0, 3))
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group0(), 1, 2, 0, 3))),
+            // e235, e315, e125
+            (-(Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                + (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))),
         );
     }
 }
@@ -20196,7 +21497,7 @@ impl AntiWedge<MultiVector> for TripleNum {
     }
 }
 impl AntiWedge<Plane> for TripleNum {
-    type Output = VersorOdd;
+    type Output = VersorSphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
@@ -20205,15 +21506,11 @@ impl AntiWedge<Plane> for TripleNum {
     // yes simd        0        2        0
     //  no simd        0        5        0
     fn anti_wedge(self, other: Plane) -> Self::Output {
-        return VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other.group0()[3])]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            Simd32x4::from(0.0),
+        return VersorSphere::from_groups(
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(self.group0()[2]) * other.group0()),
+            // e1234, scalar
+            Simd32x2::from([0.0, (self.group0()[0] * other.group0()[3])]),
         );
     }
 }
@@ -20261,7 +21558,7 @@ impl AntiWedge<Scalar> for TripleNum {
     }
 }
 impl AntiWedge<Sphere> for TripleNum {
-    type Output = VersorOdd;
+    type Output = VersorSphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        3        0
@@ -20271,15 +21568,11 @@ impl AntiWedge<Sphere> for TripleNum {
     //  no simd        1        7        0
     fn anti_wedge(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        return VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, ((self.group0()[0] * other.group0()[3]) + (self.group0()[1] * other[e4315]))]),
-            // e23, e31, e12, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] * other[e4315])]),
+        return VersorSphere::from_groups(
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(self.group0()[2]) * other.group0()),
+            // e1234, scalar
+            Simd32x2::from([(self.group0()[2] * other[e4315]), ((self.group0()[0] * other.group0()[3]) + (self.group0()[1] * other[e4315]))]),
         );
     }
 }
@@ -20352,6 +21645,49 @@ impl AntiWedge<VersorOdd> for TripleNum {
             (Simd32x4::from(self.group0()[2]) * other.group2()),
             // e4235, e4315, e4125, e3215
             (Simd32x4::from(self.group0()[2]) * other.group3()),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for TripleNum {
+    type Output = VersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        8        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group0()[2] * other.group0()[0]),
+                (self.group0()[2] * other.group0()[1]),
+                (self.group0()[2] * other.group0()[2]),
+                ((other.group1()[1] * self.group0()[0]) + (self.group0()[2] * other.group0()[3])),
+            ]),
+            // e5, e12345
+            Simd32x2::from([
+                ((other.group1()[0] * self.group0()[2]) + (other.group1()[1] * self.group0()[1])),
+                (other.group1()[1] * self.group0()[2]),
+            ]),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for TripleNum {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        5        0
+    //  no simd        2        8        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group0()[2]) * other.group0()),
+            // e1234, scalar
+            Simd32x2::from([
+                (other.group1()[0] * self.group0()[2]),
+                ((other.group1()[0] * self.group0()[1]) + (other.group1()[1] * self.group0()[2]) + (self.group0()[0] * other.group0()[3])),
+            ]),
         );
     }
 }
@@ -21496,6 +22832,71 @@ impl AntiWedge<VersorOdd> for VersorEven {
         );
     }
 }
+impl AntiWedge<VersorRoundPoint> for VersorEven {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd4        1        4        0
+    // Totals...
+    // yes simd        2        9        0
+    //  no simd        5       21        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            (Simd32x4::from(other.group1()[1]) * self.group0()),
+            // e415, e425, e435, e321
+            (Simd32x4::from(other.group1()[1]) * self.group1()),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (other.group1()[1] * self.group2()[0]),
+                (other.group1()[1] * self.group2()[1]),
+                (other.group1()[1] * self.group2()[2]),
+                ((other.group1()[0] * self.group0()[3]) + (other.group1()[1] * self.group2()[3])),
+            ]),
+            // e1, e2, e3, e4
+            ((Simd32x4::from(other.group1()[1]) * self.group3()) + (Simd32x4::from(self.group0()[3]) * other.group0())),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for VersorEven {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       13       28        0
+    //    simd4        3        4        0
+    // Totals...
+    // yes simd       16       32        0
+    //  no simd       25       44        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            (Simd32x4::from([
+                ((self.group0()[1] * other.group0()[2]) * -1.0),
+                ((self.group0()[2] * other.group0()[0]) * -1.0),
+                ((self.group0()[0] * other.group0()[1]) * -1.0),
+                ((self.group3()[0] * other.group0()[0]) + (self.group3()[1] * other.group0()[1]) + (self.group3()[2] * other.group0()[2]) + (self.group3()[3] * other.group0()[3])),
+            ]) + (Simd32x4::from(other.group1()[0]) * Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group2()[3]]))
+                + (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group1()[1]]) * swizzle!(self.group0(), 2, 0, 1, 3))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((other.group1()[0] * self.group2()[0]) + (self.group0()[0] * other.group0()[3])),
+                ((other.group1()[0] * self.group2()[1]) + (self.group0()[1] * other.group0()[3])),
+                ((other.group1()[0] * self.group2()[2]) + (self.group0()[2] * other.group0()[3])),
+                (-(self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2])),
+            ]) - (swizzle!(self.group1(), 3, 3, 3, 0) * swizzle!(other.group0(), 0, 1, 2, 0))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((self.group1()[0] * other.group0()[3]) + (self.group2()[1] * other.group0()[2]) - (self.group2()[2] * other.group0()[1])),
+                ((self.group1()[1] * other.group0()[3]) - (self.group2()[0] * other.group0()[2]) + (self.group2()[2] * other.group0()[0])),
+                ((self.group1()[2] * other.group0()[3]) + (self.group2()[0] * other.group0()[1]) - (self.group2()[1] * other.group0()[0])),
+                (other.group1()[0] * self.group0()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group0()[3]) * other.group0()),
+        );
+    }
+}
 impl InfixAntiWedge for VersorOdd {}
 impl AntiWedge<AntiCircleRotor> for VersorOdd {
     type Output = RoundPoint;
@@ -22537,6 +23938,1684 @@ impl AntiWedge<VersorOdd> for VersorOdd {
                 + (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[2]]) * swizzle!(other.group3(), 3, 3, 3, 2))
                 + (Simd32x4::from([self.group1()[1], self.group1()[2], self.group1()[0], self.group2()[1]]) * swizzle!(other.group3(), 2, 0, 1, 1))
                 - (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[1]]) * swizzle!(other.group2(), 3, 3, 3, 1))),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for VersorOdd {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        5        9        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        5       12        0
+    //  no simd        5       21        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (other.group1()[1] * self.group0()[0]),
+                (other.group1()[1] * self.group0()[1]),
+                (other.group1()[1] * self.group0()[2]),
+                ((other.group1()[0] * self.group2()[3])
+                    + (other.group1()[1] * self.group0()[3])
+                    + (self.group3()[0] * other.group0()[0])
+                    + (self.group3()[1] * other.group0()[1])
+                    + (self.group3()[2] * other.group0()[2])
+                    + (self.group3()[3] * other.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from(other.group1()[1]) * self.group1()),
+            // e15, e25, e35, e1234
+            (Simd32x4::from(other.group1()[1]) * self.group2()),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group1()[1]) * self.group3()),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for VersorOdd {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       14        0
+    //    simd3        1        2        0
+    //    simd4        4        5        0
+    // Totals...
+    // yes simd       11       21        0
+    //  no simd       25       40        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (-(Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]))
+                + (Simd32x3::from(self.group2()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))),
+            // e415, e425, e435, e321
+            ((Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group2()[3]]) * swizzle!(other.group0(), 1, 2, 0, 3))
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group3(), 1, 2, 0, 3))),
+            // e235, e315, e125, e4
+            (Simd32x4::from([
+                (self.group3()[0] * other.group0()[3]),
+                (self.group3()[1] * other.group0()[3]),
+                (self.group3()[2] * other.group0()[3]),
+                (-(other.group1()[0] * self.group1()[3]) - (self.group0()[1] * other.group0()[1]) - (self.group0()[2] * other.group0()[2])),
+            ]) - (Simd32x4::from([self.group3()[3], self.group3()[3], self.group3()[3], self.group0()[0]]) * swizzle!(other.group0(), 0, 1, 2, 0))),
+            // e1, e2, e3, e5
+            (Simd32x4::from([
+                (-(other.group1()[0] * self.group2()[0]) - (self.group1()[2] * other.group0()[1])),
+                (-(other.group1()[0] * self.group2()[1]) - (self.group1()[0] * other.group0()[2])),
+                (-(other.group1()[0] * self.group2()[2]) - (self.group1()[1] * other.group0()[0])),
+                ((self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2])),
+            ]) + (Simd32x4::from(other.group0()[3]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]))
+                + (Simd32x4::from([self.group1()[1], self.group1()[2], self.group1()[0], self.group2()[0]]) * swizzle!(other.group0(), 2, 0, 1, 0))),
+        );
+    }
+}
+impl InfixAntiWedge for VersorRoundPoint {}
+impl AntiWedge<AntiCircleRotor> for VersorRoundPoint {
+    type Output = AntiCircleRotor;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0       11        0
+    fn anti_wedge(self, other: AntiCircleRotor) -> Self::Output {
+        return AntiCircleRotor::from_groups(
+            // e41, e42, e43
+            (Simd32x3::from(self.group1()[1]) * other.group0()),
+            // e23, e31, e12, e45
+            (Simd32x4::from(self.group1()[1]) * other.group1()),
+            // e15, e25, e35, scalar
+            (Simd32x4::from(self.group1()[1]) * other.group2()),
+        );
+    }
+}
+impl AntiWedge<AntiDipoleInversion> for VersorRoundPoint {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0       15        0
+    fn anti_wedge(self, other: AntiDipoleInversion) -> Self::Output {
+        return AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(self.group1()[1]) * other.group0()),
+            // e415, e425, e435, e321
+            (Simd32x4::from(self.group1()[1]) * other.group1()),
+            // e235, e315, e125, e4
+            (Simd32x4::from(self.group1()[1]) * other.group2()),
+            // e1, e2, e3, e5
+            (Simd32x4::from(self.group1()[1]) * other.group3()),
+        );
+    }
+}
+impl AntiWedge<AntiDualNum321> for VersorRoundPoint {
+    type Output = AntiDualNum321;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
+    fn anti_wedge(self, other: AntiDualNum321) -> Self::Output {
+        return AntiDualNum321::from_groups(/* e45, scalar */ (Simd32x2::from(self.group1()[1]) * other.group0()));
+    }
+}
+impl AntiWedge<AntiDualNum4> for VersorRoundPoint {
+    type Output = AntiDualNum4;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        3        0
+    fn anti_wedge(self, other: AntiDualNum4) -> Self::Output {
+        return AntiDualNum4::from_groups(/* e1234, scalar */ Simd32x2::from([
+            (other.group0()[0] * self.group1()[1]),
+            ((other.group0()[0] * self.group1()[0]) + (other.group0()[1] * self.group1()[1])),
+        ]));
+    }
+}
+impl AntiWedge<AntiDualNum5> for VersorRoundPoint {
+    type Output = AntiDualNum5;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        3        0
+    fn anti_wedge(self, other: AntiDualNum5) -> Self::Output {
+        return AntiDualNum5::from_groups(/* e3215, scalar */ Simd32x2::from([
+            (other.group0()[0] * self.group1()[1]),
+            ((other.group0()[0] * self.group0()[3]) + (other.group0()[1] * self.group1()[1])),
+        ]));
+    }
+}
+impl AntiWedge<AntiFlatPoint> for VersorRoundPoint {
+    type Output = AntiFlatPoint;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (Simd32x4::from(self.group1()[1]) * other.group0()));
+    }
+}
+impl AntiWedge<AntiFlector> for VersorRoundPoint {
+    type Output = AntiFlector;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
+    fn anti_wedge(self, other: AntiFlector) -> Self::Output {
+        return AntiFlector::from_groups(
+            // e235, e315, e125, e321
+            (Simd32x4::from(self.group1()[1]) * other.group0()),
+            // e1, e2, e3, e5
+            (Simd32x4::from(self.group1()[1]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<AntiLine> for VersorRoundPoint {
+    type Output = AntiLine;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
+    fn anti_wedge(self, other: AntiLine) -> Self::Output {
+        return AntiLine::from_groups(
+            // e23, e31, e12
+            (Simd32x3::from(self.group1()[1]) * other.group0()),
+            // e15, e25, e35
+            (Simd32x3::from(self.group1()[1]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<AntiMotor> for VersorRoundPoint {
+    type Output = AntiMotor;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        1        6        0
+    //  no simd        1        9        0
+    fn anti_wedge(self, other: AntiMotor) -> Self::Output {
+        return AntiMotor::from_groups(
+            // e23, e31, e12, scalar
+            Simd32x4::from([
+                (self.group1()[1] * other.group0()[0]),
+                (self.group1()[1] * other.group0()[1]),
+                (self.group1()[1] * other.group0()[2]),
+                ((self.group1()[1] * other.group0()[3]) + (other.group1()[3] * self.group0()[3])),
+            ]),
+            // e15, e25, e35, e3215
+            (Simd32x4::from(self.group1()[1]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<AntiPlane> for VersorRoundPoint {
+    type Output = AntiPlane;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_wedge(self, other: AntiPlane) -> Self::Output {
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ (Simd32x4::from(self.group1()[1]) * other.group0()));
+    }
+}
+impl AntiWedge<AntiQuadNum> for VersorRoundPoint {
+    type Output = AntiQuadNum;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        6        0
+    fn anti_wedge(self, other: AntiQuadNum) -> Self::Output {
+        return AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([
+            (self.group1()[1] * other.group0()[0]),
+            (self.group1()[1] * other.group0()[1]),
+            (self.group1()[1] * other.group0()[2]),
+            ((self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[3]) + (other.group0()[1] * self.group0()[3])),
+        ]));
+    }
+}
+impl AntiWedge<AntiScalar> for VersorRoundPoint {
+    type Output = VersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd2        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        6        0
+    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
+        use crate::elements::*;
+        return VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(other[e12345]) * self.group0()),
+            // e5, e12345
+            (Simd32x2::from(other[e12345]) * self.group1()),
+        );
+    }
+}
+impl AntiWedge<AntiTripleNum> for VersorRoundPoint {
+    type Output = AntiTripleNum;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        5        0
+    fn anti_wedge(self, other: AntiTripleNum) -> Self::Output {
+        return AntiTripleNum::from_groups(/* e1234, e3215, scalar */ Simd32x3::from([
+            (self.group1()[1] * other.group0()[0]),
+            (self.group1()[1] * other.group0()[1]),
+            ((self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[2]) + (other.group0()[1] * self.group0()[3])),
+        ]));
+    }
+}
+impl AntiWedge<Circle> for VersorRoundPoint {
+    type Output = Circle;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0       10        0
+    fn anti_wedge(self, other: Circle) -> Self::Output {
+        return Circle::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(self.group1()[1]) * other.group0()),
+            // e415, e425, e435, e321
+            (Simd32x4::from(self.group1()[1]) * other.group1()),
+            // e235, e315, e125
+            (Simd32x3::from(self.group1()[1]) * other.group2()),
+        );
+    }
+}
+impl AntiWedge<CircleRotor> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
+    fn anti_wedge(self, other: CircleRotor) -> Self::Output {
+        return VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            (Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]])),
+            // e415, e425, e435, e321
+            (Simd32x4::from(self.group1()[1]) * other.group1()),
+            // e235, e315, e125, e5
+            (Simd32x4::from([self.group1()[1], self.group1()[1], self.group1()[1], self.group1()[0]]) * other.group2()),
+            // e1, e2, e3, e4
+            (Simd32x4::from(other.group2()[3]) * self.group0()),
+        );
+    }
+}
+impl AntiWedge<Dipole> for VersorRoundPoint {
+    type Output = Dipole;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0       10        0
+    fn anti_wedge(self, other: Dipole) -> Self::Output {
+        return Dipole::from_groups(
+            // e41, e42, e43
+            (Simd32x3::from(self.group1()[1]) * other.group0()),
+            // e23, e31, e12, e45
+            (Simd32x4::from(self.group1()[1]) * other.group1()),
+            // e15, e25, e35
+            (Simd32x3::from(self.group1()[1]) * other.group2()),
+        );
+    }
+}
+impl AntiWedge<DipoleInversion> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        4       11        0
+    //  no simd        4       20        0
+    fn anti_wedge(self, other: DipoleInversion) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (self.group1()[1] * other.group0()[0]),
+                (self.group1()[1] * other.group0()[1]),
+                (self.group1()[1] * other.group0()[2]),
+                ((self.group1()[0] * other.group2()[3])
+                    + (other.group3()[0] * self.group0()[0])
+                    + (other.group3()[1] * self.group0()[1])
+                    + (other.group3()[2] * self.group0()[2])
+                    + (other.group3()[3] * self.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from(self.group1()[1]) * other.group1()),
+            // e15, e25, e35, e1234
+            (Simd32x4::from(self.group1()[1]) * other.group2()),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * other.group3()),
+        );
+    }
+}
+impl AntiWedge<DualNum321> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
+    fn anti_wedge(self, other: DualNum321) -> Self::Output {
+        return VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * self.group1()[1])]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * self.group1()[1])]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * self.group1()[0])]),
+            // e1, e2, e3, e4
+            (Simd32x4::from(other.group0()[1]) * self.group0()),
+        );
+    }
+}
+impl AntiWedge<DualNum4> for VersorRoundPoint {
+    type Output = VersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd2        0        1        0
+    // Totals...
+    // yes simd        1        6        0
+    //  no simd        1        7        0
+    fn anti_wedge(self, other: DualNum4) -> Self::Output {
+        return VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (other.group0()[1] * self.group0()[0]),
+                (other.group0()[1] * self.group0()[1]),
+                (other.group0()[1] * self.group0()[2]),
+                ((other.group0()[0] * self.group1()[1]) + (other.group0()[1] * self.group0()[3])),
+            ]),
+            // e5, e12345
+            (Simd32x2::from(other.group0()[1]) * self.group1()),
+        );
+    }
+}
+impl AntiWedge<DualNum5> for VersorRoundPoint {
+    type Output = VersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        1        4        0
+    //  no simd        1        7        0
+    fn anti_wedge(self, other: DualNum5) -> Self::Output {
+        return VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(other.group0()[1]) * self.group0()),
+            // e5, e12345
+            Simd32x2::from([
+                ((other.group0()[0] * self.group1()[1]) + (other.group0()[1] * self.group1()[0])),
+                (other.group0()[1] * self.group1()[1]),
+            ]),
+        );
+    }
+}
+impl AntiWedge<FlatPoint> for VersorRoundPoint {
+    type Output = FlatPoint;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_wedge(self, other: FlatPoint) -> Self::Output {
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ (Simd32x4::from(self.group1()[1]) * other.group0()));
+    }
+}
+impl AntiWedge<Flector> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3        8        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        3        9        0
+    //  no simd        3       12        0
+    fn anti_wedge(self, other: Flector) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                ((other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group0()[1]) + (other.group1()[2] * self.group0()[2]) + (other.group1()[3] * self.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group1()[1] * other.group0()[3])]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                (self.group1()[1] * other.group0()[0]),
+                (self.group1()[1] * other.group0()[1]),
+                (self.group1()[1] * other.group0()[2]),
+                0.0,
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<Line> for VersorRoundPoint {
+    type Output = Line;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
+    fn anti_wedge(self, other: Line) -> Self::Output {
+        return Line::from_groups(
+            // e415, e425, e435
+            (Simd32x3::from(self.group1()[1]) * other.group0()),
+            // e235, e315, e125
+            (Simd32x3::from(self.group1()[1]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<Motor> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        9        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        1       10        0
+    //  no simd        1       13        0
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        return VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group1()[1] * other.group0()[3])]),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                (self.group1()[1] * other.group0()[0]),
+                (self.group1()[1] * other.group0()[1]),
+                (self.group1()[1] * other.group0()[2]),
+                0.0,
+            ]),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (self.group1()[1] * other.group1()[0]),
+                (self.group1()[1] * other.group1()[1]),
+                (self.group1()[1] * other.group1()[2]),
+                ((self.group1()[0] * other.group0()[3]) + (self.group1()[1] * other.group1()[3])),
+            ]),
+            // e1, e2, e3, e4
+            (Simd32x4::from(other.group0()[3]) * self.group0()),
+        );
+    }
+}
+impl AntiWedge<MultiVector> for VersorRoundPoint {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       10        0
+    //    simd3        0        4        0
+    //    simd4        1        5        0
+    // Totals...
+    // yes simd        7       19        0
+    //  no simd       10       42        0
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([
+                ((other.group0()[0] * self.group1()[1])
+                    + (self.group1()[0] * other[e45])
+                    + (other.group9()[0] * self.group0()[0])
+                    + (other.group9()[1] * self.group0()[1])
+                    + (other.group9()[2] * self.group0()[2])
+                    + (other.group9()[3] * self.group0()[3])),
+                (other.group0()[1] * self.group1()[1]),
+            ]),
+            // e1, e2, e3, e4
+            ((Simd32x4::from(other.group0()[1]) * self.group0()) + (Simd32x4::from(self.group1()[1]) * other.group1())),
+            // e5
+            ((other.group0()[1] * self.group1()[0]) + (self.group1()[1] * other[e1])),
+            // e15, e25, e35, e45
+            (Simd32x4::from(self.group1()[1]) * other.group3()),
+            // e41, e42, e43
+            (Simd32x3::from(self.group1()[1]) * other.group4()),
+            // e23, e31, e12
+            (Simd32x3::from(self.group1()[1]) * other.group5()),
+            // e415, e425, e435, e321
+            (Simd32x4::from(self.group1()[1]) * other.group6()),
+            // e423, e431, e412
+            (Simd32x3::from(self.group1()[1]) * other.group7()),
+            // e235, e315, e125
+            (Simd32x3::from(self.group1()[1]) * other.group8()),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * other.group9()),
+            // e1234
+            (self.group1()[1] * other[e45]),
+        );
+    }
+}
+impl AntiWedge<Plane> for VersorRoundPoint {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        3        5        0
+    //  no simd        3        8        0
+    fn anti_wedge(self, other: Plane) -> Self::Output {
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * other.group0()),
+            // e1234, scalar
+            Simd32x2::from([
+                0.0,
+                ((other.group0()[0] * self.group0()[0]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2]) + (other.group0()[3] * self.group0()[3])),
+            ]),
+        );
+    }
+}
+impl AntiWedge<QuadNum> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        9        0
+    fn anti_wedge(self, other: QuadNum) -> Self::Output {
+        return VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group1()[1] * other.group0()[3])]),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group1()[1] * other.group0()[2])]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, ((self.group1()[0] * other.group0()[3]) + (self.group1()[1] * other.group0()[1]))]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (other.group0()[3] * self.group0()[0]),
+                (other.group0()[3] * self.group0()[1]),
+                (other.group0()[3] * self.group0()[2]),
+                ((self.group1()[1] * other.group0()[0]) + (other.group0()[3] * self.group0()[3])),
+            ]),
+        );
+    }
+}
+impl AntiWedge<RoundPoint> for VersorRoundPoint {
+    type Output = RoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
+    fn anti_wedge(self, other: RoundPoint) -> Self::Output {
+        use crate::elements::*;
+        return RoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(self.group1()[1]) * other.group0()),
+            // e5
+            (self.group1()[1] * other[e2]),
+        );
+    }
+}
+impl AntiWedge<Scalar> for VersorRoundPoint {
+    type Output = Scalar;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
+    fn anti_wedge(self, other: Scalar) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */ (self.group1()[1] * other[scalar]));
+    }
+}
+impl AntiWedge<Sphere> for VersorRoundPoint {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        6        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        4        7        0
+    //  no simd        4       10        0
+    fn anti_wedge(self, other: Sphere) -> Self::Output {
+        use crate::elements::*;
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * other.group0()),
+            // e1234, scalar
+            Simd32x2::from([
+                (self.group1()[1] * other[e4315]),
+                ((self.group1()[0] * other[e4315])
+                    + (other.group0()[0] * self.group0()[0])
+                    + (other.group0()[1] * self.group0()[1])
+                    + (other.group0()[2] * self.group0()[2])
+                    + (other.group0()[3] * self.group0()[3])),
+            ]),
+        );
+    }
+}
+impl AntiWedge<TripleNum> for VersorRoundPoint {
+    type Output = VersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        8        0
+    fn anti_wedge(self, other: TripleNum) -> Self::Output {
+        return VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (other.group0()[2] * self.group0()[0]),
+                (other.group0()[2] * self.group0()[1]),
+                (other.group0()[2] * self.group0()[2]),
+                ((self.group1()[1] * other.group0()[0]) + (other.group0()[2] * self.group0()[3])),
+            ]),
+            // e5, e12345
+            Simd32x2::from([
+                ((self.group1()[0] * other.group0()[2]) + (self.group1()[1] * other.group0()[1])),
+                (self.group1()[1] * other.group0()[2]),
+            ]),
+        );
+    }
+}
+impl AntiWedge<VersorEven> for VersorRoundPoint {
+    type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd4        1        4        0
+    // Totals...
+    // yes simd        2        9        0
+    //  no simd        5       21        0
+    fn anti_wedge(self, other: VersorEven) -> Self::Output {
+        return VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            (Simd32x4::from(self.group1()[1]) * other.group0()),
+            // e415, e425, e435, e321
+            (Simd32x4::from(self.group1()[1]) * other.group1()),
+            // e235, e315, e125, e5
+            Simd32x4::from([
+                (self.group1()[1] * other.group2()[0]),
+                (self.group1()[1] * other.group2()[1]),
+                (self.group1()[1] * other.group2()[2]),
+                ((self.group1()[0] * other.group0()[3]) + (self.group1()[1] * other.group2()[3])),
+            ]),
+            // e1, e2, e3, e4
+            ((Simd32x4::from(self.group1()[1]) * other.group3()) + (Simd32x4::from(other.group0()[3]) * self.group0())),
+        );
+    }
+}
+impl AntiWedge<VersorOdd> for VersorRoundPoint {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        5        9        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        5       12        0
+    //  no simd        5       21        0
+    fn anti_wedge(self, other: VersorOdd) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (self.group1()[1] * other.group0()[0]),
+                (self.group1()[1] * other.group0()[1]),
+                (self.group1()[1] * other.group0()[2]),
+                ((self.group1()[0] * other.group2()[3])
+                    + (self.group1()[1] * other.group0()[3])
+                    + (other.group3()[0] * self.group0()[0])
+                    + (other.group3()[1] * self.group0()[1])
+                    + (other.group3()[2] * self.group0()[2])
+                    + (other.group3()[3] * self.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from(self.group1()[1]) * other.group1()),
+            // e15, e25, e35, e1234
+            (Simd32x4::from(self.group1()[1]) * other.group2()),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * other.group3()),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for VersorRoundPoint {
+    type Output = VersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        3        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd        2        5        0
+    //  no simd        5       11        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            ((Simd32x4::from(other.group1()[1]) * self.group0()) + (Simd32x4::from(self.group1()[1]) * other.group0())),
+            // e5, e12345
+            Simd32x2::from([
+                ((other.group1()[0] * self.group1()[1]) + (other.group1()[1] * self.group1()[0])),
+                (other.group1()[1] * self.group1()[1]),
+            ]),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for VersorRoundPoint {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        5        7        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        5        8        0
+    //  no simd        5       11        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self.group1()[1]) * other.group0()),
+            // e1234, scalar
+            Simd32x2::from([
+                (self.group1()[1] * other.group1()[0]),
+                ((self.group1()[0] * other.group1()[0])
+                    + (self.group1()[1] * other.group1()[1])
+                    + (self.group0()[0] * other.group0()[0])
+                    + (self.group0()[1] * other.group0()[1])
+                    + (self.group0()[2] * other.group0()[2])
+                    + (self.group0()[3] * other.group0()[3])),
+            ]),
+        );
+    }
+}
+impl InfixAntiWedge for VersorSphere {}
+impl AntiWedge<AntiCircleRotor> for VersorSphere {
+    type Output = RoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        7       12        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        9       14        0
+    //  no simd       15       20        0
+    fn anti_wedge(self, other: AntiCircleRotor) -> Self::Output {
+        return RoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                (-(other.group0()[0] * self.group0()[3]) - (other.group1()[1] * self.group0()[2])),
+                (-(other.group0()[1] * self.group0()[3]) - (other.group1()[2] * self.group0()[0])),
+                (-(other.group0()[2] * self.group0()[3]) - (other.group1()[0] * self.group0()[1])),
+                ((other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]))
+                + (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+            // e5
+            (-(other.group1()[3] * self.group0()[3]) - (other.group2()[0] * self.group0()[0]) - (other.group2()[1] * self.group0()[1]) - (other.group2()[2] * self.group0()[2])),
+        );
+    }
+}
+impl AntiWedge<AntiDipoleInversion> for VersorSphere {
+    type Output = AntiCircleRotor;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       17        0
+    //    simd3        2        3        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       11       23        0
+    //  no simd       24       38        0
+    fn anti_wedge(self, other: AntiDipoleInversion) -> Self::Output {
+        return AntiCircleRotor::from_groups(
+            // e41, e42, e43
+            ((Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
+                + (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(other.group0(), 2, 0, 1))
+                - (Simd32x3::from([self.group0()[2], self.group0()[0], self.group0()[1]]) * swizzle!(other.group0(), 1, 2, 0))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group2()[0]) + (other.group0()[0] * self.group0()[3])),
+                ((self.group1()[0] * other.group2()[1]) + (other.group0()[1] * self.group0()[3])),
+                ((self.group1()[0] * other.group2()[2]) + (other.group0()[2] * self.group0()[3])),
+                (-(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) - (swizzle!(other.group1(), 3, 3, 3, 0) * swizzle!(self.group0(), 0, 1, 2, 0))),
+            // e15, e25, e35, scalar
+            (Simd32x4::from([
+                ((other.group2()[2] * self.group0()[1]) * -1.0),
+                ((other.group2()[0] * self.group0()[2]) * -1.0),
+                ((other.group2()[1] * self.group0()[0]) * -1.0),
+                ((self.group1()[0] * other.group3()[3]) + (other.group3()[1] * self.group0()[1]) + (other.group3()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group2()[3]]))
+                + (Simd32x4::from([other.group2()[1], other.group2()[2], other.group2()[0], other.group3()[0]]) * swizzle!(self.group0(), 2, 0, 1, 0))),
+        );
+    }
+}
+impl AntiWedge<AntiDualNum321> for VersorSphere {
+    type Output = TripleNum;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
+    fn anti_wedge(self, other: AntiDualNum321) -> Self::Output {
+        return TripleNum::from_groups(
+            // e4, e5, e12345
+            Simd32x3::from([(other.group0()[0] * self.group1()[0]), (other.group0()[0] * self.group0()[3] * -1.0), 0.0]),
+        );
+    }
+}
+impl AntiWedge<AntiDualNum4> for VersorSphere {
+    type Output = Circle;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        8        0
+    fn anti_wedge(self, other: AntiDualNum4) -> Self::Output {
+        return Circle::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(other.group0()[0]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * self.group0()[3] * -1.0)]),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+        );
+    }
+}
+impl AntiWedge<AntiDualNum5> for VersorSphere {
+    type Output = AntiFlatPoint;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
+    fn anti_wedge(self, other: AntiDualNum5) -> Self::Output {
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            (Simd32x4::from(other.group0()[0]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]])),
+        );
+    }
+}
+impl AntiWedge<AntiFlatPoint> for VersorSphere {
+    type Output = AntiLine;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3        6        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        4        8        0
+    //  no simd        6       12        0
+    fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
+        return AntiLine::from_groups(
+            // e23, e31, e12
+            ((Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                - (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))),
+            // e15, e25, e35
+            Simd32x3::from([
+                ((other.group0()[1] * self.group0()[2]) - (other.group0()[2] * self.group0()[1])),
+                (-(other.group0()[0] * self.group0()[2]) + (other.group0()[2] * self.group0()[0])),
+                ((other.group0()[0] * self.group0()[1]) - (other.group0()[1] * self.group0()[0])),
+            ]),
+        );
+    }
+}
+impl AntiWedge<AntiFlector> for VersorSphere {
+    type Output = AntiMotor;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        5       15        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        6       16        0
+    //  no simd        9       19        0
+    fn anti_wedge(self, other: AntiFlector) -> Self::Output {
+        return AntiMotor::from_groups(
+            // e23, e31, e12, scalar
+            (Simd32x4::from([
+                ((other.group0()[3] * self.group0()[0]) * -1.0),
+                ((other.group0()[3] * self.group0()[1]) * -1.0),
+                ((other.group0()[3] * self.group0()[2]) * -1.0),
+                ((other.group1()[0] * self.group0()[0]) + (other.group1()[1] * self.group0()[1]) + (other.group1()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]))),
+            // e15, e25, e35, e3215
+            Simd32x4::from([
+                ((other.group0()[1] * self.group0()[2]) - (other.group0()[2] * self.group0()[1])),
+                (-(other.group0()[0] * self.group0()[2]) + (other.group0()[2] * self.group0()[0])),
+                ((other.group0()[0] * self.group0()[1]) - (other.group0()[1] * self.group0()[0])),
+                0.0,
+            ]),
+        );
+    }
+}
+impl AntiWedge<AntiLine> for VersorSphere {
+    type Output = AntiPlane;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
+    fn anti_wedge(self, other: AntiLine) -> Self::Output {
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group1()[0]) + (other.group0()[2] * self.group0()[1])),
+                ((self.group1()[0] * other.group1()[1]) + (other.group0()[0] * self.group0()[2])),
+                ((self.group1()[0] * other.group1()[2]) + (other.group0()[1] * self.group0()[0])),
+                (-(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group1()[0]]) * swizzle!(self.group0(), 2, 0, 1, 0))),
+        );
+    }
+}
+impl AntiWedge<AntiMotor> for VersorSphere {
+    type Output = AntiFlector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd        5       10        0
+    //  no simd        8       16        0
+    fn anti_wedge(self, other: AntiMotor) -> Self::Output {
+        return AntiFlector::from_groups(
+            // e235, e315, e125, e321
+            (Simd32x4::from(other.group1()[3]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]])),
+            // e1, e2, e3, e5
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group1()[0]) + (other.group0()[2] * self.group0()[1])),
+                ((self.group1()[0] * other.group1()[1]) + (other.group0()[0] * self.group0()[2])),
+                ((self.group1()[0] * other.group1()[2]) + (other.group0()[1] * self.group0()[0])),
+                (-(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[0], other.group1()[0]]) * swizzle!(self.group0(), 2, 0, 1, 0))),
+        );
+    }
+}
+impl AntiWedge<AntiPlane> for VersorSphere {
+    type Output = Scalar;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3        4        0
+    fn anti_wedge(self, other: AntiPlane) -> Self::Output {
+        return Scalar::from_groups(
+            // scalar
+            ((self.group1()[0] * other.group0()[3]) + (other.group0()[0] * self.group0()[0]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2])),
+        );
+    }
+}
+impl AntiWedge<AntiQuadNum> for VersorSphere {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        4        0
+    //    simd3        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        1        7        0
+    //  no simd        1       14        0
+    fn anti_wedge(self, other: AntiQuadNum) -> Self::Output {
+        return AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(other.group0()[0]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, ((self.group1()[0] * other.group0()[1]) - (other.group0()[0] * self.group0()[3]))]),
+            // e235, e315, e125, e4
+            (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]]) * swizzle!(other.group0(), 1, 1, 1, 2)),
+            // e1, e2, e3, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[2] * self.group0()[3] * -1.0)]),
+        );
+    }
+}
+impl AntiWedge<AntiScalar> for VersorSphere {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd2        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        6        0
+    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
+        use crate::elements::*;
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other[e12345]) * self.group0()),
+            // e1234, scalar
+            (Simd32x2::from(other[e12345]) * self.group1()),
+        );
+    }
+}
+impl AntiWedge<AntiTripleNum> for VersorSphere {
+    type Output = Circle;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        2        0
+    //    simd3        0        3        0
+    // Totals...
+    // yes simd        1        5        0
+    //  no simd        1       11        0
+    fn anti_wedge(self, other: AntiTripleNum) -> Self::Output {
+        return Circle::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(other.group0()[0]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(-1.0)),
+            // e415, e425, e435, e321
+            Simd32x4::from([0.0, 0.0, 0.0, ((self.group1()[0] * other.group0()[1]) - (other.group0()[0] * self.group0()[3]))]),
+            // e235, e315, e125
+            (Simd32x3::from(other.group0()[1]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])),
+        );
+    }
+}
+impl AntiWedge<Circle> for VersorSphere {
+    type Output = Dipole;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd3        4        6        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        9       15        0
+    //  no simd       20       30        0
+    fn anti_wedge(self, other: Circle) -> Self::Output {
+        return Dipole::from_groups(
+            // e41, e42, e43
+            ((Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
+                + (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(other.group0(), 2, 0, 1))
+                - (Simd32x3::from([self.group0()[2], self.group0()[0], self.group0()[1]]) * swizzle!(other.group0(), 1, 2, 0))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group2()[0]) + (other.group0()[0] * self.group0()[3])),
+                ((self.group1()[0] * other.group2()[1]) + (other.group0()[1] * self.group0()[3])),
+                ((self.group1()[0] * other.group2()[2]) + (other.group0()[2] * self.group0()[3])),
+                (-(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) - (swizzle!(other.group1(), 3, 3, 3, 0) * swizzle!(self.group0(), 0, 1, 2, 0))),
+            // e15, e25, e35
+            ((Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
+                - (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(other.group2(), 2, 0, 1))
+                + (Simd32x3::from([self.group0()[2], self.group0()[0], self.group0()[1]]) * swizzle!(other.group2(), 1, 2, 0))),
+        );
+    }
+}
+impl AntiWedge<CircleRotor> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       16       28        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd       17       30        0
+    //  no simd       20       36        0
+    fn anti_wedge(self, other: CircleRotor) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                ((self.group1()[0] * other.group1()[0]) - (other.group0()[1] * self.group0()[2]) + (other.group0()[2] * self.group0()[1])),
+                ((self.group1()[0] * other.group1()[1]) + (other.group0()[0] * self.group0()[2]) - (other.group0()[2] * self.group0()[0])),
+                ((self.group1()[0] * other.group1()[2]) - (other.group0()[0] * self.group0()[1]) + (other.group0()[1] * self.group0()[0])),
+                (self.group1()[1] * other.group2()[3]),
+            ]),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group2()[0]) + (other.group0()[0] * self.group0()[3])),
+                ((self.group1()[0] * other.group2()[1]) + (other.group0()[1] * self.group0()[3])),
+                ((self.group1()[0] * other.group2()[2]) + (other.group0()[2] * self.group0()[3])),
+                (-(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) - (swizzle!(other.group1(), 3, 3, 3, 0) * swizzle!(self.group0(), 0, 1, 2, 0))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((other.group1()[0] * self.group0()[3]) + (other.group2()[1] * self.group0()[2]) - (other.group2()[2] * self.group0()[1])),
+                ((other.group1()[1] * self.group0()[3]) - (other.group2()[0] * self.group0()[2]) + (other.group2()[2] * self.group0()[0])),
+                ((other.group1()[2] * self.group0()[3]) + (other.group2()[0] * self.group0()[1]) - (other.group2()[1] * self.group0()[0])),
+                (self.group1()[0] * other.group2()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group2()[3]) * self.group0()),
+        );
+    }
+}
+impl AntiWedge<Dipole> for VersorSphere {
+    type Output = RoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        7       12        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        9       14        0
+    //  no simd       15       20        0
+    fn anti_wedge(self, other: Dipole) -> Self::Output {
+        return RoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                (-(other.group0()[0] * self.group0()[3]) - (other.group1()[1] * self.group0()[2])),
+                (-(other.group0()[1] * self.group0()[3]) - (other.group1()[2] * self.group0()[0])),
+                (-(other.group0()[2] * self.group0()[3]) - (other.group1()[0] * self.group0()[1])),
+                ((other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]))
+                + (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+            // e5
+            (-(other.group2()[0] * self.group0()[0]) - (other.group2()[1] * self.group0()[1]) - (other.group2()[2] * self.group0()[2]) - (other.group1()[3] * self.group0()[3])),
+        );
+    }
+}
+impl AntiWedge<DipoleInversion> for VersorSphere {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       17        0
+    //    simd3        1        2        0
+    //    simd4        4        5        0
+    // Totals...
+    // yes simd       11       24        0
+    //  no simd       25       43        0
+    fn anti_wedge(self, other: DipoleInversion) -> Self::Output {
+        return AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            ((Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group3()[0], other.group3()[1], other.group3()[2]]))
+                - (Simd32x3::from(other.group2()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))),
+            // e415, e425, e435, e321
+            (-(Simd32x4::from([other.group3()[2], other.group3()[0], other.group3()[1], other.group2()[3]]) * swizzle!(self.group0(), 1, 2, 0, 3))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group3(), 1, 2, 0, 3))),
+            // e235, e315, e125, e4
+            (Simd32x4::from([
+                ((other.group3()[0] * self.group0()[3]) * -1.0),
+                ((other.group3()[1] * self.group0()[3]) * -1.0),
+                ((other.group3()[2] * self.group0()[3]) * -1.0),
+                ((self.group1()[0] * other.group1()[3]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from([other.group3()[3], other.group3()[3], other.group3()[3], other.group0()[0]]) * swizzle!(self.group0(), 0, 1, 2, 0))),
+            // e1, e2, e3, e5
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group2()[0]) + (other.group1()[2] * self.group0()[1])),
+                ((self.group1()[0] * other.group2()[1]) + (other.group1()[0] * self.group0()[2])),
+                ((self.group1()[0] * other.group2()[2]) + (other.group1()[1] * self.group0()[0])),
+                (-(other.group2()[1] * self.group0()[1]) - (other.group2()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]))
+                - (Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[0], other.group2()[0]]) * swizzle!(self.group0(), 2, 0, 1, 0))),
+        );
+    }
+}
+impl AntiWedge<DualNum321> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        8        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        9        0
+    //  no simd        0       12        0
+    fn anti_wedge(self, other: DualNum321) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * self.group1()[1])]),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                (other.group0()[0] * self.group0()[0] * -1.0),
+                (other.group0()[0] * self.group0()[1] * -1.0),
+                (other.group0()[0] * self.group0()[2] * -1.0),
+                0.0,
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * self.group1()[0])]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group0()[1]) * self.group0()),
+        );
+    }
+}
+impl AntiWedge<DualNum4> for VersorSphere {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        1        4        0
+    //  no simd        1        7        0
+    fn anti_wedge(self, other: DualNum4) -> Self::Output {
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group0()[1]) * self.group0()),
+            // e1234, scalar
+            Simd32x2::from([
+                (other.group0()[1] * self.group1()[0]),
+                ((other.group0()[0] * self.group0()[3]) + (other.group0()[1] * self.group1()[1])),
+            ]),
+        );
+    }
+}
+impl AntiWedge<DualNum5> for VersorSphere {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        1        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        1        4        0
+    //  no simd        1        7        0
+    fn anti_wedge(self, other: DualNum5) -> Self::Output {
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group0()[1]) * self.group0()),
+            // e1234, scalar
+            Simd32x2::from([
+                (other.group0()[1] * self.group1()[0]),
+                ((other.group0()[0] * self.group1()[0]) + (other.group0()[1] * self.group1()[1])),
+            ]),
+        );
+    }
+}
+impl AntiWedge<FlatPoint> for VersorSphere {
+    type Output = RoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        3        5        0
+    //  no simd        3        8        0
+    fn anti_wedge(self, other: FlatPoint) -> Self::Output {
+        return RoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(self.group1()[0]) * other.group0()),
+            // e5
+            (-(other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2]) - (other.group0()[3] * self.group0()[3])),
+        );
+    }
+}
+impl AntiWedge<Flector> for VersorSphere {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        9       21        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        9       22        0
+    //  no simd        9       24        0
+    fn anti_wedge(self, other: Flector) -> Self::Output {
+        return AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                ((other.group1()[1] * self.group0()[2]) - (other.group1()[2] * self.group0()[1])),
+                (-(other.group1()[0] * self.group0()[2]) + (other.group1()[2] * self.group0()[0])),
+                ((other.group1()[0] * self.group0()[1]) - (other.group1()[1] * self.group0()[0])),
+                (self.group1()[0] * other.group1()[3]),
+            ]),
+            // e235, e315, e125, e4
+            Simd32x4::from([
+                (-(other.group1()[0] * self.group0()[3]) + (other.group1()[3] * self.group0()[0])),
+                (-(other.group1()[1] * self.group0()[3]) + (other.group1()[3] * self.group0()[1])),
+                (-(other.group1()[2] * self.group0()[3]) + (other.group1()[3] * self.group0()[2])),
+                (self.group1()[0] * other.group0()[3]),
+            ]),
+            // e1, e2, e3, e5
+            Simd32x4::from([
+                (self.group1()[0] * other.group0()[0]),
+                (self.group1()[0] * other.group0()[1]),
+                (self.group1()[0] * other.group0()[2]),
+                (-(other.group0()[0] * self.group0()[0])
+                    - (other.group0()[1] * self.group0()[1])
+                    - (other.group0()[2] * self.group0()[2])
+                    - (other.group0()[3] * self.group0()[3])),
+            ]),
+        );
+    }
+}
+impl AntiWedge<Line> for VersorSphere {
+    type Output = Dipole;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        6        0
+    //    simd3        2        4        0
+    // Totals...
+    // yes simd        4       10        0
+    //  no simd        8       18        0
+    fn anti_wedge(self, other: Line) -> Self::Output {
+        return Dipole::from_groups(
+            // e41, e42, e43
+            (Simd32x3::from(self.group1()[0]) * other.group0()),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                (self.group1()[0] * other.group1()[0]),
+                (self.group1()[0] * other.group1()[1]),
+                (self.group1()[0] * other.group1()[2]),
+                (-(other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])),
+            ]),
+            // e15, e25, e35
+            ((Simd32x3::from(self.group0()[3]) * other.group0()) - (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(other.group1(), 2, 0, 1))
+                + (Simd32x3::from([self.group0()[2], self.group0()[0], self.group0()[1]]) * swizzle!(other.group1(), 1, 2, 0))),
+        );
+    }
+}
+impl AntiWedge<Motor> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        9       21        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        9       22        0
+    //  no simd        9       25        0
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                (self.group1()[0] * other.group0()[0]),
+                (self.group1()[0] * other.group0()[1]),
+                (self.group1()[0] * other.group0()[2]),
+                ((self.group1()[0] * other.group1()[3]) + (self.group1()[1] * other.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                (self.group1()[0] * other.group1()[0]),
+                (self.group1()[0] * other.group1()[1]),
+                (self.group1()[0] * other.group1()[2]),
+                (-(other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])),
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((other.group0()[0] * self.group0()[3]) + (other.group1()[1] * self.group0()[2]) - (other.group1()[2] * self.group0()[1])),
+                ((other.group0()[1] * self.group0()[3]) - (other.group1()[0] * self.group0()[2]) + (other.group1()[2] * self.group0()[0])),
+                ((other.group0()[2] * self.group0()[3]) + (other.group1()[0] * self.group0()[1]) - (other.group1()[1] * self.group0()[0])),
+                (self.group1()[0] * other.group0()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group0()[3]) * self.group0()),
+        );
+    }
+}
+impl AntiWedge<MultiVector> for VersorSphere {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       16       27        0
+    //    simd3        6       10        0
+    //    simd4        4        6        0
+    // Totals...
+    // yes simd       26       43        0
+    //  no simd       50       81        0
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([
+                ((other.group0()[1] * self.group1()[1])
+                    + (self.group1()[0] * other[e1])
+                    + (other.group1()[0] * self.group0()[0])
+                    + (other.group1()[1] * self.group0()[1])
+                    + (other.group1()[2] * self.group0()[2])
+                    + (other.group1()[3] * self.group0()[3])),
+                0.0,
+            ]),
+            // e1, e2, e3, e4
+            (Simd32x4::from([
+                (-(other.group4()[0] * self.group0()[3]) - (other.group5()[1] * self.group0()[2])),
+                (-(other.group4()[1] * self.group0()[3]) - (other.group5()[2] * self.group0()[0])),
+                (-(other.group4()[2] * self.group0()[3]) - (other.group5()[0] * self.group0()[1])),
+                ((other.group4()[1] * self.group0()[1]) + (other.group4()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from(self.group1()[0]) * other.group3())
+                + (Simd32x4::from([other.group5()[2], other.group5()[0], other.group5()[1], other.group4()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+            // e5
+            (-(other.group3()[0] * self.group0()[0]) - (other.group3()[1] * self.group0()[1]) - (other.group3()[2] * self.group0()[2]) - (other.group3()[3] * self.group0()[3])),
+            // e15, e25, e35, e45
+            (Simd32x4::from([
+                ((other.group8()[1] * self.group0()[2]) + (other.group6()[0] * self.group0()[3])),
+                ((other.group8()[2] * self.group0()[0]) + (other.group6()[1] * self.group0()[3])),
+                ((other.group8()[0] * self.group0()[1]) + (other.group6()[2] * self.group0()[3])),
+                (-(other.group6()[1] * self.group0()[1]) - (other.group6()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from([other.group8()[2], other.group8()[0], other.group8()[1], other.group6()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))),
+            // e41, e42, e43
+            ((Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]))
+                + (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(other.group7(), 2, 0, 1))
+                - (Simd32x3::from([self.group0()[2], self.group0()[0], self.group0()[1]]) * swizzle!(other.group7(), 1, 2, 0))),
+            // e23, e31, e12
+            ((Simd32x3::from(self.group1()[0]) * other.group8()) - (Simd32x3::from(other.group6()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                + (Simd32x3::from(self.group0()[3]) * other.group7())),
+            // e415, e425, e435, e321
+            (-(Simd32x4::from([other.group9()[2], other.group9()[0], other.group9()[1], other[e45]]) * swizzle!(self.group0(), 1, 2, 0, 3))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group9(), 1, 2, 0, 3))),
+            // e423, e431, e412
+            ((Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group9()[0], other.group9()[1], other.group9()[2]]))
+                - (Simd32x3::from(other[e45]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))),
+            // e235, e315, e125
+            ((Simd32x3::from(other.group9()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                - (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group9()[0], other.group9()[1], other.group9()[2]]))),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group0()[1]) * self.group0()),
+            // e1234
+            (other.group0()[1] * self.group1()[0]),
+        );
+    }
+}
+impl AntiWedge<Plane> for VersorSphere {
+    type Output = Circle;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        3        7        0
+    //    simd3        1        3        0
+    // Totals...
+    // yes simd        4       10        0
+    //  no simd        6       16        0
+    fn anti_wedge(self, other: Plane) -> Self::Output {
+        return Circle::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                ((other.group0()[1] * self.group0()[2]) - (other.group0()[2] * self.group0()[1])),
+                (-(other.group0()[0] * self.group0()[2]) + (other.group0()[2] * self.group0()[0])),
+                ((other.group0()[0] * self.group0()[1]) - (other.group0()[1] * self.group0()[0])),
+                (self.group1()[0] * other.group0()[3]),
+            ]),
+            // e235, e315, e125
+            ((Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                - (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))),
+        );
+    }
+}
+impl AntiWedge<QuadNum> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2       10        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2       11        0
+    //  no simd        2       14        0
+    fn anti_wedge(self, other: QuadNum) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                0.0,
+                0.0,
+                0.0,
+                ((self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[3]) + (other.group0()[0] * self.group0()[3])),
+            ]),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                (other.group0()[2] * self.group0()[0] * -1.0),
+                (other.group0()[2] * self.group0()[1] * -1.0),
+                (other.group0()[2] * self.group0()[2] * -1.0),
+                0.0,
+            ]),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group1()[0] * other.group0()[3])]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group0()[3]) * self.group0()),
+        );
+    }
+}
+impl AntiWedge<RoundPoint> for VersorSphere {
+    type Output = Scalar;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        4        5        0
+    fn anti_wedge(self, other: RoundPoint) -> Self::Output {
+        use crate::elements::*;
+        return Scalar::from_groups(
+            // scalar
+            ((self.group1()[0] * other[e2])
+                + (other.group0()[0] * self.group0()[0])
+                + (other.group0()[1] * self.group0()[1])
+                + (other.group0()[2] * self.group0()[2])
+                + (other.group0()[3] * self.group0()[3])),
+        );
+    }
+}
+impl AntiWedge<Sphere> for VersorSphere {
+    type Output = Circle;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        2        4        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd        3        6        0
+    //  no simd       10       20        0
+    fn anti_wedge(self, other: Sphere) -> Self::Output {
+        use crate::elements::*;
+        return Circle::from_groups(
+            // e423, e431, e412
+            ((Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                - (Simd32x3::from(other[e4315]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))),
+            // e415, e425, e435, e321
+            (-(Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other[e4315]]) * swizzle!(self.group0(), 1, 2, 0, 3))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group0(), 1, 2, 0, 3))),
+            // e235, e315, e125
+            ((Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                - (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))),
+        );
+    }
+}
+impl AntiWedge<TripleNum> for VersorSphere {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        5        0
+    //  no simd        2        8        0
+    fn anti_wedge(self, other: TripleNum) -> Self::Output {
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group0()[2]) * self.group0()),
+            // e1234, scalar
+            Simd32x2::from([
+                (self.group1()[0] * other.group0()[2]),
+                ((self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[2]) + (other.group0()[0] * self.group0()[3])),
+            ]),
+        );
+    }
+}
+impl AntiWedge<VersorEven> for VersorSphere {
+    type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       13       28        0
+    //    simd4        3        4        0
+    // Totals...
+    // yes simd       16       32        0
+    //  no simd       25       44        0
+    fn anti_wedge(self, other: VersorEven) -> Self::Output {
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
+            (Simd32x4::from([
+                ((other.group0()[1] * self.group0()[2]) * -1.0),
+                ((other.group0()[2] * self.group0()[0]) * -1.0),
+                ((other.group0()[0] * self.group0()[1]) * -1.0),
+                ((other.group3()[0] * self.group0()[0]) + (other.group3()[1] * self.group0()[1]) + (other.group3()[2] * self.group0()[2]) + (other.group3()[3] * self.group0()[3])),
+            ]) + (Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group2()[3]]))
+                + (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group1()[1]]) * swizzle!(other.group0(), 2, 0, 1, 3))),
+            // e23, e31, e12, e45
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group2()[0]) + (other.group0()[0] * self.group0()[3])),
+                ((self.group1()[0] * other.group2()[1]) + (other.group0()[1] * self.group0()[3])),
+                ((self.group1()[0] * other.group2()[2]) + (other.group0()[2] * self.group0()[3])),
+                (-(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2])),
+            ]) - (swizzle!(other.group1(), 3, 3, 3, 0) * swizzle!(self.group0(), 0, 1, 2, 0))),
+            // e15, e25, e35, e1234
+            Simd32x4::from([
+                ((other.group1()[0] * self.group0()[3]) + (other.group2()[1] * self.group0()[2]) - (other.group2()[2] * self.group0()[1])),
+                ((other.group1()[1] * self.group0()[3]) - (other.group2()[0] * self.group0()[2]) + (other.group2()[2] * self.group0()[0])),
+                ((other.group1()[2] * self.group0()[3]) + (other.group2()[0] * self.group0()[1]) - (other.group2()[1] * self.group0()[0])),
+                (self.group1()[0] * other.group0()[3]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group0()[3]) * self.group0()),
+        );
+    }
+}
+impl AntiWedge<VersorOdd> for VersorSphere {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        6       17        0
+    //    simd3        1        2        0
+    //    simd4        4        5        0
+    // Totals...
+    // yes simd       11       24        0
+    //  no simd       25       43        0
+    fn anti_wedge(self, other: VersorOdd) -> Self::Output {
+        return AntiDipoleInversion::from_groups(
+            // e423, e431, e412
+            ((Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group3()[0], other.group3()[1], other.group3()[2]]))
+                - (Simd32x3::from(other.group2()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))),
+            // e415, e425, e435, e321
+            (-(Simd32x4::from([other.group3()[2], other.group3()[0], other.group3()[1], other.group2()[3]]) * swizzle!(self.group0(), 1, 2, 0, 3))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group3(), 1, 2, 0, 3))),
+            // e235, e315, e125, e4
+            (Simd32x4::from([
+                ((other.group3()[0] * self.group0()[3]) * -1.0),
+                ((other.group3()[1] * self.group0()[3]) * -1.0),
+                ((other.group3()[2] * self.group0()[3]) * -1.0),
+                ((self.group1()[0] * other.group1()[3]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2])),
+            ]) + (Simd32x4::from([other.group3()[3], other.group3()[3], other.group3()[3], other.group0()[0]]) * swizzle!(self.group0(), 0, 1, 2, 0))),
+            // e1, e2, e3, e5
+            (Simd32x4::from([
+                ((self.group1()[0] * other.group2()[0]) + (other.group1()[2] * self.group0()[1])),
+                ((self.group1()[0] * other.group2()[1]) + (other.group1()[0] * self.group0()[2])),
+                ((self.group1()[0] * other.group2()[2]) + (other.group1()[1] * self.group0()[0])),
+                (-(other.group2()[1] * self.group0()[1]) - (other.group2()[2] * self.group0()[2])),
+            ]) - (Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]))
+                - (Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[0], other.group2()[0]]) * swizzle!(self.group0(), 2, 0, 1, 0))),
+        );
+    }
+}
+impl AntiWedge<VersorRoundPoint> for VersorSphere {
+    type Output = VersorSphere;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        5        7        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        5        8        0
+    //  no simd        5       11        0
+    fn anti_wedge(self, other: VersorRoundPoint) -> Self::Output {
+        return VersorSphere::from_groups(
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(other.group1()[1]) * self.group0()),
+            // e1234, scalar
+            Simd32x2::from([
+                (other.group1()[1] * self.group1()[0]),
+                ((other.group1()[0] * self.group1()[0])
+                    + (other.group1()[1] * self.group1()[1])
+                    + (other.group0()[0] * self.group0()[0])
+                    + (other.group0()[1] * self.group0()[1])
+                    + (other.group0()[2] * self.group0()[2])
+                    + (other.group0()[3] * self.group0()[3])),
+            ]),
+        );
+    }
+}
+impl AntiWedge<VersorSphere> for VersorSphere {
+    type Output = Circle;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //    simd3        2        4        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd        3        6        0
+    //  no simd       10       20        0
+    fn anti_wedge(self, other: VersorSphere) -> Self::Output {
+        return Circle::from_groups(
+            // e423, e431, e412
+            (-(Simd32x3::from(other.group1()[0]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                + (Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))),
+            // e415, e425, e435, e321
+            (-(Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * swizzle!(self.group0(), 1, 2, 0, 3))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(other.group0(), 1, 2, 0, 3))),
+            // e235, e315, e125
+            ((Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
+                - (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))),
         );
     }
 }

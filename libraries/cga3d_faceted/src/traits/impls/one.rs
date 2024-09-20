@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 21
+// Total Implementations: 24
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -92,24 +92,9 @@ impl One for AntiQuadNum {
         return AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]));
     }
 }
-impl One for AntiQuadNumAligningOrigin {
-    fn one() -> Self {
-        return AntiQuadNumAligningOrigin::from_groups(/* e1234, e3215, scalar */ Simd32x3::from([0.0, 0.0, 1.0]));
-    }
-}
-impl One for AntiQuadNumAligningOriginAtInfinity {
-    fn one() -> Self {
-        return AntiQuadNumAligningOriginAtInfinity::from_groups(/* e3215, scalar */ Simd32x2::from([0.0, 1.0]));
-    }
-}
 impl One for AntiQuadNumAtInfinity {
     fn one() -> Self {
         return AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ Simd32x3::from([0.0, 0.0, 1.0]));
-    }
-}
-impl One for AntiQuadNumOnOrigin {
-    fn one() -> Self {
-        return AntiQuadNumOnOrigin::from_groups(/* e1234, scalar */ Simd32x2::from([0.0, 1.0]));
     }
 }
 impl One for AntiVersorEvenOnOrigin {
@@ -120,6 +105,16 @@ impl One for AntiVersorEvenOnOrigin {
             // e23, e31, e12, e1234
             Simd32x4::from(0.0),
         );
+    }
+}
+impl One for AntiVersorRoundPointAligningOriginAtInfinity {
+    fn one() -> Self {
+        return AntiVersorRoundPointAligningOriginAtInfinity::from_groups(/* e3215, scalar */ Simd32x2::from([0.0, 1.0]));
+    }
+}
+impl One for AntiVersorRoundPointOnOrigin {
+    fn one() -> Self {
+        return AntiVersorRoundPointOnOrigin::from_groups(/* e1234, scalar */ Simd32x2::from([0.0, 1.0]));
     }
 }
 impl One for MultiVector {
@@ -158,6 +153,11 @@ impl One for MysteryVersorOdd {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
         );
+    }
+}
+impl One for MysteryVersorSphere {
+    fn one() -> Self {
+        return MysteryVersorSphere::from_groups(/* e4235, e4315, e4125, scalar */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]));
     }
 }
 impl One for Scalar {
@@ -201,5 +201,20 @@ impl One for VersorOddOrthogonalOrigin {
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
         );
+    }
+}
+impl One for VersorSphere {
+    fn one() -> Self {
+        return VersorSphere::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(0.0), /* e1234, scalar */ Simd32x2::from([0.0, 1.0]));
+    }
+}
+impl One for VersorSphereAtInfinity {
+    fn one() -> Self {
+        return VersorSphereAtInfinity::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(0.0), /* scalar */ 1.0);
+    }
+}
+impl One for VersorSphereOrthogonalOrigin {
+    fn one() -> Self {
+        return VersorSphereOrthogonalOrigin::from_groups(/* e3215, e1234, scalar */ Simd32x3::from([0.0, 0.0, 1.0]));
     }
 }

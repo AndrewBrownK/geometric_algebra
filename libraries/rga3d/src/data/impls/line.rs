@@ -1,4 +1,5 @@
 use crate::traits::GeometricProduct;
+use crate::traits::RightDual;
 use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -477,8 +478,7 @@ impl std::ops::Not for Line {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn not(self) -> Self::Output {
-        let right_dual = Line::from_groups(/* e41, e42, e43 */ (self.group1() * Simd32x3::from(-1.0)), /* e23, e31, e12 */ Simd32x3::from(0.0));
-        return right_dual;
+        return self.right_dual();
     }
 }
 impl std::ops::Sub<AntiScalar> for Line {

@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 21
+// Total Implementations: 24
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -140,29 +140,19 @@ impl AntiOne for MysteryVersorEven {
         );
     }
 }
+impl AntiOne for MysteryVersorRoundPoint {
+    fn anti_one() -> Self {
+        return MysteryVersorRoundPoint::from_groups(/* e1, e2, e3, e12345 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]));
+    }
+}
 impl AntiOne for QuadNum {
     fn anti_one() -> Self {
         return QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]));
     }
 }
-impl AntiOne for QuadNumAligningOrigin {
-    fn anti_one() -> Self {
-        return QuadNumAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from([0.0, 0.0, 1.0]));
-    }
-}
-impl AntiOne for QuadNumAligningOriginAtInfinity {
-    fn anti_one() -> Self {
-        return QuadNumAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([0.0, 1.0]));
-    }
-}
 impl AntiOne for QuadNumAtInfinity {
     fn anti_one() -> Self {
         return QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from([0.0, 0.0, 1.0]));
-    }
-}
-impl AntiOne for QuadNumOnOrigin {
-    fn anti_one() -> Self {
-        return QuadNumOnOrigin::from_groups(/* e4, e12345 */ Simd32x2::from([0.0, 1.0]));
     }
 }
 impl AntiOne for VersorEven {
@@ -211,5 +201,30 @@ impl AntiOne for VersorEvenOnOrigin {
             // e415, e425, e435, e4
             Simd32x4::from(0.0),
         );
+    }
+}
+impl AntiOne for VersorRoundPoint {
+    fn anti_one() -> Self {
+        return VersorRoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(0.0), /* e5, e12345 */ Simd32x2::from([0.0, 1.0]));
+    }
+}
+impl AntiOne for VersorRoundPointAligningOrigin {
+    fn anti_one() -> Self {
+        return VersorRoundPointAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from([0.0, 0.0, 1.0]));
+    }
+}
+impl AntiOne for VersorRoundPointAligningOriginAtInfinity {
+    fn anti_one() -> Self {
+        return VersorRoundPointAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from([0.0, 1.0]));
+    }
+}
+impl AntiOne for VersorRoundPointAtInfinity {
+    fn anti_one() -> Self {
+        return VersorRoundPointAtInfinity::from_groups(/* e1, e2, e3 */ Simd32x3::from(0.0), /* e5, e12345 */ Simd32x2::from([0.0, 1.0]));
+    }
+}
+impl AntiOne for VersorRoundPointOnOrigin {
+    fn anti_one() -> Self {
+        return VersorRoundPointOnOrigin::from_groups(/* e4, e12345 */ Simd32x2::from([0.0, 1.0]));
     }
 }

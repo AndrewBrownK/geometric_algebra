@@ -5,18 +5,18 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 33
+// Total Implementations: 35
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         3       6       0
-//  Average:        14      34       0
+//  Average:        13      32       0
 //  Maximum:       194     416       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         3       6       0
-//  Average:        17      39       0
+//  Average:        16      38       0
 //  Maximum:       248     528       0
 impl AntiSquare for AntiCircleRotor {
     type Output = VersorEven;
@@ -276,27 +276,17 @@ impl AntiSquare for AntiTripleNum {
     }
 }
 impl AntiSquare for Circle {
-    type Output = VersorEven;
+    type Output = VersorRoundPoint;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       36        0
+    //           add/sub      mul      div
+    //      f32       11       24        0
+    //    simd2        3        6        0
+    // Totals...
+    // yes simd       14       30        0
+    //  no simd       17       36        0
     fn anti_square(self) -> Self::Output {
         use crate::elements::*;
-        return VersorEven::from_groups(
-            // e423, e431, e412, e12345
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                (-f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2) + f32::powi(self[e321], 2)
-                    - 2.0 * (self[e423] * self[e235])
-                    - 2.0 * (self[e431] * self[e315])
-                    - 2.0 * (self[e412] * self[e125])),
-            ]),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, (-2.0 * (self[e415] * self[e235]) - 2.0 * (self[e425] * self[e315]) - 2.0 * (self[e435] * self[e125]))]),
+        return VersorRoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (-2.0 * (self[e431] * self[e125]) + 2.0 * (self[e412] * self[e315]) + 2.0 * (self[e415] * self[e321])),
@@ -304,6 +294,11 @@ impl AntiSquare for Circle {
                 (-2.0 * (self[e423] * self[e315]) + 2.0 * (self[e431] * self[e235]) + 2.0 * (self[e435] * self[e321])),
                 (-2.0 * (self[e423] * self[e415]) - 2.0 * (self[e431] * self[e425]) - 2.0 * (self[e412] * self[e435])),
             ]),
+            // e5, e12345
+            (Simd32x2::from([0.0, (-f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2) + f32::powi(self[e321], 2))])
+                - Simd32x2::from(2.0) * (Simd32x2::from(self[e235]) * Simd32x2::from([self[e415], self[e423]]))
+                - Simd32x2::from(2.0) * (Simd32x2::from(self[e315]) * Simd32x2::from([self[e425], self[e431]]))
+                - Simd32x2::from(2.0) * (Simd32x2::from(self[e125]) * Simd32x2::from([self[e435], self[e412]]))),
         );
     }
 }
@@ -349,27 +344,17 @@ impl AntiSquare for CircleRotor {
     }
 }
 impl AntiSquare for Dipole {
-    type Output = VersorEven;
+    type Output = VersorRoundPoint;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       36        0
+    //           add/sub      mul      div
+    //      f32       11       24        0
+    //    simd2        3        6        0
+    // Totals...
+    // yes simd       14       30        0
+    //  no simd       17       36        0
     fn anti_square(self) -> Self::Output {
         use crate::elements::*;
-        return VersorEven::from_groups(
-            // e423, e431, e412, e12345
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                (f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) - f32::powi(self[e45], 2)
-                    + 2.0 * (self[e41] * self[e15])
-                    + 2.0 * (self[e42] * self[e25])
-                    + 2.0 * (self[e43] * self[e35])),
-            ]),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, (2.0 * (self[e23] * self[e15]) + 2.0 * (self[e31] * self[e25]) + 2.0 * (self[e12] * self[e35]))]),
+        return VersorRoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (2.0 * (self[e42] * self[e35]) - 2.0 * (self[e43] * self[e25]) + 2.0 * (self[e23] * self[e45])),
@@ -377,6 +362,11 @@ impl AntiSquare for Dipole {
                 (2.0 * (self[e41] * self[e25]) - 2.0 * (self[e42] * self[e15]) + 2.0 * (self[e12] * self[e45])),
                 (2.0 * (self[e41] * self[e23]) + 2.0 * (self[e42] * self[e31]) + 2.0 * (self[e43] * self[e12])),
             ]),
+            // e5, e12345
+            (Simd32x2::from([0.0, (f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) - f32::powi(self[e45], 2))])
+                + Simd32x2::from(2.0) * (Simd32x2::from(self[e15]) * Simd32x2::from([self[e23], self[e41]]))
+                + Simd32x2::from(2.0) * (Simd32x2::from(self[e25]) * Simd32x2::from([self[e31], self[e42]]))
+                + Simd32x2::from(2.0) * (Simd32x2::from(self[e35]) * Simd32x2::from([self[e12], self[e43]]))),
         );
     }
 }
@@ -913,6 +903,50 @@ impl AntiSquare for VersorOdd {
                 (-2.0 * (self[e41] * self[e35]) + 2.0 * (self[e43] * self[e15]) + 2.0 * (self[scalar] * self[e4315]) + 2.0 * (self[e31] * self[e45])),
                 (2.0 * (self[e41] * self[e25]) - 2.0 * (self[e42] * self[e15]) + 2.0 * (self[scalar] * self[e4125]) + 2.0 * (self[e12] * self[e45])),
                 (2.0 * (self[e41] * self[e23]) + 2.0 * (self[e42] * self[e31]) + 2.0 * (self[e43] * self[e12]) - 2.0 * (self[scalar] * self[e1234])),
+            ]),
+        );
+    }
+}
+impl AntiSquare for VersorRoundPoint {
+    type Output = VersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        4        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        4        6        0
+    //  no simd        4       12        0
+    fn anti_square(self) -> Self::Output {
+        use crate::elements::*;
+        return VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(self[e12345]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]) * Simd32x4::from(2.0)),
+            // e5, e12345
+            Simd32x2::from([
+                (self[e5] * self[e12345] * 2.0),
+                (-f32::powi(self[e1], 2) - f32::powi(self[e2], 2) - f32::powi(self[e3], 2) + f32::powi(self[e12345], 2) + 2.0 * (self[e4] * self[e5])),
+            ]),
+        );
+    }
+}
+impl AntiSquare for VersorSphere {
+    type Output = VersorRoundPoint;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        4        4        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        4        6        0
+    //  no simd        4       12        0
+    fn anti_square(self) -> Self::Output {
+        use crate::elements::*;
+        return VersorRoundPoint::from_groups(
+            // e1, e2, e3, e4
+            (Simd32x4::from(self[scalar]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e1234]]) * Simd32x4::from([2.0, 2.0, 2.0, -2.0])),
+            // e5, e12345
+            Simd32x2::from([
+                (self[e3215] * self[scalar] * -2.0),
+                (f32::powi(self[e4235], 2) + f32::powi(self[e4315], 2) + f32::powi(self[e4125], 2) - f32::powi(self[scalar], 2) - 2.0 * (self[e3215] * self[e1234])),
             ]),
         );
     }
