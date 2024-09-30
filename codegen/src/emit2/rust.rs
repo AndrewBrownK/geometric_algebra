@@ -2530,7 +2530,7 @@ impl std::hash::Hash for {ucc} {{
                         no += 1;
                         write!(w, "let {name}_{no} = ")?;
                     }
-                    self.write_expression(w, expr)?;
+                    self.write_expression(w, expr.read().deref())?;
                     writeln!(w, ";")?;
                 }
             }
@@ -2590,7 +2590,7 @@ impl std::hash::Hash for {ucc} {{
                         no += 1;
                         write!(w, "let {name}_{no} = ")?;
                     }
-                    self.write_expression(w, expr)?;
+                    self.write_expression(w, expr.read().deref())?;
                     writeln!(w, ";")?;
                 }
             }

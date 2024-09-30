@@ -1,6 +1,9 @@
 use std::borrow::Cow;
 use std::cmp::Ordering;
+use std::ops::Deref;
 use std::sync::Arc;
+
+use parking_lot::RwLock;
 
 use crate::ast2::expressions::AnyExpression;
 
@@ -54,13 +57,17 @@ impl<ExprType> Ord for Variable<ExprType> where ExprType: Ord {
 pub(crate) struct RawVariableDeclaration {
     pub(crate) comment: Option<Cow<'static, String>>,
     pub(crate) name: (String, usize),
-    pub(crate) expr: Option<AnyExpression>,
+    pub(crate) expr: Option<Arc<RwLock<AnyExpression>>>,
 }
 impl PartialEq for RawVariableDeclaration {
     fn eq(&self, other: &Self) -> bool {
         let result = std::ptr::eq(self, other);
         if !result {
-            return self.name == other.name && self.comment == other.comment && self.expr == other.expr
+            return self.name == other.name && self.comment == other.comment && match (&self.expr, &other.expr) {
+                (Some(a), Some(b)) => Arc::ptr_eq(a, b),
+                (None, None) => true,
+                _ => false
+            }
         }
         result
     }
@@ -77,8 +84,23 @@ impl Ord for RawVariableDeclaration {
             return Ordering::Equal
         }
         self.name.cmp(&other.name).then_with(|| {
-            self.expr.cmp(&other.expr).then_with(|| {
-                self.comment.cmp(&other.comment)
+            self.comment.cmp(&other.comment).then_with(|| {
+                let a = &self.expr;
+                let b = &other.expr;
+                match (a, b) {
+                    (None, None) => Ordering::Equal,
+                    (Some(_), None) => Ordering::Greater,
+                    (None, Some(_)) => Ordering::Less,
+                    (Some(a), Some(b)) => {
+                        if Arc::ptr_eq(a, b) {
+                            Ordering::Equal
+                        } else {
+                            let a = a.read();
+                            let b = b.read();
+                            a.deref().cmp(b.deref())
+                        }
+                    }
+                }
             })
         })
     }

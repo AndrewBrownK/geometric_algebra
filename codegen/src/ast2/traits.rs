@@ -2285,7 +2285,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         let decl = Arc::new(RawVariableDeclaration {
             comment: comment.map(|it| Cow::Owned(it.into())),
             name: unique_name.clone(),
-            expr: Some(expr),
+            expr: Some(Arc::new(RwLock::new(expr))),
         });
         let mut vars = self.variables.lock();
         let existing = vars.insert(unique_name.clone(), Arc::downgrade(&decl));
@@ -2481,7 +2481,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
                     let Some(old_decl) = old_decl.upgrade() else { continue };
                     let new_var_comment = old_decl.comment.clone();
                     let new_var_name = self.make_var_name_unique(old_decl.name.0.clone());
-                    let mut new_var_expr = old_decl.expr.clone().expect("Non-Parameter Variables are always initialized");
+                    let mut new_var_expr = old_decl.expr.as_ref().expect("Non-Parameter Variables are always initialized").read().clone();
                     for (old, new) in var_replacements.iter() {
                         // Update all variables used in this expression
                         new_var_expr.substitute_variable(old.clone(), new.clone());
@@ -2490,7 +2490,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
                     let new_decl = Arc::new(RawVariableDeclaration {
                         comment: new_var_comment,
                         name: new_var_name,
-                        expr: Some(new_var_expr),
+                        expr: Some(Arc::new(RwLock::new(new_var_expr))),
                     });
                     // Then add it to the list
                     var_replacements.push((old_decl.clone(), new_decl.clone()));
@@ -2524,7 +2524,9 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
                 None => drop(lines.remove(i)),
                 Some(vd) => {
                     if let Some(v) = &vd.expr {
-                        statistics += v.count_operations(&lookup);
+                        let mut expr = v.write();
+                        expr.final_simplify();
+                        statistics += expr.count_operations(&lookup);
                     }
                 }
             }
@@ -2580,7 +2582,9 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
                 None => drop(lines.remove(i)),
                 Some(vd) => {
                     if let Some(v) = &vd.expr {
-                        statistics += v.count_operations(&lookup);
+                        let mut expr = v.write();
+                        expr.final_simplify();
+                        statistics += expr.count_operations(&lookup);
                     }
                 }
             }
@@ -2636,7 +2640,9 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
                 None => drop(lines.remove(i)),
                 Some(vd) => {
                     if let Some(v) = &vd.expr {
-                        statistics += v.count_operations(&lookup);
+                        let mut expr = v.write();
+                        expr.final_simplify();
+                        statistics += expr.count_operations(&lookup);
                     }
                 }
             }
@@ -2692,7 +2698,9 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
                 None => drop(lines.remove(i)),
                 Some(vd) => {
                     if let Some(v) = &vd.expr {
-                        statistics += v.count_operations(&lookup);
+                        let mut expr = v.write();
+                        expr.final_simplify();
+                        statistics += expr.count_operations(&lookup);
                     }
                 }
             }
@@ -2748,7 +2756,9 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
                 None => drop(lines.remove(i)),
                 Some(vd) => {
                     if let Some(v) = &vd.expr {
-                        statistics += v.count_operations(&lookup);
+                        let mut expr = v.write();
+                        expr.final_simplify();
+                        statistics += expr.count_operations(&lookup);
                     }
                 }
             }
@@ -2804,7 +2814,9 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
                 None => drop(lines.remove(i)),
                 Some(vd) => {
                     if let Some(v) = &vd.expr {
-                        statistics += v.count_operations(&lookup);
+                        let mut expr = v.write();
+                        expr.final_simplify();
+                        statistics += expr.count_operations(&lookup);
                     }
                 }
             }
