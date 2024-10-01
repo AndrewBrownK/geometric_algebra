@@ -677,17 +677,41 @@ mod impls {
         builder.return_expr(result)
     });
 
+
+    /*
+    QuadNum(
+        e4((
+            a12345 * a4 * (((a12345 ^2)) + ((a321 ^2)) + 2*(a4 * a5))
+        )),
+
+        e5((
+            a12345 * a5 * (((a12345 ^2)) + ((a321 ^2)) + 2*(a4 * a5))
+        )),
+
+        e321((
+            a12345 * a321 * (((a12345 ^2)) + ((a321 ^2)) + 2*(a4 * a5))
+        )),
+
+        e12345((
+            2*((a12345 ^2) * a4 * a5) + ((((((a12345 ^2)) + ((a321 ^2)) + 2*(a4 * a5)) ^2)) ^ 0.25) + (((a12345 ^2) * (a321 ^2) * 2) ^ 0.25)
+        ))
+    )
+
+    */
+
     trait_impl_1_type_2_arg_f32!(AntiPowfImpl(builder, slf, exp) -> MultiVector {
         let exp: FloatExpr = exp.into();
         let mut dyn_mv = DynamicMultiVector::zero();
         let r = slf.clone();
+        let anti_scalar = builder.ga.anti_scalar();
         for (a, a_el) in slf.elements_flat() {
             for (b, b_el) in r.elements_flat() {
                 let sop = builder.ga.anti_product(a_el, b_el);
                 for p in sop.sum {
                     let el = p.element;
-                    let mut f = a.clone() * b.clone() * p.coefficient;
-                    if a_el.signature() == b_el.signature() {
+                    let mut f = FloatExpr::Literal(p.coefficient);
+                    f = f * a.clone() * b.clone();
+                    if el == anti_scalar {
                         f = FloatExpr::Exp(Box::new(f), Some(Box::new(exp.clone())), 0.5);
                     } else {
                         f = f * exp.clone() * 0.5;

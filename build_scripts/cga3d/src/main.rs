@@ -15,7 +15,7 @@ use codegen::ast2::traits::{
     TraitImplBuilder,
 };
 use codegen::ast2::Variable;
-use codegen::build_scripts2::common_traits::{AntiPowi, AntiSquare, GeometricAntiProduct};
+use codegen::build_scripts2::common_traits::{AntiPowf, AntiPowi, AntiSquare, AntiSquareRoot, GeometricAntiProduct};
 use codegen::elements::e12345;
 
 codegen::multi_vecs! { e12345;
@@ -172,21 +172,47 @@ fn test_powf() {
     let builder = TraitImplBuilder::new_sandbox(cga3d.clone(), repo);
     let rt = tokio::runtime::Runtime::new().expect("tokio works");
     let result: Option<()> = rt.block_on(async move {
-        let qn = MultiVector::from(&QuadNum);
+        let qn = MultiVector::from(&DualNum4);
         let qn = qn.construct(|el| {
             let mut n = format!("{el}");
             n = n.replace("e", "a");
             float_var_expr(n.as_str())
         });
-        println!("Basic QuadNum: {qn}");
+
+        println!("Basic QuadNum: {qn}\n");
+
         let qn_1 = GeometricAntiProduct.deep_inline(&builder, qn.clone(), qn.clone()).await?;
         println!("Manually Squared: {qn_1}");
-        // println!("Manually Squared: {qn_1:?}");
         let qn_2 = AntiSquare.deep_inline(&builder, qn.clone()).await?;
-        println!("Trait Squared: {qn_2}");
+        println!("Trait Squared:    {qn_2}");
         let qn_3 = AntiPowi.deep_inline(&builder, qn.clone(), IntExpr::Literal(2)).await?;
-        println!("Powi Squared: {qn_3}");
-        // println!("Powi Squared: {qn_3:?}");
+        println!("Powi Squared:     {qn_3}");
+        let qn_4 = AntiPowf.deep_inline(&builder, qn.clone(), FloatExpr::Literal(2.0)).await?;
+        println!("Powf Squared:     {qn_4}\n");
+
+        let qn_5 = AntiPowi.deep_inline(&builder, qn.clone(), IntExpr::Literal(3)).await?;
+        println!("Powi Cubed:     {qn_5}\n");
+
+
+        let qn_6 = AntiPowf.deep_inline(&builder, qn.clone(), FloatExpr::Literal(0.5)).await?;
+        println!("Powf Sqrt:     {qn_6}");
+
+
+
+        // let qn_7 = AntiPowf.deep_inline(&builder, qn_1.clone(), FloatExpr::Literal(0.5)).await?;
+        // println!("Powf Sqrt 1:     {qn_7}");
+        // let qn_8 = AntiPowf.deep_inline(&builder, qn_2.clone(), FloatExpr::Literal(0.5)).await?;
+        // println!("Powf Sqrt 2:     {qn_8}");
+        // let qn_9 = AntiPowf.deep_inline(&builder, qn_3.clone(), FloatExpr::Literal(0.5)).await?;
+        // println!("Powf Sqrt 3:     {qn_9}\n");
+        //
+        // let qn_4 = AntiSquareRoot.deep_inline(&builder, qn_1.clone()).await?;
+        // println!("Trait Sqrt 1:     {qn_4}");
+        // let qn_5 = AntiSquareRoot.deep_inline(&builder, qn_2.clone()).await?;
+        // println!("Trait Sqrt 2:     {qn_5}");
+        // let qn_6 = AntiSquareRoot.deep_inline(&builder, qn_3.clone()).await?;
+        // println!("Trait Sqrt 3:     {qn_6}\n");
+
         Some(())
     });
     result.expect("Entire script must complete")

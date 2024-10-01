@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 use std::fmt::{Debug, Display, Formatter};
 use std::mem;
-use std::ops::{Add, AddAssign, Deref, Mul, MulAssign, Neg, Sub, SubAssign};
+use std::ops::{Add, AddAssign, Deref, DerefMut, Mul, MulAssign, Neg, Sub, SubAssign};
 use std::sync::Arc;
 use float_ord::FloatOrd;
 use crate::algebra2::basis::BasisElement;
@@ -2996,25 +2996,58 @@ impl FloatExpr {
                     *self = FloatExpr::Literal(*last_addend);
                 }
             }
-            FloatExpr::Exp(a, b, c) => {
+            FloatExpr::Exp(base_expression, exponent_expression, exponent_literal) => {
                 if !insides_already_done {
-                    a.simplify_nuanced(insides_already_done, transpose_simd);
+                    base_expression.simplify_nuanced(insides_already_done, transpose_simd);
                 }
-                if let Some(d) = b {
+                if let Some(d) = exponent_expression {
                     if !insides_already_done {
                         d.simplify_nuanced(insides_already_done, transpose_simd);
                     }
                     if let box FloatExpr::Literal(l) = d {
-                        *c *= *l;
-                        *b = None;
+                        *exponent_literal *= *l;
+                        *exponent_expression = None;
                     }
                 }
-                if b.is_none() {
-                    if *c == 1.0 {
-                        *self = a.take_as_owned();
+
+                match (exponent_expression.as_deref_mut(), base_expression.deref_mut()) {
+                    (Some(outer_exponent), FloatExpr::Exp(box inner_base, Some(box inner_exponent), inner_literal)) => {
+                        *exponent_expression = Some(Box::new(outer_exponent.take_as_owned() * inner_exponent.take_as_owned()));
+                        exponent_literal.mul_assign(*inner_literal);
+                        *base_expression = Box::new(inner_base.take_as_owned());
+                    }
+                    (None, FloatExpr::Exp(box inner_base, Some(box inner_exponent), inner_literal)) => {
+                        *exponent_expression = Some(Box::new(inner_exponent.take_as_owned()));
+                        exponent_literal.mul_assign(*inner_literal);
+                        *base_expression = Box::new(inner_base.take_as_owned());
+                    }
+                    (_outer_exponent, FloatExpr::Exp(box inner_base, None, inner_literal)) => {
+                        exponent_literal.mul_assign(*inner_literal);
+                        *base_expression = Box::new(inner_base.take_as_owned());
+                    }
+                    (Some(outer_exponent), FloatExpr::Product(factors, factor_literal)) if factors.len() == 1 && *factor_literal == 1.0 => {
+                        // Pull the inside exponent out
+                        let (factor, factor_exponent) = &mut factors[0];
+                        outer_exponent.mul_assign(*factor_exponent);
+                        *base_expression = Box::new(factor.take_as_owned());
+                    }
+                    (None, FloatExpr::Product(factors, factor_literal)) if factors.len() == 1 => {
+                        // Push the outside exponent in
+                        let (factor, factor_exponent) = &mut factors[0];
+                        let new_factor_exponent = *factor_exponent * *exponent_literal;
+                        let new_factor_literal = f32::powf(*factor_literal, *exponent_literal);
+                        *self = FloatExpr::Product(vec![(factor.take_as_owned(), new_factor_exponent)], new_factor_literal);
+                        self.simplify_nuanced(insides_already_done, transpose_simd);
                         return
                     }
-                    if *c == 0.0 {
+                    _ => {}
+                }
+                if exponent_expression.is_none() {
+                    if *exponent_literal == 1.0 {
+                        *self = base_expression.take_as_owned();
+                        return
+                    }
+                    if *exponent_literal == 0.0 {
                         *self = FloatExpr::Literal(1.0);
                         return
                     }
