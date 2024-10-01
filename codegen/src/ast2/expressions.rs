@@ -3051,6 +3051,9 @@ impl FloatExpr {
                         *self = FloatExpr::Literal(1.0);
                         return
                     }
+                    *self = FloatExpr::Product(vec![(base_expression.take_as_owned(), *exponent_literal)], 1.0);
+                    self.simplify_nuanced(insides_already_done, transpose_simd);
+                    return
                 }
             }
         }
