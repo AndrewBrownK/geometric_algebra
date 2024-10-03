@@ -155,12 +155,9 @@ mod impls {
     use crate::algebra2::multivector::DynamicMultiVector;
     use crate::ast2::datatype::{Integer, MultiVector};
     use crate::ast2::expressions::{Expression, FloatExpr, IntExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
-    use crate::ast2::traits::{HasNotReturned, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImplBuilder, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22};
+    use crate::ast2::traits::{HasNotReturned, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImplBuilder, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitDef_1_Type_2_Args_f32};
     use crate::ast2::Variable;
-    use crate::build_scripts2::common_traits::{
-        AntiInverse, AntiReverse, AntiScalarProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightDual, ScalarProduct,
-        SquareRoot, Subtraction, Wedge,
-    };
+    use crate::build_scripts2::common_traits::{AntiInverse, AntiPowf, AntiReverse, AntiScalarProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Powf, Reverse, RightAntiDual, RightDual, ScalarProduct, SquareRoot, Subtraction, Wedge};
     use crate::elements::scalar;
 
     #[macro_export]
@@ -633,14 +630,26 @@ mod impls {
             for (b, b_el) in r.elements_flat() {
                 let sop = builder.ga.product(a_el, b_el);
                 for p in sop.sum {
-                    let el = p.element;
-                    let mut f = a.clone() * b.clone() * p.coefficient;
-                    if a_el.signature() == b_el.signature() {
-                        f = FloatExpr::Exp(Box::new(f), Some(Box::new(exp.clone())), 0.5);
+                    let f = if a_el == b_el {
+                        let a_exp = FloatExpr::Exp(Box::new(a.clone()), Some(Box::new(exp.clone())), 1.0);
+                        let b_exp = FloatExpr::Exp(Box::new(b.clone()), Some(Box::new(exp.clone())), 1.0);
+                        FloatExpr::Product(vec![(a_exp, 0.5), (b_exp, 0.5)], p.coefficient)
                     } else {
-                        f = f * exp.clone() * 0.5;
-                    }
-                    dyn_mv += (f, el);
+                        let mut f = exp.clone() * p.coefficient * 0.5;
+                        let exp_minus_one = FloatExpr::Sum(vec![(exp.clone(), 1.0)], -1.0);
+                        if a_el == scalar {
+                            f.mul_assign(FloatExpr::Exp(Box::new(a.clone()), Some(Box::new(exp_minus_one.clone())), 1.0));
+                        } else {
+                            f.mul_assign(a.clone());
+                        }
+                        if b_el == scalar {
+                            f.mul_assign(FloatExpr::Exp(Box::new(b.clone()), Some(Box::new(exp_minus_one.clone())), 1.0));
+                        } else {
+                            f.mul_assign(b.clone());
+                        }
+                        f
+                    };
+                    dyn_mv += (f, p.element);
                 }
             }
         }
@@ -653,27 +662,7 @@ mod impls {
 
     trait_impl_1_type_2_arg_i32!(PowiImpl(builder, slf, exp) -> MultiVector {
         let exp = FloatExpr::FromInt(exp.into());
-        let mut dyn_mv = DynamicMultiVector::zero();
-        let r = slf.clone();
-        for (a, a_el) in slf.elements_flat() {
-            for (b, b_el) in r.elements_flat() {
-                let sop = builder.ga.product(a_el, b_el);
-                for p in sop.sum {
-                    let el = p.element;
-                    let mut f = a.clone() * b.clone() * p.coefficient;
-                    if a_el.signature() == b_el.signature() {
-                        f = FloatExpr::Exp(Box::new(f), Some(Box::new(exp.clone())), 0.5);
-                    } else {
-                        f = f * exp.clone() * 0.5;
-                    }
-                    dyn_mv += (f, el);
-                }
-            }
-        }
-        let result = dyn_mv.construct(&builder)?;
-        if result.mv_class != slf.expr_type {
-            return None
-        }
+        let result = Powf.inline(&builder, slf, exp).await?;
         builder.return_expr(result)
     });
 
@@ -719,27 +708,7 @@ mod impls {
 
     trait_impl_1_type_2_arg_i32!(AntiPowiImpl(builder, slf, exp) -> MultiVector {
         let exp = FloatExpr::FromInt(exp.into());
-        let mut dyn_mv = DynamicMultiVector::zero();
-        let r = slf.clone();
-        for (a, a_el) in slf.elements_flat() {
-            for (b, b_el) in r.elements_flat() {
-                let sop = builder.ga.anti_product(a_el, b_el);
-                for p in sop.sum {
-                    let el = p.element;
-                    let mut f = a.clone() * b.clone() * p.coefficient;
-                    if a_el.signature() == b_el.signature() {
-                        f = FloatExpr::Exp(Box::new(f), Some(Box::new(exp.clone())), 0.5);
-                    } else {
-                        f = f * exp.clone() * 0.5;
-                    }
-                    dyn_mv += (f, el);
-                }
-            }
-        }
-        let result = dyn_mv.construct(&builder)?;
-        if result.mv_class != slf.expr_type {
-            return None
-        }
+        let result = AntiPowf.inline(&builder, slf, exp).await?;
         builder.return_expr(result)
     });
 

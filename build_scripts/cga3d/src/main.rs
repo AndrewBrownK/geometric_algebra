@@ -194,27 +194,17 @@ fn test_powf() {
         let qn_5 = GeometricAntiProduct.deep_inline(&builder, qn_1.clone(), qn.clone()).await?;
         println!("Manually Cubed: {qn_5}");
         let qn_6 = AntiPowf.deep_inline(&builder, qn.clone(), FloatExpr::Literal(3.0)).await?;
-        println!("Powf Cubed:     {qn_6}\n");
+        println!("Powf Cubed:     {qn_6}");
+        let qn_7 = AntiPowi.deep_inline(&builder, qn.clone(), IntExpr::Literal(3)).await?;
+        println!("Powi Cubed:     {qn_7}\n");
 
 
-        let qn_7 = AntiPowf.deep_inline(&builder, qn.clone(), FloatExpr::Literal(0.5)).await?;
-        println!("Powf Sqrt:     {qn_7}");
+        let qn_8 = AntiPowf.deep_inline(&builder, qn.clone(), FloatExpr::Literal(0.5)).await?;
+        println!("Powf Sqrt:     {qn_8}");
+        let qn_9 = GeometricAntiProduct.deep_inline(&builder, qn_8.clone(), qn_8.clone()).await?;
+        println!("Squared Sqrt:  {qn_9}\n");
 
 
-
-        // let qn_7 = AntiPowf.deep_inline(&builder, qn_1.clone(), FloatExpr::Literal(0.5)).await?;
-        // println!("Powf Sqrt 1:     {qn_7}");
-        // let qn_8 = AntiPowf.deep_inline(&builder, qn_2.clone(), FloatExpr::Literal(0.5)).await?;
-        // println!("Powf Sqrt 2:     {qn_8}");
-        // let qn_9 = AntiPowf.deep_inline(&builder, qn_3.clone(), FloatExpr::Literal(0.5)).await?;
-        // println!("Powf Sqrt 3:     {qn_9}\n");
-        //
-        // let qn_4 = AntiSquareRoot.deep_inline(&builder, qn_1.clone()).await?;
-        // println!("Trait Sqrt 1:     {qn_4}");
-        // let qn_5 = AntiSquareRoot.deep_inline(&builder, qn_2.clone()).await?;
-        // println!("Trait Sqrt 2:     {qn_5}");
-        // let qn_6 = AntiSquareRoot.deep_inline(&builder, qn_3.clone()).await?;
-        // println!("Trait Sqrt 3:     {qn_6}\n");
 
         Some(())
     });
