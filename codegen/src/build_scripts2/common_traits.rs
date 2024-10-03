@@ -666,6 +666,35 @@ mod impls {
         builder.return_expr(result)
     });
 
+
+    /*
+
+Manually cubed QuadNum:
+QuadNum(
+    e4(((a4 * (((a12345 ^2)) + ((a321 ^2)) + 2*(a4 * a5))) + 2*((a12345 ^2) * a4))),
+    e5(((a5 * (((a12345 ^2)) + ((a321 ^2)) + 2*(a4 * a5))) + 2*((a12345 ^2) * a5))),
+    e321(((a321 * (((a12345 ^2)) + ((a321 ^2)) + 2*(a4 * a5))) + 2*((a12345 ^2) * a321))),
+    e12345(((a12345 * (((a12345 ^2)) + ((a321 ^2)) + 2*(a4 * a5))) + 2*(a12345 * (a321 ^2)) + 4*(a12345 * a4 * a5)))
+)
+
+Manually cubed QuadNum, simplified by hand (TODO what this is telling me is that I need to add arithmetic flattening to simplification):
+QuadNum(
+    e4( a4*a321^2 + 2*a5*a4^2 + 3*a4*a12345^2 ),
+    e5( a5*a321^2 + 2*a4*a5^2 + 3*a5*a12345^2 ),
+    e321( a321^3 + 2*a4*a5*a321 + 3*a321*a12345^2 ),
+    e12345( a12345^3 + 6*a4*a5*a12345 + 3*a12345*a321^2 ),
+)
+
+Current Powf implementation of cubed QuadNum:
+QuadNum(
+    e4(((a12345 ^2) * a4 * 3)),
+    e5(((a12345 ^2) * a5 * 3)),
+    e321(((a12345 ^2) * a321 * 3)),
+    e12345((((a12345 ^3)) + ((a321 ^3)) + 3*(a4 * a5)))
+)
+
+    */
+
     trait_impl_1_type_2_arg_f32!(AntiPowfImpl(builder, slf, exp) -> MultiVector {
         // TODO after you finish fixing this, fix Powf, Powi, and AntiPowi also
         let exp: FloatExpr = exp.into();

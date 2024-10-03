@@ -172,7 +172,7 @@ fn test_powf() {
     let builder = TraitImplBuilder::new_sandbox(cga3d.clone(), repo);
     let rt = tokio::runtime::Runtime::new().expect("tokio works");
     let result: Option<()> = rt.block_on(async move {
-        let qn = MultiVector::from(&DualNum4);
+        let qn = MultiVector::from(&QuadNum);
         let qn = qn.construct(|el| {
             let mut n = format!("{el}");
             n = n.replace("e", "a");
