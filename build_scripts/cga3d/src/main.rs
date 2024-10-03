@@ -190,12 +190,15 @@ fn test_powf() {
         let qn_4 = AntiPowf.deep_inline(&builder, qn.clone(), FloatExpr::Literal(2.0)).await?;
         println!("Powf Squared:     {qn_4}\n");
 
-        let qn_5 = AntiPowi.deep_inline(&builder, qn.clone(), IntExpr::Literal(3)).await?;
-        println!("Powi Cubed:     {qn_5}\n");
+
+        let qn_5 = GeometricAntiProduct.deep_inline(&builder, qn_1.clone(), qn.clone()).await?;
+        println!("Manually Cubed: {qn_5}");
+        let qn_6 = AntiPowf.deep_inline(&builder, qn.clone(), FloatExpr::Literal(3.0)).await?;
+        println!("Powf Cubed:     {qn_6}\n");
 
 
-        let qn_6 = AntiPowf.deep_inline(&builder, qn.clone(), FloatExpr::Literal(0.5)).await?;
-        println!("Powf Sqrt:     {qn_6}");
+        let qn_7 = AntiPowf.deep_inline(&builder, qn.clone(), FloatExpr::Literal(0.5)).await?;
+        println!("Powf Sqrt:     {qn_7}");
 
 
 

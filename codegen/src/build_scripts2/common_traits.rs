@@ -147,7 +147,7 @@ pub const fn select_anti_grades(anti_grades: AntiGrades) -> InlineOnly<SelectAnt
 
 mod impls {
     use std::collections::{BTreeMap, BTreeSet};
-
+    use std::ops::MulAssign;
     use async_trait::async_trait;
 
     use crate::algebra2::basis::grades::{AntiGrades, Grades};
@@ -677,29 +677,8 @@ mod impls {
         builder.return_expr(result)
     });
 
-
-    /*
-    QuadNum(
-        e4((
-            a12345 * a4 * (((a12345 ^2)) + ((a321 ^2)) + 2*(a4 * a5))
-        )),
-
-        e5((
-            a12345 * a5 * (((a12345 ^2)) + ((a321 ^2)) + 2*(a4 * a5))
-        )),
-
-        e321((
-            a12345 * a321 * (((a12345 ^2)) + ((a321 ^2)) + 2*(a4 * a5))
-        )),
-
-        e12345((
-            2*((a12345 ^2) * a4 * a5) + ((((((a12345 ^2)) + ((a321 ^2)) + 2*(a4 * a5)) ^2)) ^ 0.25) + (((a12345 ^2) * (a321 ^2) * 2) ^ 0.25)
-        ))
-    )
-
-    */
-
     trait_impl_1_type_2_arg_f32!(AntiPowfImpl(builder, slf, exp) -> MultiVector {
+        // TODO after you finish fixing this, fix Powf, Powi, and AntiPowi also
         let exp: FloatExpr = exp.into();
         let mut dyn_mv = DynamicMultiVector::zero();
         let r = slf.clone();
@@ -708,15 +687,26 @@ mod impls {
             for (b, b_el) in r.elements_flat() {
                 let sop = builder.ga.anti_product(a_el, b_el);
                 for p in sop.sum {
-                    let el = p.element;
-                    let mut f = FloatExpr::Literal(p.coefficient);
-                    f = f * a.clone() * b.clone();
-                    if el == anti_scalar {
-                        f = FloatExpr::Exp(Box::new(f), Some(Box::new(exp.clone())), 0.5);
+                    let f = if a_el == b_el {
+                        let a_exp = FloatExpr::Exp(Box::new(a.clone()), Some(Box::new(exp.clone())), 1.0);
+                        let b_exp = FloatExpr::Exp(Box::new(b.clone()), Some(Box::new(exp.clone())), 1.0);
+                        FloatExpr::Product(vec![(a_exp, 0.5), (b_exp, 0.5)], p.coefficient)
                     } else {
-                        f = f * exp.clone() * 0.5;
-                    }
-                    dyn_mv += (f, el);
+                        let mut f = exp.clone() * p.coefficient * 0.5;
+                        let exp_minus_one = FloatExpr::Sum(vec![(exp.clone(), 1.0)], -1.0);
+                        if a_el == anti_scalar {
+                            f.mul_assign(FloatExpr::Exp(Box::new(a.clone()), Some(Box::new(exp_minus_one.clone())), 1.0));
+                        } else {
+                            f.mul_assign(a.clone());
+                        }
+                        if b_el == anti_scalar {
+                            f.mul_assign(FloatExpr::Exp(Box::new(b.clone()), Some(Box::new(exp_minus_one.clone())), 1.0));
+                        } else {
+                            f.mul_assign(b.clone());
+                        }
+                        f
+                    };
+                    dyn_mv += (f, p.element);
                 }
             }
         }
