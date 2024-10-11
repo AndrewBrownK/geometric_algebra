@@ -172,40 +172,54 @@ fn test_powf() {
     let builder = TraitImplBuilder::new_sandbox(cga3d.clone(), repo);
     let rt = tokio::runtime::Runtime::new().expect("tokio works");
     let result: Option<()> = rt.block_on(async move {
-        let qn = MultiVector::from(&QuadNum);
-        let qn = qn.construct(|el| {
-            let mut n = format!("{el}");
-            n = n.replace("e", "a");
-            float_var_expr(n.as_str())
-        });
+        let mvs = [
+            MultiVector::from(&AntiScalar),
+            MultiVector::from(&DualNum4),
+            MultiVector::from(&DualNum5),
+            MultiVector::from(&DualNum321),
+            MultiVector::from(&TripleNum),
+            MultiVector::from(&QuadNum),
+        ];
 
-        println!("Basic QuadNum: {qn}\n");
+        for mv in mvs {
+            let base_mv = mv.construct(|el| {
+                let mut n = format!("{el}");
+                n = n.replace("e", "a");
+                float_var_expr(n.as_str())
+            });
 
-        let qn_1 = GeometricAntiProduct.deep_inline(&builder, qn.clone(), qn.clone()).await?;
-        println!("Manually Squared: {qn_1}");
-        let qn_2 = AntiSquare.deep_inline(&builder, qn.clone()).await?;
-        println!("Trait Squared:    {qn_2}");
-        let qn_3 = AntiPowi.deep_inline(&builder, qn.clone(), IntExpr::Literal(2)).await?;
-        println!("Powi Squared:     {qn_3}");
-        let qn_4 = AntiPowf.deep_inline(&builder, qn.clone(), FloatExpr::Literal(2.0)).await?;
-        println!("Powf Squared:     {qn_4}\n");
+            let accurate_squared = GeometricAntiProduct.deep_inline(&builder, base_mv.clone(), base_mv.clone()).await?;
+            let accurate_cubed = GeometricAntiProduct.deep_inline(&builder, accurate_squared.clone(), base_mv.clone()).await?;
+            let accurate_4th_pow = GeometricAntiProduct.deep_inline(&builder, accurate_cubed.clone(), base_mv.clone()).await?;
+            let accurate_5th_pow = GeometricAntiProduct.deep_inline(&builder, accurate_4th_pow.clone(), base_mv.clone()).await?;
+            let accurate_6th_pow = GeometricAntiProduct.deep_inline(&builder, accurate_5th_pow.clone(), base_mv.clone()).await?;
+            println!("\nBase:             {base_mv}");
+            println!("Accurate Square:  {accurate_squared}");
+            println!("Accurate Cube:    {accurate_cubed}");
+            println!("Accurate 4th pow: {accurate_4th_pow}");
+            println!("Accurate 5th pow: {accurate_5th_pow}");
+            println!("Accurate 6th pow: {accurate_6th_pow}");
 
-
-        let qn_5 = GeometricAntiProduct.deep_inline(&builder, qn_1.clone(), qn.clone()).await?;
-        println!("Manually Cubed: {qn_5}");
-        let qn_6 = AntiPowf.deep_inline(&builder, qn.clone(), FloatExpr::Literal(3.0)).await?;
-        println!("Powf Cubed:     {qn_6}");
-        let qn_7 = AntiPowi.deep_inline(&builder, qn.clone(), IntExpr::Literal(3)).await?;
-        println!("Powi Cubed:     {qn_7}\n");
-
-
-        let qn_8 = AntiPowf.deep_inline(&builder, qn.clone(), FloatExpr::Literal(0.5)).await?;
-        println!("Powf Sqrt:     {qn_8}");
-        let qn_9 = GeometricAntiProduct.deep_inline(&builder, qn_8.clone(), qn_8.clone()).await?;
-        println!("Squared Sqrt:  {qn_9}\n");
-
-
-
+            // let trait_squared = AntiSquare.deep_inline(&builder, base_mv.clone()).await?;
+            // if accurate_squared != trait_squared {
+            //     println!("Wrong Trait Square: {trait_squared}");
+            // }
+            // let powf_squared = AntiPowf.deep_inline(&builder, base_mv.clone(), FloatExpr::Literal(2.0)).await?;
+            // if accurate_squared != powf_squared {
+            //     println!("Wrong Powf Square: {powf_squared}");
+            // }
+            // let powf_cubed = AntiPowf.deep_inline(&builder, base_mv.clone(), FloatExpr::Literal(3.0)).await?;
+            // if accurate_cubed != powf_cubed {
+            //     println!("Wrong Powf Cube: {powf_cubed}");
+            // }
+            //
+            // let powf_root = AntiPowf.deep_inline(&builder, base_mv.clone(), FloatExpr::Literal(0.5)).await?;
+            // let root_squared = GeometricAntiProduct.deep_inline(&builder, powf_root.clone(), powf_root.clone()).await?;
+            // if base_mv != root_squared {
+            //     println!("Wrong Root Squared: {root_squared}");
+            //     println!("Wrong Powf Root:    {powf_root}");
+            // }
+        }
         Some(())
     });
     result.expect("Entire script must complete")

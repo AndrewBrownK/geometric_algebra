@@ -2389,7 +2389,7 @@ impl FloatExpr {
             FloatExpr::FromInt(a) => a.deep_inline_variables(),
         };
         if result {
-            self.simplify_nuanced(true, false);
+            self.simplify_nuanced(true, false, true);
         }
         result
     }
@@ -2661,7 +2661,7 @@ impl AnyExpression {
     pub(crate) fn final_simplify(&mut self) {
         match self {
             AnyExpression::Int(_) => {}
-            AnyExpression::Float(e) => e.simplify_nuanced(false, true),
+            AnyExpression::Float(e) => e.simplify_nuanced(false, true, true),
             AnyExpression::Vec2(e) => e.simplify_nuanced(false, true),
             AnyExpression::Vec3(e) => e.simplify_nuanced(false, true),
             AnyExpression::Vec4(e) => e.simplify_nuanced(false, true),
@@ -2676,9 +2676,9 @@ impl IntExpr {
 }
 impl FloatExpr {
     pub(crate) fn simplify(&mut self) {
-        self.simplify_nuanced(false, false);
+        self.simplify_nuanced(false, false, true);
     }
-    fn simplify_nuanced(&mut self, insides_already_done: bool, transpose_simd: bool) {
+    fn simplify_nuanced(&mut self, insides_already_done: bool, transpose_simd: bool, distribute_and_flatten_arithmetic: bool) {
         match self {
             FloatExpr::Variable(_) => {}
             FloatExpr::Literal(_) => {}
@@ -2842,7 +2842,7 @@ impl FloatExpr {
                 }
                 for (factor, _exponent) in product.iter_mut() {
                     if !insides_already_done {
-                        factor.simplify_nuanced(insides_already_done, transpose_simd);
+                        factor.simplify_nuanced(insides_already_done, transpose_simd, distribute_and_flatten_arithmetic);
                     }
                 }
                 if product.len() == 1 && *last_factor == 1.0 {
@@ -2852,6 +2852,7 @@ impl FloatExpr {
                         return;
                     }
                 }
+                let mut sums_to_distribute = vec![];
                 let mut flatten = vec![];
                 product.retain_mut(|(factor, exponent)| match factor {
                     FloatExpr::Literal(f) => {
@@ -2864,6 +2865,14 @@ impl FloatExpr {
                         }
                         flatten.append(p);
                         *last_factor *= *another_factor;
+                        false
+                    }
+                    FloatExpr::Sum(ref mut s, another_addend) if distribute_and_flatten_arithmetic => {
+                        sums_to_distribute.push((s.take_as_owned(), *another_addend));
+                        false
+                    }
+                    FloatExpr::Exp(box base_expr, None, exponent_literal) => {
+                        flatten.push((base_expr.take_as_owned(), *exponent_literal * *exponent));
                         false
                     }
                     _ => true,
@@ -2895,6 +2904,42 @@ impl FloatExpr {
                 }
                 product.retain(|(_, e)| *e != 0.0);
 
+                if distribute_and_flatten_arithmetic && !sums_to_distribute.is_empty() {
+                    // Start the sum/product transposition by distributing non-sum factors to the first sum factor
+                    let (first_sum, first_sum_lits) = &mut sums_to_distribute[0];
+                    if product.is_empty() {
+                        product.push((FloatExpr::Literal(1.0), 1.0));
+                    }
+                    for (addend, factor) in first_sum.iter_mut() {
+                        addend.mul_assign(FloatExpr::Product(product.clone(), *factor * *last_factor));
+                        *factor = 1.0;
+                    }
+                    first_sum.push((FloatExpr::Product(product.take_as_owned(), *last_factor), *first_sum_lits));
+                    *first_sum_lits = 0.0;
+
+                    // Then finish the sum/product transposition by distributing sum factors on one another
+                    let mut result_sum = first_sum.take_as_owned();
+                    let mut idx = 1;
+                    while idx < sums_to_distribute.len() {
+                        let mut next_sum = &mut sums_to_distribute[idx];
+                        idx += 1;
+
+                        let mut result_replacer = vec![];
+                        next_sum.0.push((FloatExpr::Literal(next_sum.1), 1.0));
+                        let mut next_sum = &mut next_sum.0;
+                        for result_addend in result_sum.iter_mut() {
+                            for next_addend in next_sum.iter_mut() {
+                                result_replacer.push((result_addend.0.take_as_owned() * next_addend.0.take_as_owned(), result_addend.1 * next_addend.1));
+                            }
+                        }
+                        result_sum = result_replacer;
+                    }
+                    *self = FloatExpr::Sum(result_sum, 0.0);
+                    // Transposition is a non-trivial structural change, so we need to re-simplify
+                    self.simplify_nuanced(insides_already_done, transpose_simd, distribute_and_flatten_arithmetic);
+                    return
+                }
+
                 if product.len() == 1 && product[0].1 == 1.0 {
                     if let FloatExpr::Sum(sum, last_addend) = &mut product[0].0 {
                         *last_addend *= *last_factor;
@@ -2920,7 +2965,7 @@ impl FloatExpr {
                 }
                 for (addend, _factor) in sum.iter_mut() {
                     if !insides_already_done {
-                        addend.simplify_nuanced(insides_already_done, transpose_simd);
+                        addend.simplify_nuanced(insides_already_done, transpose_simd, distribute_and_flatten_arithmetic);
                     }
                 }
                 if sum.len() == 1 && *last_addend == 0.0 {
@@ -2998,11 +3043,11 @@ impl FloatExpr {
             }
             FloatExpr::Exp(base_expression, exponent_expression, exponent_literal) => {
                 if !insides_already_done {
-                    base_expression.simplify_nuanced(insides_already_done, transpose_simd);
+                    base_expression.simplify_nuanced(insides_already_done, transpose_simd, distribute_and_flatten_arithmetic);
                 }
                 if let Some(d) = exponent_expression {
                     if !insides_already_done {
-                        d.simplify_nuanced(insides_already_done, transpose_simd);
+                        d.simplify_nuanced(insides_already_done, transpose_simd, distribute_and_flatten_arithmetic);
                     }
                     if let box FloatExpr::Literal(l) = d {
                         *exponent_literal *= *l;
@@ -3037,7 +3082,7 @@ impl FloatExpr {
                         let new_factor_exponent = *factor_exponent * *exponent_literal;
                         let new_factor_literal = f32::powf(*factor_literal, *exponent_literal);
                         *self = FloatExpr::Product(vec![(factor.take_as_owned(), new_factor_exponent)], new_factor_literal);
-                        self.simplify_nuanced(insides_already_done, transpose_simd);
+                        self.simplify_nuanced(insides_already_done, transpose_simd, distribute_and_flatten_arithmetic);
                         return
                     }
                     _ => {}
@@ -3052,7 +3097,7 @@ impl FloatExpr {
                         return
                     }
                     *self = FloatExpr::Product(vec![(base_expression.take_as_owned(), *exponent_literal)], 1.0);
-                    self.simplify_nuanced(insides_already_done, transpose_simd);
+                    self.simplify_nuanced(insides_already_done, transpose_simd, distribute_and_flatten_arithmetic);
                     return
                 }
             }
@@ -3068,15 +3113,15 @@ impl Vec2Expr {
             Vec2Expr::Variable(_) => {}
             Vec2Expr::Gather1(ref mut f) => {
                 if !insides_already_done {
-                    f.simplify_nuanced(insides_already_done, transpose_simd);
+                    f.simplify_nuanced(insides_already_done, transpose_simd, true);
                 }
                 // Do I really want to do more here?
             }
             Vec2Expr::Gather2(ref mut f0, ref mut f1) => {
                 use crate::ast2::expressions::FloatExpr::*;
                 if !insides_already_done {
-                    f0.simplify_nuanced(insides_already_done, transpose_simd);
-                    f1.simplify_nuanced(insides_already_done, transpose_simd);
+                    f0.simplify_nuanced(insides_already_done, transpose_simd, true);
+                    f1.simplify_nuanced(insides_already_done, transpose_simd, true);
                 }
                 if f0 == f1 {
                     *self = Vec2Expr::Gather1(f0.take_as_owned());
@@ -3344,16 +3389,16 @@ impl Vec3Expr {
             Vec3Expr::Variable(_) => {}
             Vec3Expr::Gather1(ref mut f) => {
                 if !insides_already_done {
-                    f.simplify_nuanced(insides_already_done, transpose_simd);
+                    f.simplify_nuanced(insides_already_done, transpose_simd, true);
                 }
                 // Do I really want to do more here?
             }
             Vec3Expr::Gather3(ref mut f0, ref mut f1, ref mut f2) => {
                 use crate::ast2::expressions::FloatExpr::*;
                 if !insides_already_done {
-                    f0.simplify_nuanced(insides_already_done, transpose_simd);
-                    f1.simplify_nuanced(insides_already_done, transpose_simd);
-                    f2.simplify_nuanced(insides_already_done, transpose_simd);
+                    f0.simplify_nuanced(insides_already_done, transpose_simd, true);
+                    f1.simplify_nuanced(insides_already_done, transpose_simd, true);
+                    f2.simplify_nuanced(insides_already_done, transpose_simd, true);
                 }
                 if f0 == f1 && f0 == f2 {
                     *self = Vec3Expr::Gather1(f0.take_as_owned());
@@ -3639,17 +3684,17 @@ impl Vec4Expr {
             Vec4Expr::Variable(_) => {}
             Vec4Expr::Gather1(f) => {
                 if !insides_already_done {
-                    f.simplify_nuanced(insides_already_done, transpose_simd);
+                    f.simplify_nuanced(insides_already_done, transpose_simd, true);
                 }
                 // Do I really want to do more here?
             }
             Vec4Expr::Gather4(f0, f1, f2, f3) => {
                 use crate::ast2::expressions::FloatExpr::*;
                 if !insides_already_done {
-                    f0.simplify_nuanced(insides_already_done, transpose_simd);
-                    f1.simplify_nuanced(insides_already_done, transpose_simd);
-                    f2.simplify_nuanced(insides_already_done, transpose_simd);
-                    f3.simplify_nuanced(insides_already_done, transpose_simd);
+                    f0.simplify_nuanced(insides_already_done, transpose_simd, true);
+                    f1.simplify_nuanced(insides_already_done, transpose_simd, true);
+                    f2.simplify_nuanced(insides_already_done, transpose_simd, true);
+                    f3.simplify_nuanced(insides_already_done, transpose_simd, true);
                 }
                 if f0 == f1 && f0 == f2 && f0 == f3 {
                     *self = Vec4Expr::Gather1(f0.take_as_owned());
@@ -3954,7 +3999,7 @@ impl MultiVectorGroupExpr {
         match self {
             MultiVectorGroupExpr::JustFloat(f) => {
                 if !insides_already_done {
-                    f.simplify_nuanced(insides_already_done, transpose_simd);
+                    f.simplify_nuanced(insides_already_done, transpose_simd, true);
                 }
                 if let FloatExpr::AccessMultiVecGroup(MultiVectorExpr { expr, mv_class: _ }, idx) = f {
                     if let MultiVectorVia::Construct(v) = expr.as_mut() {

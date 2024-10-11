@@ -13,6 +13,11 @@
 #![feature(const_swap)]
 #![feature(box_patterns)]
 
+
+// TODO rendering round objects in polygons (triangles)
+//  https://www.youtube.com/watch?v=VEnglRKNHjU
+
+
 mod algebra;
 // TODO calculus: https://en.wikipedia.org/wiki/Geometric_calculus
 pub mod algebra2;
