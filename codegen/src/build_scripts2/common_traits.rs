@@ -690,70 +690,137 @@ Accurate 4th pow: DualNum5( e5(((a12345 ^3) * a5 * 4)), e12345(((a12345 ^4))) )
 Accurate 5th pow: DualNum5( e5(((a12345 ^4) * a5 * 5)), e12345(((a12345 ^5))) )
 Accurate 6th pow: DualNum5( e5(((a12345 ^5) * a5 * 6)), e12345(((a12345 ^6))) )
 
+
 Base:             DualNum321( e321(a321), e12345(a12345) )
+
 Accurate Square:  DualNum321(
+    // a12345 powers: 1
+    // a321 powers: 1
     e321((a12345 * a321 * 2)),
+    // a12345 powers: 2
+    // a321 powers: 2
     e12345((((a12345 ^2)) + ((a321 ^2)))) )
+
 Accurate Cube:    DualNum321(
+    // a12345 powers: 2
+    // a321 powers: 3, 1
     e321((((a321 ^3)) + 3*((a12345 ^2) * a321))),
+    // a12345 powers: 3, 1
+    // a321 powers: 2
     e12345((((a12345 ^3)) + 3*(a12345 * (a321 ^2)))) )
+
 Accurate 4th pow: DualNum321(
+    // a12345 powers: 3, 1
+    // a321 powers: 3, 1
     e321((4*(a12345 * (a321 ^3)) + 4*((a12345 ^3) * a321))),
+    // a12345 powers: 4, 2
+    // a321 powers: 4, 2
     e12345((((a12345 ^4)) + ((a321 ^4)) + 6*((a12345 ^2) * (a321 ^2)))) )
+
 Accurate 5th pow: DualNum321(
+    // a12345 powers: 4, 2
+    // a321 powers: 5, 3, 1
     e321((((a321 ^5)) + 10*((a12345 ^2) * (a321 ^3)) + 5*((a12345 ^4) * a321))),
+    // a12345 powers: 5, 3, 1
+    // a321 powers: 4, 2
     e12345((((a12345 ^5)) + 5*(a12345 * (a321 ^4)) + 10*((a12345 ^3) * (a321 ^2)))) )
+
 Accurate 6th pow: DualNum321(
+    // a12345 powers: 1, 3, 5
+    // a321 powers: 5, 3, 1
     e321((6*(a12345 * (a321 ^5)) + 20*((a12345 ^3) * (a321 ^3)) + 6*((a12345 ^5) * a321))),
+    // a12345 powers: 6, 4, 2
+    // a321 powers: 6, 4, 2
     e12345((((a12345 ^6)) + ((a321 ^6)) + 15*((a12345 ^2) * (a321 ^4)) + 15*((a12345 ^4) * (a321 ^2)))) )
 
+
 Base:             TripleNum( e4(a4), e5(a5), e12345(a12345) )
+
 Accurate Square:  TripleNum(
+    // a12345 powers: 1
+    // e4 powers: 1
     e4((a12345 * a4 * 2)),
+    // a12345 powers: 1
+    // e5 powers: 1
     e5((a12345 * a5 * 2)),
+    // a12345 powers: 2
+    // e4 powers: 1
+    // e5 powers: 1
     e12345((((a12345 ^2)) + 2*(a4 * a5))) )
+
 Accurate Cube:    TripleNum(
+    // a12345 powers: 2
+    // e4 powers: 2, 1
+    // e5 powers: 1
     e4((3*((a12345 ^2) * a4) + 2*((a4 ^2) * a5))),
+    // a12345 powers: 2
+    // e4 powers: 1
+    // e5 powers: 2, 1
     e5((2*(a4 * (a5 ^2)) + 3*((a12345 ^2) * a5))),
+    // a12345 powers: 3, 1
+    // e4 powers: 1
+    // e5 powers: 1
     e12345((((a12345 ^3)) + 6*(a12345 * a4 * a5))) )
+
 Accurate 4th pow: TripleNum(
     e4((4*((a12345 ^3) * a4) + 8*(a12345 * (a4 ^2) * a5))),
     e5((4*((a12345 ^3) * a5) + 8*(a12345 * a4 * (a5 ^2)))),
     e12345((((a12345 ^4)) + 4*((a4 ^2) * (a5 ^2)) + 12*((a12345 ^2) * a4 * a5))) )
+
 Accurate 5th pow: TripleNum(
     e4((4*((a4 ^3) * (a5 ^2)) + 5*((a12345 ^4) * a4) + 20*((a12345 ^2) * (a4 ^2) * a5))),
     e5((4*((a4 ^2) * (a5 ^3)) + 5*((a12345 ^4) * a5) + 20*((a12345 ^2) * a4 * (a5 ^2)))),
     e12345((((a12345 ^5)) + 20*(a12345 * (a4 ^2) * (a5 ^2)) + 20*((a12345 ^3) * a4 * a5))) )
+
 Accurate 6th pow: TripleNum(
     e4((6*((a12345 ^5) * a4) + 24*(a12345 * (a4 ^3) * (a5 ^2)) + 40*((a12345 ^3) * (a4 ^2) * a5))),
     e5((6*((a12345 ^5) * a5) + 24*(a12345 * (a4 ^2) * (a5 ^3)) + 40*((a12345 ^3) * a4 * (a5 ^2)))),
     e12345((((a12345 ^6)) + 8*((a4 ^3) * (a5 ^3)) + 60*((a12345 ^2) * (a4 ^2) * (a5 ^2)) + 30*((a12345 ^4) * a4 * a5))) )
 
+
 Base:             QuadNum( e4(a4), e5(a5), e321(a321), e12345(a12345) )
+
 Accurate Square:  QuadNum(
     e4((a12345 * a4 * 2)),
     e5((a12345 * a5 * 2)),
     e321((a12345 * a321 * 2)),
     e12345((((a12345 ^2)) + ((a321 ^2)) + 2*(a4 * a5))) )
+
 Accurate Cube:    QuadNum(
     e4((3*((a12345 ^2) * a4) + ((a321 ^2) * a4) + 2*((a4 ^2) * a5))),
     e5((2*(a4 * (a5 ^2)) + 3*((a12345 ^2) * a5) + ((a321 ^2) * a5))),
     e321((((a321 ^3)) + 3*((a12345 ^2) * a321) + 2*(a321 * a4 * a5))),
     e12345((((a12345 ^3)) + 3*(a12345 * (a321 ^2)) + 6*(a12345 * a4 * a5))) )
+
 Accurate 4th pow: QuadNum(
     e4((4*((a12345 ^3) * a4) + 4*(a12345 * (a321 ^2) * a4) + 8*(a12345 * (a4 ^2) * a5))),
     e5((4*((a12345 ^3) * a5) + 8*(a12345 * a4 * (a5 ^2)) + 4*(a12345 * (a321 ^2) * a5))),
     e321((4*(a12345 * (a321 ^3)) + 4*((a12345 ^3) * a321) + 8*(a12345 * a321 * a4 * a5))),
     e12345((((a12345 ^4)) + ((a321 ^4)) + 6*((a12345 ^2) * (a321 ^2)) + 4*((a4 ^2) * (a5 ^2)) + 12*((a12345 ^2) * a4 * a5) + 4*((a321 ^2) * a4 * a5))) )
+
 Accurate 5th pow: QuadNum(
     e4((4*((a4 ^3) * (a5 ^2)) + 5*((a12345 ^4) * a4) + ((a321 ^4) * a4) + 10*((a12345 ^2) * (a321 ^2) * a4) + 20*((a12345 ^2) * (a4 ^2) * a5) + 4*((a321 ^2) * (a4 ^2) * a5))),
     e5((4*((a4 ^2) * (a5 ^3)) + 5*((a12345 ^4) * a5) + ((a321 ^4) * a5) + 20*((a12345 ^2) * a4 * (a5 ^2)) + 10*((a12345 ^2) * (a321 ^2) * a5) + 4*((a321 ^2) * a4 * (a5 ^2)))),
     e321((((a321 ^5)) + 10*((a12345 ^2) * (a321 ^3)) + 5*((a12345 ^4) * a321) + 4*(a321 * (a4 ^2) * (a5 ^2)) + 4*((a321 ^3) * a4 * a5) + 20*((a12345 ^2) * a321 * a4 * a5))),
     e12345((((a12345 ^5)) + 5*(a12345 * (a321 ^4)) + 10*((a12345 ^3) * (a321 ^2)) + 20*(a12345 * (a4 ^2) * (a5 ^2)) + 20*((a12345 ^3) * a4 * a5) + 20*(a12345 * (a321 ^2) * a4 * a5))) )
+
 Accurate 6th pow: QuadNum(
     e4((6*((a12345 ^5) * a4) + 24*(a12345 * (a4 ^3) * (a5 ^2)) + 6*(a12345 * (a321 ^4) * a4) + 20*((a12345 ^3) * (a321 ^2) * a4) + 40*((a12345 ^3) * (a4 ^2) * a5) + 24*(a12345 * (a321 ^2) * (a4 ^2) * a5))),
     e5((6*((a12345 ^5) * a5) + 24*(a12345 * (a4 ^2) * (a5 ^3)) + 6*(a12345 * (a321 ^4) * a5) + 40*((a12345 ^3) * a4 * (a5 ^2)) + 20*((a12345 ^3) * (a321 ^2) * a5) + 24*(a12345 * (a321 ^2) * a4 * (a5 ^2)))),
     e321((6*(a12345 * (a321 ^5)) + 20*((a12345 ^3) * (a321 ^3)) + 6*((a12345 ^5) * a321) + 24*(a12345 * a321 * (a4 ^2) * (a5 ^2)) + 24*(a12345 * (a321 ^3) * a4 * a5) + 40*((a12345 ^3) * a321 * a4 * a5))),
+
+    // TODO so... analyzing this... It all makes perfect sense. But I don't think I can make static expressions for it. Even though I could generate each combination of coefficients,
+    //   there could be any quantity of that combination showing up, if the power is high enough. I just can't imagine a simpler or more direct way to specify the expression
+    //   (similar as done with DualNums on page 126) other than to manually compound multiplication on itself over and over, so it automatically distributes all valid combinations.
+    //   The problem with THAT is that we don't have loops, branching, or boolean expressions in the AST yet. And I kind of don't want them either. At least not for 1.0 release.
+    //   I might still be able to do something for a codegen-side Powf that accepts a raw f32 instead of a FloatExpr.
+    // (a12345) powers: 6
+    // (e321) powers: 6
+    // (a12345, a321) powers: (2, 4), (4, 2)
+    // (a4, a5) powers: (3, 3)
+    // (a12345, a4, a5) powers: (2, 2, 2), (4, 1, 1)
+    // (a321, a4, a5) powers: (2, 2, 2), (4, 1, 1)
+    // (a12345, a321, a4, a5) powers (2, 2, 1, 1)
     e12345((((a12345 ^6)) + ((a321 ^6)) + 15*((a12345 ^2) * (a321 ^4)) + 8*((a4 ^3) * (a5 ^3)) + 15*((a12345 ^4) * (a321 ^2)) + 60*((a12345 ^2) * (a4 ^2) * (a5 ^2)) + 12*((a321 ^2) * (a4 ^2) * (a5 ^2)) + 30*((a12345 ^4) * a4 * a5) + 6*((a321 ^4) * a4 * a5) + 60*((a12345 ^2) * (a321 ^2) * a4 * a5))) )
 
 
