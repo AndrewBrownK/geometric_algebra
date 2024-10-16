@@ -8,19 +8,19 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 444
+// Total Implementations: 376
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         0       2       0
-//  Average:         5       9       0
-//  Maximum:        99     124       0
+//   Median:         1       3       0
+//  Average:         8      12       0
+//  Maximum:       160     192       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         0       4       0
-//  Average:         7      12       0
-//  Maximum:       160     193       0
+//   Median:         2       4       0
+//  Average:         8      12       0
+//  Maximum:       160     192       0
 impl std::ops::Add<AntiCircleOnOrigin> for Line {
     type Output = MultiVector;
     fn add(self, other: AntiCircleOnOrigin) -> Self::Output {
@@ -312,6 +312,36 @@ impl std::ops::Add<AntiDipoleOnOrigin> for Line {
         return addition;
     }
 }
+impl std::ops::Add<AntiDualNum> for Line {
+    type Output = MultiVector;
+    fn add(self, other: AntiDualNum) -> Self::Output {
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([other.group0()[1], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            self.group1(),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([other.group0()[0], 0.0, 0.0, 0.0]),
+            // e3215
+            0.0,
+        );
+        return addition;
+    }
+}
 impl std::ops::Add<AntiFlatOrigin> for Line {
     type Output = CircleAtInfinity;
     fn add(self, other: AntiFlatOrigin) -> Self::Output {
@@ -546,36 +576,6 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for Line {
         return addition;
     }
 }
-impl std::ops::Add<AntiMysteryQuadNum> for Line {
-    type Output = MultiVector;
-    fn add(self, other: AntiMysteryQuadNum) -> Self::Output {
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group0()[1], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
-        );
-        return addition;
-    }
-}
 impl std::ops::Add<AntiPlane> for Line {
     type Output = AntiDipoleInversionAtInfinity;
     fn add(self, other: AntiPlane) -> Self::Output {
@@ -600,96 +600,6 @@ impl std::ops::Add<AntiPlaneOnOrigin> for Line {
             self.group1(),
             // e1, e2, e3, e5
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<AntiQuadNum> for Line {
-    type Output = MultiVector;
-    fn add(self, other: AntiQuadNum) -> Self::Output {
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group0()[3], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]]),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([other.group0()[0], 0.0, 0.0, 0.0]),
-            // e3215
-            other.group0()[1],
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<AntiQuadNumAtInfinity> for Line {
-    type Output = MultiVector;
-    fn add(self, other: AntiQuadNumAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group0()[2], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            other.group0()[0],
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<AntiQuadNumOrthogonalOrigin> for Line {
-    type Output = MultiVector;
-    fn add(self, other: AntiQuadNumOrthogonalOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from(0.0),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]]),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([other.group0()[0], 0.0, 0.0, 0.0]),
-            // e3215
-            other.group0()[1],
         );
         return addition;
     }
@@ -747,66 +657,6 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for Line {
             self.group1(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other.group1()[3], 0.0, 0.0, 0.0]),
-            // e3215
-            0.0,
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<AntiVersorRoundPointAligningOriginAtInfinity> for Line {
-    type Output = MultiVector;
-    fn add(self, other: AntiVersorRoundPointAligningOriginAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group0()[1], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            other.group0()[0],
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<AntiVersorRoundPointOnOrigin> for Line {
-    type Output = MultiVector;
-    fn add(self, other: AntiVersorRoundPointOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group0()[1], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([other.group0()[0], 0.0, 0.0, 0.0]),
             // e3215
             0.0,
         );
@@ -1415,6 +1265,20 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for Line {
         return addition;
     }
 }
+impl std::ops::Add<DualNum> for Line {
+    type Output = VersorEvenAligningOrigin;
+    fn add(self, other: DualNum) -> Self::Output {
+        let addition = VersorEvenAligningOrigin::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
+            // e415, e425, e435, e4
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[0]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+        );
+        return addition;
+    }
+}
 impl std::ops::Add<FlatOrigin> for Line {
     type Output = MultiVector;
     fn add(self, other: FlatOrigin) -> Self::Output {
@@ -1906,18 +1770,6 @@ impl std::ops::Add<MysteryDipoleInversion> for Line {
         return addition;
     }
 }
-impl std::ops::Add<MysteryQuadNum> for Line {
-    type Output = CircleRotorAtInfinity;
-    fn add(self, other: MysteryQuadNum) -> Self::Output {
-        let addition = CircleRotorAtInfinity::from_groups(
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[0]]),
-            // e235, e315, e125, e12345
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[1]]),
-        );
-        return addition;
-    }
-}
 impl std::ops::Add<MysteryVersorEven> for Line {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
@@ -1964,50 +1816,6 @@ impl std::ops::Add<MysteryVersorOdd> for Line {
             self.group1(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([0.0, other.group0()[1], other.group0()[2], other.group0()[3]]),
-            // e3215
-            0.0,
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<MysteryVersorRoundPoint> for Line {
-    type Output = VersorEvenAtInfinity;
-    fn add(self, other: MysteryVersorRoundPoint) -> Self::Output {
-        let addition = VersorEvenAtInfinity::from_groups(
-            // e12345, e1, e2, e3
-            Simd32x4::from([other.group0()[3], other.group0()[0], other.group0()[1], other.group0()[2]]),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<MysteryVersorSphere> for Line {
-    type Output = MultiVector;
-    fn add(self, other: MysteryVersorSphere) -> Self::Output {
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group0()[3], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([0.0, other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e3215
             0.0,
         );
@@ -2204,52 +2012,6 @@ impl std::ops::Add<PlaneOnOrigin> for Line {
             Simd32x4::from([0.0, other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e3215
             0.0,
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<QuadNum> for Line {
-    type Output = VersorEven;
-    fn add(self, other: QuadNum) -> Self::Output {
-        let addition = VersorEven::from_groups(
-            // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[2]]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[1]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<QuadNumAtInfinity> for Line {
-    type Output = VersorEvenAtInfinity;
-    fn add(self, other: QuadNumAtInfinity) -> Self::Output {
-        let addition = VersorEvenAtInfinity::from_groups(
-            // e12345, e1, e2, e3
-            Simd32x4::from([other.group0()[2], 0.0, 0.0, 0.0]),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[1]]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[0]]),
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<QuadNumOrthogonalOrigin> for Line {
-    type Output = AntiDipoleInversion;
-    fn add(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
-        let addition = AntiDipoleInversion::from_groups(
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[2]]),
-            // e235, e315, e125, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[0]]),
-            // e1, e2, e3, e5
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
         );
         return addition;
     }
@@ -2648,167 +2410,6 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for Line {
         return addition;
     }
 }
-impl std::ops::Add<VersorRoundPoint> for Line {
-    type Output = VersorEven;
-    fn add(self, other: VersorRoundPoint) -> Self::Output {
-        let addition = VersorEven::from_groups(
-            // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, other.group1()[1]]),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group1()[0]]),
-            // e1, e2, e3, e4
-            other.group0(),
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<VersorRoundPointAligningOrigin> for Line {
-    type Output = VersorEvenAligningOrigin;
-    fn add(self, other: VersorRoundPointAligningOrigin) -> Self::Output {
-        let addition = VersorEvenAligningOrigin::from_groups(
-            // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]]),
-            // e415, e425, e435, e4
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[0]]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[1]]),
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<VersorRoundPointAligningOriginAtInfinity> for Line {
-    type Output = Motor;
-    fn add(self, other: VersorRoundPointAligningOriginAtInfinity) -> Self::Output {
-        let addition = Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[1]]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[0]]),
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<VersorRoundPointAtInfinity> for Line {
-    type Output = VersorEvenAtInfinity;
-    fn add(self, other: VersorRoundPointAtInfinity) -> Self::Output {
-        let addition = VersorEvenAtInfinity::from_groups(
-            // e12345, e1, e2, e3
-            Simd32x4::from([other.group1()[1], other.group0()[0], other.group0()[1], other.group0()[2]]),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group1()[0]]),
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<VersorRoundPointOnOrigin> for Line {
-    type Output = VersorEvenAligningOrigin;
-    fn add(self, other: VersorRoundPointOnOrigin) -> Self::Output {
-        let addition = VersorEvenAligningOrigin::from_groups(
-            // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
-            // e415, e425, e435, e4
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[0]]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<VersorSphere> for Line {
-    type Output = MultiVector;
-    fn add(self, other: VersorSphere) -> Self::Output {
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group1()[1], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([other.group1()[0], other.group0()[0], other.group0()[1], other.group0()[2]]),
-            // e3215
-            other.group0()[3],
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<VersorSphereAtInfinity> for Line {
-    type Output = MultiVector;
-    fn add(self, other: VersorSphereAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other[e4315], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([0.0, other.group0()[0], other.group0()[1], other.group0()[2]]),
-            // e3215
-            other.group0()[3],
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<VersorSphereOrthogonalOrigin> for Line {
-    type Output = MultiVector;
-    fn add(self, other: VersorSphereOrthogonalOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group0()[2], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([other.group0()[1], 0.0, 0.0, 0.0]),
-            // e3215
-            other.group0()[0],
-        );
-        return addition;
-    }
-}
 impl std::ops::BitXor<AntiCircleOnOrigin> for Line {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
@@ -2821,12 +2422,8 @@ impl std::ops::BitXor<AntiCircleOnOrigin> for Line {
 impl std::ops::BitXor<AntiCircleRotor> for Line {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        9        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        5       10        0
-    //  no simd        5       12        0
+    //      add/sub      mul      div
+    // f32        5       12        0
     fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -2834,12 +2431,8 @@ impl std::ops::BitXor<AntiCircleRotor> for Line {
 impl std::ops::BitXor<AntiCircleRotorAligningOrigin> for Line {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        9        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        5       10        0
-    //  no simd        5       12        0
+    //      add/sub      mul      div
+    // f32        5       12        0
     fn bitxor(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2847,12 +2440,8 @@ impl std::ops::BitXor<AntiCircleRotorAligningOrigin> for Line {
 impl std::ops::BitXor<AntiCircleRotorAligningOriginAtInfinity> for Line {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        6        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        2        7        0
-    //  no simd        2        9        0
+    //      add/sub      mul      div
+    // f32        2        9        0
     fn bitxor(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2860,12 +2449,8 @@ impl std::ops::BitXor<AntiCircleRotorAligningOriginAtInfinity> for Line {
 impl std::ops::BitXor<AntiCircleRotorAtInfinity> for Line {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        6        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        2        7        0
-    //  no simd        2        9        0
+    //      add/sub      mul      div
+    // f32        2        9        0
     fn bitxor(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2873,12 +2458,8 @@ impl std::ops::BitXor<AntiCircleRotorAtInfinity> for Line {
 impl std::ops::BitXor<AntiCircleRotorOnOrigin> for Line {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        9        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        5       10        0
-    //  no simd        5       12        0
+    //      add/sub      mul      div
+    // f32        5       12        0
     fn bitxor(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2886,12 +2467,8 @@ impl std::ops::BitXor<AntiCircleRotorOnOrigin> for Line {
 impl std::ops::BitXor<AntiDipoleInversion> for Line {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        5        9        0
-    //  no simd        8       12        0
+    //      add/sub      mul      div
+    // f32        8       12        0
     fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -2899,12 +2476,8 @@ impl std::ops::BitXor<AntiDipoleInversion> for Line {
 impl std::ops::BitXor<AntiDipoleInversionAtInfinity> for Line {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        2        9        0
-    //  no simd        5       12        0
+    //      add/sub      mul      div
+    // f32        5        9        0
     fn bitxor(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2912,12 +2485,8 @@ impl std::ops::BitXor<AntiDipoleInversionAtInfinity> for Line {
 impl std::ops::BitXor<AntiDipoleInversionOnOrigin> for Line {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        5        9        0
-    //  no simd        8       12        0
+    //      add/sub      mul      div
+    // f32        8       12        0
     fn bitxor(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2925,22 +2494,31 @@ impl std::ops::BitXor<AntiDipoleInversionOnOrigin> for Line {
 impl std::ops::BitXor<AntiDipoleInversionOrthogonalOrigin> for Line {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn bitxor(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiDualNum> for Line {
+    type Output = Line;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        6        0
+    fn bitxor(self, other: AntiDualNum) -> Self::Output {
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiDualNum> for Line {
+    fn bitxor_assign(&mut self, other: AntiDualNum) {
+        *self = self.wedge(other);
     }
 }
 impl std::ops::BitXor<AntiFlector> for Line {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        2        9        0
-    //  no simd        5       12        0
+    //      add/sub      mul      div
+    // f32        5        9        0
     fn bitxor(self, other: AntiFlector) -> Self::Output {
         return self.wedge(other);
     }
@@ -2948,12 +2526,8 @@ impl std::ops::BitXor<AntiFlector> for Line {
 impl std::ops::BitXor<AntiFlectorOnOrigin> for Line {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        2        9        0
-    //  no simd        5       12        0
+    //      add/sub      mul      div
+    // f32        5        9        0
     fn bitxor(self, other: AntiFlectorOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2979,12 +2553,8 @@ impl std::ops::BitXor<AntiLineOnOrigin> for Line {
 impl std::ops::BitXor<AntiMotor> for Line {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        6        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        2        7        0
-    //  no simd        2        9        0
+    //      add/sub      mul      div
+    // f32        2        9        0
     fn bitxor(self, other: AntiMotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -2992,12 +2562,8 @@ impl std::ops::BitXor<AntiMotor> for Line {
 impl std::ops::BitXor<AntiMotorOnOrigin> for Line {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        6        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        2        7        0
-    //  no simd        2        9        0
+    //      add/sub      mul      div
+    // f32        2        9        0
     fn bitxor(self, other: AntiMotorOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3005,12 +2571,8 @@ impl std::ops::BitXor<AntiMotorOnOrigin> for Line {
 impl std::ops::BitXor<AntiMysteryCircleRotor> for Line {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        6        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        2        7        0
-    //  no simd        2        9        0
+    //      add/sub      mul      div
+    // f32        2        9        0
     fn bitxor(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3025,30 +2587,11 @@ impl std::ops::BitXor<AntiMysteryDipoleInversion> for Line {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<AntiMysteryQuadNum> for Line {
-    type Output = Line;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
-    fn bitxor(self, other: AntiMysteryQuadNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiMysteryQuadNum> for Line {
-    fn bitxor_assign(&mut self, other: AntiMysteryQuadNum) {
-        *self = self.wedge(other);
-    }
-}
 impl std::ops::BitXor<AntiPlane> for Line {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        2        9        0
-    //  no simd        5       12        0
+    //      add/sub      mul      div
+    // f32        5        9        0
     fn bitxor(self, other: AntiPlane) -> Self::Output {
         return self.wedge(other);
     }
@@ -3062,45 +2605,11 @@ impl std::ops::BitXor<AntiPlaneOnOrigin> for Line {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<AntiQuadNum> for Line {
-    type Output = Line;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
-    fn bitxor(self, other: AntiQuadNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiQuadNum> for Line {
-    fn bitxor_assign(&mut self, other: AntiQuadNum) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiQuadNumAtInfinity> for Line {
-    type Output = Line;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
-    fn bitxor(self, other: AntiQuadNumAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiQuadNumAtInfinity> for Line {
-    fn bitxor_assign(&mut self, other: AntiQuadNumAtInfinity) {
-        *self = self.wedge(other);
-    }
-}
 impl std::ops::BitXor<AntiSphereOnOrigin> for Line {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        5        9        0
-    //  no simd        8       12        0
+    //      add/sub      mul      div
+    // f32        8       12        0
     fn bitxor(self, other: AntiSphereOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3108,44 +2617,10 @@ impl std::ops::BitXor<AntiSphereOnOrigin> for Line {
 impl std::ops::BitXor<AntiVersorEvenOnOrigin> for Line {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        9        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        5       10        0
-    //  no simd        5       12        0
+    //      add/sub      mul      div
+    // f32        5       12        0
     fn bitxor(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiVersorRoundPointAligningOriginAtInfinity> for Line {
-    type Output = Line;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
-    fn bitxor(self, other: AntiVersorRoundPointAligningOriginAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiVersorRoundPointAligningOriginAtInfinity> for Line {
-    fn bitxor_assign(&mut self, other: AntiVersorRoundPointAligningOriginAtInfinity) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiVersorRoundPointOnOrigin> for Line {
-    type Output = Line;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
-    fn bitxor(self, other: AntiVersorRoundPointOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiVersorRoundPointOnOrigin> for Line {
-    fn bitxor_assign(&mut self, other: AntiVersorRoundPointOnOrigin) {
-        *self = self.wedge(other);
     }
 }
 impl std::ops::BitXor<Dipole> for Line {
@@ -3256,15 +2731,20 @@ impl std::ops::BitXor<DipoleOrthogonalOrigin> for Line {
         return self.wedge(other);
     }
 }
+impl std::ops::BitXor<DualNum> for Line {
+    type Output = PlaneOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        6        0
+    fn bitxor(self, other: DualNum) -> Self::Output {
+        return self.wedge(other);
+    }
+}
 impl std::ops::BitXor<MultiVector> for Line {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       13       21        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd       13       22        0
-    //  no simd       13       24        0
+    //      add/sub      mul      div
+    // f32       13       24        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
         return self.wedge(other);
     }
@@ -3290,12 +2770,8 @@ impl std::ops::BitXor<MysteryDipoleInversion> for Line {
 impl std::ops::BitXor<MysteryVersorEven> for Line {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        2        9        0
-    //  no simd        5       12        0
+    //      add/sub      mul      div
+    // f32        5        9        0
     fn bitxor(self, other: MysteryVersorEven) -> Self::Output {
         return self.wedge(other);
     }
@@ -3303,42 +2779,10 @@ impl std::ops::BitXor<MysteryVersorEven> for Line {
 impl std::ops::BitXor<MysteryVersorOdd> for Line {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        6        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        2        7        0
-    //  no simd        2        9        0
+    //      add/sub      mul      div
+    // f32        2        9        0
     fn bitxor(self, other: MysteryVersorOdd) -> Self::Output {
         return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MysteryVersorRoundPoint> for Line {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        2        9        0
-    //  no simd        5       12        0
-    fn bitxor(self, other: MysteryVersorRoundPoint) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MysteryVersorSphere> for Line {
-    type Output = Line;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
-    fn bitxor(self, other: MysteryVersorSphere) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<MysteryVersorSphere> for Line {
-    fn bitxor_assign(&mut self, other: MysteryVersorSphere) {
-        *self = self.wedge(other);
     }
 }
 impl std::ops::BitXor<NullDipoleAtOrigin> for Line {
@@ -3362,9 +2806,8 @@ impl std::ops::BitXor<NullDipoleInversionAtOrigin> for Line {
 impl std::ops::BitXor<NullVersorEvenAtOrigin> for Line {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn bitxor(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3372,43 +2815,18 @@ impl std::ops::BitXor<NullVersorEvenAtOrigin> for Line {
 impl std::ops::BitXor<Origin> for Line {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn bitxor(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<QuadNum> for Line {
-    type Output = PlaneOnOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
-    fn bitxor(self, other: QuadNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<QuadNumOrthogonalOrigin> for Line {
-    type Output = PlaneOnOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
-    fn bitxor(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
 }
 impl std::ops::BitXor<RoundPoint> for Line {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        5        9        0
-    //  no simd        8       12        0
+    //      add/sub      mul      div
+    // f32        8       12        0
     fn bitxor(self, other: RoundPoint) -> Self::Output {
         return self.wedge(other);
     }
@@ -3416,9 +2834,8 @@ impl std::ops::BitXor<RoundPoint> for Line {
 impl std::ops::BitXor<RoundPointAtOrigin> for Line {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn bitxor(self, other: RoundPointAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3426,9 +2843,8 @@ impl std::ops::BitXor<RoundPointAtOrigin> for Line {
 impl std::ops::BitXor<Scalar> for Line {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn bitxor(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3443,12 +2859,8 @@ impl std::ops::BitXorAssign<Scalar> for Line {
 impl std::ops::BitXor<VersorEven> for Line {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        5        9        0
-    //  no simd        8       12        0
+    //      add/sub      mul      div
+    // f32        8       12        0
     fn bitxor(self, other: VersorEven) -> Self::Output {
         return self.wedge(other);
     }
@@ -3456,9 +2868,8 @@ impl std::ops::BitXor<VersorEven> for Line {
 impl std::ops::BitXor<VersorEvenAligningOrigin> for Line {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn bitxor(self, other: VersorEvenAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3466,12 +2877,8 @@ impl std::ops::BitXor<VersorEvenAligningOrigin> for Line {
 impl std::ops::BitXor<VersorEvenAtInfinity> for Line {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        2        9        0
-    //  no simd        5       12        0
+    //      add/sub      mul      div
+    // f32        5        9        0
     fn bitxor(self, other: VersorEvenAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3479,9 +2886,8 @@ impl std::ops::BitXor<VersorEvenAtInfinity> for Line {
 impl std::ops::BitXor<VersorEvenAtOrigin> for Line {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn bitxor(self, other: VersorEvenAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3489,9 +2895,8 @@ impl std::ops::BitXor<VersorEvenAtOrigin> for Line {
 impl std::ops::BitXor<VersorEvenOnOrigin> for Line {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn bitxor(self, other: VersorEvenOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3499,12 +2904,8 @@ impl std::ops::BitXor<VersorEvenOnOrigin> for Line {
 impl std::ops::BitXor<VersorEvenOrthogonalOrigin> for Line {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        5        9        0
-    //  no simd        8       12        0
+    //      add/sub      mul      div
+    // f32        8       12        0
     fn bitxor(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3512,12 +2913,8 @@ impl std::ops::BitXor<VersorEvenOrthogonalOrigin> for Line {
 impl std::ops::BitXor<VersorOdd> for Line {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        9        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        5       10        0
-    //  no simd        5       12        0
+    //      add/sub      mul      div
+    // f32        5       12        0
     fn bitxor(self, other: VersorOdd) -> Self::Output {
         return self.wedge(other);
     }
@@ -3525,12 +2922,8 @@ impl std::ops::BitXor<VersorOdd> for Line {
 impl std::ops::BitXor<VersorOddAtInfinity> for Line {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        6        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        2        7        0
-    //  no simd        2        9        0
+    //      add/sub      mul      div
+    // f32        2        9        0
     fn bitxor(self, other: VersorOddAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3538,103 +2931,10 @@ impl std::ops::BitXor<VersorOddAtInfinity> for Line {
 impl std::ops::BitXor<VersorOddOrthogonalOrigin> for Line {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5        9        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        5       10        0
-    //  no simd        5       12        0
+    //      add/sub      mul      div
+    // f32        5       12        0
     fn bitxor(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorRoundPoint> for Line {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        5        9        0
-    //  no simd        8       12        0
-    fn bitxor(self, other: VersorRoundPoint) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorRoundPointAligningOrigin> for Line {
-    type Output = PlaneOnOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
-    fn bitxor(self, other: VersorRoundPointAligningOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorRoundPointAtInfinity> for Line {
-    type Output = Plane;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5        9        0
-    fn bitxor(self, other: VersorRoundPointAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorRoundPointOnOrigin> for Line {
-    type Output = PlaneOnOrigin;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
-    fn bitxor(self, other: VersorRoundPointOnOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorSphere> for Line {
-    type Output = Line;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
-    fn bitxor(self, other: VersorSphere) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<VersorSphere> for Line {
-    fn bitxor_assign(&mut self, other: VersorSphere) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorSphereAtInfinity> for Line {
-    type Output = Line;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
-    fn bitxor(self, other: VersorSphereAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<VersorSphereAtInfinity> for Line {
-    fn bitxor_assign(&mut self, other: VersorSphereAtInfinity) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorSphereOrthogonalOrigin> for Line {
-    type Output = Line;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
-    fn bitxor(self, other: VersorSphereOrthogonalOrigin) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<VersorSphereOrthogonalOrigin> for Line {
-    fn bitxor_assign(&mut self, other: VersorSphereOrthogonalOrigin) {
-        *self = self.wedge(other);
     }
 }
 
@@ -3673,12 +2973,8 @@ impl std::ops::Mul<AntiCircleOnOrigin> for Line {
 impl std::ops::Mul<AntiCircleRotor> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       38       54        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd       41       57        0
-    //  no simd       50       66        0
+    //      add/sub      mul      div
+    // f32       50       66        0
     fn mul(self, other: AntiCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3686,12 +2982,8 @@ impl std::ops::Mul<AntiCircleRotor> for Line {
 impl std::ops::Mul<AntiCircleRotorAligningOrigin> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       40       56        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       41       57        0
-    //  no simd       44       60        0
+    //      add/sub      mul      div
+    // f32       44       60        0
     fn mul(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3699,12 +2991,8 @@ impl std::ops::Mul<AntiCircleRotorAligningOrigin> for Line {
 impl std::ops::Mul<AntiCircleRotorAligningOriginAtInfinity> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       21       29        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       22       30        0
-    //  no simd       25       33        0
+    //      add/sub      mul      div
+    // f32       25       33        0
     fn mul(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3712,12 +3000,8 @@ impl std::ops::Mul<AntiCircleRotorAligningOriginAtInfinity> for Line {
 impl std::ops::Mul<AntiCircleRotorAtInfinity> for Line {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       16       30        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd       19       33        0
-    //  no simd       28       42        0
+    //      add/sub      mul      div
+    // f32       28       42        0
     fn mul(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3725,12 +3009,8 @@ impl std::ops::Mul<AntiCircleRotorAtInfinity> for Line {
 impl std::ops::Mul<AntiCircleRotorOnOrigin> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       19       35        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       23       39        0
-    //  no simd       35       51        0
+    //      add/sub      mul      div
+    // f32       35       51        0
     fn mul(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3738,12 +3018,8 @@ impl std::ops::Mul<AntiCircleRotorOnOrigin> for Line {
 impl std::ops::Mul<AntiDipoleInversion> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       66       82        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       68       84        0
-    //  no simd       74       90        0
+    //      add/sub      mul      div
+    // f32       74       90        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3751,12 +3027,8 @@ impl std::ops::Mul<AntiDipoleInversion> for Line {
 impl std::ops::Mul<AntiDipoleInversionAtInfinity> for Line {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       30       45        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd       33       48        0
-    //  no simd       42       57        0
+    //      add/sub      mul      div
+    // f32       42       54        0
     fn mul(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3764,12 +3036,8 @@ impl std::ops::Mul<AntiDipoleInversionAtInfinity> for Line {
 impl std::ops::Mul<AntiDipoleInversionOnOrigin> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       28       47        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       32       51        0
-    //  no simd       44       63        0
+    //      add/sub      mul      div
+    // f32       44       60        0
     fn mul(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3777,12 +3045,8 @@ impl std::ops::Mul<AntiDipoleInversionOnOrigin> for Line {
 impl std::ops::Mul<AntiDipoleInversionOrthogonalOrigin> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       42       58        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       44       60        0
-    //  no simd       50       66        0
+    //      add/sub      mul      div
+    // f32       50       66        0
     fn mul(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3790,13 +3054,18 @@ impl std::ops::Mul<AntiDipoleInversionOrthogonalOrigin> for Line {
 impl std::ops::Mul<AntiDipoleOnOrigin> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       10       34        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       12       36        0
-    //  no simd       18       42        0
+    //      add/sub      mul      div
+    // f32       18       36        0
     fn mul(self, other: AntiDipoleOnOrigin) -> Self::Output {
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<AntiDualNum> for Line {
+    type Output = AntiDipoleInversion;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3       18        0
+    fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
 }
@@ -3822,12 +3091,8 @@ impl std::ops::Mul<AntiFlatPoint> for Line {
 impl std::ops::Mul<AntiFlector> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       12       24        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       16       28        0
-    //  no simd       28       40        0
+    //      add/sub      mul      div
+    // f32       28       36        0
     fn mul(self, other: AntiFlector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3835,9 +3100,8 @@ impl std::ops::Mul<AntiFlector> for Line {
 impl std::ops::Mul<AntiFlectorOnOrigin> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        4        8        0
-    // no simd       16       32        0
+    //      add/sub      mul      div
+    // f32       16       24        0
     fn mul(self, other: AntiFlectorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3863,12 +3127,8 @@ impl std::ops::Mul<AntiLineOnOrigin> for Line {
 impl std::ops::Mul<AntiMotor> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       16       24        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd       19       27        0
-    //  no simd       28       36        0
+    //      add/sub      mul      div
+    // f32       28       36        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3876,12 +3136,8 @@ impl std::ops::Mul<AntiMotor> for Line {
 impl std::ops::Mul<AntiMotorOnOrigin> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       16        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       10       18        0
-    //  no simd       16       24        0
+    //      add/sub      mul      div
+    // f32       16       24        0
     fn mul(self, other: AntiMotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3889,12 +3145,8 @@ impl std::ops::Mul<AntiMotorOnOrigin> for Line {
 impl std::ops::Mul<AntiMysteryCircleRotor> for Line {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       11       26        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       13       28        0
-    //  no simd       19       34        0
+    //      add/sub      mul      div
+    // f32       19       33        0
     fn mul(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3903,38 +3155,17 @@ impl std::ops::Mul<AntiMysteryCircleRotor> for Line {
 impl std::ops::Mul<AntiMysteryDipoleInversion> for Line {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       22       34        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       24       36        0
-    //  no simd       30       42        0
+    //      add/sub      mul      div
+    // f32       30       42        0
     fn mul(self, other: AntiMysteryDipoleInversion) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<AntiMysteryQuadNum> for Line {
-    type Output = AntiDipoleInversionAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        9        0
-    //    simd3        1        2        0
-    // Totals...
-    // yes simd        1       11        0
-    //  no simd        3       15        0
-    fn mul(self, other: AntiMysteryQuadNum) -> Self::Output {
         return self.geometric_product(other);
     }
 }
 impl std::ops::Mul<AntiPlane> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        8        0
-    //    simd4        3        5        0
-    // Totals...
-    // yes simd        4       13        0
-    //  no simd       13       28        0
+    //      add/sub      mul      div
+    // f32       13       21        0
     fn mul(self, other: AntiPlane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3948,51 +3179,11 @@ impl std::ops::Mul<AntiPlaneOnOrigin> for Line {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiQuadNum> for Line {
-    type Output = AntiDipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       12       21        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd       12       22        0
-    //  no simd       12       24        0
-    fn mul(self, other: AntiQuadNum) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<AntiQuadNumAtInfinity> for Line {
-    type Output = AntiDipoleInversionAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        9        0
-    //    simd3        2        3        0
-    // Totals...
-    // yes simd        2       12        0
-    //  no simd        6       18        0
-    fn mul(self, other: AntiQuadNumAtInfinity) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<AntiQuadNumOrthogonalOrigin> for Line {
-    type Output = AntiDipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       15        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        6       16        0
-    //  no simd        6       18        0
-    fn mul(self, other: AntiQuadNumOrthogonalOrigin) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
 impl std::ops::Mul<AntiScalar> for Line {
     type Output = AntiLine;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        4        0
-    // no simd        0       12        0
+    //      add/sub      mul      div
+    // f32        0       12        0
     fn mul(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4001,13 +3192,8 @@ impl std::ops::Mul<AntiScalar> for Line {
 impl std::ops::Mul<AntiSphereOnOrigin> for Line {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       23        0
-    //    simd3        0        2        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       10       26        0
-    //  no simd       13       33        0
+    //      add/sub      mul      div
+    // f32       13       33        0
     fn mul(self, other: AntiSphereOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4015,53 +3201,17 @@ impl std::ops::Mul<AntiSphereOnOrigin> for Line {
 impl std::ops::Mul<AntiVersorEvenOnOrigin> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       24       40        0
-    //    simd4        5        5        0
-    // Totals...
-    // yes simd       29       45        0
-    //  no simd       44       60        0
+    //      add/sub      mul      div
+    // f32       44       60        0
     fn mul(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<AntiVersorRoundPointAligningOriginAtInfinity> for Line {
-    type Output = Line;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        1        3        0
-    // no simd        3        9        0
-    fn mul(self, other: AntiVersorRoundPointAligningOriginAtInfinity) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<AntiVersorRoundPointAligningOriginAtInfinity> for Line {
-    fn mul_assign(&mut self, other: AntiVersorRoundPointAligningOriginAtInfinity) {
-        *self = self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<AntiVersorRoundPointOnOrigin> for Line {
-    type Output = AntiDipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3       15        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        3       16        0
-    //  no simd        3       18        0
-    fn mul(self, other: AntiVersorRoundPointOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
 }
 impl std::ops::Mul<Circle> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       40       56        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       41       57        0
-    //  no simd       44       60        0
+    //      add/sub      mul      div
+    // f32       44       60        0
     fn mul(self, other: Circle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4078,12 +3228,8 @@ impl std::ops::Mul<CircleAligningOrigin> for Line {
 impl std::ops::Mul<CircleAtInfinity> for Line {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       18       29        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       19       30        0
-    //  no simd       22       33        0
+    //      add/sub      mul      div
+    // f32       22       33        0
     fn mul(self, other: CircleAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4109,12 +3255,8 @@ impl std::ops::Mul<CircleOnOrigin> for Line {
 impl std::ops::Mul<CircleOrthogonalOrigin> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       18       40        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       20       42        0
-    //  no simd       26       48        0
+    //      add/sub      mul      div
+    // f32       26       42        0
     fn mul(self, other: CircleOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4122,12 +3264,8 @@ impl std::ops::Mul<CircleOrthogonalOrigin> for Line {
 impl std::ops::Mul<CircleRotor> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       46       62        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       47       63        0
-    //  no simd       50       66        0
+    //      add/sub      mul      div
+    // f32       50       66        0
     fn mul(self, other: CircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4144,12 +3282,8 @@ impl std::ops::Mul<CircleRotorAligningOrigin> for Line {
 impl std::ops::Mul<CircleRotorAligningOriginAtInfinity> for Line {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       21       29        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       22       30        0
-    //  no simd       25       33        0
+    //      add/sub      mul      div
+    // f32       25       33        0
     fn mul(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4157,12 +3291,8 @@ impl std::ops::Mul<CircleRotorAligningOriginAtInfinity> for Line {
 impl std::ops::Mul<CircleRotorAtInfinity> for Line {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       24       35        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       25       36        0
-    //  no simd       28       39        0
+    //      add/sub      mul      div
+    // f32       28       39        0
     fn mul(self, other: CircleRotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4170,12 +3300,8 @@ impl std::ops::Mul<CircleRotorAtInfinity> for Line {
 impl std::ops::Mul<CircleRotorOnOrigin> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       27       46        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       29       48        0
-    //  no simd       35       54        0
+    //      add/sub      mul      div
+    // f32       35       51        0
     fn mul(self, other: CircleRotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4183,12 +3309,8 @@ impl std::ops::Mul<CircleRotorOnOrigin> for Line {
 impl std::ops::Mul<Dipole> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       36       52        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       38       54        0
-    //  no simd       44       60        0
+    //      add/sub      mul      div
+    // f32       44       60        0
     fn mul(self, other: Dipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4196,12 +3318,8 @@ impl std::ops::Mul<Dipole> for Line {
 impl std::ops::Mul<DipoleAligningOrigin> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       10       25        0
-    //    simd4        4        6        0
-    // Totals...
-    // yes simd       14       31        0
-    //  no simd       26       49        0
+    //      add/sub      mul      div
+    // f32       26       42        0
     fn mul(self, other: DipoleAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4209,12 +3327,8 @@ impl std::ops::Mul<DipoleAligningOrigin> for Line {
 impl std::ops::Mul<DipoleAtInfinity> for Line {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       14       28        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       16       30        0
-    //  no simd       22       36        0
+    //      add/sub      mul      div
+    // f32       22       36        0
     fn mul(self, other: DipoleAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4231,12 +3345,8 @@ impl std::ops::Mul<DipoleAtOrigin> for Line {
 impl std::ops::Mul<DipoleInversion> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       50       66        0
-    //    simd4        6        6        0
-    // Totals...
-    // yes simd       56       72        0
-    //  no simd       74       90        0
+    //      add/sub      mul      div
+    // f32       74       90        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4244,12 +3354,8 @@ impl std::ops::Mul<DipoleInversion> for Line {
 impl std::ops::Mul<DipoleInversionAligningOrigin> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       28       45        0
-    //    simd4        7        7        0
-    // Totals...
-    // yes simd       35       52        0
-    //  no simd       56       73        0
+    //      add/sub      mul      div
+    // f32       56       72        0
     fn mul(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4257,12 +3363,8 @@ impl std::ops::Mul<DipoleInversionAligningOrigin> for Line {
 impl std::ops::Mul<DipoleInversionAtInfinity> for Line {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       18       30        0
-    //    simd4        6        6        0
-    // Totals...
-    // yes simd       24       36        0
-    //  no simd       42       54        0
+    //      add/sub      mul      div
+    // f32       42       54        0
     fn mul(self, other: DipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4270,12 +3372,8 @@ impl std::ops::Mul<DipoleInversionAtInfinity> for Line {
 impl std::ops::Mul<DipoleInversionAtOrigin> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       16       32        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       20       36        0
-    //  no simd       32       48        0
+    //      add/sub      mul      div
+    // f32       32       48        0
     fn mul(self, other: DipoleInversionAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4283,12 +3381,8 @@ impl std::ops::Mul<DipoleInversionAtOrigin> for Line {
 impl std::ops::Mul<DipoleInversionOnOrigin> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       20       40        0
-    //    simd4        6        6        0
-    // Totals...
-    // yes simd       26       46        0
-    //  no simd       44       64        0
+    //      add/sub      mul      div
+    // f32       44       60        0
     fn mul(self, other: DipoleInversionOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4296,12 +3390,8 @@ impl std::ops::Mul<DipoleInversionOnOrigin> for Line {
 impl std::ops::Mul<DipoleInversionOrthogonalOrigin> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       34       50        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       38       54        0
-    //  no simd       50       66        0
+    //      add/sub      mul      div
+    // f32       50       66        0
     fn mul(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4309,12 +3399,8 @@ impl std::ops::Mul<DipoleInversionOrthogonalOrigin> for Line {
 impl std::ops::Mul<DipoleOnOrigin> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2       19        0
-    //    simd4        4        6        0
-    // Totals...
-    // yes simd        6       25        0
-    //  no simd       18       43        0
+    //      add/sub      mul      div
+    // f32       18       36        0
     fn mul(self, other: DipoleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4325,6 +3411,15 @@ impl std::ops::Mul<DipoleOrthogonalOrigin> for Line {
     //      add/sub      mul      div
     // f32       38       54        0
     fn mul(self, other: DipoleOrthogonalOrigin) -> Self::Output {
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::Mul<DualNum> for Line {
+    type Output = DipoleInversion;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        3       24        0
+    fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
 }
@@ -4359,12 +3454,8 @@ impl std::ops::Mul<FlatPointAtInfinity> for Line {
 impl std::ops::Mul<Flector> for Line {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       12       23        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       16       27        0
-    //  no simd       28       39        0
+    //      add/sub      mul      div
+    // f32       28       36        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4372,12 +3463,8 @@ impl std::ops::Mul<Flector> for Line {
 impl std::ops::Mul<FlectorAtInfinity> for Line {
     type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        5        9        0
-    //  no simd        8       12        0
+    //      add/sub      mul      div
+    // f32        8       12        0
     fn mul(self, other: FlectorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4385,12 +3472,8 @@ impl std::ops::Mul<FlectorAtInfinity> for Line {
 impl std::ops::Mul<FlectorOnOrigin> for Line {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       16        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       10       18        0
-    //  no simd       16       24        0
+    //      add/sub      mul      div
+    // f32       16       24        0
     fn mul(self, other: FlectorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4398,9 +3481,8 @@ impl std::ops::Mul<FlectorOnOrigin> for Line {
 impl std::ops::Mul<Horizon> for Line {
     type Output = LineAtInfinity;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        1        0
-    // no simd        0        3        0
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn mul(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4409,9 +3491,8 @@ impl std::ops::Mul<Horizon> for Line {
 impl std::ops::Mul<Infinity> for Line {
     type Output = FlatPointAtInfinity;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn mul(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4447,12 +3528,8 @@ impl std::ops::Mul<LineOnOrigin> for Line {
 impl std::ops::Mul<Motor> for Line {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       16       24        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd       19       27        0
-    //  no simd       28       36        0
+    //      add/sub      mul      div
+    // f32       28       36        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4460,12 +3537,8 @@ impl std::ops::Mul<Motor> for Line {
 impl std::ops::Mul<MotorAtInfinity> for Line {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        5        9        0
-    //  no simd        8       12        0
+    //      add/sub      mul      div
+    // f32        8       12        0
     fn mul(self, other: MotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4473,12 +3546,8 @@ impl std::ops::Mul<MotorAtInfinity> for Line {
 impl std::ops::Mul<MotorOnOrigin> for Line {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       16        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       10       18        0
-    //  no simd       16       24        0
+    //      add/sub      mul      div
+    // f32       16       24        0
     fn mul(self, other: MotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4486,13 +3555,8 @@ impl std::ops::Mul<MotorOnOrigin> for Line {
 impl std::ops::Mul<MultiVector> for Line {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       71       92        0
-    //    simd3       23       27        0
-    //    simd4        5        5        0
-    // Totals...
-    // yes simd       99      124        0
-    //  no simd      160      193        0
+    //      add/sub      mul      div
+    // f32      160      192        0
     fn mul(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4501,12 +3565,8 @@ impl std::ops::Mul<MultiVector> for Line {
 impl std::ops::Mul<MysteryCircle> for Line {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       20        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       10       21        0
-    //  no simd       13       24        0
+    //      add/sub      mul      div
+    // f32       13       24        0
     fn mul(self, other: MysteryCircle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4514,12 +3574,8 @@ impl std::ops::Mul<MysteryCircle> for Line {
 impl std::ops::Mul<MysteryCircleRotor> for Line {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       15       26        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       16       27        0
-    //  no simd       19       30        0
+    //      add/sub      mul      div
+    // f32       19       30        0
     fn mul(self, other: MysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4528,12 +3584,8 @@ impl std::ops::Mul<MysteryCircleRotor> for Line {
 impl std::ops::Mul<MysteryDipole> for Line {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5       15        0
-    //    simd4        2        4        0
-    // Totals...
-    // yes simd        7       19        0
-    //  no simd       13       31        0
+    //      add/sub      mul      div
+    // f32       13       27        0
     fn mul(self, other: MysteryDipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4541,38 +3593,17 @@ impl std::ops::Mul<MysteryDipole> for Line {
 impl std::ops::Mul<MysteryDipoleInversion> for Line {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       14       26        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       18       30        0
-    //  no simd       30       42        0
+    //      add/sub      mul      div
+    // f32       30       42        0
     fn mul(self, other: MysteryDipoleInversion) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<MysteryQuadNum> for Line {
-    type Output = DipoleInversionAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        9        0
-    //    simd3        1        2        0
-    // Totals...
-    // yes simd        1       11        0
-    //  no simd        3       15        0
-    fn mul(self, other: MysteryQuadNum) -> Self::Output {
         return self.geometric_product(other);
     }
 }
 impl std::ops::Mul<MysteryVersorEven> for Line {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       20       35        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       24       39        0
-    //  no simd       36       51        0
+    //      add/sub      mul      div
+    // f32       36       48        0
     fn mul(self, other: MysteryVersorEven) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4580,41 +3611,9 @@ impl std::ops::Mul<MysteryVersorEven> for Line {
 impl std::ops::Mul<MysteryVersorOdd> for Line {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       16        0
-    //    simd4        7        8        0
-    // Totals...
-    // yes simd       15       24        0
-    //  no simd       36       48        0
+    //      add/sub      mul      div
+    // f32       36       48        0
     fn mul(self, other: MysteryVersorOdd) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<MysteryVersorRoundPoint> for Line {
-    type Output = DipoleInversionAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3       17        0
-    //    simd3        2        3        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        6       21        0
-    //  no simd       13       30        0
-    fn mul(self, other: MysteryVersorRoundPoint) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<MysteryVersorSphere> for Line {
-    type Output = AntiDipoleInversionAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3       14        0
-    //    simd3        2        3        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        6       18        0
-    //  no simd       13       27        0
-    fn mul(self, other: MysteryVersorSphere) -> Self::Output {
         return self.geometric_product(other);
     }
 }
@@ -4639,12 +3638,8 @@ impl std::ops::Mul<NullDipoleAtOrigin> for Line {
 impl std::ops::Mul<NullDipoleInversionAtOrigin> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        5        9        0
-    // Totals...
-    // yes simd        9       17        0
-    //  no simd       24       44        0
+    //      add/sub      mul      div
+    // f32       24       36        0
     fn mul(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4652,12 +3647,8 @@ impl std::ops::Mul<NullDipoleInversionAtOrigin> for Line {
 impl std::ops::Mul<NullSphereAtOrigin> for Line {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        9        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       12        0
+    //      add/sub      mul      div
+    // f32        0       12        0
     fn mul(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4666,12 +3657,8 @@ impl std::ops::Mul<NullSphereAtOrigin> for Line {
 impl std::ops::Mul<NullVersorEvenAtOrigin> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       16       28        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       18       30        0
-    //  no simd       24       36        0
+    //      add/sub      mul      div
+    // f32       24       36        0
     fn mul(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4679,12 +3666,8 @@ impl std::ops::Mul<NullVersorEvenAtOrigin> for Line {
 impl std::ops::Mul<Origin> for Line {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       12        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0       14        0
-    //  no simd        0       18        0
+    //      add/sub      mul      div
+    // f32        0       18        0
     fn mul(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4693,12 +3676,8 @@ impl std::ops::Mul<Origin> for Line {
 impl std::ops::Mul<Plane> for Line {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        8        0
-    //    simd4        3        5        0
-    // Totals...
-    // yes simd        4       13        0
-    //  no simd       13       28        0
+    //      add/sub      mul      div
+    // f32       13       21        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4712,55 +3691,11 @@ impl std::ops::Mul<PlaneOnOrigin> for Line {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<QuadNum> for Line {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       12       21        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd       12       23        0
-    //  no simd       12       27        0
-    fn mul(self, other: QuadNum) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<QuadNumAtInfinity> for Line {
-    type Output = DipoleInversionAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        9        0
-    //    simd3        2        3        0
-    // Totals...
-    // yes simd        2       12        0
-    //  no simd        6       18        0
-    fn mul(self, other: QuadNumAtInfinity) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<QuadNumOrthogonalOrigin> for Line {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       18        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        6       20        0
-    //  no simd        6       24        0
-    fn mul(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
 impl std::ops::Mul<RoundPoint> for Line {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       12       26        0
-    //    simd3        0        2        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       13       29        0
-    //  no simd       16       36        0
+    //      add/sub      mul      div
+    // f32       16       36        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4769,12 +3704,8 @@ impl std::ops::Mul<RoundPoint> for Line {
 impl std::ops::Mul<RoundPointAtOrigin> for Line {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       18        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0       20        0
-    //  no simd        0       24        0
+    //      add/sub      mul      div
+    // f32        0       24        0
     fn mul(self, other: RoundPointAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4782,9 +3713,8 @@ impl std::ops::Mul<RoundPointAtOrigin> for Line {
 impl std::ops::Mul<Scalar> for Line {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn mul(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4799,13 +3729,8 @@ impl std::ops::MulAssign<Scalar> for Line {
 impl std::ops::Mul<Sphere> for Line {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       12       23        0
-    //    simd3        0        1        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       13       25        0
-    //  no simd       16       30        0
+    //      add/sub      mul      div
+    // f32       16       30        0
     fn mul(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4814,12 +3739,8 @@ impl std::ops::Mul<Sphere> for Line {
 impl std::ops::Mul<SphereAtOrigin> for Line {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       12        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        0       13        0
-    //  no simd        0       15        0
+    //      add/sub      mul      div
+    // f32        0       15        0
     fn mul(self, other: SphereAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4827,13 +3748,8 @@ impl std::ops::Mul<SphereAtOrigin> for Line {
 impl std::ops::Mul<SphereOnOrigin> for Line {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       20        0
-    //    simd3        0        1        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       10       22        0
-    //  no simd       13       27        0
+    //      add/sub      mul      div
+    // f32       13       27        0
     fn mul(self, other: SphereOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4841,12 +3757,8 @@ impl std::ops::Mul<SphereOnOrigin> for Line {
 impl std::ops::Mul<VersorEven> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       60       76        0
-    //    simd4        5        5        0
-    // Totals...
-    // yes simd       65       81        0
-    //  no simd       80       96        0
+    //      add/sub      mul      div
+    // f32       80       96        0
     fn mul(self, other: VersorEven) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4854,12 +3766,8 @@ impl std::ops::Mul<VersorEven> for Line {
 impl std::ops::Mul<VersorEvenAligningOrigin> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       48       64        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       50       66        0
-    //  no simd       56       72        0
+    //      add/sub      mul      div
+    // f32       56       72        0
     fn mul(self, other: VersorEvenAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4867,12 +3775,8 @@ impl std::ops::Mul<VersorEvenAligningOrigin> for Line {
 impl std::ops::Mul<VersorEvenAtInfinity> for Line {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       32       47        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       36       51        0
-    //  no simd       48       63        0
+    //      add/sub      mul      div
+    // f32       48       60        0
     fn mul(self, other: VersorEvenAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4880,12 +3784,8 @@ impl std::ops::Mul<VersorEvenAtInfinity> for Line {
 impl std::ops::Mul<VersorEvenAtOrigin> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       24       40        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       26       42        0
-    //  no simd       32       48        0
+    //      add/sub      mul      div
+    // f32       32       48        0
     fn mul(self, other: VersorEvenAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4893,12 +3793,8 @@ impl std::ops::Mul<VersorEvenAtOrigin> for Line {
 impl std::ops::Mul<VersorEvenOnOrigin> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       36       52        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       38       54        0
-    //  no simd       44       60        0
+    //      add/sub      mul      div
+    // f32       44       60        0
     fn mul(self, other: VersorEvenOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4906,12 +3802,8 @@ impl std::ops::Mul<VersorEvenOnOrigin> for Line {
 impl std::ops::Mul<VersorEvenOrthogonalOrigin> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       40       59        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       44       63        0
-    //  no simd       56       75        0
+    //      add/sub      mul      div
+    // f32       56       72        0
     fn mul(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4919,12 +3811,8 @@ impl std::ops::Mul<VersorEvenOrthogonalOrigin> for Line {
 impl std::ops::Mul<VersorOdd> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       36       52        0
-    //    simd4       11       11        0
-    // Totals...
-    // yes simd       47       63        0
-    //  no simd       80       96        0
+    //      add/sub      mul      div
+    // f32       80       96        0
     fn mul(self, other: VersorOdd) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4932,12 +3820,8 @@ impl std::ops::Mul<VersorOdd> for Line {
 impl std::ops::Mul<VersorOddAtInfinity> for Line {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       16       28        0
-    //    simd4        8        8        0
-    // Totals...
-    // yes simd       24       36        0
-    //  no simd       48       60        0
+    //      add/sub      mul      div
+    // f32       48       60        0
     fn mul(self, other: VersorOddAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4945,118 +3829,9 @@ impl std::ops::Mul<VersorOddAtInfinity> for Line {
 impl std::ops::Mul<VersorOddOrthogonalOrigin> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       32       48        0
-    //    simd4        6        6        0
-    // Totals...
-    // yes simd       38       54        0
-    //  no simd       56       72        0
+    //      add/sub      mul      div
+    // f32       56       72        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorRoundPoint> for Line {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       14       28        0
-    //    simd3        0        2        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       16       32        0
-    //  no simd       22       42        0
-    fn mul(self, other: VersorRoundPoint) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorRoundPointAligningOrigin> for Line {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       18        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        6       20        0
-    //  no simd        6       24        0
-    fn mul(self, other: VersorRoundPointAligningOrigin) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorRoundPointAligningOriginAtInfinity> for Line {
-    type Output = AntiLine;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        1        4        0
-    // no simd        3       12        0
-    fn mul(self, other: VersorRoundPointAligningOriginAtInfinity) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorRoundPointAtInfinity> for Line {
-    type Output = DipoleInversionAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        7       18        0
-    //    simd3        3        4        0
-    // Totals...
-    // yes simd       10       22        0
-    //  no simd       16       30        0
-    fn mul(self, other: VersorRoundPointAtInfinity) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorRoundPointOnOrigin> for Line {
-    type Output = DipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3       18        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        3       20        0
-    //  no simd        3       24        0
-    fn mul(self, other: VersorRoundPointOnOrigin) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorSphere> for Line {
-    type Output = AntiDipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       18       29        0
-    //    simd3        0        1        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       19       31        0
-    //  no simd       22       36        0
-    fn mul(self, other: VersorSphere) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorSphereAtInfinity> for Line {
-    type Output = AntiDipoleInversionAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3       14        0
-    //    simd3        3        4        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        7       19        0
-    //  no simd       16       30        0
-    fn mul(self, other: VersorSphereAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorSphereOrthogonalOrigin> for Line {
-    type Output = AntiDipoleInversion;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       18        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        6       19        0
-    //  no simd        6       21        0
-    fn mul(self, other: VersorSphereOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
 }
@@ -5436,6 +4211,39 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for Line {
         return subtraction;
     }
 }
+impl std::ops::Sub<AntiDualNum> for Line {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn sub(self, other: AntiDualNum) -> Self::Output {
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group0()[1] * -1.0), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            self.group1(),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([(other.group0()[0] * -1.0), 0.0, 0.0, 0.0]),
+            // e3215
+            0.0,
+        );
+        return subtraction;
+    }
+}
 impl std::ops::Sub<AntiFlatOrigin> for Line {
     type Output = CircleAtInfinity;
     // Operative Statistics for this implementation:
@@ -5456,17 +4264,17 @@ impl std::ops::Sub<AntiFlatPoint> for Line {
     type Output = CircleAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        4        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        1        1        0
-    //  no simd        3        1        0
+    // yes simd        1        4        0
+    //  no simd        3        4        0
     fn sub(self, other: AntiFlatPoint) -> Self::Output {
         let subtraction = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] * -1.0)]),
             // e235, e315, e125
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group1()),
         );
         return subtraction;
     }
@@ -5475,18 +4283,18 @@ impl std::ops::Sub<AntiFlector> for Line {
     type Output = AntiDipoleInversionAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        4        0
     //    simd3        1        0        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        1        2        0
-    //  no simd        3        5        0
+    // yes simd        1        5        0
+    //  no simd        3        8        0
     fn sub(self, other: AntiFlector) -> Self::Output {
         let subtraction = AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] * -1.0)]),
             // e235, e315, e125
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group1()),
             // e1, e2, e3, e5
             (other.group1() * Simd32x4::from(-1.0)),
         );
@@ -5712,39 +4520,6 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for Line {
         return subtraction;
     }
 }
-impl std::ops::Sub<AntiMysteryQuadNum> for Line {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn sub(self, other: AntiMysteryQuadNum) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[1] * -1.0), 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
-        );
-        return subtraction;
-    }
-}
 impl std::ops::Sub<AntiPlane> for Line {
     type Output = AntiDipoleInversionAtInfinity;
     // Operative Statistics for this implementation:
@@ -5776,105 +4551,6 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for Line {
             self.group1(),
             // e1, e2, e3, e5
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<AntiQuadNum> for Line {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
-    fn sub(self, other: AntiQuadNum) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[2] * -1.0)]),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(other.group0()[0] * -1.0), 0.0, 0.0, 0.0]),
-            // e3215
-            (other.group0()[1] * -1.0),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<AntiQuadNumAtInfinity> for Line {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
-    fn sub(self, other: AntiQuadNumAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[2] * -1.0), 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            (other.group0()[0] * -1.0),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<AntiQuadNumOrthogonalOrigin> for Line {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
-    fn sub(self, other: AntiQuadNumOrthogonalOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from(0.0),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[2] * -1.0)]),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(other.group0()[0] * -1.0), 0.0, 0.0, 0.0]),
-            // e3215
-            (other.group0()[1] * -1.0),
         );
         return subtraction;
     }
@@ -5945,72 +4621,6 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for Line {
             self.group1(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([(other.group1()[3] * -1.0), 0.0, 0.0, 0.0]),
-            // e3215
-            0.0,
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<AntiVersorRoundPointAligningOriginAtInfinity> for Line {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn sub(self, other: AntiVersorRoundPointAligningOriginAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[1] * -1.0), 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            (other.group0()[0] * -1.0),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<AntiVersorRoundPointOnOrigin> for Line {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn sub(self, other: AntiVersorRoundPointOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[1] * -1.0), 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(other.group0()[0] * -1.0), 0.0, 0.0, 0.0]),
             // e3215
             0.0,
         );
@@ -6709,6 +5319,23 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for Line {
         return subtraction;
     }
 }
+impl std::ops::Sub<DualNum> for Line {
+    type Output = VersorEvenAligningOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
+    fn sub(self, other: DualNum) -> Self::Output {
+        let subtraction = VersorEvenAligningOrigin::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
+            // e415, e425, e435, e4
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[0] * -1.0)]),
+            // e235, e315, e125, e5
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+        );
+        return subtraction;
+    }
+}
 impl std::ops::Sub<FlatOrigin> for Line {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -7081,15 +5708,15 @@ impl std::ops::Sub<MotorOnOrigin> for Line {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        4        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        1        1        0
-    //  no simd        3        1        0
+    // yes simd        1        4        0
+    //  no simd        3        4        0
     fn sub(self, other: MotorOnOrigin) -> Self::Output {
         let subtraction = CircleRotorAligningOriginAtInfinity::from_groups(
             // e415, e425, e435
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group0()),
             // e235, e315, e125, e12345
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[3] * -1.0)]),
         );
@@ -7256,21 +5883,6 @@ impl std::ops::Sub<MysteryDipoleInversion> for Line {
         return subtraction;
     }
 }
-impl std::ops::Sub<MysteryQuadNum> for Line {
-    type Output = CircleRotorAtInfinity;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn sub(self, other: MysteryQuadNum) -> Self::Output {
-        let subtraction = CircleRotorAtInfinity::from_groups(
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[0] * -1.0)]),
-            // e235, e315, e125, e12345
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[1] * -1.0)]),
-        );
-        return subtraction;
-    }
-}
 impl std::ops::Sub<MysteryVersorEven> for Line {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
@@ -7328,57 +5940,6 @@ impl std::ops::Sub<MysteryVersorOdd> for Line {
             self.group1(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([0.0, (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group0()[3] * -1.0)]),
-            // e3215
-            0.0,
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<MysteryVersorRoundPoint> for Line {
-    type Output = VersorEvenAtInfinity;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
-    fn sub(self, other: MysteryVersorRoundPoint) -> Self::Output {
-        let subtraction = VersorEvenAtInfinity::from_groups(
-            // e12345, e1, e2, e3
-            (swizzle!(other.group0(), 3, 0, 1, 2) * Simd32x4::from(-1.0)),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<MysteryVersorSphere> for Line {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
-    fn sub(self, other: MysteryVersorSphere) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([0.0, (other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]),
             // e3215
             0.0,
         );
@@ -7600,61 +6161,6 @@ impl std::ops::Sub<PlaneOnOrigin> for Line {
             Simd32x4::from([0.0, (other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]),
             // e3215
             0.0,
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<QuadNum> for Line {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
-    fn sub(self, other: QuadNum) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
-            // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[2] * -1.0)]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[1] * -1.0)]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<QuadNumAtInfinity> for Line {
-    type Output = VersorEvenAtInfinity;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
-    fn sub(self, other: QuadNumAtInfinity) -> Self::Output {
-        let subtraction = VersorEvenAtInfinity::from_groups(
-            // e12345, e1, e2, e3
-            Simd32x4::from([(other.group0()[2] * -1.0), 0.0, 0.0, 0.0]),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] * -1.0)]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] * -1.0)]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<QuadNumOrthogonalOrigin> for Line {
-    type Output = AntiDipoleInversion;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
-    fn sub(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
-        let subtraction = AntiDipoleInversion::from_groups(
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[2] * -1.0)]),
-            // e235, e315, e125, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] * -1.0)]),
-            // e1, e2, e3, e5
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
         );
         return subtraction;
     }
@@ -8123,203 +6629,6 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for Line {
             Simd32x4::from([(other.group2()[3] * -1.0), 0.0, 0.0, 0.0]),
             // e3215
             (other.group1()[3] * -1.0),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<VersorRoundPoint> for Line {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        6        0
-    fn sub(self, other: VersorRoundPoint) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
-            // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[1] * -1.0)]),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group1()[0] * -1.0)]),
-            // e1, e2, e3, e4
-            (other.group0() * Simd32x4::from(-1.0)),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<VersorRoundPointAligningOrigin> for Line {
-    type Output = VersorEvenAligningOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
-    fn sub(self, other: VersorRoundPointAligningOrigin) -> Self::Output {
-        let subtraction = VersorEvenAligningOrigin::from_groups(
-            // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[2] * -1.0)]),
-            // e415, e425, e435, e4
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[0] * -1.0)]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[1] * -1.0)]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<VersorRoundPointAligningOriginAtInfinity> for Line {
-    type Output = Motor;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn sub(self, other: VersorRoundPointAligningOriginAtInfinity) -> Self::Output {
-        let subtraction = Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] * -1.0)]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] * -1.0)]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<VersorRoundPointAtInfinity> for Line {
-    type Output = VersorEvenAtInfinity;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        5        0
-    fn sub(self, other: VersorRoundPointAtInfinity) -> Self::Output {
-        let subtraction = VersorEvenAtInfinity::from_groups(
-            // e12345, e1, e2, e3
-            (Simd32x4::from([other.group1()[1], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from(-1.0)),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group1()[0] * -1.0)]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<VersorRoundPointOnOrigin> for Line {
-    type Output = VersorEvenAligningOrigin;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn sub(self, other: VersorRoundPointOnOrigin) -> Self::Output {
-        let subtraction = VersorEvenAligningOrigin::from_groups(
-            // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
-            // e415, e425, e435, e4
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[0] * -1.0)]),
-            // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<VersorSphere> for Line {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        6        0
-    fn sub(self, other: VersorSphere) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group1()[1] * -1.0), 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            (Simd32x4::from([other.group1()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from(-1.0)),
-            // e3215
-            (other.group0()[3] * -1.0),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<VersorSphereAtInfinity> for Line {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        5        0
-    fn sub(self, other: VersorSphereAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other[e4315] * -1.0), 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([0.0, (other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]),
-            // e3215
-            (other.group0()[3] * -1.0),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<VersorSphereOrthogonalOrigin> for Line {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
-    fn sub(self, other: VersorSphereOrthogonalOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[2] * -1.0), 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            self.group1(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(other.group0()[1] * -1.0), 0.0, 0.0, 0.0]),
-            // e3215
-            (other.group0()[0] * -1.0),
         );
         return subtraction;
     }

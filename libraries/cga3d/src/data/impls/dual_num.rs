@@ -8,29 +8,29 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 155
+// Total Implementations: 107
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         1       3       0
-//  Average:         2       6       0
-//  Maximum:        36      60       0
+//   Median:         0       4       0
+//  Average:         1       7       0
+//  Maximum:        32      68       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         1       4       0
-//  Average:         2       8       0
-//  Maximum:        64      96       0
-impl std::ops::Add<AntiCircleRotor> for TripleNum {
+//   Median:         0       4       0
+//  Average:         1       7       0
+//  Maximum:        32      68       0
+impl std::ops::Add<AntiCircleRotor> for DualNum {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotor) -> Self::Output {
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group2()[3], self.group0()[2]]),
+            Simd32x2::from([other.group2()[3], self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]),
             // e41, e42, e43
@@ -51,65 +51,35 @@ impl std::ops::Add<AntiCircleRotor> for TripleNum {
         return addition;
     }
 }
-impl std::ops::Add<AntiDipoleInversion> for TripleNum {
+impl std::ops::Add<AntiDipoleInversion> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        2        0        0
+    // f32        1        0        0
     fn add(self, other: AntiDipoleInversion) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[2]]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[1]]),
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (self.group0()[1] + other.group3()[3])]),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group3()[3]]),
             // e1, e2, e3, e4
             Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], (self.group0()[0] + other.group2()[3])]),
         );
         return addition;
     }
 }
-impl std::ops::Add<AntiDualNum321> for TripleNum {
+impl std::ops::Add<AntiDualNum> for DualNum {
     type Output = MultiVector;
-    fn add(self, other: AntiDualNum321) -> Self::Output {
+    fn add(self, other: AntiDualNum) -> Self::Output {
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[1], self.group0()[2]]),
+            Simd32x2::from([other.group0()[1], self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
-            // e15, e25, e35, e45
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
-            // e1234
             0.0,
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<AntiDualNum4> for TripleNum {
-    type Output = MultiVector;
-    fn add(self, other: AntiDualNum4) -> Self::Output {
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group0()[1], self.group0()[2]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
-            // e5
-            self.group0()[1],
             // e15, e25, e35, e45
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -130,81 +100,48 @@ impl std::ops::Add<AntiDualNum4> for TripleNum {
         return addition;
     }
 }
-impl std::ops::Add<AntiDualNum5> for TripleNum {
-    type Output = MultiVector;
-    fn add(self, other: AntiDualNum5) -> Self::Output {
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group0()[1], self.group0()[2]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
-            // e5
-            self.group0()[1],
-            // e15, e25, e35, e45
-            Simd32x4::from(0.0),
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
-            // e1234
-            0.0,
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<AntiFlatPoint> for TripleNum {
+impl std::ops::Add<AntiFlatPoint> for DualNum {
     type Output = VersorEven;
     fn add(self, other: AntiFlatPoint) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[2]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[1]]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
         return addition;
     }
 }
-impl std::ops::Add<AntiFlector> for TripleNum {
+impl std::ops::Add<AntiFlector> for DualNum {
     type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
     fn add(self, other: AntiFlector) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[2]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[1] + other.group1()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]),
             // e1, e2, e3, e4
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[0]]),
         );
         return addition;
     }
 }
-impl std::ops::Add<AntiLine> for TripleNum {
+impl std::ops::Add<AntiLine> for DualNum {
     type Output = MultiVector;
     fn add(self, other: AntiLine) -> Self::Output {
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, self.group0()[2]]),
+            Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             // e41, e42, e43
@@ -225,16 +162,16 @@ impl std::ops::Add<AntiLine> for TripleNum {
         return addition;
     }
 }
-impl std::ops::Add<AntiMotor> for TripleNum {
+impl std::ops::Add<AntiMotor> for DualNum {
     type Output = MultiVector;
     fn add(self, other: AntiMotor) -> Self::Output {
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[3], self.group0()[2]]),
+            Simd32x2::from([other.group0()[3], self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             // e41, e42, e43
@@ -255,116 +192,57 @@ impl std::ops::Add<AntiMotor> for TripleNum {
         return addition;
     }
 }
-impl std::ops::Add<AntiPlane> for TripleNum {
-    type Output = VersorRoundPoint;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
+impl std::ops::Add<AntiPlane> for DualNum {
+    type Output = VersorEven;
     fn add(self, other: AntiPlane) -> Self::Output {
-        let addition = VersorRoundPoint::from_groups(
-            // e1, e2, e3, e4
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[0]]),
-            // e5, e12345
-            Simd32x2::from([(self.group0()[1] + other.group0()[3]), self.group0()[2]]),
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<AntiQuadNum> for TripleNum {
-    type Output = MultiVector;
-    fn add(self, other: AntiQuadNum) -> Self::Output {
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group0()[3], self.group0()[2]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
-            // e5
-            self.group0()[1],
-            // e15, e25, e35, e45
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]]),
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
+        let addition = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
-            // e1234
-            other.group0()[0],
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[0]]),
         );
         return addition;
     }
 }
-impl std::ops::Add<AntiScalar> for TripleNum {
-    type Output = TripleNum;
+impl std::ops::Add<AntiScalar> for DualNum {
+    type Output = DualNum;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        1        0        0
     fn add(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let addition = TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([self.group0()[0], self.group0()[1], (self.group0()[2] + other[e12345])]));
+        let addition = DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[0], (self.group0()[1] + other[e12345])]));
         return addition;
     }
 }
-impl std::ops::AddAssign<AntiScalar> for TripleNum {
+impl std::ops::AddAssign<AntiScalar> for DualNum {
     fn add_assign(&mut self, other: AntiScalar) {
         use crate::elements::*;
-        let addition = TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([self.group0()[0], self.group0()[1], (self.group0()[2] + other[e12345])]));
+        let addition = DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[0], (self.group0()[1] + other[e12345])]));
         *self = addition;
     }
 }
-impl std::ops::Add<AntiTripleNum> for TripleNum {
-    type Output = MultiVector;
-    fn add(self, other: AntiTripleNum) -> Self::Output {
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group0()[2], self.group0()[2]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
-            // e5
-            self.group0()[1],
-            // e15, e25, e35, e45
-            Simd32x4::from(0.0),
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
-            // e1234
-            other.group0()[0],
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<Circle> for TripleNum {
+impl std::ops::Add<Circle> for DualNum {
     type Output = VersorEven;
     fn add(self, other: Circle) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[2]]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[1]]),
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], self.group0()[1]]),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
         return addition;
     }
 }
-impl std::ops::Add<CircleRotor> for TripleNum {
+impl std::ops::Add<CircleRotor> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -372,27 +250,27 @@ impl std::ops::Add<CircleRotor> for TripleNum {
     fn add(self, other: CircleRotor) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[2] + other.group2()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[1] + other.group2()[3])]),
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], self.group0()[1]]),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
         return addition;
     }
 }
-impl std::ops::Add<Dipole> for TripleNum {
+impl std::ops::Add<Dipole> for DualNum {
     type Output = MultiVector;
     fn add(self, other: Dipole) -> Self::Output {
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, self.group0()[2]]),
+            Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]),
             // e41, e42, e43
@@ -413,16 +291,16 @@ impl std::ops::Add<Dipole> for TripleNum {
         return addition;
     }
 }
-impl std::ops::Add<DipoleInversion> for TripleNum {
+impl std::ops::Add<DipoleInversion> for DualNum {
     type Output = MultiVector;
     fn add(self, other: DipoleInversion) -> Self::Output {
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, self.group0()[2]]),
+            Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]),
             // e41, e42, e43
@@ -443,73 +321,33 @@ impl std::ops::Add<DipoleInversion> for TripleNum {
         return addition;
     }
 }
-impl std::ops::Add<DualNum321> for TripleNum {
-    type Output = QuadNum;
+impl std::ops::Add<DualNum> for DualNum {
+    type Output = DualNum;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
-    fn add(self, other: DualNum321) -> Self::Output {
-        let addition = QuadNum::from_groups(
-            // e4, e5, e321, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], other.group0()[0], (other.group0()[1] + self.group0()[2])]),
-        );
+    //          add/sub      mul      div
+    //   simd2        1        0        0
+    // no simd        2        0        0
+    fn add(self, other: DualNum) -> Self::Output {
+        let addition = DualNum::from_groups(/* e4, e12345 */ (other.group0() + self.group0()));
         return addition;
     }
 }
-impl std::ops::Add<DualNum4> for TripleNum {
-    type Output = TripleNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn add(self, other: DualNum4) -> Self::Output {
-        let addition = TripleNum::from_groups(
-            // e4, e5, e12345
-            Simd32x3::from([(other.group0()[0] + self.group0()[0]), self.group0()[1], (other.group0()[1] + self.group0()[2])]),
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<DualNum4> for TripleNum {
-    fn add_assign(&mut self, other: DualNum4) {
-        let addition = TripleNum::from_groups(
-            // e4, e5, e12345
-            Simd32x3::from([(other.group0()[0] + self.group0()[0]), self.group0()[1], (other.group0()[1] + self.group0()[2])]),
-        );
+impl std::ops::AddAssign<DualNum> for DualNum {
+    fn add_assign(&mut self, other: DualNum) {
+        let addition = DualNum::from_groups(/* e4, e12345 */ (other.group0() + self.group0()));
         *self = addition;
     }
 }
-impl std::ops::Add<DualNum5> for TripleNum {
-    type Output = TripleNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn add(self, other: DualNum5) -> Self::Output {
-        let addition = TripleNum::from_groups(
-            // e4, e5, e12345
-            Simd32x3::from([self.group0()[0], (other.group0()[0] + self.group0()[1]), (other.group0()[1] + self.group0()[2])]),
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<DualNum5> for TripleNum {
-    fn add_assign(&mut self, other: DualNum5) {
-        let addition = TripleNum::from_groups(
-            // e4, e5, e12345
-            Simd32x3::from([self.group0()[0], (other.group0()[0] + self.group0()[1]), (other.group0()[1] + self.group0()[2])]),
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<FlatPoint> for TripleNum {
+impl std::ops::Add<FlatPoint> for DualNum {
     type Output = MultiVector;
     fn add(self, other: FlatPoint) -> Self::Output {
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, self.group0()[2]]),
+            Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             other.group0(),
             // e41, e42, e43
@@ -530,16 +368,16 @@ impl std::ops::Add<FlatPoint> for TripleNum {
         return addition;
     }
 }
-impl std::ops::Add<Flector> for TripleNum {
+impl std::ops::Add<Flector> for DualNum {
     type Output = MultiVector;
     fn add(self, other: Flector) -> Self::Output {
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, self.group0()[2]]),
+            Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             other.group0(),
             // e41, e42, e43
@@ -560,55 +398,55 @@ impl std::ops::Add<Flector> for TripleNum {
         return addition;
     }
 }
-impl std::ops::Add<Line> for TripleNum {
+impl std::ops::Add<Line> for DualNum {
     type Output = VersorEven;
     fn add(self, other: Line) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[2]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[1]]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
         return addition;
     }
 }
-impl std::ops::Add<Motor> for TripleNum {
+impl std::ops::Add<Motor> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        2        0        0
+    // f32        1        0        0
     fn add(self, other: Motor) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] + other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] + other.group0()[3])]),
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[1] + other.group1()[3])]),
+            other.group1(),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
         return addition;
     }
 }
-impl std::ops::Add<MultiVector> for TripleNum {
+impl std::ops::Add<MultiVector> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        3        0        0
+    // f32        2        0        0
     fn add(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[0], (other.group0()[1] + self.group0()[2])]),
+            Simd32x2::from([other.group0()[0], (self.group0()[1] + other.group0()[1])]),
             // e1, e2, e3, e4
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (self.group0()[0] + other.group1()[3])]),
             // e5
-            (self.group0()[1] + other[e1]),
+            other[e1],
             // e15, e25, e35, e45
             other.group3(),
             // e41, e42, e43
@@ -629,16 +467,16 @@ impl std::ops::Add<MultiVector> for TripleNum {
         return addition;
     }
 }
-impl std::ops::Add<Plane> for TripleNum {
+impl std::ops::Add<Plane> for DualNum {
     type Output = MultiVector;
     fn add(self, other: Plane) -> Self::Output {
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, self.group0()[2]]),
+            Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -659,48 +497,37 @@ impl std::ops::Add<Plane> for TripleNum {
         return addition;
     }
 }
-impl std::ops::Add<QuadNum> for TripleNum {
-    type Output = QuadNum;
+impl std::ops::Add<RoundPoint> for DualNum {
+    type Output = VersorEven;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        3        0        0
-    fn add(self, other: QuadNum) -> Self::Output {
-        let addition = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] + other.group0()[0]),
-            (self.group0()[1] + other.group0()[1]),
-            other.group0()[2],
-            (self.group0()[2] + other.group0()[3]),
-        ]));
-        return addition;
-    }
-}
-impl std::ops::Add<RoundPoint> for TripleNum {
-    type Output = VersorRoundPoint;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
+    // f32        1        0        0
     fn add(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorRoundPoint::from_groups(
+        let addition = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, other[e2]]),
             // e1, e2, e3, e4
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[0] + other.group0()[3])]),
-            // e5, e12345
-            Simd32x2::from([(self.group0()[1] + other[e2]), self.group0()[2]]),
         );
         return addition;
     }
 }
-impl std::ops::Add<Scalar> for TripleNum {
+impl std::ops::Add<Scalar> for DualNum {
     type Output = MultiVector;
     fn add(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other[scalar], self.group0()[2]]),
+            Simd32x2::from([other[scalar], self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -721,17 +548,17 @@ impl std::ops::Add<Scalar> for TripleNum {
         return addition;
     }
 }
-impl std::ops::Add<Sphere> for TripleNum {
+impl std::ops::Add<Sphere> for DualNum {
     type Output = MultiVector;
     fn add(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, self.group0()[2]]),
+            Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -752,52 +579,35 @@ impl std::ops::Add<Sphere> for TripleNum {
         return addition;
     }
 }
-impl std::ops::Add<TripleNum> for TripleNum {
-    type Output = TripleNum;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        1        0        0
-    // no simd        3        0        0
-    fn add(self, other: TripleNum) -> Self::Output {
-        let addition = TripleNum::from_groups(/* e4, e5, e12345 */ (other.group0() + self.group0()));
-        return addition;
-    }
-}
-impl std::ops::AddAssign<TripleNum> for TripleNum {
-    fn add_assign(&mut self, other: TripleNum) {
-        let addition = TripleNum::from_groups(/* e4, e5, e12345 */ (other.group0() + self.group0()));
-        *self = addition;
-    }
-}
-impl std::ops::Add<VersorEven> for TripleNum {
+impl std::ops::Add<VersorEven> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        3        0        0
+    // f32        2        0        0
     fn add(self, other: VersorEven) -> Self::Output {
         let addition = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[2] + other.group0()[3])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[1] + other.group0()[3])]),
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (self.group0()[1] + other.group2()[3])]),
+            other.group2(),
             // e1, e2, e3, e4
             Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], (self.group0()[0] + other.group3()[3])]),
         );
         return addition;
     }
 }
-impl std::ops::Add<VersorOdd> for TripleNum {
+impl std::ops::Add<VersorOdd> for DualNum {
     type Output = MultiVector;
     fn add(self, other: VersorOdd) -> Self::Output {
         let addition = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[3], self.group0()[2]]),
+            Simd32x2::from([other.group0()[3], self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]),
             // e41, e42, e43
@@ -818,311 +628,138 @@ impl std::ops::Add<VersorOdd> for TripleNum {
         return addition;
     }
 }
-impl std::ops::Add<VersorRoundPoint> for TripleNum {
-    type Output = VersorRoundPoint;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        0        0
-    //    simd2        1        0        0
-    // Totals...
-    // yes simd        2        0        0
-    //  no simd        3        0        0
-    fn add(self, other: VersorRoundPoint) -> Self::Output {
-        let addition = VersorRoundPoint::from_groups(
-            // e1, e2, e3, e4
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[0] + other.group0()[3])]),
-            // e5, e12345
-            (Simd32x2::from([self.group0()[1], self.group0()[2]]) + other.group1()),
-        );
-        return addition;
-    }
-}
-impl std::ops::Add<VersorSphere> for TripleNum {
-    type Output = MultiVector;
-    fn add(self, other: VersorSphere) -> Self::Output {
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([other.group1()[1], self.group0()[2]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
-            // e5
-            self.group0()[1],
-            // e15, e25, e35, e45
-            Simd32x4::from(0.0),
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e3215
-            other.group0(),
-            // e1234
-            other.group1()[0],
-        );
-        return addition;
-    }
-}
-impl std::ops::BitXor<AntiCircleRotor> for TripleNum {
+impl std::ops::BitXor<AntiCircleRotor> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3       11        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        3       12        0
-    //  no simd        3       15        0
+    //      add/sub      mul      div
+    // f32        0        8        0
     fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<AntiDipoleInversion> for TripleNum {
+impl std::ops::BitXor<AntiDipoleInversion> for DualNum {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       14        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        4       16        0
-    //  no simd        4       21        0
+    //      add/sub      mul      div
+    // f32        0        8        0
     fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<AntiDualNum321> for TripleNum {
-    type Output = TripleNum;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        1        0
-    // no simd        0        3        0
-    fn bitxor(self, other: AntiDualNum321) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiDualNum321> for TripleNum {
-    fn bitxor_assign(&mut self, other: AntiDualNum321) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiDualNum4> for TripleNum {
-    type Output = TripleNum;
+impl std::ops::BitXor<AntiDualNum> for DualNum {
+    type Output = DualNum;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        1        4        0
-    fn bitxor(self, other: AntiDualNum4) -> Self::Output {
+    // f32        0        2        0
+    fn bitxor(self, other: AntiDualNum) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXorAssign<AntiDualNum4> for TripleNum {
-    fn bitxor_assign(&mut self, other: AntiDualNum4) {
+impl std::ops::BitXorAssign<AntiDualNum> for DualNum {
+    fn bitxor_assign(&mut self, other: AntiDualNum) {
         *self = self.wedge(other);
     }
 }
-impl std::ops::BitXor<AntiDualNum5> for TripleNum {
-    type Output = TripleNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        4        0
-    fn bitxor(self, other: AntiDualNum5) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiDualNum5> for TripleNum {
-    fn bitxor_assign(&mut self, other: AntiDualNum5) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiFlatPoint> for TripleNum {
+impl std::ops::BitXor<AntiFlatPoint> for DualNum {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    //      add/sub      mul      div
+    // f32        0        4        0
     fn bitxor(self, other: AntiFlatPoint) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<AntiFlector> for TripleNum {
+impl std::ops::BitXor<AntiFlector> for DualNum {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        5        0
-    //    simd3        0        1        0
-    //    simd4        0        3        0
-    // Totals...
-    // yes simd        0        9        0
-    //  no simd        0       20        0
+    //      add/sub      mul      div
+    // f32        0        8        0
     fn bitxor(self, other: AntiFlector) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<AntiLine> for TripleNum {
+impl std::ops::BitXor<AntiLine> for DualNum {
     type Output = Circle;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        9        0
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn bitxor(self, other: AntiLine) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<AntiMotor> for TripleNum {
+impl std::ops::BitXor<AntiMotor> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        9        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        1       10        0
-    //  no simd        1       13        0
+    //      add/sub      mul      div
+    // f32        1        9        0
     fn bitxor(self, other: AntiMotor) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<AntiPlane> for TripleNum {
+impl std::ops::BitXor<AntiPlane> for DualNum {
     type Output = Dipole;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd3        0        3        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    //      add/sub      mul      div
+    // f32        0        4        0
     fn bitxor(self, other: AntiPlane) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<AntiQuadNum> for TripleNum {
-    type Output = TripleNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        5        0
-    fn bitxor(self, other: AntiQuadNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiQuadNum> for TripleNum {
-    fn bitxor_assign(&mut self, other: AntiQuadNum) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiTripleNum> for TripleNum {
-    type Output = TripleNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        5        0
-    fn bitxor(self, other: AntiTripleNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiTripleNum> for TripleNum {
-    fn bitxor_assign(&mut self, other: AntiTripleNum) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<Circle> for TripleNum {
+impl std::ops::BitXor<Circle> for DualNum {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        3        9        0
+    // f32        0        4        0
     fn bitxor(self, other: Circle) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<CircleRotor> for TripleNum {
+impl std::ops::BitXor<CircleRotor> for DualNum {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        3        9        0
+    // f32        0        4        0
     fn bitxor(self, other: CircleRotor) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<Dipole> for TripleNum {
+impl std::ops::BitXor<Dipole> for DualNum {
     type Output = Circle;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        6        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        3        8        0
-    //  no simd        3       12        0
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn bitxor(self, other: Dipole) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<DipoleInversion> for TripleNum {
+impl std::ops::BitXor<DipoleInversion> for DualNum {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       11        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        4       12        0
-    //  no simd        4       14        0
+    //      add/sub      mul      div
+    // f32        0        7        0
     fn bitxor(self, other: DipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<DualNum321> for TripleNum {
-    type Output = AntiTripleNum;
+impl std::ops::BitXor<FlatPoint> for DualNum {
+    type Output = Line;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        3        0
-    fn bitxor(self, other: DualNum321) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DualNum4> for TripleNum {
-    type Output = AntiDualNum321;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn bitxor(self, other: DualNum4) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<DualNum5> for TripleNum {
-    type Output = AntiDualNum321;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: DualNum5) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<FlatPoint> for TripleNum {
-    type Output = Line;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        1        0
-    // no simd        0        3        0
     fn bitxor(self, other: FlatPoint) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<Flector> for TripleNum {
+impl std::ops::BitXor<Flector> for DualNum {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        4        0
     fn bitxor(self, other: Flector) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<Line> for TripleNum {
+impl std::ops::BitXor<Line> for DualNum {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -1131,7 +768,7 @@ impl std::ops::BitXor<Line> for TripleNum {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<Motor> for TripleNum {
+impl std::ops::BitXor<Motor> for DualNum {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -1140,21 +777,17 @@ impl std::ops::BitXor<Motor> for TripleNum {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<MultiVector> for TripleNum {
+impl std::ops::BitXor<MultiVector> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       28        0
-    //    simd3        0        3        0
-    // Totals...
-    // yes simd        9       31        0
-    //  no simd        9       37        0
+    //      add/sub      mul      div
+    // f32        1       17        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<Plane> for TripleNum {
+impl std::ops::BitXor<Plane> for DualNum {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -1163,572 +796,327 @@ impl std::ops::BitXor<Plane> for TripleNum {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<QuadNum> for TripleNum {
-    type Output = AntiQuadNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        5        0
-    fn bitxor(self, other: QuadNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<RoundPoint> for TripleNum {
+impl std::ops::BitXor<RoundPoint> for DualNum {
     type Output = Dipole;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        2        0
-    //    simd3        0        3        0
-    // Totals...
-    // yes simd        1        5        0
-    //  no simd        1       11        0
+    //      add/sub      mul      div
+    // f32        0        4        0
     fn bitxor(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<Scalar> for TripleNum {
-    type Output = TripleNum;
+impl std::ops::BitXor<Scalar> for DualNum {
+    type Output = DualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        1        0
-    // no simd        0        3        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn bitxor(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
     }
 }
-impl std::ops::BitXorAssign<Scalar> for TripleNum {
+impl std::ops::BitXorAssign<Scalar> for DualNum {
     fn bitxor_assign(&mut self, other: Scalar) {
         use crate::elements::*;
         *self = self.wedge(other);
     }
 }
-impl std::ops::BitXor<Sphere> for TripleNum {
+impl std::ops::BitXor<Sphere> for DualNum {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        1        2        0
+    // f32        0        1        0
     fn bitxor(self, other: Sphere) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<TripleNum> for TripleNum {
-    type Output = AntiDualNum321;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        2        0
-    fn bitxor(self, other: TripleNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorEven> for TripleNum {
+impl std::ops::BitXor<VersorEven> for DualNum {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       14        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        4       16        0
-    //  no simd        4       21        0
+    //      add/sub      mul      div
+    // f32        0        8        0
     fn bitxor(self, other: VersorEven) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<VersorOdd> for TripleNum {
+impl std::ops::BitXor<VersorOdd> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5       13        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        5       14        0
-    //  no simd        5       17        0
+    //      add/sub      mul      div
+    // f32        1        9        0
     fn bitxor(self, other: VersorOdd) -> Self::Output {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<VersorRoundPoint> for TripleNum {
-    type Output = Dipole;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        2        0
-    //    simd3        0        3        0
-    // Totals...
-    // yes simd        1        5        0
-    //  no simd        1       11        0
-    fn bitxor(self, other: VersorRoundPoint) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorSphere> for TripleNum {
-    type Output = TripleNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        5        0
-    fn bitxor(self, other: VersorSphere) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<VersorSphere> for TripleNum {
-    fn bitxor_assign(&mut self, other: VersorSphere) {
-        *self = self.wedge(other);
-    }
-}
 
-impl From<AntiScalar> for TripleNum {
+impl From<AntiScalar> for DualNum {
     fn from(anti_scalar: AntiScalar) -> Self {
         use crate::elements::*;
-        return TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([0.0, 0.0, anti_scalar[e12345]]));
+        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([0.0, anti_scalar[e12345]]));
     }
 }
-
-impl From<DualNum4> for TripleNum {
-    fn from(dual_num4: DualNum4) -> Self {
-        use crate::elements::*;
-        return TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([dual_num4[e4], 0.0, dual_num4[e12345]]));
-    }
-}
-
-impl From<DualNum5> for TripleNum {
-    fn from(dual_num5: DualNum5) -> Self {
-        use crate::elements::*;
-        return TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([0.0, dual_num5[e5], dual_num5[e12345]]));
-    }
-}
-impl std::ops::Mul<AntiCircleRotor> for TripleNum {
+impl std::ops::Mul<AntiCircleRotor> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       26        0
-    //    simd4        2        4        0
-    // Totals...
-    // yes simd       11       30        0
-    //  no simd       17       42        0
+    //      add/sub      mul      div
+    // f32        7       23        0
     fn mul(self, other: AntiCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiDipoleInversion> for TripleNum {
+impl std::ops::Mul<AntiDipoleInversion> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       13       31        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       17       35        0
-    //  no simd       29       47        0
+    //      add/sub      mul      div
+    // f32       14       35        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiDualNum321> for TripleNum {
-    type Output = QuadNum;
+impl std::ops::Mul<AntiDualNum> for DualNum {
+    type Output = DualNum;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        2        7        0
-    fn mul(self, other: AntiDualNum321) -> Self::Output {
+    // f32        1        3        0
+    fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiDualNum4> for TripleNum {
-    type Output = QuadNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        7        0
-    fn mul(self, other: AntiDualNum4) -> Self::Output {
-        return self.geometric_product(other);
+impl std::ops::MulAssign<AntiDualNum> for DualNum {
+    fn mul_assign(&mut self, other: AntiDualNum) {
+        *self = self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiDualNum5> for TripleNum {
-    type Output = QuadNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        6        0
-    fn mul(self, other: AntiDualNum5) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<AntiFlatPoint> for TripleNum {
+impl std::ops::Mul<AntiFlatPoint> for DualNum {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        6        0
-    // no simd        0       24        0
+    //      add/sub      mul      div
+    // f32        0       17        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiFlector> for TripleNum {
+impl std::ops::Mul<AntiFlector> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       23        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        8       25        0
-    //  no simd        8       31        0
+    //      add/sub      mul      div
+    // f32        4       28        0
     fn mul(self, other: AntiFlector) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiLine> for TripleNum {
+impl std::ops::Mul<AntiLine> for DualNum {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       15        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        6       16        0
-    //  no simd        6       18        0
+    //      add/sub      mul      div
+    // f32        3       15        0
     fn mul(self, other: AntiLine) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiMotor> for TripleNum {
+impl std::ops::Mul<AntiMotor> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       12        0
-    //    simd4        1        3        0
-    // Totals...
-    // yes simd        5       15        0
-    //  no simd        8       24        0
+    //      add/sub      mul      div
+    // f32        4       20        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiPlane> for TripleNum {
+impl std::ops::Mul<AntiPlane> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        7        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0       11        0
-    //  no simd        0       23        0
+    //      add/sub      mul      div
+    // f32        0       11        0
     fn mul(self, other: AntiPlane) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiQuadNum> for TripleNum {
-    type Output = QuadNum;
+impl std::ops::Mul<AntiScalar> for DualNum {
+    type Output = AntiDualNum;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        5        9        0
-    //  no simd        8       12        0
-    fn mul(self, other: AntiQuadNum) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<AntiScalar> for TripleNum {
-    type Output = AntiTripleNum;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        4        0
     fn mul(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiTripleNum> for TripleNum {
-    type Output = QuadNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5        9        0
-    fn mul(self, other: AntiTripleNum) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<Circle> for TripleNum {
+impl std::ops::Mul<Circle> for DualNum {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       12       25        0
-    //    simd3        1        2        0
-    // Totals...
-    // yes simd       13       27        0
-    //  no simd       15       31        0
+    //      add/sub      mul      div
+    // f32        6       23        0
     fn mul(self, other: Circle) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<CircleRotor> for TripleNum {
+impl std::ops::Mul<CircleRotor> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       18        0
-    //    simd4        2        6        0
-    // Totals...
-    // yes simd       11       24        0
-    //  no simd       17       42        0
+    //      add/sub      mul      div
+    // f32        7       26        0
     fn mul(self, other: CircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<Dipole> for TripleNum {
+impl std::ops::Mul<Dipole> for DualNum {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       12       26        0
-    //    simd3        1        2        0
-    // Totals...
-    // yes simd       13       28        0
-    //  no simd       15       32        0
+    //      add/sub      mul      div
+    // f32        6       21        0
     fn mul(self, other: Dipole) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<DipoleInversion> for TripleNum {
+impl std::ops::Mul<DipoleInversion> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       10       25        0
-    //    simd4        5        5        0
-    // Totals...
-    // yes simd       15       30        0
-    //  no simd       30       45        0
+    //      add/sub      mul      div
+    // f32       14       30        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<DualNum321> for TripleNum {
-    type Output = AntiQuadNum;
+impl std::ops::Mul<DualNum> for DualNum {
+    type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        2        7        0
-    fn mul(self, other: DualNum321) -> Self::Output {
+    // f32        1        4        0
+    fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<DualNum4> for TripleNum {
-    type Output = AntiQuadNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        8        0
-    fn mul(self, other: DualNum4) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<DualNum5> for TripleNum {
-    type Output = AntiQuadNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        7        0
-    fn mul(self, other: DualNum5) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<FlatPoint> for TripleNum {
+impl std::ops::Mul<FlatPoint> for DualNum {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        5        0
-    // no simd        0       20        0
+    //      add/sub      mul      div
+    // f32        0       12        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<Flector> for TripleNum {
+impl std::ops::Mul<Flector> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       12        0
-    //    simd4        1        3        0
-    // Totals...
-    // yes simd        5       15        0
-    //  no simd        8       24        0
+    //      add/sub      mul      div
+    // f32        4       20        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<Line> for TripleNum {
+impl std::ops::Mul<Line> for DualNum {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       15        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        6       17        0
-    //  no simd        6       21        0
+    //      add/sub      mul      div
+    // f32        3       21        0
     fn mul(self, other: Line) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<Motor> for TripleNum {
+impl std::ops::Mul<Motor> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        8       28        0
+    // f32        4       28        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<MultiVector> for TripleNum {
+impl std::ops::Mul<MultiVector> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       24       44        0
-    //    simd3        8       12        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       36       60        0
-    //  no simd       64       96        0
+    //      add/sub      mul      div
+    // f32       32       68        0
     fn mul(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<Plane> for TripleNum {
+impl std::ops::Mul<Plane> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        7        0
-    //    simd4        0        3        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       19        0
+    //      add/sub      mul      div
+    // f32        0       12        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<QuadNum> for TripleNum {
-    type Output = AntiQuadNum;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        5        9        0
-    //  no simd        8       12        0
-    fn mul(self, other: QuadNum) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<RoundPoint> for TripleNum {
+impl std::ops::Mul<RoundPoint> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        7        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        2       11        0
-    //  no simd        2       23        0
+    //      add/sub      mul      div
+    // f32        0       13        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<Scalar> for TripleNum {
-    type Output = TripleNum;
+impl std::ops::Mul<Scalar> for DualNum {
+    type Output = DualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        1        0
-    // no simd        0        3        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn mul(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
 }
-impl std::ops::MulAssign<Scalar> for TripleNum {
+impl std::ops::MulAssign<Scalar> for DualNum {
     fn mul_assign(&mut self, other: Scalar) {
         use crate::elements::*;
         *self = self.geometric_product(other);
     }
 }
-impl std::ops::Mul<Sphere> for TripleNum {
+impl std::ops::Mul<Sphere> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        7        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        2       11        0
-    //  no simd        2       23        0
+    //      add/sub      mul      div
+    // f32        0       13        0
     fn mul(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<TripleNum> for TripleNum {
-    type Output = AntiQuadNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5        9        0
-    fn mul(self, other: TripleNum) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorEven> for TripleNum {
+impl std::ops::Mul<VersorEven> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       12       24        0
-    //    simd4        5        7        0
-    // Totals...
-    // yes simd       17       31        0
-    //  no simd       32       52        0
+    //      add/sub      mul      div
+    // f32       16       36        0
     fn mul(self, other: VersorEven) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<VersorOdd> for TripleNum {
+impl std::ops::Mul<VersorOdd> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       20        0
-    //    simd4        6        7        0
-    // Totals...
-    // yes simd       14       27        0
-    //  no simd       32       48        0
+    //      add/sub      mul      div
+    // f32       16       32        0
     fn mul(self, other: VersorOdd) -> Self::Output {
         return self.geometric_product(other);
     }
 }
-impl std::ops::Mul<VersorRoundPoint> for TripleNum {
-    type Output = VersorOdd;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       21        0
-    fn mul(self, other: VersorRoundPoint) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorSphere> for TripleNum {
-    type Output = VersorEven;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       24        0
-    fn mul(self, other: VersorSphere) -> Self::Output {
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::Neg for TripleNum {
+impl std::ops::Neg for DualNum {
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd3        0        1        0
-    // no simd        0        3        0
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn neg(self) -> Self {
-        let negation = TripleNum::from_groups(/* e4, e5, e12345 */ (self.group0() * Simd32x3::from(-1.0)));
+        let negation = DualNum::from_groups(/* e4, e12345 */ (self.group0() * Simd32x2::from(-1.0)));
         return negation;
     }
 }
-impl std::ops::Not for TripleNum {
-    type Output = AntiTripleNum;
+impl std::ops::Not for DualNum {
+    type Output = AntiDualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        1        0
-    // no simd        0        3        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn not(self) -> Self::Output {
         return self.right_dual();
     }
 }
-impl std::ops::Sub<AntiCircleRotor> for TripleNum {
+impl std::ops::Sub<AntiCircleRotor> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -1741,11 +1129,11 @@ impl std::ops::Sub<AntiCircleRotor> for TripleNum {
     fn sub(self, other: AntiCircleRotor) -> Self::Output {
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group2()[3] * -1.0), self.group0()[2]]),
+            Simd32x2::from([(other.group2()[3] * -1.0), self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0)),
             // e41, e42, e43
@@ -1766,28 +1154,23 @@ impl std::ops::Sub<AntiCircleRotor> for TripleNum {
         return subtraction;
     }
 }
-impl std::ops::Sub<AntiDipoleInversion> for TripleNum {
+impl std::ops::Sub<AntiDipoleInversion> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        9        0
-    //    simd4        0        1        0
+    //      f32        1        6        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        2       10        0
-    //  no simd        2       13        0
+    // yes simd        1        8        0
+    //  no simd        1       14        0
     fn sub(self, other: AntiDipoleInversion) -> Self::Output {
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[2]]),
+            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[1]]),
             // e415, e425, e435, e321
             (other.group1() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                (other.group2()[0] * -1.0),
-                (other.group2()[1] * -1.0),
-                (other.group2()[2] * -1.0),
-                (self.group0()[1] - other.group3()[3]),
-            ]),
+            (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group3()[3]]) * Simd32x4::from(-1.0)),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other.group3()[0] * -1.0),
@@ -1799,52 +1182,19 @@ impl std::ops::Sub<AntiDipoleInversion> for TripleNum {
         return subtraction;
     }
 }
-impl std::ops::Sub<AntiDualNum321> for TripleNum {
+impl std::ops::Sub<AntiDualNum> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        2        0
-    fn sub(self, other: AntiDualNum321) -> Self::Output {
+    fn sub(self, other: AntiDualNum) -> Self::Output {
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group0()[1] * -1.0), self.group0()[2]]),
+            Simd32x2::from([(other.group0()[1] * -1.0), self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
-            // e15, e25, e35, e45
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
-            // e1234
             0.0,
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<AntiDualNum4> for TripleNum {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn sub(self, other: AntiDualNum4) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[1] * -1.0), self.group0()[2]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
-            // e5
-            self.group0()[1],
             // e15, e25, e35, e45
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -1865,40 +1215,7 @@ impl std::ops::Sub<AntiDualNum4> for TripleNum {
         return subtraction;
     }
 }
-impl std::ops::Sub<AntiDualNum5> for TripleNum {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn sub(self, other: AntiDualNum5) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[1] * -1.0), self.group0()[2]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
-            // e5
-            self.group0()[1],
-            // e15, e25, e35, e45
-            Simd32x4::from(0.0),
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
-            // e1234
-            0.0,
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<AntiFlatPoint> for TripleNum {
+impl std::ops::Sub<AntiFlatPoint> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -1906,42 +1223,41 @@ impl std::ops::Sub<AntiFlatPoint> for TripleNum {
     fn sub(self, other: AntiFlatPoint) -> Self::Output {
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[2]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
             // e235, e315, e125, e5
-            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[1]]),
+            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
         return subtraction;
     }
 }
-impl std::ops::Sub<AntiFlector> for TripleNum {
+impl std::ops::Sub<AntiFlector> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        7        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        8        0
     fn sub(self, other: AntiFlector) -> Self::Output {
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[2]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                (other.group0()[0] * -1.0),
-                (other.group0()[1] * -1.0),
-                (other.group0()[2] * -1.0),
-                (self.group0()[1] - other.group1()[3]),
-            ]),
+            (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]) * Simd32x4::from(-1.0)),
             // e1, e2, e3, e4
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self.group0()[0]]),
         );
         return subtraction;
     }
 }
-impl std::ops::Sub<AntiLine> for TripleNum {
+impl std::ops::Sub<AntiLine> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -1953,11 +1269,11 @@ impl std::ops::Sub<AntiLine> for TripleNum {
     fn sub(self, other: AntiLine) -> Self::Output {
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, self.group0()[2]]),
+            Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), 0.0]),
             // e41, e42, e43
@@ -1978,7 +1294,7 @@ impl std::ops::Sub<AntiLine> for TripleNum {
         return subtraction;
     }
 }
-impl std::ops::Sub<AntiMotor> for TripleNum {
+impl std::ops::Sub<AntiMotor> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -1990,11 +1306,11 @@ impl std::ops::Sub<AntiMotor> for TripleNum {
     fn sub(self, other: AntiMotor) -> Self::Output {
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group0()[3] * -1.0), self.group0()[2]]),
+            Simd32x2::from([(other.group0()[3] * -1.0), self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), 0.0]),
             // e41, e42, e43
@@ -2015,106 +1331,44 @@ impl std::ops::Sub<AntiMotor> for TripleNum {
         return subtraction;
     }
 }
-impl std::ops::Sub<AntiPlane> for TripleNum {
-    type Output = VersorRoundPoint;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        3        0
-    fn sub(self, other: AntiPlane) -> Self::Output {
-        let subtraction = VersorRoundPoint::from_groups(
-            // e1, e2, e3, e4
-            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[0]]),
-            // e5, e12345
-            Simd32x2::from([(self.group0()[1] - other.group0()[3]), self.group0()[2]]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<AntiQuadNum> for TripleNum {
-    type Output = MultiVector;
+impl std::ops::Sub<AntiPlane> for DualNum {
+    type Output = VersorEven;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        4        0
-    fn sub(self, other: AntiQuadNum) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[3] * -1.0), self.group0()[2]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
-            // e5
-            self.group0()[1],
-            // e15, e25, e35, e45
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[2] * -1.0)]),
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
+    fn sub(self, other: AntiPlane) -> Self::Output {
+        let subtraction = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
-            // e1234
-            (other.group0()[0] * -1.0),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
+            // e1, e2, e3, e4
+            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[0]]),
         );
         return subtraction;
     }
 }
-impl std::ops::Sub<AntiScalar> for TripleNum {
-    type Output = TripleNum;
+impl std::ops::Sub<AntiScalar> for DualNum {
+    type Output = DualNum;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        1        0        0
     fn sub(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let subtraction = TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([self.group0()[0], self.group0()[1], (self.group0()[2] - other[e12345])]));
+        let subtraction = DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[0], (self.group0()[1] - other[e12345])]));
         return subtraction;
     }
 }
-impl std::ops::SubAssign<AntiScalar> for TripleNum {
+impl std::ops::SubAssign<AntiScalar> for DualNum {
     fn sub_assign(&mut self, other: AntiScalar) {
         use crate::elements::*;
-        let subtraction = TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([self.group0()[0], self.group0()[1], (self.group0()[2] - other[e12345])]));
+        let subtraction = DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[0], (self.group0()[1] - other[e12345])]));
         *self = subtraction;
     }
 }
-impl std::ops::Sub<AntiTripleNum> for TripleNum {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
-    fn sub(self, other: AntiTripleNum) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[2] * -1.0), self.group0()[2]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
-            // e5
-            self.group0()[1],
-            // e15, e25, e35, e45
-            Simd32x4::from(0.0),
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
-            // e1234
-            (other.group0()[0] * -1.0),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<Circle> for TripleNum {
+impl std::ops::Sub<Circle> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -2126,18 +1380,18 @@ impl std::ops::Sub<Circle> for TripleNum {
     fn sub(self, other: Circle) -> Self::Output {
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[2]]),
+            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[1]]),
             // e415, e425, e435, e321
             (other.group1() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e5
-            Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), self.group0()[1]]),
+            Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), 0.0]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
         return subtraction;
     }
 }
-impl std::ops::Sub<CircleRotor> for TripleNum {
+impl std::ops::Sub<CircleRotor> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -2153,19 +1407,19 @@ impl std::ops::Sub<CircleRotor> for TripleNum {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[2] - other.group2()[3]),
+                (self.group0()[1] - other.group2()[3]),
             ]),
             // e415, e425, e435, e321
             (other.group1() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e5
-            Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), self.group0()[1]]),
+            Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), 0.0]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
         return subtraction;
     }
 }
-impl std::ops::Sub<Dipole> for TripleNum {
+impl std::ops::Sub<Dipole> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -2177,11 +1431,11 @@ impl std::ops::Sub<Dipole> for TripleNum {
     fn sub(self, other: Dipole) -> Self::Output {
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, self.group0()[2]]),
+            Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0)),
             // e41, e42, e43
@@ -2202,7 +1456,7 @@ impl std::ops::Sub<Dipole> for TripleNum {
         return subtraction;
     }
 }
-impl std::ops::Sub<DipoleInversion> for TripleNum {
+impl std::ops::Sub<DipoleInversion> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -2215,11 +1469,11 @@ impl std::ops::Sub<DipoleInversion> for TripleNum {
     fn sub(self, other: DipoleInversion) -> Self::Output {
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, self.group0()[2]]),
+            Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0)),
             // e41, e42, e43
@@ -2240,66 +1494,24 @@ impl std::ops::Sub<DipoleInversion> for TripleNum {
         return subtraction;
     }
 }
-impl std::ops::Sub<DualNum321> for TripleNum {
-    type Output = QuadNum;
+impl std::ops::Sub<DualNum> for DualNum {
+    type Output = DualNum;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        1        0
-    fn sub(self, other: DualNum321) -> Self::Output {
-        let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            self.group0()[0],
-            self.group0()[1],
-            (other.group0()[0] * -1.0),
-            (-other.group0()[1] + self.group0()[2]),
-        ]));
+    //          add/sub      mul      div
+    //   simd2        1        0        0
+    // no simd        2        0        0
+    fn sub(self, other: DualNum) -> Self::Output {
+        let subtraction = DualNum::from_groups(/* e4, e12345 */ (-other.group0() + self.group0()));
         return subtraction;
     }
 }
-impl std::ops::Sub<DualNum4> for TripleNum {
-    type Output = TripleNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn sub(self, other: DualNum4) -> Self::Output {
-        let subtraction = TripleNum::from_groups(
-            // e4, e5, e12345
-            Simd32x3::from([(-other.group0()[0] + self.group0()[0]), self.group0()[1], (-other.group0()[1] + self.group0()[2])]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<DualNum4> for TripleNum {
-    fn sub_assign(&mut self, other: DualNum4) {
-        let subtraction = TripleNum::from_groups(
-            // e4, e5, e12345
-            Simd32x3::from([(-other.group0()[0] + self.group0()[0]), self.group0()[1], (-other.group0()[1] + self.group0()[2])]),
-        );
+impl std::ops::SubAssign<DualNum> for DualNum {
+    fn sub_assign(&mut self, other: DualNum) {
+        let subtraction = DualNum::from_groups(/* e4, e12345 */ (-other.group0() + self.group0()));
         *self = subtraction;
     }
 }
-impl std::ops::Sub<DualNum5> for TripleNum {
-    type Output = TripleNum;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn sub(self, other: DualNum5) -> Self::Output {
-        let subtraction = TripleNum::from_groups(
-            // e4, e5, e12345
-            Simd32x3::from([self.group0()[0], (-other.group0()[0] + self.group0()[1]), (-other.group0()[1] + self.group0()[2])]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<DualNum5> for TripleNum {
-    fn sub_assign(&mut self, other: DualNum5) {
-        let subtraction = TripleNum::from_groups(
-            // e4, e5, e12345
-            Simd32x3::from([self.group0()[0], (-other.group0()[0] + self.group0()[1]), (-other.group0()[1] + self.group0()[2])]),
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<FlatPoint> for TripleNum {
+impl std::ops::Sub<FlatPoint> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
@@ -2308,11 +1520,11 @@ impl std::ops::Sub<FlatPoint> for TripleNum {
     fn sub(self, other: FlatPoint) -> Self::Output {
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, self.group0()[2]]),
+            Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             (other.group0() * Simd32x4::from(-1.0)),
             // e41, e42, e43
@@ -2333,7 +1545,7 @@ impl std::ops::Sub<FlatPoint> for TripleNum {
         return subtraction;
     }
 }
-impl std::ops::Sub<Flector> for TripleNum {
+impl std::ops::Sub<Flector> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
@@ -2342,11 +1554,11 @@ impl std::ops::Sub<Flector> for TripleNum {
     fn sub(self, other: Flector) -> Self::Output {
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, self.group0()[2]]),
+            Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             (other.group0() * Simd32x4::from(-1.0)),
             // e41, e42, e43
@@ -2367,7 +1579,7 @@ impl std::ops::Sub<Flector> for TripleNum {
         return subtraction;
     }
 }
-impl std::ops::Sub<Line> for TripleNum {
+impl std::ops::Sub<Line> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -2375,56 +1587,55 @@ impl std::ops::Sub<Line> for TripleNum {
     fn sub(self, other: Line) -> Self::Output {
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[2]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self.group0()[1]]),
+            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), 0.0]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
         return subtraction;
     }
 }
-impl std::ops::Sub<Motor> for TripleNum {
+impl std::ops::Sub<Motor> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        6        0
+    //           add/sub      mul      div
+    //      f32        1        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        1        4        0
+    //  no simd        1        7        0
     fn sub(self, other: Motor) -> Self::Output {
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[2] - other.group0()[3])]),
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] - other.group0()[3])]),
             // e415, e425, e435, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                (other.group1()[0] * -1.0),
-                (other.group1()[1] * -1.0),
-                (other.group1()[2] * -1.0),
-                (self.group0()[1] - other.group1()[3]),
-            ]),
+            (other.group1() * Simd32x4::from(-1.0)),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
         return subtraction;
     }
 }
-impl std::ops::Sub<MultiVector> for TripleNum {
+impl std::ops::Sub<MultiVector> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        5        0
+    //      f32        2        6        0
     //    simd3        0        4        0
     //    simd4        0        3        0
     // Totals...
-    // yes simd        3       12        0
-    //  no simd        3       29        0
+    // yes simd        2       13        0
+    //  no simd        2       30        0
     fn sub(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self.group0()[2])]),
+            Simd32x2::from([(other.group0()[0] * -1.0), (self.group0()[1] - other.group0()[1])]),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other.group1()[0] * -1.0),
@@ -2433,7 +1644,7 @@ impl std::ops::Sub<MultiVector> for TripleNum {
                 (self.group0()[0] - other.group1()[3]),
             ]),
             // e5
-            (self.group0()[1] - other[e1]),
+            (other[e1] * -1.0),
             // e15, e25, e35, e45
             (other.group3() * Simd32x4::from(-1.0)),
             // e41, e42, e43
@@ -2454,7 +1665,7 @@ impl std::ops::Sub<MultiVector> for TripleNum {
         return subtraction;
     }
 }
-impl std::ops::Sub<Plane> for TripleNum {
+impl std::ops::Sub<Plane> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
@@ -2463,11 +1674,11 @@ impl std::ops::Sub<Plane> for TripleNum {
     fn sub(self, other: Plane) -> Self::Output {
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, self.group0()[2]]),
+            Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -2488,29 +1699,20 @@ impl std::ops::Sub<Plane> for TripleNum {
         return subtraction;
     }
 }
-impl std::ops::Sub<QuadNum> for TripleNum {
-    type Output = QuadNum;
+impl std::ops::Sub<RoundPoint> for DualNum {
+    type Output = VersorEven;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        3        1        0
-    fn sub(self, other: QuadNum) -> Self::Output {
-        let subtraction = QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self.group0()[0] - other.group0()[0]),
-            (self.group0()[1] - other.group0()[1]),
-            (other.group0()[2] * -1.0),
-            (self.group0()[2] - other.group0()[3]),
-        ]));
-        return subtraction;
-    }
-}
-impl std::ops::Sub<RoundPoint> for TripleNum {
-    type Output = VersorRoundPoint;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        3        0
+    // f32        1        4        0
     fn sub(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorRoundPoint::from_groups(
+        let subtraction = VersorEven::from_groups(
+            // e423, e431, e412, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (other[e2] * -1.0)]),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -2518,13 +1720,11 @@ impl std::ops::Sub<RoundPoint> for TripleNum {
                 (other.group0()[2] * -1.0),
                 (self.group0()[0] - other.group0()[3]),
             ]),
-            // e5, e12345
-            Simd32x2::from([(self.group0()[1] - other[e2]), self.group0()[2]]),
         );
         return subtraction;
     }
 }
-impl std::ops::Sub<Scalar> for TripleNum {
+impl std::ops::Sub<Scalar> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -2533,11 +1733,11 @@ impl std::ops::Sub<Scalar> for TripleNum {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other[scalar] * -1.0), self.group0()[2]]),
+            Simd32x2::from([(other[scalar] * -1.0), self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -2558,7 +1758,7 @@ impl std::ops::Sub<Scalar> for TripleNum {
         return subtraction;
     }
 }
-impl std::ops::Sub<Sphere> for TripleNum {
+impl std::ops::Sub<Sphere> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -2571,11 +1771,11 @@ impl std::ops::Sub<Sphere> for TripleNum {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, self.group0()[2]]),
+            Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -2596,32 +1796,15 @@ impl std::ops::Sub<Sphere> for TripleNum {
         return subtraction;
     }
 }
-impl std::ops::Sub<TripleNum> for TripleNum {
-    type Output = TripleNum;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        1        0        0
-    // no simd        3        0        0
-    fn sub(self, other: TripleNum) -> Self::Output {
-        let subtraction = TripleNum::from_groups(/* e4, e5, e12345 */ (-other.group0() + self.group0()));
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<TripleNum> for TripleNum {
-    fn sub_assign(&mut self, other: TripleNum) {
-        let subtraction = TripleNum::from_groups(/* e4, e5, e12345 */ (-other.group0() + self.group0()));
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<VersorEven> for TripleNum {
+impl std::ops::Sub<VersorEven> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        9        0
-    //    simd4        0        1        0
+    //      f32        2        6        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        3       10        0
-    //  no simd        3       13        0
+    // yes simd        2        8        0
+    //  no simd        2       14        0
     fn sub(self, other: VersorEven) -> Self::Output {
         let subtraction = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2629,17 +1812,12 @@ impl std::ops::Sub<VersorEven> for TripleNum {
                 (other.group0()[0] * -1.0),
                 (other.group0()[1] * -1.0),
                 (other.group0()[2] * -1.0),
-                (self.group0()[2] - other.group0()[3]),
+                (self.group0()[1] - other.group0()[3]),
             ]),
             // e415, e425, e435, e321
             (other.group1() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                (other.group2()[0] * -1.0),
-                (other.group2()[1] * -1.0),
-                (other.group2()[2] * -1.0),
-                (self.group0()[1] - other.group2()[3]),
-            ]),
+            (other.group2() * Simd32x4::from(-1.0)),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other.group3()[0] * -1.0),
@@ -2651,7 +1829,7 @@ impl std::ops::Sub<VersorEven> for TripleNum {
         return subtraction;
     }
 }
-impl std::ops::Sub<VersorOdd> for TripleNum {
+impl std::ops::Sub<VersorOdd> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -2664,11 +1842,11 @@ impl std::ops::Sub<VersorOdd> for TripleNum {
     fn sub(self, other: VersorOdd) -> Self::Output {
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group0()[3] * -1.0), self.group0()[2]]),
+            Simd32x2::from([(other.group0()[3] * -1.0), self.group0()[1]]),
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
             // e5
-            self.group0()[1],
+            0.0,
             // e15, e25, e35, e45
             (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0)),
             // e41, e42, e43
@@ -2689,69 +1867,8 @@ impl std::ops::Sub<VersorOdd> for TripleNum {
         return subtraction;
     }
 }
-impl std::ops::Sub<VersorRoundPoint> for TripleNum {
-    type Output = VersorRoundPoint;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        3        0
-    //    simd2        1        0        0
-    // Totals...
-    // yes simd        2        3        0
-    //  no simd        3        3        0
-    fn sub(self, other: VersorRoundPoint) -> Self::Output {
-        let subtraction = VersorRoundPoint::from_groups(
-            // e1, e2, e3, e4
-            Simd32x4::from([
-                (other.group0()[0] * -1.0),
-                (other.group0()[1] * -1.0),
-                (other.group0()[2] * -1.0),
-                (self.group0()[0] - other.group0()[3]),
-            ]),
-            // e5, e12345
-            (Simd32x2::from([self.group0()[1], self.group0()[2]]) - other.group1()),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::Sub<VersorSphere> for TripleNum {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        6        0
-    fn sub(self, other: VersorSphere) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group1()[1] * -1.0), self.group0()[2]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
-            // e5
-            self.group0()[1],
-            // e15, e25, e35, e45
-            Simd32x4::from(0.0),
-            // e41, e42, e43
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e3215
-            (other.group0() * Simd32x4::from(-1.0)),
-            // e1234
-            (other.group1()[0] * -1.0),
-        );
-        return subtraction;
-    }
-}
 
-impl TryFrom<AntiDipoleInversion> for TripleNum {
+impl TryFrom<AntiDipoleInversion> for DualNum {
     type Error = String;
     fn try_from(anti_dipole_inversion: AntiDipoleInversion) -> Result<Self, Self::Error> {
         use crate::elements::*;
@@ -2848,122 +1965,24 @@ impl TryFrom<AntiDipoleInversion> for TripleNum {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        if fail {
-            let mut error = "Elements from AntiDipoleInversion do not fit into TripleNum { ".to_string();
-            error.push_str(error_string.as_str());
-            error.push('}');
-            return Err(error);
-        }
-        return Ok(TripleNum::from_groups(
-            // e4, e5, e12345
-            Simd32x3::from([anti_dipole_inversion[e4], anti_dipole_inversion[e5], 0.0]),
-        ));
-    }
-}
-
-impl TryFrom<AntiFlector> for TripleNum {
-    type Error = String;
-    fn try_from(anti_flector: AntiFlector) -> Result<Self, Self::Error> {
-        use crate::elements::*;
-        let mut error_string = String::new();
-        let mut fail = false;
-        let el = anti_flector[0];
+        let el = anti_dipole_inversion[14];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e235: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = anti_flector[1];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e315: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = anti_flector[2];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e125: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = anti_flector[3];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e321: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = anti_flector[4];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e1: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = anti_flector[5];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e2: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = anti_flector[6];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e3: ");
+            error_string.push_str("e5: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         if fail {
-            let mut error = "Elements from AntiFlector do not fit into TripleNum { ".to_string();
+            let mut error = "Elements from AntiDipoleInversion do not fit into DualNum { ".to_string();
             error.push_str(error_string.as_str());
             error.push('}');
             return Err(error);
         }
-        return Ok(TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([0.0, anti_flector[e5], 0.0])));
+        return Ok(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([anti_dipole_inversion[e4], 0.0])));
     }
 }
 
-impl TryFrom<AntiPlane> for TripleNum {
-    type Error = String;
-    fn try_from(anti_plane: AntiPlane) -> Result<Self, Self::Error> {
-        use crate::elements::*;
-        let mut error_string = String::new();
-        let mut fail = false;
-        let el = anti_plane[0];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e1: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = anti_plane[1];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e2: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = anti_plane[2];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e3: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        if fail {
-            let mut error = "Elements from AntiPlane do not fit into TripleNum { ".to_string();
-            error.push_str(error_string.as_str());
-            error.push('}');
-            return Err(error);
-        }
-        return Ok(TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([0.0, anti_plane[e5], 0.0])));
-    }
-}
-
-impl TryFrom<CircleRotor> for TripleNum {
+impl TryFrom<CircleRotor> for DualNum {
     type Error = String;
     fn try_from(circle_rotor: CircleRotor) -> Result<Self, Self::Error> {
         use crate::elements::*;
@@ -3040,39 +2059,16 @@ impl TryFrom<CircleRotor> for TripleNum {
             error_string.push_str(", ");
         }
         if fail {
-            let mut error = "Elements from CircleRotor do not fit into TripleNum { ".to_string();
+            let mut error = "Elements from CircleRotor do not fit into DualNum { ".to_string();
             error.push_str(error_string.as_str());
             error.push('}');
             return Err(error);
         }
-        return Ok(TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([0.0, 0.0, circle_rotor[e12345]])));
+        return Ok(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([0.0, circle_rotor[e12345]])));
     }
 }
 
-impl TryFrom<DualNum321> for TripleNum {
-    type Error = String;
-    fn try_from(dual_num321: DualNum321) -> Result<Self, Self::Error> {
-        use crate::elements::*;
-        let mut error_string = String::new();
-        let mut fail = false;
-        let el = dual_num321[0];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e321: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        if fail {
-            let mut error = "Elements from DualNum321 do not fit into TripleNum { ".to_string();
-            error.push_str(error_string.as_str());
-            error.push('}');
-            return Err(error);
-        }
-        return Ok(TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([0.0, 0.0, dual_num321[e12345]])));
-    }
-}
-
-impl TryFrom<Motor> for TripleNum {
+impl TryFrom<Motor> for DualNum {
     type Error = String;
     fn try_from(motor: Motor) -> Result<Self, Self::Error> {
         use crate::elements::*;
@@ -3120,17 +2116,24 @@ impl TryFrom<Motor> for TripleNum {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
+        let el = motor[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e5: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
         if fail {
-            let mut error = "Elements from Motor do not fit into TripleNum { ".to_string();
+            let mut error = "Elements from Motor do not fit into DualNum { ".to_string();
             error.push_str(error_string.as_str());
             error.push('}');
             return Err(error);
         }
-        return Ok(TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([0.0, motor[e5], motor[e12345]])));
+        return Ok(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([0.0, motor[e12345]])));
     }
 }
 
-impl TryFrom<MultiVector> for TripleNum {
+impl TryFrom<MultiVector> for DualNum {
     type Error = String;
     fn try_from(multi_vector: MultiVector) -> Result<Self, Self::Error> {
         use crate::elements::*;
@@ -3161,6 +2164,13 @@ impl TryFrom<MultiVector> for TripleNum {
         if el != 0.0 {
             fail = true;
             error_string.push_str("e3: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[6];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e5: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -3340,42 +2350,16 @@ impl TryFrom<MultiVector> for TripleNum {
             error_string.push_str(", ");
         }
         if fail {
-            let mut error = "Elements from MultiVector do not fit into TripleNum { ".to_string();
+            let mut error = "Elements from MultiVector do not fit into DualNum { ".to_string();
             error.push_str(error_string.as_str());
             error.push('}');
             return Err(error);
         }
-        return Ok(TripleNum::from_groups(
-            // e4, e5, e12345
-            Simd32x3::from([multi_vector[e4], multi_vector[e5], multi_vector[e12345]]),
-        ));
+        return Ok(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([multi_vector[e4], multi_vector[e12345]])));
     }
 }
 
-impl TryFrom<QuadNum> for TripleNum {
-    type Error = String;
-    fn try_from(quad_num: QuadNum) -> Result<Self, Self::Error> {
-        use crate::elements::*;
-        let mut error_string = String::new();
-        let mut fail = false;
-        let el = quad_num[2];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e321: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        if fail {
-            let mut error = "Elements from QuadNum do not fit into TripleNum { ".to_string();
-            error.push_str(error_string.as_str());
-            error.push('}');
-            return Err(error);
-        }
-        return Ok(TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([quad_num[e4], quad_num[e5], quad_num[e12345]])));
-    }
-}
-
-impl TryFrom<RoundPoint> for TripleNum {
+impl TryFrom<RoundPoint> for DualNum {
     type Error = String;
     fn try_from(round_point: RoundPoint) -> Result<Self, Self::Error> {
         use crate::elements::*;
@@ -3402,17 +2386,24 @@ impl TryFrom<RoundPoint> for TripleNum {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
+        let el = round_point[4];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e5: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
         if fail {
-            let mut error = "Elements from RoundPoint do not fit into TripleNum { ".to_string();
+            let mut error = "Elements from RoundPoint do not fit into DualNum { ".to_string();
             error.push_str(error_string.as_str());
             error.push('}');
             return Err(error);
         }
-        return Ok(TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([round_point[e4], round_point[e5], 0.0])));
+        return Ok(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([round_point[e4], 0.0])));
     }
 }
 
-impl TryFrom<VersorEven> for TripleNum {
+impl TryFrom<VersorEven> for DualNum {
     type Error = String;
     fn try_from(versor_even: VersorEven) -> Result<Self, Self::Error> {
         use crate::elements::*;
@@ -3488,6 +2479,13 @@ impl TryFrom<VersorEven> for TripleNum {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
+        let el = versor_even[11];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e5: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
         let el = versor_even[12];
         if el != 0.0 {
             fail = true;
@@ -3510,54 +2508,11 @@ impl TryFrom<VersorEven> for TripleNum {
             error_string.push_str(", ");
         }
         if fail {
-            let mut error = "Elements from VersorEven do not fit into TripleNum { ".to_string();
+            let mut error = "Elements from VersorEven do not fit into DualNum { ".to_string();
             error.push_str(error_string.as_str());
             error.push('}');
             return Err(error);
         }
-        return Ok(TripleNum::from_groups(
-            // e4, e5, e12345
-            Simd32x3::from([versor_even[e4], versor_even[e5], versor_even[e12345]]),
-        ));
-    }
-}
-
-impl TryFrom<VersorRoundPoint> for TripleNum {
-    type Error = String;
-    fn try_from(versor_round_point: VersorRoundPoint) -> Result<Self, Self::Error> {
-        use crate::elements::*;
-        let mut error_string = String::new();
-        let mut fail = false;
-        let el = versor_round_point[0];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e1: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = versor_round_point[1];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e2: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = versor_round_point[2];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e3: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        if fail {
-            let mut error = "Elements from VersorRoundPoint do not fit into TripleNum { ".to_string();
-            error.push_str(error_string.as_str());
-            error.push('}');
-            return Err(error);
-        }
-        return Ok(TripleNum::from_groups(
-            // e4, e5, e12345
-            Simd32x3::from([versor_round_point[e4], versor_round_point[e5], versor_round_point[e12345]]),
-        ));
+        return Ok(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([versor_even[e4], versor_even[e12345]])));
     }
 }

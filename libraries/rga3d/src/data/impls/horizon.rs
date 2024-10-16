@@ -13,8 +13,8 @@ use crate::traits::Wedge;
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       1       0
-//  Average:         0       1       0
-//  Maximum:         1       8       0
+//  Average:         0       2       0
+//  Maximum:         1      24       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -318,9 +318,8 @@ impl std::ops::Mul<DualNum> for Horizon {
 impl std::ops::Mul<Flector> for Horizon {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        4        0
-    // no simd        0       16        0
+    //      add/sub      mul      div
+    // f32        0       16        0
     fn mul(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -349,9 +348,8 @@ impl std::ops::Mul<Line> for Horizon {
 impl std::ops::Mul<Motor> for Horizon {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //      add/sub      mul      div
+    // f32        0        8        0
     fn mul(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -360,13 +358,8 @@ impl std::ops::Mul<Motor> for Horizon {
 impl std::ops::Mul<MultiVector> for Horizon {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //    simd2        0        2        0
-    //    simd3        0        4        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        8        0
-    //  no simd        0       24        0
+    //      add/sub      mul      div
+    // f32        0       24        0
     fn mul(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);

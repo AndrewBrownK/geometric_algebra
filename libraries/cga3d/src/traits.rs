@@ -10,13 +10,11 @@ pub mod arity_1 {
     pub use crate::traits::anti_constraint_violation::AntiConstraintViolation;
     pub use crate::traits::anti_fix_impl::AntiFixImpl;
     pub use crate::traits::anti_reverse::AntiReverse;
-    pub use crate::traits::anti_square::AntiSquare;
     pub use crate::traits::constraint_violation::ConstraintViolation;
     pub use crate::traits::fix::Fix;
     pub use crate::traits::reverse::Reverse;
     pub use crate::traits::right_anti_dual::RightAntiDual;
     pub use crate::traits::right_dual::RightDual;
-    pub use crate::traits::square::Square;
 }
 pub mod arity_2 {
     pub use crate::traits::anti_sandwich::AntiSandwich;
@@ -32,7 +30,6 @@ pub mod infix {
     pub use crate::traits::anti_reverse::anti_reverse;
     pub use crate::traits::anti_sandwich::anti_sandwich;
     pub use crate::traits::anti_sandwich::anti_sandwich_partial;
-    pub use crate::traits::anti_square::anti_square;
     pub use crate::traits::anti_wedge::anti_wedge;
     pub use crate::traits::anti_wedge::anti_wedge_partial;
     pub use crate::traits::constraint_violation::constraint_violation;
@@ -46,7 +43,6 @@ pub mod infix {
     pub use crate::traits::right_dual::right_dual;
     pub use crate::traits::sandwich::sandwich;
     pub use crate::traits::sandwich::sandwich_partial;
-    pub use crate::traits::square::square;
     pub use crate::traits::wedge::wedge;
     pub use crate::traits::wedge::wedge_partial;
 }
@@ -62,8 +58,6 @@ mod anti_reverse;
 pub use anti_reverse::AntiReverse;
 mod anti_sandwich;
 pub use anti_sandwich::AntiSandwich;
-mod anti_square;
-pub use anti_square::AntiSquare;
 mod anti_wedge;
 pub use anti_wedge::AntiWedge;
 mod constraint_violation;
@@ -86,8 +80,6 @@ mod right_dual;
 pub use right_dual::RightDual;
 mod sandwich;
 pub use sandwich::Sandwich;
-mod square;
-pub use square::Square;
 mod unit;
 pub use unit::Unit;
 mod wedge;

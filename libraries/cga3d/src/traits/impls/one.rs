@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 11
+// Total Implementations: 6
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -30,19 +30,9 @@ impl One for AntiCircleRotor {
         );
     }
 }
-impl One for AntiDualNum321 {
+impl One for AntiDualNum {
     fn one() -> Self {
-        return AntiDualNum321::from_groups(/* e45, scalar */ Simd32x2::from([0.0, 1.0]));
-    }
-}
-impl One for AntiDualNum4 {
-    fn one() -> Self {
-        return AntiDualNum4::from_groups(/* e1234, scalar */ Simd32x2::from([0.0, 1.0]));
-    }
-}
-impl One for AntiDualNum5 {
-    fn one() -> Self {
-        return AntiDualNum5::from_groups(/* e3215, scalar */ Simd32x2::from([0.0, 1.0]));
+        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([0.0, 1.0]));
     }
 }
 impl One for AntiMotor {
@@ -53,16 +43,6 @@ impl One for AntiMotor {
             // e15, e25, e35, e3215
             Simd32x4::from(0.0),
         );
-    }
-}
-impl One for AntiQuadNum {
-    fn one() -> Self {
-        return AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]));
-    }
-}
-impl One for AntiTripleNum {
-    fn one() -> Self {
-        return AntiTripleNum::from_groups(/* e1234, e3215, scalar */ Simd32x3::from([0.0, 0.0, 1.0]));
     }
 }
 impl One for MultiVector {
@@ -110,10 +90,5 @@ impl One for VersorOdd {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
-    }
-}
-impl One for VersorSphere {
-    fn one() -> Self {
-        return VersorSphere::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(0.0), /* e1234, scalar */ Simd32x2::from([0.0, 1.0]));
     }
 }

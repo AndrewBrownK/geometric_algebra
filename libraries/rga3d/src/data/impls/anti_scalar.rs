@@ -13,7 +13,7 @@ use crate::traits::Wedge;
 //  Minimum:         0       0       0
 //   Median:         0       1       0
 //  Average:         0       1       0
-//  Maximum:         1      10       0
+//  Maximum:         1      12       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -306,9 +306,8 @@ impl std::ops::Mul<Horizon> for AntiScalar {
 impl std::ops::Mul<Line> for AntiScalar {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        1        0
-    // no simd        0        3        0
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn mul(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -317,9 +316,8 @@ impl std::ops::Mul<Line> for AntiScalar {
 impl std::ops::Mul<Motor> for AntiScalar {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        4        0
     fn mul(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -328,12 +326,8 @@ impl std::ops::Mul<Motor> for AntiScalar {
 impl std::ops::Mul<MultiVector> for AntiScalar {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        9        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       12        0
+    //      add/sub      mul      div
+    // f32        0       12        0
     fn mul(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);

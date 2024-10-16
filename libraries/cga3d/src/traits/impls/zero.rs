@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 35
+// Total Implementations: 25
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -44,19 +44,9 @@ impl Zero for AntiDipoleInversion {
         );
     }
 }
-impl Zero for AntiDualNum321 {
+impl Zero for AntiDualNum {
     fn zero() -> Self {
-        return AntiDualNum321::from_groups(/* e45, scalar */ Simd32x2::from(0.0));
-    }
-}
-impl Zero for AntiDualNum4 {
-    fn zero() -> Self {
-        return AntiDualNum4::from_groups(/* e1234, scalar */ Simd32x2::from(0.0));
-    }
-}
-impl Zero for AntiDualNum5 {
-    fn zero() -> Self {
-        return AntiDualNum5::from_groups(/* e3215, scalar */ Simd32x2::from(0.0));
+        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from(0.0));
     }
 }
 impl Zero for AntiFlatPoint {
@@ -84,19 +74,9 @@ impl Zero for AntiPlane {
         return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(0.0));
     }
 }
-impl Zero for AntiQuadNum {
-    fn zero() -> Self {
-        return AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from(0.0));
-    }
-}
 impl Zero for AntiScalar {
     fn zero() -> Self {
         return AntiScalar::from_groups(/* e12345 */ 0.0);
-    }
-}
-impl Zero for AntiTripleNum {
-    fn zero() -> Self {
-        return AntiTripleNum::from_groups(/* e1234, e3215, scalar */ Simd32x3::from(0.0));
     }
 }
 impl Zero for Circle {
@@ -149,19 +129,9 @@ impl Zero for DipoleInversion {
         );
     }
 }
-impl Zero for DualNum321 {
+impl Zero for DualNum {
     fn zero() -> Self {
-        return DualNum321::from_groups(/* e321, e12345 */ Simd32x2::from(0.0));
-    }
-}
-impl Zero for DualNum4 {
-    fn zero() -> Self {
-        return DualNum4::from_groups(/* e4, e12345 */ Simd32x2::from(0.0));
-    }
-}
-impl Zero for DualNum5 {
-    fn zero() -> Self {
-        return DualNum5::from_groups(/* e5, e12345 */ Simd32x2::from(0.0));
+        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from(0.0));
     }
 }
 impl Zero for FlatPoint {
@@ -217,11 +187,6 @@ impl Zero for Plane {
         return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(0.0));
     }
 }
-impl Zero for QuadNum {
-    fn zero() -> Self {
-        return QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from(0.0));
-    }
-}
 impl Zero for RoundPoint {
     fn zero() -> Self {
         return RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(0.0), /* e5 */ 0.0);
@@ -235,11 +200,6 @@ impl Zero for Scalar {
 impl Zero for Sphere {
     fn zero() -> Self {
         return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(0.0), /* e1234 */ 0.0);
-    }
-}
-impl Zero for TripleNum {
-    fn zero() -> Self {
-        return TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from(0.0));
     }
 }
 impl Zero for VersorEven {
@@ -268,15 +228,5 @@ impl Zero for VersorOdd {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
-    }
-}
-impl Zero for VersorRoundPoint {
-    fn zero() -> Self {
-        return VersorRoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(0.0), /* e5, e12345 */ Simd32x2::from(0.0));
-    }
-}
-impl Zero for VersorSphere {
-    fn zero() -> Self {
-        return VersorSphere::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(0.0), /* e1234, scalar */ Simd32x2::from(0.0));
     }
 }

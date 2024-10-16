@@ -5,19 +5,19 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 3
+// Total Implementations: 4
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       1       1
-//   Median:         0       1       1
+//   Median:         0       4       1
 //  Average:         0       2       1
 //  Maximum:         2       4       1
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       1       1
 //   Median:         0       4       1
-//  Average:         0       3       1
-//  Maximum:         2       4       1
+//  Average:         0       4       1
+//  Maximum:         2      10       1
 impl Fix for Horizon {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -30,6 +30,25 @@ impl Fix for Horizon {
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         let geometric_product_2 = Horizon::from_groups(/* e321 */ (self[e321] * inverse[scalar]));
+        return geometric_product_2;
+    }
+}
+impl Fix for Plane {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        1
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        4        1
+    //  no simd        0       10        1
+    fn fix(self) -> Self {
+        use crate::elements::*;
+        let reverse = Plane::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(-1.0)));
+        let geometric_product = Scalar::from_groups(/* scalar */ (reverse.group0()[3] * self.group0()[3] * -1.0));
+        let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
+        let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
+        let geometric_product_2 = Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
         return geometric_product_2;
     }
 }

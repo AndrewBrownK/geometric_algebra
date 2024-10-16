@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 11
+// Total Implementations: 6
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -35,19 +35,9 @@ impl AntiOne for CircleRotor {
         );
     }
 }
-impl AntiOne for DualNum321 {
+impl AntiOne for DualNum {
     fn anti_one() -> Self {
-        return DualNum321::from_groups(/* e321, e12345 */ Simd32x2::from([0.0, 1.0]));
-    }
-}
-impl AntiOne for DualNum4 {
-    fn anti_one() -> Self {
-        return DualNum4::from_groups(/* e4, e12345 */ Simd32x2::from([0.0, 1.0]));
-    }
-}
-impl AntiOne for DualNum5 {
-    fn anti_one() -> Self {
-        return DualNum5::from_groups(/* e5, e12345 */ Simd32x2::from([0.0, 1.0]));
+        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([0.0, 1.0]));
     }
 }
 impl AntiOne for Motor {
@@ -88,16 +78,6 @@ impl AntiOne for MultiVector {
         );
     }
 }
-impl AntiOne for QuadNum {
-    fn anti_one() -> Self {
-        return QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]));
-    }
-}
-impl AntiOne for TripleNum {
-    fn anti_one() -> Self {
-        return TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([0.0, 0.0, 1.0]));
-    }
-}
 impl AntiOne for VersorEven {
     fn anti_one() -> Self {
         return VersorEven::from_groups(
@@ -110,10 +90,5 @@ impl AntiOne for VersorEven {
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
         );
-    }
-}
-impl AntiOne for VersorRoundPoint {
-    fn anti_one() -> Self {
-        return VersorRoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(0.0), /* e5, e12345 */ Simd32x2::from([0.0, 1.0]));
     }
 }

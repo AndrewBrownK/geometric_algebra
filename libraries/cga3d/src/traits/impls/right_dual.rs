@@ -5,32 +5,28 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 35
+// Total Implementations: 25
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         0       2       0
-//  Average:         0       2       0
-//  Maximum:         0      12       0
+//   Median:         0       3       0
+//  Average:         0       4       0
+//  Maximum:         0      16       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         0       2       0
-//  Average:         0       3       0
+//   Median:         0       3       0
+//  Average:         0       4       0
 //  Maximum:         0      16       0
 impl RightDual for AntiCircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        6        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        0        7        0
-    //  no simd        0        9        0
+    //      add/sub      mul      div
+    // f32        0        9        0
     fn right_dual(self) -> Self::Output {
         return CircleRotor::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0)]),
             // e415, e425, e435, e321
             Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
             // e235, e315, e125, e12345
@@ -56,20 +52,8 @@ impl RightDual for AntiDipoleInversion {
         );
     }
 }
-impl RightDual for AntiDualNum321 {
-    type Output = AntiDualNum321;
-    fn right_dual(self) -> Self::Output {
-        return self;
-    }
-}
-impl RightDual for AntiDualNum4 {
-    type Output = AntiDualNum4;
-    fn right_dual(self) -> Self::Output {
-        return self;
-    }
-}
-impl RightDual for AntiDualNum5 {
-    type Output = AntiDualNum5;
+impl RightDual for AntiDualNum {
+    type Output = AntiDualNum;
     fn right_dual(self) -> Self::Output {
         return self;
     }
@@ -103,15 +87,14 @@ impl RightDual for AntiFlector {
 impl RightDual for AntiLine {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn right_dual(self) -> Self::Output {
         return Line::from_groups(
             // e415, e425, e435
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0)]),
             // e235, e315, e125
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0)]),
         );
     }
 }
@@ -141,12 +124,6 @@ impl RightDual for AntiPlane {
         );
     }
 }
-impl RightDual for AntiQuadNum {
-    type Output = AntiQuadNum;
-    fn right_dual(self) -> Self::Output {
-        return self;
-    }
-}
 impl RightDual for AntiScalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:
@@ -155,12 +132,6 @@ impl RightDual for AntiScalar {
     fn right_dual(self) -> Self::Output {
         use crate::elements::*;
         return Scalar::from_groups(/* scalar */ (self[e12345] * -1.0));
-    }
-}
-impl RightDual for AntiTripleNum {
-    type Output = AntiTripleNum;
-    fn right_dual(self) -> Self::Output {
-        return self;
     }
 }
 impl RightDual for Circle {
@@ -198,36 +169,28 @@ impl RightDual for CircleRotor {
 impl RightDual for Dipole {
     type Output = Circle;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        9        0
+    //      add/sub      mul      div
+    // f32        0        9        0
     fn right_dual(self) -> Self::Output {
         return Circle::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0)]),
             // e415, e425, e435, e321
             Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
             // e235, e315, e125
-            (self.group2() * Simd32x3::from(-1.0)),
+            Simd32x3::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0)]),
         );
     }
 }
 impl RightDual for DipoleInversion {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        9        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       12        0
+    //      add/sub      mul      div
+    // f32        0       12        0
     fn right_dual(self) -> Self::Output {
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0)]),
             // e415, e425, e435, e321
             Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
             // e235, e315, e125, e4
@@ -237,34 +200,13 @@ impl RightDual for DipoleInversion {
         );
     }
 }
-impl RightDual for DualNum321 {
-    type Output = AntiDualNum321;
+impl RightDual for DualNum {
+    type Output = AntiDualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        1        0
-    // no simd        0        2        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn right_dual(self) -> Self::Output {
-        return AntiDualNum321::from_groups(/* e45, scalar */ (self.group0() * Simd32x2::from(-1.0)));
-    }
-}
-impl RightDual for DualNum4 {
-    type Output = AntiDualNum4;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        1        0
-    // no simd        0        2        0
-    fn right_dual(self) -> Self::Output {
-        return AntiDualNum4::from_groups(/* e1234, scalar */ (self.group0() * Simd32x2::from(-1.0)));
-    }
-}
-impl RightDual for DualNum5 {
-    type Output = AntiDualNum5;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        1        0
-    // no simd        0        2        0
-    fn right_dual(self) -> Self::Output {
-        return AntiDualNum5::from_groups(/* e3215, scalar */ (self.group0() * Simd32x2::from(-1.0)));
+        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0)]));
     }
 }
 impl RightDual for FlatPoint {
@@ -316,12 +258,8 @@ impl RightDual for Motor {
 impl RightDual for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       10        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0       12        0
-    //  no simd        0       16        0
+    //      add/sub      mul      div
+    // f32        0       16        0
     fn right_dual(self) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -340,9 +278,9 @@ impl RightDual for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from([(self.group5()[0] * -1.0), (self.group5()[1] * -1.0), (self.group5()[2] * -1.0), self.group3()[3]]),
             // e423, e431, e412
-            (self.group4() * Simd32x3::from(-1.0)),
+            Simd32x3::from([(self.group4()[0] * -1.0), (self.group4()[1] * -1.0), (self.group4()[2] * -1.0)]),
             // e235, e315, e125
-            (Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([(self.group3()[0] * -1.0), (self.group3()[1] * -1.0), (self.group3()[2] * -1.0)]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self[e1] * -1.0)]),
             // e1234
@@ -360,16 +298,6 @@ impl RightDual for Plane {
             // e1, e2, e3, e5
             Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
         );
-    }
-}
-impl RightDual for QuadNum {
-    type Output = AntiQuadNum;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
-    fn right_dual(self) -> Self::Output {
-        return AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ (self.group0() * Simd32x4::from(-1.0)));
     }
 }
 impl RightDual for RoundPoint {
@@ -408,16 +336,6 @@ impl RightDual for Sphere {
         );
     }
 }
-impl RightDual for TripleNum {
-    type Output = AntiTripleNum;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        1        0
-    // no simd        0        3        0
-    fn right_dual(self) -> Self::Output {
-        return AntiTripleNum::from_groups(/* e1234, e3215, scalar */ (self.group0() * Simd32x3::from(-1.0)));
-    }
-}
 impl RightDual for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
@@ -451,38 +369,6 @@ impl RightDual for VersorOdd {
             Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group3()[3]]),
             // e1, e2, e3, e4
             Simd32x4::from([(self.group3()[0] * -1.0), (self.group3()[1] * -1.0), (self.group3()[2] * -1.0), self.group2()[3]]),
-        );
-    }
-}
-impl RightDual for VersorRoundPoint {
-    type Output = VersorSphere;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        3        0
-    fn right_dual(self) -> Self::Output {
-        return VersorSphere::from_groups(
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group1()[0] * -1.0)]),
-            // e1234, scalar
-            (Simd32x2::from([self.group0()[3], self.group1()[1]]) * Simd32x2::from(-1.0)),
-        );
-    }
-}
-impl RightDual for VersorSphere {
-    type Output = VersorRoundPoint;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
-    fn right_dual(self) -> Self::Output {
-        return VersorRoundPoint::from_groups(
-            // e1, e2, e3, e4
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group1()[0]]),
-            // e5, e12345
-            Simd32x2::from([self.group0()[3], self.group1()[1]]),
         );
     }
 }

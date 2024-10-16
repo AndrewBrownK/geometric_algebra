@@ -1,35 +1,25 @@
 use crate::data::*;
 use crate::simd::*;
 
-/// AntiVersorRoundPointOnOrigin.
-/// This variant of VersorSphereOrthogonalOrigin is the Dual to VersorRoundPointOnOrigin. It is common for
-/// objects of this type to not intersect the null cone, which also prevents them from
-/// projecting onto the horosphere in the usual manner. When this happens, this
-/// object has behavioral and operative similarity to a VersorSphereOrthogonalOrigin,
-/// but an imaginary radius, and a spacial presence in the shape of a
-/// VersorRoundPointOnOrigin with a real radius.
+/// DualNum
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
-pub union AntiVersorRoundPointOnOrigin {
-    groups: AntiVersorRoundPointOnOriginGroups,
-    /// e1234, scalar, 0, 0
+pub union DualNum {
+    groups: DualNumGroups,
+    /// e4, e12345, 0, 0
     elements: [f32; 4],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
-pub struct AntiVersorRoundPointOnOriginGroups {
-    /// e1234, scalar
+pub struct DualNumGroups {
+    /// e4, e12345
     g0: Simd32x2,
 }
-impl AntiVersorRoundPointOnOrigin {
+impl DualNum {
     #[allow(clippy::too_many_arguments)]
-    pub const fn from_elements(e1234: f32, scalar: f32) -> Self {
-        Self {
-            elements: [e1234, scalar, 0.0, 0.0],
-        }
+    pub const fn from_elements(e4: f32, e12345: f32) -> Self {
+        Self { elements: [e4, e12345, 0.0, 0.0] }
     }
     pub const fn from_groups(g0: Simd32x2) -> Self {
-        Self {
-            groups: AntiVersorRoundPointOnOriginGroups { g0 },
-        }
+        Self { groups: DualNumGroups { g0 } }
     }
     #[inline(always)]
     pub fn group0(&self) -> Simd32x2 {
@@ -40,41 +30,41 @@ impl AntiVersorRoundPointOnOrigin {
         unsafe { &mut self.groups.g0 }
     }
 }
-const ANTI_VERSOR_ROUND_POINT_ON_ORIGIN_INDEX_REMAP: [usize; 2] = [0, 1];
-impl std::ops::Index<usize> for AntiVersorRoundPointOnOrigin {
+const DUAL_NUM_INDEX_REMAP: [usize; 2] = [0, 1];
+impl std::ops::Index<usize> for DualNum {
     type Output = f32;
     fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[ANTI_VERSOR_ROUND_POINT_ON_ORIGIN_INDEX_REMAP[index]] }
+        unsafe { &self.elements[DUAL_NUM_INDEX_REMAP[index]] }
     }
 }
-impl std::ops::IndexMut<usize> for AntiVersorRoundPointOnOrigin {
+impl std::ops::IndexMut<usize> for DualNum {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[ANTI_VERSOR_ROUND_POINT_ON_ORIGIN_INDEX_REMAP[index]] }
+        unsafe { &mut self.elements[DUAL_NUM_INDEX_REMAP[index]] }
     }
 }
-impl From<AntiVersorRoundPointOnOrigin> for [f32; 2] {
-    fn from(vector: AntiVersorRoundPointOnOrigin) -> Self {
+impl From<DualNum> for [f32; 2] {
+    fn from(vector: DualNum) -> Self {
         unsafe { [vector.elements[0], vector.elements[1]] }
     }
 }
-impl From<[f32; 2]> for AntiVersorRoundPointOnOrigin {
+impl From<[f32; 2]> for DualNum {
     fn from(array: [f32; 2]) -> Self {
         Self {
             elements: [array[0], array[1], 0.0, 0.0],
         }
     }
 }
-impl std::fmt::Debug for AntiVersorRoundPointOnOrigin {
+impl std::fmt::Debug for DualNum {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter.debug_struct("AntiVersorRoundPointOnOrigin").field("e1234", &self[0]).field("scalar", &self[1]).finish()
+        formatter.debug_struct("DualNum").field("e4", &self[0]).field("e12345", &self[1]).finish()
     }
 }
 
-impl AntiVersorRoundPointOnOrigin {
+impl DualNum {
     pub const LEN: usize = 2;
 }
 
-impl AntiVersorRoundPointOnOrigin {
+impl DualNum {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
             let f = self[i];
@@ -86,7 +76,7 @@ impl AntiVersorRoundPointOnOrigin {
     }
 }
 
-impl PartialOrd for AntiVersorRoundPointOnOrigin {
+impl PartialOrd for DualNum {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         for i in 0..Self::LEN {
             let a = float_ord::FloatOrd(self[i]);
@@ -99,7 +89,7 @@ impl PartialOrd for AntiVersorRoundPointOnOrigin {
         Some(std::cmp::Ordering::Equal)
     }
 }
-impl Ord for AntiVersorRoundPointOnOrigin {
+impl Ord for DualNum {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         for i in 0..Self::LEN {
             let a = float_ord::FloatOrd(self[i]);
@@ -112,7 +102,7 @@ impl Ord for AntiVersorRoundPointOnOrigin {
         std::cmp::Ordering::Equal
     }
 }
-impl PartialEq for AntiVersorRoundPointOnOrigin {
+impl PartialEq for DualNum {
     fn eq(&self, other: &Self) -> bool {
         for i in 0..Self::LEN {
             let a = float_ord::FloatOrd(self[i]);
@@ -124,8 +114,8 @@ impl PartialEq for AntiVersorRoundPointOnOrigin {
         true
     }
 }
-impl Eq for AntiVersorRoundPointOnOrigin {}
-impl std::hash::Hash for AntiVersorRoundPointOnOrigin {
+impl Eq for DualNum {}
+impl std::hash::Hash for DualNum {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         for i in 0..Self::LEN {
             self[i].to_bits().hash(state);
@@ -133,26 +123,26 @@ impl std::hash::Hash for AntiVersorRoundPointOnOrigin {
     }
 }
 
-impl std::ops::Index<crate::elements::e1234> for AntiVersorRoundPointOnOrigin {
+impl std::ops::Index<crate::elements::e4> for DualNum {
     type Output = f32;
-    fn index(&self, _: crate::elements::e1234) -> &Self::Output {
+    fn index(&self, _: crate::elements::e4) -> &Self::Output {
         &self[0]
     }
 }
-impl std::ops::Index<crate::elements::scalar> for AntiVersorRoundPointOnOrigin {
+impl std::ops::Index<crate::elements::e12345> for DualNum {
     type Output = f32;
-    fn index(&self, _: crate::elements::scalar) -> &Self::Output {
+    fn index(&self, _: crate::elements::e12345) -> &Self::Output {
         &self[1]
     }
 }
-impl std::ops::IndexMut<crate::elements::e1234> for AntiVersorRoundPointOnOrigin {
-    fn index_mut(&self, _: crate::elements::e1234) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e4> for DualNum {
+    fn index_mut(&self, _: crate::elements::e4) -> &mut Self::Output {
         &mut self[0]
     }
 }
-impl std::ops::IndexMut<crate::elements::scalar> for AntiVersorRoundPointOnOrigin {
-    fn index_mut(&self, _: crate::elements::scalar) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e12345> for DualNum {
+    fn index_mut(&self, _: crate::elements::e12345) -> &mut Self::Output {
         &mut self[1]
     }
 }
-include!("./impls/anti_versor_round_point_on_origin.rs");
+include!("./impls/dual_num.rs");

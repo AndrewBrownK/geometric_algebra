@@ -8,18 +8,18 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 566
+// Total Implementations: 476
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         4       0       0
-//  Average:        22      29       0
-//  Maximum:       505     533       0
+//   Median:         4       1       0
+//  Average:        44      53       0
+//  Maximum:       992    1024       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         7       0       0
-//  Average:        41      50       0
+//   Median:         7       1       0
+//  Average:        45      53       0
 //  Maximum:       992    1024       0
 impl std::ops::Add<AntiCircleOnOrigin> for MultiVector {
     type Output = MultiVector;
@@ -823,6 +823,70 @@ impl std::ops::AddAssign<AntiDipoleOnOrigin> for MultiVector {
         *self = addition;
     }
 }
+impl std::ops::Add<AntiDualNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn add(self, other: AntiDualNum) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group0()[1] + self.group0()[0]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e41, e42, e43, e45
+            self.group3(),
+            // e15, e25, e35
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([(other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
+            // e3215
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<AntiDualNum> for MultiVector {
+    fn add_assign(&mut self, other: AntiDualNum) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(other.group0()[1] + self.group0()[0]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e41, e42, e43, e45
+            self.group3(),
+            // e15, e25, e35
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([(other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
+            // e3215
+            self[e45],
+        );
+        *self = addition;
+    }
+}
 impl std::ops::Add<AntiFlatOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -1519,70 +1583,6 @@ impl std::ops::AddAssign<AntiMysteryDipoleInversion> for MultiVector {
         *self = addition;
     }
 }
-impl std::ops::Add<AntiMysteryQuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn add(self, other: AntiMysteryQuadNum) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[1] + self.group0()[0]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group0()[0] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<AntiMysteryQuadNum> for MultiVector {
-    fn add_assign(&mut self, other: AntiMysteryQuadNum) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[1] + self.group0()[0]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group0()[0] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = addition;
-    }
-}
 impl std::ops::Add<AntiPlane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -1727,198 +1727,6 @@ impl std::ops::AddAssign<AntiPlaneOnOrigin> for MultiVector {
             self.group9(),
             // e3215
             self[e45],
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<AntiQuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
-    fn add(self, other: AntiQuadNum) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] + other.group0()[3]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group0()[2] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            (other.group0()[1] + self[e45]),
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<AntiQuadNum> for MultiVector {
-    fn add_assign(&mut self, other: AntiQuadNum) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] + other.group0()[3]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group0()[2] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            (other.group0()[1] + self[e45]),
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<AntiQuadNumAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
-    fn add(self, other: AntiQuadNumAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] + other.group0()[2]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group0()[1] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            (other.group0()[0] + self[e45]),
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<AntiQuadNumAtInfinity> for MultiVector {
-    fn add_assign(&mut self, other: AntiQuadNumAtInfinity) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] + other.group0()[2]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group0()[1] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            (other.group0()[0] + self[e45]),
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<AntiQuadNumOrthogonalOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
-    fn add(self, other: AntiQuadNumOrthogonalOrigin) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            self.group0(),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group0()[2] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            (other.group0()[1] + self[e45]),
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<AntiQuadNumOrthogonalOrigin> for MultiVector {
-    fn add_assign(&mut self, other: AntiQuadNumOrthogonalOrigin) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            self.group0(),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group0()[2] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            (other.group0()[1] + self[e45]),
         );
         *self = addition;
     }
@@ -2124,134 +1932,6 @@ impl std::ops::AddAssign<AntiVersorEvenOnOrigin> for MultiVector {
             self.group8(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([(other.group1()[3] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            self[e45],
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<AntiVersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn add(self, other: AntiVersorRoundPointAligningOriginAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[1] + self.group0()[0]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            (other.group0()[0] + self[e45]),
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<AntiVersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    fn add_assign(&mut self, other: AntiVersorRoundPointAligningOriginAtInfinity) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[1] + self.group0()[0]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            (other.group0()[0] + self[e45]),
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<AntiVersorRoundPointOnOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn add(self, other: AntiVersorRoundPointOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[1] + self.group0()[0]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            self[e45],
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<AntiVersorRoundPointOnOrigin> for MultiVector {
-    fn add_assign(&mut self, other: AntiVersorRoundPointOnOrigin) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(other.group0()[1] + self.group0()[0]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
             // e3215
             self[e45],
         );
@@ -3917,6 +3597,70 @@ impl std::ops::AddAssign<DipoleOrthogonalOrigin> for MultiVector {
         *self = addition;
     }
 }
+impl std::ops::Add<DualNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn add(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (other.group0()[1] + self.group0()[1])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] + self.group1()[3])]),
+            // e5
+            self[e1],
+            // e41, e42, e43, e45
+            self.group3(),
+            // e15, e25, e35
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e1234, e4235, e4315, e4125
+            self.group9(),
+            // e3215
+            self[e45],
+        );
+        return addition;
+    }
+}
+impl std::ops::AddAssign<DualNum> for MultiVector {
+    fn add_assign(&mut self, other: DualNum) {
+        use crate::elements::*;
+        let addition = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (other.group0()[1] + self.group0()[1])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] + self.group1()[3])]),
+            // e5
+            self[e1],
+            // e41, e42, e43, e45
+            self.group3(),
+            // e15, e25, e35
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e1234, e4235, e4315, e4125
+            self.group9(),
+            // e3215
+            self[e45],
+        );
+        *self = addition;
+    }
+}
 impl std::ops::Add<FlatOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -5248,70 +4992,6 @@ impl std::ops::AddAssign<MysteryDipoleInversion> for MultiVector {
         *self = addition;
     }
 }
-impl std::ops::Add<MysteryQuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn add(self, other: MysteryQuadNum) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[1])]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (other.group0()[0] + self.group6()[3])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<MysteryQuadNum> for MultiVector {
-    fn add_assign(&mut self, other: MysteryQuadNum) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[1])]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (other.group0()[0] + self.group6()[3])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = addition;
-    }
-}
 impl std::ops::Add<MysteryVersorEven> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -5461,154 +5141,6 @@ impl std::ops::AddAssign<MysteryVersorOdd> for MultiVector {
                 (self.group9()[1] + other.group0()[1]),
                 (self.group9()[2] + other.group0()[2]),
                 (self.group9()[3] + other.group0()[3]),
-            ]),
-            // e3215
-            self[e45],
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<MysteryVersorRoundPoint> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
-    fn add(self, other: MysteryVersorRoundPoint) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[3])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([
-                (self.group1()[0] + other.group0()[0]),
-                (self.group1()[1] + other.group0()[1]),
-                (self.group1()[2] + other.group0()[2]),
-                self.group1()[3],
-            ]),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<MysteryVersorRoundPoint> for MultiVector {
-    fn add_assign(&mut self, other: MysteryVersorRoundPoint) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[3])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([
-                (self.group1()[0] + other.group0()[0]),
-                (self.group1()[1] + other.group0()[1]),
-                (self.group1()[2] + other.group0()[2]),
-                self.group1()[3],
-            ]),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<MysteryVersorSphere> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
-    fn add(self, other: MysteryVersorSphere) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] + other.group0()[3]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([
-                self.group9()[0],
-                (self.group9()[1] + other.group0()[0]),
-                (self.group9()[2] + other.group0()[1]),
-                (self.group9()[3] + other.group0()[2]),
-            ]),
-            // e3215
-            self[e45],
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<MysteryVersorSphere> for MultiVector {
-    fn add_assign(&mut self, other: MysteryVersorSphere) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] + other.group0()[3]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([
-                self.group9()[0],
-                (self.group9()[1] + other.group0()[0]),
-                (self.group9()[2] + other.group0()[1]),
-                (self.group9()[3] + other.group0()[2]),
             ]),
             // e3215
             self[e45],
@@ -6167,198 +5699,6 @@ impl std::ops::AddAssign<PlaneOnOrigin> for MultiVector {
                 (other.group0()[1] + self.group9()[2]),
                 (other.group0()[2] + self.group9()[3]),
             ]),
-            // e3215
-            self[e45],
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<QuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
-    fn add(self, other: QuadNum) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[3])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[0])]),
-            // e5
-            (other.group0()[1] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] + other.group0()[2])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<QuadNum> for MultiVector {
-    fn add_assign(&mut self, other: QuadNum) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[3])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[0])]),
-            // e5
-            (other.group0()[1] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] + other.group0()[2])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<QuadNumAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
-    fn add(self, other: QuadNumAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[2])]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            (other.group0()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (other.group0()[1] + self.group6()[3])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<QuadNumAtInfinity> for MultiVector {
-    fn add_assign(&mut self, other: QuadNumAtInfinity) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[2])]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            (other.group0()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (other.group0()[1] + self.group6()[3])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<QuadNumOrthogonalOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
-    fn add(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            self.group0(),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] + self.group1()[3])]),
-            // e5
-            (other.group0()[1] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (other.group0()[2] + self.group6()[3])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<QuadNumOrthogonalOrigin> for MultiVector {
-    fn add_assign(&mut self, other: QuadNumOrthogonalOrigin) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            self.group0(),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] + self.group1()[3])]),
-            // e5
-            (other.group0()[1] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (other.group0()[2] + self.group6()[3])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
             // e3215
             self[e45],
         );
@@ -7424,555 +6764,11 @@ impl std::ops::AddAssign<VersorOddOrthogonalOrigin> for MultiVector {
         *self = addition;
     }
 }
-impl std::ops::Add<VersorRoundPoint> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        0        0
-    //    simd4        1        0        0
-    // Totals...
-    // yes simd        3        0        0
-    //  no simd        6        0        0
-    fn add(self, other: VersorRoundPoint) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group1()[1])]),
-            // e1, e2, e3, e4
-            (self.group1() + other.group0()),
-            // e5
-            (other.group1()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<VersorRoundPoint> for MultiVector {
-    fn add_assign(&mut self, other: VersorRoundPoint) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group1()[1])]),
-            // e1, e2, e3, e4
-            (self.group1() + other.group0()),
-            // e5
-            (other.group1()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<VersorRoundPointAligningOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
-    fn add(self, other: VersorRoundPointAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[2])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] + self.group1()[3])]),
-            // e5
-            (other.group0()[1] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<VersorRoundPointAligningOrigin> for MultiVector {
-    fn add_assign(&mut self, other: VersorRoundPointAligningOrigin) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[2])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] + self.group1()[3])]),
-            // e5
-            (other.group0()[1] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<VersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn add(self, other: VersorRoundPointAligningOriginAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[1])]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            (other.group0()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<VersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    fn add_assign(&mut self, other: VersorRoundPointAligningOriginAtInfinity) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[1])]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            (other.group0()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<VersorRoundPointAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5        0        0
-    fn add(self, other: VersorRoundPointAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group1()[1])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([
-                (other.group0()[0] + self.group1()[0]),
-                (other.group0()[1] + self.group1()[1]),
-                (other.group0()[2] + self.group1()[2]),
-                self.group1()[3],
-            ]),
-            // e5
-            (other.group1()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<VersorRoundPointAtInfinity> for MultiVector {
-    fn add_assign(&mut self, other: VersorRoundPointAtInfinity) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group1()[1])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([
-                (other.group0()[0] + self.group1()[0]),
-                (other.group0()[1] + self.group1()[1]),
-                (other.group0()[2] + self.group1()[2]),
-                self.group1()[3],
-            ]),
-            // e5
-            (other.group1()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<VersorRoundPointOnOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn add(self, other: VersorRoundPointOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[1])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] + self.group1()[3])]),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<VersorRoundPointOnOrigin> for MultiVector {
-    fn add_assign(&mut self, other: VersorRoundPointOnOrigin) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] + other.group0()[1])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] + self.group1()[3])]),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<VersorSphere> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        0        0
-    //    simd4        1        0        0
-    // Totals...
-    // yes simd        3        0        0
-    //  no simd        6        0        0
-    fn add(self, other: VersorSphere) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] + other.group1()[1]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            (Simd32x4::from([other.group1()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group9()),
-            // e3215
-            (other.group0()[3] + self[e45]),
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<VersorSphere> for MultiVector {
-    fn add_assign(&mut self, other: VersorSphere) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] + other.group1()[1]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            (Simd32x4::from([other.group1()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group9()),
-            // e3215
-            (other.group0()[3] + self[e45]),
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<VersorSphereAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5        0        0
-    fn add(self, other: VersorSphereAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] + other[e4315]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([
-                self.group9()[0],
-                (self.group9()[1] + other.group0()[0]),
-                (self.group9()[2] + other.group0()[1]),
-                (self.group9()[3] + other.group0()[2]),
-            ]),
-            // e3215
-            (other.group0()[3] + self[e45]),
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<VersorSphereAtInfinity> for MultiVector {
-    fn add_assign(&mut self, other: VersorSphereAtInfinity) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] + other[e4315]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([
-                self.group9()[0],
-                (self.group9()[1] + other.group0()[0]),
-                (self.group9()[2] + other.group0()[1]),
-                (self.group9()[3] + other.group0()[2]),
-            ]),
-            // e3215
-            (other.group0()[3] + self[e45]),
-        );
-        *self = addition;
-    }
-}
-impl std::ops::Add<VersorSphereOrthogonalOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
-    fn add(self, other: VersorSphereOrthogonalOrigin) -> Self::Output {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] + other.group0()[2]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(other.group0()[1] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            (other.group0()[0] + self[e45]),
-        );
-        return addition;
-    }
-}
-impl std::ops::AddAssign<VersorSphereOrthogonalOrigin> for MultiVector {
-    fn add_assign(&mut self, other: VersorSphereOrthogonalOrigin) {
-        use crate::elements::*;
-        let addition = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] + other.group0()[2]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(other.group0()[1] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            (other.group0()[0] + self[e45]),
-        );
-        *self = addition;
-    }
-}
 impl std::ops::BitXor<AntiCircleOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       20       33        0
-    //    simd3        2        5        0
-    // Totals...
-    // yes simd       22       38        0
-    //  no simd       26       48        0
+    //      add/sub      mul      div
+    // f32       26       48        0
     fn bitxor(self, other: AntiCircleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -7987,13 +6783,8 @@ impl std::ops::BitXorAssign<AntiCircleOnOrigin> for MultiVector {
 impl std::ops::BitXor<AntiCircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       39       54        0
-    //    simd3        7       10        0
-    //    simd4        5        7        0
-    // Totals...
-    // yes simd       51       71        0
-    //  no simd       80      112        0
+    //      add/sub      mul      div
+    // f32       80      112        0
     fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8008,13 +6799,8 @@ impl std::ops::BitXorAssign<AntiCircleRotor> for MultiVector {
 impl std::ops::BitXor<AntiCircleRotorAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       39       58        0
-    //    simd3        7       10        0
-    //    simd4        3        4        0
-    // Totals...
-    // yes simd       49       72        0
-    //  no simd       72      104        0
+    //      add/sub      mul      div
+    // f32       72      104        0
     fn bitxor(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8029,13 +6815,8 @@ impl std::ops::BitXorAssign<AntiCircleRotorAligningOrigin> for MultiVector {
 impl std::ops::BitXor<AntiCircleRotorAligningOriginAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       21       36        0
-    //    simd3        5        8        0
-    //    simd4        3        5        0
-    // Totals...
-    // yes simd       29       49        0
-    //  no simd       48       80        0
+    //      add/sub      mul      div
+    // f32       48       80        0
     fn bitxor(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8050,13 +6831,8 @@ impl std::ops::BitXorAssign<AntiCircleRotorAligningOriginAtInfinity> for MultiVe
 impl std::ops::BitXor<AntiCircleRotorAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       25       44        0
-    //    simd3        5        8        0
-    //    simd4        4        5        0
-    // Totals...
-    // yes simd       34       57        0
-    //  no simd       56       88        0
+    //      add/sub      mul      div
+    // f32       56       88        0
     fn bitxor(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8071,13 +6847,8 @@ impl std::ops::BitXorAssign<AntiCircleRotorAtInfinity> for MultiVector {
 impl std::ops::BitXor<AntiCircleRotorOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       24       43        0
-    //    simd3        4        7        0
-    //    simd4        3        4        0
-    // Totals...
-    // yes simd       31       54        0
-    //  no simd       48       80        0
+    //      add/sub      mul      div
+    // f32       48       80        0
     fn bitxor(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8092,13 +6863,8 @@ impl std::ops::BitXorAssign<AntiCircleRotorOnOrigin> for MultiVector {
 impl std::ops::BitXor<AntiDipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       43       60        0
-    //    simd3        6        8        0
-    //    simd4        7        9        0
-    // Totals...
-    // yes simd       56       77        0
-    //  no simd       89      120        0
+    //      add/sub      mul      div
+    // f32       89      120        0
     fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8113,13 +6879,8 @@ impl std::ops::BitXorAssign<AntiDipoleInversion> for MultiVector {
 impl std::ops::BitXor<AntiDipoleInversionAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       34       54        0
-    //    simd3        4        6        0
-    //    simd4        4        5        0
-    // Totals...
-    // yes simd       42       65        0
-    //  no simd       62       92        0
+    //      add/sub      mul      div
+    // f32       62       92        0
     fn bitxor(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8134,13 +6895,8 @@ impl std::ops::BitXorAssign<AntiDipoleInversionAtInfinity> for MultiVector {
 impl std::ops::BitXor<AntiDipoleInversionOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       29       50        0
-    //    simd3        3        6        0
-    //    simd4        3        4        0
-    // Totals...
-    // yes simd       35       60        0
-    //  no simd       50       84        0
+    //      add/sub      mul      div
+    // f32       50       84        0
     fn bitxor(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8155,13 +6911,8 @@ impl std::ops::BitXorAssign<AntiDipoleInversionOnOrigin> for MultiVector {
 impl std::ops::BitXor<AntiDipoleInversionOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       23       40        0
-    //    simd3        2        5        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       29       49        0
-    //  no simd       45       71        0
+    //      add/sub      mul      div
+    // f32       44       71        0
     fn bitxor(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8176,12 +6927,8 @@ impl std::ops::BitXorAssign<AntiDipoleInversionOrthogonalOrigin> for MultiVector
 impl std::ops::BitXor<AntiDipoleOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       17        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        6       18        0
-    //  no simd        6       20        0
+    //      add/sub      mul      div
+    // f32        6       20        0
     fn bitxor(self, other: AntiDipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8189,6 +6936,22 @@ impl std::ops::BitXor<AntiDipoleOnOrigin> for MultiVector {
 }
 impl std::ops::BitXorAssign<AntiDipoleOnOrigin> for MultiVector {
     fn bitxor_assign(&mut self, other: AntiDipoleOnOrigin) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<AntiDualNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2       34        0
+    fn bitxor(self, other: AntiDualNum) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<AntiDualNum> for MultiVector {
+    fn bitxor_assign(&mut self, other: AntiDualNum) {
         use crate::elements::*;
         *self = self.wedge(other);
     }
@@ -8212,13 +6975,8 @@ impl std::ops::BitXorAssign<AntiFlatOrigin> for MultiVector {
 impl std::ops::BitXor<AntiFlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6        9        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        6       11        0
-    //  no simd        6       16        0
+    //      add/sub      mul      div
+    // f32        6       16        0
     fn bitxor(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8233,13 +6991,8 @@ impl std::ops::BitXorAssign<AntiFlatPoint> for MultiVector {
 impl std::ops::BitXor<AntiFlector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       26       46        0
-    //    simd3        4        6        0
-    //    simd4        3        4        0
-    // Totals...
-    // yes simd       33       56        0
-    //  no simd       50       80        0
+    //      add/sub      mul      div
+    // f32       50       80        0
     fn bitxor(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8254,13 +7007,8 @@ impl std::ops::BitXorAssign<AntiFlector> for MultiVector {
 impl std::ops::BitXor<AntiFlectorOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       16       38        0
-    //    simd3        1        4        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       19       44        0
-    //  no simd       27       58        0
+    //      add/sub      mul      div
+    // f32       24       58        0
     fn bitxor(self, other: AntiFlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8275,13 +7023,8 @@ impl std::ops::BitXorAssign<AntiFlectorOnOrigin> for MultiVector {
 impl std::ops::BitXor<AntiLine> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       16       26        0
-    //    simd3        2        6        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       19       33        0
-    //  no simd       26       48        0
+    //      add/sub      mul      div
+    // f32       26       48        0
     fn bitxor(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8296,12 +7039,8 @@ impl std::ops::BitXorAssign<AntiLine> for MultiVector {
 impl std::ops::BitXor<AntiLineOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       15        0
-    //    simd3        0        3        0
-    // Totals...
-    // yes simd        8       18        0
-    //  no simd        8       24        0
+    //      add/sub      mul      div
+    // f32        8       24        0
     fn bitxor(self, other: AntiLineOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8316,13 +7055,8 @@ impl std::ops::BitXorAssign<AntiLineOnOrigin> for MultiVector {
 impl std::ops::BitXor<AntiMotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       23       38        0
-    //    simd3        5        8        0
-    //    simd4        3        5        0
-    // Totals...
-    // yes simd       31       51        0
-    //  no simd       50       82        0
+    //      add/sub      mul      div
+    // f32       50       82        0
     fn bitxor(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8337,13 +7071,8 @@ impl std::ops::BitXorAssign<AntiMotor> for MultiVector {
 impl std::ops::BitXor<AntiMotorOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       11       23        0
-    //    simd3        3        7        0
-    //    simd4        1        3        0
-    // Totals...
-    // yes simd       15       33        0
-    //  no simd       24       56        0
+    //      add/sub      mul      div
+    // f32       24       56        0
     fn bitxor(self, other: AntiMotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8358,13 +7087,8 @@ impl std::ops::BitXorAssign<AntiMotorOnOrigin> for MultiVector {
 impl std::ops::BitXor<AntiMysteryCircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       14       27        0
-    //    simd3        3        7        0
-    //    simd4        3        4        0
-    // Totals...
-    // yes simd       20       38        0
-    //  no simd       35       64        0
+    //      add/sub      mul      div
+    // f32       32       64        0
     fn bitxor(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8379,13 +7103,8 @@ impl std::ops::BitXorAssign<AntiMysteryCircleRotor> for MultiVector {
 impl std::ops::BitXor<AntiMysteryDipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       19       38        0
-    //    simd3        3        8        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       24       48        0
-    //  no simd       36       70        0
+    //      add/sub      mul      div
+    // f32       36       67        0
     fn bitxor(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8397,37 +7116,11 @@ impl std::ops::BitXorAssign<AntiMysteryDipoleInversion> for MultiVector {
         *self = self.wedge(other);
     }
 }
-impl std::ops::BitXor<AntiMysteryQuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       24        0
-    //    simd3        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        8       29        0
-    //  no simd        8       40        0
-    fn bitxor(self, other: AntiMysteryQuadNum) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiMysteryQuadNum> for MultiVector {
-    fn bitxor_assign(&mut self, other: AntiMysteryQuadNum) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
 impl std::ops::BitXor<AntiPlane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       17       37        0
-    //    simd3        3        5        0
-    //    simd4        2        3        0
-    // Totals...
-    // yes simd       22       45        0
-    //  no simd       34       64        0
+    //      add/sub      mul      div
+    // f32       34       64        0
     fn bitxor(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8442,12 +7135,8 @@ impl std::ops::BitXorAssign<AntiPlane> for MultiVector {
 impl std::ops::BitXor<AntiPlaneOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       11       30        0
-    //    simd3        3        8        0
-    // Totals...
-    // yes simd       14       38        0
-    //  no simd       20       54        0
+    //      add/sub      mul      div
+    // f32       20       54        0
     fn bitxor(self, other: AntiPlaneOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8455,64 +7144,6 @@ impl std::ops::BitXor<AntiPlaneOnOrigin> for MultiVector {
 }
 impl std::ops::BitXorAssign<AntiPlaneOnOrigin> for MultiVector {
     fn bitxor_assign(&mut self, other: AntiPlaneOnOrigin) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiQuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       20        0
-    //    simd3        0        4        0
-    //    simd4        1        3        0
-    // Totals...
-    // yes simd        9       27        0
-    //  no simd       12       44        0
-    fn bitxor(self, other: AntiQuadNum) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiQuadNum> for MultiVector {
-    fn bitxor_assign(&mut self, other: AntiQuadNum) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiQuadNumAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       10       26        0
-    //    simd3        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd       10       31        0
-    //  no simd       10       42        0
-    fn bitxor(self, other: AntiQuadNumAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiQuadNumAtInfinity> for MultiVector {
-    fn bitxor_assign(&mut self, other: AntiQuadNumAtInfinity) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiQuadNumOrthogonalOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2       15        0
-    fn bitxor(self, other: AntiQuadNumOrthogonalOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiQuadNumOrthogonalOrigin> for MultiVector {
-    fn bitxor_assign(&mut self, other: AntiQuadNumOrthogonalOrigin) {
         use crate::elements::*;
         *self = self.wedge(other);
     }
@@ -8530,13 +7161,8 @@ impl std::ops::BitXor<AntiScalar> for MultiVector {
 impl std::ops::BitXor<AntiSphereOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       16       37        0
-    //    simd3        2        5        0
-    //    simd4        3        4        0
-    // Totals...
-    // yes simd       21       46        0
-    //  no simd       34       68        0
+    //      add/sub      mul      div
+    // f32       34       68        0
     fn bitxor(self, other: AntiSphereOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8551,13 +7177,8 @@ impl std::ops::BitXorAssign<AntiSphereOnOrigin> for MultiVector {
 impl std::ops::BitXor<AntiVersorEvenOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       22       41        0
-    //    simd3        4        7        0
-    //    simd4        4        5        0
-    // Totals...
-    // yes simd       30       53        0
-    //  no simd       50       82        0
+    //      add/sub      mul      div
+    // f32       50       82        0
     fn bitxor(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8569,58 +7190,11 @@ impl std::ops::BitXorAssign<AntiVersorEvenOnOrigin> for MultiVector {
         *self = self.wedge(other);
     }
 }
-impl std::ops::BitXor<AntiVersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        6        0
-    //    simd3        0        4        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        2       14        0
-    //  no simd        2       34        0
-    fn bitxor(self, other: AntiVersorRoundPointAligningOriginAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiVersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    fn bitxor_assign(&mut self, other: AntiVersorRoundPointAligningOriginAtInfinity) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<AntiVersorRoundPointOnOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2       10        0
-    //    simd3        0        4        0
-    //    simd4        0        3        0
-    // Totals...
-    // yes simd        2       17        0
-    //  no simd        2       34        0
-    fn bitxor(self, other: AntiVersorRoundPointOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<AntiVersorRoundPointOnOrigin> for MultiVector {
-    fn bitxor_assign(&mut self, other: AntiVersorRoundPointOnOrigin) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
 impl std::ops::BitXor<Circle> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       16       22        0
-    //    simd3        0        2        0
-    //    simd4        2        3        0
-    // Totals...
-    // yes simd       18       27        0
-    //  no simd       24       40        0
+    //      add/sub      mul      div
+    // f32       24       40        0
     fn bitxor(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8635,13 +7209,8 @@ impl std::ops::BitXorAssign<Circle> for MultiVector {
 impl std::ops::BitXor<CircleAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       13       22        0
-    //    simd3        0        2        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       15       26        0
-    //  no simd       21       36        0
+    //      add/sub      mul      div
+    // f32       21       36        0
     fn bitxor(self, other: CircleAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8656,13 +7225,8 @@ impl std::ops::BitXorAssign<CircleAligningOrigin> for MultiVector {
 impl std::ops::BitXor<CircleAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       15       21        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd       15       23        0
-    //  no simd       15       28        0
+    //      add/sub      mul      div
+    // f32       15       28        0
     fn bitxor(self, other: CircleAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8677,13 +7241,8 @@ impl std::ops::BitXorAssign<CircleAtInfinity> for MultiVector {
 impl std::ops::BitXor<CircleAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       17        0
-    //    simd3        0        2        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        9       20        0
-    //  no simd       12       27        0
+    //      add/sub      mul      div
+    // f32       12       24        0
     fn bitxor(self, other: CircleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8698,13 +7257,8 @@ impl std::ops::BitXorAssign<CircleAtOrigin> for MultiVector {
 impl std::ops::BitXor<CircleOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       17        0
-    //    simd3        0        1        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       10       19        0
-    //  no simd       13       24        0
+    //      add/sub      mul      div
+    // f32       13       24        0
     fn bitxor(self, other: CircleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8719,13 +7273,8 @@ impl std::ops::BitXorAssign<CircleOnOrigin> for MultiVector {
 impl std::ops::BitXor<CircleOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       11       21        0
-    //    simd3        0        2        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       12       24        0
-    //  no simd       15       31        0
+    //      add/sub      mul      div
+    // f32       15       28        0
     fn bitxor(self, other: CircleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8740,13 +7289,8 @@ impl std::ops::BitXorAssign<CircleOrthogonalOrigin> for MultiVector {
 impl std::ops::BitXor<CircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       17       23        0
-    //    simd3        0        2        0
-    //    simd4        2        3        0
-    // Totals...
-    // yes simd       19       28        0
-    //  no simd       25       41        0
+    //      add/sub      mul      div
+    // f32       25       41        0
     fn bitxor(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8761,13 +7305,8 @@ impl std::ops::BitXorAssign<CircleRotor> for MultiVector {
 impl std::ops::BitXor<CircleRotorAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       14       23        0
-    //    simd3        0        2        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       16       27        0
-    //  no simd       22       37        0
+    //      add/sub      mul      div
+    // f32       22       37        0
     fn bitxor(self, other: CircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8782,12 +7321,8 @@ impl std::ops::BitXorAssign<CircleRotorAligningOrigin> for MultiVector {
 impl std::ops::BitXor<CircleRotorAligningOriginAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       14       22        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd       14       23        0
-    //  no simd       14       25        0
+    //      add/sub      mul      div
+    // f32       14       25        0
     fn bitxor(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -8800,13 +7335,8 @@ impl std::ops::BitXorAssign<CircleRotorAligningOriginAtInfinity> for MultiVector
 impl std::ops::BitXor<CircleRotorAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       16       22        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd       16       24        0
-    //  no simd       16       29        0
+    //      add/sub      mul      div
+    // f32       16       29        0
     fn bitxor(self, other: CircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8821,13 +7351,8 @@ impl std::ops::BitXorAssign<CircleRotorAtInfinity> for MultiVector {
 impl std::ops::BitXor<CircleRotorOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       10       18        0
-    //    simd3        0        1        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       11       20        0
-    //  no simd       14       25        0
+    //      add/sub      mul      div
+    // f32       14       25        0
     fn bitxor(self, other: CircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8842,13 +7367,8 @@ impl std::ops::BitXorAssign<CircleRotorOnOrigin> for MultiVector {
 impl std::ops::BitXor<Dipole> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       34       44        0
-    //    simd3        4        8        0
-    //    simd4        2        3        0
-    // Totals...
-    // yes simd       40       55        0
-    //  no simd       54       80        0
+    //      add/sub      mul      div
+    // f32       54       80        0
     fn bitxor(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8863,13 +7383,8 @@ impl std::ops::BitXorAssign<Dipole> for MultiVector {
 impl std::ops::BitXor<DipoleAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       27       39        0
-    //    simd3        1        3        0
-    //    simd4        1        2        0
-    // Totals...
-    // yes simd       29       44        0
-    //  no simd       34       56        0
+    //      add/sub      mul      div
+    // f32       34       56        0
     fn bitxor(self, other: DipoleAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8884,13 +7399,8 @@ impl std::ops::BitXorAssign<DipoleAligningOrigin> for MultiVector {
 impl std::ops::BitXor<DipoleAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       19       30        0
-    //    simd3        2        6        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       23       38        0
-    //  no simd       33       56        0
+    //      add/sub      mul      div
+    // f32       33       56        0
     fn bitxor(self, other: DipoleAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8905,12 +7415,8 @@ impl std::ops::BitXorAssign<DipoleAtInfinity> for MultiVector {
 impl std::ops::BitXor<DipoleAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       21       33        0
-    //    simd3        2        5        0
-    // Totals...
-    // yes simd       23       38        0
-    //  no simd       27       48        0
+    //      add/sub      mul      div
+    // f32       27       48        0
     fn bitxor(self, other: DipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8925,13 +7431,8 @@ impl std::ops::BitXorAssign<DipoleAtOrigin> for MultiVector {
 impl std::ops::BitXor<DipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       43       56        0
-    //    simd3        3        6        0
-    //    simd4        3        4        0
-    // Totals...
-    // yes simd       49       66        0
-    //  no simd       64       90        0
+    //      add/sub      mul      div
+    // f32       64       90        0
     fn bitxor(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8946,13 +7447,8 @@ impl std::ops::BitXorAssign<DipoleInversion> for MultiVector {
 impl std::ops::BitXor<DipoleInversionAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       36       51        0
-    //    simd3        0        1        0
-    //    simd4        2        3        0
-    // Totals...
-    // yes simd       38       55        0
-    //  no simd       44       66        0
+    //      add/sub      mul      div
+    // f32       44       66        0
     fn bitxor(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8967,13 +7463,8 @@ impl std::ops::BitXorAssign<DipoleInversionAligningOrigin> for MultiVector {
 impl std::ops::BitXor<DipoleInversionAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       27       38        0
-    //    simd3        2        6        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       31       46        0
-    //  no simd       41       64        0
+    //      add/sub      mul      div
+    // f32       41       64        0
     fn bitxor(self, other: DipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -8988,13 +7479,8 @@ impl std::ops::BitXorAssign<DipoleInversionAtInfinity> for MultiVector {
 impl std::ops::BitXor<DipoleInversionAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       23       41        0
-    //    simd3        0        1        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       25       44        0
-    //  no simd       31       52        0
+    //      add/sub      mul      div
+    // f32       31       52        0
     fn bitxor(self, other: DipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9009,12 +7495,8 @@ impl std::ops::BitXorAssign<DipoleInversionAtOrigin> for MultiVector {
 impl std::ops::BitXor<DipoleInversionOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       17       28        0
-    //    simd4        2        3        0
-    // Totals...
-    // yes simd       19       31        0
-    //  no simd       25       40        0
+    //      add/sub      mul      div
+    // f32       25       40        0
     fn bitxor(self, other: DipoleInversionOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9029,13 +7511,8 @@ impl std::ops::BitXorAssign<DipoleInversionOnOrigin> for MultiVector {
 impl std::ops::BitXor<DipoleInversionOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       33       52        0
-    //    simd3        2        4        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd       38       59        0
-    //  no simd       51       76        0
+    //      add/sub      mul      div
+    // f32       51       76        0
     fn bitxor(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9050,12 +7527,8 @@ impl std::ops::BitXorAssign<DipoleInversionOrthogonalOrigin> for MultiVector {
 impl std::ops::BitXor<DipoleOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       13       24        0
-    //    simd4        1        2        0
-    // Totals...
-    // yes simd       14       26        0
-    //  no simd       17       32        0
+    //      add/sub      mul      div
+    // f32       17       32        0
     fn bitxor(self, other: DipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9070,13 +7543,8 @@ impl std::ops::BitXorAssign<DipoleOnOrigin> for MultiVector {
 impl std::ops::BitXor<DipoleOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       31       44        0
-    //    simd3        4        8        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       36       53        0
-    //  no simd       47       72        0
+    //      add/sub      mul      div
+    // f32       47       72        0
     fn bitxor(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9084,6 +7552,22 @@ impl std::ops::BitXor<DipoleOrthogonalOrigin> for MultiVector {
 }
 impl std::ops::BitXorAssign<DipoleOrthogonalOrigin> for MultiVector {
     fn bitxor_assign(&mut self, other: DipoleOrthogonalOrigin) {
+        use crate::elements::*;
+        *self = self.wedge(other);
+    }
+}
+impl std::ops::BitXor<DualNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1       25        0
+    fn bitxor(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        return self.wedge(other);
+    }
+}
+impl std::ops::BitXorAssign<DualNum> for MultiVector {
+    fn bitxor_assign(&mut self, other: DualNum) {
         use crate::elements::*;
         *self = self.wedge(other);
     }
@@ -9107,12 +7591,8 @@ impl std::ops::BitXorAssign<FlatOrigin> for MultiVector {
 impl std::ops::BitXor<FlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       17       29        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd       17       30        0
-    //  no simd       17       32        0
+    //      add/sub      mul      div
+    // f32       17       32        0
     fn bitxor(self, other: FlatPoint) -> Self::Output {
         return self.wedge(other);
     }
@@ -9125,12 +7605,8 @@ impl std::ops::BitXorAssign<FlatPoint> for MultiVector {
 impl std::ops::BitXor<FlatPointAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        7       15        0
-    //    simd3        1        3        0
-    // Totals...
-    // yes simd        8       18        0
-    //  no simd       10       24        0
+    //      add/sub      mul      div
+    // f32       10       24        0
     fn bitxor(self, other: FlatPointAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -9143,12 +7619,8 @@ impl std::ops::BitXorAssign<FlatPointAtInfinity> for MultiVector {
 impl std::ops::BitXor<Flector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       25       37        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd       25       38        0
-    //  no simd       25       40        0
+    //      add/sub      mul      div
+    // f32       25       40        0
     fn bitxor(self, other: Flector) -> Self::Output {
         return self.wedge(other);
     }
@@ -9161,12 +7633,8 @@ impl std::ops::BitXorAssign<Flector> for MultiVector {
 impl std::ops::BitXor<FlectorAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       12       23        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd       12       24        0
-    //  no simd       12       26        0
+    //      add/sub      mul      div
+    // f32       12       26        0
     fn bitxor(self, other: FlectorAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -9209,12 +7677,8 @@ impl std::ops::BitXorAssign<Horizon> for MultiVector {
 impl std::ops::BitXor<Infinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       10        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0       12        0
-    //  no simd        0       16        0
+    //      add/sub      mul      div
+    // f32        0       16        0
     fn bitxor(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9229,12 +7693,8 @@ impl std::ops::BitXorAssign<Infinity> for MultiVector {
 impl std::ops::BitXor<Line> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       13       21        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd       13       22        0
-    //  no simd       13       24        0
+    //      add/sub      mul      div
+    // f32       13       24        0
     fn bitxor(self, other: Line) -> Self::Output {
         return self.wedge(other);
     }
@@ -9247,12 +7707,8 @@ impl std::ops::BitXorAssign<Line> for MultiVector {
 impl std::ops::BitXor<LineAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        9        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        4       10        0
-    //  no simd        4       12        0
+    //      add/sub      mul      div
+    // f32        4       12        0
     fn bitxor(self, other: LineAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -9279,12 +7735,8 @@ impl std::ops::BitXorAssign<LineOnOrigin> for MultiVector {
 impl std::ops::BitXor<Motor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       22       32        0
-    //    simd3        1        3        0
-    // Totals...
-    // yes simd       23       35        0
-    //  no simd       25       41        0
+    //      add/sub      mul      div
+    // f32       25       41        0
     fn bitxor(self, other: Motor) -> Self::Output {
         return self.wedge(other);
     }
@@ -9297,12 +7749,8 @@ impl std::ops::BitXorAssign<Motor> for MultiVector {
 impl std::ops::BitXor<MotorAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       19        0
-    //    simd3        1        3        0
-    // Totals...
-    // yes simd       10       22        0
-    //  no simd       12       28        0
+    //      add/sub      mul      div
+    // f32       12       28        0
     fn bitxor(self, other: MotorAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -9329,13 +7777,8 @@ impl std::ops::BitXorAssign<MotorOnOrigin> for MultiVector {
 impl std::ops::BitXor<MultiVector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       99      117        0
-    //    simd3       16       18        0
-    //    simd4       16       18        0
-    // Totals...
-    // yes simd      131      153        0
-    //  no simd      211      243        0
+    //      add/sub      mul      div
+    // f32      211      243        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9350,12 +7793,8 @@ impl std::ops::BitXorAssign<MultiVector> for MultiVector {
 impl std::ops::BitXor<MysteryCircle> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       13        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        6       14        0
-    //  no simd        6       17        0
+    //      add/sub      mul      div
+    // f32        6       17        0
     fn bitxor(self, other: MysteryCircle) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9370,12 +7809,8 @@ impl std::ops::BitXorAssign<MysteryCircle> for MultiVector {
 impl std::ops::BitXor<MysteryCircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        7       14        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        7       15        0
-    //  no simd        7       18        0
+    //      add/sub      mul      div
+    // f32        7       18        0
     fn bitxor(self, other: MysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9390,12 +7825,8 @@ impl std::ops::BitXorAssign<MysteryCircleRotor> for MultiVector {
 impl std::ops::BitXor<MysteryDipole> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       12       26        0
-    //    simd3        0        3        0
-    // Totals...
-    // yes simd       12       29        0
-    //  no simd       12       35        0
+    //      add/sub      mul      div
+    // f32       12       35        0
     fn bitxor(self, other: MysteryDipole) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9410,12 +7841,8 @@ impl std::ops::BitXorAssign<MysteryDipole> for MultiVector {
 impl std::ops::BitXor<MysteryDipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       18       32        0
-    //    simd3        0        3        0
-    // Totals...
-    // yes simd       18       35        0
-    //  no simd       18       41        0
+    //      add/sub      mul      div
+    // f32       18       41        0
     fn bitxor(self, other: MysteryDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9427,32 +7854,11 @@ impl std::ops::BitXorAssign<MysteryDipoleInversion> for MultiVector {
         *self = self.wedge(other);
     }
 }
-impl std::ops::BitXor<MysteryQuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        6        0
-    fn bitxor(self, other: MysteryQuadNum) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<MysteryQuadNum> for MultiVector {
-    fn bitxor_assign(&mut self, other: MysteryQuadNum) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
 impl std::ops::BitXor<MysteryVersorEven> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       21       40        0
-    //    simd3        1        4        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       26       48        0
-    //  no simd       40       68        0
+    //      add/sub      mul      div
+    // f32       37       68        0
     fn bitxor(self, other: MysteryVersorEven) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9467,13 +7873,8 @@ impl std::ops::BitXorAssign<MysteryVersorEven> for MultiVector {
 impl std::ops::BitXor<MysteryVersorOdd> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       20       33        0
-    //    simd3        3        7        0
-    //    simd4        3        4        0
-    // Totals...
-    // yes simd       26       44        0
-    //  no simd       41       70        0
+    //      add/sub      mul      div
+    // f32       38       70        0
     fn bitxor(self, other: MysteryVersorOdd) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9485,57 +7886,11 @@ impl std::ops::BitXorAssign<MysteryVersorOdd> for MultiVector {
         *self = self.wedge(other);
     }
 }
-impl std::ops::BitXor<MysteryVersorRoundPoint> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       14       39        0
-    //    simd3        1        4        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       16       44        0
-    //  no simd       21       55        0
-    fn bitxor(self, other: MysteryVersorRoundPoint) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<MysteryVersorRoundPoint> for MultiVector {
-    fn bitxor_assign(&mut self, other: MysteryVersorRoundPoint) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<MysteryVersorSphere> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       14        0
-    //    simd3        0        4        0
-    //    simd4        0        3        0
-    // Totals...
-    // yes simd        6       21        0
-    //  no simd        6       38        0
-    fn bitxor(self, other: MysteryVersorSphere) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<MysteryVersorSphere> for MultiVector {
-    fn bitxor_assign(&mut self, other: MysteryVersorSphere) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
 impl std::ops::BitXor<NullCircleAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       12        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        4       13        0
-    //  no simd        4       15        0
+    //      add/sub      mul      div
+    // f32        4       15        0
     fn bitxor(self, other: NullCircleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9550,12 +7905,8 @@ impl std::ops::BitXorAssign<NullCircleAtOrigin> for MultiVector {
 impl std::ops::BitXor<NullDipoleAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        7       18        0
-    //    simd3        1        2        0
-    // Totals...
-    // yes simd        8       20        0
-    //  no simd       10       24        0
+    //      add/sub      mul      div
+    // f32       10       24        0
     fn bitxor(self, other: NullDipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9570,12 +7921,8 @@ impl std::ops::BitXorAssign<NullDipoleAtOrigin> for MultiVector {
 impl std::ops::BitXor<NullDipoleInversionAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        7       18        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd        9       20        0
-    //  no simd       15       26        0
+    //      add/sub      mul      div
+    // f32       12       26        0
     fn bitxor(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9606,13 +7953,8 @@ impl std::ops::BitXorAssign<NullSphereAtOrigin> for MultiVector {
 impl std::ops::BitXor<NullVersorEvenAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5       17        0
-    //    simd3        1        2        0
-    //    simd4        1        3        0
-    // Totals...
-    // yes simd        7       22        0
-    //  no simd       12       35        0
+    //      add/sub      mul      div
+    // f32       12       32        0
     fn bitxor(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9627,13 +7969,8 @@ impl std::ops::BitXorAssign<NullVersorEvenAtOrigin> for MultiVector {
 impl std::ops::BitXor<Origin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        5        0
-    //    simd3        0        1        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       24        0
+    //      add/sub      mul      div
+    // f32        0       24        0
     fn bitxor(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9673,78 +8010,11 @@ impl std::ops::BitXorAssign<PlaneOnOrigin> for MultiVector {
         *self = self.wedge(other);
     }
 }
-impl std::ops::BitXor<QuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       23        0
-    //    simd3        0        3        0
-    //    simd4        1        2        0
-    // Totals...
-    // yes simd        9       28        0
-    //  no simd       12       40        0
-    fn bitxor(self, other: QuadNum) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<QuadNum> for MultiVector {
-    fn bitxor_assign(&mut self, other: QuadNum) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<QuadNumAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3       15        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        3       17        0
-    //  no simd        3       21        0
-    fn bitxor(self, other: QuadNumAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<QuadNumAtInfinity> for MultiVector {
-    fn bitxor_assign(&mut self, other: QuadNumAtInfinity) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<QuadNumOrthogonalOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        7       26        0
-    //    simd3        0        3        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd        8       30        0
-    //  no simd       11       39        0
-    fn bitxor(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<QuadNumOrthogonalOrigin> for MultiVector {
-    fn bitxor_assign(&mut self, other: QuadNumOrthogonalOrigin) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
 impl std::ops::BitXor<RoundPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       21       38        0
-    //    simd3        4        6        0
-    //    simd4        4        6        0
-    // Totals...
-    // yes simd       29       50        0
-    //  no simd       49       80        0
+    //      add/sub      mul      div
+    // f32       49       80        0
     fn bitxor(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9759,12 +8029,8 @@ impl std::ops::BitXorAssign<RoundPoint> for MultiVector {
 impl std::ops::BitXor<RoundPointAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       27        0
-    //    simd3        0        3        0
-    // Totals...
-    // yes simd        8       30        0
-    //  no simd        8       36        0
+    //      add/sub      mul      div
+    // f32        8       36        0
     fn bitxor(self, other: RoundPointAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9779,14 +8045,8 @@ impl std::ops::BitXorAssign<RoundPointAtOrigin> for MultiVector {
 impl std::ops::BitXor<Scalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        0        1        0
-    //    simd3        0        4        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0       11        0
-    //  no simd        0       32        0
+    //      add/sub      mul      div
+    // f32        0       32        0
     fn bitxor(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9801,12 +8061,8 @@ impl std::ops::BitXorAssign<Scalar> for MultiVector {
 impl std::ops::BitXor<Sphere> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        6        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        4        7        0
-    //  no simd        4       10        0
+    //      add/sub      mul      div
+    // f32        4       10        0
     fn bitxor(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9837,12 +8093,8 @@ impl std::ops::BitXorAssign<SphereAtOrigin> for MultiVector {
 impl std::ops::BitXor<SphereOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        3        5        0
-    //  no simd        3        8        0
+    //      add/sub      mul      div
+    // f32        3        8        0
     fn bitxor(self, other: SphereOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9857,13 +8109,8 @@ impl std::ops::BitXorAssign<SphereOnOrigin> for MultiVector {
 impl std::ops::BitXor<VersorEven> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       44       61        0
-    //    simd3        6        8        0
-    //    simd4        7        9        0
-    // Totals...
-    // yes simd       57       78        0
-    //  no simd       90      121        0
+    //      add/sub      mul      div
+    // f32       90      121        0
     fn bitxor(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9878,13 +8125,8 @@ impl std::ops::BitXorAssign<VersorEven> for MultiVector {
 impl std::ops::BitXor<VersorEvenAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       27       45        0
-    //    simd3        2        5        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd       32       53        0
-    //  no simd       45       72        0
+    //      add/sub      mul      div
+    // f32       45       72        0
     fn bitxor(self, other: VersorEvenAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9899,13 +8141,8 @@ impl std::ops::BitXorAssign<VersorEvenAligningOrigin> for MultiVector {
 impl std::ops::BitXor<VersorEvenAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       35       55        0
-    //    simd3        4        6        0
-    //    simd4        4        5        0
-    // Totals...
-    // yes simd       43       66        0
-    //  no simd       63       93        0
+    //      add/sub      mul      div
+    // f32       63       93        0
     fn bitxor(self, other: VersorEvenAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9920,13 +8157,8 @@ impl std::ops::BitXorAssign<VersorEvenAtInfinity> for MultiVector {
 impl std::ops::BitXor<VersorEvenAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       18       36        0
-    //    simd3        2        5        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       22       43        0
-    //  no simd       32       59        0
+    //      add/sub      mul      div
+    // f32       32       59        0
     fn bitxor(self, other: VersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9941,13 +8173,8 @@ impl std::ops::BitXorAssign<VersorEvenAtOrigin> for MultiVector {
 impl std::ops::BitXor<VersorEvenOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       14       23        0
-    //    simd3        1        2        0
-    //    simd4        2        4        0
-    // Totals...
-    // yes simd       17       29        0
-    //  no simd       25       45        0
+    //      add/sub      mul      div
+    // f32       25       45        0
     fn bitxor(self, other: VersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9962,13 +8189,8 @@ impl std::ops::BitXorAssign<VersorEvenOnOrigin> for MultiVector {
 impl std::ops::BitXor<VersorEvenOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       39       56        0
-    //    simd3        6        8        0
-    //    simd4        5        7        0
-    // Totals...
-    // yes simd       50       71        0
-    //  no simd       77      108        0
+    //      add/sub      mul      div
+    // f32       77      108        0
     fn bitxor(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -9983,13 +8205,8 @@ impl std::ops::BitXorAssign<VersorEvenOrthogonalOrigin> for MultiVector {
 impl std::ops::BitXor<VersorOdd> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       44       62        0
-    //    simd3        6        8        0
-    //    simd4        7        9        0
-    // Totals...
-    // yes simd       57       79        0
-    //  no simd       90      122        0
+    //      add/sub      mul      div
+    // f32       90      122        0
     fn bitxor(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -10004,13 +8221,8 @@ impl std::ops::BitXorAssign<VersorOdd> for MultiVector {
 impl std::ops::BitXor<VersorOddAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       33       52        0
-    //    simd3        5        8        0
-    //    simd4        4        5        0
-    // Totals...
-    // yes simd       42       65        0
-    //  no simd       64       96        0
+    //      add/sub      mul      div
+    // f32       64       96        0
     fn bitxor(self, other: VersorOddAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -10025,13 +8237,8 @@ impl std::ops::BitXorAssign<VersorOddAtInfinity> for MultiVector {
 impl std::ops::BitXor<VersorOddOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       38       60        0
-    //    simd3        6        8        0
-    //    simd4        5        6        0
-    // Totals...
-    // yes simd       49       74        0
-    //  no simd       76      108        0
+    //      add/sub      mul      div
+    // f32       76      108        0
     fn bitxor(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -10039,170 +8246,6 @@ impl std::ops::BitXor<VersorOddOrthogonalOrigin> for MultiVector {
 }
 impl std::ops::BitXorAssign<VersorOddOrthogonalOrigin> for MultiVector {
     fn bitxor_assign(&mut self, other: VersorOddOrthogonalOrigin) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorRoundPoint> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       22       39        0
-    //    simd3        4        6        0
-    //    simd4        4        6        0
-    // Totals...
-    // yes simd       30       51        0
-    //  no simd       50       81        0
-    fn bitxor(self, other: VersorRoundPoint) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<VersorRoundPoint> for MultiVector {
-    fn bitxor_assign(&mut self, other: VersorRoundPoint) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorRoundPointAligningOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       28        0
-    //    simd3        0        3        0
-    // Totals...
-    // yes simd        9       31        0
-    //  no simd        9       37        0
-    fn bitxor(self, other: VersorRoundPointAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<VersorRoundPointAligningOrigin> for MultiVector {
-    fn bitxor_assign(&mut self, other: VersorRoundPointAligningOrigin) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1       11        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        1       13        0
-    //  no simd        1       17        0
-    fn bitxor(self, other: VersorRoundPointAligningOriginAtInfinity) -> Self::Output {
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<VersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    fn bitxor_assign(&mut self, other: VersorRoundPointAligningOriginAtInfinity) {
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorRoundPointAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       20       34        0
-    //    simd3        5        9        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd       25       44        0
-    //  no simd       35       65        0
-    fn bitxor(self, other: VersorRoundPointAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<VersorRoundPointAtInfinity> for MultiVector {
-    fn bitxor_assign(&mut self, other: VersorRoundPointAtInfinity) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorRoundPointOnOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        6        0
-    //    simd3        0        1        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        1       11        0
-    //  no simd        1       25        0
-    fn bitxor(self, other: VersorRoundPointOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<VersorRoundPointOnOrigin> for MultiVector {
-    fn bitxor_assign(&mut self, other: VersorRoundPointOnOrigin) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorSphere> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       10        0
-    //    simd3        0        4        0
-    //    simd4        1        5        0
-    // Totals...
-    // yes simd        7       19        0
-    //  no simd       10       42        0
-    fn bitxor(self, other: VersorSphere) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<VersorSphere> for MultiVector {
-    fn bitxor_assign(&mut self, other: VersorSphere) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorSphereAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       16        0
-    //    simd3        0        4        0
-    //    simd4        0        3        0
-    // Totals...
-    // yes simd        8       23        0
-    //  no simd        8       40        0
-    fn bitxor(self, other: VersorSphereAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<VersorSphereAtInfinity> for MultiVector {
-    fn bitxor_assign(&mut self, other: VersorSphereAtInfinity) {
-        use crate::elements::*;
-        *self = self.wedge(other);
-    }
-}
-impl std::ops::BitXor<VersorSphereOrthogonalOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       12        0
-    //    simd3        0        4        0
-    //    simd4        0        3        0
-    // Totals...
-    // yes simd        4       19        0
-    //  no simd        4       36        0
-    fn bitxor(self, other: VersorSphereOrthogonalOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.wedge(other);
-    }
-}
-impl std::ops::BitXorAssign<VersorSphereOrthogonalOrigin> for MultiVector {
-    fn bitxor_assign(&mut self, other: VersorSphereOrthogonalOrigin) {
         use crate::elements::*;
         *self = self.wedge(other);
     }
@@ -10578,6 +8621,36 @@ impl From<AntiDipoleOnOrigin> for MultiVector {
     }
 }
 
+impl From<AntiDualNum> for MultiVector {
+    fn from(anti_dual_num: AntiDualNum) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([anti_dual_num[scalar], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([anti_dual_num[e1234], 0.0, 0.0, 0.0]),
+            // e3215
+            0.0,
+        );
+    }
+}
+
 impl From<AntiFlatOrigin> for MultiVector {
     fn from(anti_flat_origin: AntiFlatOrigin) -> Self {
         use crate::elements::*;
@@ -10883,36 +8956,6 @@ impl From<AntiMysteryDipoleInversion> for MultiVector {
     }
 }
 
-impl From<AntiMysteryQuadNum> for MultiVector {
-    fn from(anti_mystery_quad_num: AntiMysteryQuadNum) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([anti_mystery_quad_num[scalar], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from([0.0, 0.0, 0.0, anti_mystery_quad_num[e45]]),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
-        );
-    }
-}
-
 impl From<AntiPlane> for MultiVector {
     fn from(anti_plane: AntiPlane) -> Self {
         use crate::elements::*;
@@ -10969,96 +9012,6 @@ impl From<AntiPlaneOnOrigin> for MultiVector {
             Simd32x4::from(0.0),
             // e3215
             0.0,
-        );
-    }
-}
-
-impl From<AntiQuadNum> for MultiVector {
-    fn from(anti_quad_num: AntiQuadNum) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([anti_quad_num[scalar], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from([0.0, 0.0, 0.0, anti_quad_num[e45]]),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([anti_quad_num[e1234], 0.0, 0.0, 0.0]),
-            // e3215
-            anti_quad_num[e3215],
-        );
-    }
-}
-
-impl From<AntiQuadNumAtInfinity> for MultiVector {
-    fn from(anti_quad_num_at_infinity: AntiQuadNumAtInfinity) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([anti_quad_num_at_infinity[scalar], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from([0.0, 0.0, 0.0, anti_quad_num_at_infinity[e45]]),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            anti_quad_num_at_infinity[e3215],
-        );
-    }
-}
-
-impl From<AntiQuadNumOrthogonalOrigin> for MultiVector {
-    fn from(anti_quad_num_orthogonal_origin: AntiQuadNumOrthogonalOrigin) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from(0.0),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from([0.0, 0.0, 0.0, anti_quad_num_orthogonal_origin[e45]]),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([anti_quad_num_orthogonal_origin[e1234], 0.0, 0.0, 0.0]),
-            // e3215
-            anti_quad_num_orthogonal_origin[e3215],
         );
     }
 }
@@ -11147,66 +9100,6 @@ impl From<AntiVersorEvenOnOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([anti_versor_even_on_origin[e1234], 0.0, 0.0, 0.0]),
-            // e3215
-            0.0,
-        );
-    }
-}
-
-impl From<AntiVersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    fn from(anti_versor_round_point_aligning_origin_at_infinity: AntiVersorRoundPointAligningOriginAtInfinity) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([anti_versor_round_point_aligning_origin_at_infinity[scalar], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            anti_versor_round_point_aligning_origin_at_infinity[e3215],
-        );
-    }
-}
-
-impl From<AntiVersorRoundPointOnOrigin> for MultiVector {
-    fn from(anti_versor_round_point_on_origin: AntiVersorRoundPointOnOrigin) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([anti_versor_round_point_on_origin[scalar], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([anti_versor_round_point_on_origin[e1234], 0.0, 0.0, 0.0]),
             // e3215
             0.0,
         );
@@ -11950,6 +9843,36 @@ impl From<DipoleOrthogonalOrigin> for MultiVector {
     }
 }
 
+impl From<DualNum> for MultiVector {
+    fn from(dual_num: DualNum) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, dual_num[e12345]]),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, dual_num[e4]]),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+    }
+}
+
 impl From<FlatOrigin> for MultiVector {
     fn from(flat_origin: FlatOrigin) -> Self {
         use crate::elements::*;
@@ -12490,36 +10413,6 @@ impl From<MysteryDipoleInversion> for MultiVector {
     }
 }
 
-impl From<MysteryQuadNum> for MultiVector {
-    fn from(mystery_quad_num: MysteryQuadNum) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([0.0, mystery_quad_num[e12345]]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, mystery_quad_num[e321]]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
-        );
-    }
-}
-
 impl From<MysteryVersorEven> for MultiVector {
     fn from(mystery_versor_even: MysteryVersorEven) -> Self {
         use crate::elements::*;
@@ -12574,66 +10467,6 @@ impl From<MysteryVersorOdd> for MultiVector {
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([0.0, mystery_versor_odd[e4235], mystery_versor_odd[e4315], mystery_versor_odd[e4125]]),
-            // e3215
-            0.0,
-        );
-    }
-}
-
-impl From<MysteryVersorRoundPoint> for MultiVector {
-    fn from(mystery_versor_round_point: MysteryVersorRoundPoint) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([0.0, mystery_versor_round_point[e12345]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([mystery_versor_round_point[e1], mystery_versor_round_point[e2], mystery_versor_round_point[e3], 0.0]),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
-        );
-    }
-}
-
-impl From<MysteryVersorSphere> for MultiVector {
-    fn from(mystery_versor_sphere: MysteryVersorSphere) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([mystery_versor_sphere[scalar], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([0.0, mystery_versor_sphere[e4235], mystery_versor_sphere[e4315], mystery_versor_sphere[e4125]]),
             // e3215
             0.0,
         );
@@ -12874,96 +10707,6 @@ impl From<PlaneOnOrigin> for MultiVector {
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([0.0, plane_on_origin[e4235], plane_on_origin[e4315], plane_on_origin[e4125]]),
-            // e3215
-            0.0,
-        );
-    }
-}
-
-impl From<QuadNum> for MultiVector {
-    fn from(quad_num: QuadNum) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([0.0, quad_num[e12345]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, quad_num[e4]]),
-            // e5
-            quad_num[e5],
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, quad_num[e321]]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
-        );
-    }
-}
-
-impl From<QuadNumAtInfinity> for MultiVector {
-    fn from(quad_num_at_infinity: QuadNumAtInfinity) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([0.0, quad_num_at_infinity[e12345]]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            quad_num_at_infinity[e5],
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, quad_num_at_infinity[e321]]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
-        );
-    }
-}
-
-impl From<QuadNumOrthogonalOrigin> for MultiVector {
-    fn from(quad_num_orthogonal_origin: QuadNumOrthogonalOrigin) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from(0.0),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, quad_num_orthogonal_origin[e4]]),
-            // e5
-            quad_num_orthogonal_origin[e5],
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, quad_num_orthogonal_origin[e321]]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
             // e3215
             0.0,
         );
@@ -13429,257 +11172,11 @@ impl From<VersorOddOrthogonalOrigin> for MultiVector {
         );
     }
 }
-
-impl From<VersorRoundPoint> for MultiVector {
-    fn from(versor_round_point: VersorRoundPoint) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([0.0, versor_round_point[e12345]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([versor_round_point[e1], versor_round_point[e2], versor_round_point[e3], versor_round_point[e4]]),
-            // e5
-            versor_round_point[e5],
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
-        );
-    }
-}
-
-impl From<VersorRoundPointAligningOrigin> for MultiVector {
-    fn from(versor_round_point_aligning_origin: VersorRoundPointAligningOrigin) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([0.0, versor_round_point_aligning_origin[e12345]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, versor_round_point_aligning_origin[e4]]),
-            // e5
-            versor_round_point_aligning_origin[e5],
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
-        );
-    }
-}
-
-impl From<VersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    fn from(versor_round_point_aligning_origin_at_infinity: VersorRoundPointAligningOriginAtInfinity) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([0.0, versor_round_point_aligning_origin_at_infinity[e12345]]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            versor_round_point_aligning_origin_at_infinity[e5],
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
-        );
-    }
-}
-
-impl From<VersorRoundPointAtInfinity> for MultiVector {
-    fn from(versor_round_point_at_infinity: VersorRoundPointAtInfinity) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([0.0, versor_round_point_at_infinity[e12345]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([versor_round_point_at_infinity[e1], versor_round_point_at_infinity[e2], versor_round_point_at_infinity[e3], 0.0]),
-            // e5
-            versor_round_point_at_infinity[e5],
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
-        );
-    }
-}
-
-impl From<VersorRoundPointOnOrigin> for MultiVector {
-    fn from(versor_round_point_on_origin: VersorRoundPointOnOrigin) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([0.0, versor_round_point_on_origin[e12345]]),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, versor_round_point_on_origin[e4]]),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
-        );
-    }
-}
-
-impl From<VersorSphere> for MultiVector {
-    fn from(versor_sphere: VersorSphere) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([versor_sphere[scalar], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([versor_sphere[e1234], versor_sphere[e4235], versor_sphere[e4315], versor_sphere[e4125]]),
-            // e3215
-            versor_sphere[e3215],
-        );
-    }
-}
-
-impl From<VersorSphereAtInfinity> for MultiVector {
-    fn from(versor_sphere_at_infinity: VersorSphereAtInfinity) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([versor_sphere_at_infinity[scalar], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([0.0, versor_sphere_at_infinity[e4235], versor_sphere_at_infinity[e4315], versor_sphere_at_infinity[e4125]]),
-            // e3215
-            versor_sphere_at_infinity[e3215],
-        );
-    }
-}
-
-impl From<VersorSphereOrthogonalOrigin> for MultiVector {
-    fn from(versor_sphere_orthogonal_origin: VersorSphereOrthogonalOrigin) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([versor_sphere_orthogonal_origin[scalar], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([versor_sphere_orthogonal_origin[e1234], 0.0, 0.0, 0.0]),
-            // e3215
-            versor_sphere_orthogonal_origin[e3215],
-        );
-    }
-}
 impl std::ops::Mul<AntiCircleOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       79       97        0
-    //    simd2        5        6        0
-    //    simd3       17       21        0
-    //    simd4        5        5        0
-    // Totals...
-    // yes simd      106      129        0
-    //  no simd      160      192        0
+    //      add/sub      mul      div
+    // f32      160      192        0
     fn mul(self, other: AntiCircleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -13694,14 +11191,8 @@ impl std::ops::MulAssign<AntiCircleOnOrigin> for MultiVector {
 impl std::ops::Mul<AntiCircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      101      128        0
-    //    simd2       10       12        0
-    //    simd3       37       38        0
-    //    simd4       22       22        0
-    // Totals...
-    // yes simd      170      200        0
-    //  no simd      320      354        0
+    //      add/sub      mul      div
+    // f32      320      352        0
     fn mul(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -13716,14 +11207,8 @@ impl std::ops::MulAssign<AntiCircleRotor> for MultiVector {
 impl std::ops::Mul<AntiCircleRotorAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      119      146        0
-    //    simd2        9       10        0
-    //    simd3       33       34        0
-    //    simd4       13       13        0
-    // Totals...
-    // yes simd      174      203        0
-    //  no simd      288      320        0
+    //      add/sub      mul      div
+    // f32      288      320        0
     fn mul(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -13738,14 +11223,8 @@ impl std::ops::MulAssign<AntiCircleRotorAligningOrigin> for MultiVector {
 impl std::ops::Mul<AntiCircleRotorAligningOriginAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       80      107        0
-    //    simd2        6        7        0
-    //    simd3       24       25        0
-    //    simd4        7        7        0
-    // Totals...
-    // yes simd      117      146        0
-    //  no simd      192      224        0
+    //      add/sub      mul      div
+    // f32      192      224        0
     fn mul(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -13760,14 +11239,8 @@ impl std::ops::MulAssign<AntiCircleRotorAligningOriginAtInfinity> for MultiVecto
 impl std::ops::Mul<AntiCircleRotorAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       62       91        0
-    //    simd2        7        9        0
-    //    simd3       28       29        0
-    //    simd4       16       16        0
-    // Totals...
-    // yes simd      113      145        0
-    //  no simd      224      260        0
+    //      add/sub      mul      div
+    // f32      224      256        0
     fn mul(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -13782,14 +11255,8 @@ impl std::ops::MulAssign<AntiCircleRotorAtInfinity> for MultiVector {
 impl std::ops::Mul<AntiCircleRotorOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       58       79        0
-    //    simd2        6        7        0
-    //    simd3       18       21        0
-    //    simd4       17       17        0
-    // Totals...
-    // yes simd       99      124        0
-    //  no simd      192      224        0
+    //      add/sub      mul      div
+    // f32      192      224        0
     fn mul(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -13804,14 +11271,8 @@ impl std::ops::MulAssign<AntiCircleRotorOnOrigin> for MultiVector {
 impl std::ops::Mul<AntiDipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      146      178        0
-    //    simd2        4        4        0
-    //    simd3       50       50        0
-    //    simd4       36       36        0
-    // Totals...
-    // yes simd      236      268        0
-    //  no simd      448      480        0
+    //      add/sub      mul      div
+    // f32      448      480        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -13826,14 +11287,8 @@ impl std::ops::MulAssign<AntiDipoleInversion> for MultiVector {
 impl std::ops::Mul<AntiDipoleInversionAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       96      123        0
-    //    simd2        4        4        0
-    //    simd3       40       42        0
-    //    simd4       24       24        0
-    // Totals...
-    // yes simd      164      193        0
-    //  no simd      320      353        0
+    //      add/sub      mul      div
+    // f32      320      352        0
     fn mul(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -13848,14 +11303,8 @@ impl std::ops::MulAssign<AntiDipoleInversionAtInfinity> for MultiVector {
 impl std::ops::Mul<AntiDipoleInversionOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       64       93        0
-    //    simd2        4        4        0
-    //    simd3       20       22        0
-    //    simd4       23       23        0
-    // Totals...
-    // yes simd      111      142        0
-    //  no simd      224      259        0
+    //      add/sub      mul      div
+    // f32      224      256        0
     fn mul(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -13870,13 +11319,8 @@ impl std::ops::MulAssign<AntiDipoleInversionOnOrigin> for MultiVector {
 impl std::ops::Mul<AntiDipoleInversionOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      101      130        0
-    //    simd3       37       38        0
-    //    simd4       27       27        0
-    // Totals...
-    // yes simd      165      195        0
-    //  no simd      320      352        0
+    //      add/sub      mul      div
+    // f32      320      352        0
     fn mul(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -13891,14 +11335,8 @@ impl std::ops::MulAssign<AntiDipoleInversionOrthogonalOrigin> for MultiVector {
 impl std::ops::Mul<AntiDipoleOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       29       50        0
-    //    simd2        1        1        0
-    //    simd3        8       12        0
-    //    simd4       11       11        0
-    // Totals...
-    // yes simd       49       74        0
-    //  no simd       99      132        0
+    //      add/sub      mul      div
+    // f32       96      132        0
     fn mul(self, other: AntiDipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -13910,17 +11348,27 @@ impl std::ops::MulAssign<AntiDipoleOnOrigin> for MultiVector {
         *self = self.geometric_product(other);
     }
 }
+impl std::ops::Mul<AntiDualNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32       32       64        0
+    fn mul(self, other: AntiDualNum) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiDualNum> for MultiVector {
+    fn mul_assign(&mut self, other: AntiDualNum) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
 impl std::ops::Mul<AntiFlatOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd2        0        2        0
-    //    simd3        0        7        0
-    //    simd4        0        6        0
-    // Totals...
-    // yes simd        0       18        0
-    //  no simd        0       52        0
+    //      add/sub      mul      div
+    // f32        0       48        0
     fn mul(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -13935,14 +11383,8 @@ impl std::ops::MulAssign<AntiFlatOrigin> for MultiVector {
 impl std::ops::Mul<AntiFlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       43       66        0
-    //    simd2        1        1        0
-    //    simd3       13       16        0
-    //    simd4        3        5        0
-    // Totals...
-    // yes simd       60       88        0
-    //  no simd       96      136        0
+    //      add/sub      mul      div
+    // f32       96      132        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -13957,14 +11399,8 @@ impl std::ops::MulAssign<AntiFlatPoint> for MultiVector {
 impl std::ops::Mul<AntiFlector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       73      104        0
-    //    simd2        4        4        0
-    //    simd3       28       28        0
-    //    simd4       15       15        0
-    // Totals...
-    // yes simd      120      151        0
-    //  no simd      225      256        0
+    //      add/sub      mul      div
+    // f32      224      256        0
     fn mul(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -13979,14 +11415,8 @@ impl std::ops::MulAssign<AntiFlector> for MultiVector {
 impl std::ops::Mul<AntiFlectorOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       20       36        0
-    //    simd2        3        4        0
-    //    simd3       10       12        0
-    //    simd4       10       12        0
-    // Totals...
-    // yes simd       43       64        0
-    //  no simd       96      128        0
+    //      add/sub      mul      div
+    // f32       96      128        0
     fn mul(self, other: AntiFlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14001,14 +11431,8 @@ impl std::ops::MulAssign<AntiFlectorOnOrigin> for MultiVector {
 impl std::ops::Mul<AntiLine> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       73       91        0
-    //    simd2        5        6        0
-    //    simd3       23       27        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd      103      126        0
-    //  no simd      160      192        0
+    //      add/sub      mul      div
+    // f32      160      192        0
     fn mul(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14023,13 +11447,8 @@ impl std::ops::MulAssign<AntiLine> for MultiVector {
 impl std::ops::Mul<AntiLineOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       36       54        0
-    //    simd2        2        3        0
-    //    simd3        8       12        0
-    // Totals...
-    // yes simd       46       69        0
-    //  no simd       64       96        0
+    //      add/sub      mul      div
+    // f32       64       96        0
     fn mul(self, other: AntiLineOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14044,14 +11463,8 @@ impl std::ops::MulAssign<AntiLineOnOrigin> for MultiVector {
 impl std::ops::Mul<AntiMotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       72       98        0
-    //    simd2        7        8        0
-    //    simd3       29       30        0
-    //    simd4       13       13        0
-    // Totals...
-    // yes simd      121      149        0
-    //  no simd      225      256        0
+    //      add/sub      mul      div
+    // f32      224      256        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14066,14 +11479,8 @@ impl std::ops::MulAssign<AntiMotor> for MultiVector {
 impl std::ops::Mul<AntiMotorOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       22       40        0
-    //    simd2        3        4        0
-    //    simd3       12       16        0
-    //    simd4        8        8        0
-    // Totals...
-    // yes simd       45       68        0
-    //  no simd       96      128        0
+    //      add/sub      mul      div
+    // f32       96      128        0
     fn mul(self, other: AntiMotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14088,14 +11495,8 @@ impl std::ops::MulAssign<AntiMotorOnOrigin> for MultiVector {
 impl std::ops::Mul<AntiMysteryCircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       20       38        0
-    //    simd2        4        6        0
-    //    simd3       16       20        0
-    //    simd4       13       14        0
-    // Totals...
-    // yes simd       53       78        0
-    //  no simd      128      166        0
+    //      add/sub      mul      div
+    // f32      128      160        0
     fn mul(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14110,14 +11511,8 @@ impl std::ops::MulAssign<AntiMysteryCircleRotor> for MultiVector {
 impl std::ops::Mul<AntiMysteryDipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       74      100        0
-    //    simd2        4        4        0
-    //    simd3       22       24        0
-    //    simd4       11       11        0
-    // Totals...
-    // yes simd      111      139        0
-    //  no simd      192      224        0
+    //      add/sub      mul      div
+    // f32      192      224        0
     fn mul(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14129,39 +11524,11 @@ impl std::ops::MulAssign<AntiMysteryDipoleInversion> for MultiVector {
         *self = self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiMysteryQuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        8        0
-    //    simd2        1        3        0
-    //    simd3        4        8        0
-    //    simd4        4        8        0
-    // Totals...
-    // yes simd       11       27        0
-    //  no simd       32       70        0
-    fn mul(self, other: AntiMysteryQuadNum) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<AntiMysteryQuadNum> for MultiVector {
-    fn mul_assign(&mut self, other: AntiMysteryQuadNum) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
 impl std::ops::Mul<AntiPlane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       22       44        0
-    //    simd2        3        5        0
-    //    simd3       11       13        0
-    //    simd4        9       11        0
-    // Totals...
-    // yes simd       45       73        0
-    //  no simd       97      137        0
+    //      add/sub      mul      div
+    // f32       96      128        0
     fn mul(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14176,13 +11543,8 @@ impl std::ops::MulAssign<AntiPlane> for MultiVector {
 impl std::ops::Mul<AntiPlaneOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       36       54        0
-    //    simd2        2        3        0
-    //    simd3        8       12        0
-    // Totals...
-    // yes simd       46       69        0
-    //  no simd       64       96        0
+    //      add/sub      mul      div
+    // f32       64       96        0
     fn mul(self, other: AntiPlaneOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14194,83 +11556,11 @@ impl std::ops::MulAssign<AntiPlaneOnOrigin> for MultiVector {
         *self = self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiQuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       10       16        0
-    //    simd2        3        5        0
-    //    simd3       12       16        0
-    //    simd4       11       15        0
-    // Totals...
-    // yes simd       36       52        0
-    //  no simd       96      134        0
-    fn mul(self, other: AntiQuadNum) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<AntiQuadNum> for MultiVector {
-    fn mul_assign(&mut self, other: AntiQuadNum) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<AntiQuadNumAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        9       23        0
-    //    simd2        2        4        0
-    //    simd3        9       13        0
-    //    simd4        7        8        0
-    // Totals...
-    // yes simd       27       48        0
-    //  no simd       68      102        0
-    fn mul(self, other: AntiQuadNumAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<AntiQuadNumAtInfinity> for MultiVector {
-    fn mul_assign(&mut self, other: AntiQuadNumAtInfinity) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<AntiQuadNumOrthogonalOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       12       18        0
-    //    simd2        2        4        0
-    //    simd3        8       12        0
-    //    simd4        6       10        0
-    // Totals...
-    // yes simd       28       44        0
-    //  no simd       64      102        0
-    fn mul(self, other: AntiQuadNumOrthogonalOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<AntiQuadNumOrthogonalOrigin> for MultiVector {
-    fn mul_assign(&mut self, other: AntiQuadNumOrthogonalOrigin) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
 impl std::ops::Mul<AntiScalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd2        0        2        0
-    //    simd3        0        6        0
-    //    simd4        0        8        0
-    // Totals...
-    // yes simd        0       19        0
-    //  no simd        0       57        0
+    //      add/sub      mul      div
+    // f32        0       48        0
     fn mul(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14285,14 +11575,8 @@ impl std::ops::MulAssign<AntiScalar> for MultiVector {
 impl std::ops::Mul<AntiSphereOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       23       51        0
-    //    simd2        3        5        0
-    //    simd3        9       11        0
-    //    simd4       10       10        0
-    // Totals...
-    // yes simd       45       77        0
-    //  no simd       96      134        0
+    //      add/sub      mul      div
+    // f32       96      128        0
     fn mul(self, other: AntiSphereOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14307,14 +11591,8 @@ impl std::ops::MulAssign<AntiSphereOnOrigin> for MultiVector {
 impl std::ops::Mul<AntiVersorEvenOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       43       65        0
-    //    simd2        7        8        0
-    //    simd3       21       24        0
-    //    simd4       26       26        0
-    // Totals...
-    // yes simd       97      123        0
-    //  no simd      224      257        0
+    //      add/sub      mul      div
+    // f32      224      256        0
     fn mul(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14326,61 +11604,11 @@ impl std::ops::MulAssign<AntiVersorEvenOnOrigin> for MultiVector {
         *self = self.geometric_product(other);
     }
 }
-impl std::ops::Mul<AntiVersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       11       25        0
-    //    simd2        1        2        0
-    //    simd3        5        9        0
-    //    simd4        1        2        0
-    // Totals...
-    // yes simd       18       38        0
-    //  no simd       32       64        0
-    fn mul(self, other: AntiVersorRoundPointAligningOriginAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<AntiVersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    fn mul_assign(&mut self, other: AntiVersorRoundPointAligningOriginAtInfinity) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<AntiVersorRoundPointOnOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1       18        0
-    //    simd2        1        2        0
-    //    simd3        3        7        0
-    //    simd4        6        8        0
-    // Totals...
-    // yes simd       11       35        0
-    //  no simd       36       75        0
-    fn mul(self, other: AntiVersorRoundPointOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<AntiVersorRoundPointOnOrigin> for MultiVector {
-    fn mul_assign(&mut self, other: AntiVersorRoundPointOnOrigin) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
 impl std::ops::Mul<Circle> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      116      142        0
-    //    simd2        1        1        0
-    //    simd3       34       36        0
-    //    simd4       17       17        0
-    // Totals...
-    // yes simd      168      196        0
-    //  no simd      288      320        0
+    //      add/sub      mul      div
+    // f32      288      320        0
     fn mul(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14395,13 +11623,8 @@ impl std::ops::MulAssign<Circle> for MultiVector {
 impl std::ops::Mul<CircleAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      116      136        0
-    //    simd3       32       36        0
-    //    simd4       11       11        0
-    // Totals...
-    // yes simd      159      183        0
-    //  no simd      256      288        0
+    //      add/sub      mul      div
+    // f32      256      288        0
     fn mul(self, other: CircleAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14416,14 +11639,8 @@ impl std::ops::MulAssign<CircleAligningOrigin> for MultiVector {
 impl std::ops::Mul<CircleAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       60       86        0
-    //    simd2        1        1        0
-    //    simd3       25       27        0
-    //    simd4       14       14        0
-    // Totals...
-    // yes simd      100      128        0
-    //  no simd      193      225        0
+    //      add/sub      mul      div
+    // f32      192      224        0
     fn mul(self, other: CircleAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14438,13 +11655,8 @@ impl std::ops::MulAssign<CircleAtInfinity> for MultiVector {
 impl std::ops::Mul<CircleAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       88      108        0
-    //    simd3       20       24        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd      111      135        0
-    //  no simd      160      192        0
+    //      add/sub      mul      div
+    // f32      160      192        0
     fn mul(self, other: CircleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14459,13 +11671,8 @@ impl std::ops::MulAssign<CircleAtOrigin> for MultiVector {
 impl std::ops::Mul<CircleOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       85      105        0
-    //    simd3       17       21        0
-    //    simd4        6        6        0
-    // Totals...
-    // yes simd      108      132        0
-    //  no simd      160      192        0
+    //      add/sub      mul      div
+    // f32      160      192        0
     fn mul(self, other: CircleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14480,14 +11687,8 @@ impl std::ops::MulAssign<CircleOnOrigin> for MultiVector {
 impl std::ops::Mul<CircleOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       65       88        0
-    //    simd2        1        1        0
-    //    simd3       23       26        0
-    //    simd4       14       14        0
-    // Totals...
-    // yes simd      103      129        0
-    //  no simd      192      224        0
+    //      add/sub      mul      div
+    // f32      192      224        0
     fn mul(self, other: CircleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14502,14 +11703,8 @@ impl std::ops::MulAssign<CircleOrthogonalOrigin> for MultiVector {
 impl std::ops::Mul<CircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      122      154        0
-    //    simd2        1        1        0
-    //    simd3       36       36        0
-    //    simd4       22       22        0
-    // Totals...
-    // yes simd      181      213        0
-    //  no simd      320      352        0
+    //      add/sub      mul      div
+    // f32      320      352        0
     fn mul(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14524,13 +11719,8 @@ impl std::ops::MulAssign<CircleRotor> for MultiVector {
 impl std::ops::Mul<CircleRotorAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      126      152        0
-    //    simd3       34       36        0
-    //    simd4       15       15        0
-    // Totals...
-    // yes simd      175      203        0
-    //  no simd      288      320        0
+    //      add/sub      mul      div
+    // f32      288      320        0
     fn mul(self, other: CircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14545,13 +11735,8 @@ impl std::ops::MulAssign<CircleRotorAligningOrigin> for MultiVector {
 impl std::ops::Mul<CircleRotorAligningOriginAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       85      112        0
-    //    simd3       25       27        0
-    //    simd4        8        8        0
-    // Totals...
-    // yes simd      118      147        0
-    //  no simd      192      225        0
+    //      add/sub      mul      div
+    // f32      192      224        0
     fn mul(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14566,14 +11751,8 @@ impl std::ops::MulAssign<CircleRotorAligningOriginAtInfinity> for MultiVector {
 impl std::ops::Mul<CircleRotorAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       71      101        0
-    //    simd2        1        1        0
-    //    simd3       27       27        0
-    //    simd4       18       18        0
-    // Totals...
-    // yes simd      117      147        0
-    //  no simd      226      256        0
+    //      add/sub      mul      div
+    // f32      224      256        0
     fn mul(self, other: CircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14588,13 +11767,8 @@ impl std::ops::MulAssign<CircleRotorAtInfinity> for MultiVector {
 impl std::ops::Mul<CircleRotorOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       56       82        0
-    //    simd3       20       23        0
-    //    simd4       19       19        0
-    // Totals...
-    // yes simd       95      124        0
-    //  no simd      192      227        0
+    //      add/sub      mul      div
+    // f32      192      224        0
     fn mul(self, other: CircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14609,14 +11783,8 @@ impl std::ops::MulAssign<CircleRotorOnOrigin> for MultiVector {
 impl std::ops::Mul<Dipole> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       98      116        0
-    //    simd2        9       11        0
-    //    simd3       36       40        0
-    //    simd4       16       16        0
-    // Totals...
-    // yes simd      159      183        0
-    //  no simd      288      322        0
+    //      add/sub      mul      div
+    // f32      288      320        0
     fn mul(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14631,14 +11799,8 @@ impl std::ops::MulAssign<Dipole> for MultiVector {
 impl std::ops::Mul<DipoleAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       53       74        0
-    //    simd2        6        8        0
-    //    simd3       21       24        0
-    //    simd4       16       16        0
-    // Totals...
-    // yes simd       96      122        0
-    //  no simd      192      226        0
+    //      add/sub      mul      div
+    // f32      192      224        0
     fn mul(self, other: DipoleAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14653,14 +11815,8 @@ impl std::ops::MulAssign<DipoleAligningOrigin> for MultiVector {
 impl std::ops::Mul<DipoleAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       55       75        0
-    //    simd2        6        8        0
-    //    simd3       27       31        0
-    //    simd4       11       11        0
-    // Totals...
-    // yes simd       99      125        0
-    //  no simd      192      228        0
+    //      add/sub      mul      div
+    // f32      192      224        0
     fn mul(self, other: DipoleAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14675,14 +11831,8 @@ impl std::ops::MulAssign<DipoleAtInfinity> for MultiVector {
 impl std::ops::Mul<DipoleAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       78       96        0
-    //    simd2        5        6        0
-    //    simd3       20       24        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd      106      129        0
-    //  no simd      160      192        0
+    //      add/sub      mul      div
+    // f32      160      192        0
     fn mul(self, other: DipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14697,14 +11847,8 @@ impl std::ops::MulAssign<DipoleAtOrigin> for MultiVector {
 impl std::ops::Mul<DipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      141      170        0
-    //    simd2       11       11        0
-    //    simd3       51       52        0
-    //    simd4       33       33        0
-    // Totals...
-    // yes simd      236      266        0
-    //  no simd      448      480        0
+    //      add/sub      mul      div
+    // f32      448      480        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14719,14 +11863,8 @@ impl std::ops::MulAssign<DipoleInversion> for MultiVector {
 impl std::ops::Mul<DipoleInversionAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      100      132        0
-    //    simd2        8        8        0
-    //    simd3       36       36        0
-    //    simd4       32       32        0
-    // Totals...
-    // yes simd      176      208        0
-    //  no simd      352      384        0
+    //      add/sub      mul      div
+    // f32      352      384        0
     fn mul(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14741,14 +11879,8 @@ impl std::ops::MulAssign<DipoleInversionAligningOrigin> for MultiVector {
 impl std::ops::Mul<DipoleInversionAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       89      112        0
-    //    simd2        7        7        0
-    //    simd3       43       46        0
-    //    simd4       22       22        0
-    // Totals...
-    // yes simd      161      187        0
-    //  no simd      320      352        0
+    //      add/sub      mul      div
+    // f32      320      352        0
     fn mul(self, other: DipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14763,14 +11895,8 @@ impl std::ops::MulAssign<DipoleInversionAtInfinity> for MultiVector {
 impl std::ops::Mul<DipoleInversionAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       64       94        0
-    //    simd2        7        8        0
-    //    simd3       22       22        0
-    //    simd4       20       20        0
-    // Totals...
-    // yes simd      113      144        0
-    //  no simd      224      256        0
+    //      add/sub      mul      div
+    // f32      224      256        0
     fn mul(self, other: DipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14785,14 +11911,8 @@ impl std::ops::MulAssign<DipoleInversionAtOrigin> for MultiVector {
 impl std::ops::Mul<DipoleInversionOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       51       75        0
-    //    simd2        4        4        0
-    //    simd3       20       22        0
-    //    simd4       27       27        0
-    // Totals...
-    // yes simd      102      128        0
-    //  no simd      227      257        0
+    //      add/sub      mul      div
+    // f32      224      256        0
     fn mul(self, other: DipoleInversionOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14807,14 +11927,8 @@ impl std::ops::MulAssign<DipoleInversionOnOrigin> for MultiVector {
 impl std::ops::Mul<DipoleInversionOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      102      132        0
-    //    simd2       10       11        0
-    //    simd3       34       34        0
-    //    simd4       24       24        0
-    // Totals...
-    // yes simd      170      201        0
-    //  no simd      320      352        0
+    //      add/sub      mul      div
+    // f32      320      352        0
     fn mul(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14829,14 +11943,8 @@ impl std::ops::MulAssign<DipoleInversionOrthogonalOrigin> for MultiVector {
 impl std::ops::Mul<DipoleOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       19       31        0
-    //    simd2        3        5        0
-    //    simd3        6       11        0
-    //    simd4       15       17        0
-    // Totals...
-    // yes simd       43       64        0
-    //  no simd      103      142        0
+    //      add/sub      mul      div
+    // f32       96      136        0
     fn mul(self, other: DipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14851,14 +11959,8 @@ impl std::ops::MulAssign<DipoleOnOrigin> for MultiVector {
 impl std::ops::Mul<DipoleOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      116      134        0
-    //    simd2        8        9        0
-    //    simd3       32       36        0
-    //    simd4        7        7        0
-    // Totals...
-    // yes simd      163      186        0
-    //  no simd      256      288        0
+    //      add/sub      mul      div
+    // f32      256      288        0
     fn mul(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14870,17 +11972,27 @@ impl std::ops::MulAssign<DipoleOrthogonalOrigin> for MultiVector {
         *self = self.geometric_product(other);
     }
 }
+impl std::ops::Mul<DualNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32       32       68        0
+    fn mul(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<DualNum> for MultiVector {
+    fn mul_assign(&mut self, other: DualNum) {
+        use crate::elements::*;
+        *self = self.geometric_product(other);
+    }
+}
 impl std::ops::Mul<FlatOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd2        0        2        0
-    //    simd3        0        6        0
-    //    simd4        0        6        0
-    // Totals...
-    // yes simd        0       18        0
-    //  no simd        0       50        0
+    //      add/sub      mul      div
+    // f32        0       48        0
     fn mul(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14895,14 +12007,8 @@ impl std::ops::MulAssign<FlatOrigin> for MultiVector {
 impl std::ops::Mul<FlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       46       73        0
-    //    simd2        3        5        0
-    //    simd3       12       13        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       63       93        0
-    //  no simd       96      130        0
+    //      add/sub      mul      div
+    // f32       96      128        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14917,13 +12023,8 @@ impl std::ops::MulAssign<FlatPoint> for MultiVector {
 impl std::ops::Mul<FlatPointAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       32       45        0
-    //    simd2        2        3        0
-    //    simd3       12       15        0
-    // Totals...
-    // yes simd       46       63        0
-    //  no simd       72       96        0
+    //      add/sub      mul      div
+    // f32       72       96        0
     fn mul(self, other: FlatPointAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -14936,14 +12037,8 @@ impl std::ops::MulAssign<FlatPointAtInfinity> for MultiVector {
 impl std::ops::Mul<Flector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       76      105        0
-    //    simd2        4        4        0
-    //    simd3       27       28        0
-    //    simd4       15       15        0
-    // Totals...
-    // yes simd      122      152        0
-    //  no simd      225      257        0
+    //      add/sub      mul      div
+    // f32      224      256        0
     fn mul(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14958,14 +12053,8 @@ impl std::ops::MulAssign<Flector> for MultiVector {
 impl std::ops::Mul<FlectorAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       48       70        0
-    //    simd2        3        4        0
-    //    simd3       14       14        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       67       90        0
-    //  no simd      104      128        0
+    //      add/sub      mul      div
+    // f32      104      128        0
     fn mul(self, other: FlectorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -14978,13 +12067,8 @@ impl std::ops::MulAssign<FlectorAtInfinity> for MultiVector {
 impl std::ops::Mul<FlectorOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       27       46        0
-    //    simd3       11       14        0
-    //    simd4        9       10        0
-    // Totals...
-    // yes simd       47       70        0
-    //  no simd       96      128        0
+    //      add/sub      mul      div
+    // f32       96      128        0
     fn mul(self, other: FlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -14999,14 +12083,8 @@ impl std::ops::MulAssign<FlectorOnOrigin> for MultiVector {
 impl std::ops::Mul<Horizon> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2       15        0
-    //    simd2        0        1        0
-    //    simd3        2        5        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        4       22        0
-    //  no simd        8       36        0
+    //      add/sub      mul      div
+    // f32        8       36        0
     fn mul(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15021,14 +12099,8 @@ impl std::ops::MulAssign<Horizon> for MultiVector {
 impl std::ops::Mul<Infinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2       11        0
-    //    simd2        0        2        0
-    //    simd3        2        6        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        4       20        0
-    //  no simd        8       37        0
+    //      add/sub      mul      div
+    // f32        8       36        0
     fn mul(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15043,13 +12115,8 @@ impl std::ops::MulAssign<Infinity> for MultiVector {
 impl std::ops::Mul<Line> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       71       92        0
-    //    simd3       23       27        0
-    //    simd4        5        5        0
-    // Totals...
-    // yes simd       99      124        0
-    //  no simd      160      193        0
+    //      add/sub      mul      div
+    // f32      160      192        0
     fn mul(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15064,13 +12131,8 @@ impl std::ops::MulAssign<Line> for MultiVector {
 impl std::ops::Mul<LineAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       32       47        0
-    //    simd3       12       15        0
-    //    simd4        1        1        0
-    // Totals...
-    // yes simd       45       63        0
-    //  no simd       72       96        0
+    //      add/sub      mul      div
+    // f32       72       96        0
     fn mul(self, other: LineAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -15083,13 +12145,8 @@ impl std::ops::MulAssign<LineAtInfinity> for MultiVector {
 impl std::ops::Mul<LineOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       32       52        0
-    //    simd3        8       12        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       42       66        0
-    //  no simd       64       96        0
+    //      add/sub      mul      div
+    // f32       64       96        0
     fn mul(self, other: LineOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15104,13 +12161,8 @@ impl std::ops::MulAssign<LineOnOrigin> for MultiVector {
 impl std::ops::Mul<Motor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       73      100        0
-    //    simd3       28       28        0
-    //    simd4       18       18        0
-    // Totals...
-    // yes simd      119      146        0
-    //  no simd      229      256        0
+    //      add/sub      mul      div
+    // f32      224      256        0
     fn mul(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15125,13 +12177,8 @@ impl std::ops::MulAssign<Motor> for MultiVector {
 impl std::ops::Mul<MotorAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       51       72        0
-    //    simd3       15       16        0
-    //    simd4        2        2        0
-    // Totals...
-    // yes simd       68       90        0
-    //  no simd      104      128        0
+    //      add/sub      mul      div
+    // f32      104      128        0
     fn mul(self, other: MotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -15144,13 +12191,8 @@ impl std::ops::MulAssign<MotorAtInfinity> for MultiVector {
 impl std::ops::Mul<MotorOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       18       28        0
-    //    simd3       10       12        0
-    //    simd4       12       16        0
-    // Totals...
-    // yes simd       40       56        0
-    //  no simd       96      128        0
+    //      add/sub      mul      div
+    // f32       96      128        0
     fn mul(self, other: MotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15165,14 +12207,8 @@ impl std::ops::MulAssign<MotorOnOrigin> for MultiVector {
 impl std::ops::Mul<MultiVector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      294      320        0
-    //    simd2       16       16        0
-    //    simd3      114      116        0
-    //    simd4       81       81        0
-    // Totals...
-    // yes simd      505      533        0
-    //  no simd      992     1024        0
+    //      add/sub      mul      div
+    // f32      992     1024        0
     fn mul(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15187,14 +12223,8 @@ impl std::ops::MulAssign<MultiVector> for MultiVector {
 impl std::ops::Mul<MysteryCircle> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       24       42        0
-    //    simd2        1        1        0
-    //    simd3       10       12        0
-    //    simd4       10       14        0
-    // Totals...
-    // yes simd       45       69        0
-    //  no simd       96      136        0
+    //      add/sub      mul      div
+    // f32       96      128        0
     fn mul(self, other: MysteryCircle) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15209,14 +12239,8 @@ impl std::ops::MulAssign<MysteryCircle> for MultiVector {
 impl std::ops::Mul<MysteryCircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       36       58        0
-    //    simd2        1        1        0
-    //    simd3       14       16        0
-    //    simd4       12       13        0
-    // Totals...
-    // yes simd       63       88        0
-    //  no simd      128      160        0
+    //      add/sub      mul      div
+    // f32      128      160        0
     fn mul(self, other: MysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15231,14 +12255,8 @@ impl std::ops::MulAssign<MysteryCircleRotor> for MultiVector {
 impl std::ops::Mul<MysteryDipole> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       18       32        0
-    //    simd2        3        5        0
-    //    simd3       12       16        0
-    //    simd4        9       11        0
-    // Totals...
-    // yes simd       42       64        0
-    //  no simd       96      134        0
+    //      add/sub      mul      div
+    // f32       96      128        0
     fn mul(self, other: MysteryDipole) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15253,14 +12271,8 @@ impl std::ops::MulAssign<MysteryDipole> for MultiVector {
 impl std::ops::Mul<MysteryDipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       70       90        0
-    //    simd2        3        3        0
-    //    simd3       24       28        0
-    //    simd4       11       11        0
-    // Totals...
-    // yes simd      108      132        0
-    //  no simd      192      224        0
+    //      add/sub      mul      div
+    // f32      192      224        0
     fn mul(self, other: MysteryDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15272,39 +12284,11 @@ impl std::ops::MulAssign<MysteryDipoleInversion> for MultiVector {
         *self = self.geometric_product(other);
     }
 }
-impl std::ops::Mul<MysteryQuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       16        0
-    //    simd2        1        3        0
-    //    simd3        4        8        0
-    //    simd4        3        7        0
-    // Totals...
-    // yes simd       14       34        0
-    //  no simd       32       74        0
-    fn mul(self, other: MysteryQuadNum) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<MysteryQuadNum> for MultiVector {
-    fn mul_assign(&mut self, other: MysteryQuadNum) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
 impl std::ops::Mul<MysteryVersorEven> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       53       76        0
-    //    simd2        4        4        0
-    //    simd3       25       28        0
-    //    simd4       22       22        0
-    // Totals...
-    // yes simd      104      130        0
-    //  no simd      224      256        0
+    //      add/sub      mul      div
+    // f32      224      256        0
     fn mul(self, other: MysteryVersorEven) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15319,14 +12303,8 @@ impl std::ops::MulAssign<MysteryVersorEven> for MultiVector {
 impl std::ops::Mul<MysteryVersorOdd> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       55       78        0
-    //    simd2        4        4        0
-    //    simd3       27       30        0
-    //    simd4       20       20        0
-    // Totals...
-    // yes simd      106      132        0
-    //  no simd      224      256        0
+    //      add/sub      mul      div
+    // f32      224      256        0
     fn mul(self, other: MysteryVersorOdd) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15338,59 +12316,11 @@ impl std::ops::MulAssign<MysteryVersorOdd> for MultiVector {
         *self = self.geometric_product(other);
     }
 }
-impl std::ops::Mul<MysteryVersorRoundPoint> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       28       48        0
-    //    simd2        3        5        0
-    //    simd3       10       12        0
-    //    simd4        8       10        0
-    // Totals...
-    // yes simd       49       75        0
-    //  no simd       96      134        0
-    fn mul(self, other: MysteryVersorRoundPoint) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<MysteryVersorRoundPoint> for MultiVector {
-    fn mul_assign(&mut self, other: MysteryVersorRoundPoint) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<MysteryVersorSphere> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       25       44        0
-    //    simd2        1        1        0
-    //    simd3       11       14        0
-    //    simd4        9       11        0
-    // Totals...
-    // yes simd       46       70        0
-    //  no simd       96      132        0
-    fn mul(self, other: MysteryVersorSphere) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<MysteryVersorSphere> for MultiVector {
-    fn mul_assign(&mut self, other: MysteryVersorSphere) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
 impl std::ops::Mul<NullCircleAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       51       69        0
-    //    simd3        7        9        0
-    // Totals...
-    // yes simd       58       78        0
-    //  no simd       72       96        0
+    //      add/sub      mul      div
+    // f32       72       96        0
     fn mul(self, other: NullCircleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15405,14 +12335,8 @@ impl std::ops::MulAssign<NullCircleAtOrigin> for MultiVector {
 impl std::ops::Mul<NullDipoleAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       36       51        0
-    //    simd2        2        3        0
-    //    simd3        7        9        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd       48       66        0
-    //  no simd       73       96        0
+    //      add/sub      mul      div
+    // f32       72       96        0
     fn mul(self, other: NullDipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15427,14 +12351,8 @@ impl std::ops::MulAssign<NullDipoleAtOrigin> for MultiVector {
 impl std::ops::Mul<NullDipoleInversionAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       24       32        0
-    //    simd2        3        4        0
-    //    simd3        7        8        0
-    //    simd4       15       16        0
-    // Totals...
-    // yes simd       49       60        0
-    //  no simd      111      128        0
+    //      add/sub      mul      div
+    // f32      104      128        0
     fn mul(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15449,14 +12367,8 @@ impl std::ops::MulAssign<NullDipoleInversionAtOrigin> for MultiVector {
 impl std::ops::Mul<NullSphereAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5       20        0
-    //    simd2        0        1        0
-    //    simd3        1        3        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        6       26        0
-    //  no simd        8       39        0
+    //      add/sub      mul      div
+    // f32        8       36        0
     fn mul(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15471,13 +12383,8 @@ impl std::ops::MulAssign<NullSphereAtOrigin> for MultiVector {
 impl std::ops::Mul<NullVersorEvenAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       28       45        0
-    //    simd3        9       10        0
-    //    simd4       13       14        0
-    // Totals...
-    // yes simd       50       69        0
-    //  no simd      107      131        0
+    //      add/sub      mul      div
+    // f32      104      128        0
     fn mul(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15492,14 +12399,8 @@ impl std::ops::MulAssign<NullVersorEvenAtOrigin> for MultiVector {
 impl std::ops::Mul<Origin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        5       24        0
-    //    simd2        0        2        0
-    //    simd3        1        4        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        6       32        0
-    //  no simd        8       48        0
+    //      add/sub      mul      div
+    // f32        8       44        0
     fn mul(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15514,14 +12415,8 @@ impl std::ops::MulAssign<Origin> for MultiVector {
 impl std::ops::Mul<Plane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       30       55        0
-    //    simd2        1        1        0
-    //    simd3       12       15        0
-    //    simd4        7        7        0
-    // Totals...
-    // yes simd       50       78        0
-    //  no simd       96      130        0
+    //      add/sub      mul      div
+    // f32       96      128        0
     fn mul(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15536,12 +12431,8 @@ impl std::ops::MulAssign<Plane> for MultiVector {
 impl std::ops::Mul<PlaneOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       40       60        0
-    //    simd3        8       12        0
-    // Totals...
-    // yes simd       48       72        0
-    //  no simd       64       96        0
+    //      add/sub      mul      div
+    // f32       64       96        0
     fn mul(self, other: PlaneOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15553,83 +12444,11 @@ impl std::ops::MulAssign<PlaneOnOrigin> for MultiVector {
         *self = self.geometric_product(other);
     }
 }
-impl std::ops::Mul<QuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       18       30        0
-    //    simd2        1        1        0
-    //    simd3       12       16        0
-    //    simd4       10       13        0
-    // Totals...
-    // yes simd       41       60        0
-    //  no simd       96      132        0
-    fn mul(self, other: QuadNum) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<QuadNum> for MultiVector {
-    fn mul_assign(&mut self, other: QuadNum) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<QuadNumAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       19       43        0
-    //    simd2        1        1        0
-    //    simd3        9       13        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       33       61        0
-    //  no simd       64      100        0
-    fn mul(self, other: QuadNumAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<QuadNumAtInfinity> for MultiVector {
-    fn mul_assign(&mut self, other: QuadNumAtInfinity) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<QuadNumOrthogonalOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       14       34        0
-    //    simd2        1        1        0
-    //    simd3        8       12        0
-    //    simd4        6        8        0
-    // Totals...
-    // yes simd       29       55        0
-    //  no simd       64      104        0
-    fn mul(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<QuadNumOrthogonalOrigin> for MultiVector {
-    fn mul_assign(&mut self, other: QuadNumOrthogonalOrigin) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
 impl std::ops::Mul<RoundPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       28       46        0
-    //    simd2        3        3        0
-    //    simd3       14       16        0
-    //    simd4       13       17        0
-    // Totals...
-    // yes simd       58       82        0
-    //  no simd      128      168        0
+    //      add/sub      mul      div
+    // f32      128      160        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15644,13 +12463,8 @@ impl std::ops::MulAssign<RoundPoint> for MultiVector {
 impl std::ops::Mul<RoundPointAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       20        0
-    //    simd3        4        8        0
-    //    simd4        4        8        0
-    // Totals...
-    // yes simd       12       36        0
-    //  no simd       32       76        0
+    //      add/sub      mul      div
+    // f32       32       64        0
     fn mul(self, other: RoundPointAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15665,14 +12479,8 @@ impl std::ops::MulAssign<RoundPointAtOrigin> for MultiVector {
 impl std::ops::Mul<Scalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        0        1        0
-    //    simd3        0        4        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0       11        0
-    //  no simd        0       32        0
+    //      add/sub      mul      div
+    // f32        0       32        0
     fn mul(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15687,14 +12495,8 @@ impl std::ops::MulAssign<Scalar> for MultiVector {
 impl std::ops::Mul<Sphere> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       35       58        0
-    //    simd2        2        2        0
-    //    simd3       15       18        0
-    //    simd4       11       11        0
-    // Totals...
-    // yes simd       63       89        0
-    //  no simd      128      160        0
+    //      add/sub      mul      div
+    // f32      128      160        0
     fn mul(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15709,14 +12511,8 @@ impl std::ops::MulAssign<Sphere> for MultiVector {
 impl std::ops::Mul<SphereAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        6       12        0
-    //    simd2        1        2        0
-    //    simd3        4        8        0
-    //    simd4        3        7        0
-    // Totals...
-    // yes simd       14       29        0
-    //  no simd       32       68        0
+    //      add/sub      mul      div
+    // f32       32       64        0
     fn mul(self, other: SphereAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15731,14 +12527,8 @@ impl std::ops::MulAssign<SphereAtOrigin> for MultiVector {
 impl std::ops::Mul<SphereOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       19       36        0
-    //    simd2        1        1        0
-    //    simd3       10       13        0
-    //    simd4       12       14        0
-    // Totals...
-    // yes simd       42       64        0
-    //  no simd       99      133        0
+    //      add/sub      mul      div
+    // f32       96      128        0
     fn mul(self, other: SphereOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15753,14 +12543,8 @@ impl std::ops::MulAssign<SphereOnOrigin> for MultiVector {
 impl std::ops::Mul<VersorEven> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      118      150        0
-    //    simd2        4        4        0
-    //    simd3       54       54        0
-    //    simd4       48       48        0
-    // Totals...
-    // yes simd      224      256        0
-    //  no simd      480      512        0
+    //      add/sub      mul      div
+    // f32      480      512        0
     fn mul(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15775,13 +12559,8 @@ impl std::ops::MulAssign<VersorEven> for MultiVector {
 impl std::ops::Mul<VersorEvenAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      102      134        0
-    //    simd3       38       38        0
-    //    simd4       34       34        0
-    // Totals...
-    // yes simd      174      206        0
-    //  no simd      352      384        0
+    //      add/sub      mul      div
+    // f32      352      384        0
     fn mul(self, other: VersorEvenAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15796,14 +12575,8 @@ impl std::ops::MulAssign<VersorEvenAligningOrigin> for MultiVector {
 impl std::ops::Mul<VersorEvenAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      103      133        0
-    //    simd2        4        4        0
-    //    simd3       43       44        0
-    //    simd4       28       28        0
-    // Totals...
-    // yes simd      178      209        0
-    //  no simd      352      385        0
+    //      add/sub      mul      div
+    // f32      352      384        0
     fn mul(self, other: VersorEvenAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15818,13 +12591,8 @@ impl std::ops::MulAssign<VersorEvenAtInfinity> for MultiVector {
 impl std::ops::Mul<VersorEvenAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       73      102        0
-    //    simd3       25       26        0
-    //    simd4       19       19        0
-    // Totals...
-    // yes simd      117      147        0
-    //  no simd      224      256        0
+    //      add/sub      mul      div
+    // f32      224      256        0
     fn mul(self, other: VersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15839,13 +12607,8 @@ impl std::ops::MulAssign<VersorEvenAtOrigin> for MultiVector {
 impl std::ops::Mul<VersorEvenOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       55       77        0
-    //    simd3       20       22        0
-    //    simd4       28       29        0
-    // Totals...
-    // yes simd      103      128        0
-    //  no simd      227      259        0
+    //      add/sub      mul      div
+    // f32      224      256        0
     fn mul(self, other: VersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15860,14 +12623,8 @@ impl std::ops::MulAssign<VersorEvenOnOrigin> for MultiVector {
 impl std::ops::Mul<VersorEvenOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      114      146        0
-    //    simd2        4        4        0
-    //    simd3       38       38        0
-    //    simd4       29       29        0
-    // Totals...
-    // yes simd      185      217        0
-    //  no simd      352      384        0
+    //      add/sub      mul      div
+    // f32      352      384        0
     fn mul(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15882,14 +12639,8 @@ impl std::ops::MulAssign<VersorEvenOrthogonalOrigin> for MultiVector {
 impl std::ops::Mul<VersorOdd> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32      128      160        0
-    //    simd2       12       12        0
-    //    simd3       52       52        0
-    //    simd4       43       43        0
-    // Totals...
-    // yes simd      235      267        0
-    //  no simd      480      512        0
+    //      add/sub      mul      div
+    // f32      480      512        0
     fn mul(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15904,14 +12655,8 @@ impl std::ops::MulAssign<VersorOdd> for MultiVector {
 impl std::ops::Mul<VersorOddAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       95      124        0
-    //    simd2        8        8        0
-    //    simd3       43       44        0
-    //    simd4       28       28        0
-    // Totals...
-    // yes simd      174      204        0
-    //  no simd      352      384        0
+    //      add/sub      mul      div
+    // f32      352      384        0
     fn mul(self, other: VersorOddAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15926,14 +12671,8 @@ impl std::ops::MulAssign<VersorOddAtInfinity> for MultiVector {
 impl std::ops::Mul<VersorOddOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       92      122        0
-    //    simd2       11       12        0
-    //    simd3       38       38        0
-    //    simd4       31       31        0
-    // Totals...
-    // yes simd      172      203        0
-    //  no simd      352      384        0
+    //      add/sub      mul      div
+    // f32      352      384        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -15941,179 +12680,6 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for MultiVector {
 }
 impl std::ops::MulAssign<VersorOddOrthogonalOrigin> for MultiVector {
     fn mul_assign(&mut self, other: VersorOddOrthogonalOrigin) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorRoundPoint> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       48       74        0
-    //    simd2        3        3        0
-    //    simd3       18       20        0
-    //    simd4       13       13        0
-    // Totals...
-    // yes simd       82      110        0
-    //  no simd      160      192        0
-    fn mul(self, other: VersorRoundPoint) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<VersorRoundPoint> for MultiVector {
-    fn mul_assign(&mut self, other: VersorRoundPoint) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorRoundPointAligningOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       24       44        0
-    //    simd3        8       12        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       36       60        0
-    //  no simd       64       96        0
-    fn mul(self, other: VersorRoundPointAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<VersorRoundPointAligningOrigin> for MultiVector {
-    fn mul_assign(&mut self, other: VersorRoundPointAligningOrigin) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       13       33        0
-    //    simd3        5        9        0
-    //    simd4        1        3        0
-    // Totals...
-    // yes simd       19       45        0
-    //  no simd       32       72        0
-    fn mul(self, other: VersorRoundPointAligningOriginAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<VersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    fn mul_assign(&mut self, other: VersorRoundPointAligningOriginAtInfinity) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorRoundPointAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       55       75        0
-    //    simd2        3        3        0
-    //    simd3       17       21        0
-    //    simd4        4        4        0
-    // Totals...
-    // yes simd       79      103        0
-    //  no simd      128      160        0
-    fn mul(self, other: VersorRoundPointAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<VersorRoundPointAtInfinity> for MultiVector {
-    fn mul_assign(&mut self, other: VersorRoundPointAtInfinity) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorRoundPointOnOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       11       35        0
-    //    simd3        3        8        0
-    //    simd4        3        3        0
-    // Totals...
-    // yes simd       17       46        0
-    //  no simd       32       71        0
-    fn mul(self, other: VersorRoundPointOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<VersorRoundPointOnOrigin> for MultiVector {
-    fn mul_assign(&mut self, other: VersorRoundPointOnOrigin) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorSphere> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       37       60        0
-    //    simd2        3        3        0
-    //    simd3       19       22        0
-    //    simd4       15       15        0
-    // Totals...
-    // yes simd       74      100        0
-    //  no simd      160      192        0
-    fn mul(self, other: VersorSphere) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<VersorSphere> for MultiVector {
-    fn mul_assign(&mut self, other: VersorSphere) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorSphereAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32       32       57        0
-    //    simd2        2        2        0
-    //    simd3       16       19        0
-    //    simd4       11       11        0
-    // Totals...
-    // yes simd       61       89        0
-    //  no simd      128      162        0
-    fn mul(self, other: VersorSphereAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<VersorSphereAtInfinity> for MultiVector {
-    fn mul_assign(&mut self, other: VersorSphereAtInfinity) {
-        use crate::elements::*;
-        *self = self.geometric_product(other);
-    }
-}
-impl std::ops::Mul<VersorSphereOrthogonalOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        8       14        0
-    //    simd2        2        3        0
-    //    simd3        8       12        0
-    //    simd4        7       11        0
-    // Totals...
-    // yes simd       25       40        0
-    //  no simd       64      100        0
-    fn mul(self, other: VersorSphereOrthogonalOrigin) -> Self::Output {
-        use crate::elements::*;
-        return self.geometric_product(other);
-    }
-}
-impl std::ops::MulAssign<VersorSphereOrthogonalOrigin> for MultiVector {
-    fn mul_assign(&mut self, other: VersorSphereOrthogonalOrigin) {
         use crate::elements::*;
         *self = self.geometric_product(other);
     }
@@ -16160,12 +12726,8 @@ impl std::ops::Neg for MultiVector {
 impl std::ops::Not for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       10        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0       12        0
-    //  no simd        0       16        0
+    //      add/sub      mul      div
+    // f32        0       16        0
     fn not(self) -> Self::Output {
         use crate::elements::*;
         return self.right_dual();
@@ -16253,12 +12815,12 @@ impl std::ops::Sub<AntiCircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1       10        0
     //    simd3        2        0        0
     //    simd4        1        0        0
     // Totals...
-    // yes simd        4        0        0
-    //  no simd       11        0        0
+    // yes simd        4       10        0
+    //  no simd       11       10        0
     fn sub(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -16269,11 +12831,11 @@ impl std::ops::Sub<AntiCircleRotor> for MultiVector {
             // e5
             self[e1],
             // e41, e42, e43, e45
-            (-Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]) + self.group3()),
+            (Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group1()[3] * -1.0)]) + self.group3()),
             // e15, e25, e35
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -16299,11 +12861,11 @@ impl std::ops::SubAssign<AntiCircleRotor> for MultiVector {
             // e5
             self[e1],
             // e41, e42, e43, e45
-            (-Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]) + self.group3()),
+            (Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group1()[3] * -1.0)]) + self.group3()),
             // e15, e25, e35
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -16322,11 +12884,11 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        0        0
+    //      f32        4        3        0
     //    simd3        2        0        0
     // Totals...
-    // yes simd        6        0        0
-    //  no simd       10        0        0
+    // yes simd        6        3        0
+    //  no simd       10        3        0
     fn sub(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -16344,7 +12906,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for MultiVector {
                 self.group3()[3],
             ]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             (-other.group1() + self.group5()),
             // e415, e425, e435, e321
@@ -16379,7 +12941,7 @@ impl std::ops::SubAssign<AntiCircleRotorAligningOrigin> for MultiVector {
                 self.group3()[3],
             ]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             (-other.group1() + self.group5()),
             // e415, e425, e435, e321
@@ -16400,11 +12962,11 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        3        0
     //    simd3        2        0        0
     // Totals...
-    // yes simd        3        0        0
-    //  no simd        7        0        0
+    // yes simd        3        3        0
+    //  no simd        7        3        0
     fn sub(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -16417,7 +12979,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for MultiVector {
             // e41, e42, e43, e45
             self.group3(),
             // e15, e25, e35
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             (-other.group0() + self.group5()),
             // e415, e425, e435, e321
@@ -16447,7 +13009,7 @@ impl std::ops::SubAssign<AntiCircleRotorAligningOriginAtInfinity> for MultiVecto
             // e41, e42, e43, e45
             self.group3(),
             // e15, e25, e35
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             (-other.group0() + self.group5()),
             // e415, e425, e435, e321
@@ -16468,11 +13030,11 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        0
+    //      f32        2        6        0
     //    simd3        2        0        0
     // Totals...
-    // yes simd        4        0        0
-    //  no simd        8        0        0
+    // yes simd        4        6        0
+    //  no simd        8        6        0
     fn sub(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -16485,9 +13047,9 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[3] + self.group3()[3])]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -16515,9 +13077,9 @@ impl std::ops::SubAssign<AntiCircleRotorAtInfinity> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[3] + self.group3()[3])]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -16614,19 +13176,19 @@ impl std::ops::Sub<AntiDipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        7        0
     //    simd3        2        0        0
     //    simd4        2        0        0
     // Totals...
-    // yes simd        5        0        0
-    //  no simd       15        0        0
+    // yes simd        5        7        0
+    //  no simd       15        7        0
     fn sub(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
             // scalar, e12345
             self.group0(),
             // e1, e2, e3, e4
-            (-Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]]) + self.group1()),
+            (Simd32x4::from([(other.group3()[0] * -1.0), (other.group3()[1] * -1.0), (other.group3()[2] * -1.0), (other.group2()[3] * -1.0)]) + self.group1()),
             // e5
             (-other.group3()[3] + self[e1]),
             // e41, e42, e43, e45
@@ -16640,7 +13202,7 @@ impl std::ops::Sub<AntiDipoleInversion> for MultiVector {
             // e423, e431, e412
             (-other.group0() + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -16656,7 +13218,7 @@ impl std::ops::SubAssign<AntiDipoleInversion> for MultiVector {
             // scalar, e12345
             self.group0(),
             // e1, e2, e3, e4
-            (-Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]]) + self.group1()),
+            (Simd32x4::from([(other.group3()[0] * -1.0), (other.group3()[1] * -1.0), (other.group3()[2] * -1.0), (other.group2()[3] * -1.0)]) + self.group1()),
             // e5
             (-other.group3()[3] + self[e1]),
             // e41, e42, e43, e45
@@ -16670,7 +13232,7 @@ impl std::ops::SubAssign<AntiDipoleInversion> for MultiVector {
             // e423, e431, e412
             (-other.group0() + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -16762,12 +13324,12 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        3        0
     //    simd3        1        0        0
     //    simd4        1        0        0
     // Totals...
-    // yes simd        3        0        0
-    //  no simd        8        0        0
+    // yes simd        3        3        0
+    //  no simd        8        3        0
     fn sub(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -16786,7 +13348,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (-other.group0()[3] + self.group6()[3])]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
@@ -16816,7 +13378,7 @@ impl std::ops::SubAssign<AntiDipoleInversionOnOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (-other.group0()[3] + self.group6()[3])]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
@@ -16831,11 +13393,11 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        0        0
+    //      f32        5        6        0
     //    simd3        2        0        0
     // Totals...
-    // yes simd        7        0        0
-    //  no simd       11        0        0
+    // yes simd        7        6        0
+    //  no simd       11        6        0
     fn sub(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -16859,9 +13421,9 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for MultiVector {
                 self.group6()[3],
             ]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -16894,9 +13456,9 @@ impl std::ops::SubAssign<AntiDipoleInversionOrthogonalOrigin> for MultiVector {
                 self.group6()[3],
             ]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -16909,11 +13471,11 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        2        0        0
-    //  no simd        4        0        0
+    // yes simd        2        3        0
+    //  no simd        4        3        0
     fn sub(self, other: AntiDipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -16932,7 +13494,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (-other.group0()[3] + self.group6()[3])]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
@@ -16962,11 +13524,75 @@ impl std::ops::SubAssign<AntiDipoleOnOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (-other.group0()[3] + self.group6()[3])]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
             self.group9(),
+            // e3215
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
+impl std::ops::Sub<AntiDualNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn sub(self, other: AntiDualNum) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(-other.group0()[1] + self.group0()[0]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e41, e42, e43, e45
+            self.group3(),
+            // e15, e25, e35
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([(-other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
+            // e3215
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<AntiDualNum> for MultiVector {
+    fn sub_assign(&mut self, other: AntiDualNum) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(-other.group0()[1] + self.group0()[0]), self.group0()[1]]),
+            // e1, e2, e3, e4
+            self.group1(),
+            // e5
+            self[e1],
+            // e41, e42, e43, e45
+            self.group3(),
+            // e15, e25, e35
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([(-other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
             // e3215
             self[e45],
         );
@@ -17041,11 +13667,11 @@ impl std::ops::Sub<AntiFlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        2        0        0
-    //  no simd        4        0        0
+    // yes simd        2        3        0
+    //  no simd        4        3        0
     fn sub(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -17066,7 +13692,7 @@ impl std::ops::Sub<AntiFlatPoint> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -17096,7 +13722,7 @@ impl std::ops::SubAssign<AntiFlatPoint> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -17109,11 +13735,11 @@ impl std::ops::Sub<AntiFlector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        0        0
+    //      f32        5        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        6        0        0
-    //  no simd        8        0        0
+    // yes simd        6        3        0
+    //  no simd        8        3        0
     fn sub(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -17139,7 +13765,7 @@ impl std::ops::Sub<AntiFlector> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -17174,7 +13800,7 @@ impl std::ops::SubAssign<AntiFlector> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -17391,11 +14017,11 @@ impl std::ops::Sub<AntiMotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        0
+    //      f32        2        6        0
     //    simd3        2        0        0
     // Totals...
-    // yes simd        4        0        0
-    //  no simd        8        0        0
+    // yes simd        4        6        0
+    //  no simd        8        6        0
     fn sub(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -17408,9 +14034,9 @@ impl std::ops::Sub<AntiMotor> for MultiVector {
             // e41, e42, e43, e45
             self.group3(),
             // e15, e25, e35
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -17438,9 +14064,9 @@ impl std::ops::SubAssign<AntiMotor> for MultiVector {
             // e41, e42, e43, e45
             self.group3(),
             // e15, e25, e35
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -17459,11 +14085,11 @@ impl std::ops::Sub<AntiMotorOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        2        0        0
-    //  no simd        4        0        0
+    // yes simd        2        3        0
+    //  no simd        4        3        0
     fn sub(self, other: AntiMotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -17478,7 +14104,7 @@ impl std::ops::Sub<AntiMotorOnOrigin> for MultiVector {
             // e15, e25, e35
             self.group4(),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -17508,7 +14134,7 @@ impl std::ops::SubAssign<AntiMotorOnOrigin> for MultiVector {
             // e15, e25, e35
             self.group4(),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -17527,11 +14153,11 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        0
+    //      f32        2        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        3        0        0
-    //  no simd        5        0        0
+    // yes simd        3        3        0
+    //  no simd        5        3        0
     fn sub(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -17546,7 +14172,7 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for MultiVector {
             // e15, e25, e35
             self.group4(),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -17576,7 +14202,7 @@ impl std::ops::SubAssign<AntiMysteryCircleRotor> for MultiVector {
             // e15, e25, e35
             self.group4(),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -17657,70 +14283,6 @@ impl std::ops::SubAssign<AntiMysteryDipoleInversion> for MultiVector {
             self.group5(),
             // e415, e425, e435, e321
             (-other.group0() + self.group6()),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<AntiMysteryQuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn sub(self, other: AntiMysteryQuadNum) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(-other.group0()[1] + self.group0()[0]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[0] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<AntiMysteryQuadNum> for MultiVector {
-    fn sub_assign(&mut self, other: AntiMysteryQuadNum) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(-other.group0()[1] + self.group0()[0]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[0] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
@@ -17881,198 +14443,6 @@ impl std::ops::SubAssign<AntiPlaneOnOrigin> for MultiVector {
         *self = subtraction;
     }
 }
-impl std::ops::Sub<AntiQuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
-    fn sub(self, other: AntiQuadNum) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] - other.group0()[3]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[2] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(-other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            (-other.group0()[1] + self[e45]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<AntiQuadNum> for MultiVector {
-    fn sub_assign(&mut self, other: AntiQuadNum) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] - other.group0()[3]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[2] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(-other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            (-other.group0()[1] + self[e45]),
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<AntiQuadNumAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
-    fn sub(self, other: AntiQuadNumAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] - other.group0()[2]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[1] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            (-other.group0()[0] + self[e45]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<AntiQuadNumAtInfinity> for MultiVector {
-    fn sub_assign(&mut self, other: AntiQuadNumAtInfinity) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] - other.group0()[2]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[1] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            (-other.group0()[0] + self[e45]),
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<AntiQuadNumOrthogonalOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
-    fn sub(self, other: AntiQuadNumOrthogonalOrigin) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            self.group0(),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[2] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(-other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            (-other.group0()[1] + self[e45]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<AntiQuadNumOrthogonalOrigin> for MultiVector {
-    fn sub_assign(&mut self, other: AntiQuadNumOrthogonalOrigin) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            self.group0(),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[2] + self.group3()[3])]),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(-other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            (-other.group0()[1] + self[e45]),
-        );
-        *self = subtraction;
-    }
-}
 impl std::ops::Sub<AntiScalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -18206,11 +14576,11 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        0        0
+    //      f32        5        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        6        0        0
-    //  no simd        8        0        0
+    // yes simd        6        3        0
+    //  no simd        8        3        0
     fn sub(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -18230,7 +14600,7 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for MultiVector {
             // e15, e25, e35
             self.group4(),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -18265,7 +14635,7 @@ impl std::ops::SubAssign<AntiVersorEvenOnOrigin> for MultiVector {
             // e15, e25, e35
             self.group4(),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -18274,134 +14644,6 @@ impl std::ops::SubAssign<AntiVersorEvenOnOrigin> for MultiVector {
             self.group8(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([(-other.group1()[3] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            self[e45],
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<AntiVersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn sub(self, other: AntiVersorRoundPointAligningOriginAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(-other.group0()[1] + self.group0()[0]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            (-other.group0()[0] + self[e45]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<AntiVersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    fn sub_assign(&mut self, other: AntiVersorRoundPointAligningOriginAtInfinity) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(-other.group0()[1] + self.group0()[0]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            (-other.group0()[0] + self[e45]),
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<AntiVersorRoundPointOnOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn sub(self, other: AntiVersorRoundPointOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(-other.group0()[1] + self.group0()[0]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(-other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            self[e45],
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<AntiVersorRoundPointOnOrigin> for MultiVector {
-    fn sub_assign(&mut self, other: AntiVersorRoundPointOnOrigin) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(-other.group0()[1] + self.group0()[0]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(-other.group0()[0] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
             // e3215
             self[e45],
         );
@@ -18769,11 +15011,11 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        3        0
     //    simd3        2        0        0
     // Totals...
-    // yes simd        3        0        0
-    //  no simd        7        0        0
+    // yes simd        3        3        0
+    //  no simd        7        3        0
     fn sub(self, other: CircleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -18792,7 +15034,7 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (-other.group0()[3] + self.group6()[3])]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
             (-other.group1() + self.group8()),
             // e1234, e4235, e4315, e4125
@@ -18822,7 +15064,7 @@ impl std::ops::SubAssign<CircleOrthogonalOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (-other.group0()[3] + self.group6()[3])]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
             (-other.group1() + self.group8()),
             // e1234, e4235, e4315, e4125
@@ -18837,12 +15079,12 @@ impl std::ops::Sub<CircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        3        0
     //    simd3        2        0        0
     //    simd4        1        0        0
     // Totals...
-    // yes simd        4        0        0
-    //  no simd       11        0        0
+    // yes simd        4        3        0
+    //  no simd       11        3        0
     fn sub(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -18863,7 +15105,7 @@ impl std::ops::Sub<CircleRotor> for MultiVector {
             // e423, e431, e412
             (-other.group0() + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -18893,7 +15135,7 @@ impl std::ops::SubAssign<CircleRotor> for MultiVector {
             // e423, e431, e412
             (-other.group0() + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -18906,11 +15148,11 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        0        0
+    //      f32        4        3        0
     //    simd3        2        0        0
     // Totals...
-    // yes simd        6        0        0
-    //  no simd       10        0        0
+    // yes simd        6        3        0
+    //  no simd       10        3        0
     fn sub(self, other: CircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -18936,7 +15178,7 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for MultiVector {
             // e423, e431, e412
             (-other.group0() + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -18971,7 +15213,7 @@ impl std::ops::SubAssign<CircleRotorAligningOrigin> for MultiVector {
             // e423, e431, e412
             (-other.group0() + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -18984,11 +15226,11 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        0        0
+    //      f32        4        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        5        0        0
-    //  no simd        7        0        0
+    // yes simd        5        3        0
+    //  no simd        7        3        0
     fn sub(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -19014,7 +15256,7 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -19049,7 +15291,7 @@ impl std::ops::SubAssign<CircleRotorAligningOriginAtInfinity> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -19062,12 +15304,12 @@ impl std::ops::Sub<CircleRotorAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        3        0
     //    simd3        1        0        0
     //    simd4        1        0        0
     // Totals...
-    // yes simd        3        0        0
-    //  no simd        8        0        0
+    // yes simd        3        3        0
+    //  no simd        8        3        0
     fn sub(self, other: CircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -19088,7 +15330,7 @@ impl std::ops::Sub<CircleRotorAtInfinity> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -19118,7 +15360,7 @@ impl std::ops::SubAssign<CircleRotorAtInfinity> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -19131,11 +15373,11 @@ impl std::ops::Sub<CircleRotorOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        0        0
+    //      f32        4        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        5        0        0
-    //  no simd        7        0        0
+    // yes simd        5        3        0
+    //  no simd        7        3        0
     fn sub(self, other: CircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -19159,7 +15401,7 @@ impl std::ops::Sub<CircleRotorOnOrigin> for MultiVector {
                 self.group6()[3],
             ]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
@@ -19194,7 +15436,7 @@ impl std::ops::SubAssign<CircleRotorOnOrigin> for MultiVector {
                 self.group6()[3],
             ]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
@@ -19209,11 +15451,12 @@ impl std::ops::Sub<Dipole> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        7        0
     //    simd3        2        0        0
     //    simd4        1        0        0
     // Totals...
-    // yes simd        3        0        0
-    //  no simd       10        0        0
+    // yes simd        3        7        0
+    //  no simd       10        7        0
     fn sub(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -19224,11 +15467,11 @@ impl std::ops::Sub<Dipole> for MultiVector {
             // e5
             self[e1],
             // e41, e42, e43, e45
-            (-Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]) + self.group3()),
+            (Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group1()[3] * -1.0)]) + self.group3()),
             // e15, e25, e35
             (-other.group2() + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -19254,11 +15497,11 @@ impl std::ops::SubAssign<Dipole> for MultiVector {
             // e5
             self[e1],
             // e41, e42, e43, e45
-            (-Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]) + self.group3()),
+            (Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group1()[3] * -1.0)]) + self.group3()),
             // e15, e25, e35
             (-other.group2() + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -19345,11 +15588,11 @@ impl std::ops::Sub<DipoleAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        3        0
     //    simd3        2        0        0
     // Totals...
-    // yes simd        3        0        0
-    //  no simd        7        0        0
+    // yes simd        3        3        0
+    //  no simd        7        3        0
     fn sub(self, other: DipoleAtInfinity) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -19364,7 +15607,7 @@ impl std::ops::Sub<DipoleAtInfinity> for MultiVector {
             // e15, e25, e35
             (-other.group1() + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -19394,7 +15637,7 @@ impl std::ops::SubAssign<DipoleAtInfinity> for MultiVector {
             // e15, e25, e35
             (-other.group1() + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -19491,12 +15734,12 @@ impl std::ops::Sub<DipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1       14        0
     //    simd3        2        0        0
     //    simd4        2        0        0
     // Totals...
-    // yes simd        5        0        0
-    //  no simd       15        0        0
+    // yes simd        5       14        0
+    //  no simd       15       14        0
     fn sub(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -19507,11 +15750,11 @@ impl std::ops::Sub<DipoleInversion> for MultiVector {
             // e5
             self[e1],
             // e41, e42, e43, e45
-            (-Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]) + self.group3()),
+            (Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group1()[3] * -1.0)]) + self.group3()),
             // e15, e25, e35
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -19519,7 +15762,7 @@ impl std::ops::Sub<DipoleInversion> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
-            (-Simd32x4::from([other.group2()[3], other.group3()[0], other.group3()[1], other.group3()[2]]) + self.group9()),
+            (Simd32x4::from([(other.group2()[3] * -1.0), (other.group3()[0] * -1.0), (other.group3()[1] * -1.0), (other.group3()[2] * -1.0)]) + self.group9()),
             // e3215
             (-other.group3()[3] + self[e45]),
         );
@@ -19537,11 +15780,11 @@ impl std::ops::SubAssign<DipoleInversion> for MultiVector {
             // e5
             self[e1],
             // e41, e42, e43, e45
-            (-Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]) + self.group3()),
+            (Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group1()[3] * -1.0)]) + self.group3()),
             // e15, e25, e35
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -19549,7 +15792,7 @@ impl std::ops::SubAssign<DipoleInversion> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
-            (-Simd32x4::from([other.group2()[3], other.group3()[0], other.group3()[1], other.group3()[2]]) + self.group9()),
+            (Simd32x4::from([(other.group2()[3] * -1.0), (other.group3()[0] * -1.0), (other.group3()[1] * -1.0), (other.group3()[2] * -1.0)]) + self.group9()),
             // e3215
             (-other.group3()[3] + self[e45]),
         );
@@ -19560,12 +15803,12 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        7        0
     //    simd3        1        0        0
     //    simd4        2        0        0
     // Totals...
-    // yes simd        4        0        0
-    //  no simd       12        0        0
+    // yes simd        4        7        0
+    //  no simd       12        7        0
     fn sub(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -19578,7 +15821,7 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for MultiVector {
             // e41, e42, e43, e45
             (-other.group0() + self.group3()),
             // e15, e25, e35
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
@@ -19588,7 +15831,7 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
-            (-Simd32x4::from([other.group1()[3], other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group9()),
+            (Simd32x4::from([(other.group1()[3] * -1.0), (other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group9()),
             // e3215
             (-other.group2()[3] + self[e45]),
         );
@@ -19608,7 +15851,7 @@ impl std::ops::SubAssign<DipoleInversionAligningOrigin> for MultiVector {
             // e41, e42, e43, e45
             (-other.group0() + self.group3()),
             // e15, e25, e35
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
@@ -19618,7 +15861,7 @@ impl std::ops::SubAssign<DipoleInversionAligningOrigin> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
-            (-Simd32x4::from([other.group1()[3], other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group9()),
+            (Simd32x4::from([(other.group1()[3] * -1.0), (other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group9()),
             // e3215
             (-other.group2()[3] + self[e45]),
         );
@@ -19629,11 +15872,11 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        0        0
+    //      f32        5        3        0
     //    simd3        2        0        0
     // Totals...
-    // yes simd        7        0        0
-    //  no simd       11        0        0
+    // yes simd        7        3        0
+    //  no simd       11        3        0
     fn sub(self, other: DipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -19648,7 +15891,7 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for MultiVector {
             // e15, e25, e35
             (-other.group1() + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -19683,7 +15926,7 @@ impl std::ops::SubAssign<DipoleInversionAtInfinity> for MultiVector {
             // e15, e25, e35
             (-other.group1() + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -19707,11 +15950,11 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        0        0
+    //      f32        5        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        6        0        0
-    //  no simd        8        0        0
+    // yes simd        6        3        0
+    //  no simd        8        3        0
     fn sub(self, other: DipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -19729,7 +15972,7 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for MultiVector {
                 self.group3()[3],
             ]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
@@ -19764,7 +16007,7 @@ impl std::ops::SubAssign<DipoleInversionAtOrigin> for MultiVector {
                 self.group3()[3],
             ]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
@@ -19850,11 +16093,11 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        0        0
+    //      f32        5        3        0
     //    simd3        2        0        0
     // Totals...
-    // yes simd        7        0        0
-    //  no simd       11        0        0
+    // yes simd        7        3        0
+    //  no simd       11        3        0
     fn sub(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -19872,7 +16115,7 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for MultiVector {
                 self.group3()[3],
             ]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             (-other.group1() + self.group5()),
             // e415, e425, e435, e321
@@ -19907,7 +16150,7 @@ impl std::ops::SubAssign<DipoleInversionOrthogonalOrigin> for MultiVector {
                 self.group3()[3],
             ]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             (-other.group1() + self.group5()),
             // e415, e425, e435, e321
@@ -20067,6 +16310,70 @@ impl std::ops::SubAssign<DipoleOrthogonalOrigin> for MultiVector {
         *self = subtraction;
     }
 }
+impl std::ops::Sub<DualNum> for MultiVector {
+    type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        2        0        0
+    fn sub(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (-other.group0()[1] + self.group0()[1])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[0] + self.group1()[3])]),
+            // e5
+            self[e1],
+            // e41, e42, e43, e45
+            self.group3(),
+            // e15, e25, e35
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e1234, e4235, e4315, e4125
+            self.group9(),
+            // e3215
+            self[e45],
+        );
+        return subtraction;
+    }
+}
+impl std::ops::SubAssign<DualNum> for MultiVector {
+    fn sub_assign(&mut self, other: DualNum) {
+        use crate::elements::*;
+        let subtraction = MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([self.group0()[0], (-other.group0()[1] + self.group0()[1])]),
+            // e1, e2, e3, e4
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[0] + self.group1()[3])]),
+            // e5
+            self[e1],
+            // e41, e42, e43, e45
+            self.group3(),
+            // e15, e25, e35
+            self.group4(),
+            // e23, e31, e12
+            self.group5(),
+            // e415, e425, e435, e321
+            self.group6(),
+            // e423, e431, e412
+            self.group7(),
+            // e235, e315, e125
+            self.group8(),
+            // e1234, e4235, e4315, e4125
+            self.group9(),
+            // e3215
+            self[e45],
+        );
+        *self = subtraction;
+    }
+}
 impl std::ops::Sub<FlatOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -20135,11 +16442,11 @@ impl std::ops::Sub<FlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        2        0        0
-    //  no simd        4        0        0
+    // yes simd        2        3        0
+    //  no simd        4        3        0
     fn sub(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -20152,7 +16459,7 @@ impl std::ops::Sub<FlatPoint> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[3] + self.group3()[3])]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
@@ -20182,7 +16489,7 @@ impl std::ops::SubAssign<FlatPoint> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[3] + self.group3()[3])]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
@@ -20268,11 +16575,11 @@ impl std::ops::Sub<Flector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        0        0
+    //      f32        5        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        6        0        0
-    //  no simd        8        0        0
+    // yes simd        6        3        0
+    //  no simd        8        3        0
     fn sub(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -20285,7 +16592,7 @@ impl std::ops::Sub<Flector> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[3] + self.group3()[3])]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
@@ -20320,7 +16627,7 @@ impl std::ops::SubAssign<Flector> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group0()[3] + self.group3()[3])]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
@@ -20346,11 +16653,11 @@ impl std::ops::Sub<FlectorAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        2        0        0
-    //  no simd        4        0        0
+    // yes simd        2        3        0
+    //  no simd        4        3        0
     fn sub(self, other: FlectorAtInfinity) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -20363,7 +16670,7 @@ impl std::ops::Sub<FlectorAtInfinity> for MultiVector {
             // e41, e42, e43, e45
             self.group3(),
             // e15, e25, e35
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
@@ -20393,7 +16700,7 @@ impl std::ops::SubAssign<FlectorAtInfinity> for MultiVector {
             // e41, e42, e43, e45
             self.group3(),
             // e15, e25, e35
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
@@ -20833,11 +17140,11 @@ impl std::ops::Sub<Motor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        0        0
+    //      f32        5        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        6        0        0
-    //  no simd        8        0        0
+    // yes simd        6        3        0
+    //  no simd        8        3        0
     fn sub(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -20863,7 +17170,7 @@ impl std::ops::Sub<Motor> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -20898,7 +17205,7 @@ impl std::ops::SubAssign<Motor> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -20911,11 +17218,11 @@ impl std::ops::Sub<MotorAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        2        0        0
-    //  no simd        4        0        0
+    // yes simd        2        3        0
+    //  no simd        4        3        0
     fn sub(self, other: MotorAtInfinity) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -20936,7 +17243,7 @@ impl std::ops::Sub<MotorAtInfinity> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -20966,7 +17273,7 @@ impl std::ops::SubAssign<MotorAtInfinity> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -21256,11 +17563,11 @@ impl std::ops::Sub<MysteryDipole> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        2        0        0
-    //  no simd        4        0        0
+    // yes simd        2        3        0
+    //  no simd        4        3        0
     fn sub(self, other: MysteryDipole) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -21275,7 +17582,7 @@ impl std::ops::Sub<MysteryDipole> for MultiVector {
             // e15, e25, e35
             self.group4(),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -21305,7 +17612,7 @@ impl std::ops::SubAssign<MysteryDipole> for MultiVector {
             // e15, e25, e35
             self.group4(),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -21324,11 +17631,11 @@ impl std::ops::Sub<MysteryDipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        0        0
+    //      f32        4        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        5        0        0
-    //  no simd        7        0        0
+    // yes simd        5        3        0
+    //  no simd        7        3        0
     fn sub(self, other: MysteryDipoleInversion) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -21343,7 +17650,7 @@ impl std::ops::Sub<MysteryDipoleInversion> for MultiVector {
             // e15, e25, e35
             self.group4(),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -21378,7 +17685,7 @@ impl std::ops::SubAssign<MysteryDipoleInversion> for MultiVector {
             // e15, e25, e35
             self.group4(),
             // e23, e31, e12
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -21392,70 +17699,6 @@ impl std::ops::SubAssign<MysteryDipoleInversion> for MultiVector {
                 (-other.group1()[1] + self.group9()[2]),
                 (-other.group1()[2] + self.group9()[3]),
             ]),
-            // e3215
-            self[e45],
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<MysteryQuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn sub(self, other: MysteryQuadNum) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[1])]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (-other.group0()[0] + self.group6()[3])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<MysteryQuadNum> for MultiVector {
-    fn sub_assign(&mut self, other: MysteryQuadNum) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[1])]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (-other.group0()[0] + self.group6()[3])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
             // e3215
             self[e45],
         );
@@ -21544,11 +17787,11 @@ impl std::ops::Sub<MysteryVersorOdd> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        0        0
+    //      f32        5        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        6        0        0
-    //  no simd        8        0        0
+    // yes simd        6        3        0
+    //  no simd        8        3        0
     fn sub(self, other: MysteryVersorOdd) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -21563,7 +17806,7 @@ impl std::ops::Sub<MysteryVersorOdd> for MultiVector {
             // e15, e25, e35
             self.group4(),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -21598,7 +17841,7 @@ impl std::ops::SubAssign<MysteryVersorOdd> for MultiVector {
             // e15, e25, e35
             self.group4(),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -21611,154 +17854,6 @@ impl std::ops::SubAssign<MysteryVersorOdd> for MultiVector {
                 (self.group9()[1] - other.group0()[1]),
                 (self.group9()[2] - other.group0()[2]),
                 (self.group9()[3] - other.group0()[3]),
-            ]),
-            // e3215
-            self[e45],
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<MysteryVersorRoundPoint> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
-    fn sub(self, other: MysteryVersorRoundPoint) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[3])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([
-                (self.group1()[0] - other.group0()[0]),
-                (self.group1()[1] - other.group0()[1]),
-                (self.group1()[2] - other.group0()[2]),
-                self.group1()[3],
-            ]),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<MysteryVersorRoundPoint> for MultiVector {
-    fn sub_assign(&mut self, other: MysteryVersorRoundPoint) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[3])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([
-                (self.group1()[0] - other.group0()[0]),
-                (self.group1()[1] - other.group0()[1]),
-                (self.group1()[2] - other.group0()[2]),
-                self.group1()[3],
-            ]),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<MysteryVersorSphere> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
-    fn sub(self, other: MysteryVersorSphere) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] - other.group0()[3]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([
-                self.group9()[0],
-                (self.group9()[1] - other.group0()[0]),
-                (self.group9()[2] - other.group0()[1]),
-                (self.group9()[3] - other.group0()[2]),
-            ]),
-            // e3215
-            self[e45],
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<MysteryVersorSphere> for MultiVector {
-    fn sub_assign(&mut self, other: MysteryVersorSphere) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] - other.group0()[3]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([
-                self.group9()[0],
-                (self.group9()[1] - other.group0()[0]),
-                (self.group9()[2] - other.group0()[1]),
-                (self.group9()[3] - other.group0()[2]),
             ]),
             // e3215
             self[e45],
@@ -22047,11 +18142,11 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        2        0        0
-    //  no simd        4        0        0
+    // yes simd        2        3        0
+    //  no simd        4        3        0
     fn sub(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -22070,7 +18165,7 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for MultiVector {
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
@@ -22100,7 +18195,7 @@ impl std::ops::SubAssign<NullVersorEvenAtOrigin> for MultiVector {
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
@@ -22323,198 +18418,6 @@ impl std::ops::SubAssign<PlaneOnOrigin> for MultiVector {
         *self = subtraction;
     }
 }
-impl std::ops::Sub<QuadNum> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
-    fn sub(self, other: QuadNum) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[3])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[0])]),
-            // e5
-            (-other.group0()[1] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] - other.group0()[2])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<QuadNum> for MultiVector {
-    fn sub_assign(&mut self, other: QuadNum) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[3])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[0])]),
-            // e5
-            (-other.group0()[1] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] - other.group0()[2])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<QuadNumAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
-    fn sub(self, other: QuadNumAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[2])]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            (-other.group0()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (-other.group0()[1] + self.group6()[3])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<QuadNumAtInfinity> for MultiVector {
-    fn sub_assign(&mut self, other: QuadNumAtInfinity) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[2])]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            (-other.group0()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (-other.group0()[1] + self.group6()[3])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<QuadNumOrthogonalOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
-    fn sub(self, other: QuadNumOrthogonalOrigin) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            self.group0(),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[0] + self.group1()[3])]),
-            // e5
-            (-other.group0()[1] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (-other.group0()[2] + self.group6()[3])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<QuadNumOrthogonalOrigin> for MultiVector {
-    fn sub_assign(&mut self, other: QuadNumOrthogonalOrigin) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            self.group0(),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[0] + self.group1()[3])]),
-            // e5
-            (-other.group0()[1] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (-other.group0()[2] + self.group6()[3])]),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = subtraction;
-    }
-}
 impl std::ops::Sub<RoundPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -22715,11 +18618,11 @@ impl std::ops::Sub<Sphere> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        1        4        0
     //    simd4        1        0        0
     // Totals...
-    // yes simd        2        0        0
-    //  no simd        5        0        0
+    // yes simd        2        4        0
+    //  no simd        5        4        0
     fn sub(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -22742,7 +18645,7 @@ impl std::ops::Sub<Sphere> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
-            (-Simd32x4::from([other[e4315], other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group9()),
+            (Simd32x4::from([(other[e4315] * -1.0), (other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group9()),
             // e3215
             (-other.group0()[3] + self[e45]),
         );
@@ -22772,7 +18675,7 @@ impl std::ops::SubAssign<Sphere> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
-            (-Simd32x4::from([other[e4315], other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group9()),
+            (Simd32x4::from([(other[e4315] * -1.0), (other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group9()),
             // e3215
             (-other.group0()[3] + self[e45]),
         );
@@ -22912,12 +18815,12 @@ impl std::ops::Sub<VersorEven> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        0
+    //      f32        2        6        0
     //    simd3        2        0        0
     //    simd4        2        0        0
     // Totals...
-    // yes simd        6        0        0
-    //  no simd       16        0        0
+    // yes simd        6        6        0
+    //  no simd       16        6        0
     fn sub(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -22936,9 +18839,9 @@ impl std::ops::Sub<VersorEven> for MultiVector {
             // e415, e425, e435, e321
             (self.group6() - other.group1()),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -22966,9 +18869,9 @@ impl std::ops::SubAssign<VersorEven> for MultiVector {
             // e415, e425, e435, e321
             (self.group6() - other.group1()),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -22981,11 +18884,11 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6        0        0
+    //      f32        6        6        0
     //    simd3        2        0        0
     // Totals...
-    // yes simd        8        0        0
-    //  no simd       12        0        0
+    // yes simd        8        6        0
+    //  no simd       12        6        0
     fn sub(self, other: VersorEvenAligningOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -23009,9 +18912,9 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for MultiVector {
                 self.group6()[3],
             ]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -23044,9 +18947,9 @@ impl std::ops::SubAssign<VersorEvenAligningOrigin> for MultiVector {
                 self.group6()[3],
             ]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -23059,12 +18962,12 @@ impl std::ops::Sub<VersorEvenAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        0        0
+    //      f32        5        3        0
     //    simd3        1        0        0
     //    simd4        1        0        0
     // Totals...
-    // yes simd        7        0        0
-    //  no simd       12        0        0
+    // yes simd        7        3        0
+    //  no simd       12        3        0
     fn sub(self, other: VersorEvenAtInfinity) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -23090,7 +18993,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -23125,7 +19028,7 @@ impl std::ops::SubAssign<VersorEvenAtInfinity> for MultiVector {
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -23138,11 +19041,11 @@ impl std::ops::Sub<VersorEvenAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        0
+    //      f32        2        6        0
     //    simd3        2        0        0
     // Totals...
-    // yes simd        4        0        0
-    //  no simd        8        0        0
+    // yes simd        4        6        0
+    //  no simd        8        6        0
     fn sub(self, other: VersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -23161,9 +19064,9 @@ impl std::ops::Sub<VersorEvenAtOrigin> for MultiVector {
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -23191,9 +19094,9 @@ impl std::ops::SubAssign<VersorEvenAtOrigin> for MultiVector {
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -23206,11 +19109,11 @@ impl std::ops::Sub<VersorEvenOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        0        0
+    //      f32        5        3        0
     //    simd3        1        0        0
     // Totals...
-    // yes simd        6        0        0
-    //  no simd        8        0        0
+    // yes simd        6        3        0
+    //  no simd        8        3        0
     fn sub(self, other: VersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -23234,7 +19137,7 @@ impl std::ops::Sub<VersorEvenOnOrigin> for MultiVector {
                 self.group6()[3],
             ]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
@@ -23269,7 +19172,7 @@ impl std::ops::SubAssign<VersorEvenOnOrigin> for MultiVector {
                 self.group6()[3],
             ]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
@@ -23284,12 +19187,12 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        0
+    //      f32        2        6        0
     //    simd3        2        0        0
     //    simd4        1        0        0
     // Totals...
-    // yes simd        5        0        0
-    //  no simd       12        0        0
+    // yes simd        5        6        0
+    //  no simd       12        6        0
     fn sub(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -23308,9 +19211,9 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] - other.group0()[3])]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -23338,9 +19241,9 @@ impl std::ops::SubAssign<VersorEvenOrthogonalOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], (self.group6()[3] - other.group0()[3])]),
             // e423, e431, e412
-            (-Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group7()),
+            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group7()),
             // e235, e315, e125
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group8()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group8()),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -23353,12 +19256,12 @@ impl std::ops::Sub<VersorOdd> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        0        0
+    //      f32        2       14        0
     //    simd3        2        0        0
     //    simd4        2        0        0
     // Totals...
-    // yes simd        6        0        0
-    //  no simd       16        0        0
+    // yes simd        6       14        0
+    //  no simd       16       14        0
     fn sub(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -23369,11 +19272,11 @@ impl std::ops::Sub<VersorOdd> for MultiVector {
             // e5
             self[e1],
             // e41, e42, e43, e45
-            (-Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]) + self.group3()),
+            (Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group1()[3] * -1.0)]) + self.group3()),
             // e15, e25, e35
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -23381,7 +19284,7 @@ impl std::ops::Sub<VersorOdd> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
-            (-Simd32x4::from([other.group2()[3], other.group3()[0], other.group3()[1], other.group3()[2]]) + self.group9()),
+            (Simd32x4::from([(other.group2()[3] * -1.0), (other.group3()[0] * -1.0), (other.group3()[1] * -1.0), (other.group3()[2] * -1.0)]) + self.group9()),
             // e3215
             (-other.group3()[3] + self[e45]),
         );
@@ -23399,11 +19302,11 @@ impl std::ops::SubAssign<VersorOdd> for MultiVector {
             // e5
             self[e1],
             // e41, e42, e43, e45
-            (-Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]) + self.group3()),
+            (Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group1()[3] * -1.0)]) + self.group3()),
             // e15, e25, e35
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -23411,7 +19314,7 @@ impl std::ops::SubAssign<VersorOdd> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e1234, e4235, e4315, e4125
-            (-Simd32x4::from([other.group2()[3], other.group3()[0], other.group3()[1], other.group3()[2]]) + self.group9()),
+            (Simd32x4::from([(other.group2()[3] * -1.0), (other.group3()[0] * -1.0), (other.group3()[1] * -1.0), (other.group3()[2] * -1.0)]) + self.group9()),
             // e3215
             (-other.group3()[3] + self[e45]),
         );
@@ -23422,11 +19325,11 @@ impl std::ops::Sub<VersorOddAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6        0        0
+    //      f32        6        6        0
     //    simd3        2        0        0
     // Totals...
-    // yes simd        8        0        0
-    //  no simd       12        0        0
+    // yes simd        8        6        0
+    //  no simd       12        6        0
     fn sub(self, other: VersorOddAtInfinity) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -23439,9 +19342,9 @@ impl std::ops::Sub<VersorOddAtInfinity> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] - other.group1()[3])]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]) + self.group4()),
+            (Simd32x3::from([(other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group0()[3] * -1.0)]) + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -23474,9 +19377,9 @@ impl std::ops::SubAssign<VersorOddAtInfinity> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (self.group3()[3] - other.group1()[3])]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]) + self.group4()),
+            (Simd32x3::from([(other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group0()[3] * -1.0)]) + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -23500,11 +19403,11 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6        0        0
+    //      f32        6        6        0
     //    simd3        2        0        0
     // Totals...
-    // yes simd        8        0        0
-    //  no simd       12        0        0
+    // yes simd        8        6        0
+    //  no simd       12        6        0
     fn sub(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         let subtraction = MultiVector::from_groups(
@@ -23522,9 +19425,9 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for MultiVector {
                 self.group3()[3],
             ]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -23557,9 +19460,9 @@ impl std::ops::SubAssign<VersorOddOrthogonalOrigin> for MultiVector {
                 self.group3()[3],
             ]),
             // e15, e25, e35
-            (-Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) + self.group4()),
+            (Simd32x3::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]) + self.group4()),
             // e23, e31, e12
-            (-Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) + self.group5()),
+            (Simd32x3::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]) + self.group5()),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -23570,546 +19473,6 @@ impl std::ops::SubAssign<VersorOddOrthogonalOrigin> for MultiVector {
             Simd32x4::from([(self.group9()[0] - other.group2()[3]), self.group9()[1], self.group9()[2], self.group9()[3]]),
             // e3215
             (-other.group1()[3] + self[e45]),
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<VersorRoundPoint> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        0        0
-    //    simd4        1        0        0
-    // Totals...
-    // yes simd        3        0        0
-    //  no simd        6        0        0
-    fn sub(self, other: VersorRoundPoint) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group1()[1])]),
-            // e1, e2, e3, e4
-            (self.group1() - other.group0()),
-            // e5
-            (-other.group1()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<VersorRoundPoint> for MultiVector {
-    fn sub_assign(&mut self, other: VersorRoundPoint) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group1()[1])]),
-            // e1, e2, e3, e4
-            (self.group1() - other.group0()),
-            // e5
-            (-other.group1()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<VersorRoundPointAligningOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
-    fn sub(self, other: VersorRoundPointAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[2])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[0] + self.group1()[3])]),
-            // e5
-            (-other.group0()[1] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<VersorRoundPointAligningOrigin> for MultiVector {
-    fn sub_assign(&mut self, other: VersorRoundPointAligningOrigin) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[2])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[0] + self.group1()[3])]),
-            // e5
-            (-other.group0()[1] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<VersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn sub(self, other: VersorRoundPointAligningOriginAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[1])]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            (-other.group0()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<VersorRoundPointAligningOriginAtInfinity> for MultiVector {
-    fn sub_assign(&mut self, other: VersorRoundPointAligningOriginAtInfinity) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[1])]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            (-other.group0()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<VersorRoundPointAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5        0        0
-    fn sub(self, other: VersorRoundPointAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group1()[1])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([
-                (-other.group0()[0] + self.group1()[0]),
-                (-other.group0()[1] + self.group1()[1]),
-                (-other.group0()[2] + self.group1()[2]),
-                self.group1()[3],
-            ]),
-            // e5
-            (-other.group1()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<VersorRoundPointAtInfinity> for MultiVector {
-    fn sub_assign(&mut self, other: VersorRoundPointAtInfinity) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group1()[1])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([
-                (-other.group0()[0] + self.group1()[0]),
-                (-other.group0()[1] + self.group1()[1]),
-                (-other.group0()[2] + self.group1()[2]),
-                self.group1()[3],
-            ]),
-            // e5
-            (-other.group1()[0] + self[e1]),
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<VersorRoundPointOnOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
-    fn sub(self, other: VersorRoundPointOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[1])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[0] + self.group1()[3])]),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<VersorRoundPointOnOrigin> for MultiVector {
-    fn sub_assign(&mut self, other: VersorRoundPointOnOrigin) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([self.group0()[0], (self.group0()[1] - other.group0()[1])]),
-            // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[0] + self.group1()[3])]),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            self.group9(),
-            // e3215
-            self[e45],
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<VersorSphere> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        2        0        0
-    //    simd4        1        0        0
-    // Totals...
-    // yes simd        3        0        0
-    //  no simd        6        0        0
-    fn sub(self, other: VersorSphere) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] - other.group1()[1]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            (-Simd32x4::from([other.group1()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group9()),
-            // e3215
-            (-other.group0()[3] + self[e45]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<VersorSphere> for MultiVector {
-    fn sub_assign(&mut self, other: VersorSphere) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] - other.group1()[1]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            (-Simd32x4::from([other.group1()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group9()),
-            // e3215
-            (-other.group0()[3] + self[e45]),
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<VersorSphereAtInfinity> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5        0        0
-    fn sub(self, other: VersorSphereAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] - other[e4315]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([
-                self.group9()[0],
-                (self.group9()[1] - other.group0()[0]),
-                (self.group9()[2] - other.group0()[1]),
-                (self.group9()[3] - other.group0()[2]),
-            ]),
-            // e3215
-            (-other.group0()[3] + self[e45]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<VersorSphereAtInfinity> for MultiVector {
-    fn sub_assign(&mut self, other: VersorSphereAtInfinity) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] - other[e4315]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([
-                self.group9()[0],
-                (self.group9()[1] - other.group0()[0]),
-                (self.group9()[2] - other.group0()[1]),
-                (self.group9()[3] - other.group0()[2]),
-            ]),
-            // e3215
-            (-other.group0()[3] + self[e45]),
-        );
-        *self = subtraction;
-    }
-}
-impl std::ops::Sub<VersorSphereOrthogonalOrigin> for MultiVector {
-    type Output = MultiVector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
-    fn sub(self, other: VersorSphereOrthogonalOrigin) -> Self::Output {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] - other.group0()[2]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(-other.group0()[1] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            (-other.group0()[0] + self[e45]),
-        );
-        return subtraction;
-    }
-}
-impl std::ops::SubAssign<VersorSphereOrthogonalOrigin> for MultiVector {
-    fn sub_assign(&mut self, other: VersorSphereOrthogonalOrigin) {
-        use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([(self.group0()[0] - other.group0()[2]), self.group0()[1]]),
-            // e1, e2, e3, e4
-            self.group1(),
-            // e5
-            self[e1],
-            // e41, e42, e43, e45
-            self.group3(),
-            // e15, e25, e35
-            self.group4(),
-            // e23, e31, e12
-            self.group5(),
-            // e415, e425, e435, e321
-            self.group6(),
-            // e423, e431, e412
-            self.group7(),
-            // e235, e315, e125
-            self.group8(),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([(-other.group0()[1] + self.group9()[0]), self.group9()[1], self.group9()[2], self.group9()[3]]),
-            // e3215
-            (-other.group0()[0] + self[e45]),
         );
         *self = subtraction;
     }

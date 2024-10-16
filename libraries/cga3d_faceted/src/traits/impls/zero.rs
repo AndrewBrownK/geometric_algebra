@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 113
+// Total Implementations: 95
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -110,6 +110,11 @@ impl Zero for AntiDipoleOnOrigin {
         return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(0.0));
     }
 }
+impl Zero for AntiDualNum {
+    fn zero() -> Self {
+        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from(0.0));
+    }
+}
 impl Zero for AntiFlatOrigin {
     fn zero() -> Self {
         return AntiFlatOrigin::from_groups(/* e321 */ 0.0);
@@ -160,11 +165,6 @@ impl Zero for AntiMysteryDipoleInversion {
         return AntiMysteryDipoleInversion::from_groups(/* e415, e425, e435, e321 */ Simd32x4::from(0.0), /* e1, e2, e3 */ Simd32x3::from(0.0));
     }
 }
-impl Zero for AntiMysteryQuadNum {
-    fn zero() -> Self {
-        return AntiMysteryQuadNum::from_groups(/* e45, scalar */ Simd32x2::from(0.0));
-    }
-}
 impl Zero for AntiPlane {
     fn zero() -> Self {
         return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(0.0));
@@ -173,21 +173,6 @@ impl Zero for AntiPlane {
 impl Zero for AntiPlaneOnOrigin {
     fn zero() -> Self {
         return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ Simd32x3::from(0.0));
-    }
-}
-impl Zero for AntiQuadNum {
-    fn zero() -> Self {
-        return AntiQuadNum::from_groups(/* e1234, e3215, e45, scalar */ Simd32x4::from(0.0));
-    }
-}
-impl Zero for AntiQuadNumAtInfinity {
-    fn zero() -> Self {
-        return AntiQuadNumAtInfinity::from_groups(/* e3215, e45, scalar */ Simd32x3::from(0.0));
-    }
-}
-impl Zero for AntiQuadNumOrthogonalOrigin {
-    fn zero() -> Self {
-        return AntiQuadNumOrthogonalOrigin::from_groups(/* e1234, e3215, e45 */ Simd32x3::from(0.0));
     }
 }
 impl Zero for AntiScalar {
@@ -203,16 +188,6 @@ impl Zero for AntiSphereOnOrigin {
 impl Zero for AntiVersorEvenOnOrigin {
     fn zero() -> Self {
         return AntiVersorEvenOnOrigin::from_groups(/* e41, e42, e43, scalar */ Simd32x4::from(0.0), /* e23, e31, e12, e1234 */ Simd32x4::from(0.0));
-    }
-}
-impl Zero for AntiVersorRoundPointAligningOriginAtInfinity {
-    fn zero() -> Self {
-        return AntiVersorRoundPointAligningOriginAtInfinity::from_groups(/* e3215, scalar */ Simd32x2::from(0.0));
-    }
-}
-impl Zero for AntiVersorRoundPointOnOrigin {
-    fn zero() -> Self {
-        return AntiVersorRoundPointOnOrigin::from_groups(/* e1234, scalar */ Simd32x2::from(0.0));
     }
 }
 impl Zero for Circle {
@@ -402,6 +377,11 @@ impl Zero for DipoleOrthogonalOrigin {
         );
     }
 }
+impl Zero for DualNum {
+    fn zero() -> Self {
+        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from(0.0));
+    }
+}
 impl Zero for FlatOrigin {
     fn zero() -> Self {
         return FlatOrigin::from_groups(/* e45 */ 0.0);
@@ -520,11 +500,6 @@ impl Zero for MysteryDipoleInversion {
         return MysteryDipoleInversion::from_groups(/* e23, e31, e12, e45 */ Simd32x4::from(0.0), /* e4235, e4315, e4125 */ Simd32x3::from(0.0));
     }
 }
-impl Zero for MysteryQuadNum {
-    fn zero() -> Self {
-        return MysteryQuadNum::from_groups(/* e321, e12345 */ Simd32x2::from(0.0));
-    }
-}
 impl Zero for MysteryVersorEven {
     fn zero() -> Self {
         return MysteryVersorEven::from_groups(/* e12345, e1, e2, e3 */ Simd32x4::from(0.0), /* e415, e425, e435, e321 */ Simd32x4::from(0.0));
@@ -533,16 +508,6 @@ impl Zero for MysteryVersorEven {
 impl Zero for MysteryVersorOdd {
     fn zero() -> Self {
         return MysteryVersorOdd::from_groups(/* scalar, e4235, e4315, e4125 */ Simd32x4::from(0.0), /* e23, e31, e12, e45 */ Simd32x4::from(0.0));
-    }
-}
-impl Zero for MysteryVersorRoundPoint {
-    fn zero() -> Self {
-        return MysteryVersorRoundPoint::from_groups(/* e1, e2, e3, e12345 */ Simd32x4::from(0.0));
-    }
-}
-impl Zero for MysteryVersorSphere {
-    fn zero() -> Self {
-        return MysteryVersorSphere::from_groups(/* e4235, e4315, e4125, scalar */ Simd32x4::from(0.0));
     }
 }
 impl Zero for NullCircleAtOrigin {
@@ -583,21 +548,6 @@ impl Zero for Plane {
 impl Zero for PlaneOnOrigin {
     fn zero() -> Self {
         return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ Simd32x3::from(0.0));
-    }
-}
-impl Zero for QuadNum {
-    fn zero() -> Self {
-        return QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from(0.0));
-    }
-}
-impl Zero for QuadNumAtInfinity {
-    fn zero() -> Self {
-        return QuadNumAtInfinity::from_groups(/* e5, e321, e12345 */ Simd32x3::from(0.0));
-    }
-}
-impl Zero for QuadNumOrthogonalOrigin {
-    fn zero() -> Self {
-        return QuadNumOrthogonalOrigin::from_groups(/* e4, e5, e321 */ Simd32x3::from(0.0));
     }
 }
 impl Zero for RoundPoint {
@@ -726,45 +676,5 @@ impl Zero for VersorOddOrthogonalOrigin {
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
         );
-    }
-}
-impl Zero for VersorRoundPoint {
-    fn zero() -> Self {
-        return VersorRoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(0.0), /* e5, e12345 */ Simd32x2::from(0.0));
-    }
-}
-impl Zero for VersorRoundPointAligningOrigin {
-    fn zero() -> Self {
-        return VersorRoundPointAligningOrigin::from_groups(/* e4, e5, e12345 */ Simd32x3::from(0.0));
-    }
-}
-impl Zero for VersorRoundPointAligningOriginAtInfinity {
-    fn zero() -> Self {
-        return VersorRoundPointAligningOriginAtInfinity::from_groups(/* e5, e12345 */ Simd32x2::from(0.0));
-    }
-}
-impl Zero for VersorRoundPointAtInfinity {
-    fn zero() -> Self {
-        return VersorRoundPointAtInfinity::from_groups(/* e1, e2, e3 */ Simd32x3::from(0.0), /* e5, e12345 */ Simd32x2::from(0.0));
-    }
-}
-impl Zero for VersorRoundPointOnOrigin {
-    fn zero() -> Self {
-        return VersorRoundPointOnOrigin::from_groups(/* e4, e12345 */ Simd32x2::from(0.0));
-    }
-}
-impl Zero for VersorSphere {
-    fn zero() -> Self {
-        return VersorSphere::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(0.0), /* e1234, scalar */ Simd32x2::from(0.0));
-    }
-}
-impl Zero for VersorSphereAtInfinity {
-    fn zero() -> Self {
-        return VersorSphereAtInfinity::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(0.0), /* scalar */ 0.0);
-    }
-}
-impl Zero for VersorSphereOrthogonalOrigin {
-    fn zero() -> Self {
-        return VersorSphereOrthogonalOrigin::from_groups(/* e3215, e1234, scalar */ Simd32x3::from(0.0));
     }
 }

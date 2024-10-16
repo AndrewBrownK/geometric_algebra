@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 20
+// Total Implementations: 24
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       1       1
@@ -15,9 +15,28 @@
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       1       1
-//   Median:         2       4       1
-//  Average:         1       5       1
+//   Median:         2       7       1
+//  Average:         1       6       1
 //  Maximum:         3      11       1
+impl Fix for AntiDipoleOnOrigin {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        1
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        4        1
+    //  no simd        0       10        1
+    fn fix(self) -> Self {
+        use crate::elements::*;
+        let reverse = AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(-1.0)));
+        let geometric_product = Scalar::from_groups(/* scalar */ (reverse.group0()[3] * self.group0()[3] * -1.0));
+        let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
+        let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
+        let geometric_product_2 = AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return geometric_product_2;
+    }
+}
 impl Fix for AntiFlatOrigin {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -30,6 +49,25 @@ impl Fix for AntiFlatOrigin {
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         let geometric_product_2 = AntiFlatOrigin::from_groups(/* e321 */ (self[e321] * inverse[scalar]));
+        return geometric_product_2;
+    }
+}
+impl Fix for AntiFlatPoint {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        2        1
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        4        1
+    //  no simd        0       10        1
+    fn fix(self) -> Self {
+        use crate::elements::*;
+        let reverse = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (self.group0() * Simd32x4::from(-1.0)));
+        let geometric_product = Scalar::from_groups(/* scalar */ (reverse.group0()[3] * self.group0()[3] * -1.0));
+        let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
+        let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
+        let geometric_product_2 = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
         return geometric_product_2;
     }
 }
@@ -61,6 +99,28 @@ impl Fix for AntiFlectorOnOrigin {
         return geometric_product_2;
     }
 }
+impl Fix for AntiLineOnOrigin {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        3        1
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        2        5        1
+    //  no simd        2        9        1
+    fn fix(self) -> Self {
+        use crate::elements::*;
+        let reverse = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (self.group0() * Simd32x3::from(-1.0)));
+        let geometric_product = Scalar::from_groups(
+            // scalar
+            (-(reverse.group0()[0] * self.group0()[0]) - (reverse.group0()[1] * self.group0()[1]) - (reverse.group0()[2] * self.group0()[2])),
+        );
+        let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
+        let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
+        let geometric_product_2 = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (Simd32x3::from(inverse[scalar]) * self.group0()));
+        return geometric_product_2;
+    }
+}
 impl Fix for AntiMotorOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -84,25 +144,6 @@ impl Fix for AntiMotorOnOrigin {
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         let geometric_product_2 = AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ (Simd32x4::from(inverse[scalar]) * self.group0()));
-        return geometric_product_2;
-    }
-}
-impl Fix for AntiMysteryQuadNum {
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        3        1
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        1        4        1
-    //  no simd        1        5        1
-    fn fix(self) -> Self {
-        use crate::elements::*;
-        let reverse = AntiMysteryQuadNum::from_groups(/* e45, scalar */ Simd32x2::from([(self.group0()[0] * -1.0), self.group0()[1]]));
-        let geometric_product = Scalar::from_groups(/* scalar */ ((reverse.group0()[0] * self.group0()[0]) + (reverse.group0()[1] * self.group0()[1])));
-        let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
-        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
-        let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        let geometric_product_2 = AntiMysteryQuadNum::from_groups(/* e45, scalar */ (Simd32x2::from(inverse[scalar]) * self.group0()));
         return geometric_product_2;
     }
 }
@@ -174,6 +215,25 @@ impl Fix for AntiSphereOnOrigin {
         return geometric_product_2;
     }
 }
+impl Fix for DipoleOnOrigin {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        1
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        3        1
+    //  no simd        0        9        1
+    fn fix(self) -> Self {
+        use crate::elements::*;
+        let reverse = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ (self.group0() * Simd32x4::from(-1.0)));
+        let geometric_product = Scalar::from_groups(/* scalar */ (reverse.group0()[3] * self.group0()[3]));
+        let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
+        let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
+        let geometric_product_2 = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return geometric_product_2;
+    }
+}
 impl Fix for FlatOrigin {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -186,6 +246,25 @@ impl Fix for FlatOrigin {
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         let geometric_product_2 = FlatOrigin::from_groups(/* e45 */ (self[e45] * inverse[scalar]));
+        return geometric_product_2;
+    }
+}
+impl Fix for FlatPoint {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        1
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        3        1
+    //  no simd        0        9        1
+    fn fix(self) -> Self {
+        use crate::elements::*;
+        let reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ (self.group0() * Simd32x4::from(-1.0)));
+        let geometric_product = Scalar::from_groups(/* scalar */ (reverse.group0()[3] * self.group0()[3]));
+        let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
+        let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
+        let geometric_product_2 = FlatPoint::from_groups(/* e15, e25, e35, e45 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
         return geometric_product_2;
     }
 }
@@ -217,6 +296,28 @@ impl Fix for FlectorOnOrigin {
         return geometric_product_2;
     }
 }
+impl Fix for LineOnOrigin {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        2        3        1
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        2        5        1
+    //  no simd        2        9        1
+    fn fix(self) -> Self {
+        use crate::elements::*;
+        let reverse = LineOnOrigin::from_groups(/* e415, e425, e435 */ (self.group0() * Simd32x3::from(-1.0)));
+        let geometric_product = Scalar::from_groups(
+            // scalar
+            ((reverse.group0()[0] * self.group0()[0]) + (reverse.group0()[1] * self.group0()[1]) + (reverse.group0()[2] * self.group0()[2])),
+        );
+        let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
+        let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
+        let geometric_product_2 = LineOnOrigin::from_groups(/* e415, e425, e435 */ (Simd32x3::from(inverse[scalar]) * self.group0()));
+        return geometric_product_2;
+    }
+}
 impl Fix for MotorOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -240,25 +341,6 @@ impl Fix for MotorOnOrigin {
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         let geometric_product_2 = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
-        return geometric_product_2;
-    }
-}
-impl Fix for MysteryQuadNum {
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        3        1
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        1        4        1
-    //  no simd        1        5        1
-    fn fix(self) -> Self {
-        use crate::elements::*;
-        let reverse = MysteryQuadNum::from_groups(/* e321, e12345 */ Simd32x2::from([(self.group0()[0] * -1.0), self.group0()[1]]));
-        let geometric_product = Scalar::from_groups(/* scalar */ (-(reverse.group0()[0] * self.group0()[0]) - (reverse.group0()[1] * self.group0()[1])));
-        let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
-        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
-        let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        let geometric_product_2 = MysteryQuadNum::from_groups(/* e321, e12345 */ (Simd32x2::from(inverse[scalar]) * self.group0()));
         return geometric_product_2;
     }
 }

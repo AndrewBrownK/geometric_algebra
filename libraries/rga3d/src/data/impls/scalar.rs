@@ -13,8 +13,8 @@ use crate::traits::Wedge;
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       1       0
-//  Average:         0       1       0
-//  Maximum:         1       6       0
+//  Average:         0       2       0
+//  Maximum:         1      16       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -217,9 +217,8 @@ impl std::ops::BitXor<AntiScalar> for Scalar {
 impl std::ops::BitXor<DualNum> for Scalar {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        1        0
-    // no simd        0        2        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn bitxor(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -228,9 +227,8 @@ impl std::ops::BitXor<DualNum> for Scalar {
 impl std::ops::BitXor<Flector> for Scalar {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //      add/sub      mul      div
+    // f32        0        8        0
     fn bitxor(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -249,9 +247,8 @@ impl std::ops::BitXor<Horizon> for Scalar {
 impl std::ops::BitXor<Line> for Scalar {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn bitxor(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -260,9 +257,8 @@ impl std::ops::BitXor<Line> for Scalar {
 impl std::ops::BitXor<Motor> for Scalar {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //      add/sub      mul      div
+    // f32        0        8        0
     fn bitxor(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -271,13 +267,8 @@ impl std::ops::BitXor<Motor> for Scalar {
 impl std::ops::BitXor<MultiVector> for Scalar {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //    simd2        0        1        0
-    //    simd3        0        2        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       16        0
+    //      add/sub      mul      div
+    // f32        0       16        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -296,9 +287,8 @@ impl std::ops::BitXor<Origin> for Scalar {
 impl std::ops::BitXor<Plane> for Scalar {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        4        0
     fn bitxor(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -307,9 +297,8 @@ impl std::ops::BitXor<Plane> for Scalar {
 impl std::ops::BitXor<Point> for Scalar {
     type Output = Point;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        4        0
     fn bitxor(self, other: Point) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -344,9 +333,8 @@ impl std::ops::Mul<AntiScalar> for Scalar {
 impl std::ops::Mul<DualNum> for Scalar {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd2        0        1        0
-    // no simd        0        2        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn mul(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -355,9 +343,8 @@ impl std::ops::Mul<DualNum> for Scalar {
 impl std::ops::Mul<Flector> for Scalar {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //      add/sub      mul      div
+    // f32        0        8        0
     fn mul(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -376,9 +363,8 @@ impl std::ops::Mul<Horizon> for Scalar {
 impl std::ops::Mul<Line> for Scalar {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        2        0
-    // no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn mul(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -387,9 +373,8 @@ impl std::ops::Mul<Line> for Scalar {
 impl std::ops::Mul<Motor> for Scalar {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //      add/sub      mul      div
+    // f32        0        8        0
     fn mul(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -398,13 +383,8 @@ impl std::ops::Mul<Motor> for Scalar {
 impl std::ops::Mul<MultiVector> for Scalar {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //    simd2        0        1        0
-    //    simd3        0        2        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       16        0
+    //      add/sub      mul      div
+    // f32        0       16        0
     fn mul(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -423,9 +403,8 @@ impl std::ops::Mul<Origin> for Scalar {
 impl std::ops::Mul<Plane> for Scalar {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        4        0
     fn mul(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -434,9 +413,8 @@ impl std::ops::Mul<Plane> for Scalar {
 impl std::ops::Mul<Point> for Scalar {
     type Output = Point;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        4        0
     fn mul(self, other: Point) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);

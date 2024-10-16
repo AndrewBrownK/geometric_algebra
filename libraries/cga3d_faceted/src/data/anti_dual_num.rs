@@ -1,84 +1,78 @@
 use crate::data::*;
 use crate::simd::*;
 
-/// AntiQuadNum.
-/// This variant of VersorOdd is the Dual to QuadNum. It is common for
+/// AntiDualNum.
+/// This variant of VersorOddOrthogonalOrigin is the Dual to DualNum. It is common for
 /// objects of this type to not intersect the null cone, which also prevents them from
 /// projecting onto the horosphere in the usual manner. When this happens, this
-/// object has behavioral and operative similarity to a VersorOdd,
+/// object has behavioral and operative similarity to a VersorOddOrthogonalOrigin,
 /// but an imaginary radius, and a spacial presence in the shape of a
-/// QuadNum with a real radius.
+/// DualNum with a real radius.
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
-pub union AntiQuadNum {
-    groups: AntiQuadNumGroups,
-    /// e1234, e3215, e45, scalar
+pub union AntiDualNum {
+    groups: AntiDualNumGroups,
+    /// e1234, scalar, 0, 0
     elements: [f32; 4],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
-pub struct AntiQuadNumGroups {
-    /// e1234, e3215, e45, scalar
-    g0: Simd32x4,
+pub struct AntiDualNumGroups {
+    /// e1234, scalar
+    g0: Simd32x2,
 }
-impl AntiQuadNum {
+impl AntiDualNum {
     #[allow(clippy::too_many_arguments)]
-    pub const fn from_elements(e1234: f32, e3215: f32, e45: f32, scalar: f32) -> Self {
+    pub const fn from_elements(e1234: f32, scalar: f32) -> Self {
         Self {
-            elements: [e1234, e3215, e45, scalar],
+            elements: [e1234, scalar, 0.0, 0.0],
         }
     }
-    pub const fn from_groups(g0: Simd32x4) -> Self {
-        Self { groups: AntiQuadNumGroups { g0 } }
+    pub const fn from_groups(g0: Simd32x2) -> Self {
+        Self { groups: AntiDualNumGroups { g0 } }
     }
     #[inline(always)]
-    pub fn group0(&self) -> Simd32x4 {
+    pub fn group0(&self) -> Simd32x2 {
         unsafe { self.groups.g0 }
     }
     #[inline(always)]
-    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
+    pub fn group0_mut(&mut self) -> &mut Simd32x2 {
         unsafe { &mut self.groups.g0 }
     }
 }
-const ANTI_QUAD_NUM_INDEX_REMAP: [usize; 4] = [0, 1, 2, 3];
-impl std::ops::Index<usize> for AntiQuadNum {
+const ANTI_DUAL_NUM_INDEX_REMAP: [usize; 2] = [0, 1];
+impl std::ops::Index<usize> for AntiDualNum {
     type Output = f32;
     fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[ANTI_QUAD_NUM_INDEX_REMAP[index]] }
+        unsafe { &self.elements[ANTI_DUAL_NUM_INDEX_REMAP[index]] }
     }
 }
-impl std::ops::IndexMut<usize> for AntiQuadNum {
+impl std::ops::IndexMut<usize> for AntiDualNum {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[ANTI_QUAD_NUM_INDEX_REMAP[index]] }
+        unsafe { &mut self.elements[ANTI_DUAL_NUM_INDEX_REMAP[index]] }
     }
 }
-impl From<AntiQuadNum> for [f32; 4] {
-    fn from(vector: AntiQuadNum) -> Self {
-        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3]] }
+impl From<AntiDualNum> for [f32; 2] {
+    fn from(vector: AntiDualNum) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1]] }
     }
 }
-impl From<[f32; 4]> for AntiQuadNum {
-    fn from(array: [f32; 4]) -> Self {
+impl From<[f32; 2]> for AntiDualNum {
+    fn from(array: [f32; 2]) -> Self {
         Self {
-            elements: [array[0], array[1], array[2], array[3]],
+            elements: [array[0], array[1], 0.0, 0.0],
         }
     }
 }
-impl std::fmt::Debug for AntiQuadNum {
+impl std::fmt::Debug for AntiDualNum {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter
-            .debug_struct("AntiQuadNum")
-            .field("e1234", &self[0])
-            .field("e3215", &self[1])
-            .field("e45", &self[2])
-            .field("scalar", &self[3])
-            .finish()
+        formatter.debug_struct("AntiDualNum").field("e1234", &self[0]).field("scalar", &self[1]).finish()
     }
 }
 
-impl AntiQuadNum {
-    pub const LEN: usize = 4;
+impl AntiDualNum {
+    pub const LEN: usize = 2;
 }
 
-impl AntiQuadNum {
+impl AntiDualNum {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
             let f = self[i];
@@ -90,7 +84,7 @@ impl AntiQuadNum {
     }
 }
 
-impl PartialOrd for AntiQuadNum {
+impl PartialOrd for AntiDualNum {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         for i in 0..Self::LEN {
             let a = float_ord::FloatOrd(self[i]);
@@ -103,7 +97,7 @@ impl PartialOrd for AntiQuadNum {
         Some(std::cmp::Ordering::Equal)
     }
 }
-impl Ord for AntiQuadNum {
+impl Ord for AntiDualNum {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         for i in 0..Self::LEN {
             let a = float_ord::FloatOrd(self[i]);
@@ -116,7 +110,7 @@ impl Ord for AntiQuadNum {
         std::cmp::Ordering::Equal
     }
 }
-impl PartialEq for AntiQuadNum {
+impl PartialEq for AntiDualNum {
     fn eq(&self, other: &Self) -> bool {
         for i in 0..Self::LEN {
             let a = float_ord::FloatOrd(self[i]);
@@ -128,8 +122,8 @@ impl PartialEq for AntiQuadNum {
         true
     }
 }
-impl Eq for AntiQuadNum {}
-impl std::hash::Hash for AntiQuadNum {
+impl Eq for AntiDualNum {}
+impl std::hash::Hash for AntiDualNum {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         for i in 0..Self::LEN {
             self[i].to_bits().hash(state);
@@ -137,48 +131,26 @@ impl std::hash::Hash for AntiQuadNum {
     }
 }
 
-impl std::ops::Index<crate::elements::e1234> for AntiQuadNum {
+impl std::ops::Index<crate::elements::e1234> for AntiDualNum {
     type Output = f32;
     fn index(&self, _: crate::elements::e1234) -> &Self::Output {
         &self[0]
     }
 }
-impl std::ops::Index<crate::elements::e3215> for AntiQuadNum {
+impl std::ops::Index<crate::elements::scalar> for AntiDualNum {
     type Output = f32;
-    fn index(&self, _: crate::elements::e3215) -> &Self::Output {
+    fn index(&self, _: crate::elements::scalar) -> &Self::Output {
         &self[1]
     }
 }
-impl std::ops::Index<crate::elements::e45> for AntiQuadNum {
-    type Output = f32;
-    fn index(&self, _: crate::elements::e45) -> &Self::Output {
-        &self[2]
-    }
-}
-impl std::ops::Index<crate::elements::scalar> for AntiQuadNum {
-    type Output = f32;
-    fn index(&self, _: crate::elements::scalar) -> &Self::Output {
-        &self[3]
-    }
-}
-impl std::ops::IndexMut<crate::elements::e1234> for AntiQuadNum {
+impl std::ops::IndexMut<crate::elements::e1234> for AntiDualNum {
     fn index_mut(&self, _: crate::elements::e1234) -> &mut Self::Output {
         &mut self[0]
     }
 }
-impl std::ops::IndexMut<crate::elements::e3215> for AntiQuadNum {
-    fn index_mut(&self, _: crate::elements::e3215) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::scalar> for AntiDualNum {
+    fn index_mut(&self, _: crate::elements::scalar) -> &mut Self::Output {
         &mut self[1]
     }
 }
-impl std::ops::IndexMut<crate::elements::e45> for AntiQuadNum {
-    fn index_mut(&self, _: crate::elements::e45) -> &mut Self::Output {
-        &mut self[2]
-    }
-}
-impl std::ops::IndexMut<crate::elements::scalar> for AntiQuadNum {
-    fn index_mut(&self, _: crate::elements::scalar) -> &mut Self::Output {
-        &mut self[3]
-    }
-}
-include!("./impls/anti_quad_num.rs");
+include!("./impls/anti_dual_num.rs");
