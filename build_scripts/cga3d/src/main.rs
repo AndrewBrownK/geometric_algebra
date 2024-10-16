@@ -5,17 +5,14 @@
 #![feature(adt_const_params)]
 
 use codegen::algebra2::multivector::DeclareMultiVecs;
-use codegen::ast2::datatype::{Float, MultiVector};
-use codegen::ast2::expressions::{FloatExpr, IntExpr};
 use codegen::ast2::traits::{
-    TraitDef_2_Types_2_Args,
-    TraitDef_1_Type_2_Args_i32,
-    TraitDef_1_Type_2_Args_f32,
     TraitDef_1_Type_1_Arg,
-    TraitImplBuilder,
+    TraitDef_1_Type_2_Args_f32,
+    TraitDef_1_Type_2_Args_i32,
+    TraitDef_2_Types_2_Args
+    ,
 };
-use codegen::ast2::Variable;
-use codegen::build_scripts2::common_traits::{AntiPowf, AntiPowi, AntiSquare, AntiSquareRoot, GeometricAntiProduct};
+use codegen::build_scripts2::common_traits::GeometricAntiProduct;
 use codegen::elements::e12345;
 
 codegen::multi_vecs! { e12345;
@@ -23,11 +20,11 @@ codegen::multi_vecs! { e12345;
     // Special Objects
     Scalar     as scalar;
     AntiScalar as e12345;
-    DualNum5   as e5, e12345;
-    DualNum4   as e4, e12345;
-    DualNum321 as e321, e12345;
-    TripleNum    as e4, e5, e12345;
-    QuadNum    as e4, e5, e321, e12345;
+    DualNum    as e4, e12345;
+    // DualNum5   as e5, e12345;
+    // DualNum321 as e321, e12345;
+    // TripleNum    as e4, e5, e12345;
+    // QuadNum    as e4, e5, e321, e12345;
 
     // Uniform Grade Flat Objects
     FlatPoint  as e15, e25, e35, e45;
@@ -48,12 +45,8 @@ codegen::multi_vecs! { e12345;
     // 3 reflections
     DipoleInversion as e41, e42, e43 | e23, e31, e12, e45 | e15, e25, e35, e1234 | e4235, e4315, e4125, e3215;
     // 4 reflections
-    // TODO is this actually a Versor, or more like a non-geometric DualNum?
-    VersorRoundPoint as e1, e2, e3, e4 | e5, e12345;
     VersorEven as e423, e431, e412, e12345 | e415, e425, e435, e321 | e235, e315, e125, e5 | e1, e2, e3, e4;
     // 5 reflections
-    // TODO is this actually a Versor, or more like a non-geometric DualNum?
-    VersorSphere     as e4235, e4315, e4125, e3215 | e1234, scalar;
     VersorOdd  as e41, e42, e43, scalar | e23, e31, e12, e45 | e15, e25, e35, e1234 | e4235, e4315, e4125, e3215;
 }
 
@@ -81,7 +74,6 @@ fn main() {
         Fix AntiFix
         ConstraintViolation AntiConstraintViolation
         ConstraintValid AntiConstraintValid
-        Square AntiSquare
     };
     codegen::operators! { repo, traits;
         fancy_infix => Div;
@@ -156,7 +148,10 @@ pub mod custom_traits {
     });
 }
 
+
+
 #[test]
+#[cfg(feature = "incorrect-wip-traits")]
 fn test_powf() {
     let cga3d = codegen::ga! { e12345;
         1 => e1, e2, e3, eP;

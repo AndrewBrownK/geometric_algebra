@@ -1,3 +1,4 @@
+#![cfg_attr(rustfmt, rustfmt_skip)]
 #![allow(non_upper_case_globals)]
 
 use crate::algebra2::basis::grades::{AntiGrades, Grades};
@@ -5,117 +6,243 @@ use crate::ast2::impls::{Elaborated, InlineOnly};
 use crate::ast2::traits::{NameTrait, TraitDef_1_Type_1_Arg, TraitImpl_10, TraitImpl_11, TraitImpl_21};
 use crate::build_scripts2::common_traits::impls::*;
 
-pub static Zero: Elaborated<ZeroImpl> = ZeroImpl.new_trait_named("Zero").blurb("All elements set to zero.");
-pub static One: Elaborated<OneImpl> = OneImpl.new_trait_named("One").blurb("The scalar element set to one, and all other elements set to zero.");
-pub static AntiOne: Elaborated<AntiOneImpl> = AntiOneImpl.new_trait_named("AntiOne").blurb("The anti-scalar element set to one, and all other elements set to zero.");
-pub static Unit: Elaborated<UnitImpl> = UnitImpl.new_trait_named("Unit").blurb("All elements set to one.");
-pub static Grade: Elaborated<GradeImpl> = GradeImpl.new_trait_named("Grade").blurb(
-    "A multivector class may have uniform grade, or mixed grade, depending on \
-    the grades of its elements. This trait only characterizes uniform grade multivectors.",
-);
-pub static AntiGrade: Elaborated<AntiGradeImpl> = AntiGradeImpl.new_trait_named("AntiGrade").blurb(
-    "The AntiGrade can be described as the missing Grade with respect to an \
-    AntiScalar. This trait only characterizes uniform anti-grade multivectors.",
-);
+pub static Zero: Elaborated<ZeroImpl> = ZeroImpl
+    .new_trait_named("Zero")
+    .blurb("All elements set to zero.");
+pub static One: Elaborated<OneImpl> = OneImpl
+    .new_trait_named("One")
+    .blurb("The scalar element set to one, and all other elements set to zero.");
+pub static AntiOne: Elaborated<AntiOneImpl> = AntiOneImpl
+    .new_trait_named("AntiOne")
+    .blurb("The anti-scalar element set to one, and all other elements set to zero.");
+pub static Unit: Elaborated<UnitImpl> = UnitImpl
+    .new_trait_named("Unit")
+    .blurb("All elements set to one.");
+pub static Grade: Elaborated<GradeImpl> = GradeImpl
+    .new_trait_named("Grade")
+    .blurb("A multivector class may have uniform grade, or mixed grade, depending on \
+    the grades of its elements. This trait only characterizes uniform grade multivectors.");
+pub static AntiGrade: Elaborated<AntiGradeImpl> = AntiGradeImpl
+    .new_trait_named("AntiGrade")
+    .blurb("The AntiGrade can be described as the missing Grade with respect to an \
+    AntiScalar. This trait only characterizes uniform anti-grade multivectors.");
 
-pub static RightDual: Elaborated<RightDualImpl> = RightDualImpl.new_trait_named("RightDual").blurb("TODO");
+pub static RightDual: Elaborated<RightDualImpl> = RightDualImpl
+    .new_trait_named("RightDual")
+    .blurb("TODO");
 
-pub static RightAntiDual: Elaborated<RightAntiDualImpl> = RightAntiDualImpl.new_trait_named("RightAntiDual").blurb("TODO");
+pub static RightAntiDual: Elaborated<RightAntiDualImpl> = RightAntiDualImpl
+    .new_trait_named("RightAntiDual")
+    .blurb("TODO");
 
-pub static LeftDual: Elaborated<LeftDualImpl> = LeftDualImpl.new_trait_named("LeftDual").blurb("TODO");
+pub static LeftDual: Elaborated<LeftDualImpl> = LeftDualImpl
+    .new_trait_named("LeftDual")
+    .blurb("TODO");
 
-pub static LeftAntiDual: Elaborated<LeftAntiDualImpl> = LeftAntiDualImpl.new_trait_named("LeftAntiDual").blurb("TODO");
+pub static LeftAntiDual: Elaborated<LeftAntiDualImpl> = LeftAntiDualImpl
+    .new_trait_named("LeftAntiDual")
+    .blurb("TODO");
 
-pub static Reverse: Elaborated<ReverseImpl> = ReverseImpl.new_trait_named("Reverse").blurb("TODO");
+pub static Reverse: Elaborated<ReverseImpl> = ReverseImpl
+    .new_trait_named("Reverse")
+    .blurb("TODO");
 
-pub static AntiReverse: Elaborated<AntiReverseImpl> = AntiReverseImpl.new_trait_named("AntiReverse").blurb("TODO");
+pub static AntiReverse: Elaborated<AntiReverseImpl> = AntiReverseImpl
+    .new_trait_named("AntiReverse")
+    .blurb("TODO");
 
-pub static AutoMorphism: Elaborated<AutoMorphismImpl> = AutoMorphismImpl.new_trait_named("AutoMorphism").blurb("TODO");
+pub static AutoMorphism: Elaborated<AutoMorphismImpl> = AutoMorphismImpl
+    .new_trait_named("AutoMorphism")
+    .blurb("TODO");
 
-pub static AntiAutoMorphism: Elaborated<AntiAutoMorphismImpl> = AntiAutoMorphismImpl.new_trait_named("AntiAutoMorphism").blurb("TODO");
+pub static AntiAutoMorphism: Elaborated<AntiAutoMorphismImpl> = AntiAutoMorphismImpl
+    .new_trait_named("AntiAutoMorphism")
+    .blurb("TODO");
 
-pub static Conjugation: Elaborated<ConjugationImpl> = ConjugationImpl.new_trait_named("Conjugation").blurb("TODO");
+pub static Conjugation: Elaborated<ConjugationImpl> = ConjugationImpl
+    .new_trait_named("Conjugation")
+    .blurb("TODO");
 
-pub static AntiConjugation: Elaborated<AntiConjugationImpl> = AntiConjugationImpl.new_trait_named("AntiConjugation").blurb("TODO");
+pub static AntiConjugation: Elaborated<AntiConjugationImpl> = AntiConjugationImpl
+    .new_trait_named("AntiConjugation")
+    .blurb("TODO");
 
-pub static RightComplement: Elaborated<RightComplementImpl> = RightComplementImpl.new_trait_named("RightComplement").blurb("TODO");
+pub static RightComplement: Elaborated<RightComplementImpl> = RightComplementImpl
+    .new_trait_named("RightComplement")
+    .blurb("TODO");
 
-pub static LeftComplement: Elaborated<LeftComplementImpl> = LeftComplementImpl.new_trait_named("LeftComplement").blurb("TODO");
+pub static LeftComplement: Elaborated<LeftComplementImpl> = LeftComplementImpl
+    .new_trait_named("LeftComplement")
+    .blurb("TODO");
 
-pub static DoubleComplement: Elaborated<DoubleComplementImpl> = DoubleComplementImpl.new_trait_named("DoubleComplement").blurb("TODO");
+pub static DoubleComplement: Elaborated<DoubleComplementImpl> = DoubleComplementImpl
+    .new_trait_named("DoubleComplement")
+    .blurb("TODO");
 
-pub static Negation: Elaborated<NegationImpl> = NegationImpl.new_trait_named("Negation").blurb("TODO");
+pub static Negation: Elaborated<NegationImpl> = NegationImpl
+    .new_trait_named("Negation")
+    .blurb("TODO");
 
-pub static Addition: Elaborated<AdditionImpl> = AdditionImpl.new_trait_named("Addition").blurb("TODO");
+pub static Addition: Elaborated<AdditionImpl> = AdditionImpl
+    .new_trait_named("Addition")
+    .blurb("TODO");
 
-pub static Subtraction: Elaborated<SubtractionImpl> = SubtractionImpl.new_trait_named("Subtraction").blurb("TODO");
+pub static Subtraction: Elaborated<SubtractionImpl> = SubtractionImpl
+    .new_trait_named("Subtraction")
+    .blurb("TODO");
 
-pub static Wedge: Elaborated<WedgeImpl> = WedgeImpl.new_trait_named("Wedge").blurb("TODO");
-pub static AntiWedge: Elaborated<AntiWedgeImpl> = AntiWedgeImpl.new_trait_named("AntiWedge").blurb("TODO");
+pub static Wedge: Elaborated<WedgeImpl> = WedgeImpl
+    .new_trait_named("Wedge")
+    .blurb("TODO");
+pub static AntiWedge: Elaborated<AntiWedgeImpl> = AntiWedgeImpl
+    .new_trait_named("AntiWedge")
+    .blurb("TODO");
 
-pub static GeometricProduct: Elaborated<GeometricProductImpl> = GeometricProductImpl.new_trait_named("GeometricProduct").blurb("TODO");
+pub static GeometricProduct: Elaborated<GeometricProductImpl> = GeometricProductImpl
+    .new_trait_named("GeometricProduct")
+    .blurb("TODO");
 
-pub static GeometricAntiProduct: Elaborated<GeometricAntiProductImpl> = GeometricAntiProductImpl.new_trait_named("GeometricAntiProduct").blurb("TODO");
+pub static GeometricAntiProduct: Elaborated<GeometricAntiProductImpl> = GeometricAntiProductImpl
+    .new_trait_named("GeometricAntiProduct")
+    .blurb("TODO");
 
-pub static Sandwich: Elaborated<SandwichImpl> = SandwichImpl.new_trait_named("Sandwich").blurb("TODO");
+pub static Sandwich: Elaborated<SandwichImpl> = SandwichImpl
+    .new_trait_named("Sandwich")
+    .blurb("TODO");
 
-pub static AntiSandwich: Elaborated<AntiSandwichImpl> = AntiSandwichImpl.new_trait_named("AntiSandwich").blurb("TODO");
+pub static AntiSandwich: Elaborated<AntiSandwichImpl> = AntiSandwichImpl
+    .new_trait_named("AntiSandwich")
+    .blurb("TODO");
 
-pub static ScalarProduct: Elaborated<ScalarProductImpl> = ScalarProductImpl.new_trait_named("ScalarProduct").blurb("TODO");
+pub static ScalarProduct: Elaborated<ScalarProductImpl> = ScalarProductImpl
+    .new_trait_named("ScalarProduct")
+    .blurb("TODO");
 
-pub static AntiScalarProduct: Elaborated<AntiScalarProductImpl> = AntiScalarProductImpl.new_trait_named("AntiScalarProduct").blurb("TODO");
+pub static AntiScalarProduct: Elaborated<AntiScalarProductImpl> = AntiScalarProductImpl
+    .new_trait_named("AntiScalarProduct")
+    .blurb("TODO");
 
-pub static ScalarNormSquared: Elaborated<ScalarNormSquaredImpl> = ScalarNormSquaredImpl.new_trait_named("ScalarNormSquared").blurb("TODO");
+pub static ScalarNormSquared: Elaborated<ScalarNormSquaredImpl> = ScalarNormSquaredImpl
+    .new_trait_named("ScalarNormSquared")
+    .blurb("TODO");
 
-pub static AntiScalarNormSquared: Elaborated<AntiScalarNormImpl> = AntiScalarNormImpl.new_trait_named("AntiScalarNormSquared").blurb("TODO");
+pub static AntiScalarNormSquared: Elaborated<AntiScalarNormImpl> = AntiScalarNormImpl
+    .new_trait_named("AntiScalarNormSquared")
+    .blurb("TODO");
 
-pub static ScalarNorm: Elaborated<ScalarNormSquaredImpl> = ScalarNormSquaredImpl.new_trait_named("ScalarNorm").blurb("TODO");
+pub static ScalarNorm: Elaborated<ScalarNormSquaredImpl> = ScalarNormSquaredImpl
+    .new_trait_named("ScalarNorm")
+    .blurb("TODO");
 
-pub static AntiScalarNorm: Elaborated<AntiScalarNormImpl> = AntiScalarNormImpl.new_trait_named("AntiScalarNorm").blurb("TODO");
+pub static AntiScalarNorm: Elaborated<AntiScalarNormImpl> = AntiScalarNormImpl
+    .new_trait_named("AntiScalarNorm")
+    .blurb("TODO");
 
-pub static Powf: Elaborated<PowfImpl> = PowfImpl.new_trait_named("Powf").blurb("TODO");
-pub static Powi: Elaborated<PowiImpl> = PowiImpl.new_trait_named("Powi").blurb("TODO");
-pub static AntiPowf: Elaborated<AntiPowfImpl> = AntiPowfImpl.new_trait_named("AntiPowf").blurb("TODO");
-pub static AntiPowi: Elaborated<AntiPowiImpl> = AntiPowiImpl.new_trait_named("AntiPowi").blurb("TODO");
 
-pub static ConstraintViolation: Elaborated<ConstraintViolationImpl> = ConstraintViolationImpl.new_trait_named("ConstraintViolation").blurb("TODO");
 
-pub static AntiConstraintViolation: Elaborated<AntiConstraintViolationImpl> = AntiConstraintViolationImpl.new_trait_named("AntiConstraintViolation").blurb("TODO");
 
-pub static ConstraintValid: Elaborated<ConstraintValidImpl> = ConstraintValidImpl.new_trait_named("ConstraintValid").blurb("TODO");
 
-pub static AntiConstraintValid: Elaborated<AntiConstraintValidImpl> = AntiConstraintValidImpl.new_trait_named("AntiConstraintValid").blurb("TODO");
+#[cfg(feature = "incorrect-wip-traits")]
+pub static Square: Elaborated<SquareImpl> = SquareImpl
+    .new_trait_named("Square")
+    .blurb("TODO");
+#[cfg(feature = "incorrect-wip-traits")]
+pub static AntiSquare: Elaborated<AntiSquareImpl> = AntiSquareImpl
+    .new_trait_named("AntiSquare")
+    .blurb("TODO");
+#[cfg(feature = "incorrect-wip-traits")]
+pub static Powf: Elaborated<PowfImpl> = PowfImpl
+    .new_trait_named("Powf")
+    .blurb("TODO");
+#[cfg(feature = "incorrect-wip-traits")]
+pub static Powi: Elaborated<PowiImpl> = PowiImpl
+    .new_trait_named("Powi")
+    .blurb("TODO");
+#[cfg(feature = "incorrect-wip-traits")]
+pub static AntiPowf: Elaborated<AntiPowfImpl> = AntiPowfImpl
+    .new_trait_named("AntiPowf")
+    .blurb("TODO");
+#[cfg(feature = "incorrect-wip-traits")]
+pub static AntiPowi: Elaborated<AntiPowiImpl> = AntiPowiImpl
+    .new_trait_named("AntiPowi")
+    .blurb("TODO");
 
-pub static Fix: Elaborated<FixImpl> = FixImpl.new_trait_named("Fix").blurb("TODO");
 
-pub static AntiFix: Elaborated<AntiFixImpl> = AntiFixImpl.new_trait_named("AntiFixImpl").blurb("TODO");
 
-pub static Inverse: Elaborated<InverseImpl> = InverseImpl.new_trait_named("Inverse").blurb("TODO");
 
-pub static AntiInverse: Elaborated<AntiInverseImpl> = AntiInverseImpl.new_trait_named("AntiInverse").blurb("TODO");
 
-pub static GeometricQuotient: Elaborated<GeometricQuotientImpl> = GeometricQuotientImpl.new_trait_named("GeometricQuotient").blurb("TODO");
 
-pub static GeometricAntiQuotient: Elaborated<GeometricAntiQuotientImpl> = GeometricAntiQuotientImpl.new_trait_named("GeometricAntiQuotient").blurb("TODO");
+pub static ConstraintViolation: Elaborated<ConstraintViolationImpl> = ConstraintViolationImpl
+    .new_trait_named("ConstraintViolation")
+    .blurb("TODO");
 
-pub static SquareRoot: Elaborated<SquareRootImpl> = SquareRootImpl.new_trait_named("SquareRoot").blurb("TODO");
+pub static AntiConstraintViolation: Elaborated<AntiConstraintViolationImpl> = AntiConstraintViolationImpl
+    .new_trait_named("AntiConstraintViolation")
+    .blurb("TODO");
 
-pub static AntiSquareRoot: Elaborated<AntiSquareRootImpl> = AntiSquareRootImpl.new_trait_named("AntiSquareRoot").blurb("TODO");
+pub static ConstraintValid: Elaborated<ConstraintValidImpl> = ConstraintValidImpl
+    .new_trait_named("ConstraintValid")
+    .blurb("TODO");
 
-pub static Square: Elaborated<SquareImpl> = SquareImpl.new_trait_named("Square").blurb("TODO");
-pub static AntiSquare: Elaborated<AntiSquareImpl> = AntiSquareImpl.new_trait_named("AntiSquare").blurb("TODO");
+pub static AntiConstraintValid: Elaborated<AntiConstraintValidImpl> = AntiConstraintValidImpl
+    .new_trait_named("AntiConstraintValid")
+    .blurb("TODO");
 
-pub static BulkContraction: Elaborated<BulkContractionImpl> = BulkContractionImpl.new_trait_named("BulkContraction").blurb("TODO");
+pub static Fix: Elaborated<FixImpl> = FixImpl
+    .new_trait_named("Fix")
+    .blurb("TODO");
 
-pub static WeightContraction: Elaborated<WeightContractionImpl> = WeightContractionImpl.new_trait_named("WeightContraction").blurb("TODO");
+pub static AntiFix: Elaborated<AntiFixImpl> = AntiFixImpl
+    .new_trait_named("AntiFixImpl")
+    .blurb("TODO");
 
-pub static BulkExpansion: Elaborated<BulkExpansionImpl> = BulkExpansionImpl.new_trait_named("BulkExpansion").blurb("TODO");
+pub static Inverse: Elaborated<InverseImpl> = InverseImpl
+    .new_trait_named("Inverse")
+    .blurb("TODO");
 
-pub static WeightExpansion: Elaborated<WeightExpansionImpl> = WeightExpansionImpl.new_trait_named("WeightExpansion").blurb("TODO");
+pub static AntiInverse: Elaborated<AntiInverseImpl> = AntiInverseImpl
+    .new_trait_named("AntiInverse")
+    .blurb("TODO");
 
-pub static Into: Elaborated<IntoImpl> = IntoImpl.new_trait_named("Into").blurb("TODO");
+pub static GeometricQuotient: Elaborated<GeometricQuotientImpl> = GeometricQuotientImpl
+    .new_trait_named("GeometricQuotient")
+    .blurb("TODO");
 
-pub static TryInto: Elaborated<TryIntoImpl> = TryIntoImpl.new_trait_named("TryInto").blurb("TODO");
+pub static GeometricAntiQuotient: Elaborated<GeometricAntiQuotientImpl> = GeometricAntiQuotientImpl
+    .new_trait_named("GeometricAntiQuotient")
+    .blurb("TODO");
+
+pub static SquareRoot: Elaborated<SquareRootImpl> = SquareRootImpl
+    .new_trait_named("SquareRoot")
+    .blurb("TODO");
+
+pub static AntiSquareRoot: Elaborated<AntiSquareRootImpl> = AntiSquareRootImpl
+    .new_trait_named("AntiSquareRoot")
+    .blurb("TODO");
+
+pub static BulkContraction: Elaborated<BulkContractionImpl> = BulkContractionImpl
+    .new_trait_named("BulkContraction")
+    .blurb("TODO");
+
+pub static WeightContraction: Elaborated<WeightContractionImpl> = WeightContractionImpl
+    .new_trait_named("WeightContraction")
+    .blurb("TODO");
+
+pub static BulkExpansion: Elaborated<BulkExpansionImpl> = BulkExpansionImpl
+    .new_trait_named("BulkExpansion")
+    .blurb("TODO");
+
+pub static WeightExpansion: Elaborated<WeightExpansionImpl> = WeightExpansionImpl
+    .new_trait_named("WeightExpansion")
+    .blurb("TODO");
+
+pub static Into: Elaborated<IntoImpl> = IntoImpl
+    .new_trait_named("Into")
+    .blurb("TODO");
+
+pub static TryInto: Elaborated<TryIntoImpl> = TryIntoImpl
+    .new_trait_named("TryInto")
+    .blurb("TODO");
 
 // NOTE: If you find yourself wanting to generate grade selection traits, you are
 // probably generating extremely wasteful implementations that perform a lot more
@@ -147,17 +274,17 @@ pub const fn select_anti_grades(anti_grades: AntiGrades) -> InlineOnly<SelectAnt
 
 mod impls {
     use std::collections::{BTreeMap, BTreeSet};
-    use std::ops::MulAssign;
+
     use async_trait::async_trait;
 
-    use crate::algebra2::basis::grades::{AntiGrades, Grades};
     use crate::algebra2::basis::{BasisElement, BasisSignature};
+    use crate::algebra2::basis::grades::{AntiGrades, Grades};
     use crate::algebra2::multivector::DynamicMultiVector;
     use crate::ast2::datatype::{Integer, MultiVector};
-    use crate::ast2::expressions::{Expression, FloatExpr, IntExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
-    use crate::ast2::traits::{HasNotReturned, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImplBuilder, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitDef_1_Type_2_Args_f32};
+    use crate::ast2::expressions::{Expression, FloatExpr, IntExpr};
+    use crate::ast2::traits::{HasNotReturned, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder};
     use crate::ast2::Variable;
-    use crate::build_scripts2::common_traits::{AntiInverse, AntiPowf, AntiReverse, AntiScalarProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Powf, Reverse, RightAntiDual, RightDual, ScalarProduct, SquareRoot, Subtraction, Wedge};
+    use crate::build_scripts2::common_traits::{AntiInverse, AntiReverse, AntiScalarProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightDual, ScalarProduct, SquareRoot, Subtraction, Wedge};
     use crate::elements::scalar;
 
     #[macro_export]
@@ -622,305 +749,18 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_1_type_2_arg_f32!(PowfImpl(builder, slf, exp) -> MultiVector {
-        let exp: FloatExpr = exp.into();
-        let mut dyn_mv = DynamicMultiVector::zero();
-        let r = slf.clone();
-        for (a, a_el) in slf.elements_flat() {
-            for (b, b_el) in r.elements_flat() {
-                let sop = builder.ga.product(a_el, b_el);
-                for p in sop.sum {
-                    let f = if a_el == b_el {
-                        let a_exp = FloatExpr::Exp(Box::new(a.clone()), Some(Box::new(exp.clone())), 1.0);
-                        let b_exp = FloatExpr::Exp(Box::new(b.clone()), Some(Box::new(exp.clone())), 1.0);
-                        FloatExpr::Product(vec![(a_exp, 0.5), (b_exp, 0.5)], p.coefficient)
-                    } else {
-                        let mut f = exp.clone() * p.coefficient * 0.5;
-                        let exp_minus_one = FloatExpr::Sum(vec![(exp.clone(), 1.0)], -1.0);
-                        if a_el == scalar {
-                            f.mul_assign(FloatExpr::Exp(Box::new(a.clone()), Some(Box::new(exp_minus_one.clone())), 1.0));
-                        } else {
-                            f.mul_assign(a.clone());
-                        }
-                        if b_el == scalar {
-                            f.mul_assign(FloatExpr::Exp(Box::new(b.clone()), Some(Box::new(exp_minus_one.clone())), 1.0));
-                        } else {
-                            f.mul_assign(b.clone());
-                        }
-                        f
-                    };
-                    dyn_mv += (f, p.element);
-                }
-            }
-        }
-        let mut result = dyn_mv.construct(&builder)?;
-        if result.mv_class != slf.expr_type {
-            return None
-        }
-        builder.return_expr(result)
-    });
-
-    trait_impl_1_type_2_arg_i32!(PowiImpl(builder, slf, exp) -> MultiVector {
-        let exp = FloatExpr::FromInt(exp.into());
-        let result = Powf.inline(&builder, slf, exp).await?;
-        builder.return_expr(result)
-    });
 
 
-    /*
-
-Base:             AntiScalar( e12345(a12345) )
-Accurate Square:  AntiScalar( e12345(((a12345 ^2))) )
-Accurate Cube:    AntiScalar( e12345(((a12345 ^3))) )
-Accurate 4th pow: AntiScalar( e12345(((a12345 ^4))) )
-Accurate 5th pow: AntiScalar( e12345(((a12345 ^5))) )
-Accurate 6th pow: AntiScalar( e12345(((a12345 ^6))) )
-
-Base:             DualNum4( e4(a4), e12345(a12345) )
-Accurate Square:  DualNum4( e4((a12345 * a4 * 2)), e12345(((a12345 ^2))) )
-Accurate Cube:    DualNum4( e4(((a12345 ^2) * a4 * 3)), e12345(((a12345 ^3))) )
-Accurate 4th pow: DualNum4( e4(((a12345 ^3) * a4 * 4)), e12345(((a12345 ^4))) )
-Accurate 5th pow: DualNum4( e4(((a12345 ^4) * a4 * 5)), e12345(((a12345 ^5))) )
-Accurate 6th pow: DualNum4( e4(((a12345 ^5) * a4 * 6)), e12345(((a12345 ^6))) )
-
-Base:             DualNum5( e5(a5), e12345(a12345) )
-Accurate Square:  DualNum5( e5((a12345 * a5 * 2)), e12345(((a12345 ^2))) )
-Accurate Cube:    DualNum5( e5(((a12345 ^2) * a5 * 3)), e12345(((a12345 ^3))) )
-Accurate 4th pow: DualNum5( e5(((a12345 ^3) * a5 * 4)), e12345(((a12345 ^4))) )
-Accurate 5th pow: DualNum5( e5(((a12345 ^4) * a5 * 5)), e12345(((a12345 ^5))) )
-Accurate 6th pow: DualNum5( e5(((a12345 ^5) * a5 * 6)), e12345(((a12345 ^6))) )
 
 
-Base:             DualNum321( e321(a321), e12345(a12345) )
-
-Accurate Square:  DualNum321(
-    // a12345 powers: 1
-    // a321 powers: 1
-    e321((a12345 * a321 * 2)),
-    // a12345 powers: 2
-    // a321 powers: 2
-    e12345((((a12345 ^2)) + ((a321 ^2)))) )
-
-Accurate Cube:    DualNum321(
-    // a12345 powers: 2
-    // a321 powers: 3, 1
-    e321((((a321 ^3)) + 3*((a12345 ^2) * a321))),
-    // a12345 powers: 3, 1
-    // a321 powers: 2
-    e12345((((a12345 ^3)) + 3*(a12345 * (a321 ^2)))) )
-
-Accurate 4th pow: DualNum321(
-    // a12345 powers: 3, 1
-    // a321 powers: 3, 1
-    e321((4*(a12345 * (a321 ^3)) + 4*((a12345 ^3) * a321))),
-    // a12345 powers: 4, 2
-    // a321 powers: 4, 2
-    e12345((((a12345 ^4)) + ((a321 ^4)) + 6*((a12345 ^2) * (a321 ^2)))) )
-
-Accurate 5th pow: DualNum321(
-    // a12345 powers: 4, 2
-    // a321 powers: 5, 3, 1
-    e321((((a321 ^5)) + 10*((a12345 ^2) * (a321 ^3)) + 5*((a12345 ^4) * a321))),
-    // a12345 powers: 5, 3, 1
-    // a321 powers: 4, 2
-    e12345((((a12345 ^5)) + 5*(a12345 * (a321 ^4)) + 10*((a12345 ^3) * (a321 ^2)))) )
-
-Accurate 6th pow: DualNum321(
-    // a12345 powers: 1, 3, 5
-    // a321 powers: 5, 3, 1
-    e321((6*(a12345 * (a321 ^5)) + 20*((a12345 ^3) * (a321 ^3)) + 6*((a12345 ^5) * a321))),
-    // a12345 powers: 6, 4, 2
-    // a321 powers: 6, 4, 2
-    e12345((((a12345 ^6)) + ((a321 ^6)) + 15*((a12345 ^2) * (a321 ^4)) + 15*((a12345 ^4) * (a321 ^2)))) )
+    // TODO troublesome traits that won't make it to 1.0
+    #[cfg(feature = "incorrect-wip-traits")]
+    include!("wip_traits.rs");
 
 
-Base:             TripleNum( e4(a4), e5(a5), e12345(a12345) )
-
-Accurate Square:  TripleNum(
-    // a12345 powers: 1
-    // e4 powers: 1
-    e4((a12345 * a4 * 2)),
-    // a12345 powers: 1
-    // e5 powers: 1
-    e5((a12345 * a5 * 2)),
-    // a12345 powers: 2
-    // e4 powers: 1
-    // e5 powers: 1
-    e12345((((a12345 ^2)) + 2*(a4 * a5))) )
-
-Accurate Cube:    TripleNum(
-    // a12345 powers: 2
-    // e4 powers: 2, 1
-    // e5 powers: 1
-    e4((3*((a12345 ^2) * a4) + 2*((a4 ^2) * a5))),
-    // a12345 powers: 2
-    // e4 powers: 1
-    // e5 powers: 2, 1
-    e5((2*(a4 * (a5 ^2)) + 3*((a12345 ^2) * a5))),
-    // a12345 powers: 3, 1
-    // e4 powers: 1
-    // e5 powers: 1
-    e12345((((a12345 ^3)) + 6*(a12345 * a4 * a5))) )
-
-Accurate 4th pow: TripleNum(
-    e4((4*((a12345 ^3) * a4) + 8*(a12345 * (a4 ^2) * a5))),
-    e5((4*((a12345 ^3) * a5) + 8*(a12345 * a4 * (a5 ^2)))),
-    e12345((((a12345 ^4)) + 4*((a4 ^2) * (a5 ^2)) + 12*((a12345 ^2) * a4 * a5))) )
-
-Accurate 5th pow: TripleNum(
-    e4((4*((a4 ^3) * (a5 ^2)) + 5*((a12345 ^4) * a4) + 20*((a12345 ^2) * (a4 ^2) * a5))),
-    e5((4*((a4 ^2) * (a5 ^3)) + 5*((a12345 ^4) * a5) + 20*((a12345 ^2) * a4 * (a5 ^2)))),
-    e12345((((a12345 ^5)) + 20*(a12345 * (a4 ^2) * (a5 ^2)) + 20*((a12345 ^3) * a4 * a5))) )
-
-Accurate 6th pow: TripleNum(
-    e4((6*((a12345 ^5) * a4) + 24*(a12345 * (a4 ^3) * (a5 ^2)) + 40*((a12345 ^3) * (a4 ^2) * a5))),
-    e5((6*((a12345 ^5) * a5) + 24*(a12345 * (a4 ^2) * (a5 ^3)) + 40*((a12345 ^3) * a4 * (a5 ^2)))),
-    e12345((((a12345 ^6)) + 8*((a4 ^3) * (a5 ^3)) + 60*((a12345 ^2) * (a4 ^2) * (a5 ^2)) + 30*((a12345 ^4) * a4 * a5))) )
 
 
-Base:             QuadNum( e4(a4), e5(a5), e321(a321), e12345(a12345) )
 
-Accurate Square:  QuadNum(
-    e4((a12345 * a4 * 2)),
-    e5((a12345 * a5 * 2)),
-    e321((a12345 * a321 * 2)),
-    e12345((((a12345 ^2)) + ((a321 ^2)) + 2*(a4 * a5))) )
-
-Accurate Cube:    QuadNum(
-    e4((3*((a12345 ^2) * a4) + ((a321 ^2) * a4) + 2*((a4 ^2) * a5))),
-    e5((2*(a4 * (a5 ^2)) + 3*((a12345 ^2) * a5) + ((a321 ^2) * a5))),
-    e321((((a321 ^3)) + 3*((a12345 ^2) * a321) + 2*(a321 * a4 * a5))),
-    e12345((((a12345 ^3)) + 3*(a12345 * (a321 ^2)) + 6*(a12345 * a4 * a5))) )
-
-Accurate 4th pow: QuadNum(
-    e4((4*((a12345 ^3) * a4) + 4*(a12345 * (a321 ^2) * a4) + 8*(a12345 * (a4 ^2) * a5))),
-    e5((4*((a12345 ^3) * a5) + 8*(a12345 * a4 * (a5 ^2)) + 4*(a12345 * (a321 ^2) * a5))),
-    e321((4*(a12345 * (a321 ^3)) + 4*((a12345 ^3) * a321) + 8*(a12345 * a321 * a4 * a5))),
-    e12345((((a12345 ^4)) + ((a321 ^4)) + 6*((a12345 ^2) * (a321 ^2)) + 4*((a4 ^2) * (a5 ^2)) + 12*((a12345 ^2) * a4 * a5) + 4*((a321 ^2) * a4 * a5))) )
-
-Accurate 5th pow: QuadNum(
-    e4((4*((a4 ^3) * (a5 ^2)) + 5*((a12345 ^4) * a4) + ((a321 ^4) * a4) + 10*((a12345 ^2) * (a321 ^2) * a4) + 20*((a12345 ^2) * (a4 ^2) * a5) + 4*((a321 ^2) * (a4 ^2) * a5))),
-    e5((4*((a4 ^2) * (a5 ^3)) + 5*((a12345 ^4) * a5) + ((a321 ^4) * a5) + 20*((a12345 ^2) * a4 * (a5 ^2)) + 10*((a12345 ^2) * (a321 ^2) * a5) + 4*((a321 ^2) * a4 * (a5 ^2)))),
-    e321((((a321 ^5)) + 10*((a12345 ^2) * (a321 ^3)) + 5*((a12345 ^4) * a321) + 4*(a321 * (a4 ^2) * (a5 ^2)) + 4*((a321 ^3) * a4 * a5) + 20*((a12345 ^2) * a321 * a4 * a5))),
-    e12345((((a12345 ^5)) + 5*(a12345 * (a321 ^4)) + 10*((a12345 ^3) * (a321 ^2)) + 20*(a12345 * (a4 ^2) * (a5 ^2)) + 20*((a12345 ^3) * a4 * a5) + 20*(a12345 * (a321 ^2) * a4 * a5))) )
-
-Accurate 6th pow: QuadNum(
-    e4((6*((a12345 ^5) * a4) + 24*(a12345 * (a4 ^3) * (a5 ^2)) + 6*(a12345 * (a321 ^4) * a4) + 20*((a12345 ^3) * (a321 ^2) * a4) + 40*((a12345 ^3) * (a4 ^2) * a5) + 24*(a12345 * (a321 ^2) * (a4 ^2) * a5))),
-    e5((6*((a12345 ^5) * a5) + 24*(a12345 * (a4 ^2) * (a5 ^3)) + 6*(a12345 * (a321 ^4) * a5) + 40*((a12345 ^3) * a4 * (a5 ^2)) + 20*((a12345 ^3) * (a321 ^2) * a5) + 24*(a12345 * (a321 ^2) * a4 * (a5 ^2)))),
-    e321((6*(a12345 * (a321 ^5)) + 20*((a12345 ^3) * (a321 ^3)) + 6*((a12345 ^5) * a321) + 24*(a12345 * a321 * (a4 ^2) * (a5 ^2)) + 24*(a12345 * (a321 ^3) * a4 * a5) + 40*((a12345 ^3) * a321 * a4 * a5))),
-
-    // TODO so... analyzing this... It all makes perfect sense. But I don't think I can make static expressions for it. Even though I could generate each combination of coefficients,
-    //   there could be any quantity of that combination showing up, if the power is high enough. I just can't imagine a simpler or more direct way to specify the expression
-    //   (similar as done with DualNums on page 126) other than to manually compound multiplication on itself over and over, so it automatically distributes all valid combinations.
-    //   The problem with THAT is that we don't have loops, branching, or boolean expressions in the AST yet. And I kind of don't want them either. At least not for 1.0 release.
-    //   I might still be able to do something for a codegen-side Powf that accepts a raw f32 instead of a FloatExpr.
-    // (a12345) powers: 6
-    // (e321) powers: 6
-    // (a12345, a321) powers: (2, 4), (4, 2)
-    // (a4, a5) powers: (3, 3)
-    // (a12345, a4, a5) powers: (2, 2, 2), (4, 1, 1)
-    // (a321, a4, a5) powers: (2, 2, 2), (4, 1, 1)
-    // (a12345, a321, a4, a5) powers (2, 2, 1, 1)
-    e12345((((a12345 ^6)) + ((a321 ^6)) + 15*((a12345 ^2) * (a321 ^4)) + 8*((a4 ^3) * (a5 ^3)) + 15*((a12345 ^4) * (a321 ^2)) + 60*((a12345 ^2) * (a4 ^2) * (a5 ^2)) + 12*((a321 ^2) * (a4 ^2) * (a5 ^2)) + 30*((a12345 ^4) * a4 * a5) + 6*((a321 ^4) * a4 * a5) + 60*((a12345 ^2) * (a321 ^2) * a4 * a5))) )
-
-
-    */
-
-    trait_impl_1_type_2_arg_f32!(AntiPowfImpl(builder, slf, exp) -> MultiVector {
-        // TODO after you finish fixing this, fix Powf, Powi, and AntiPowi also
-        let exp: FloatExpr = exp.into();
-        let mut dyn_mv = DynamicMultiVector::zero();
-
-        let mut allowed_elements: Vec<BasisElement> = slf.elements_flat().map(|it| it.1).collect();
-        let qty_elements = allowed_elements.len();
-        if qty_elements > 8 {
-            // We can't go too crazy.
-            // For context, familiar 3D CGA using 5 dimensions has a VersorOdd and VersorEven each
-            // with 16 elements, but the full MultiVector has 32 elements.
-            // The significance of the number `8` or `16` or `32` here is that we have to get
-            // every combination of coefficients. That is, while usually BasisElements don't
-            // end up paired together because they cancel, the coefficients beside each BasisElement
-            // do (in these Pow functions) because there are different ways to converge to an
-            // (Anti)Scalar at different powers. So if a DualNum has 2 elements, then we might be
-            // concerned about 2^2=4 combinations of FloatExpr. If a QuadNum has 4 elements, then we
-            // might be concerned about 2^4=16 combinations of FloatExpr. A multivector type with
-            // 16 different BasisElements will require 2^16 which is roughly 65,536 combinations of
-            // FloatExpr. Anything higher is too crazy, with 2^24 in the millions and 2^32 in the
-            // billions. Keep in mind all this is supposed to end up printed to a source file.
-            // For a 16 element multivector, each BasisElement in the result of the Powf could
-            // be the sum of 65k products. 65k * 16 elements = 1 million product terms in lots of
-            // sums, where each product is several many bytes. You know what.... screw it. We are
-            // limiting it to 8 element multivectors. 8 * 2^8 = 2048 product terms in a multivector
-            // construction. Nobody asked for powf on anything beyond DualNum anyway (except me),
-            // so don't lose sleep over it.
-            return None;
-        }
-        // allowed_elements.sort();
-        // let allowed_elements = allowed_elements;
-        // if allowed_elements.binary_search(&builder.ga.anti_scalar()).is_err() {
-        //     return None;
-        // }
-        //
-        // let mut elements_and_stuff: Vec<_> = slf.elements_flat().collect();
-        // elements_and_stuff.sort_by_key(|a| a.1)
-        // let elements_and_stuff: Vec<_> = elements_and_stuff.into_iter().enumerate()
-        //     .map(|(idx, (expr, el))| {
-        //         let bits = 1u8 << idx;
-        //         (el, bits, expr)
-        //     }).collect();
-        //
-        // for product_term_idx in 1u8..(1u8 << qty_elements) {
-        //     let qty_factors = product_term_idx.count_ones();
-        //     let mut factors_here: Vec<(FloatExpr, f32)> = vec![];
-        //     //
-        // }
-
-
-        let r = slf.clone();
-        let anti_scalar = builder.ga.anti_scalar();
-        for (a, a_el) in slf.elements_flat() {
-            for (b, b_el) in r.elements_flat() {
-                let sop = builder.ga.anti_product(a_el, b_el);
-                for p in sop.sum {
-                    if allowed_elements.binary_search(&p.element).is_err() {
-                        return None;
-                    }
-
-                    let f = if a_el == b_el {
-                        let a_exp = FloatExpr::Exp(Box::new(a.clone()), Some(Box::new(exp.clone())), 1.0);
-                        let b_exp = FloatExpr::Exp(Box::new(b.clone()), Some(Box::new(exp.clone())), 1.0);
-                        FloatExpr::Product(vec![(a_exp, 0.5), (b_exp, 0.5)], p.coefficient)
-                    } else {
-                        let mut f = exp.clone() * p.coefficient * 0.5;
-                        let exp_minus_one = FloatExpr::Sum(vec![(exp.clone(), 1.0)], -1.0);
-                        if a_el == anti_scalar {
-                            f.mul_assign(FloatExpr::Exp(Box::new(a.clone()), Some(Box::new(exp_minus_one.clone())), 1.0));
-                        } else {
-                            f.mul_assign(a.clone());
-                        }
-                        if b_el == anti_scalar {
-                            f.mul_assign(FloatExpr::Exp(Box::new(b.clone()), Some(Box::new(exp_minus_one.clone())), 1.0));
-                        } else {
-                            f.mul_assign(b.clone());
-                        }
-                        f
-                    };
-                    dyn_mv += (f, p.element);
-                }
-            }
-        }
-        let result = dyn_mv.construct(&builder)?;
-        if result.mv_class != slf.expr_type {
-            return None
-        }
-        builder.return_expr(result)
-    });
-
-    trait_impl_1_type_2_arg_i32!(AntiPowiImpl(builder, slf, exp) -> MultiVector {
-        let exp = FloatExpr::FromInt(exp.into());
-        let result = AntiPowf.inline(&builder, slf, exp).await?;
-        builder.return_expr(result)
-    });
 
     // TODO these violation traits should only be implemented where the constraint is possible to violate
     //  then also make a trait where it is always/only implemented where the constraint is impossible to violate
@@ -1014,101 +854,11 @@ Accurate 6th pow: QuadNum(
         builder.return_expr(result)
     });
 
-    // TODO this is just a placeholder to help me figure out powi and then powf and then sqrt
-    trait_impl_1_type_1_arg!(SquareImpl(builder, slf) -> MultiVector {
-        let mut dyn_mv = DynamicMultiVector::zero();
-        // let r = Reverse.inline(&builder, slf.clone()).await?;
-        let r = slf.clone();
-        for (a, a_el) in slf.elements_flat() {
-            for (b, b_el) in r.elements_flat() {
-                let sop = builder.ga.product(a_el, b_el);
-                for p in sop.sum {
-                    let el = p.element;
-                    let f = a.clone() * b.clone() * p.coefficient;
-                    dyn_mv += (f, el);
-                }
-            }
-        }
-        let result = dyn_mv.construct(&builder)?;
-        builder.return_expr(result)
-    });
-    trait_impl_1_type_1_arg!(AntiSquareImpl(builder, slf) -> MultiVector {
-        let mut dyn_mv = DynamicMultiVector::zero();
-        // let r = AntiReverse.inline(&builder, slf.clone()).await?;
-        let r = slf.clone();
-        for (a, a_el) in slf.elements_flat() {
-            for (b, b_el) in r.elements_flat() {
-                let sop = builder.ga.anti_product(a_el, b_el);
-                for p in sop.sum {
-                    let el = p.element;
-                    let f = a.clone() * b.clone() * p.coefficient;
-                    dyn_mv += (f, el);
-                }
-            }
-        }
-        let result = dyn_mv.construct(&builder)?;
-        builder.return_expr(result)
-    });
 
-/*
-impl AntiSquare for QuadNum {
-    type Output = QuadNum;
-    fn anti_square(self) -> Self::Output {
-        use crate::elements::*;
-        return QuadNum::from_groups(/* e4, e5, e321, e12345 */ Simd32x4::from([
-            (self[e4] * self[e12345] * 2.0),
-            (self[e5] * self[e12345] * 2.0),
-            (self[e321] * self[e12345] * 2.0),
-            (f32::powi(self[e321], 2) + f32::powi(self[e12345], 2) + 2.0 * (self[e4] * self[e5])),
-        ]));
-    }
-}
-impl AntiSquare for DualNum5 {
-    type Output = DualNum5;
-    fn anti_square(self) -> Self::Output {
-        use crate::elements::*;
-        return DualNum5::from_groups(
-            // e5, e12345
-            (Simd32x2::from([
-                (self[e5] * self[e12345]),
-                f32::powi(self[e12345], 2)
-            ]) * Simd32x2::from([2.0, 1.0])),
-        );
-    }
-}
-impl AntiSquare for DualNum4 {
-    type Output = DualNum4;
-    fn anti_square(self) -> Self::Output {
-        use crate::elements::*;
-        return DualNum4::from_groups(
-            // e4, e12345
-            (Simd32x2::from([(self[e4] * self[e12345]),
-            f32::powi(self[e12345], 2)]) * Simd32x2::from([2.0, 1.0])),
-        );
-    }
-}
-impl AntiSquare for DualNum321 {
-    type Output = DualNum321;
-    fn anti_square(self) -> Self::Output {
-        use crate::elements::*;
-        return DualNum321::from_groups(
-            // e321, e12345
-            Simd32x2::from([(self[e321] * self[e12345] * 2.0),
-            (f32::powi(self[e321], 2) + f32::powi(self[e12345], 2))]),
-        );
-    }
-}impl AntiSquare for TripleNum {
-    type Output = TripleNum;
-    fn anti_square(self) -> Self::Output {
-        use crate::elements::*;
-        return TripleNum::from_groups(/* e4, e5, e12345 */ Simd32x3::from([
-            (self[e4] * self[e12345] * 2.0),
-            (self[e5] * self[e12345] * 2.0),
-            (f32::powi(self[e12345], 2) + 2.0 * (self[e4] * self[e5])),
-        ]));
-    }
-}
-*/
+
+
+
+
 
     trait_impl_1_type_1_arg!(SquareRootImpl(builder, slf) -> MultiVector {
         let scalar_mv = MultiVector::from(builder.mvs.scalar());

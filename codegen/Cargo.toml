@@ -13,6 +13,8 @@ publish = false
 default = []
 large-basis-elements = []
 very-large-basis-elements = ["large-basis-elements"]
+# TODO clean up this feature
+incorrect-wip-traits = []
 
 [dependencies]
 naga = { version = "0.19.2", features = ["default", "glsl-in", "wgsl-in"] }

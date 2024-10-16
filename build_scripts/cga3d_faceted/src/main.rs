@@ -17,7 +17,8 @@ codegen::multi_vecs! { e12345;
     Infinity   as e5;
     FlatOrigin as e45;
     Horizon    as e3215;
-    QuadNum    as e4, e5, e321, e12345;
+    DualNum    as e4, e12345;
+    // QuadNum    as e4, e5, e321, e12345;
 
     // Uniform Grade Flat Objects
     FlatPoint  as e15, e25, e35, e45;
@@ -38,12 +39,8 @@ codegen::multi_vecs! { e12345;
     // 3 reflections
     DipoleInversion as e41, e42, e43 | e23, e31, e12, e45 | e15, e25, e35, e1234 | e4235, e4315, e4125, e3215;
     // 4 reflections
-    // TODO is this actually a Versor, or more like a non-geometric DualNum?
-    VersorRoundPoint as e1, e2, e3, e4 | e5, e12345;
     VersorEven as e423, e431, e412, e12345 | e415, e425, e435, e321 | e235, e315, e125, e5 | e1, e2, e3, e4;
     // 5 reflections
-    // TODO is this actually a Versor, or more like a non-geometric DualNum?
-    VersorSphere     as e4235, e4315, e4125, e3215 | e1234, scalar;
     VersorOdd  as e41, e42, e43, scalar | e23, e31, e12, e45 | e15, e25, e35, e1234 | e4235, e4315, e4125, e3215;
 }
 
