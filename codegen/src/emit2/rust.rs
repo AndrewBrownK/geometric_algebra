@@ -1881,7 +1881,9 @@ impl TryFrom<{other}> for {owner} {{
         "rs"
     }
 
-    fn declare_multi_vector<W: Write, const AntiScalar: BasisElement>(&self, w: &mut W, multi_vec: &'static MultiVec<AntiScalar>, docs: Option<String>) -> anyhow::Result<()> {
+    fn declare_multi_vector<W: Write, const AntiScalar: BasisElement>(
+        &self, w: &mut W, multi_vec: &'static MultiVec<AntiScalar>, docs: Option<String>
+    ) -> anyhow::Result<()> {
         let name = TraitKey::new(multi_vec.name);
         let ucc = name.as_upper_camel();
         let lcc = name.as_lower_camel();
@@ -2340,7 +2342,9 @@ impl std::hash::Hash for {ucc} {{
         Ok(())
     }
 
-    fn declare_trait_impl<W: Write>(&self, w: &mut W, impls: Arc<RawTraitImplementation>, already_granted_infix: &mut BTreeSet<&'static str>) -> anyhow::Result<()> {
+    fn declare_trait_impl<W: Write>(
+        &self, w: &mut W, impls: Arc<RawTraitImplementation>, already_granted_infix: &mut BTreeSet<&'static str>
+    ) -> anyhow::Result<()> {
         let def = &impls.definition;
 
         let output_kind = def.output.read();
