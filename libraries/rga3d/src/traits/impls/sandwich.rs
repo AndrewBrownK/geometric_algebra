@@ -11,15 +11,15 @@ use crate::traits::Reverse;
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       2       0
-//   Median:        18      35       0
-//  Average:        39      56       0
-//  Maximum:       279     320       0
+//   Median:        12      27       0
+//  Average:        25      40       0
+//  Maximum:       206     239       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       2       0
 //   Median:        19      39       0
-//  Average:        44      63       0
-//  Maximum:       353     394       0
+//  Average:        44      64       0
+//  Maximum:       354     394       0
 impl InfixSandwich for AntiScalar {}
 impl Sandwich<Flector> for AntiScalar {
     type Output = Flector;
@@ -45,12 +45,9 @@ impl Sandwich<Flector> for AntiScalar {
 impl Sandwich<Line> for AntiScalar {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        6        0
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
     fn sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Line::from_groups(/* e41, e42, e43 */ (Simd32x3::from(self[e1234]) * other.group1()), /* e23, e31, e12 */ Simd32x3::from(0.0));
@@ -60,12 +57,9 @@ impl Sandwich<Line> for AntiScalar {
 impl Sandwich<Motor> for AntiScalar {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Motor::from_groups(
@@ -81,10 +75,10 @@ impl Sandwich<MultiVector> for AntiScalar {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       17        0
-    //    simd3        0        1        0
+    //      f32        0       14        0
+    //    simd3        0        2        0
     // Totals...
-    // yes simd        0       18        0
+    // yes simd        0       16        0
     //  no simd        0       20        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -193,12 +187,9 @@ impl Sandwich<Horizon> for DualNum {
 impl Sandwich<Line> for DualNum {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        9        0
-    //    simd3        1        3        0
-    // Totals...
-    // yes simd        4       12        0
-    //  no simd        6       18        0
+    //          add/sub      mul      div
+    //   simd3        2        6        0
+    // no simd        6       18        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = Line::from_groups(
             // e41, e42, e43
@@ -212,12 +203,9 @@ impl Sandwich<Line> for DualNum {
 impl Sandwich<Motor> for DualNum {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       12        0
-    //    simd4        1        3        0
-    // Totals...
-    // yes simd        5       15        0
-    //  no simd        8       24        0
+    //          add/sub      mul      div
+    //   simd4        2        6        0
+    // no simd        8       24        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
@@ -232,10 +220,10 @@ impl Sandwich<MultiVector> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       39        0
-    //    simd3        1        3        0
+    //      f32       10       30        0
+    //    simd3        2        6        0
     // Totals...
-    // yes simd       14       42        0
+    // yes simd       12       36        0
     //  no simd       16       48        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         let geometric_product = MultiVector::from_groups(
@@ -339,8 +327,12 @@ impl InfixSandwich for Flector {}
 impl Sandwich<AntiScalar> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       56        0
+    //           add/sub      mul      div
+    //      f32        8       20        0
+    //    simd4        8        9        0
+    // Totals...
+    // yes simd       16       29        0
+    //  no simd       40       56        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Flector::from_groups(
@@ -355,8 +347,12 @@ impl Sandwich<AntiScalar> for Flector {
 impl Sandwich<DualNum> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       44       64        0
+    //           add/sub      mul      div
+    //      f32       12       28        0
+    //    simd4        8        9        0
+    // Totals...
+    // yes simd       20       37        0
+    //  no simd       44       64        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
@@ -381,11 +377,11 @@ impl Sandwich<Flector> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       68        0
-    //    simd4        8        8        0
+    //      f32       20       32        0
+    //    simd4       16       17        0
     // Totals...
-    // yes simd       56       76        0
-    //  no simd       80      100        0
+    // yes simd       36       49        0
+    //  no simd       84      100        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
@@ -416,11 +412,11 @@ impl Sandwich<Horizon> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       52        0
-    //    simd4        0        3        0
+    //      f32       12       16        0
+    //    simd4        8       12        0
     // Totals...
-    // yes simd       40       55        0
-    //  no simd       40       64        0
+    // yes simd       20       28        0
+    //  no simd       44       64        0
     fn sandwich(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Motor::from_groups(
@@ -436,10 +432,10 @@ impl Sandwich<Line> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       60       80        0
-    //    simd4        2        2        0
+    //      f32       28       44        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       62       82        0
+    // yes simd       38       55        0
     //  no simd       68       88        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -473,10 +469,10 @@ impl Sandwich<Motor> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       77        0
-    //    simd4        6        6        0
+    //      f32       24       41        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd       62       83        0
+    // yes simd       38       56        0
     //  no simd       80      101        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -522,13 +518,13 @@ impl Sandwich<MultiVector> for Flector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      115      150        0
-    //    simd2        4        4        0
-    //    simd3        6        6        0
-    //    simd4        5        5        0
+    //      f32       70      101        0
+    //    simd2        8        8        0
+    //    simd3       12       12        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd      130      165        0
-    //  no simd      161      196        0
+    // yes simd      100      132        0
+    //  no simd      162      197        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
@@ -594,11 +590,11 @@ impl Sandwich<Origin> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       52        0
-    //    simd4        0        2        0
+    //      f32       12       16        0
+    //    simd4        8       11        0
     // Totals...
-    // yes simd       40       54        0
-    //  no simd       40       60        0
+    // yes simd       20       27        0
+    //  no simd       44       60        0
     fn sandwich(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Motor::from_groups(
@@ -614,11 +610,11 @@ impl Sandwich<Plane> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       60        0
-    //    simd4        2        4        0
+    //      f32       16       24        0
+    //    simd4       10       13        0
     // Totals...
-    // yes simd       46       64        0
-    //  no simd       52       76        0
+    // yes simd       26       37        0
+    //  no simd       56       76        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
@@ -639,11 +635,11 @@ impl Sandwich<Point> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       68        0
-    //    simd4        3        3        0
+    //      f32       20       32        0
+    //    simd4       11       12        0
     // Totals...
-    // yes simd       51       71        0
-    //  no simd       60       80        0
+    // yes simd       31       44        0
+    //  no simd       64       80        0
     fn sandwich(self, other: Point) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
@@ -669,10 +665,10 @@ impl Sandwich<Scalar> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       52        0
-    //    simd4        0        2        0
+    //      f32        8       16        0
+    //    simd4        8       11        0
     // Totals...
-    // yes simd       40       54        0
+    // yes simd       16       27        0
     //  no simd       40       60        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -700,8 +696,12 @@ impl Sandwich<AntiScalar> for Horizon {
 impl Sandwich<DualNum> for Horizon {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       15        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        0        6        0
+    //  no simd        0       15        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Flector::from_groups(
@@ -717,11 +717,11 @@ impl Sandwich<Flector> for Horizon {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       13        0
-    //    simd4        0        4        0
+    //      f32        0        1        0
+    //    simd4        0        8        0
     // Totals...
-    // yes simd        0       17        0
-    //  no simd        0       29        0
+    // yes simd        0        9        0
+    //  no simd        0       33        0
     fn sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Motor::from_groups(
@@ -747,8 +747,12 @@ impl Sandwich<Horizon> for Horizon {
 impl Sandwich<Line> for Horizon {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       19        0
+    //           add/sub      mul      div
+    //      f32        0        7        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        0       10        0
+    //  no simd        0       19        0
     fn sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Flector::from_groups(
@@ -764,10 +768,10 @@ impl Sandwich<Motor> for Horizon {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       13        0
-    //    simd4        0        2        0
+    //      f32        0        1        0
+    //    simd4        0        5        0
     // Totals...
-    // yes simd        0       15        0
+    // yes simd        0        6        0
     //  no simd        0       21        0
     fn sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
@@ -784,13 +788,13 @@ impl Sandwich<MultiVector> for Horizon {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       25        0
-    //    simd2        0        2        0
-    //    simd3        0        4        0
-    //    simd4        0        2        0
+    //      f32        0        1        0
+    //    simd2        0        4        0
+    //    simd3        0        7        0
+    //    simd4        0        6        0
     // Totals...
-    // yes simd        0       33        0
-    //  no simd        0       49        0
+    // yes simd        0       18        0
+    //  no simd        0       54        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -822,8 +826,12 @@ impl Sandwich<Origin> for Horizon {
 impl Sandwich<Plane> for Horizon {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       21        0
+    //           add/sub      mul      div
+    //      f32        0        9        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        0       13        0
+    //  no simd        0       25        0
     fn sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Motor::from_groups(
@@ -843,8 +851,12 @@ impl Sandwich<Plane> for Horizon {
 impl Sandwich<Point> for Horizon {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       21        0
+    //           add/sub      mul      div
+    //      f32        0        9        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        0       13        0
+    //  no simd        0       25        0
     fn sandwich(self, other: Point) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Motor::from_groups(
@@ -877,10 +889,10 @@ impl Sandwich<AntiScalar> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       33        0
-    //    simd3        0        1        0
+    //      f32       19       27        0
+    //    simd3        0        3        0
     // Totals...
-    // yes simd       19       34        0
+    // yes simd       19       30        0
     //  no simd       19       36        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -892,10 +904,10 @@ impl Sandwich<DualNum> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       33        0
-    //    simd3        1        3        0
+    //      f32       19       27        0
+    //    simd3        1        5        0
     // Totals...
-    // yes simd       20       36        0
+    // yes simd       20       32        0
     //  no simd       22       42        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = Line::from_groups(
@@ -911,10 +923,11 @@ impl Sandwich<Flector> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       70        0
-    //    simd4        2        2        0
+    //      f32       40       56        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       50       72        0
+    // yes simd       44       62        0
     //  no simd       56       78        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -950,8 +963,13 @@ impl Sandwich<Flector> for Line {
 impl Sandwich<Horizon> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       51        0
+    //           add/sub      mul      div
+    //      f32       20       37        0
+    //    simd3        0        2        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       22       41        0
+    //  no simd       28       51        0
     fn sandwich(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Flector::from_groups(
@@ -971,8 +989,13 @@ impl Sandwich<Horizon> for Line {
 impl Sandwich<Line> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       47       69        0
+    //           add/sub      mul      div
+    //      f32       35       51        0
+    //    simd3        0        2        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       38       56        0
+    //  no simd       47       69        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
@@ -1003,10 +1026,11 @@ impl Sandwich<Motor> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       66        0
-    //    simd4        3        3        0
+    //      f32       32       48        0
+    //    simd3        0        2        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       47       69        0
+    // yes simd       38       56        0
     //  no simd       56       78        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -1036,13 +1060,13 @@ impl Sandwich<MultiVector> for Line {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       78      109        0
-    //    simd2        3        3        0
-    //    simd3        7        9        0
-    //    simd4        2        2        0
+    //      f32       44       62        0
+    //    simd2        6        6        0
+    //    simd3       14       20        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       90      123        0
-    //  no simd      113      150        0
+    // yes simd       68       92        0
+    //  no simd      114      150        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
@@ -1093,8 +1117,12 @@ impl Sandwich<MultiVector> for Line {
 impl Sandwich<Origin> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       24        0
+    //           add/sub      mul      div
+    //      f32        8       18        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        8       20        0
+    //  no simd        8       24        0
     fn sandwich(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Plane::from_groups(
@@ -1107,8 +1135,13 @@ impl Sandwich<Origin> for Line {
 impl Sandwich<Plane> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       57        0
+    //           add/sub      mul      div
+    //      f32       28       43        0
+    //    simd3        0        2        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       30       47        0
+    //  no simd       36       57        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
@@ -1133,10 +1166,11 @@ impl Sandwich<Point> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       58        0
-    //    simd4        2        2        0
+    //      f32       25       44        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       35       60        0
+    // yes simd       29       50        0
     //  no simd       41       66        0
     fn sandwich(self, other: Point) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -1162,10 +1196,10 @@ impl Sandwich<Scalar> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       33        0
-    //    simd3        0        2        0
+    //      f32       19       27        0
+    //    simd3        0        4        0
     // Totals...
-    // yes simd       19       35        0
+    // yes simd       19       31        0
     //  no simd       19       39        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -1183,10 +1217,10 @@ impl Sandwich<AntiScalar> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       54        0
-    //    simd4        0        1        0
+    //      f32       16       30        0
+    //    simd4        6        7        0
     // Totals...
-    // yes simd       40       55        0
+    // yes simd       22       37        0
     //  no simd       40       58        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -1203,10 +1237,10 @@ impl Sandwich<DualNum> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       54        0
-    //    simd4        1        3        0
+    //      f32       16       30        0
+    //    simd4        7        9        0
     // Totals...
-    // yes simd       41       57        0
+    // yes simd       23       39        0
     //  no simd       44       66        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -1222,11 +1256,11 @@ impl Sandwich<Flector> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       70        0
-    //    simd4        8        8        0
+    //      f32       28       47        0
+    //    simd4       14       14        0
     // Totals...
-    // yes simd       60       78        0
-    //  no simd       84      102        0
+    // yes simd       42       61        0
+    //  no simd       84      103        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
@@ -1257,11 +1291,11 @@ impl Sandwich<Horizon> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       54        0
-    //    simd4        0        4        0
+    //      f32       16       31        0
+    //    simd4        6       10        0
     // Totals...
-    // yes simd       40       58        0
-    //  no simd       40       70        0
+    // yes simd       22       41        0
+    //  no simd       40       71        0
     fn sandwich(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Flector::from_groups(
@@ -1277,10 +1311,10 @@ impl Sandwich<Line> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        3        3        0
+    //      f32       32       54        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       59       81        0
+    // yes simd       41       63        0
     //  no simd       68       90        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -1310,10 +1344,10 @@ impl Sandwich<Motor> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        6        6        0
+    //      f32       32       54        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd       62       84        0
+    // yes simd       44       66        0
     //  no simd       80      102        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -1346,13 +1380,13 @@ impl Sandwich<MultiVector> for Motor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       96      126        0
-    //    simd2        4        4        0
-    //    simd3       10       12        0
-    //    simd4        7        7        0
+    //      f32       39       63        0
+    //    simd2        8        8        0
+    //    simd3       20       24        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd      117      149        0
-    //  no simd      162      198        0
+    // yes simd       79      107        0
+    //  no simd      163      199        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
@@ -1412,8 +1446,12 @@ impl Sandwich<MultiVector> for Motor {
 impl Sandwich<Origin> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       58        0
+    //           add/sub      mul      div
+    //      f32       16       35        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       22       41        0
+    //  no simd       40       59        0
     fn sandwich(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Flector::from_groups(
@@ -1428,8 +1466,12 @@ impl Sandwich<Origin> for Motor {
 impl Sandwich<Plane> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       52       74        0
+    //           add/sub      mul      div
+    //      f32       28       51        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       34       57        0
+    //  no simd       52       75        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
@@ -1462,11 +1504,11 @@ impl Sandwich<Point> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       70        0
-    //    simd4        4        4        0
+    //      f32       20       47        0
+    //    simd4       10       10        0
     // Totals...
-    // yes simd       48       74        0
-    //  no simd       60       86        0
+    // yes simd       30       57        0
+    //  no simd       60       87        0
     fn sandwich(self, other: Point) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
@@ -1493,10 +1535,10 @@ impl Sandwich<Scalar> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       54        0
-    //    simd4        0        2        0
+    //      f32       16       30        0
+    //    simd4        6        8        0
     // Totals...
-    // yes simd       40       56        0
+    // yes simd       22       38        0
     //  no simd       40       62        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -1514,11 +1556,13 @@ impl Sandwich<AntiScalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      176      207        0
-    //    simd3        0        1        0
+    //      f32       67       87        0
+    //    simd2        8        8        0
+    //    simd3       18       21        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd      176      208        0
-    //  no simd      176      210        0
+    // yes simd      103      127        0
+    //  no simd      177      210        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -1540,11 +1584,13 @@ impl Sandwich<DualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      181      217        0
-    //    simd3        1        3        0
+    //      f32       72       97        0
+    //    simd2        8        8        0
+    //    simd3       19       23        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd      182      220        0
-    //  no simd      184      226        0
+    // yes simd      109      139        0
+    //  no simd      185      226        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
@@ -1578,13 +1624,13 @@ impl Sandwich<Flector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      211      253        0
-    //    simd2        4        4        0
-    //    simd3        6        6        0
-    //    simd4        5        5        0
+    //      f32      102      133        0
+    //    simd2       12       12        0
+    //    simd3       24       26        0
+    //    simd4       15       16        0
     // Totals...
-    // yes simd      226      268        0
-    //  no simd      257      299        0
+    // yes simd      153      187        0
+    //  no simd      258      299        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
@@ -1649,13 +1695,13 @@ impl Sandwich<Horizon> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      176      202        0
-    //    simd2        0        2        0
-    //    simd3        0        3        0
-    //    simd4        0        4        0
+    //      f32       67       82        0
+    //    simd2        8       10        0
+    //    simd3       18       23        0
+    //    simd4       10       15        0
     // Totals...
-    // yes simd      176      211        0
-    //  no simd      176      231        0
+    // yes simd      103      130        0
+    //  no simd      177      231        0
     fn sandwich(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -1677,13 +1723,13 @@ impl Sandwich<Line> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      198      233        0
-    //    simd2        3        3        0
-    //    simd3        7        9        0
-    //    simd4        2        2        0
+    //      f32       89      113        0
+    //    simd2       11       11        0
+    //    simd3       25       29        0
+    //    simd4       12       13        0
     // Totals...
-    // yes simd      210      247        0
-    //  no simd      233      274        0
+    // yes simd      137      166        0
+    //  no simd      234      274        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
@@ -1733,13 +1779,13 @@ impl Sandwich<Motor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      199      235        0
-    //    simd2        4        4        0
-    //    simd3       10       12        0
-    //    simd4        5        5        0
+    //      f32       90      115        0
+    //    simd2       12       12        0
+    //    simd3       28       32        0
+    //    simd4       15       16        0
     // Totals...
-    // yes simd      218      256        0
-    //  no simd      257      299        0
+    // yes simd      145      175        0
+    //  no simd      258      299        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
@@ -1804,13 +1850,13 @@ impl Sandwich<MultiVector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      243      284        0
-    //    simd2        8        8        0
-    //    simd3       18       18        0
-    //    simd4       10       10        0
+    //      f32      134      164        0
+    //    simd2       16       16        0
+    //    simd3       36       38        0
+    //    simd4       20       21        0
     // Totals...
-    // yes simd      279      320        0
-    //  no simd      353      394        0
+    // yes simd      206      239        0
+    //  no simd      354      394        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
@@ -1925,11 +1971,13 @@ impl Sandwich<Origin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      176      208        0
-    //    simd3        0        2        0
+    //      f32       67       88        0
+    //    simd2        8        8        0
+    //    simd3       18       22        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd      176      210        0
-    //  no simd      176      214        0
+    // yes simd      103      129        0
+    //  no simd      177      214        0
     fn sandwich(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -1951,11 +1999,13 @@ impl Sandwich<Plane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      194      234        0
-    //    simd3        2        4        0
+    //      f32       85      114        0
+    //    simd2        8        8        0
+    //    simd3       20       24        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd      196      238        0
-    //  no simd      200      246        0
+    // yes simd      123      157        0
+    //  no simd      201      246        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
@@ -1997,12 +2047,13 @@ impl Sandwich<Point> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      191      237        0
-    //    simd3        3        3        0
-    //    simd4        4        4        0
+    //      f32       82      117        0
+    //    simd2        8        8        0
+    //    simd3       21       23        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd      198      244        0
-    //  no simd      216      262        0
+    // yes simd      125      163        0
+    //  no simd      217      262        0
     fn sandwich(self, other: Point) -> Self::Output {
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
@@ -2050,13 +2101,13 @@ impl Sandwich<Scalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      176      202        0
-    //    simd2        0        1        0
-    //    simd3        0        2        0
-    //    simd4        0        2        0
+    //      f32       67       82        0
+    //    simd2        8        9        0
+    //    simd3       18       22        0
+    //    simd4       10       13        0
     // Totals...
-    // yes simd      176      207        0
-    //  no simd      176      218        0
+    // yes simd      103      126        0
+    //  no simd      177      218        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -2112,8 +2163,12 @@ impl Sandwich<Line> for Origin {
 impl Sandwich<Motor> for Origin {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       12        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        6        0
+    //  no simd        0       12        0
     fn sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Flector::from_groups(
@@ -2129,10 +2184,10 @@ impl Sandwich<MultiVector> for Origin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       17        0
-    //    simd3        0        1        0
+    //      f32        0       11        0
+    //    simd3        0        3        0
     // Totals...
-    // yes simd        0       18        0
+    // yes simd        0       14        0
     //  no simd        0       20        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -2175,8 +2230,12 @@ impl InfixSandwich for Plane {}
 impl Sandwich<AntiScalar> for Plane {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        6        0
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        6        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Origin::from_groups(/* e4 */ (self.group0()[3] * other[e1234]));
@@ -2187,10 +2246,10 @@ impl Sandwich<DualNum> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       29        0
-    //    simd4        0        1        0
+    //      f32        4        9        0
+    //    simd4        2        6        0
     // Totals...
-    // yes simd       12       30        0
+    // yes simd        6       15        0
     //  no simd       12       33        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -2206,10 +2265,10 @@ impl Sandwich<Flector> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       32        0
-    //    simd4        2        4        0
+    //      f32       16       28        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       18       36        0
+    // yes simd       18       33        0
     //  no simd       24       48        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -2230,8 +2289,12 @@ impl Sandwich<Flector> for Plane {
 impl Sandwich<Horizon> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       29        0
+    //           add/sub      mul      div
+    //      f32       12       25        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       12       26        0
+    //  no simd       12       29        0
     fn sandwich(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Motor::from_groups(
@@ -2246,8 +2309,12 @@ impl Sandwich<Horizon> for Plane {
 impl Sandwich<Line> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       43        0
+    //           add/sub      mul      div
+    //      f32       12       23        0
+    //    simd4        2        5        0
+    // Totals...
+    // yes simd       14       28        0
+    //  no simd       20       43        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
@@ -2271,8 +2338,12 @@ impl Sandwich<Line> for Plane {
 impl Sandwich<Motor> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       48        0
+    //           add/sub      mul      div
+    //      f32       16       28        0
+    //    simd4        2        5        0
+    // Totals...
+    // yes simd       18       33        0
+    //  no simd       24       48        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e1, e2, e3, e4
@@ -2297,10 +2368,11 @@ impl Sandwich<MultiVector> for Plane {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       42       80        0
-    //    simd3        2        4        0
+    //      f32       36       64        0
+    //    simd3        4        8        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       44       84        0
+    // yes simd       40       73        0
     //  no simd       48       92        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         let geometric_product = MultiVector::from_groups(
@@ -2342,8 +2414,12 @@ impl Sandwich<MultiVector> for Plane {
 impl Sandwich<Origin> for Plane {
     type Output = Origin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        8        0
     fn sandwich(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiScalar::from_groups(/* e1234 */ (self.group0()[3] * other[e4] * -1.0));
@@ -2353,8 +2429,12 @@ impl Sandwich<Origin> for Plane {
 impl Sandwich<Plane> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       32        0
+    //           add/sub      mul      div
+    //      f32       15       28        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       15       29        0
+    //  no simd       15       32        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
@@ -2374,10 +2454,10 @@ impl Sandwich<Point> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       36        0
-    //    simd4        1        1        0
+    //      f32       14       32        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       15       37        0
+    // yes simd       15       34        0
     //  no simd       18       40        0
     fn sandwich(self, other: Point) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -2403,10 +2483,10 @@ impl Sandwich<Scalar> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       12        0
-    //    simd4        0        1        0
+    //      f32        3        8        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        3       13        0
+    // yes simd        3       10        0
     //  no simd        3       16        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -2418,8 +2498,12 @@ impl InfixSandwich for Point {}
 impl Sandwich<AntiScalar> for Point {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       19        0
+    //           add/sub      mul      div
+    //      f32        2       15        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        3       16        0
+    //  no simd        6       19        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([
@@ -2435,10 +2519,10 @@ impl Sandwich<DualNum> for Point {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       31        0
-    //    simd4        0        1        0
+    //      f32        8       19        0
+    //    simd4        3        4        0
     // Totals...
-    // yes simd       20       32        0
+    // yes simd       11       23        0
     //  no simd       20       35        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -2459,11 +2543,11 @@ impl Sandwich<Flector> for Point {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        3        3        0
+    //      f32       12       32        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       31       47        0
-    //  no simd       40       56        0
+    // yes simd       19       39        0
+    //  no simd       40       60        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
@@ -2488,8 +2572,12 @@ impl Sandwich<Flector> for Point {
 impl Sandwich<Horizon> for Point {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       35        0
+    //           add/sub      mul      div
+    //      f32        4       23        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd        8       27        0
+    //  no simd       20       39        0
     fn sandwich(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Motor::from_groups(
@@ -2510,10 +2598,10 @@ impl Sandwich<Line> for Point {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       41        0
-    //    simd4        2        2        0
+    //      f32       13       29        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       27       43        0
+    // yes simd       18       34        0
     //  no simd       33       49        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -2539,10 +2627,10 @@ impl Sandwich<Motor> for Point {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        3        3        0
+    //      f32       16       32        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       31       47        0
+    // yes simd       22       38        0
     //  no simd       40       56        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -2569,13 +2657,13 @@ impl Sandwich<MultiVector> for Point {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       54       85        0
+    //      f32       29       64        0
     //    simd2        3        3        0
-    //    simd3        3        3        0
-    //    simd4        3        3        0
+    //    simd3        6        6        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       63       94        0
-    //  no simd       81      112        0
+    // yes simd       45       80        0
+    //  no simd       81      116        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         let geometric_product = MultiVector::from_groups(
             // scalar, e1234
@@ -2619,11 +2707,12 @@ impl Sandwich<Origin> for Point {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       21        0
+    //      f32        5       16        0
     //    simd3        0        2        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       13       23        0
-    //  no simd       13       27        0
+    // yes simd        7       20        0
+    //  no simd       13       30        0
     fn sandwich(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Line::from_groups(
@@ -2639,11 +2728,11 @@ impl Sandwich<Plane> for Point {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       43        0
-    //    simd4        1        1        0
+    //      f32        6       31        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       23       44        0
-    //  no simd       26       47        0
+    // yes simd       11       36        0
+    //  no simd       26       51        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
@@ -2668,11 +2757,11 @@ impl Sandwich<Point> for Point {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       42        0
-    //    simd4        1        1        0
+    //      f32        8       30        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       25       43        0
-    //  no simd       28       46        0
+    // yes simd       13       35        0
+    //  no simd       28       50        0
     fn sandwich(self, other: Point) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e41, e42, e43, e1234
@@ -2697,11 +2786,11 @@ impl Sandwich<Scalar> for Point {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       15        0
-    //    simd4        0        1        0
+    //      f32        4       14        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        8       16        0
-    //  no simd        8       19        0
+    // yes simd        5       16        0
+    //  no simd        8       22        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(other[scalar]) * self.group0()));
@@ -2723,12 +2812,9 @@ impl Sandwich<AntiScalar> for Scalar {
 impl Sandwich<DualNum> for Scalar {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        4        0
+    //          add/sub      mul      div
+    //   simd2        0        2        0
+    // no simd        0        4        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_product = DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(self[scalar]) * other.group0()));
@@ -2738,12 +2824,9 @@ impl Sandwich<DualNum> for Scalar {
 impl Sandwich<Flector> for Scalar {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Flector::from_groups(
@@ -2769,12 +2852,9 @@ impl Sandwich<Horizon> for Scalar {
 impl Sandwich<Line> for Scalar {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        6        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0        8        0
-    //  no simd        0       12        0
+    //          add/sub      mul      div
+    //   simd3        0        4        0
+    // no simd        0       12        0
     fn sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Line::from_groups(
@@ -2789,12 +2869,9 @@ impl Sandwich<Line> for Scalar {
 impl Sandwich<Motor> for Scalar {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Motor::from_groups(
@@ -2810,12 +2887,11 @@ impl Sandwich<MultiVector> for Scalar {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       16        0
-    //    simd2        0        1        0
-    //    simd3        0        2        0
-    //    simd4        0        2        0
+    //    simd2        0        2        0
+    //    simd3        0        4        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0       21        0
+    // yes simd        0       10        0
     //  no simd        0       32        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -2848,12 +2924,9 @@ impl Sandwich<Origin> for Scalar {
 impl Sandwich<Plane> for Scalar {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(self[scalar]) * other.group0()));
@@ -2863,12 +2936,9 @@ impl Sandwich<Plane> for Scalar {
 impl Sandwich<Point> for Scalar {
     type Output = Point;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn sandwich(self, other: Point) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(self[scalar]) * other.group0()));

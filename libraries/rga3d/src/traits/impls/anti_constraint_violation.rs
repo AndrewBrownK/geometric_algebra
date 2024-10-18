@@ -21,8 +21,7 @@
 impl AntiConstraintViolation for AntiScalar {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl AntiConstraintViolation for DualNum {
@@ -39,8 +38,7 @@ impl AntiConstraintViolation for DualNum {
             // scalar, e1234
             (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([2.0, 1.0])),
         );
-        let subtraction = Scalar::from_groups(/* scalar */ geometric_anti_product.group0()[0]);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ geometric_anti_product.group0()[0]);
     }
 }
 impl AntiConstraintViolation for Flector {
@@ -71,11 +69,10 @@ impl AntiConstraintViolation for Flector {
             // e1234
             (-f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2)),
         );
-        let subtraction = DualNum::from_groups(
+        return DualNum::from_groups(
             // scalar, e1234
             Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e1234])]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for Line {
@@ -106,11 +103,10 @@ impl AntiConstraintViolation for Line {
                 - (Simd32x2::from(anti_reverse.group0()[2]) * Simd32x2::from([self.group1()[2], self.group0()[2]]))),
         );
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2)));
-        let subtraction = DualNum::from_groups(
+        return DualNum::from_groups(
             // scalar, e1234
             Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e1234])]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for Motor {
@@ -145,11 +141,10 @@ impl AntiConstraintViolation for Motor {
             // e1234
             (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = DualNum::from_groups(
+        return DualNum::from_groups(
             // scalar, e1234
             Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e1234])]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for MultiVector {
@@ -232,7 +227,7 @@ impl AntiConstraintViolation for MultiVector {
                 + f32::powi(self.group4()[1], 2)
                 + f32::powi(self.group4()[2], 2)),
         );
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e1234])]),
             // e1, e2, e3, e4
@@ -244,7 +239,6 @@ impl AntiConstraintViolation for MultiVector {
             // e423, e431, e412, e321
             geometric_anti_product.group4(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for Origin {
@@ -257,15 +251,13 @@ impl AntiConstraintViolation for Origin {
         let anti_reverse = Origin::from_groups(/* e4 */ (self[e4] * -1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ (anti_reverse[e4] * self[e4] * -1.0));
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(self[e4], 2) * -1.0));
-        let subtraction = AntiScalar::from_groups(/* e1234 */ (-anti_scalar_product[e1234] + geometric_anti_product[e1234]));
-        return subtraction;
+        return AntiScalar::from_groups(/* e1234 */ (-anti_scalar_product[e1234] + geometric_anti_product[e1234]));
     }
 }
 impl AntiConstraintViolation for Plane {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl AntiConstraintViolation for Point {
@@ -282,7 +274,6 @@ impl AntiConstraintViolation for Point {
         let anti_reverse = Point::from_groups(/* e1, e2, e3, e4 */ (self.group0() * Simd32x4::from(-1.0)));
         let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ (anti_reverse.group0()[3] * self.group0()[3] * -1.0));
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(self.group0()[3], 2) * -1.0));
-        let subtraction = AntiScalar::from_groups(/* e1234 */ (-anti_scalar_product[e1234] + geometric_anti_product[e1234]));
-        return subtraction;
+        return AntiScalar::from_groups(/* e1234 */ (-anti_scalar_product[e1234] + geometric_anti_product[e1234]));
     }
 }

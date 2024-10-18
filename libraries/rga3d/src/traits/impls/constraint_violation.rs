@@ -32,8 +32,7 @@ impl ConstraintViolation for DualNum {
             // scalar, e1234
             (Simd32x2::from([f32::powi(self.group0()[0], 2), (self.group0()[0] * self.group0()[1])]) * Simd32x2::from([1.0, 2.0])),
         );
-        let subtraction = AntiScalar::from_groups(/* e1234 */ geometric_product.group0()[1]);
-        return subtraction;
+        return AntiScalar::from_groups(/* e1234 */ geometric_product.group0()[1]);
     }
 }
 impl ConstraintViolation for Flector {
@@ -64,11 +63,10 @@ impl ConstraintViolation for Flector {
             // scalar
             (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group1()[3], 2)),
         );
-        let subtraction = DualNum::from_groups(
+        return DualNum::from_groups(
             // scalar, e1234
             Simd32x2::from([(geometric_product.group0()[0] - scalar_product[scalar]), geometric_product.group0()[1]]),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for Horizon {
@@ -81,8 +79,7 @@ impl ConstraintViolation for Horizon {
         let reverse = Horizon::from_groups(/* e321 */ (self[e321] * -1.0));
         let geometric_product = Scalar::from_groups(/* scalar */ (reverse[e321] * self[e321] * -1.0));
         let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(self[e321], 2) * -1.0));
-        let subtraction = Scalar::from_groups(/* scalar */ (geometric_product[scalar] - scalar_product[scalar]));
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ (geometric_product[scalar] - scalar_product[scalar]));
     }
 }
 impl ConstraintViolation for Line {
@@ -113,11 +110,10 @@ impl ConstraintViolation for Line {
                 - (Simd32x2::from(self.group1()[2]) * Simd32x2::from([reverse.group1()[2], reverse.group0()[2]]))),
         );
         let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2)));
-        let subtraction = DualNum::from_groups(
+        return DualNum::from_groups(
             // scalar, e1234
             Simd32x2::from([(geometric_product.group0()[0] - scalar_product[scalar]), geometric_product.group0()[1]]),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for Motor {
@@ -152,11 +148,10 @@ impl ConstraintViolation for Motor {
             // scalar
             (-f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2)),
         );
-        let subtraction = DualNum::from_groups(
+        return DualNum::from_groups(
             // scalar, e1234
             Simd32x2::from([(geometric_product.group0()[0] - scalar_product[scalar]), geometric_product.group0()[1]]),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for MultiVector {
@@ -240,7 +235,7 @@ impl ConstraintViolation for MultiVector {
                 + f32::powi(self.group1()[2], 2)
                 - f32::powi(self.group4()[3], 2)),
         );
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([(geometric_product.group0()[0] - scalar_product[scalar]), geometric_product.group0()[1]]),
             // e1, e2, e3, e4
@@ -252,7 +247,6 @@ impl ConstraintViolation for MultiVector {
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for Plane {
@@ -269,21 +263,18 @@ impl ConstraintViolation for Plane {
         let reverse = Plane::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(-1.0)));
         let geometric_product = Scalar::from_groups(/* scalar */ (reverse.group0()[3] * self.group0()[3] * -1.0));
         let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(self.group0()[3], 2) * -1.0));
-        let subtraction = Scalar::from_groups(/* scalar */ (geometric_product[scalar] - scalar_product[scalar]));
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ (geometric_product[scalar] - scalar_product[scalar]));
     }
 }
 impl ConstraintViolation for Point {
     type Output = Scalar;
     fn constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl ConstraintViolation for Scalar {
     type Output = Scalar;
     fn constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }

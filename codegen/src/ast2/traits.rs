@@ -2502,6 +2502,8 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
     }
 }
 
+// TODO DRY these into_traitXX methods
+
 impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, ExprType> {
     fn into_trait10(self, owner: MultiVector) -> Arc<RawTraitImplementation> {
         let lookup = TraitOperationsLookup {
@@ -2513,6 +2515,35 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             traits22: &self.traits22_dependencies,
         };
         let mut statistics = VectoredOperationsTracker::zero();
+
+        // This shouldn't be a problem because of type level state and function visibilities
+        let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
+        return_expr.final_simplify();
+        statistics += return_expr.count_operations(&lookup);
+        let maybe_variable = match &return_expr {
+            AnyExpression::Int(IntExpr::Variable(v)) => Some(v),
+            AnyExpression::Float(FloatExpr::Variable(v)) => Some(v),
+            AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(v),
+            AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(v),
+            AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(v),
+            AnyExpression::Class(MultiVectorExpr { expr: box MultiVectorVia::Variable(v), .. }) => Some(v),
+            _ => None,
+        };
+        if let Some(variable) = maybe_variable {
+            let decl = &variable.decl;
+            if 1 == Arc::strong_count(decl) && decl.expr.is_some() {
+                if let Some(lock) = decl.expr.as_ref() {
+                    let guard = lock.read();
+                    let inlined_return_expr = guard.deref().clone();
+                    drop(guard);
+                    return_expr = inlined_return_expr;
+                    return_expr.final_simplify();
+                    statistics += return_expr.count_operations(&lookup);
+                    // It is important that the Arc<RawVariableDeclaration> is dropped here,
+                    // so it is not included in the 'lines' Vec a few lines of code down from here.
+                }
+            }
+        }
 
         // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
@@ -2532,9 +2563,6 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             }
         }
 
-        // This shouldn't be a problem because of type level state and function visibilities
-        let return_expr = self.return_expr.expect("Must have return expression in order to register");
-        statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             multivector_dependencies: self.multivector_dependencies.into_inner(),
@@ -2572,6 +2600,35 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         };
         let mut statistics = VectoredOperationsTracker::zero();
 
+        // This shouldn't be a problem because of type level state and function visibilities
+        let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
+        return_expr.final_simplify();
+        statistics += return_expr.count_operations(&lookup);
+        let maybe_variable = match &return_expr {
+            AnyExpression::Int(IntExpr::Variable(v)) => Some(v),
+            AnyExpression::Float(FloatExpr::Variable(v)) => Some(v),
+            AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(v),
+            AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(v),
+            AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(v),
+            AnyExpression::Class(MultiVectorExpr { expr: box MultiVectorVia::Variable(v), .. }) => Some(v),
+            _ => None,
+        };
+        if let Some(variable) = maybe_variable {
+            let decl = &variable.decl;
+            if 1 == Arc::strong_count(decl) && decl.expr.is_some() {
+                if let Some(lock) = decl.expr.as_ref() {
+                    let guard = lock.read();
+                    let inlined_return_expr = guard.deref().clone();
+                    drop(guard);
+                    return_expr = inlined_return_expr;
+                    return_expr.final_simplify();
+                    statistics += return_expr.count_operations(&lookup);
+                    // It is important that the Arc<RawVariableDeclaration> is dropped here,
+                    // so it is not included in the 'lines' Vec a few lines of code down from here.
+                }
+            }
+        }
+
         // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
         let mut i = lines.len();
@@ -2590,9 +2647,6 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             }
         }
 
-        // This shouldn't be a problem because of type level state and function visibilities
-        let return_expr = self.return_expr.expect("Must have return expression in order to register");
-        statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             multivector_dependencies: self.multivector_dependencies.into_inner(),
@@ -2630,6 +2684,35 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         };
         let mut statistics = VectoredOperationsTracker::zero();
 
+        // This shouldn't be a problem because of type level state and function visibilities
+        let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
+        return_expr.final_simplify();
+        statistics += return_expr.count_operations(&lookup);
+        let maybe_variable = match &return_expr {
+            AnyExpression::Int(IntExpr::Variable(v)) => Some(v),
+            AnyExpression::Float(FloatExpr::Variable(v)) => Some(v),
+            AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(v),
+            AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(v),
+            AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(v),
+            AnyExpression::Class(MultiVectorExpr { expr: box MultiVectorVia::Variable(v), .. }) => Some(v),
+            _ => None,
+        };
+        if let Some(variable) = maybe_variable {
+            let decl = &variable.decl;
+            if 1 == Arc::strong_count(decl) && decl.expr.is_some() {
+                if let Some(lock) = decl.expr.as_ref() {
+                    let guard = lock.read();
+                    let inlined_return_expr = guard.deref().clone();
+                    drop(guard);
+                    return_expr = inlined_return_expr;
+                    return_expr.final_simplify();
+                    statistics += return_expr.count_operations(&lookup);
+                    // It is important that the Arc<RawVariableDeclaration> is dropped here,
+                    // so it is not included in the 'lines' Vec a few lines of code down from here.
+                }
+            }
+        }
+
         // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
         let mut i = lines.len();
@@ -2648,9 +2731,6 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             }
         }
 
-        // This shouldn't be a problem because of type level state and function visibilities
-        let return_expr = self.return_expr.expect("Must have return expression in order to register");
-        statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             multivector_dependencies: self.multivector_dependencies.into_inner(),
@@ -2688,6 +2768,35 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         };
         let mut statistics = VectoredOperationsTracker::zero();
 
+        // This shouldn't be a problem because of type level state and function visibilities
+        let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
+        return_expr.final_simplify();
+        statistics += return_expr.count_operations(&lookup);
+        let maybe_variable = match &return_expr {
+            AnyExpression::Int(IntExpr::Variable(v)) => Some(v),
+            AnyExpression::Float(FloatExpr::Variable(v)) => Some(v),
+            AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(v),
+            AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(v),
+            AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(v),
+            AnyExpression::Class(MultiVectorExpr { expr: box MultiVectorVia::Variable(v), .. }) => Some(v),
+            _ => None,
+        };
+        if let Some(variable) = maybe_variable {
+            let decl = &variable.decl;
+            if 1 == Arc::strong_count(decl) && decl.expr.is_some() {
+                if let Some(lock) = decl.expr.as_ref() {
+                    let guard = lock.read();
+                    let inlined_return_expr = guard.deref().clone();
+                    drop(guard);
+                    return_expr = inlined_return_expr;
+                    return_expr.final_simplify();
+                    statistics += return_expr.count_operations(&lookup);
+                    // It is important that the Arc<RawVariableDeclaration> is dropped here,
+                    // so it is not included in the 'lines' Vec a few lines of code down from here.
+                }
+            }
+        }
+
         // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
         let mut i = lines.len();
@@ -2706,9 +2815,6 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             }
         }
 
-        // This shouldn't be a problem because of type level state and function visibilities
-        let return_expr = self.return_expr.expect("Must have return expression in order to register");
-        statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             multivector_dependencies: self.multivector_dependencies.into_inner(),
@@ -2746,6 +2852,35 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         };
         let mut statistics = VectoredOperationsTracker::zero();
 
+        // This shouldn't be a problem because of type level state and function visibilities
+        let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
+        return_expr.final_simplify();
+        statistics += return_expr.count_operations(&lookup);
+        let maybe_variable = match &return_expr {
+            AnyExpression::Int(IntExpr::Variable(v)) => Some(v),
+            AnyExpression::Float(FloatExpr::Variable(v)) => Some(v),
+            AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(v),
+            AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(v),
+            AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(v),
+            AnyExpression::Class(MultiVectorExpr { expr: box MultiVectorVia::Variable(v), .. }) => Some(v),
+            _ => None,
+        };
+        if let Some(variable) = maybe_variable {
+            let decl = &variable.decl;
+            if 1 == Arc::strong_count(decl) && decl.expr.is_some() {
+                if let Some(lock) = decl.expr.as_ref() {
+                    let guard = lock.read();
+                    let inlined_return_expr = guard.deref().clone();
+                    drop(guard);
+                    return_expr = inlined_return_expr;
+                    return_expr.final_simplify();
+                    statistics += return_expr.count_operations(&lookup);
+                    // It is important that the Arc<RawVariableDeclaration> is dropped here,
+                    // so it is not included in the 'lines' Vec a few lines of code down from here.
+                }
+            }
+        }
+
         // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
         let mut i = lines.len();
@@ -2764,9 +2899,6 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             }
         }
 
-        // This shouldn't be a problem because of type level state and function visibilities
-        let return_expr = self.return_expr.expect("Must have return expression in order to register");
-        statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             multivector_dependencies: self.multivector_dependencies.into_inner(),
@@ -2804,6 +2936,35 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         };
         let mut statistics = VectoredOperationsTracker::zero();
 
+        // This shouldn't be a problem because of type level state and function visibilities
+        let mut return_expr = self.return_expr.expect("Must have return expression in order to register");
+        return_expr.final_simplify();
+        statistics += return_expr.count_operations(&lookup);
+        let maybe_variable = match &return_expr {
+            AnyExpression::Int(IntExpr::Variable(v)) => Some(v),
+            AnyExpression::Float(FloatExpr::Variable(v)) => Some(v),
+            AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(v),
+            AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(v),
+            AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(v),
+            AnyExpression::Class(MultiVectorExpr { expr: box MultiVectorVia::Variable(v), .. }) => Some(v),
+            _ => None,
+        };
+        if let Some(variable) = maybe_variable {
+            let decl = &variable.decl;
+            if 1 == Arc::strong_count(decl) && decl.expr.is_some() {
+                if let Some(lock) = decl.expr.as_ref() {
+                    let guard = lock.read();
+                    let inlined_return_expr = guard.deref().clone();
+                    drop(guard);
+                    return_expr = inlined_return_expr;
+                    return_expr.final_simplify();
+                    statistics += return_expr.count_operations(&lookup);
+                    // It is important that the Arc<RawVariableDeclaration> is dropped here,
+                    // so it is not included in the 'lines' Vec a few lines of code down from here.
+                }
+            }
+        }
+
         // Scan through the lines in reverse, drop unused variables, and count operations
         let mut lines = self.lines.into_inner();
         let mut i = lines.len();
@@ -2822,9 +2983,6 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             }
         }
 
-        // This shouldn't be a problem because of type level state and function visibilities
-        let return_expr = self.return_expr.expect("Must have return expression in order to register");
-        statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             multivector_dependencies: self.multivector_dependencies.into_inner(),

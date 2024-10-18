@@ -27,8 +27,7 @@ impl GeometricAntiQuotient<AntiScalar> for AntiScalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other[e1234], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
-        return geometric_anti_product;
+        return AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
     }
 }
 impl GeometricAntiQuotient<DualNum> for AntiScalar {
@@ -39,8 +38,7 @@ impl GeometricAntiQuotient<DualNum> for AntiScalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other.group0()[1], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
-        return geometric_anti_product;
+        return AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
     }
 }
 impl GeometricAntiQuotient<Flector> for AntiScalar {
@@ -54,8 +52,7 @@ impl GeometricAntiQuotient<Flector> for AntiScalar {
             (-f32::powi(other.group0()[3], 2) + f32::powi(other.group1()[0], 2) + f32::powi(other.group1()[1], 2) + f32::powi(other.group1()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
-        return geometric_anti_product;
+        return AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
     }
 }
 impl GeometricAntiQuotient<Line> for AntiScalar {
@@ -66,8 +63,7 @@ impl GeometricAntiQuotient<Line> for AntiScalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
-        return geometric_anti_product;
+        return AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
     }
 }
 impl GeometricAntiQuotient<Motor> for AntiScalar {
@@ -81,8 +77,7 @@ impl GeometricAntiQuotient<Motor> for AntiScalar {
             (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2) + f32::powi(other.group0()[3], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
-        return geometric_anti_product;
+        return AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
     }
 }
 impl GeometricAntiQuotient<MultiVector> for AntiScalar {
@@ -103,8 +98,7 @@ impl GeometricAntiQuotient<MultiVector> for AntiScalar {
                 + f32::powi(other.group4()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
-        return geometric_anti_product;
+        return AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
     }
 }
 impl GeometricAntiQuotient<Origin> for AntiScalar {
@@ -115,8 +109,7 @@ impl GeometricAntiQuotient<Origin> for AntiScalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other[e4], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
-        return geometric_anti_product;
+        return AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
     }
 }
 impl GeometricAntiQuotient<Plane> for AntiScalar {
@@ -127,8 +120,7 @@ impl GeometricAntiQuotient<Plane> for AntiScalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
-        return geometric_anti_product;
+        return AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
     }
 }
 impl GeometricAntiQuotient<Point> for AntiScalar {
@@ -139,8 +131,7 @@ impl GeometricAntiQuotient<Point> for AntiScalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[3], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
-        return geometric_anti_product;
+        return AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
     }
 }
 impl InfixGeometricAntiQuotient for DualNum {}
@@ -156,8 +147,7 @@ impl GeometricAntiQuotient<AntiScalar> for DualNum {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other[e1234], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<DualNum> for DualNum {
@@ -172,8 +162,7 @@ impl GeometricAntiQuotient<DualNum> for DualNum {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other.group0()[1], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Flector> for DualNum {
@@ -191,8 +180,7 @@ impl GeometricAntiQuotient<Flector> for DualNum {
             (-f32::powi(other.group0()[3], 2) + f32::powi(other.group1()[0], 2) + f32::powi(other.group1()[1], 2) + f32::powi(other.group1()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Line> for DualNum {
@@ -207,8 +195,7 @@ impl GeometricAntiQuotient<Line> for DualNum {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Motor> for DualNum {
@@ -226,8 +213,7 @@ impl GeometricAntiQuotient<Motor> for DualNum {
             (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2) + f32::powi(other.group0()[3], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<MultiVector> for DualNum {
@@ -252,8 +238,7 @@ impl GeometricAntiQuotient<MultiVector> for DualNum {
                 + f32::powi(other.group4()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Origin> for DualNum {
@@ -268,8 +253,7 @@ impl GeometricAntiQuotient<Origin> for DualNum {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other[e4], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Plane> for DualNum {
@@ -284,8 +268,7 @@ impl GeometricAntiQuotient<Plane> for DualNum {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Point> for DualNum {
@@ -300,8 +283,7 @@ impl GeometricAntiQuotient<Point> for DualNum {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[3], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl InfixGeometricAntiQuotient for Flector {}
@@ -317,13 +299,12 @@ impl GeometricAntiQuotient<AntiScalar> for Flector {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other[e1234], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<DualNum> for Flector {
@@ -338,13 +319,12 @@ impl GeometricAntiQuotient<DualNum> for Flector {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other.group0()[1], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Flector> for Flector {
@@ -362,13 +342,12 @@ impl GeometricAntiQuotient<Flector> for Flector {
             (-f32::powi(other.group0()[3], 2) + f32::powi(other.group1()[0], 2) + f32::powi(other.group1()[1], 2) + f32::powi(other.group1()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Line> for Flector {
@@ -383,13 +362,12 @@ impl GeometricAntiQuotient<Line> for Flector {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Motor> for Flector {
@@ -407,13 +385,12 @@ impl GeometricAntiQuotient<Motor> for Flector {
             (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2) + f32::powi(other.group0()[3], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<MultiVector> for Flector {
@@ -438,13 +415,12 @@ impl GeometricAntiQuotient<MultiVector> for Flector {
                 + f32::powi(other.group4()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Origin> for Flector {
@@ -459,13 +435,12 @@ impl GeometricAntiQuotient<Origin> for Flector {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other[e4], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Plane> for Flector {
@@ -480,13 +455,12 @@ impl GeometricAntiQuotient<Plane> for Flector {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Point> for Flector {
@@ -501,13 +475,12 @@ impl GeometricAntiQuotient<Point> for Flector {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[3], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Flector::from_groups(
+        return Flector::from_groups(
             // e1, e2, e3, e4
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl InfixGeometricAntiQuotient for Horizon {}
@@ -519,8 +492,7 @@ impl GeometricAntiQuotient<AntiScalar> for Horizon {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other[e1234], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
-        return geometric_anti_product;
+        return Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
     }
 }
 impl GeometricAntiQuotient<DualNum> for Horizon {
@@ -531,8 +503,7 @@ impl GeometricAntiQuotient<DualNum> for Horizon {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other.group0()[1], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
-        return geometric_anti_product;
+        return Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
     }
 }
 impl GeometricAntiQuotient<Flector> for Horizon {
@@ -546,8 +517,7 @@ impl GeometricAntiQuotient<Flector> for Horizon {
             (-f32::powi(other.group0()[3], 2) + f32::powi(other.group1()[0], 2) + f32::powi(other.group1()[1], 2) + f32::powi(other.group1()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
-        return geometric_anti_product;
+        return Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
     }
 }
 impl GeometricAntiQuotient<Line> for Horizon {
@@ -558,8 +528,7 @@ impl GeometricAntiQuotient<Line> for Horizon {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
-        return geometric_anti_product;
+        return Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
     }
 }
 impl GeometricAntiQuotient<Motor> for Horizon {
@@ -573,8 +542,7 @@ impl GeometricAntiQuotient<Motor> for Horizon {
             (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2) + f32::powi(other.group0()[3], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
-        return geometric_anti_product;
+        return Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
     }
 }
 impl GeometricAntiQuotient<MultiVector> for Horizon {
@@ -595,8 +563,7 @@ impl GeometricAntiQuotient<MultiVector> for Horizon {
                 + f32::powi(other.group4()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
-        return geometric_anti_product;
+        return Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
     }
 }
 impl GeometricAntiQuotient<Origin> for Horizon {
@@ -607,8 +574,7 @@ impl GeometricAntiQuotient<Origin> for Horizon {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other[e4], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
-        return geometric_anti_product;
+        return Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
     }
 }
 impl GeometricAntiQuotient<Plane> for Horizon {
@@ -619,8 +585,7 @@ impl GeometricAntiQuotient<Plane> for Horizon {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
-        return geometric_anti_product;
+        return Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
     }
 }
 impl GeometricAntiQuotient<Point> for Horizon {
@@ -631,8 +596,7 @@ impl GeometricAntiQuotient<Point> for Horizon {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[3], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
-        return geometric_anti_product;
+        return Horizon::from_groups(/* e321 */ (anti_inverse[e1234] * self[e321]));
     }
 }
 impl InfixGeometricAntiQuotient for Line {}
@@ -648,13 +612,12 @@ impl GeometricAntiQuotient<AntiScalar> for Line {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other[e1234], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Line::from_groups(
+        return Line::from_groups(
             // e41, e42, e43
             (Simd32x3::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12
             (Simd32x3::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<DualNum> for Line {
@@ -669,13 +632,12 @@ impl GeometricAntiQuotient<DualNum> for Line {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other.group0()[1], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Line::from_groups(
+        return Line::from_groups(
             // e41, e42, e43
             (Simd32x3::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12
             (Simd32x3::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Flector> for Line {
@@ -693,13 +655,12 @@ impl GeometricAntiQuotient<Flector> for Line {
             (-f32::powi(other.group0()[3], 2) + f32::powi(other.group1()[0], 2) + f32::powi(other.group1()[1], 2) + f32::powi(other.group1()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Line::from_groups(
+        return Line::from_groups(
             // e41, e42, e43
             (Simd32x3::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12
             (Simd32x3::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Line> for Line {
@@ -714,13 +675,12 @@ impl GeometricAntiQuotient<Line> for Line {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Line::from_groups(
+        return Line::from_groups(
             // e41, e42, e43
             (Simd32x3::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12
             (Simd32x3::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Motor> for Line {
@@ -738,13 +698,12 @@ impl GeometricAntiQuotient<Motor> for Line {
             (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2) + f32::powi(other.group0()[3], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Line::from_groups(
+        return Line::from_groups(
             // e41, e42, e43
             (Simd32x3::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12
             (Simd32x3::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<MultiVector> for Line {
@@ -769,13 +728,12 @@ impl GeometricAntiQuotient<MultiVector> for Line {
                 + f32::powi(other.group4()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Line::from_groups(
+        return Line::from_groups(
             // e41, e42, e43
             (Simd32x3::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12
             (Simd32x3::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Origin> for Line {
@@ -790,13 +748,12 @@ impl GeometricAntiQuotient<Origin> for Line {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other[e4], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Line::from_groups(
+        return Line::from_groups(
             // e41, e42, e43
             (Simd32x3::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12
             (Simd32x3::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Plane> for Line {
@@ -811,13 +768,12 @@ impl GeometricAntiQuotient<Plane> for Line {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Line::from_groups(
+        return Line::from_groups(
             // e41, e42, e43
             (Simd32x3::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12
             (Simd32x3::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Point> for Line {
@@ -832,13 +788,12 @@ impl GeometricAntiQuotient<Point> for Line {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[3], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Line::from_groups(
+        return Line::from_groups(
             // e41, e42, e43
             (Simd32x3::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12
             (Simd32x3::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl InfixGeometricAntiQuotient for Motor {}
@@ -854,13 +809,12 @@ impl GeometricAntiQuotient<AntiScalar> for Motor {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other[e1234], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12, scalar
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<DualNum> for Motor {
@@ -875,13 +829,12 @@ impl GeometricAntiQuotient<DualNum> for Motor {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other.group0()[1], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12, scalar
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Flector> for Motor {
@@ -899,13 +852,12 @@ impl GeometricAntiQuotient<Flector> for Motor {
             (-f32::powi(other.group0()[3], 2) + f32::powi(other.group1()[0], 2) + f32::powi(other.group1()[1], 2) + f32::powi(other.group1()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12, scalar
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Line> for Motor {
@@ -920,13 +872,12 @@ impl GeometricAntiQuotient<Line> for Motor {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12, scalar
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Motor> for Motor {
@@ -944,13 +895,12 @@ impl GeometricAntiQuotient<Motor> for Motor {
             (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2) + f32::powi(other.group0()[3], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12, scalar
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<MultiVector> for Motor {
@@ -975,13 +925,12 @@ impl GeometricAntiQuotient<MultiVector> for Motor {
                 + f32::powi(other.group4()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12, scalar
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Origin> for Motor {
@@ -996,13 +945,12 @@ impl GeometricAntiQuotient<Origin> for Motor {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other[e4], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12, scalar
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Plane> for Motor {
@@ -1017,13 +965,12 @@ impl GeometricAntiQuotient<Plane> for Motor {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12, scalar
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Point> for Motor {
@@ -1038,13 +985,12 @@ impl GeometricAntiQuotient<Point> for Motor {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[3], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Motor::from_groups(
+        return Motor::from_groups(
             // e41, e42, e43, e1234
             (Simd32x4::from(anti_inverse[e1234]) * self.group0()),
             // e23, e31, e12, scalar
             (Simd32x4::from(anti_inverse[e1234]) * self.group1()),
         );
-        return geometric_anti_product;
     }
 }
 impl InfixGeometricAntiQuotient for MultiVector {}
@@ -1062,7 +1008,7 @@ impl GeometricAntiQuotient<AntiScalar> for MultiVector {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other[e1234], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             (Simd32x2::from(anti_inverse[e1234]) * self.group0()),
             // e1, e2, e3, e4
@@ -1074,7 +1020,6 @@ impl GeometricAntiQuotient<AntiScalar> for MultiVector {
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group4()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<DualNum> for MultiVector {
@@ -1091,7 +1036,7 @@ impl GeometricAntiQuotient<DualNum> for MultiVector {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other.group0()[1], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             (Simd32x2::from(anti_inverse[e1234]) * self.group0()),
             // e1, e2, e3, e4
@@ -1103,7 +1048,6 @@ impl GeometricAntiQuotient<DualNum> for MultiVector {
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group4()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Flector> for MultiVector {
@@ -1123,7 +1067,7 @@ impl GeometricAntiQuotient<Flector> for MultiVector {
             (-f32::powi(other.group0()[3], 2) + f32::powi(other.group1()[0], 2) + f32::powi(other.group1()[1], 2) + f32::powi(other.group1()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             (Simd32x2::from(anti_inverse[e1234]) * self.group0()),
             // e1, e2, e3, e4
@@ -1135,7 +1079,6 @@ impl GeometricAntiQuotient<Flector> for MultiVector {
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group4()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Line> for MultiVector {
@@ -1152,7 +1095,7 @@ impl GeometricAntiQuotient<Line> for MultiVector {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             (Simd32x2::from(anti_inverse[e1234]) * self.group0()),
             // e1, e2, e3, e4
@@ -1164,7 +1107,6 @@ impl GeometricAntiQuotient<Line> for MultiVector {
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group4()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Motor> for MultiVector {
@@ -1184,7 +1126,7 @@ impl GeometricAntiQuotient<Motor> for MultiVector {
             (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2) + f32::powi(other.group0()[3], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             (Simd32x2::from(anti_inverse[e1234]) * self.group0()),
             // e1, e2, e3, e4
@@ -1196,7 +1138,6 @@ impl GeometricAntiQuotient<Motor> for MultiVector {
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group4()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<MultiVector> for MultiVector {
@@ -1223,7 +1164,7 @@ impl GeometricAntiQuotient<MultiVector> for MultiVector {
                 + f32::powi(other.group4()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             (Simd32x2::from(anti_inverse[e1234]) * self.group0()),
             // e1, e2, e3, e4
@@ -1235,7 +1176,6 @@ impl GeometricAntiQuotient<MultiVector> for MultiVector {
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group4()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Origin> for MultiVector {
@@ -1252,7 +1192,7 @@ impl GeometricAntiQuotient<Origin> for MultiVector {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other[e4], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             (Simd32x2::from(anti_inverse[e1234]) * self.group0()),
             // e1, e2, e3, e4
@@ -1264,7 +1204,6 @@ impl GeometricAntiQuotient<Origin> for MultiVector {
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group4()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Plane> for MultiVector {
@@ -1281,7 +1220,7 @@ impl GeometricAntiQuotient<Plane> for MultiVector {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             (Simd32x2::from(anti_inverse[e1234]) * self.group0()),
             // e1, e2, e3, e4
@@ -1293,7 +1232,6 @@ impl GeometricAntiQuotient<Plane> for MultiVector {
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group4()),
         );
-        return geometric_anti_product;
     }
 }
 impl GeometricAntiQuotient<Point> for MultiVector {
@@ -1310,7 +1248,7 @@ impl GeometricAntiQuotient<Point> for MultiVector {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[3], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e1234
             (Simd32x2::from(anti_inverse[e1234]) * self.group0()),
             // e1, e2, e3, e4
@@ -1322,7 +1260,6 @@ impl GeometricAntiQuotient<Point> for MultiVector {
             // e423, e431, e412, e321
             (Simd32x4::from(anti_inverse[e1234]) * self.group4()),
         );
-        return geometric_anti_product;
     }
 }
 impl InfixGeometricAntiQuotient for Origin {}
@@ -1334,8 +1271,7 @@ impl GeometricAntiQuotient<AntiScalar> for Origin {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other[e1234], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
-        return geometric_anti_product;
+        return Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
     }
 }
 impl GeometricAntiQuotient<DualNum> for Origin {
@@ -1346,8 +1282,7 @@ impl GeometricAntiQuotient<DualNum> for Origin {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other.group0()[1], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
-        return geometric_anti_product;
+        return Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
     }
 }
 impl GeometricAntiQuotient<Flector> for Origin {
@@ -1361,8 +1296,7 @@ impl GeometricAntiQuotient<Flector> for Origin {
             (-f32::powi(other.group0()[3], 2) + f32::powi(other.group1()[0], 2) + f32::powi(other.group1()[1], 2) + f32::powi(other.group1()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
-        return geometric_anti_product;
+        return Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
     }
 }
 impl GeometricAntiQuotient<Line> for Origin {
@@ -1373,8 +1307,7 @@ impl GeometricAntiQuotient<Line> for Origin {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
-        return geometric_anti_product;
+        return Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
     }
 }
 impl GeometricAntiQuotient<Motor> for Origin {
@@ -1388,8 +1321,7 @@ impl GeometricAntiQuotient<Motor> for Origin {
             (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2) + f32::powi(other.group0()[3], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
-        return geometric_anti_product;
+        return Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
     }
 }
 impl GeometricAntiQuotient<MultiVector> for Origin {
@@ -1410,8 +1342,7 @@ impl GeometricAntiQuotient<MultiVector> for Origin {
                 + f32::powi(other.group4()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
-        return geometric_anti_product;
+        return Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
     }
 }
 impl GeometricAntiQuotient<Origin> for Origin {
@@ -1422,8 +1353,7 @@ impl GeometricAntiQuotient<Origin> for Origin {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other[e4], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
-        return geometric_anti_product;
+        return Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
     }
 }
 impl GeometricAntiQuotient<Plane> for Origin {
@@ -1434,8 +1364,7 @@ impl GeometricAntiQuotient<Plane> for Origin {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
-        return geometric_anti_product;
+        return Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
     }
 }
 impl GeometricAntiQuotient<Point> for Origin {
@@ -1446,8 +1375,7 @@ impl GeometricAntiQuotient<Point> for Origin {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[3], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
-        return geometric_anti_product;
+        return Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
     }
 }
 impl InfixGeometricAntiQuotient for Plane {}
@@ -1463,8 +1391,7 @@ impl GeometricAntiQuotient<AntiScalar> for Plane {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other[e1234], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<DualNum> for Plane {
@@ -1479,8 +1406,7 @@ impl GeometricAntiQuotient<DualNum> for Plane {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other.group0()[1], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Flector> for Plane {
@@ -1498,8 +1424,7 @@ impl GeometricAntiQuotient<Flector> for Plane {
             (-f32::powi(other.group0()[3], 2) + f32::powi(other.group1()[0], 2) + f32::powi(other.group1()[1], 2) + f32::powi(other.group1()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Line> for Plane {
@@ -1514,8 +1439,7 @@ impl GeometricAntiQuotient<Line> for Plane {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Motor> for Plane {
@@ -1533,8 +1457,7 @@ impl GeometricAntiQuotient<Motor> for Plane {
             (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2) + f32::powi(other.group0()[3], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<MultiVector> for Plane {
@@ -1559,8 +1482,7 @@ impl GeometricAntiQuotient<MultiVector> for Plane {
                 + f32::powi(other.group4()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Origin> for Plane {
@@ -1575,8 +1497,7 @@ impl GeometricAntiQuotient<Origin> for Plane {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other[e4], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Plane> for Plane {
@@ -1591,8 +1512,7 @@ impl GeometricAntiQuotient<Plane> for Plane {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Point> for Plane {
@@ -1607,8 +1527,7 @@ impl GeometricAntiQuotient<Point> for Plane {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[3], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl InfixGeometricAntiQuotient for Point {}
@@ -1624,8 +1543,7 @@ impl GeometricAntiQuotient<AntiScalar> for Point {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other[e1234], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<DualNum> for Point {
@@ -1640,8 +1558,7 @@ impl GeometricAntiQuotient<DualNum> for Point {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other.group0()[1], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Flector> for Point {
@@ -1659,8 +1576,7 @@ impl GeometricAntiQuotient<Flector> for Point {
             (-f32::powi(other.group0()[3], 2) + f32::powi(other.group1()[0], 2) + f32::powi(other.group1()[1], 2) + f32::powi(other.group1()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Line> for Point {
@@ -1675,8 +1591,7 @@ impl GeometricAntiQuotient<Line> for Point {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Motor> for Point {
@@ -1694,8 +1609,7 @@ impl GeometricAntiQuotient<Motor> for Point {
             (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2) + f32::powi(other.group0()[3], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<MultiVector> for Point {
@@ -1720,8 +1634,7 @@ impl GeometricAntiQuotient<MultiVector> for Point {
                 + f32::powi(other.group4()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Origin> for Point {
@@ -1736,8 +1649,7 @@ impl GeometricAntiQuotient<Origin> for Point {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other[e4], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Plane> for Point {
@@ -1752,8 +1664,7 @@ impl GeometricAntiQuotient<Plane> for Point {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl GeometricAntiQuotient<Point> for Point {
@@ -1768,8 +1679,7 @@ impl GeometricAntiQuotient<Point> for Point {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[3], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
-        return geometric_anti_product;
+        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
 impl InfixGeometricAntiQuotient for Scalar {}
@@ -1781,8 +1691,7 @@ impl GeometricAntiQuotient<AntiScalar> for Scalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other[e1234], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
-        return geometric_anti_product;
+        return Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
     }
 }
 impl GeometricAntiQuotient<DualNum> for Scalar {
@@ -1793,8 +1702,7 @@ impl GeometricAntiQuotient<DualNum> for Scalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(other.group0()[1], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
-        return geometric_anti_product;
+        return Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
     }
 }
 impl GeometricAntiQuotient<Flector> for Scalar {
@@ -1808,8 +1716,7 @@ impl GeometricAntiQuotient<Flector> for Scalar {
             (-f32::powi(other.group0()[3], 2) + f32::powi(other.group1()[0], 2) + f32::powi(other.group1()[1], 2) + f32::powi(other.group1()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
-        return geometric_anti_product;
+        return Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
     }
 }
 impl GeometricAntiQuotient<Line> for Scalar {
@@ -1820,8 +1727,7 @@ impl GeometricAntiQuotient<Line> for Scalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
-        return geometric_anti_product;
+        return Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
     }
 }
 impl GeometricAntiQuotient<Motor> for Scalar {
@@ -1835,8 +1741,7 @@ impl GeometricAntiQuotient<Motor> for Scalar {
             (-f32::powi(other.group0()[0], 2) - f32::powi(other.group0()[1], 2) - f32::powi(other.group0()[2], 2) + f32::powi(other.group0()[3], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
-        return geometric_anti_product;
+        return Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
     }
 }
 impl GeometricAntiQuotient<MultiVector> for Scalar {
@@ -1857,8 +1762,7 @@ impl GeometricAntiQuotient<MultiVector> for Scalar {
                 + f32::powi(other.group4()[2], 2)),
         );
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
-        return geometric_anti_product;
+        return Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
     }
 }
 impl GeometricAntiQuotient<Origin> for Scalar {
@@ -1869,8 +1773,7 @@ impl GeometricAntiQuotient<Origin> for Scalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other[e4], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
-        return geometric_anti_product;
+        return Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
     }
 }
 impl GeometricAntiQuotient<Plane> for Scalar {
@@ -1881,8 +1784,7 @@ impl GeometricAntiQuotient<Plane> for Scalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
-        return geometric_anti_product;
+        return Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
     }
 }
 impl GeometricAntiQuotient<Point> for Scalar {
@@ -1893,7 +1795,6 @@ impl GeometricAntiQuotient<Point> for Scalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(other.group0()[3], 2) * -1.0));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
-        let geometric_anti_product = Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
-        return geometric_anti_product;
+        return Scalar::from_groups(/* scalar */ (anti_inverse[e1234] * self[scalar]));
     }
 }
