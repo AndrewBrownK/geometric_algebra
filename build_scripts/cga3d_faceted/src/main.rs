@@ -90,6 +90,25 @@ fn main() {
     }
     let traits = traits.finish();
 
+    // At the time of this commit, this wgsl file weighs in at 72.2 MB.
+    // I'm going to gitignore it and also comment it out, since
+    // I don't think I want to be using it anyway.
+
+    // let mut wgsl = codegen::Wgsl::new();
+    // wgsl.write_shader_file(
+    //     "libraries/cga3d_faceted/src/",
+    //     "cga3d_faceted",
+    //     1,
+    //     0,
+    //     0,
+    //     "",
+    //     "Latest generation test case",
+    //     "https://github.com/AndrewBrownK/projective_ga/",
+    //     &[],
+    //     repo.clone(),
+    //     traits.clone(),
+    // );
+
     let mut rust = codegen::Rust::new(true).all_features();
     rust.sql = false;
     rust.write_crate(

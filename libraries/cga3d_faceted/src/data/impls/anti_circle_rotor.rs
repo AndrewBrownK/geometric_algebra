@@ -12,15 +12,15 @@ use crate::traits::Wedge;
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         3       4       0
-//  Average:        16      22       0
-//  Maximum:       320     352       0
+//   Median:         3       3       0
+//  Average:        11      16       0
+//  Maximum:       180     211       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         4       5       0
-//  Average:        17      22       0
-//  Maximum:       320     352       0
+//  Average:        17      23       0
+//  Maximum:       320     353       0
 impl std::ops::Add<AntiCircleOnOrigin> for AntiCircleRotor {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
@@ -31,7 +31,7 @@ impl std::ops::Add<AntiCircleOnOrigin> for AntiCircleRotor {
     // yes simd        4        0        0
     //  no simd        6        0        0
     fn add(self, other: AntiCircleOnOrigin) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (other.group0() + self.group0()),
             // e23, e31, e12, e45
@@ -44,12 +44,11 @@ impl std::ops::Add<AntiCircleOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiCircleOnOrigin> for AntiCircleRotor {
     fn add_assign(&mut self, other: AntiCircleOnOrigin) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (other.group0() + self.group0()),
             // e23, e31, e12, e45
@@ -62,7 +61,6 @@ impl std::ops::AddAssign<AntiCircleOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiCircleRotor> for AntiCircleRotor {
@@ -75,7 +73,7 @@ impl std::ops::Add<AntiCircleRotor> for AntiCircleRotor {
     // yes simd        3        0        0
     //  no simd       11        0        0
     fn add(self, other: AntiCircleRotor) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (other.group0() + self.group0()),
             // e23, e31, e12, e45
@@ -83,12 +81,11 @@ impl std::ops::Add<AntiCircleRotor> for AntiCircleRotor {
             // e15, e25, e35, scalar
             (other.group2() + self.group2()),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiCircleRotor> for AntiCircleRotor {
     fn add_assign(&mut self, other: AntiCircleRotor) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (other.group0() + self.group0()),
             // e23, e31, e12, e45
@@ -96,7 +93,6 @@ impl std::ops::AddAssign<AntiCircleRotor> for AntiCircleRotor {
             // e15, e25, e35, scalar
             (other.group2() + self.group2()),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
@@ -110,7 +106,7 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
     // yes simd        5        0        0
     //  no simd       10        0        0
     fn add(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() + other.group0()),
             // e23, e31, e12, e45
@@ -123,12 +119,11 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             (self.group2() + other.group2()),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
     fn add_assign(&mut self, other: AntiCircleRotorAligningOrigin) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() + other.group0()),
             // e23, e31, e12, e45
@@ -141,7 +136,6 @@ impl std::ops::AddAssign<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             (self.group2() + other.group2()),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
@@ -154,7 +148,7 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for AntiCircleRotor 
     // yes simd        4        0        0
     //  no simd        7        0        0
     fn add(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -167,12 +161,11 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for AntiCircleRotor 
             // e15, e25, e35, scalar
             (self.group2() + other.group1()),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiCircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
     fn add_assign(&mut self, other: AntiCircleRotorAligningOriginAtInfinity) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -185,7 +178,6 @@ impl std::ops::AddAssign<AntiCircleRotorAligningOriginAtInfinity> for AntiCircle
             // e15, e25, e35, scalar
             (self.group2() + other.group1()),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorAtInfinity> for AntiCircleRotor {
@@ -195,7 +187,7 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for AntiCircleRotor {
     //   simd4        2        0        0
     // no simd        8        0        0
     fn add(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -203,12 +195,11 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for AntiCircleRotor {
             // e15, e25, e35, scalar
             (self.group2() + other.group1()),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiCircleRotorAtInfinity> for AntiCircleRotor {
     fn add_assign(&mut self, other: AntiCircleRotorAtInfinity) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -216,7 +207,6 @@ impl std::ops::AddAssign<AntiCircleRotorAtInfinity> for AntiCircleRotor {
             // e15, e25, e35, scalar
             (self.group2() + other.group1()),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorOnOrigin> for AntiCircleRotor {
@@ -229,7 +219,7 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for AntiCircleRotor {
     // yes simd        5        0        0
     //  no simd        7        0        0
     fn add(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e23, e31, e12, e45
@@ -242,12 +232,11 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other.group0()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiCircleRotorOnOrigin> for AntiCircleRotor {
     fn add_assign(&mut self, other: AntiCircleRotorOnOrigin) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e23, e31, e12, e45
@@ -260,13 +249,12 @@ impl std::ops::AddAssign<AntiCircleRotorOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other.group0()[3])]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversion> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: AntiDipoleInversion) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -290,13 +278,12 @@ impl std::ops::Add<AntiDipoleInversion> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversionAtInfinity> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -320,13 +307,12 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversionOnOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -350,13 +336,12 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -380,13 +365,12 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleOnOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -410,7 +394,6 @@ impl std::ops::Add<AntiDipoleOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDualNum> for AntiCircleRotor {
@@ -419,7 +402,7 @@ impl std::ops::Add<AntiDualNum> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        1        0        0
     fn add(self, other: AntiDualNum) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] + self.group2()[3])]),
             // e23, e31, e12, e45
@@ -429,14 +412,13 @@ impl std::ops::Add<AntiDualNum> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiFlatOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -460,13 +442,12 @@ impl std::ops::Add<AntiFlatOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiFlatPoint> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: AntiFlatPoint) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -490,13 +471,12 @@ impl std::ops::Add<AntiFlatPoint> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiFlector> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: AntiFlector) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -520,13 +500,12 @@ impl std::ops::Add<AntiFlector> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiFlectorOnOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -550,7 +529,6 @@ impl std::ops::Add<AntiFlectorOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiLine> for AntiCircleRotor {
@@ -559,7 +537,7 @@ impl std::ops::Add<AntiLine> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        6        0        0
     fn add(self, other: AntiLine) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -577,12 +555,11 @@ impl std::ops::Add<AntiLine> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiLine> for AntiCircleRotor {
     fn add_assign(&mut self, other: AntiLine) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -600,7 +577,6 @@ impl std::ops::AddAssign<AntiLine> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiLineOnOrigin> for AntiCircleRotor {
@@ -609,7 +585,7 @@ impl std::ops::Add<AntiLineOnOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: AntiLineOnOrigin) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -622,12 +598,11 @@ impl std::ops::Add<AntiLineOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiLineOnOrigin> for AntiCircleRotor {
     fn add_assign(&mut self, other: AntiLineOnOrigin) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -640,7 +615,6 @@ impl std::ops::AddAssign<AntiLineOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiMotor> for AntiCircleRotor {
@@ -649,7 +623,7 @@ impl std::ops::Add<AntiMotor> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        7        0        0
     fn add(self, other: AntiMotor) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group2()[3] + other.group0()[3])]),
             // e23, e31, e12, e45
@@ -669,7 +643,6 @@ impl std::ops::Add<AntiMotor> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, other.group1()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiMotorOnOrigin> for AntiCircleRotor {
@@ -678,7 +651,7 @@ impl std::ops::Add<AntiMotorOnOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: AntiMotorOnOrigin) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -691,12 +664,11 @@ impl std::ops::Add<AntiMotorOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other.group0()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiMotorOnOrigin> for AntiCircleRotor {
     fn add_assign(&mut self, other: AntiMotorOnOrigin) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -709,7 +681,6 @@ impl std::ops::AddAssign<AntiMotorOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other.group0()[3])]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiMysteryCircleRotor> for AntiCircleRotor {
@@ -723,7 +694,7 @@ impl std::ops::Add<AntiMysteryCircleRotor> for AntiCircleRotor {
     //  no simd        5        0        0
     fn add(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -731,13 +702,12 @@ impl std::ops::Add<AntiMysteryCircleRotor> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other[e31])]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiMysteryCircleRotor> for AntiCircleRotor {
     fn add_assign(&mut self, other: AntiMysteryCircleRotor) {
         use crate::elements::*;
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -745,13 +715,12 @@ impl std::ops::AddAssign<AntiMysteryCircleRotor> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other[e31])]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiMysteryDipoleInversion> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: AntiMysteryDipoleInversion) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -775,13 +744,12 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiPlane> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: AntiPlane) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -805,13 +773,12 @@ impl std::ops::Add<AntiPlane> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiPlaneOnOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -835,14 +802,13 @@ impl std::ops::Add<AntiPlaneOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiScalar> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], other[e12345]]),
             // e1, e2, e3, e4
@@ -866,13 +832,12 @@ impl std::ops::Add<AntiScalar> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiSphereOnOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: AntiSphereOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -896,7 +861,6 @@ impl std::ops::Add<AntiSphereOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiVersorEvenOnOrigin> for AntiCircleRotor {
@@ -909,7 +873,7 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for AntiCircleRotor {
     // yes simd        4        0        0
     //  no simd        7        0        0
     fn add(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]) + other.group0()),
             // e23, e31, e12, e45
@@ -924,13 +888,12 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Circle> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: Circle) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -954,13 +917,12 @@ impl std::ops::Add<Circle> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleAligningOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: CircleAligningOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -984,13 +946,12 @@ impl std::ops::Add<CircleAligningOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleAtInfinity> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: CircleAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -1014,13 +975,12 @@ impl std::ops::Add<CircleAtInfinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleAtOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: CircleAtOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -1044,13 +1004,12 @@ impl std::ops::Add<CircleAtOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleOnOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: CircleOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -1074,13 +1033,12 @@ impl std::ops::Add<CircleOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleOrthogonalOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -1104,13 +1062,12 @@ impl std::ops::Add<CircleOrthogonalOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotor> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: CircleRotor) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], other.group2()[3]]),
             // e1, e2, e3, e4
@@ -1134,13 +1091,12 @@ impl std::ops::Add<CircleRotor> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorAligningOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: CircleRotorAligningOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], other.group2()[3]]),
             // e1, e2, e3, e4
@@ -1164,13 +1120,12 @@ impl std::ops::Add<CircleRotorAligningOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], other.group1()[3]]),
             // e1, e2, e3, e4
@@ -1194,13 +1149,12 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorAtInfinity> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: CircleRotorAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], other.group1()[3]]),
             // e1, e2, e3, e4
@@ -1224,13 +1178,12 @@ impl std::ops::Add<CircleRotorAtInfinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorOnOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: CircleRotorOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], other.group0()[3]]),
             // e1, e2, e3, e4
@@ -1254,7 +1207,6 @@ impl std::ops::Add<CircleRotorOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Dipole> for AntiCircleRotor {
@@ -1268,7 +1220,7 @@ impl std::ops::Add<Dipole> for AntiCircleRotor {
     // yes simd        5        0        0
     //  no simd       10        0        0
     fn add(self, other: Dipole) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() + other.group0()),
             // e23, e31, e12, e45
@@ -1281,12 +1233,11 @@ impl std::ops::Add<Dipole> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<Dipole> for AntiCircleRotor {
     fn add_assign(&mut self, other: Dipole) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() + other.group0()),
             // e23, e31, e12, e45
@@ -1299,7 +1250,6 @@ impl std::ops::AddAssign<Dipole> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<DipoleAligningOrigin> for AntiCircleRotor {
@@ -1312,7 +1262,7 @@ impl std::ops::Add<DipoleAligningOrigin> for AntiCircleRotor {
     // yes simd        5        0        0
     //  no simd        7        0        0
     fn add(self, other: DipoleAligningOrigin) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e23, e31, e12, e45
@@ -1325,12 +1275,11 @@ impl std::ops::Add<DipoleAligningOrigin> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<DipoleAligningOrigin> for AntiCircleRotor {
     fn add_assign(&mut self, other: DipoleAligningOrigin) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e23, e31, e12, e45
@@ -1343,7 +1292,6 @@ impl std::ops::AddAssign<DipoleAligningOrigin> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<DipoleAtInfinity> for AntiCircleRotor {
@@ -1356,7 +1304,7 @@ impl std::ops::Add<DipoleAtInfinity> for AntiCircleRotor {
     // yes simd        4        0        0
     //  no simd        7        0        0
     fn add(self, other: DipoleAtInfinity) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -1369,12 +1317,11 @@ impl std::ops::Add<DipoleAtInfinity> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<DipoleAtInfinity> for AntiCircleRotor {
     fn add_assign(&mut self, other: DipoleAtInfinity) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -1387,7 +1334,6 @@ impl std::ops::AddAssign<DipoleAtInfinity> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<DipoleAtOrigin> for AntiCircleRotor {
@@ -1400,7 +1346,7 @@ impl std::ops::Add<DipoleAtOrigin> for AntiCircleRotor {
     // yes simd        4        0        0
     //  no simd        6        0        0
     fn add(self, other: DipoleAtOrigin) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() + other.group0()),
             // e23, e31, e12, e45
@@ -1413,12 +1359,11 @@ impl std::ops::Add<DipoleAtOrigin> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<DipoleAtOrigin> for AntiCircleRotor {
     fn add_assign(&mut self, other: DipoleAtOrigin) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() + other.group0()),
             // e23, e31, e12, e45
@@ -1431,7 +1376,6 @@ impl std::ops::AddAssign<DipoleAtOrigin> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<DipoleInversion> for AntiCircleRotor {
@@ -1444,7 +1388,7 @@ impl std::ops::Add<DipoleInversion> for AntiCircleRotor {
     // yes simd        7        0        0
     //  no simd       10        0        0
     fn add(self, other: DipoleInversion) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
                 (self.group0()[0] + other.group0()[0]),
@@ -1464,7 +1408,6 @@ impl std::ops::Add<DipoleInversion> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             other.group3(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionAligningOrigin> for AntiCircleRotor {
@@ -1473,7 +1416,7 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        7        0        0
     fn add(self, other: DipoleInversionAligningOrigin) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
                 (self.group0()[0] + other.group0()[0]),
@@ -1493,7 +1436,6 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             other.group2(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionAtInfinity> for AntiCircleRotor {
@@ -1506,7 +1448,7 @@ impl std::ops::Add<DipoleInversionAtInfinity> for AntiCircleRotor {
     // yes simd        4        0        0
     //  no simd        7        0        0
     fn add(self, other: DipoleInversionAtInfinity) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -1521,7 +1463,6 @@ impl std::ops::Add<DipoleInversionAtInfinity> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             other.group2(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionAtOrigin> for AntiCircleRotor {
@@ -1530,7 +1471,7 @@ impl std::ops::Add<DipoleInversionAtOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        6        0        0
     fn add(self, other: DipoleInversionAtOrigin) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
                 (self.group0()[0] + other.group0()[0]),
@@ -1550,7 +1491,6 @@ impl std::ops::Add<DipoleInversionAtOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionOnOrigin> for AntiCircleRotor {
@@ -1559,7 +1499,7 @@ impl std::ops::Add<DipoleInversionOnOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: DipoleInversionOnOrigin) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
                 (self.group0()[0] + other.group0()[0]),
@@ -1574,7 +1514,6 @@ impl std::ops::Add<DipoleInversionOnOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[3], 0.0]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionOrthogonalOrigin> for AntiCircleRotor {
@@ -1583,7 +1522,7 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        9        0        0
     fn add(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
                 (self.group0()[0] + other.group0()[0]),
@@ -1608,7 +1547,6 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleOnOrigin> for AntiCircleRotor {
@@ -1621,7 +1559,7 @@ impl std::ops::Add<DipoleOnOrigin> for AntiCircleRotor {
     // yes simd        2        0        0
     //  no simd        4        0        0
     fn add(self, other: DipoleOnOrigin) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e23, e31, e12, e45
@@ -1629,12 +1567,11 @@ impl std::ops::Add<DipoleOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<DipoleOnOrigin> for AntiCircleRotor {
     fn add_assign(&mut self, other: DipoleOnOrigin) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group0()),
             // e23, e31, e12, e45
@@ -1642,7 +1579,6 @@ impl std::ops::AddAssign<DipoleOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<DipoleOrthogonalOrigin> for AntiCircleRotor {
@@ -1655,7 +1591,7 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for AntiCircleRotor {
     // yes simd        7        0        0
     //  no simd        9        0        0
     fn add(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() + other.group0()),
             // e23, e31, e12, e45
@@ -1673,12 +1609,11 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<DipoleOrthogonalOrigin> for AntiCircleRotor {
     fn add_assign(&mut self, other: DipoleOrthogonalOrigin) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() + other.group0()),
             // e23, e31, e12, e45
@@ -1696,13 +1631,12 @@ impl std::ops::AddAssign<DipoleOrthogonalOrigin> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<DualNum> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: DualNum) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], other.group0()[1]]),
             // e1, e2, e3, e4
@@ -1726,7 +1660,6 @@ impl std::ops::Add<DualNum> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlatOrigin> for AntiCircleRotor {
@@ -1736,7 +1669,7 @@ impl std::ops::Add<FlatOrigin> for AntiCircleRotor {
     // f32        1        0        0
     fn add(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -1744,13 +1677,12 @@ impl std::ops::Add<FlatOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<FlatOrigin> for AntiCircleRotor {
     fn add_assign(&mut self, other: FlatOrigin) {
         use crate::elements::*;
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -1758,7 +1690,6 @@ impl std::ops::AddAssign<FlatOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<FlatPoint> for AntiCircleRotor {
@@ -1767,7 +1698,7 @@ impl std::ops::Add<FlatPoint> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: FlatPoint) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -1780,12 +1711,11 @@ impl std::ops::Add<FlatPoint> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<FlatPoint> for AntiCircleRotor {
     fn add_assign(&mut self, other: FlatPoint) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -1798,7 +1728,6 @@ impl std::ops::AddAssign<FlatPoint> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<FlatPointAtInfinity> for AntiCircleRotor {
@@ -1807,7 +1736,7 @@ impl std::ops::Add<FlatPointAtInfinity> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: FlatPointAtInfinity) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -1820,12 +1749,11 @@ impl std::ops::Add<FlatPointAtInfinity> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<FlatPointAtInfinity> for AntiCircleRotor {
     fn add_assign(&mut self, other: FlatPointAtInfinity) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -1838,7 +1766,6 @@ impl std::ops::AddAssign<FlatPointAtInfinity> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<Flector> for AntiCircleRotor {
@@ -1847,7 +1774,7 @@ impl std::ops::Add<Flector> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: Flector) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -1862,7 +1789,6 @@ impl std::ops::Add<Flector> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             other.group1(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlectorAtInfinity> for AntiCircleRotor {
@@ -1871,7 +1797,7 @@ impl std::ops::Add<FlectorAtInfinity> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: FlectorAtInfinity) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -1886,7 +1812,6 @@ impl std::ops::Add<FlectorAtInfinity> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlectorOnOrigin> for AntiCircleRotor {
@@ -1895,7 +1820,7 @@ impl std::ops::Add<FlectorOnOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        1        0        0
     fn add(self, other: FlectorOnOrigin) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -1905,14 +1830,13 @@ impl std::ops::Add<FlectorOnOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[3], 0.0]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Horizon> for AntiCircleRotor {
     type Output = VersorOdd;
     fn add(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -1922,14 +1846,13 @@ impl std::ops::Add<Horizon> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Infinity> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -1953,13 +1876,12 @@ impl std::ops::Add<Infinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Line> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: Line) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -1983,13 +1905,12 @@ impl std::ops::Add<Line> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<LineAtInfinity> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: LineAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -2013,13 +1934,12 @@ impl std::ops::Add<LineAtInfinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<LineOnOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: LineOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -2043,13 +1963,12 @@ impl std::ops::Add<LineOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Motor> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: Motor) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], other.group0()[3]]),
             // e1, e2, e3, e4
@@ -2073,13 +1992,12 @@ impl std::ops::Add<Motor> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<MotorAtInfinity> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: MotorAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -2103,13 +2021,12 @@ impl std::ops::Add<MotorAtInfinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<MotorOnOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: MotorOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], other.group0()[3]]),
             // e1, e2, e3, e4
@@ -2133,7 +2050,6 @@ impl std::ops::Add<MotorOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<MultiVector> for AntiCircleRotor {
@@ -2148,7 +2064,7 @@ impl std::ops::Add<MultiVector> for AntiCircleRotor {
     //  no simd       11        0        0
     fn add(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[0] + self.group2()[3]), other.group0()[1]]),
             // e1, e2, e3, e4
@@ -2172,13 +2088,12 @@ impl std::ops::Add<MultiVector> for AntiCircleRotor {
             // e3215
             other[e45],
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryCircle> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: MysteryCircle) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -2202,14 +2117,13 @@ impl std::ops::Add<MysteryCircle> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryCircleRotor> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: MysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], other[e425]]),
             // e1, e2, e3, e4
@@ -2233,7 +2147,6 @@ impl std::ops::Add<MysteryCircleRotor> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryDipole> for AntiCircleRotor {
@@ -2243,7 +2156,7 @@ impl std::ops::Add<MysteryDipole> for AntiCircleRotor {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: MysteryDipole) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -2251,12 +2164,11 @@ impl std::ops::Add<MysteryDipole> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<MysteryDipole> for AntiCircleRotor {
     fn add_assign(&mut self, other: MysteryDipole) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -2264,7 +2176,6 @@ impl std::ops::AddAssign<MysteryDipole> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<MysteryDipoleInversion> for AntiCircleRotor {
@@ -2274,7 +2185,7 @@ impl std::ops::Add<MysteryDipoleInversion> for AntiCircleRotor {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: MysteryDipoleInversion) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -2284,13 +2195,12 @@ impl std::ops::Add<MysteryDipoleInversion> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryVersorEven> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: MysteryVersorEven) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], other.group0()[0]]),
             // e1, e2, e3, e4
@@ -2314,7 +2224,6 @@ impl std::ops::Add<MysteryVersorEven> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryVersorOdd> for AntiCircleRotor {
@@ -2327,7 +2236,7 @@ impl std::ops::Add<MysteryVersorOdd> for AntiCircleRotor {
     // yes simd        2        0        0
     //  no simd        5        0        0
     fn add(self, other: MysteryVersorOdd) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group2()[3] + other.group0()[0])]),
             // e23, e31, e12, e45
@@ -2337,13 +2246,12 @@ impl std::ops::Add<MysteryVersorOdd> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[3], 0.0]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullCircleAtOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: NullCircleAtOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -2367,7 +2275,6 @@ impl std::ops::Add<NullCircleAtOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullDipoleAtOrigin> for AntiCircleRotor {
@@ -2377,7 +2284,7 @@ impl std::ops::Add<NullDipoleAtOrigin> for AntiCircleRotor {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: NullDipoleAtOrigin) -> Self::Output {
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() + other.group0()),
             // e23, e31, e12, e45
@@ -2385,12 +2292,11 @@ impl std::ops::Add<NullDipoleAtOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<NullDipoleAtOrigin> for AntiCircleRotor {
     fn add_assign(&mut self, other: NullDipoleAtOrigin) {
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() + other.group0()),
             // e23, e31, e12, e45
@@ -2398,7 +2304,6 @@ impl std::ops::AddAssign<NullDipoleAtOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<NullDipoleInversionAtOrigin> for AntiCircleRotor {
@@ -2407,7 +2312,7 @@ impl std::ops::Add<NullDipoleInversionAtOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
                 (self.group0()[0] + other.group0()[0]),
@@ -2422,14 +2327,13 @@ impl std::ops::Add<NullDipoleInversionAtOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullSphereAtOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     fn add(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -2439,13 +2343,12 @@ impl std::ops::Add<NullSphereAtOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullVersorEvenAtOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: NullVersorEvenAtOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -2469,14 +2372,13 @@ impl std::ops::Add<NullVersorEvenAtOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Origin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -2500,13 +2402,12 @@ impl std::ops::Add<Origin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Plane> for AntiCircleRotor {
     type Output = VersorOdd;
     fn add(self, other: Plane) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -2516,13 +2417,12 @@ impl std::ops::Add<Plane> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             other.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<PlaneOnOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     fn add(self, other: PlaneOnOrigin) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -2532,14 +2432,13 @@ impl std::ops::Add<PlaneOnOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<RoundPoint> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -2563,13 +2462,12 @@ impl std::ops::Add<RoundPoint> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<RoundPointAtOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: RoundPointAtOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -2593,7 +2491,6 @@ impl std::ops::Add<RoundPointAtOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Scalar> for AntiCircleRotor {
@@ -2603,7 +2500,7 @@ impl std::ops::Add<Scalar> for AntiCircleRotor {
     // f32        1        0        0
     fn add(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -2611,13 +2508,12 @@ impl std::ops::Add<Scalar> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other[scalar])]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<Scalar> for AntiCircleRotor {
     fn add_assign(&mut self, other: Scalar) {
         use crate::elements::*;
-        let addition = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -2625,14 +2521,13 @@ impl std::ops::AddAssign<Scalar> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other[scalar])]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<Sphere> for AntiCircleRotor {
     type Output = VersorOdd;
     fn add(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -2642,13 +2537,12 @@ impl std::ops::Add<Sphere> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             other.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<SphereAtOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     fn add(self, other: SphereAtOrigin) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -2658,13 +2552,12 @@ impl std::ops::Add<SphereAtOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<SphereOnOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     fn add(self, other: SphereOnOrigin) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -2674,13 +2567,12 @@ impl std::ops::Add<SphereOnOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEven> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: VersorEven) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], other.group0()[3]]),
             // e1, e2, e3, e4
@@ -2704,13 +2596,12 @@ impl std::ops::Add<VersorEven> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenAligningOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: VersorEvenAligningOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], other.group0()[3]]),
             // e1, e2, e3, e4
@@ -2734,13 +2625,12 @@ impl std::ops::Add<VersorEvenAligningOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenAtInfinity> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: VersorEvenAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], other.group0()[0]]),
             // e1, e2, e3, e4
@@ -2764,13 +2654,12 @@ impl std::ops::Add<VersorEvenAtInfinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenAtOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: VersorEvenAtOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -2794,13 +2683,12 @@ impl std::ops::Add<VersorEvenAtOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenOnOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: VersorEvenOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], other.group0()[3]]),
             // e1, e2, e3, e4
@@ -2824,13 +2712,12 @@ impl std::ops::Add<VersorEvenOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenOrthogonalOrigin> for AntiCircleRotor {
     type Output = MultiVector;
     fn add(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -2854,7 +2741,6 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorOdd> for AntiCircleRotor {
@@ -2867,7 +2753,7 @@ impl std::ops::Add<VersorOdd> for AntiCircleRotor {
     // yes simd        5        0        0
     //  no simd       11        0        0
     fn add(self, other: VersorOdd) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]) + other.group0()),
             // e23, e31, e12, e45
@@ -2882,7 +2768,6 @@ impl std::ops::Add<VersorOdd> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             other.group3(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorOddAtInfinity> for AntiCircleRotor {
@@ -2895,7 +2780,7 @@ impl std::ops::Add<VersorOddAtInfinity> for AntiCircleRotor {
     // yes simd        5        0        0
     //  no simd        8        0        0
     fn add(self, other: VersorOddAtInfinity) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group2()[3] + other.group0()[0])]),
             // e23, e31, e12, e45
@@ -2910,7 +2795,6 @@ impl std::ops::Add<VersorOddAtInfinity> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             other.group2(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorOddOrthogonalOrigin> for AntiCircleRotor {
@@ -2923,7 +2807,7 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for AntiCircleRotor {
     // yes simd        7        0        0
     //  no simd       10        0        0
     fn add(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
-        let addition = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]) + other.group0()),
             // e23, e31, e12, e45
@@ -2943,14 +2827,18 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, other.group1()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::BitXor<AntiCircleOnOrigin> for AntiCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       13       24        0
+    //           add/sub      mul      div
+    //      f32        9       17        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       10       19        0
+    //  no simd       13       24        0
     fn bitxor(self, other: AntiCircleOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2958,8 +2846,12 @@ impl std::ops::BitXor<AntiCircleOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<AntiCircleRotor> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       35       51        0
+    //           add/sub      mul      div
+    //      f32       23       35        0
+    //    simd4        3        4        0
+    // Totals...
+    // yes simd       26       39        0
+    //  no simd       35       51        0
     fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -2967,8 +2859,12 @@ impl std::ops::BitXor<AntiCircleRotor> for AntiCircleRotor {
 impl std::ops::BitXor<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       31       47        0
+    //           add/sub      mul      div
+    //      f32       23       39        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       25       41        0
+    //  no simd       31       47        0
     fn bitxor(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2976,8 +2872,12 @@ impl std::ops::BitXor<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<AntiCircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       19       35        0
+    //           add/sub      mul      div
+    //      f32       15       27        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd       16       29        0
+    //  no simd       19       35        0
     fn bitxor(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2985,8 +2885,12 @@ impl std::ops::BitXor<AntiCircleRotorAligningOriginAtInfinity> for AntiCircleRot
 impl std::ops::BitXor<AntiCircleRotorAtInfinity> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       23       39        0
+    //           add/sub      mul      div
+    //      f32       15       23        0
+    //    simd4        2        4        0
+    // Totals...
+    // yes simd       17       27        0
+    //  no simd       23       39        0
     fn bitxor(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2994,8 +2898,12 @@ impl std::ops::BitXor<AntiCircleRotorAtInfinity> for AntiCircleRotor {
 impl std::ops::BitXor<AntiCircleRotorOnOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       19       35        0
+    //           add/sub      mul      div
+    //      f32       15       31        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       16       32        0
+    //  no simd       19       35        0
     fn bitxor(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3003,8 +2911,12 @@ impl std::ops::BitXor<AntiCircleRotorOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<AntiDipoleInversion> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       39       55        0
+    //           add/sub      mul      div
+    //      f32       31       43        0
+    //    simd4        2        3        0
+    // Totals...
+    // yes simd       33       46        0
+    //  no simd       39       55        0
     fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -3012,8 +2924,12 @@ impl std::ops::BitXor<AntiDipoleInversion> for AntiCircleRotor {
 impl std::ops::BitXor<AntiDipoleInversionAtInfinity> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       27       42        0
+    //           add/sub      mul      div
+    //      f32       19       34        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       21       36        0
+    //  no simd       27       42        0
     fn bitxor(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3021,8 +2937,12 @@ impl std::ops::BitXor<AntiDipoleInversionAtInfinity> for AntiCircleRotor {
 impl std::ops::BitXor<AntiDipoleInversionOnOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       21       36        0
+    //           add/sub      mul      div
+    //      f32       16       24        0
+    //    simd4        2        3        0
+    // Totals...
+    // yes simd       18       27        0
+    //  no simd       24       36        0
     fn bitxor(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3039,8 +2959,12 @@ impl std::ops::BitXor<AntiDipoleInversionOrthogonalOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<AntiDipoleOnOrigin> for AntiCircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        8        0
+    //           add/sub      mul      div
+    //      f32        3        5        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        3        6        0
+    //  no simd        3        8        0
     fn bitxor(self, other: AntiDipoleOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3048,8 +2972,9 @@ impl std::ops::BitXor<AntiDipoleOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<AntiDualNum> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       12        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn bitxor(self, other: AntiDualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -3076,8 +3001,12 @@ impl std::ops::BitXor<AntiFlatPoint> for AntiCircleRotor {
 impl std::ops::BitXor<AntiFlector> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       21       36        0
+    //           add/sub      mul      div
+    //      f32       17       32        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       18       33        0
+    //  no simd       21       36        0
     fn bitxor(self, other: AntiFlector) -> Self::Output {
         return self.wedge(other);
     }
@@ -3112,8 +3041,12 @@ impl std::ops::BitXor<AntiLineOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<AntiMotor> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       36        0
+    //           add/sub      mul      div
+    //      f32       12       24        0
+    //    simd4        2        3        0
+    // Totals...
+    // yes simd       14       27        0
+    //  no simd       20       36        0
     fn bitxor(self, other: AntiMotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -3121,8 +3054,12 @@ impl std::ops::BitXor<AntiMotor> for AntiCircleRotor {
 impl std::ops::BitXor<AntiMotorOnOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        7       23        0
+    //           add/sub      mul      div
+    //      f32        7       19        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        7       20        0
+    //  no simd        7       23        0
     fn bitxor(self, other: AntiMotorOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3130,8 +3067,12 @@ impl std::ops::BitXor<AntiMotorOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<AntiMysteryCircleRotor> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       11       27        0
+    //           add/sub      mul      div
+    //      f32        7       15        0
+    //    simd4        1        3        0
+    // Totals...
+    // yes simd        8       18        0
+    //  no simd       11       27        0
     fn bitxor(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3140,8 +3081,12 @@ impl std::ops::BitXor<AntiMysteryCircleRotor> for AntiCircleRotor {
 impl std::ops::BitXor<AntiMysteryDipoleInversion> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       29        0
+    //           add/sub      mul      div
+    //      f32       10       21        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       12       23        0
+    //  no simd       18       29        0
     fn bitxor(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -3149,8 +3094,13 @@ impl std::ops::BitXor<AntiMysteryDipoleInversion> for AntiCircleRotor {
 impl std::ops::BitXor<AntiPlane> for AntiCircleRotor {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       28        0
+    //           add/sub      mul      div
+    //      f32        7       14        0
+    //    simd3        1        2        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd        9       18        0
+    //  no simd       14       28        0
     fn bitxor(self, other: AntiPlane) -> Self::Output {
         return self.wedge(other);
     }
@@ -3158,8 +3108,12 @@ impl std::ops::BitXor<AntiPlane> for AntiCircleRotor {
 impl std::ops::BitXor<AntiPlaneOnOrigin> for AntiCircleRotor {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       24        0
+    //           add/sub      mul      div
+    //      f32        5       18        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        6       20        0
+    //  no simd        8       24        0
     fn bitxor(self, other: AntiPlaneOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3177,8 +3131,13 @@ impl std::ops::BitXor<AntiScalar> for AntiCircleRotor {
 impl std::ops::BitXor<AntiSphereOnOrigin> for AntiCircleRotor {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       28        0
+    //           add/sub      mul      div
+    //      f32        4       15        0
+    //    simd3        2        3        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        7       19        0
+    //  no simd       14       28        0
     fn bitxor(self, other: AntiSphereOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3186,8 +3145,12 @@ impl std::ops::BitXor<AntiSphereOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<AntiVersorEvenOnOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       36        0
+    //           add/sub      mul      div
+    //      f32       16       32        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       17       33        0
+    //  no simd       20       36        0
     fn bitxor(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3195,8 +3158,13 @@ impl std::ops::BitXor<AntiVersorEvenOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<Circle> for AntiCircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       20        0
+    //           add/sub      mul      div
+    //      f32        9       13        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        9       15        0
+    //  no simd        9       20        0
     fn bitxor(self, other: Circle) -> Self::Output {
         return self.wedge(other);
     }
@@ -3204,8 +3172,12 @@ impl std::ops::BitXor<Circle> for AntiCircleRotor {
 impl std::ops::BitXor<CircleAligningOrigin> for AntiCircleRotor {
     type Output = CircleRotorAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       18        0
+    //           add/sub      mul      div
+    //      f32        8       12        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        8       14        0
+    //  no simd        8       18        0
     fn bitxor(self, other: CircleAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3213,8 +3185,12 @@ impl std::ops::BitXor<CircleAligningOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<CircleAtInfinity> for AntiCircleRotor {
     type Output = CircleRotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       14        0
+    //           add/sub      mul      div
+    //      f32        6       10        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        6       11        0
+    //  no simd        6       14        0
     fn bitxor(self, other: CircleAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3222,8 +3198,12 @@ impl std::ops::BitXor<CircleAtInfinity> for AntiCircleRotor {
 impl std::ops::BitXor<CircleAtOrigin> for AntiCircleRotor {
     type Output = CircleRotorAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       12        0
+    //           add/sub      mul      div
+    //      f32        5        9        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        5       10        0
+    //  no simd        5       12        0
     fn bitxor(self, other: CircleAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3231,8 +3211,12 @@ impl std::ops::BitXor<CircleAtOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<CircleOnOrigin> for AntiCircleRotor {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       12        0
+    //           add/sub      mul      div
+    //      f32        5        9        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        5       10        0
+    //  no simd        5       12        0
     fn bitxor(self, other: CircleOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3240,8 +3224,12 @@ impl std::ops::BitXor<CircleOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<CircleOrthogonalOrigin> for AntiCircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       14        0
+    //           add/sub      mul      div
+    //      f32        6       11        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        6       12        0
+    //  no simd        6       14        0
     fn bitxor(self, other: CircleOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3249,8 +3237,13 @@ impl std::ops::BitXor<CircleOrthogonalOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<CircleRotor> for AntiCircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       10       21        0
+    //           add/sub      mul      div
+    //      f32       10       14        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       10       16        0
+    //  no simd       10       21        0
     fn bitxor(self, other: CircleRotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -3258,8 +3251,12 @@ impl std::ops::BitXor<CircleRotor> for AntiCircleRotor {
 impl std::ops::BitXor<CircleRotorAligningOrigin> for AntiCircleRotor {
     type Output = CircleRotorAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       19        0
+    //           add/sub      mul      div
+    //      f32        9       13        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        9       15        0
+    //  no simd        9       19        0
     fn bitxor(self, other: CircleRotorAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3267,8 +3264,12 @@ impl std::ops::BitXor<CircleRotorAligningOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<CircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       13        0
+    //           add/sub      mul      div
+    //      f32        6       10        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        6       11        0
+    //  no simd        6       13        0
     fn bitxor(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3276,8 +3277,12 @@ impl std::ops::BitXor<CircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
 impl std::ops::BitXor<CircleRotorAtInfinity> for AntiCircleRotor {
     type Output = CircleRotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        7       15        0
+    //           add/sub      mul      div
+    //      f32        7       11        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        7       12        0
+    //  no simd        7       15        0
     fn bitxor(self, other: CircleRotorAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3285,8 +3290,12 @@ impl std::ops::BitXor<CircleRotorAtInfinity> for AntiCircleRotor {
 impl std::ops::BitXor<CircleRotorOnOrigin> for AntiCircleRotor {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       13        0
+    //           add/sub      mul      div
+    //      f32        6       10        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        6       11        0
+    //  no simd        6       13        0
     fn bitxor(self, other: CircleRotorOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3294,8 +3303,13 @@ impl std::ops::BitXor<CircleRotorOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<Dipole> for AntiCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       25       40        0
+    //           add/sub      mul      div
+    //      f32       21       29        0
+    //    simd3        0        1        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd       22       32        0
+    //  no simd       25       40        0
     fn bitxor(self, other: Dipole) -> Self::Output {
         return self.wedge(other);
     }
@@ -3303,8 +3317,12 @@ impl std::ops::BitXor<Dipole> for AntiCircleRotor {
 impl std::ops::BitXor<DipoleAligningOrigin> for AntiCircleRotor {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       28        0
+    //           add/sub      mul      div
+    //      f32       16       24        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       16       25        0
+    //  no simd       16       28        0
     fn bitxor(self, other: DipoleAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3312,8 +3330,12 @@ impl std::ops::BitXor<DipoleAligningOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<DipoleAtInfinity> for AntiCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       28        0
+    //           add/sub      mul      div
+    //      f32       16       24        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       16       25        0
+    //  no simd       16       28        0
     fn bitxor(self, other: DipoleAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3330,8 +3352,13 @@ impl std::ops::BitXor<DipoleAtOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<DipoleInversion> for AntiCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       30       45        0
+    //           add/sub      mul      div
+    //      f32       18       26        0
+    //    simd3        0        1        0
+    //    simd4        3        4        0
+    // Totals...
+    // yes simd       21       31        0
+    //  no simd       30       45        0
     fn bitxor(self, other: DipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -3339,8 +3366,12 @@ impl std::ops::BitXor<DipoleInversion> for AntiCircleRotor {
 impl std::ops::BitXor<DipoleInversionAligningOrigin> for AntiCircleRotor {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       21       33        0
+    //           add/sub      mul      div
+    //      f32       13       21        0
+    //    simd4        2        3        0
+    // Totals...
+    // yes simd       15       24        0
+    //  no simd       21       33        0
     fn bitxor(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3348,8 +3379,12 @@ impl std::ops::BitXor<DipoleInversionAligningOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<DipoleInversionAtInfinity> for AntiCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       32        0
+    //           add/sub      mul      div
+    //      f32       16       24        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd       17       26        0
+    //  no simd       20       32        0
     fn bitxor(self, other: DipoleInversionAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3357,8 +3392,12 @@ impl std::ops::BitXor<DipoleInversionAtInfinity> for AntiCircleRotor {
 impl std::ops::BitXor<DipoleInversionAtOrigin> for AntiCircleRotor {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       26        0
+    //           add/sub      mul      div
+    //      f32        7       18        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        9       20        0
+    //  no simd       15       26        0
     fn bitxor(self, other: DipoleInversionAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3366,8 +3405,12 @@ impl std::ops::BitXor<DipoleInversionAtOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<DipoleInversionOnOrigin> for AntiCircleRotor {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        3        0
+    // Totals...
+    // yes simd        6       11        0
+    //  no simd       12       20        0
     fn bitxor(self, other: DipoleInversionOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3375,8 +3418,13 @@ impl std::ops::BitXor<DipoleInversionOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<DipoleInversionOrthogonalOrigin> for AntiCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       38        0
+    //           add/sub      mul      div
+    //      f32       12       23        0
+    //    simd3        0        1        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       15       27        0
+    //  no simd       24       38        0
     fn bitxor(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3384,8 +3432,12 @@ impl std::ops::BitXor<DipoleInversionOrthogonalOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<DipoleOnOrigin> for AntiCircleRotor {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       16        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd        5       10        0
+    //  no simd        8       16        0
     fn bitxor(self, other: DipoleOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3393,8 +3445,13 @@ impl std::ops::BitXor<DipoleOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<DipoleOrthogonalOrigin> for AntiCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       22       36        0
+    //           add/sub      mul      div
+    //      f32       18       29        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       19       31        0
+    //  no simd       22       36        0
     fn bitxor(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3402,8 +3459,12 @@ impl std::ops::BitXor<DipoleOrthogonalOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<DualNum> for AntiCircleRotor {
     type Output = VersorEvenOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        8        0
     fn bitxor(self, other: DualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -3411,8 +3472,9 @@ impl std::ops::BitXor<DualNum> for AntiCircleRotor {
 impl std::ops::BitXor<FlatOrigin> for AntiCircleRotor {
     type Output = FlectorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn bitxor(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3421,8 +3483,12 @@ impl std::ops::BitXor<FlatOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<FlatPoint> for AntiCircleRotor {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       16        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd        5       10        0
+    //  no simd        8       16        0
     fn bitxor(self, other: FlatPoint) -> Self::Output {
         return self.wedge(other);
     }
@@ -3439,8 +3505,12 @@ impl std::ops::BitXor<FlatPointAtInfinity> for AntiCircleRotor {
 impl std::ops::BitXor<Flector> for AntiCircleRotor {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        3        0
+    // Totals...
+    // yes simd        6       11        0
+    //  no simd       12       20        0
     fn bitxor(self, other: Flector) -> Self::Output {
         return self.wedge(other);
     }
@@ -3448,8 +3518,12 @@ impl std::ops::BitXor<Flector> for AntiCircleRotor {
 impl std::ops::BitXor<FlectorAtInfinity> for AntiCircleRotor {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       13        0
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        3        7        0
+    //  no simd        9       13        0
     fn bitxor(self, other: FlectorAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3476,8 +3550,12 @@ impl std::ops::BitXor<Horizon> for AntiCircleRotor {
 impl std::ops::BitXor<Infinity> for AntiCircleRotor {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        7        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn bitxor(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3486,8 +3564,12 @@ impl std::ops::BitXor<Infinity> for AntiCircleRotor {
 impl std::ops::BitXor<Line> for AntiCircleRotor {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       12        0
+    //           add/sub      mul      div
+    //      f32        5        9        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        5       10        0
+    //  no simd        5       12        0
     fn bitxor(self, other: Line) -> Self::Output {
         return self.wedge(other);
     }
@@ -3513,8 +3595,12 @@ impl std::ops::BitXor<LineOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<Motor> for AntiCircleRotor {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        9       17        0
+    //  no simd       12       20        0
     fn bitxor(self, other: Motor) -> Self::Output {
         return self.wedge(other);
     }
@@ -3540,8 +3626,13 @@ impl std::ops::BitXor<MotorOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<MultiVector> for AntiCircleRotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       80      112        0
+    //           add/sub      mul      div
+    //      f32       39       54        0
+    //    simd3        7       10        0
+    //    simd4        5        7        0
+    // Totals...
+    // yes simd       51       71        0
+    //  no simd       80      112        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3550,8 +3641,12 @@ impl std::ops::BitXor<MultiVector> for AntiCircleRotor {
 impl std::ops::BitXor<MysteryCircle> for AntiCircleRotor {
     type Output = MysteryCircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        8        0
+    //           add/sub      mul      div
+    //      f32        3        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        3        5        0
+    //  no simd        3        8        0
     fn bitxor(self, other: MysteryCircle) -> Self::Output {
         return self.wedge(other);
     }
@@ -3559,8 +3654,12 @@ impl std::ops::BitXor<MysteryCircle> for AntiCircleRotor {
 impl std::ops::BitXor<MysteryCircleRotor> for AntiCircleRotor {
     type Output = MysteryCircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        9        0
+    //           add/sub      mul      div
+    //      f32        4        5        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        4        6        0
+    //  no simd        4        9        0
     fn bitxor(self, other: MysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3569,8 +3668,12 @@ impl std::ops::BitXor<MysteryCircleRotor> for AntiCircleRotor {
 impl std::ops::BitXor<MysteryDipole> for AntiCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        7       16        0
+    //           add/sub      mul      div
+    //      f32        7       12        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        7       13        0
+    //  no simd        7       16        0
     fn bitxor(self, other: MysteryDipole) -> Self::Output {
         return self.wedge(other);
     }
@@ -3578,8 +3681,12 @@ impl std::ops::BitXor<MysteryDipole> for AntiCircleRotor {
 impl std::ops::BitXor<MysteryDipoleInversion> for AntiCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       10       19        0
+    //           add/sub      mul      div
+    //      f32       10       15        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       10       16        0
+    //  no simd       10       19        0
     fn bitxor(self, other: MysteryDipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -3587,8 +3694,12 @@ impl std::ops::BitXor<MysteryDipoleInversion> for AntiCircleRotor {
 impl std::ops::BitXor<MysteryVersorEven> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       30        0
+    //           add/sub      mul      div
+    //      f32        7       21        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       10       24        0
+    //  no simd       19       33        0
     fn bitxor(self, other: MysteryVersorEven) -> Self::Output {
         return self.wedge(other);
     }
@@ -3596,8 +3707,12 @@ impl std::ops::BitXor<MysteryVersorEven> for AntiCircleRotor {
 impl std::ops::BitXor<MysteryVersorOdd> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       30        0
+    //           add/sub      mul      div
+    //      f32       10       18        0
+    //    simd4        1        3        0
+    // Totals...
+    // yes simd       11       21        0
+    //  no simd       14       30        0
     fn bitxor(self, other: MysteryVersorOdd) -> Self::Output {
         return self.wedge(other);
     }
@@ -3623,8 +3738,12 @@ impl std::ops::BitXor<NullDipoleAtOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<NullDipoleInversionAtOrigin> for AntiCircleRotor {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       13        0
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        3        7        0
+    //  no simd        9       13        0
     fn bitxor(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3642,8 +3761,12 @@ impl std::ops::BitXor<NullSphereAtOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<NullVersorEvenAtOrigin> for AntiCircleRotor {
     type Output = VersorEvenOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       13        0
+    //           add/sub      mul      div
+    //      f32        5        9        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        5       10        0
+    //  no simd        5       13        0
     fn bitxor(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3651,8 +3774,12 @@ impl std::ops::BitXor<NullVersorEvenAtOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<Origin> for AntiCircleRotor {
     type Output = VersorEvenOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        7        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn bitxor(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3661,8 +3788,9 @@ impl std::ops::BitXor<Origin> for AntiCircleRotor {
 impl std::ops::BitXor<Plane> for AntiCircleRotor {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn bitxor(self, other: Plane) -> Self::Output {
         return self.wedge(other);
     }
@@ -3670,8 +3798,9 @@ impl std::ops::BitXor<Plane> for AntiCircleRotor {
 impl std::ops::BitXor<PlaneOnOrigin> for AntiCircleRotor {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd3        0        1        0
+    // no simd        0        3        0
     fn bitxor(self, other: PlaneOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3679,8 +3808,13 @@ impl std::ops::BitXor<PlaneOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<RoundPoint> for AntiCircleRotor {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       35        0
+    //           add/sub      mul      div
+    //      f32       10       18        0
+    //    simd3        2        3        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd       13       23        0
+    //  no simd       20       35        0
     fn bitxor(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3689,8 +3823,12 @@ impl std::ops::BitXor<RoundPoint> for AntiCircleRotor {
 impl std::ops::BitXor<RoundPointAtOrigin> for AntiCircleRotor {
     type Output = AntiDipoleInversionOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3       14        0
+    //           add/sub      mul      div
+    //      f32        0        8        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        1       10        0
+    //  no simd        3       14        0
     fn bitxor(self, other: RoundPointAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3698,8 +3836,12 @@ impl std::ops::BitXor<RoundPointAtOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<Scalar> for AntiCircleRotor {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       11        0
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0       11        0
     fn bitxor(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3714,8 +3856,12 @@ impl std::ops::BitXorAssign<Scalar> for AntiCircleRotor {
 impl std::ops::BitXor<Sphere> for AntiCircleRotor {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        5        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn bitxor(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3724,8 +3870,9 @@ impl std::ops::BitXor<Sphere> for AntiCircleRotor {
 impl std::ops::BitXor<SphereAtOrigin> for AntiCircleRotor {
     type Output = SphereAtOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn bitxor(self, other: SphereAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3733,8 +3880,9 @@ impl std::ops::BitXor<SphereAtOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<SphereOnOrigin> for AntiCircleRotor {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn bitxor(self, other: SphereOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3742,8 +3890,12 @@ impl std::ops::BitXor<SphereOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<VersorEven> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       56        0
+    //           add/sub      mul      div
+    //      f32       28       40        0
+    //    simd4        3        4        0
+    // Totals...
+    // yes simd       31       44        0
+    //  no simd       40       56        0
     fn bitxor(self, other: VersorEven) -> Self::Output {
         return self.wedge(other);
     }
@@ -3751,8 +3903,12 @@ impl std::ops::BitXor<VersorEven> for AntiCircleRotor {
 impl std::ops::BitXor<VersorEvenAligningOrigin> for AntiCircleRotor {
     type Output = VersorEvenAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       21       33        0
+    //           add/sub      mul      div
+    //      f32       17       29        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       18       30        0
+    //  no simd       21       33        0
     fn bitxor(self, other: VersorEvenAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3760,8 +3916,12 @@ impl std::ops::BitXor<VersorEvenAligningOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<VersorEvenAtInfinity> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       43        0
+    //           add/sub      mul      div
+    //      f32       16       34        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       19       37        0
+    //  no simd       28       46        0
     fn bitxor(self, other: VersorEvenAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3778,8 +3938,12 @@ impl std::ops::BitXor<VersorEvenAtOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<VersorEvenOnOrigin> for AntiCircleRotor {
     type Output = VersorEvenOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        9       17        0
+    //  no simd       12       20        0
     fn bitxor(self, other: VersorEvenOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3787,8 +3951,12 @@ impl std::ops::BitXor<VersorEvenOnOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<VersorEvenOrthogonalOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       33       49        0
+    //           add/sub      mul      div
+    //      f32       25       37        0
+    //    simd4        2        3        0
+    // Totals...
+    // yes simd       27       40        0
+    //  no simd       33       49        0
     fn bitxor(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3796,8 +3964,12 @@ impl std::ops::BitXor<VersorEvenOrthogonalOrigin> for AntiCircleRotor {
 impl std::ops::BitXor<VersorOdd> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       56        0
+    //           add/sub      mul      div
+    //      f32       20       32        0
+    //    simd4        5        6        0
+    // Totals...
+    // yes simd       25       38        0
+    //  no simd       40       56        0
     fn bitxor(self, other: VersorOdd) -> Self::Output {
         return self.wedge(other);
     }
@@ -3805,8 +3977,12 @@ impl std::ops::BitXor<VersorOdd> for AntiCircleRotor {
 impl std::ops::BitXor<VersorOddAtInfinity> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       27       43        0
+    //           add/sub      mul      div
+    //      f32       15       23        0
+    //    simd4        3        5        0
+    // Totals...
+    // yes simd       18       28        0
+    //  no simd       27       43        0
     fn bitxor(self, other: VersorOddAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3814,8 +3990,12 @@ impl std::ops::BitXor<VersorOddAtInfinity> for AntiCircleRotor {
 impl std::ops::BitXor<VersorOddOrthogonalOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       33       49        0
+    //           add/sub      mul      div
+    //      f32       17       33        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       21       37        0
+    //  no simd       33       49        0
     fn bitxor(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -4152,8 +4332,12 @@ impl From<Scalar> for AntiCircleRotor {
 impl std::ops::Mul<AntiCircleOnOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       50       66        0
+    //           add/sub      mul      div
+    //      f32       34       50        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       38       54        0
+    //  no simd       50       66        0
     fn mul(self, other: AntiCircleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4161,8 +4345,12 @@ impl std::ops::Mul<AntiCircleOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<AntiCircleRotor> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      105      121        0
+    //           add/sub      mul      div
+    //      f32       45       61        0
+    //    simd4       15       15        0
+    // Totals...
+    // yes simd       60       76        0
+    //  no simd      105      121        0
     fn mul(self, other: AntiCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4170,8 +4358,12 @@ impl std::ops::Mul<AntiCircleRotor> for AntiCircleRotor {
 impl std::ops::Mul<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       94      110        0
+    //           add/sub      mul      div
+    //      f32       54       70        0
+    //    simd4       10       10        0
+    // Totals...
+    // yes simd       64       80        0
+    //  no simd       94      110        0
     fn mul(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4179,8 +4371,12 @@ impl std::ops::Mul<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
 impl std::ops::Mul<AntiCircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       61       77        0
+    //           add/sub      mul      div
+    //      f32       41       57        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       46       62        0
+    //  no simd       61       77        0
     fn mul(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4188,8 +4384,12 @@ impl std::ops::Mul<AntiCircleRotorAligningOriginAtInfinity> for AntiCircleRotor 
 impl std::ops::Mul<AntiCircleRotorAtInfinity> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       36       53        0
+    //    simd4        9        9        0
+    // Totals...
+    // yes simd       45       62        0
+    //  no simd       72       89        0
     fn mul(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4197,8 +4397,12 @@ impl std::ops::Mul<AntiCircleRotorAtInfinity> for AntiCircleRotor {
 impl std::ops::Mul<AntiCircleRotorOnOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       61       77        0
+    //           add/sub      mul      div
+    //      f32       37       53        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       43       59        0
+    //  no simd       61       77        0
     fn mul(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4206,8 +4410,12 @@ impl std::ops::Mul<AntiCircleRotorOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<AntiDipoleInversion> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      149      165        0
+    //           add/sub      mul      div
+    //      f32       53       69        0
+    //    simd4       24       24        0
+    // Totals...
+    // yes simd       77       93        0
+    //  no simd      149      165        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4215,8 +4423,12 @@ impl std::ops::Mul<AntiDipoleInversion> for AntiCircleRotor {
 impl std::ops::Mul<AntiDipoleInversionAtInfinity> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      105      121        0
+    //           add/sub      mul      div
+    //      f32       45       61        0
+    //    simd4       15       15        0
+    // Totals...
+    // yes simd       60       76        0
+    //  no simd      105      121        0
     fn mul(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4224,8 +4436,12 @@ impl std::ops::Mul<AntiDipoleInversionAtInfinity> for AntiCircleRotor {
 impl std::ops::Mul<AntiDipoleInversionOnOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       20       40        0
+    //    simd4       13       13        0
+    // Totals...
+    // yes simd       33       53        0
+    //  no simd       72       92        0
     fn mul(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4233,8 +4449,12 @@ impl std::ops::Mul<AntiDipoleInversionOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<AntiDipoleInversionOrthogonalOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      105      121        0
+    //           add/sub      mul      div
+    //      f32       49       65        0
+    //    simd4       14       14        0
+    // Totals...
+    // yes simd       63       79        0
+    //  no simd      105      121        0
     fn mul(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4242,8 +4462,12 @@ impl std::ops::Mul<AntiDipoleInversionOrthogonalOrigin> for AntiCircleRotor {
 impl std::ops::Mul<AntiDipoleOnOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       29       44        0
+    //           add/sub      mul      div
+    //      f32        9       28        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       14       33        0
+    //  no simd       29       48        0
     fn mul(self, other: AntiDipoleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4260,8 +4484,12 @@ impl std::ops::Mul<AntiDualNum> for AntiCircleRotor {
 impl std::ops::Mul<AntiFlatOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       15        0
+    //           add/sub      mul      div
+    //      f32        0        7        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        9        0
+    //  no simd        0       15        0
     fn mul(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4270,8 +4498,12 @@ impl std::ops::Mul<AntiFlatOrigin> for AntiCircleRotor {
 impl std::ops::Mul<AntiFlatPoint> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       29       47        0
+    //           add/sub      mul      div
+    //      f32       20       35        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       23       38        0
+    //  no simd       32       47        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4279,8 +4511,12 @@ impl std::ops::Mul<AntiFlatPoint> for AntiCircleRotor {
 impl std::ops::Mul<AntiFlector> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       29       44        0
+    //    simd4       11       11        0
+    // Totals...
+    // yes simd       40       55        0
+    //  no simd       73       88        0
     fn mul(self, other: AntiFlector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4288,8 +4524,12 @@ impl std::ops::Mul<AntiFlector> for AntiCircleRotor {
 impl std::ops::Mul<AntiFlectorOnOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       48        0
+    //           add/sub      mul      div
+    //      f32       13       35        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       17       39        0
+    //  no simd       29       51        0
     fn mul(self, other: AntiFlectorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4315,8 +4555,12 @@ impl std::ops::Mul<AntiLineOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<AntiMotor> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       36       52        0
+    //    simd4        9        9        0
+    // Totals...
+    // yes simd       45       61        0
+    //  no simd       72       88        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4324,8 +4568,12 @@ impl std::ops::Mul<AntiMotor> for AntiCircleRotor {
 impl std::ops::Mul<AntiMotorOnOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       44        0
+    //           add/sub      mul      div
+    //      f32       16       32        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       19       35        0
+    //  no simd       28       44        0
     fn mul(self, other: AntiMotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4333,8 +4581,12 @@ impl std::ops::Mul<AntiMotorOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<AntiMysteryCircleRotor> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       39       55        0
+    //           add/sub      mul      div
+    //      f32       12       28        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       19       35        0
+    //  no simd       40       56        0
     fn mul(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4343,8 +4595,12 @@ impl std::ops::Mul<AntiMysteryCircleRotor> for AntiCircleRotor {
 impl std::ops::Mul<AntiMysteryDipoleInversion> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       61       77        0
+    //           add/sub      mul      div
+    //      f32       29       46        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       37       54        0
+    //  no simd       61       78        0
     fn mul(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4352,8 +4608,13 @@ impl std::ops::Mul<AntiMysteryDipoleInversion> for AntiCircleRotor {
 impl std::ops::Mul<AntiPlane> for AntiCircleRotor {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       29       44        0
+    //           add/sub      mul      div
+    //      f32        2       17        0
+    //    simd3        1        2        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd        9       25        0
+    //  no simd       29       47        0
     fn mul(self, other: AntiPlane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4361,8 +4622,12 @@ impl std::ops::Mul<AntiPlane> for AntiCircleRotor {
 impl std::ops::Mul<AntiPlaneOnOrigin> for AntiCircleRotor {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       18       36        0
+    //           add/sub      mul      div
+    //      f32       15       30        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd       16       32        0
+    //  no simd       18       36        0
     fn mul(self, other: AntiPlaneOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4370,8 +4635,12 @@ impl std::ops::Mul<AntiPlaneOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<AntiScalar> for AntiCircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       12        0
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0       15        0
     fn mul(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4380,8 +4649,13 @@ impl std::ops::Mul<AntiScalar> for AntiCircleRotor {
 impl std::ops::Mul<AntiSphereOnOrigin> for AntiCircleRotor {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       29       44        0
+    //           add/sub      mul      div
+    //      f32        6       16        0
+    //    simd3        2        3        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       13       24        0
+    //  no simd       32       45        0
     fn mul(self, other: AntiSphereOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4389,8 +4663,12 @@ impl std::ops::Mul<AntiSphereOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<AntiVersorEvenOnOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       36       52        0
+    //    simd4        9        9        0
+    // Totals...
+    // yes simd       45       61        0
+    //  no simd       72       88        0
     fn mul(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4398,8 +4676,12 @@ impl std::ops::Mul<AntiVersorEvenOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<Circle> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       94      110        0
+    //           add/sub      mul      div
+    //      f32       54       70        0
+    //    simd4       10       10        0
+    // Totals...
+    // yes simd       64       80        0
+    //  no simd       94      110        0
     fn mul(self, other: Circle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4407,8 +4689,12 @@ impl std::ops::Mul<Circle> for AntiCircleRotor {
 impl std::ops::Mul<CircleAligningOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       83       99        0
+    //           add/sub      mul      div
+    //      f32       55       71        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       62       78        0
+    //  no simd       83       99        0
     fn mul(self, other: CircleAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4416,8 +4702,12 @@ impl std::ops::Mul<CircleAligningOrigin> for AntiCircleRotor {
 impl std::ops::Mul<CircleAtInfinity> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       61       77        0
+    //           add/sub      mul      div
+    //      f32       37       53        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       43       59        0
+    //  no simd       61       77        0
     fn mul(self, other: CircleAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4425,8 +4715,12 @@ impl std::ops::Mul<CircleAtInfinity> for AntiCircleRotor {
 impl std::ops::Mul<CircleAtOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       50       66        0
+    //           add/sub      mul      div
+    //      f32       42       58        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       44       60        0
+    //  no simd       50       66        0
     fn mul(self, other: CircleAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4434,8 +4728,12 @@ impl std::ops::Mul<CircleAtOrigin> for AntiCircleRotor {
 impl std::ops::Mul<CircleOnOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       50       66        0
+    //           add/sub      mul      div
+    //      f32       26       42        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       32       48        0
+    //  no simd       50       66        0
     fn mul(self, other: CircleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4443,8 +4741,12 @@ impl std::ops::Mul<CircleOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<CircleOrthogonalOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       61       77        0
+    //           add/sub      mul      div
+    //      f32       37       53        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       43       59        0
+    //  no simd       61       77        0
     fn mul(self, other: CircleOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4452,8 +4754,12 @@ impl std::ops::Mul<CircleOrthogonalOrigin> for AntiCircleRotor {
 impl std::ops::Mul<CircleRotor> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      105      121        0
+    //           add/sub      mul      div
+    //      f32       53       69        0
+    //    simd4       13       13        0
+    // Totals...
+    // yes simd       66       82        0
+    //  no simd      105      121        0
     fn mul(self, other: CircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4461,8 +4767,12 @@ impl std::ops::Mul<CircleRotor> for AntiCircleRotor {
 impl std::ops::Mul<CircleRotorAligningOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       94      110        0
+    //           add/sub      mul      div
+    //      f32       54       70        0
+    //    simd4       10       10        0
+    // Totals...
+    // yes simd       64       80        0
+    //  no simd       94      110        0
     fn mul(self, other: CircleRotorAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4470,8 +4780,12 @@ impl std::ops::Mul<CircleRotorAligningOrigin> for AntiCircleRotor {
 impl std::ops::Mul<CircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       61       77        0
+    //           add/sub      mul      div
+    //      f32       41       57        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       46       62        0
+    //  no simd       61       77        0
     fn mul(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4479,8 +4793,12 @@ impl std::ops::Mul<CircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
 impl std::ops::Mul<CircleRotorAtInfinity> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       36       52        0
+    //    simd4        9        9        0
+    // Totals...
+    // yes simd       45       61        0
+    //  no simd       72       88        0
     fn mul(self, other: CircleRotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4488,8 +4806,12 @@ impl std::ops::Mul<CircleRotorAtInfinity> for AntiCircleRotor {
 impl std::ops::Mul<CircleRotorOnOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       61       77        0
+    //           add/sub      mul      div
+    //      f32       22       37        0
+    //    simd4       10       10        0
+    // Totals...
+    // yes simd       32       47        0
+    //  no simd       62       77        0
     fn mul(self, other: CircleRotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4497,8 +4819,12 @@ impl std::ops::Mul<CircleRotorOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<Dipole> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       94      110        0
+    //           add/sub      mul      div
+    //      f32       54       70        0
+    //    simd4       10       10        0
+    // Totals...
+    // yes simd       64       80        0
+    //  no simd       94      110        0
     fn mul(self, other: Dipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4506,8 +4832,12 @@ impl std::ops::Mul<Dipole> for AntiCircleRotor {
 impl std::ops::Mul<DipoleAligningOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       61       77        0
+    //           add/sub      mul      div
+    //      f32       33       50        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       40       57        0
+    //  no simd       61       78        0
     fn mul(self, other: DipoleAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4515,8 +4845,12 @@ impl std::ops::Mul<DipoleAligningOrigin> for AntiCircleRotor {
 impl std::ops::Mul<DipoleAtInfinity> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       61       77        0
+    //           add/sub      mul      div
+    //      f32       41       58        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       46       63        0
+    //  no simd       61       78        0
     fn mul(self, other: DipoleAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4524,8 +4858,12 @@ impl std::ops::Mul<DipoleAtInfinity> for AntiCircleRotor {
 impl std::ops::Mul<DipoleAtOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       50       66        0
+    //           add/sub      mul      div
+    //      f32       42       58        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       44       60        0
+    //  no simd       50       66        0
     fn mul(self, other: DipoleAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4533,8 +4871,12 @@ impl std::ops::Mul<DipoleAtOrigin> for AntiCircleRotor {
 impl std::ops::Mul<DipoleInversion> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      149      165        0
+    //           add/sub      mul      div
+    //      f32       65       81        0
+    //    simd4       21       21        0
+    // Totals...
+    // yes simd       86      102        0
+    //  no simd      149      165        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4542,8 +4884,12 @@ impl std::ops::Mul<DipoleInversion> for AntiCircleRotor {
 impl std::ops::Mul<DipoleInversionAligningOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      116      132        0
+    //           add/sub      mul      div
+    //      f32       52       68        0
+    //    simd4       16       16        0
+    // Totals...
+    // yes simd       68       84        0
+    //  no simd      116      132        0
     fn mul(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4551,8 +4897,12 @@ impl std::ops::Mul<DipoleInversionAligningOrigin> for AntiCircleRotor {
 impl std::ops::Mul<DipoleInversionAtInfinity> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      105      121        0
+    //           add/sub      mul      div
+    //      f32       65       81        0
+    //    simd4       10       10        0
+    // Totals...
+    // yes simd       75       91        0
+    //  no simd      105      121        0
     fn mul(self, other: DipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4560,8 +4910,12 @@ impl std::ops::Mul<DipoleInversionAtInfinity> for AntiCircleRotor {
 impl std::ops::Mul<DipoleInversionAtOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       36       52        0
+    //    simd4        9        9        0
+    // Totals...
+    // yes simd       45       61        0
+    //  no simd       72       88        0
     fn mul(self, other: DipoleInversionAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4569,8 +4923,12 @@ impl std::ops::Mul<DipoleInversionAtOrigin> for AntiCircleRotor {
 impl std::ops::Mul<DipoleInversionOnOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       32       45        0
+    //    simd4       11       11        0
+    // Totals...
+    // yes simd       43       56        0
+    //  no simd       76       89        0
     fn mul(self, other: DipoleInversionOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4578,8 +4936,12 @@ impl std::ops::Mul<DipoleInversionOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<DipoleInversionOrthogonalOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      105      121        0
+    //           add/sub      mul      div
+    //      f32       61       77        0
+    //    simd4       11       11        0
+    // Totals...
+    // yes simd       72       88        0
+    //  no simd      105      121        0
     fn mul(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4587,8 +4949,12 @@ impl std::ops::Mul<DipoleInversionOrthogonalOrigin> for AntiCircleRotor {
 impl std::ops::Mul<DipoleOnOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       29       47        0
+    //           add/sub      mul      div
+    //      f32       12       28        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       17       33        0
+    //  no simd       32       48        0
     fn mul(self, other: DipoleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4596,8 +4962,12 @@ impl std::ops::Mul<DipoleOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<DipoleOrthogonalOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       83       99        0
+    //           add/sub      mul      div
+    //      f32       63       79        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       68       84        0
+    //  no simd       83       99        0
     fn mul(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4614,8 +4984,12 @@ impl std::ops::Mul<DualNum> for AntiCircleRotor {
 impl std::ops::Mul<FlatOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       14        0
+    //           add/sub      mul      div
+    //      f32        0       10        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0       11        0
+    //  no simd        0       14        0
     fn mul(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4624,8 +4998,12 @@ impl std::ops::Mul<FlatOrigin> for AntiCircleRotor {
 impl std::ops::Mul<FlatPoint> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       29       44        0
+    //           add/sub      mul      div
+    //      f32       21       39        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       23       41        0
+    //  no simd       29       47        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4642,8 +5020,12 @@ impl std::ops::Mul<FlatPointAtInfinity> for AntiCircleRotor {
 impl std::ops::Mul<Flector> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       44       60        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       51       67        0
+    //  no simd       72       88        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4651,8 +5033,12 @@ impl std::ops::Mul<Flector> for AntiCircleRotor {
 impl std::ops::Mul<FlectorAtInfinity> for AntiCircleRotor {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       32       44        0
+    //           add/sub      mul      div
+    //      f32       11       23        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       17       29        0
+    //  no simd       35       47        0
     fn mul(self, other: FlectorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4660,8 +5046,12 @@ impl std::ops::Mul<FlectorAtInfinity> for AntiCircleRotor {
 impl std::ops::Mul<FlectorOnOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       44        0
+    //           add/sub      mul      div
+    //      f32        9       28        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       14       33        0
+    //  no simd       29       48        0
     fn mul(self, other: FlectorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4669,8 +5059,12 @@ impl std::ops::Mul<FlectorOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<Horizon> for AntiCircleRotor {
     type Output = DipoleInversionAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1       14        0
+    //           add/sub      mul      div
+    //      f32        1       11        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        1       12        0
+    //  no simd        1       14        0
     fn mul(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4679,8 +5073,12 @@ impl std::ops::Mul<Horizon> for AntiCircleRotor {
 impl std::ops::Mul<Infinity> for AntiCircleRotor {
     type Output = AntiDipoleInversionAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1       11        0
+    //           add/sub      mul      div
+    //      f32        1        8        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        1        9        0
+    //  no simd        1       11        0
     fn mul(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4689,8 +5087,12 @@ impl std::ops::Mul<Infinity> for AntiCircleRotor {
 impl std::ops::Mul<Line> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       50       66        0
+    //           add/sub      mul      div
+    //      f32       42       58        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       44       60        0
+    //  no simd       50       66        0
     fn mul(self, other: Line) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4698,8 +5100,12 @@ impl std::ops::Mul<Line> for AntiCircleRotor {
 impl std::ops::Mul<LineAtInfinity> for AntiCircleRotor {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       21       33        0
+    //           add/sub      mul      div
+    //      f32       17       29        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       18       30        0
+    //  no simd       21       33        0
     fn mul(self, other: LineAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4707,8 +5113,12 @@ impl std::ops::Mul<LineAtInfinity> for AntiCircleRotor {
 impl std::ops::Mul<LineOnOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       18       36        0
+    //           add/sub      mul      div
+    //      f32       14       32        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       15       33        0
+    //  no simd       18       36        0
     fn mul(self, other: LineOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4716,8 +5126,12 @@ impl std::ops::Mul<LineOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<Motor> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       36       52        0
+    //    simd4        9        9        0
+    // Totals...
+    // yes simd       45       61        0
+    //  no simd       72       88        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4725,8 +5139,12 @@ impl std::ops::Mul<Motor> for AntiCircleRotor {
 impl std::ops::Mul<MotorAtInfinity> for AntiCircleRotor {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       32       44        0
+    //           add/sub      mul      div
+    //      f32       12       24        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       17       29        0
+    //  no simd       32       44        0
     fn mul(self, other: MotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4734,8 +5152,12 @@ impl std::ops::Mul<MotorAtInfinity> for AntiCircleRotor {
 impl std::ops::Mul<MotorOnOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       48        0
+    //           add/sub      mul      div
+    //      f32       16       36        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       19       39        0
+    //  no simd       28       48        0
     fn mul(self, other: MotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4743,8 +5165,14 @@ impl std::ops::Mul<MotorOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<MultiVector> for AntiCircleRotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      320      352        0
+    //           add/sub      mul      div
+    //      f32      115      145        0
+    //    simd2       10       10        0
+    //    simd3       35       36        0
+    //    simd4       20       20        0
+    // Totals...
+    // yes simd      180      211        0
+    //  no simd      320      353        0
     fn mul(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4753,8 +5181,12 @@ impl std::ops::Mul<MultiVector> for AntiCircleRotor {
 impl std::ops::Mul<MysteryCircle> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       44        0
+    //           add/sub      mul      div
+    //      f32       12       28        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       16       32        0
+    //  no simd       28       44        0
     fn mul(self, other: MysteryCircle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4762,8 +5194,12 @@ impl std::ops::Mul<MysteryCircle> for AntiCircleRotor {
 impl std::ops::Mul<MysteryCircleRotor> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       39       55        0
+    //           add/sub      mul      div
+    //      f32       12       27        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       19       34        0
+    //  no simd       40       55        0
     fn mul(self, other: MysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4772,8 +5208,12 @@ impl std::ops::Mul<MysteryCircleRotor> for AntiCircleRotor {
 impl std::ops::Mul<MysteryDipole> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       44        0
+    //           add/sub      mul      div
+    //      f32       12       29        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       16       33        0
+    //  no simd       28       45        0
     fn mul(self, other: MysteryDipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4781,8 +5221,12 @@ impl std::ops::Mul<MysteryDipole> for AntiCircleRotor {
 impl std::ops::Mul<MysteryDipoleInversion> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       61       77        0
+    //           add/sub      mul      div
+    //      f32       33       49        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       40       56        0
+    //  no simd       61       77        0
     fn mul(self, other: MysteryDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4790,8 +5234,12 @@ impl std::ops::Mul<MysteryDipoleInversion> for AntiCircleRotor {
 impl std::ops::Mul<MysteryVersorEven> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       28       44        0
+    //    simd4       11       11        0
+    // Totals...
+    // yes simd       39       55        0
+    //  no simd       72       88        0
     fn mul(self, other: MysteryVersorEven) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4799,8 +5247,12 @@ impl std::ops::Mul<MysteryVersorEven> for AntiCircleRotor {
 impl std::ops::Mul<MysteryVersorOdd> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       28       44        0
+    //    simd4       11       11        0
+    // Totals...
+    // yes simd       39       55        0
+    //  no simd       72       88        0
     fn mul(self, other: MysteryVersorOdd) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4808,8 +5260,12 @@ impl std::ops::Mul<MysteryVersorOdd> for AntiCircleRotor {
 impl std::ops::Mul<NullCircleAtOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       21       33        0
+    //           add/sub      mul      div
+    //      f32       17       32        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       18       33        0
+    //  no simd       21       36        0
     fn mul(self, other: NullCircleAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4817,8 +5273,12 @@ impl std::ops::Mul<NullCircleAtOrigin> for AntiCircleRotor {
 impl std::ops::Mul<NullDipoleAtOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       21       33        0
+    //           add/sub      mul      div
+    //      f32       17       29        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       18       30        0
+    //  no simd       21       33        0
     fn mul(self, other: NullDipoleAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4826,8 +5286,12 @@ impl std::ops::Mul<NullDipoleAtOrigin> for AntiCircleRotor {
 impl std::ops::Mul<NullDipoleInversionAtOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       32       44        0
+    //           add/sub      mul      div
+    //      f32       20       33        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       23       36        0
+    //  no simd       32       45        0
     fn mul(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4835,8 +5299,12 @@ impl std::ops::Mul<NullDipoleInversionAtOrigin> for AntiCircleRotor {
 impl std::ops::Mul<NullSphereAtOrigin> for AntiCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1       11        0
+    //           add/sub      mul      div
+    //      f32        1        8        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        1        9        0
+    //  no simd        1       11        0
     fn mul(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4845,8 +5313,12 @@ impl std::ops::Mul<NullSphereAtOrigin> for AntiCircleRotor {
 impl std::ops::Mul<NullVersorEvenAtOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       32       44        0
+    //           add/sub      mul      div
+    //      f32        7       20        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       14       27        0
+    //  no simd       35       48        0
     fn mul(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4854,8 +5326,12 @@ impl std::ops::Mul<NullVersorEvenAtOrigin> for AntiCircleRotor {
 impl std::ops::Mul<Origin> for AntiCircleRotor {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1       14        0
+    //           add/sub      mul      div
+    //      f32        1       11        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        1       12        0
+    //  no simd        1       14        0
     fn mul(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4864,8 +5340,13 @@ impl std::ops::Mul<Origin> for AntiCircleRotor {
 impl std::ops::Mul<Plane> for AntiCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       29       44        0
+    //           add/sub      mul      div
+    //      f32       14       26        0
+    //    simd3        1        2        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       18       31        0
+    //  no simd       29       44        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4873,8 +5354,13 @@ impl std::ops::Mul<Plane> for AntiCircleRotor {
 impl std::ops::Mul<PlaneOnOrigin> for AntiCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       18       33        0
+    //           add/sub      mul      div
+    //      f32       11       23        0
+    //    simd3        1        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       13       26        0
+    //  no simd       18       33        0
     fn mul(self, other: PlaneOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4882,8 +5368,13 @@ impl std::ops::Mul<PlaneOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<RoundPoint> for AntiCircleRotor {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       55        0
+    //           add/sub      mul      div
+    //      f32        6       19        0
+    //    simd3        2        3        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       15       29        0
+    //  no simd       40       56        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4892,8 +5383,13 @@ impl std::ops::Mul<RoundPoint> for AntiCircleRotor {
 impl std::ops::Mul<RoundPointAtOrigin> for AntiCircleRotor {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       22        0
+    //           add/sub      mul      div
+    //      f32        4       18        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5       20        0
+    //  no simd        8       25        0
     fn mul(self, other: RoundPointAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4901,8 +5397,12 @@ impl std::ops::Mul<RoundPointAtOrigin> for AntiCircleRotor {
 impl std::ops::Mul<Scalar> for AntiCircleRotor {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       11        0
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0       11        0
     fn mul(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4917,8 +5417,13 @@ impl std::ops::MulAssign<Scalar> for AntiCircleRotor {
 impl std::ops::Mul<Sphere> for AntiCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       55        0
+    //           add/sub      mul      div
+    //      f32       14       26        0
+    //    simd3        2        3        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       21       34        0
+    //  no simd       40       55        0
     fn mul(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4927,8 +5432,13 @@ impl std::ops::Mul<Sphere> for AntiCircleRotor {
 impl std::ops::Mul<SphereAtOrigin> for AntiCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       22        0
+    //           add/sub      mul      div
+    //      f32        4       18        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5       20        0
+    //  no simd        8       25        0
     fn mul(self, other: SphereAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4936,8 +5446,13 @@ impl std::ops::Mul<SphereAtOrigin> for AntiCircleRotor {
 impl std::ops::Mul<SphereOnOrigin> for AntiCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       29       44        0
+    //           add/sub      mul      div
+    //      f32        7       18        0
+    //    simd3        2        3        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       14       26        0
+    //  no simd       33       47        0
     fn mul(self, other: SphereOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4945,8 +5460,12 @@ impl std::ops::Mul<SphereOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<VersorEven> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      160      176        0
+    //           add/sub      mul      div
+    //      f32       56       72        0
+    //    simd4       26       26        0
+    // Totals...
+    // yes simd       82       98        0
+    //  no simd      160      176        0
     fn mul(self, other: VersorEven) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4954,8 +5473,12 @@ impl std::ops::Mul<VersorEven> for AntiCircleRotor {
 impl std::ops::Mul<VersorEvenAligningOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      116      132        0
+    //           add/sub      mul      div
+    //      f32       48       64        0
+    //    simd4       17       17        0
+    // Totals...
+    // yes simd       65       81        0
+    //  no simd      116      132        0
     fn mul(self, other: VersorEvenAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4963,8 +5486,12 @@ impl std::ops::Mul<VersorEvenAligningOrigin> for AntiCircleRotor {
 impl std::ops::Mul<VersorEvenAtInfinity> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      116      132        0
+    //           add/sub      mul      div
+    //      f32       52       68        0
+    //    simd4       16       16        0
+    // Totals...
+    // yes simd       68       84        0
+    //  no simd      116      132        0
     fn mul(self, other: VersorEvenAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4972,8 +5499,12 @@ impl std::ops::Mul<VersorEvenAtInfinity> for AntiCircleRotor {
 impl std::ops::Mul<VersorEvenAtOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       28       44        0
+    //    simd4       11       11        0
+    // Totals...
+    // yes simd       39       55        0
+    //  no simd       72       88        0
     fn mul(self, other: VersorEvenAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4981,8 +5512,12 @@ impl std::ops::Mul<VersorEvenAtOrigin> for AntiCircleRotor {
 impl std::ops::Mul<VersorEvenOnOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       24       36        0
+    //    simd4       13       13        0
+    // Totals...
+    // yes simd       37       49        0
+    //  no simd       76       88        0
     fn mul(self, other: VersorEvenOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4990,8 +5525,12 @@ impl std::ops::Mul<VersorEvenOnOrigin> for AntiCircleRotor {
 impl std::ops::Mul<VersorEvenOrthogonalOrigin> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      116      132        0
+    //           add/sub      mul      div
+    //      f32       48       64        0
+    //    simd4       17       17        0
+    // Totals...
+    // yes simd       65       81        0
+    //  no simd      116      132        0
     fn mul(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4999,8 +5538,12 @@ impl std::ops::Mul<VersorEvenOrthogonalOrigin> for AntiCircleRotor {
 impl std::ops::Mul<VersorOdd> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      160      176        0
+    //           add/sub      mul      div
+    //      f32       68       84        0
+    //    simd4       23       23        0
+    // Totals...
+    // yes simd       91      107        0
+    //  no simd      160      176        0
     fn mul(self, other: VersorOdd) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -5008,8 +5551,12 @@ impl std::ops::Mul<VersorOdd> for AntiCircleRotor {
 impl std::ops::Mul<VersorOddAtInfinity> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      116      132        0
+    //           add/sub      mul      div
+    //      f32       60       76        0
+    //    simd4       14       14        0
+    // Totals...
+    // yes simd       74       90        0
+    //  no simd      116      132        0
     fn mul(self, other: VersorOddAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -5017,8 +5564,12 @@ impl std::ops::Mul<VersorOddAtInfinity> for AntiCircleRotor {
 impl std::ops::Mul<VersorOddOrthogonalOrigin> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      116      132        0
+    //           add/sub      mul      div
+    //      f32       52       68        0
+    //    simd4       16       16        0
+    // Totals...
+    // yes simd       68       84        0
+    //  no simd      116      132        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -5032,7 +5583,7 @@ impl std::ops::Neg for AntiCircleRotor {
     // yes simd        0        3        0
     //  no simd        0       11        0
     fn neg(self) -> Self {
-        let negation = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() * Simd32x3::from(-1.0)),
             // e23, e31, e12, e45
@@ -5040,14 +5591,17 @@ impl std::ops::Neg for AntiCircleRotor {
             // e15, e25, e35, scalar
             (self.group2() * Simd32x4::from(-1.0)),
         );
-        return negation;
     }
 }
 impl std::ops::Not for AntiCircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        9        0
+    //           add/sub      mul      div
+    //      f32        0        6        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        7        0
+    //  no simd        0        9        0
     fn not(self) -> Self::Output {
         return self.right_dual();
     }
@@ -5062,7 +5616,7 @@ impl std::ops::Sub<AntiCircleOnOrigin> for AntiCircleRotor {
     // yes simd        4        0        0
     //  no simd        6        0        0
     fn sub(self, other: AntiCircleOnOrigin) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (-other.group0() + self.group0()),
             // e23, e31, e12, e45
@@ -5075,12 +5629,11 @@ impl std::ops::Sub<AntiCircleOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiCircleOnOrigin> for AntiCircleRotor {
     fn sub_assign(&mut self, other: AntiCircleOnOrigin) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (-other.group0() + self.group0()),
             // e23, e31, e12, e45
@@ -5093,7 +5646,6 @@ impl std::ops::SubAssign<AntiCircleOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotor> for AntiCircleRotor {
@@ -5106,7 +5658,7 @@ impl std::ops::Sub<AntiCircleRotor> for AntiCircleRotor {
     // yes simd        3        0        0
     //  no simd       11        0        0
     fn sub(self, other: AntiCircleRotor) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (-other.group0() + self.group0()),
             // e23, e31, e12, e45
@@ -5114,12 +5666,11 @@ impl std::ops::Sub<AntiCircleRotor> for AntiCircleRotor {
             // e15, e25, e35, scalar
             (-other.group2() + self.group2()),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiCircleRotor> for AntiCircleRotor {
     fn sub_assign(&mut self, other: AntiCircleRotor) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (-other.group0() + self.group0()),
             // e23, e31, e12, e45
@@ -5127,7 +5678,6 @@ impl std::ops::SubAssign<AntiCircleRotor> for AntiCircleRotor {
             // e15, e25, e35, scalar
             (-other.group2() + self.group2()),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
@@ -5141,7 +5691,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
     // yes simd        5        0        0
     //  no simd       10        0        0
     fn sub(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() - other.group0()),
             // e23, e31, e12, e45
@@ -5154,12 +5704,11 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             (self.group2() - other.group2()),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
     fn sub_assign(&mut self, other: AntiCircleRotorAligningOrigin) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() - other.group0()),
             // e23, e31, e12, e45
@@ -5172,7 +5721,6 @@ impl std::ops::SubAssign<AntiCircleRotorAligningOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             (self.group2() - other.group2()),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
@@ -5185,7 +5733,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for AntiCircleRotor 
     // yes simd        4        0        0
     //  no simd        7        0        0
     fn sub(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -5198,12 +5746,11 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for AntiCircleRotor 
             // e15, e25, e35, scalar
             (self.group2() - other.group1()),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiCircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
     fn sub_assign(&mut self, other: AntiCircleRotorAligningOriginAtInfinity) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -5216,7 +5763,6 @@ impl std::ops::SubAssign<AntiCircleRotorAligningOriginAtInfinity> for AntiCircle
             // e15, e25, e35, scalar
             (self.group2() - other.group1()),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorAtInfinity> for AntiCircleRotor {
@@ -5226,7 +5772,7 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for AntiCircleRotor {
     //   simd4        2        0        0
     // no simd        8        0        0
     fn sub(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -5234,12 +5780,11 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for AntiCircleRotor {
             // e15, e25, e35, scalar
             (self.group2() - other.group1()),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiCircleRotorAtInfinity> for AntiCircleRotor {
     fn sub_assign(&mut self, other: AntiCircleRotorAtInfinity) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -5247,7 +5792,6 @@ impl std::ops::SubAssign<AntiCircleRotorAtInfinity> for AntiCircleRotor {
             // e15, e25, e35, scalar
             (self.group2() - other.group1()),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorOnOrigin> for AntiCircleRotor {
@@ -5260,7 +5804,7 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for AntiCircleRotor {
     // yes simd        5        3        0
     //  no simd        7        3        0
     fn sub(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group0()),
             // e23, e31, e12, e45
@@ -5273,12 +5817,11 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other.group0()[3])]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiCircleRotorOnOrigin> for AntiCircleRotor {
     fn sub_assign(&mut self, other: AntiCircleRotorOnOrigin) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group0()),
             // e23, e31, e12, e45
@@ -5291,7 +5834,6 @@ impl std::ops::SubAssign<AntiCircleRotorOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other.group0()[3])]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversion> for AntiCircleRotor {
@@ -5305,7 +5847,7 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiCircleRotor {
     // yes simd        0        5        0
     //  no simd        0       15        0
     fn sub(self, other: AntiDipoleInversion) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -5329,7 +5871,6 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversionAtInfinity> for AntiCircleRotor {
@@ -5343,7 +5884,7 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for AntiCircleRotor {
     // yes simd        0        6        0
     //  no simd        0       11        0
     fn sub(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -5367,7 +5908,6 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversionOnOrigin> for AntiCircleRotor {
@@ -5381,7 +5921,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for AntiCircleRotor {
     // yes simd        0        3        0
     //  no simd        0        8        0
     fn sub(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -5405,7 +5945,6 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for AntiCircleRotor {
@@ -5418,7 +5957,7 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for AntiCircleRotor {
     // yes simd        0        7        0
     //  no simd        0       11        0
     fn sub(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -5442,7 +5981,6 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleOnOrigin> for AntiCircleRotor {
@@ -5455,7 +5993,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for AntiCircleRotor {
     // yes simd        0        2        0
     //  no simd        0        4        0
     fn sub(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -5479,7 +6017,6 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDualNum> for AntiCircleRotor {
@@ -5488,7 +6025,7 @@ impl std::ops::Sub<AntiDualNum> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        1        1        0
     fn sub(self, other: AntiDualNum) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[1] + self.group2()[3])]),
             // e23, e31, e12, e45
@@ -5498,7 +6035,6 @@ impl std::ops::Sub<AntiDualNum> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiFlatOrigin> for AntiCircleRotor {
@@ -5508,7 +6044,7 @@ impl std::ops::Sub<AntiFlatOrigin> for AntiCircleRotor {
     // f32        0        1        0
     fn sub(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -5532,7 +6068,6 @@ impl std::ops::Sub<AntiFlatOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiFlatPoint> for AntiCircleRotor {
@@ -5545,7 +6080,7 @@ impl std::ops::Sub<AntiFlatPoint> for AntiCircleRotor {
     // yes simd        0        2        0
     //  no simd        0        4        0
     fn sub(self, other: AntiFlatPoint) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -5569,7 +6104,6 @@ impl std::ops::Sub<AntiFlatPoint> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiFlector> for AntiCircleRotor {
@@ -5582,7 +6116,7 @@ impl std::ops::Sub<AntiFlector> for AntiCircleRotor {
     // yes simd        0        6        0
     //  no simd        0        8        0
     fn sub(self, other: AntiFlector) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -5606,7 +6140,6 @@ impl std::ops::Sub<AntiFlector> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiFlectorOnOrigin> for AntiCircleRotor {
@@ -5615,7 +6148,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -5639,7 +6172,6 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiLine> for AntiCircleRotor {
@@ -5648,7 +6180,7 @@ impl std::ops::Sub<AntiLine> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        6        0        0
     fn sub(self, other: AntiLine) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -5666,12 +6198,11 @@ impl std::ops::Sub<AntiLine> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiLine> for AntiCircleRotor {
     fn sub_assign(&mut self, other: AntiLine) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -5689,7 +6220,6 @@ impl std::ops::SubAssign<AntiLine> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiLineOnOrigin> for AntiCircleRotor {
@@ -5698,7 +6228,7 @@ impl std::ops::Sub<AntiLineOnOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        3        0        0
     fn sub(self, other: AntiLineOnOrigin) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -5711,12 +6241,11 @@ impl std::ops::Sub<AntiLineOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiLineOnOrigin> for AntiCircleRotor {
     fn sub_assign(&mut self, other: AntiLineOnOrigin) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -5729,7 +6258,6 @@ impl std::ops::SubAssign<AntiLineOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiMotor> for AntiCircleRotor {
@@ -5738,7 +6266,7 @@ impl std::ops::Sub<AntiMotor> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        7        1        0
     fn sub(self, other: AntiMotor) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group2()[3] - other.group0()[3])]),
             // e23, e31, e12, e45
@@ -5758,7 +6286,6 @@ impl std::ops::Sub<AntiMotor> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[3] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiMotorOnOrigin> for AntiCircleRotor {
@@ -5767,7 +6294,7 @@ impl std::ops::Sub<AntiMotorOnOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        4        0        0
     fn sub(self, other: AntiMotorOnOrigin) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -5780,12 +6307,11 @@ impl std::ops::Sub<AntiMotorOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other.group0()[3])]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiMotorOnOrigin> for AntiCircleRotor {
     fn sub_assign(&mut self, other: AntiMotorOnOrigin) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -5798,7 +6324,6 @@ impl std::ops::SubAssign<AntiMotorOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other.group0()[3])]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiMysteryCircleRotor> for AntiCircleRotor {
@@ -5812,7 +6337,7 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for AntiCircleRotor {
     //  no simd        5        0        0
     fn sub(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -5820,13 +6345,12 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other[e31])]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiMysteryCircleRotor> for AntiCircleRotor {
     fn sub_assign(&mut self, other: AntiMysteryCircleRotor) {
         use crate::elements::*;
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -5834,7 +6358,6 @@ impl std::ops::SubAssign<AntiMysteryCircleRotor> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other[e31])]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiMysteryDipoleInversion> for AntiCircleRotor {
@@ -5847,7 +6370,7 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for AntiCircleRotor {
     // yes simd        0        4        0
     //  no simd        0        7        0
     fn sub(self, other: AntiMysteryDipoleInversion) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -5871,7 +6394,6 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiPlane> for AntiCircleRotor {
@@ -5880,7 +6402,7 @@ impl std::ops::Sub<AntiPlane> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: AntiPlane) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -5904,7 +6426,6 @@ impl std::ops::Sub<AntiPlane> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiPlaneOnOrigin> for AntiCircleRotor {
@@ -5913,7 +6434,7 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        0        3        0
     fn sub(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -5937,7 +6458,6 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiScalar> for AntiCircleRotor {
@@ -5947,7 +6467,7 @@ impl std::ops::Sub<AntiScalar> for AntiCircleRotor {
     // f32        0        1        0
     fn sub(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], (other[e12345] * -1.0)]),
             // e1, e2, e3, e4
@@ -5971,7 +6491,6 @@ impl std::ops::Sub<AntiScalar> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiSphereOnOrigin> for AntiCircleRotor {
@@ -5981,7 +6500,7 @@ impl std::ops::Sub<AntiSphereOnOrigin> for AntiCircleRotor {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn sub(self, other: AntiSphereOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -6005,7 +6524,6 @@ impl std::ops::Sub<AntiSphereOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiVersorEvenOnOrigin> for AntiCircleRotor {
@@ -6018,7 +6536,7 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for AntiCircleRotor {
     // yes simd        4        1        0
     //  no simd        7        1        0
     fn sub(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]) - other.group0()),
             // e23, e31, e12, e45
@@ -6033,7 +6551,6 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Circle> for AntiCircleRotor {
@@ -6046,7 +6563,7 @@ impl std::ops::Sub<Circle> for AntiCircleRotor {
     // yes simd        0        3        0
     //  no simd        0       10        0
     fn sub(self, other: Circle) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -6070,7 +6587,6 @@ impl std::ops::Sub<Circle> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleAligningOrigin> for AntiCircleRotor {
@@ -6083,7 +6599,7 @@ impl std::ops::Sub<CircleAligningOrigin> for AntiCircleRotor {
     // yes simd        0        5        0
     //  no simd        0        9        0
     fn sub(self, other: CircleAligningOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -6107,7 +6623,6 @@ impl std::ops::Sub<CircleAligningOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleAtInfinity> for AntiCircleRotor {
@@ -6120,7 +6635,7 @@ impl std::ops::Sub<CircleAtInfinity> for AntiCircleRotor {
     // yes simd        0        2        0
     //  no simd        0        7        0
     fn sub(self, other: CircleAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -6144,7 +6659,6 @@ impl std::ops::Sub<CircleAtInfinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleAtOrigin> for AntiCircleRotor {
@@ -6154,7 +6668,7 @@ impl std::ops::Sub<CircleAtOrigin> for AntiCircleRotor {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn sub(self, other: CircleAtOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -6178,7 +6692,6 @@ impl std::ops::Sub<CircleAtOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleOnOrigin> for AntiCircleRotor {
@@ -6191,7 +6704,7 @@ impl std::ops::Sub<CircleOnOrigin> for AntiCircleRotor {
     // yes simd        0        4        0
     //  no simd        0        6        0
     fn sub(self, other: CircleOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -6215,7 +6728,6 @@ impl std::ops::Sub<CircleOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleOrthogonalOrigin> for AntiCircleRotor {
@@ -6228,7 +6740,7 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for AntiCircleRotor {
     // yes simd        0        3        0
     //  no simd        0        7        0
     fn sub(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -6252,7 +6764,6 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotor> for AntiCircleRotor {
@@ -6266,7 +6777,7 @@ impl std::ops::Sub<CircleRotor> for AntiCircleRotor {
     // yes simd        0        4        0
     //  no simd        0       11        0
     fn sub(self, other: CircleRotor) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], (other.group2()[3] * -1.0)]),
             // e1, e2, e3, e4
@@ -6290,7 +6801,6 @@ impl std::ops::Sub<CircleRotor> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorAligningOrigin> for AntiCircleRotor {
@@ -6303,7 +6813,7 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for AntiCircleRotor {
     // yes simd        0        6        0
     //  no simd        0       10        0
     fn sub(self, other: CircleRotorAligningOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], (other.group2()[3] * -1.0)]),
             // e1, e2, e3, e4
@@ -6327,7 +6837,6 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
@@ -6340,7 +6849,7 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
     // yes simd        0        5        0
     //  no simd        0        7        0
     fn sub(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], (other.group1()[3] * -1.0)]),
             // e1, e2, e3, e4
@@ -6364,7 +6873,6 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorAtInfinity> for AntiCircleRotor {
@@ -6378,7 +6886,7 @@ impl std::ops::Sub<CircleRotorAtInfinity> for AntiCircleRotor {
     // yes simd        0        3        0
     //  no simd        0        8        0
     fn sub(self, other: CircleRotorAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], (other.group1()[3] * -1.0)]),
             // e1, e2, e3, e4
@@ -6402,7 +6910,6 @@ impl std::ops::Sub<CircleRotorAtInfinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorOnOrigin> for AntiCircleRotor {
@@ -6415,7 +6922,7 @@ impl std::ops::Sub<CircleRotorOnOrigin> for AntiCircleRotor {
     // yes simd        0        5        0
     //  no simd        0        7        0
     fn sub(self, other: CircleRotorOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], (other.group0()[3] * -1.0)]),
             // e1, e2, e3, e4
@@ -6439,7 +6946,6 @@ impl std::ops::Sub<CircleRotorOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Dipole> for AntiCircleRotor {
@@ -6453,7 +6959,7 @@ impl std::ops::Sub<Dipole> for AntiCircleRotor {
     // yes simd        5        0        0
     //  no simd       10        0        0
     fn sub(self, other: Dipole) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() - other.group0()),
             // e23, e31, e12, e45
@@ -6466,12 +6972,11 @@ impl std::ops::Sub<Dipole> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<Dipole> for AntiCircleRotor {
     fn sub_assign(&mut self, other: Dipole) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() - other.group0()),
             // e23, e31, e12, e45
@@ -6484,7 +6989,6 @@ impl std::ops::SubAssign<Dipole> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<DipoleAligningOrigin> for AntiCircleRotor {
@@ -6497,7 +7001,7 @@ impl std::ops::Sub<DipoleAligningOrigin> for AntiCircleRotor {
     // yes simd        5        3        0
     //  no simd        7        3        0
     fn sub(self, other: DipoleAligningOrigin) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group0()),
             // e23, e31, e12, e45
@@ -6510,12 +7014,11 @@ impl std::ops::Sub<DipoleAligningOrigin> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<DipoleAligningOrigin> for AntiCircleRotor {
     fn sub_assign(&mut self, other: DipoleAligningOrigin) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group0()),
             // e23, e31, e12, e45
@@ -6528,7 +7031,6 @@ impl std::ops::SubAssign<DipoleAligningOrigin> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<DipoleAtInfinity> for AntiCircleRotor {
@@ -6541,7 +7043,7 @@ impl std::ops::Sub<DipoleAtInfinity> for AntiCircleRotor {
     // yes simd        4        0        0
     //  no simd        7        0        0
     fn sub(self, other: DipoleAtInfinity) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -6554,12 +7056,11 @@ impl std::ops::Sub<DipoleAtInfinity> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<DipoleAtInfinity> for AntiCircleRotor {
     fn sub_assign(&mut self, other: DipoleAtInfinity) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -6572,7 +7073,6 @@ impl std::ops::SubAssign<DipoleAtInfinity> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<DipoleAtOrigin> for AntiCircleRotor {
@@ -6585,7 +7085,7 @@ impl std::ops::Sub<DipoleAtOrigin> for AntiCircleRotor {
     // yes simd        4        0        0
     //  no simd        6        0        0
     fn sub(self, other: DipoleAtOrigin) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() - other.group0()),
             // e23, e31, e12, e45
@@ -6598,12 +7098,11 @@ impl std::ops::Sub<DipoleAtOrigin> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<DipoleAtOrigin> for AntiCircleRotor {
     fn sub_assign(&mut self, other: DipoleAtOrigin) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() - other.group0()),
             // e23, e31, e12, e45
@@ -6616,7 +7115,6 @@ impl std::ops::SubAssign<DipoleAtOrigin> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversion> for AntiCircleRotor {
@@ -6629,7 +7127,7 @@ impl std::ops::Sub<DipoleInversion> for AntiCircleRotor {
     // yes simd        7        2        0
     //  no simd       10        5        0
     fn sub(self, other: DipoleInversion) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
                 (self.group0()[0] - other.group0()[0]),
@@ -6649,7 +7147,6 @@ impl std::ops::Sub<DipoleInversion> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             (other.group3() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionAligningOrigin> for AntiCircleRotor {
@@ -6662,7 +7159,7 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for AntiCircleRotor {
     // yes simd        7        2        0
     //  no simd        7        5        0
     fn sub(self, other: DipoleInversionAligningOrigin) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
                 (self.group0()[0] - other.group0()[0]),
@@ -6682,7 +7179,6 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             (other.group2() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionAtInfinity> for AntiCircleRotor {
@@ -6695,7 +7191,7 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for AntiCircleRotor {
     // yes simd        4        1        0
     //  no simd        7        4        0
     fn sub(self, other: DipoleInversionAtInfinity) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -6710,7 +7206,6 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             (other.group2() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionAtOrigin> for AntiCircleRotor {
@@ -6719,7 +7214,7 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        6        2        0
     fn sub(self, other: DipoleInversionAtOrigin) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
                 (self.group0()[0] - other.group0()[0]),
@@ -6739,7 +7234,6 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionOnOrigin> for AntiCircleRotor {
@@ -6748,7 +7242,7 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        4        4        0
     fn sub(self, other: DipoleInversionOnOrigin) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
                 (self.group0()[0] - other.group0()[0]),
@@ -6763,7 +7257,6 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([(other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (other.group1()[3] * -1.0), 0.0]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for AntiCircleRotor {
@@ -6772,7 +7265,7 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        9        2        0
     fn sub(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
                 (self.group0()[0] - other.group0()[0]),
@@ -6797,7 +7290,6 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleOnOrigin> for AntiCircleRotor {
@@ -6810,7 +7302,7 @@ impl std::ops::Sub<DipoleOnOrigin> for AntiCircleRotor {
     // yes simd        2        3        0
     //  no simd        4        3        0
     fn sub(self, other: DipoleOnOrigin) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group0()),
             // e23, e31, e12, e45
@@ -6818,12 +7310,11 @@ impl std::ops::Sub<DipoleOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<DipoleOnOrigin> for AntiCircleRotor {
     fn sub_assign(&mut self, other: DipoleOnOrigin) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group0()),
             // e23, e31, e12, e45
@@ -6831,7 +7322,6 @@ impl std::ops::SubAssign<DipoleOnOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<DipoleOrthogonalOrigin> for AntiCircleRotor {
@@ -6844,7 +7334,7 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for AntiCircleRotor {
     // yes simd        7        0        0
     //  no simd        9        0        0
     fn sub(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() - other.group0()),
             // e23, e31, e12, e45
@@ -6862,12 +7352,11 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<DipoleOrthogonalOrigin> for AntiCircleRotor {
     fn sub_assign(&mut self, other: DipoleOrthogonalOrigin) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() - other.group0()),
             // e23, e31, e12, e45
@@ -6885,7 +7374,6 @@ impl std::ops::SubAssign<DipoleOrthogonalOrigin> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<DualNum> for AntiCircleRotor {
@@ -6894,7 +7382,7 @@ impl std::ops::Sub<DualNum> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        0        2        0
     fn sub(self, other: DualNum) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], (other.group0()[1] * -1.0)]),
             // e1, e2, e3, e4
@@ -6918,7 +7406,6 @@ impl std::ops::Sub<DualNum> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlatOrigin> for AntiCircleRotor {
@@ -6928,7 +7415,7 @@ impl std::ops::Sub<FlatOrigin> for AntiCircleRotor {
     // f32        1        0        0
     fn sub(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -6936,13 +7423,12 @@ impl std::ops::Sub<FlatOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<FlatOrigin> for AntiCircleRotor {
     fn sub_assign(&mut self, other: FlatOrigin) {
         use crate::elements::*;
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -6950,7 +7436,6 @@ impl std::ops::SubAssign<FlatOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<FlatPoint> for AntiCircleRotor {
@@ -6959,7 +7444,7 @@ impl std::ops::Sub<FlatPoint> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        4        0        0
     fn sub(self, other: FlatPoint) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -6972,12 +7457,11 @@ impl std::ops::Sub<FlatPoint> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<FlatPoint> for AntiCircleRotor {
     fn sub_assign(&mut self, other: FlatPoint) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -6990,7 +7474,6 @@ impl std::ops::SubAssign<FlatPoint> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<FlatPointAtInfinity> for AntiCircleRotor {
@@ -6999,7 +7482,7 @@ impl std::ops::Sub<FlatPointAtInfinity> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        3        0        0
     fn sub(self, other: FlatPointAtInfinity) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -7012,12 +7495,11 @@ impl std::ops::Sub<FlatPointAtInfinity> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<FlatPointAtInfinity> for AntiCircleRotor {
     fn sub_assign(&mut self, other: FlatPointAtInfinity) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -7030,7 +7512,6 @@ impl std::ops::SubAssign<FlatPointAtInfinity> for AntiCircleRotor {
                 self.group2()[3],
             ]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<Flector> for AntiCircleRotor {
@@ -7043,7 +7524,7 @@ impl std::ops::Sub<Flector> for AntiCircleRotor {
     // yes simd        4        1        0
     //  no simd        4        4        0
     fn sub(self, other: Flector) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -7058,7 +7539,6 @@ impl std::ops::Sub<Flector> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             (other.group1() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlectorAtInfinity> for AntiCircleRotor {
@@ -7067,7 +7547,7 @@ impl std::ops::Sub<FlectorAtInfinity> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        3        1        0
     fn sub(self, other: FlectorAtInfinity) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -7082,7 +7562,6 @@ impl std::ops::Sub<FlectorAtInfinity> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlectorOnOrigin> for AntiCircleRotor {
@@ -7091,7 +7570,7 @@ impl std::ops::Sub<FlectorOnOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        1        3        0
     fn sub(self, other: FlectorOnOrigin) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -7101,7 +7580,6 @@ impl std::ops::Sub<FlectorOnOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([(other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group0()[3] * -1.0), 0.0]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Horizon> for AntiCircleRotor {
@@ -7111,7 +7589,7 @@ impl std::ops::Sub<Horizon> for AntiCircleRotor {
     // f32        0        1        0
     fn sub(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -7121,7 +7599,6 @@ impl std::ops::Sub<Horizon> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, (other[e3215] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Infinity> for AntiCircleRotor {
@@ -7131,7 +7608,7 @@ impl std::ops::Sub<Infinity> for AntiCircleRotor {
     // f32        0        1        0
     fn sub(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -7155,7 +7632,6 @@ impl std::ops::Sub<Infinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Line> for AntiCircleRotor {
@@ -7168,7 +7644,7 @@ impl std::ops::Sub<Line> for AntiCircleRotor {
     // yes simd        0        4        0
     //  no simd        0        6        0
     fn sub(self, other: Line) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -7192,7 +7668,6 @@ impl std::ops::Sub<Line> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<LineAtInfinity> for AntiCircleRotor {
@@ -7202,7 +7677,7 @@ impl std::ops::Sub<LineAtInfinity> for AntiCircleRotor {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn sub(self, other: LineAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -7226,7 +7701,6 @@ impl std::ops::Sub<LineAtInfinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<LineOnOrigin> for AntiCircleRotor {
@@ -7235,7 +7709,7 @@ impl std::ops::Sub<LineOnOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        0        3        0
     fn sub(self, other: LineOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -7259,7 +7733,6 @@ impl std::ops::Sub<LineOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Motor> for AntiCircleRotor {
@@ -7272,7 +7745,7 @@ impl std::ops::Sub<Motor> for AntiCircleRotor {
     // yes simd        0        6        0
     //  no simd        0        8        0
     fn sub(self, other: Motor) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], (other.group0()[3] * -1.0)]),
             // e1, e2, e3, e4
@@ -7296,7 +7769,6 @@ impl std::ops::Sub<Motor> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MotorAtInfinity> for AntiCircleRotor {
@@ -7309,7 +7781,7 @@ impl std::ops::Sub<MotorAtInfinity> for AntiCircleRotor {
     // yes simd        0        2        0
     //  no simd        0        4        0
     fn sub(self, other: MotorAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -7333,7 +7805,6 @@ impl std::ops::Sub<MotorAtInfinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MotorOnOrigin> for AntiCircleRotor {
@@ -7342,7 +7813,7 @@ impl std::ops::Sub<MotorOnOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: MotorOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], (other.group0()[3] * -1.0)]),
             // e1, e2, e3, e4
@@ -7366,7 +7837,6 @@ impl std::ops::Sub<MotorOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MultiVector> for AntiCircleRotor {
@@ -7381,7 +7851,7 @@ impl std::ops::Sub<MultiVector> for AntiCircleRotor {
     //  no simd       11       21        0
     fn sub(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(-other.group0()[0] + self.group2()[3]), (other.group0()[1] * -1.0)]),
             // e1, e2, e3, e4
@@ -7405,7 +7875,6 @@ impl std::ops::Sub<MultiVector> for AntiCircleRotor {
             // e3215
             (other[e45] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryCircle> for AntiCircleRotor {
@@ -7415,7 +7884,7 @@ impl std::ops::Sub<MysteryCircle> for AntiCircleRotor {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn sub(self, other: MysteryCircle) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -7439,7 +7908,6 @@ impl std::ops::Sub<MysteryCircle> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryCircleRotor> for AntiCircleRotor {
@@ -7453,7 +7921,7 @@ impl std::ops::Sub<MysteryCircleRotor> for AntiCircleRotor {
     //  no simd        0        5        0
     fn sub(self, other: MysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], (other[e425] * -1.0)]),
             // e1, e2, e3, e4
@@ -7477,7 +7945,6 @@ impl std::ops::Sub<MysteryCircleRotor> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryDipole> for AntiCircleRotor {
@@ -7487,7 +7954,7 @@ impl std::ops::Sub<MysteryDipole> for AntiCircleRotor {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: MysteryDipole) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -7495,12 +7962,11 @@ impl std::ops::Sub<MysteryDipole> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<MysteryDipole> for AntiCircleRotor {
     fn sub_assign(&mut self, other: MysteryDipole) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -7508,7 +7974,6 @@ impl std::ops::SubAssign<MysteryDipole> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<MysteryDipoleInversion> for AntiCircleRotor {
@@ -7521,7 +7986,7 @@ impl std::ops::Sub<MysteryDipoleInversion> for AntiCircleRotor {
     // yes simd        1        3        0
     //  no simd        4        3        0
     fn sub(self, other: MysteryDipoleInversion) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -7531,7 +7996,6 @@ impl std::ops::Sub<MysteryDipoleInversion> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), 0.0]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryVersorEven> for AntiCircleRotor {
@@ -7544,7 +8008,7 @@ impl std::ops::Sub<MysteryVersorEven> for AntiCircleRotor {
     // yes simd        0        5        0
     //  no simd        0        8        0
     fn sub(self, other: MysteryVersorEven) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], (other.group0()[0] * -1.0)]),
             // e1, e2, e3, e4
@@ -7568,7 +8032,6 @@ impl std::ops::Sub<MysteryVersorEven> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryVersorOdd> for AntiCircleRotor {
@@ -7581,7 +8044,7 @@ impl std::ops::Sub<MysteryVersorOdd> for AntiCircleRotor {
     // yes simd        2        3        0
     //  no simd        5        3        0
     fn sub(self, other: MysteryVersorOdd) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group2()[3] - other.group0()[0])]),
             // e23, e31, e12, e45
@@ -7591,7 +8054,6 @@ impl std::ops::Sub<MysteryVersorOdd> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([(other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group0()[3] * -1.0), 0.0]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullCircleAtOrigin> for AntiCircleRotor {
@@ -7601,7 +8063,7 @@ impl std::ops::Sub<NullCircleAtOrigin> for AntiCircleRotor {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn sub(self, other: NullCircleAtOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -7625,7 +8087,6 @@ impl std::ops::Sub<NullCircleAtOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullDipoleAtOrigin> for AntiCircleRotor {
@@ -7635,7 +8096,7 @@ impl std::ops::Sub<NullDipoleAtOrigin> for AntiCircleRotor {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn sub(self, other: NullDipoleAtOrigin) -> Self::Output {
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() - other.group0()),
             // e23, e31, e12, e45
@@ -7643,12 +8104,11 @@ impl std::ops::Sub<NullDipoleAtOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<NullDipoleAtOrigin> for AntiCircleRotor {
     fn sub_assign(&mut self, other: NullDipoleAtOrigin) {
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             (self.group0() - other.group0()),
             // e23, e31, e12, e45
@@ -7656,7 +8116,6 @@ impl std::ops::SubAssign<NullDipoleAtOrigin> for AntiCircleRotor {
             // e15, e25, e35, scalar
             self.group2(),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<NullDipoleInversionAtOrigin> for AntiCircleRotor {
@@ -7665,7 +8124,7 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        3        1        0
     fn sub(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
                 (self.group0()[0] - other.group0()[0]),
@@ -7680,7 +8139,6 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullSphereAtOrigin> for AntiCircleRotor {
@@ -7690,7 +8148,7 @@ impl std::ops::Sub<NullSphereAtOrigin> for AntiCircleRotor {
     // f32        0        1        0
     fn sub(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -7700,7 +8158,6 @@ impl std::ops::Sub<NullSphereAtOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullVersorEvenAtOrigin> for AntiCircleRotor {
@@ -7713,7 +8170,7 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for AntiCircleRotor {
     // yes simd        0        2        0
     //  no simd        0        4        0
     fn sub(self, other: NullVersorEvenAtOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -7737,7 +8194,6 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Origin> for AntiCircleRotor {
@@ -7747,7 +8203,7 @@ impl std::ops::Sub<Origin> for AntiCircleRotor {
     // f32        0        1        0
     fn sub(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -7771,7 +8227,6 @@ impl std::ops::Sub<Origin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Plane> for AntiCircleRotor {
@@ -7781,7 +8236,7 @@ impl std::ops::Sub<Plane> for AntiCircleRotor {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn sub(self, other: Plane) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -7791,7 +8246,6 @@ impl std::ops::Sub<Plane> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             (other.group0() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<PlaneOnOrigin> for AntiCircleRotor {
@@ -7800,7 +8254,7 @@ impl std::ops::Sub<PlaneOnOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        0        3        0
     fn sub(self, other: PlaneOnOrigin) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -7810,7 +8264,6 @@ impl std::ops::Sub<PlaneOnOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<RoundPoint> for AntiCircleRotor {
@@ -7824,7 +8277,7 @@ impl std::ops::Sub<RoundPoint> for AntiCircleRotor {
     //  no simd        0        5        0
     fn sub(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -7848,7 +8301,6 @@ impl std::ops::Sub<RoundPoint> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<RoundPointAtOrigin> for AntiCircleRotor {
@@ -7857,7 +8309,7 @@ impl std::ops::Sub<RoundPointAtOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        0        2        0
     fn sub(self, other: RoundPointAtOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -7881,7 +8333,6 @@ impl std::ops::Sub<RoundPointAtOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Scalar> for AntiCircleRotor {
@@ -7891,7 +8342,7 @@ impl std::ops::Sub<Scalar> for AntiCircleRotor {
     // f32        1        0        0
     fn sub(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiCircleRotor::from_groups(
+        return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -7899,13 +8350,12 @@ impl std::ops::Sub<Scalar> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other[scalar])]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<Scalar> for AntiCircleRotor {
     fn sub_assign(&mut self, other: Scalar) {
         use crate::elements::*;
-        let subtraction = AntiCircleRotor::from_groups(
+        *self = AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
@@ -7913,7 +8363,6 @@ impl std::ops::SubAssign<Scalar> for AntiCircleRotor {
             // e15, e25, e35, scalar
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other[scalar])]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<Sphere> for AntiCircleRotor {
@@ -7927,7 +8376,7 @@ impl std::ops::Sub<Sphere> for AntiCircleRotor {
     //  no simd        0        5        0
     fn sub(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -7937,7 +8386,6 @@ impl std::ops::Sub<Sphere> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             (other.group0() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<SphereAtOrigin> for AntiCircleRotor {
@@ -7946,7 +8394,7 @@ impl std::ops::Sub<SphereAtOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        0        2        0
     fn sub(self, other: SphereAtOrigin) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -7956,7 +8404,6 @@ impl std::ops::Sub<SphereAtOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<SphereOnOrigin> for AntiCircleRotor {
@@ -7965,7 +8412,7 @@ impl std::ops::Sub<SphereOnOrigin> for AntiCircleRotor {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: SphereOnOrigin) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
             // e23, e31, e12, e45
@@ -7975,7 +8422,6 @@ impl std::ops::Sub<SphereOnOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEven> for AntiCircleRotor {
@@ -7989,7 +8435,7 @@ impl std::ops::Sub<VersorEven> for AntiCircleRotor {
     // yes simd        0        6        0
     //  no simd        0       16        0
     fn sub(self, other: VersorEven) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], (other.group0()[3] * -1.0)]),
             // e1, e2, e3, e4
@@ -8013,7 +8459,6 @@ impl std::ops::Sub<VersorEven> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenAligningOrigin> for AntiCircleRotor {
@@ -8026,7 +8471,7 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for AntiCircleRotor {
     // yes simd        0        8        0
     //  no simd        0       12        0
     fn sub(self, other: VersorEvenAligningOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], (other.group0()[3] * -1.0)]),
             // e1, e2, e3, e4
@@ -8050,7 +8495,6 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenAtInfinity> for AntiCircleRotor {
@@ -8064,7 +8508,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for AntiCircleRotor {
     // yes simd        0        7        0
     //  no simd        0       12        0
     fn sub(self, other: VersorEvenAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], (other.group0()[0] * -1.0)]),
             // e1, e2, e3, e4
@@ -8088,7 +8532,6 @@ impl std::ops::Sub<VersorEvenAtInfinity> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenAtOrigin> for AntiCircleRotor {
@@ -8101,7 +8544,7 @@ impl std::ops::Sub<VersorEvenAtOrigin> for AntiCircleRotor {
     // yes simd        0        4        0
     //  no simd        0        8        0
     fn sub(self, other: VersorEvenAtOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -8125,7 +8568,6 @@ impl std::ops::Sub<VersorEvenAtOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenOnOrigin> for AntiCircleRotor {
@@ -8138,7 +8580,7 @@ impl std::ops::Sub<VersorEvenOnOrigin> for AntiCircleRotor {
     // yes simd        0        6        0
     //  no simd        0        8        0
     fn sub(self, other: VersorEvenOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], (other.group0()[3] * -1.0)]),
             // e1, e2, e3, e4
@@ -8162,7 +8604,6 @@ impl std::ops::Sub<VersorEvenOnOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenOrthogonalOrigin> for AntiCircleRotor {
@@ -8176,7 +8617,7 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for AntiCircleRotor {
     // yes simd        0        5        0
     //  no simd        0       12        0
     fn sub(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -8200,7 +8641,6 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for AntiCircleRotor {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorOdd> for AntiCircleRotor {
@@ -8213,7 +8653,7 @@ impl std::ops::Sub<VersorOdd> for AntiCircleRotor {
     // yes simd        5        2        0
     //  no simd       11        5        0
     fn sub(self, other: VersorOdd) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]) - other.group0()),
             // e23, e31, e12, e45
@@ -8228,7 +8668,6 @@ impl std::ops::Sub<VersorOdd> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             (other.group3() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorOddAtInfinity> for AntiCircleRotor {
@@ -8241,7 +8680,7 @@ impl std::ops::Sub<VersorOddAtInfinity> for AntiCircleRotor {
     // yes simd        5        1        0
     //  no simd        8        4        0
     fn sub(self, other: VersorOddAtInfinity) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group2()[3] - other.group0()[0])]),
             // e23, e31, e12, e45
@@ -8256,7 +8695,6 @@ impl std::ops::Sub<VersorOddAtInfinity> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             (other.group2() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorOddOrthogonalOrigin> for AntiCircleRotor {
@@ -8269,7 +8707,7 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for AntiCircleRotor {
     // yes simd        7        2        0
     //  no simd       10        2        0
     fn sub(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]) - other.group0()),
             // e23, e31, e12, e45
@@ -8289,7 +8727,6 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[3] * -1.0)]),
         );
-        return subtraction;
     }
 }
 

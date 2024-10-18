@@ -46,11 +46,10 @@ impl AntiConstraintViolation for AntiCircleOnOrigin {
                 + (Simd32x2::from(self.group1()[2]) * Simd32x2::from([anti_reverse.group0()[2], anti_reverse.group1()[2]]))),
         );
         let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2)));
-        let subtraction = DualNum::from_groups(
+        return DualNum::from_groups(
             // e4, e12345
             Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for AntiCircleRotor {
@@ -127,7 +126,7 @@ impl AntiConstraintViolation for AntiCircleRotor {
                 + 2.0 * (self.group0()[1] * self.group2()[1])
                 + 2.0 * (self.group0()[2] * self.group2()[2])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -137,7 +136,6 @@ impl AntiConstraintViolation for AntiCircleRotor {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for AntiCircleRotorAligningOrigin {
@@ -213,7 +211,7 @@ impl AntiConstraintViolation for AntiCircleRotorAligningOrigin {
                 + 2.0 * (self.group0()[1] * self.group2()[1])
                 + 2.0 * (self.group0()[2] * self.group2()[2])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -223,7 +221,6 @@ impl AntiConstraintViolation for AntiCircleRotorAligningOrigin {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for AntiCircleRotorAligningOriginAtInfinity {
@@ -269,13 +266,12 @@ impl AntiConstraintViolation for AntiCircleRotorAligningOriginAtInfinity {
             // e12345
             (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group1()[3], 2)),
         );
-        let subtraction = Motor::from_groups(
+        return Motor::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for AntiCircleRotorAtInfinity {
@@ -323,7 +319,7 @@ impl AntiConstraintViolation for AntiCircleRotorAtInfinity {
             // e12345
             (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2) - f32::powi(self.group1()[3], 2)),
         );
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -336,7 +332,6 @@ impl AntiConstraintViolation for AntiCircleRotorAtInfinity {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for AntiCircleRotorOnOrigin {
@@ -370,11 +365,10 @@ impl AntiConstraintViolation for AntiCircleRotorOnOrigin {
             // e12345
             (f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = DualNum::from_groups(
+        return DualNum::from_groups(
             // e4, e12345
             Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for AntiDipoleInversion {
@@ -490,7 +484,7 @@ impl AntiConstraintViolation for AntiDipoleInversion {
                 - 2.0 * (self.group0()[2] * self.group2()[2])
                 + 2.0 * (self.group2()[3] * self.group3()[3])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -500,7 +494,6 @@ impl AntiConstraintViolation for AntiDipoleInversion {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for AntiDipoleInversionAtInfinity {
@@ -566,7 +559,7 @@ impl AntiConstraintViolation for AntiDipoleInversionAtInfinity {
                 - f32::powi(self.group2()[1], 2)
                 - f32::powi(self.group2()[2], 2)),
         );
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -579,7 +572,6 @@ impl AntiConstraintViolation for AntiDipoleInversionAtInfinity {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for AntiDipoleInversionOnOrigin {
@@ -611,11 +603,10 @@ impl AntiConstraintViolation for AntiDipoleInversionOnOrigin {
             // e12345
             (f32::powi(self.group0()[3], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2)),
         );
-        let subtraction = DualNum::from_groups(
+        return DualNum::from_groups(
             // e4, e12345
             Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for AntiDipoleInversionOrthogonalOrigin {
@@ -696,7 +687,7 @@ impl AntiConstraintViolation for AntiDipoleInversionOrthogonalOrigin {
                 - 2.0 * (self.group0()[2] * self.group2()[2])
                 + 2.0 * (self.group0()[3] * self.group2()[3])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -706,7 +697,6 @@ impl AntiConstraintViolation for AntiDipoleInversionOrthogonalOrigin {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for AntiDipoleOnOrigin {
@@ -723,8 +713,7 @@ impl AntiConstraintViolation for AntiDipoleOnOrigin {
         let anti_reverse = AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(-1.0)));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ (anti_reverse.group0()[3] * self.group0()[3]));
         let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self.group0()[3], 2));
-        let subtraction = AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
-        return subtraction;
+        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
     }
 }
 impl AntiConstraintViolation for AntiDualNum {
@@ -741,8 +730,7 @@ impl AntiConstraintViolation for AntiDualNum {
             // e4, e12345
             (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([-2.0, -1.0])),
         );
-        let subtraction = Origin::from_groups(/* e4 */ geometric_anti_product.group0()[0]);
-        return subtraction;
+        return Origin::from_groups(/* e4 */ geometric_anti_product.group0()[0]);
     }
 }
 impl AntiConstraintViolation for AntiFlatOrigin {
@@ -755,8 +743,7 @@ impl AntiConstraintViolation for AntiFlatOrigin {
         let anti_reverse = AntiFlatOrigin::from_groups(/* e321 */ (self[e321] * -1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ (anti_reverse[e321] * self[e321]));
         let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e321], 2));
-        let subtraction = AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
-        return subtraction;
+        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
     }
 }
 impl AntiConstraintViolation for AntiFlatPoint {
@@ -773,8 +760,7 @@ impl AntiConstraintViolation for AntiFlatPoint {
         let anti_reverse = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (self.group0() * Simd32x4::from(-1.0)));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ (anti_reverse.group0()[3] * self.group0()[3]));
         let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self.group0()[3], 2));
-        let subtraction = AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
-        return subtraction;
+        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
     }
 }
 impl AntiConstraintViolation for AntiFlector {
@@ -819,13 +805,12 @@ impl AntiConstraintViolation for AntiFlector {
             // e12345
             (f32::powi(self.group0()[3], 2) - f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2)),
         );
-        let subtraction = Motor::from_groups(
+        return Motor::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for AntiFlectorOnOrigin {
@@ -850,8 +835,7 @@ impl AntiConstraintViolation for AntiFlectorOnOrigin {
             // e12345
             (f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
-        return subtraction;
+        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
     }
 }
 impl AntiConstraintViolation for AntiLine {
@@ -893,13 +877,12 @@ impl AntiConstraintViolation for AntiLine {
             ]),
         );
         let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2)));
-        let subtraction = Motor::from_groups(
+        return Motor::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for AntiLineOnOrigin {
@@ -919,8 +902,7 @@ impl AntiConstraintViolation for AntiLineOnOrigin {
             ((anti_reverse.group0()[0] * self.group0()[0]) + (anti_reverse.group0()[1] * self.group0()[1]) + (anti_reverse.group0()[2] * self.group0()[2])),
         );
         let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2)));
-        let subtraction = AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
-        return subtraction;
+        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
     }
 }
 impl AntiConstraintViolation for AntiMotor {
@@ -962,13 +944,12 @@ impl AntiConstraintViolation for AntiMotor {
             // e12345
             (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = Motor::from_groups(
+        return Motor::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for AntiMotorOnOrigin {
@@ -991,8 +972,7 @@ impl AntiConstraintViolation for AntiMotorOnOrigin {
             // e12345
             (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
-        return subtraction;
+        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
     }
 }
 impl AntiConstraintViolation for AntiMysteryCircleRotor {
@@ -1023,7 +1003,7 @@ impl AntiConstraintViolation for AntiMysteryCircleRotor {
             // e12345
             (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2) - f32::powi(self[e31], 2)),
         );
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -1034,7 +1014,6 @@ impl AntiConstraintViolation for AntiMysteryCircleRotor {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for AntiMysteryDipoleInversion {
@@ -1075,7 +1054,7 @@ impl AntiConstraintViolation for AntiMysteryDipoleInversion {
                 - f32::powi(self.group0()[2], 2)
                 + f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -1086,35 +1065,30 @@ impl AntiConstraintViolation for AntiMysteryDipoleInversion {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for AntiPlane {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl AntiConstraintViolation for AntiPlaneOnOrigin {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl AntiConstraintViolation for AntiScalar {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl AntiConstraintViolation for AntiSphereOnOrigin {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl AntiConstraintViolation for AntiVersorEvenOnOrigin {
@@ -1149,11 +1123,10 @@ impl AntiConstraintViolation for AntiVersorEvenOnOrigin {
             // e12345
             (-f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2)),
         );
-        let subtraction = DualNum::from_groups(
+        return DualNum::from_groups(
             // e4, e12345
             Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for Circle {
@@ -1236,7 +1209,7 @@ impl AntiConstraintViolation for Circle {
                 - 2.0 * (self.group0()[1] * self.group2()[1])
                 - 2.0 * (self.group0()[2] * self.group2()[2])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -1246,7 +1219,6 @@ impl AntiConstraintViolation for Circle {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for CircleAligningOrigin {
@@ -1323,7 +1295,7 @@ impl AntiConstraintViolation for CircleAligningOrigin {
                 - 2.0 * (self.group0()[1] * self.group2()[1])
                 - 2.0 * (self.group0()[2] * self.group2()[2])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -1333,7 +1305,6 @@ impl AntiConstraintViolation for CircleAligningOrigin {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for CircleAtInfinity {
@@ -1381,7 +1352,7 @@ impl AntiConstraintViolation for CircleAtInfinity {
             // e12345
             (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -1394,7 +1365,6 @@ impl AntiConstraintViolation for CircleAtInfinity {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for CircleAtOrigin {
@@ -1437,7 +1407,7 @@ impl AntiConstraintViolation for CircleAtOrigin {
             // e12345
             (-2.0 * (self.group0()[0] * self.group1()[0]) - 2.0 * (self.group0()[1] * self.group1()[1]) - 2.0 * (self.group0()[2] * self.group1()[2])),
         );
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -1448,7 +1418,6 @@ impl AntiConstraintViolation for CircleAtOrigin {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for CircleOnOrigin {
@@ -1479,11 +1448,10 @@ impl AntiConstraintViolation for CircleOnOrigin {
                 - (Simd32x2::from(self.group1()[2]) * Simd32x2::from([anti_reverse.group0()[2], anti_reverse.group1()[2]]))),
         );
         let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (-f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2)));
-        let subtraction = DualNum::from_groups(
+        return DualNum::from_groups(
             // e4, e12345
             Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for CircleOrthogonalOrigin {
@@ -1527,7 +1495,7 @@ impl AntiConstraintViolation for CircleOrthogonalOrigin {
                 - 2.0 * (self.group1()[1] * self.group0()[1])
                 - 2.0 * (self.group1()[2] * self.group0()[2])),
         );
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -1538,7 +1506,6 @@ impl AntiConstraintViolation for CircleOrthogonalOrigin {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for CircleRotor {
@@ -1622,7 +1589,7 @@ impl AntiConstraintViolation for CircleRotor {
                 - 2.0 * (self.group0()[1] * self.group2()[1])
                 - 2.0 * (self.group0()[2] * self.group2()[2])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -1632,7 +1599,6 @@ impl AntiConstraintViolation for CircleRotor {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for CircleRotorAligningOrigin {
@@ -1708,7 +1674,7 @@ impl AntiConstraintViolation for CircleRotorAligningOrigin {
                 - 2.0 * (self.group0()[1] * self.group2()[1])
                 - 2.0 * (self.group0()[2] * self.group2()[2])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -1718,7 +1684,6 @@ impl AntiConstraintViolation for CircleRotorAligningOrigin {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for CircleRotorAligningOriginAtInfinity {
@@ -1764,13 +1729,12 @@ impl AntiConstraintViolation for CircleRotorAligningOriginAtInfinity {
             // e12345
             (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group1()[3], 2)),
         );
-        let subtraction = Motor::from_groups(
+        return Motor::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for CircleRotorAtInfinity {
@@ -1818,7 +1782,7 @@ impl AntiConstraintViolation for CircleRotorAtInfinity {
             // e12345
             (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[3], 2)),
         );
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -1831,7 +1795,6 @@ impl AntiConstraintViolation for CircleRotorAtInfinity {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for CircleRotorOnOrigin {
@@ -1865,11 +1828,10 @@ impl AntiConstraintViolation for CircleRotorOnOrigin {
             // e12345
             (-f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = DualNum::from_groups(
+        return DualNum::from_groups(
             // e4, e12345
             Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for Dipole {
@@ -1945,7 +1907,7 @@ impl AntiConstraintViolation for Dipole {
                 + 2.0 * (self.group0()[1] * self.group2()[1])
                 + 2.0 * (self.group0()[2] * self.group2()[2])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -1955,7 +1917,6 @@ impl AntiConstraintViolation for Dipole {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for DipoleAligningOrigin {
@@ -1999,7 +1960,7 @@ impl AntiConstraintViolation for DipoleAligningOrigin {
                 + 2.0 * (self.group1()[1] * self.group0()[1])
                 + 2.0 * (self.group1()[2] * self.group0()[2])),
         );
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -2010,7 +1971,6 @@ impl AntiConstraintViolation for DipoleAligningOrigin {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for DipoleAtInfinity {
@@ -2055,7 +2015,7 @@ impl AntiConstraintViolation for DipoleAtInfinity {
             // e12345
             (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -2068,7 +2028,6 @@ impl AntiConstraintViolation for DipoleAtInfinity {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for DipoleAtOrigin {
@@ -2111,7 +2070,7 @@ impl AntiConstraintViolation for DipoleAtOrigin {
             // e12345
             (2.0 * (self.group0()[0] * self.group1()[0]) + 2.0 * (self.group0()[1] * self.group1()[1]) + 2.0 * (self.group0()[2] * self.group1()[2])),
         );
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -2122,7 +2081,6 @@ impl AntiConstraintViolation for DipoleAtOrigin {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for DipoleInversion {
@@ -2235,7 +2193,7 @@ impl AntiConstraintViolation for DipoleInversion {
                 + 2.0 * (self.group0()[2] * self.group2()[2])
                 - 2.0 * (self.group2()[3] * self.group3()[3])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -2245,7 +2203,6 @@ impl AntiConstraintViolation for DipoleInversion {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for DipoleInversionAligningOrigin {
@@ -2330,7 +2287,7 @@ impl AntiConstraintViolation for DipoleInversionAligningOrigin {
                 + 2.0 * (self.group0()[2] * self.group1()[2])
                 - 2.0 * (self.group1()[3] * self.group2()[3])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -2340,7 +2297,6 @@ impl AntiConstraintViolation for DipoleInversionAligningOrigin {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for DipoleInversionAtInfinity {
@@ -2403,7 +2359,7 @@ impl AntiConstraintViolation for DipoleInversionAtInfinity {
                 + f32::powi(self.group2()[1], 2)
                 + f32::powi(self.group2()[2], 2)),
         );
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -2416,7 +2372,6 @@ impl AntiConstraintViolation for DipoleInversionAtInfinity {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for DipoleInversionAtOrigin {
@@ -2457,7 +2412,7 @@ impl AntiConstraintViolation for DipoleInversionAtOrigin {
             (2.0 * (self.group0()[0] * self.group1()[0]) + 2.0 * (self.group0()[1] * self.group1()[1]) + 2.0 * (self.group0()[2] * self.group1()[2])
                 - 2.0 * (self.group0()[3] * self.group1()[3])),
         );
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -2468,7 +2423,6 @@ impl AntiConstraintViolation for DipoleInversionAtOrigin {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for DipoleInversionOnOrigin {
@@ -2506,11 +2460,10 @@ impl AntiConstraintViolation for DipoleInversionOnOrigin {
             // e12345
             (-f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2)),
         );
-        let subtraction = DualNum::from_groups(
+        return DualNum::from_groups(
             // e4, e12345
             Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for DipoleInversionOrthogonalOrigin {
@@ -2591,7 +2544,7 @@ impl AntiConstraintViolation for DipoleInversionOrthogonalOrigin {
                 + 2.0 * (self.group0()[2] * self.group2()[2])
                 - 2.0 * (self.group0()[3] * self.group2()[3])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -2601,7 +2554,6 @@ impl AntiConstraintViolation for DipoleInversionOrthogonalOrigin {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for DipoleOnOrigin {
@@ -2618,8 +2570,7 @@ impl AntiConstraintViolation for DipoleOnOrigin {
         let anti_reverse = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ (self.group0() * Simd32x4::from(-1.0)));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ (anti_reverse.group0()[3] * self.group0()[3] * -1.0));
         let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (f32::powi(self.group0()[3], 2) * -1.0));
-        let subtraction = AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
-        return subtraction;
+        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
     }
 }
 impl AntiConstraintViolation for DipoleOrthogonalOrigin {
@@ -2696,7 +2647,7 @@ impl AntiConstraintViolation for DipoleOrthogonalOrigin {
                 + 2.0 * (self.group0()[1] * self.group2()[1])
                 + 2.0 * (self.group0()[2] * self.group2()[2])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -2706,7 +2657,6 @@ impl AntiConstraintViolation for DipoleOrthogonalOrigin {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for DualNum {
@@ -2723,8 +2673,7 @@ impl AntiConstraintViolation for DualNum {
             // e4, e12345
             (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([2.0, 1.0])),
         );
-        let subtraction = Origin::from_groups(/* e4 */ geometric_anti_product.group0()[0]);
-        return subtraction;
+        return Origin::from_groups(/* e4 */ geometric_anti_product.group0()[0]);
     }
 }
 impl AntiConstraintViolation for FlatOrigin {
@@ -2737,8 +2686,7 @@ impl AntiConstraintViolation for FlatOrigin {
         let anti_reverse = FlatOrigin::from_groups(/* e45 */ (self[e45] * -1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ (anti_reverse[e45] * self[e45] * -1.0));
         let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (f32::powi(self[e45], 2) * -1.0));
-        let subtraction = AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
-        return subtraction;
+        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
     }
 }
 impl AntiConstraintViolation for FlatPoint {
@@ -2755,8 +2703,7 @@ impl AntiConstraintViolation for FlatPoint {
         let anti_reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ (self.group0() * Simd32x4::from(-1.0)));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ (anti_reverse.group0()[3] * self.group0()[3] * -1.0));
         let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (f32::powi(self.group0()[3], 2) * -1.0));
-        let subtraction = AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
-        return subtraction;
+        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
     }
 }
 impl AntiConstraintViolation for Flector {
@@ -2806,13 +2753,12 @@ impl AntiConstraintViolation for Flector {
             // e12345
             (-f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2)),
         );
-        let subtraction = Motor::from_groups(
+        return Motor::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for FlectorOnOrigin {
@@ -2837,8 +2783,7 @@ impl AntiConstraintViolation for FlectorOnOrigin {
             // e12345
             (-f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
-        return subtraction;
+        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
     }
 }
 impl AntiConstraintViolation for Line {
@@ -2880,13 +2825,12 @@ impl AntiConstraintViolation for Line {
             ]),
         );
         let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2)));
-        let subtraction = Motor::from_groups(
+        return Motor::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for LineOnOrigin {
@@ -2906,8 +2850,7 @@ impl AntiConstraintViolation for LineOnOrigin {
             (-(anti_reverse.group0()[0] * self.group0()[0]) - (anti_reverse.group0()[1] * self.group0()[1]) - (anti_reverse.group0()[2] * self.group0()[2])),
         );
         let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2)));
-        let subtraction = AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
-        return subtraction;
+        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
     }
 }
 impl AntiConstraintViolation for Motor {
@@ -2949,13 +2892,12 @@ impl AntiConstraintViolation for Motor {
             // e12345
             (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = Motor::from_groups(
+        return Motor::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for MotorOnOrigin {
@@ -2978,8 +2920,7 @@ impl AntiConstraintViolation for MotorOnOrigin {
             // e12345
             (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
-        return subtraction;
+        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
     }
 }
 impl AntiConstraintViolation for MultiVector {
@@ -3306,7 +3247,7 @@ impl AntiConstraintViolation for MultiVector {
                 + 2.0 * (self.group1()[3] * self[e1])
                 - 2.0 * (self.group9()[0] * self[e45])),
         );
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
             // e1, e2, e3, e4
@@ -3330,7 +3271,6 @@ impl AntiConstraintViolation for MultiVector {
             // e3215
             geometric_anti_product[e45],
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for MysteryCircle {
@@ -3360,7 +3300,7 @@ impl AntiConstraintViolation for MysteryCircle {
             // e12345
             (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -3371,7 +3311,6 @@ impl AntiConstraintViolation for MysteryCircle {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for MysteryCircleRotor {
@@ -3402,7 +3341,7 @@ impl AntiConstraintViolation for MysteryCircleRotor {
             // e12345
             (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2) + f32::powi(self[e425], 2)),
         );
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -3413,7 +3352,6 @@ impl AntiConstraintViolation for MysteryCircleRotor {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for MysteryDipole {
@@ -3440,7 +3378,7 @@ impl AntiConstraintViolation for MysteryDipole {
             // e12345
             (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -3451,7 +3389,6 @@ impl AntiConstraintViolation for MysteryDipole {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for MysteryDipoleInversion {
@@ -3490,7 +3427,7 @@ impl AntiConstraintViolation for MysteryDipoleInversion {
                 + f32::powi(self.group0()[2], 2)
                 - f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -3501,7 +3438,6 @@ impl AntiConstraintViolation for MysteryDipoleInversion {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for MysteryVersorEven {
@@ -3553,7 +3489,7 @@ impl AntiConstraintViolation for MysteryVersorEven {
                 - f32::powi(self.group1()[2], 2)
                 + f32::powi(self.group1()[3], 2)),
         );
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -3564,7 +3500,6 @@ impl AntiConstraintViolation for MysteryVersorEven {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for MysteryVersorOdd {
@@ -3608,7 +3543,7 @@ impl AntiConstraintViolation for MysteryVersorOdd {
                 + f32::powi(self.group1()[2], 2)
                 - f32::powi(self.group1()[3], 2)),
         );
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -3619,63 +3554,54 @@ impl AntiConstraintViolation for MysteryVersorOdd {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for Plane {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl AntiConstraintViolation for PlaneOnOrigin {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl AntiConstraintViolation for RoundPoint {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl AntiConstraintViolation for RoundPointAtOrigin {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl AntiConstraintViolation for Scalar {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl AntiConstraintViolation for Sphere {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl AntiConstraintViolation for SphereAtOrigin {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl AntiConstraintViolation for SphereOnOrigin {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl AntiConstraintViolation for VersorEven {
@@ -3785,7 +3711,7 @@ impl AntiConstraintViolation for VersorEven {
                 - 2.0 * (self.group0()[2] * self.group2()[2])
                 + 2.0 * (self.group2()[3] * self.group3()[3])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -3795,7 +3721,6 @@ impl AntiConstraintViolation for VersorEven {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for VersorEvenAligningOrigin {
@@ -3874,7 +3799,7 @@ impl AntiConstraintViolation for VersorEvenAligningOrigin {
                 - 2.0 * (self.group0()[2] * self.group2()[2])
                 + 2.0 * (self.group1()[3] * self.group2()[3])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -3884,7 +3809,6 @@ impl AntiConstraintViolation for VersorEvenAligningOrigin {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for VersorEvenAtInfinity {
@@ -3965,7 +3889,7 @@ impl AntiConstraintViolation for VersorEvenAtInfinity {
                 - f32::powi(self.group1()[2], 2)
                 + f32::powi(self.group1()[3], 2)),
         );
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -3978,7 +3902,6 @@ impl AntiConstraintViolation for VersorEvenAtInfinity {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for VersorEvenAtOrigin {
@@ -4019,7 +3942,7 @@ impl AntiConstraintViolation for VersorEvenAtOrigin {
             (-2.0 * (self.group0()[0] * self.group1()[0]) - 2.0 * (self.group0()[1] * self.group1()[1]) - 2.0 * (self.group0()[2] * self.group1()[2])
                 + 2.0 * (self.group0()[3] * self.group1()[3])),
         );
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -4030,7 +3953,6 @@ impl AntiConstraintViolation for VersorEvenAtOrigin {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for VersorEvenOnOrigin {
@@ -4065,11 +3987,10 @@ impl AntiConstraintViolation for VersorEvenOnOrigin {
             // e12345
             (f32::powi(self.group0()[3], 2) - f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2)),
         );
-        let subtraction = DualNum::from_groups(
+        return DualNum::from_groups(
             // e4, e12345
             Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for VersorEvenOrthogonalOrigin {
@@ -4153,7 +4074,7 @@ impl AntiConstraintViolation for VersorEvenOrthogonalOrigin {
                 - 2.0 * (self.group0()[2] * self.group1()[2])
                 + 2.0 * (self.group1()[3] * self.group2()[3])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -4163,7 +4084,6 @@ impl AntiConstraintViolation for VersorEvenOrthogonalOrigin {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for VersorOdd {
@@ -4270,7 +4190,7 @@ impl AntiConstraintViolation for VersorOdd {
                 + 2.0 * (self.group0()[2] * self.group2()[2])
                 - 2.0 * (self.group2()[3] * self.group3()[3])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -4280,7 +4200,6 @@ impl AntiConstraintViolation for VersorOdd {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for VersorOddAtInfinity {
@@ -4346,7 +4265,7 @@ impl AntiConstraintViolation for VersorOddAtInfinity {
                 + f32::powi(self.group2()[1], 2)
                 + f32::powi(self.group2()[2], 2)),
         );
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
@@ -4359,7 +4278,6 @@ impl AntiConstraintViolation for VersorOddAtInfinity {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
         );
-        return subtraction;
     }
 }
 impl AntiConstraintViolation for VersorOddOrthogonalOrigin {
@@ -4437,7 +4355,7 @@ impl AntiConstraintViolation for VersorOddOrthogonalOrigin {
                 + 2.0 * (self.group0()[2] * self.group2()[2])
                 - 2.0 * (self.group1()[3] * self.group2()[3])),
         );
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
             // e415, e425, e435, e321
@@ -4447,6 +4365,5 @@ impl AntiConstraintViolation for VersorOddOrthogonalOrigin {
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
-        return subtraction;
     }
 }

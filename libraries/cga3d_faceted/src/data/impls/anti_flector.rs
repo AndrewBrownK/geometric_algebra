@@ -12,19 +12,19 @@ use crate::traits::Wedge;
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         3       4       0
-//  Average:        11      17       0
-//  Maximum:       224     256       0
+//   Median:         2       4       0
+//  Average:         6      11       0
+//  Maximum:       124     155       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         3       6       0
-//  Average:        11      17       0
-//  Maximum:       224     256       0
+//  Average:        11      18       0
+//  Maximum:       225     256       0
 impl std::ops::Add<AntiCircleOnOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: AntiCircleOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -48,13 +48,12 @@ impl std::ops::Add<AntiCircleOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiCircleRotor> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotor) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -78,13 +77,12 @@ impl std::ops::Add<AntiCircleRotor> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorAligningOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -108,13 +106,12 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group1()[3], 0.0]),
             // e1, e2, e3, e4
@@ -138,13 +135,12 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorAtInfinity> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group1()[3], 0.0]),
             // e1, e2, e3, e4
@@ -168,13 +164,12 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorOnOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], 0.0]),
             // e1, e2, e3, e4
@@ -198,7 +193,6 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversion> for AntiFlector {
@@ -211,7 +205,7 @@ impl std::ops::Add<AntiDipoleInversion> for AntiFlector {
     // yes simd        5        0        0
     //  no simd        8        0        0
     fn add(self, other: AntiDipoleInversion) -> Self::Output {
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
@@ -226,7 +220,6 @@ impl std::ops::Add<AntiDipoleInversion> for AntiFlector {
             // e1, e2, e3, e5
             (other.group3() + self.group1()),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversionAtInfinity> for AntiFlector {
@@ -240,7 +233,7 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for AntiFlector {
     // yes simd        3        0        0
     //  no simd        8        0        0
     fn add(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
-        let addition = AntiDipoleInversionAtInfinity::from_groups(
+        return AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[3])]),
             // e235, e315, e125
@@ -248,7 +241,6 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for AntiFlector {
             // e1, e2, e3, e5
             (other.group2() + self.group1()),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversionOnOrigin> for AntiFlector {
@@ -257,7 +249,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[3])]),
             // e235, e315, e125, e5
@@ -270,7 +262,6 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for AntiFlector {
                 other.group1()[0],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for AntiFlector {
@@ -279,7 +270,7 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e415, e425, e435, e321
@@ -294,7 +285,6 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for AntiFlector {
             // e1, e2, e3, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[3] + self.group1()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleOnOrigin> for AntiFlector {
@@ -303,7 +293,7 @@ impl std::ops::Add<AntiDipoleOnOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        1        0        0
     fn add(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[3])]),
             // e235, e315, e125, e5
@@ -311,13 +301,12 @@ impl std::ops::Add<AntiDipoleOnOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDualNum> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: AntiDualNum) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[1], 0.0]),
             // e1, e2, e3, e4
@@ -341,7 +330,6 @@ impl std::ops::Add<AntiDualNum> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiFlatOrigin> for AntiFlector {
@@ -351,25 +339,23 @@ impl std::ops::Add<AntiFlatOrigin> for AntiFlector {
     // f32        1        0        0
     fn add(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiFlector::from_groups(
+        return AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other[e321])]),
             // e1, e2, e3, e5
             self.group1(),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiFlatOrigin> for AntiFlector {
     fn add_assign(&mut self, other: AntiFlatOrigin) {
         use crate::elements::*;
-        let addition = AntiFlector::from_groups(
+        *self = AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other[e321])]),
             // e1, e2, e3, e5
             self.group1(),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiFlatPoint> for AntiFlector {
@@ -379,14 +365,12 @@ impl std::ops::Add<AntiFlatPoint> for AntiFlector {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: AntiFlatPoint) -> Self::Output {
-        let addition = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (other.group0() + self.group0()), /* e1, e2, e3, e5 */ self.group1());
-        return addition;
+        return AntiFlector::from_groups(/* e235, e315, e125, e321 */ (other.group0() + self.group0()), /* e1, e2, e3, e5 */ self.group1());
     }
 }
 impl std::ops::AddAssign<AntiFlatPoint> for AntiFlector {
     fn add_assign(&mut self, other: AntiFlatPoint) {
-        let addition = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (other.group0() + self.group0()), /* e1, e2, e3, e5 */ self.group1());
-        *self = addition;
+        *self = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (other.group0() + self.group0()), /* e1, e2, e3, e5 */ self.group1());
     }
 }
 impl std::ops::Add<AntiFlector> for AntiFlector {
@@ -396,24 +380,22 @@ impl std::ops::Add<AntiFlector> for AntiFlector {
     //   simd4        2        0        0
     // no simd        8        0        0
     fn add(self, other: AntiFlector) -> Self::Output {
-        let addition = AntiFlector::from_groups(
+        return AntiFlector::from_groups(
             // e235, e315, e125, e321
             (other.group0() + self.group0()),
             // e1, e2, e3, e5
             (other.group1() + self.group1()),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiFlector> for AntiFlector {
     fn add_assign(&mut self, other: AntiFlector) {
-        let addition = AntiFlector::from_groups(
+        *self = AntiFlector::from_groups(
             // e235, e315, e125, e321
             (other.group0() + self.group0()),
             // e1, e2, e3, e5
             (other.group1() + self.group1()),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiFlectorOnOrigin> for AntiFlector {
@@ -422,7 +404,7 @@ impl std::ops::Add<AntiFlectorOnOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        let addition = AntiFlector::from_groups(
+        return AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[0])]),
             // e1, e2, e3, e5
@@ -433,12 +415,11 @@ impl std::ops::Add<AntiFlectorOnOrigin> for AntiFlector {
                 self.group1()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiFlectorOnOrigin> for AntiFlector {
     fn add_assign(&mut self, other: AntiFlectorOnOrigin) {
-        let addition = AntiFlector::from_groups(
+        *self = AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[0])]),
             // e1, e2, e3, e5
@@ -449,13 +430,12 @@ impl std::ops::AddAssign<AntiFlectorOnOrigin> for AntiFlector {
                 self.group1()[3],
             ]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiLine> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: AntiLine) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -479,13 +459,12 @@ impl std::ops::Add<AntiLine> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiLineOnOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: AntiLineOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -509,13 +488,12 @@ impl std::ops::Add<AntiLineOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiMotor> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: AntiMotor) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], 0.0]),
             // e1, e2, e3, e4
@@ -539,13 +517,12 @@ impl std::ops::Add<AntiMotor> for AntiFlector {
             // e3215
             other.group1()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiMotorOnOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: AntiMotorOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], 0.0]),
             // e1, e2, e3, e4
@@ -569,14 +546,13 @@ impl std::ops::Add<AntiMotorOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiMysteryCircleRotor> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other[e31], 0.0]),
             // e1, e2, e3, e4
@@ -600,7 +576,6 @@ impl std::ops::Add<AntiMysteryCircleRotor> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiMysteryDipoleInversion> for AntiFlector {
@@ -609,7 +584,7 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: AntiMysteryDipoleInversion) -> Self::Output {
-        let addition = AntiDipoleInversionAtInfinity::from_groups(
+        return AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[3] + other.group0()[3])]),
             // e235, e315, e125
@@ -622,7 +597,6 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for AntiFlector {
                 self.group1()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiPlane> for AntiFlector {
@@ -632,14 +606,12 @@ impl std::ops::Add<AntiPlane> for AntiFlector {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: AntiPlane) -> Self::Output {
-        let addition = AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0(), /* e1, e2, e3, e5 */ (self.group1() + other.group0()));
-        return addition;
+        return AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0(), /* e1, e2, e3, e5 */ (self.group1() + other.group0()));
     }
 }
 impl std::ops::AddAssign<AntiPlane> for AntiFlector {
     fn add_assign(&mut self, other: AntiPlane) {
-        let addition = AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0(), /* e1, e2, e3, e5 */ (self.group1() + other.group0()));
-        *self = addition;
+        *self = AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0(), /* e1, e2, e3, e5 */ (self.group1() + other.group0()));
     }
 }
 impl std::ops::Add<AntiPlaneOnOrigin> for AntiFlector {
@@ -648,7 +620,7 @@ impl std::ops::Add<AntiPlaneOnOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        let addition = AntiFlector::from_groups(
+        return AntiFlector::from_groups(
             // e235, e315, e125, e321
             self.group0(),
             // e1, e2, e3, e5
@@ -659,12 +631,11 @@ impl std::ops::Add<AntiPlaneOnOrigin> for AntiFlector {
                 self.group1()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiPlaneOnOrigin> for AntiFlector {
     fn add_assign(&mut self, other: AntiPlaneOnOrigin) {
-        let addition = AntiFlector::from_groups(
+        *self = AntiFlector::from_groups(
             // e235, e315, e125, e321
             self.group0(),
             // e1, e2, e3, e5
@@ -675,14 +646,13 @@ impl std::ops::AddAssign<AntiPlaneOnOrigin> for AntiFlector {
                 self.group1()[3],
             ]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiScalar> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     fn add(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([other[e12345], self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
@@ -690,7 +660,6 @@ impl std::ops::Add<AntiScalar> for AntiFlector {
             // e235, e315, e125, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiSphereOnOrigin> for AntiFlector {
@@ -699,7 +668,7 @@ impl std::ops::Add<AntiSphereOnOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: AntiSphereOnOrigin) -> Self::Output {
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e235, e315, e125, e5
@@ -712,13 +681,12 @@ impl std::ops::Add<AntiSphereOnOrigin> for AntiFlector {
                 other.group0()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiVersorEvenOnOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], 0.0]),
             // e1, e2, e3, e4
@@ -742,7 +710,6 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Circle> for AntiFlector {
@@ -751,7 +718,7 @@ impl std::ops::Add<Circle> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: Circle) -> Self::Output {
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
@@ -766,7 +733,6 @@ impl std::ops::Add<Circle> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleAligningOrigin> for AntiFlector {
@@ -775,7 +741,7 @@ impl std::ops::Add<CircleAligningOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: CircleAligningOrigin) -> Self::Output {
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
@@ -790,7 +756,6 @@ impl std::ops::Add<CircleAligningOrigin> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleAtInfinity> for AntiFlector {
@@ -803,7 +768,7 @@ impl std::ops::Add<CircleAtInfinity> for AntiFlector {
     // yes simd        2        0        0
     //  no simd        4        0        0
     fn add(self, other: CircleAtInfinity) -> Self::Output {
-        let addition = AntiDipoleInversionAtInfinity::from_groups(
+        return AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[3] + other.group0()[3])]),
             // e235, e315, e125
@@ -811,7 +776,6 @@ impl std::ops::Add<CircleAtInfinity> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleAtOrigin> for AntiFlector {
@@ -820,7 +784,7 @@ impl std::ops::Add<CircleAtOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: CircleAtOrigin) -> Self::Output {
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e235, e315, e125, e5
@@ -833,13 +797,12 @@ impl std::ops::Add<CircleAtOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleOnOrigin> for AntiFlector {
     type Output = AntiDipoleInversion;
     fn add(self, other: CircleOnOrigin) -> Self::Output {
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
@@ -849,7 +812,6 @@ impl std::ops::Add<CircleOnOrigin> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleOrthogonalOrigin> for AntiFlector {
@@ -858,7 +820,7 @@ impl std::ops::Add<CircleOrthogonalOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[3] + other.group0()[3])]),
             // e235, e315, e125, e5
@@ -871,7 +833,6 @@ impl std::ops::Add<CircleOrthogonalOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotor> for AntiFlector {
@@ -880,7 +841,7 @@ impl std::ops::Add<CircleRotor> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: CircleRotor) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]),
             // e415, e425, e435, e321
@@ -895,7 +856,6 @@ impl std::ops::Add<CircleRotor> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorAligningOrigin> for AntiFlector {
@@ -904,7 +864,7 @@ impl std::ops::Add<CircleRotorAligningOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: CircleRotorAligningOrigin) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]),
             // e415, e425, e435, e321
@@ -919,7 +879,6 @@ impl std::ops::Add<CircleRotorAligningOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for AntiFlector {
@@ -928,7 +887,7 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for AntiFlector {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
-        let addition = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([other.group1()[3], self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
@@ -941,7 +900,6 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for AntiFlector {
                 self.group1()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorAtInfinity> for AntiFlector {
@@ -950,7 +908,7 @@ impl std::ops::Add<CircleRotorAtInfinity> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: CircleRotorAtInfinity) -> Self::Output {
-        let addition = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([other.group1()[3], self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
@@ -963,13 +921,12 @@ impl std::ops::Add<CircleRotorAtInfinity> for AntiFlector {
                 self.group1()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorOnOrigin> for AntiFlector {
     type Output = VersorEven;
     fn add(self, other: CircleRotorOnOrigin) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             other.group0(),
             // e415, e425, e435, e321
@@ -979,13 +936,12 @@ impl std::ops::Add<CircleRotorOnOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Dipole> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: Dipole) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1009,13 +965,12 @@ impl std::ops::Add<Dipole> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleAligningOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: DipoleAligningOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1039,13 +994,12 @@ impl std::ops::Add<DipoleAligningOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleAtInfinity> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: DipoleAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1069,13 +1023,12 @@ impl std::ops::Add<DipoleAtInfinity> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleAtOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: DipoleAtOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1099,13 +1052,12 @@ impl std::ops::Add<DipoleAtOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversion> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: DipoleInversion) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1129,13 +1081,12 @@ impl std::ops::Add<DipoleInversion> for AntiFlector {
             // e3215
             other.group3()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionAligningOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: DipoleInversionAligningOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1159,13 +1110,12 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for AntiFlector {
             // e3215
             other.group2()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionAtInfinity> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: DipoleInversionAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1189,13 +1139,12 @@ impl std::ops::Add<DipoleInversionAtInfinity> for AntiFlector {
             // e3215
             other.group2()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionAtOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: DipoleInversionAtOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1219,13 +1168,12 @@ impl std::ops::Add<DipoleInversionAtOrigin> for AntiFlector {
             // e3215
             other.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionOnOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: DipoleInversionOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1249,13 +1197,12 @@ impl std::ops::Add<DipoleInversionOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionOrthogonalOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1279,13 +1226,12 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for AntiFlector {
             // e3215
             other.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleOnOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: DipoleOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1309,13 +1255,12 @@ impl std::ops::Add<DipoleOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleOrthogonalOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1339,13 +1284,12 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DualNum> for AntiFlector {
     type Output = VersorEven;
     fn add(self, other: DualNum) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
             // e415, e425, e435, e321
@@ -1355,14 +1299,13 @@ impl std::ops::Add<DualNum> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[0]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlatOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1386,13 +1329,12 @@ impl std::ops::Add<FlatOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlatPoint> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: FlatPoint) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1416,13 +1358,12 @@ impl std::ops::Add<FlatPoint> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlatPointAtInfinity> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: FlatPointAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1446,13 +1387,12 @@ impl std::ops::Add<FlatPointAtInfinity> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Flector> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: Flector) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1476,13 +1416,12 @@ impl std::ops::Add<Flector> for AntiFlector {
             // e3215
             other.group1()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlectorAtInfinity> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: FlectorAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1506,13 +1445,12 @@ impl std::ops::Add<FlectorAtInfinity> for AntiFlector {
             // e3215
             other.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlectorOnOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: FlectorOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1536,14 +1474,13 @@ impl std::ops::Add<FlectorOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Horizon> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1567,7 +1504,6 @@ impl std::ops::Add<Horizon> for AntiFlector {
             // e3215
             other[e3215],
         );
-        return addition;
     }
 }
 impl std::ops::Add<Infinity> for AntiFlector {
@@ -1577,25 +1513,23 @@ impl std::ops::Add<Infinity> for AntiFlector {
     // f32        1        0        0
     fn add(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiFlector::from_groups(
+        return AntiFlector::from_groups(
             // e235, e315, e125, e321
             self.group0(),
             // e1, e2, e3, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other[e5])]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<Infinity> for AntiFlector {
     fn add_assign(&mut self, other: Infinity) {
         use crate::elements::*;
-        let addition = AntiFlector::from_groups(
+        *self = AntiFlector::from_groups(
             // e235, e315, e125, e321
             self.group0(),
             // e1, e2, e3, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other[e5])]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<Line> for AntiFlector {
@@ -1605,7 +1539,7 @@ impl std::ops::Add<Line> for AntiFlector {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: Line) -> Self::Output {
-        let addition = AntiDipoleInversionAtInfinity::from_groups(
+        return AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e235, e315, e125
@@ -1613,7 +1547,6 @@ impl std::ops::Add<Line> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<LineAtInfinity> for AntiFlector {
@@ -1622,7 +1555,7 @@ impl std::ops::Add<LineAtInfinity> for AntiFlector {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: LineAtInfinity) -> Self::Output {
-        let addition = AntiFlector::from_groups(
+        return AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([
                 (other.group0()[0] + self.group0()[0]),
@@ -1633,12 +1566,11 @@ impl std::ops::Add<LineAtInfinity> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<LineAtInfinity> for AntiFlector {
     fn add_assign(&mut self, other: LineAtInfinity) {
-        let addition = AntiFlector::from_groups(
+        *self = AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([
                 (other.group0()[0] + self.group0()[0]),
@@ -1649,13 +1581,12 @@ impl std::ops::AddAssign<LineAtInfinity> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<LineOnOrigin> for AntiFlector {
     type Output = AntiDipoleInversionAtInfinity;
     fn add(self, other: LineOnOrigin) -> Self::Output {
-        let addition = AntiDipoleInversionAtInfinity::from_groups(
+        return AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e235, e315, e125
@@ -1663,7 +1594,6 @@ impl std::ops::Add<LineOnOrigin> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Motor> for AntiFlector {
@@ -1673,7 +1603,7 @@ impl std::ops::Add<Motor> for AntiFlector {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: Motor) -> Self::Output {
-        let addition = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([other.group0()[3], self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
@@ -1681,7 +1611,6 @@ impl std::ops::Add<Motor> for AntiFlector {
             // e235, e315, e125, e5
             (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]) + other.group1()),
         );
-        return addition;
     }
 }
 impl std::ops::Add<MotorAtInfinity> for AntiFlector {
@@ -1690,7 +1619,7 @@ impl std::ops::Add<MotorAtInfinity> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: MotorAtInfinity) -> Self::Output {
-        let addition = AntiFlector::from_groups(
+        return AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([
                 (self.group0()[0] + other.group0()[0]),
@@ -1701,12 +1630,11 @@ impl std::ops::Add<MotorAtInfinity> for AntiFlector {
             // e1, e2, e3, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<MotorAtInfinity> for AntiFlector {
     fn add_assign(&mut self, other: MotorAtInfinity) {
-        let addition = AntiFlector::from_groups(
+        *self = AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([
                 (self.group0()[0] + other.group0()[0]),
@@ -1717,13 +1645,12 @@ impl std::ops::AddAssign<MotorAtInfinity> for AntiFlector {
             // e1, e2, e3, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other.group0()[3])]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<MotorOnOrigin> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     fn add(self, other: MotorOnOrigin) -> Self::Output {
-        let addition = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([other.group0()[3], self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
@@ -1731,7 +1658,6 @@ impl std::ops::Add<MotorOnOrigin> for AntiFlector {
             // e235, e315, e125, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<MultiVector> for AntiFlector {
@@ -1745,7 +1671,7 @@ impl std::ops::Add<MultiVector> for AntiFlector {
     //  no simd        8        0        0
     fn add(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             other.group0(),
             // e1, e2, e3, e4
@@ -1774,7 +1700,6 @@ impl std::ops::Add<MultiVector> for AntiFlector {
             // e3215
             other[e45],
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryCircle> for AntiFlector {
@@ -1783,7 +1708,7 @@ impl std::ops::Add<MysteryCircle> for AntiFlector {
     //      add/sub      mul      div
     // f32        1        0        0
     fn add(self, other: MysteryCircle) -> Self::Output {
-        let addition = AntiDipoleInversionAtInfinity::from_groups(
+        return AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[3] + other.group0()[3])]),
             // e235, e315, e125
@@ -1791,7 +1716,6 @@ impl std::ops::Add<MysteryCircle> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryCircleRotor> for AntiFlector {
@@ -1801,7 +1725,7 @@ impl std::ops::Add<MysteryCircleRotor> for AntiFlector {
     // f32        1        0        0
     fn add(self, other: MysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([other[e425], self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
@@ -1809,13 +1733,12 @@ impl std::ops::Add<MysteryCircleRotor> for AntiFlector {
             // e235, e315, e125, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryDipole> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: MysteryDipole) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1839,13 +1762,12 @@ impl std::ops::Add<MysteryDipole> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryDipoleInversion> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: MysteryDipoleInversion) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1869,7 +1791,6 @@ impl std::ops::Add<MysteryDipoleInversion> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryVersorEven> for AntiFlector {
@@ -1878,7 +1799,7 @@ impl std::ops::Add<MysteryVersorEven> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: MysteryVersorEven) -> Self::Output {
-        let addition = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 other.group0()[0],
@@ -1891,13 +1812,12 @@ impl std::ops::Add<MysteryVersorEven> for AntiFlector {
             // e235, e315, e125, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryVersorOdd> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: MysteryVersorOdd) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[0], 0.0]),
             // e1, e2, e3, e4
@@ -1921,13 +1841,12 @@ impl std::ops::Add<MysteryVersorOdd> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullCircleAtOrigin> for AntiFlector {
     type Output = VersorEvenOrthogonalOrigin;
     fn add(self, other: NullCircleAtOrigin) -> Self::Output {
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e235, e315, e125, e5
@@ -1935,13 +1854,12 @@ impl std::ops::Add<NullCircleAtOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullDipoleAtOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: NullDipoleAtOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1965,13 +1883,12 @@ impl std::ops::Add<NullDipoleAtOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullDipoleInversionAtOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1995,14 +1912,13 @@ impl std::ops::Add<NullDipoleInversionAtOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullSphereAtOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -2026,13 +1942,12 @@ impl std::ops::Add<NullSphereAtOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullVersorEvenAtOrigin> for AntiFlector {
     type Output = VersorEvenOrthogonalOrigin;
     fn add(self, other: NullVersorEvenAtOrigin) -> Self::Output {
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e235, e315, e125, e5
@@ -2040,14 +1955,13 @@ impl std::ops::Add<NullVersorEvenAtOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Origin> for AntiFlector {
     type Output = VersorEvenOrthogonalOrigin;
     fn add(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e235, e315, e125, e5
@@ -2055,13 +1969,12 @@ impl std::ops::Add<Origin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other[e4]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Plane> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: Plane) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -2085,13 +1998,12 @@ impl std::ops::Add<Plane> for AntiFlector {
             // e3215
             other.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<PlaneOnOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: PlaneOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -2115,7 +2027,6 @@ impl std::ops::Add<PlaneOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<RoundPoint> for AntiFlector {
@@ -2125,7 +2036,7 @@ impl std::ops::Add<RoundPoint> for AntiFlector {
     // f32        4        0        0
     fn add(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e235, e315, e125, e5
@@ -2138,7 +2049,6 @@ impl std::ops::Add<RoundPoint> for AntiFlector {
                 other.group0()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<RoundPointAtOrigin> for AntiFlector {
@@ -2147,7 +2057,7 @@ impl std::ops::Add<RoundPointAtOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        1        0        0
     fn add(self, other: RoundPointAtOrigin) -> Self::Output {
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e235, e315, e125, e5
@@ -2155,14 +2065,13 @@ impl std::ops::Add<RoundPointAtOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[0]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Scalar> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
@@ -2186,14 +2095,13 @@ impl std::ops::Add<Scalar> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Sphere> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -2217,13 +2125,12 @@ impl std::ops::Add<Sphere> for AntiFlector {
             // e3215
             other.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<SphereAtOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: SphereAtOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -2247,13 +2154,12 @@ impl std::ops::Add<SphereAtOrigin> for AntiFlector {
             // e3215
             other.group0()[0],
         );
-        return addition;
     }
 }
 impl std::ops::Add<SphereOnOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: SphereOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -2277,7 +2183,6 @@ impl std::ops::Add<SphereOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEven> for AntiFlector {
@@ -2290,7 +2195,7 @@ impl std::ops::Add<VersorEven> for AntiFlector {
     // yes simd        5        0        0
     //  no simd        8        0        0
     fn add(self, other: VersorEven) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             other.group0(),
             // e415, e425, e435, e321
@@ -2305,7 +2210,6 @@ impl std::ops::Add<VersorEven> for AntiFlector {
                 other.group3()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenAligningOrigin> for AntiFlector {
@@ -2315,7 +2219,7 @@ impl std::ops::Add<VersorEvenAligningOrigin> for AntiFlector {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: VersorEvenAligningOrigin) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             other.group0(),
             // e415, e425, e435, e321
@@ -2325,7 +2229,6 @@ impl std::ops::Add<VersorEvenAligningOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group1()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenAtInfinity> for AntiFlector {
@@ -2338,7 +2241,7 @@ impl std::ops::Add<VersorEvenAtInfinity> for AntiFlector {
     // yes simd        5        0        0
     //  no simd        8        0        0
     fn add(self, other: VersorEvenAtInfinity) -> Self::Output {
-        let addition = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 other.group0()[0],
@@ -2351,7 +2254,6 @@ impl std::ops::Add<VersorEvenAtInfinity> for AntiFlector {
             // e235, e315, e125, e5
             (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]) + other.group2()),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenAtOrigin> for AntiFlector {
@@ -2361,7 +2263,7 @@ impl std::ops::Add<VersorEvenAtOrigin> for AntiFlector {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: VersorEvenAtOrigin) -> Self::Output {
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e235, e315, e125, e5
@@ -2369,13 +2271,12 @@ impl std::ops::Add<VersorEvenAtOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenOnOrigin> for AntiFlector {
     type Output = VersorEven;
     fn add(self, other: VersorEvenOnOrigin) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             other.group0(),
             // e415, e425, e435, e321
@@ -2385,7 +2286,6 @@ impl std::ops::Add<VersorEvenOnOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group1()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenOrthogonalOrigin> for AntiFlector {
@@ -2398,7 +2298,7 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for AntiFlector {
     // yes simd        5        0        0
     //  no simd        8        0        0
     fn add(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[3] + other.group0()[3])]),
             // e235, e315, e125, e5
@@ -2411,13 +2311,12 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for AntiFlector {
                 other.group2()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorOdd> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: VersorOdd) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], 0.0]),
             // e1, e2, e3, e4
@@ -2441,13 +2340,12 @@ impl std::ops::Add<VersorOdd> for AntiFlector {
             // e3215
             other.group3()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorOddAtInfinity> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: VersorOddAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[0], 0.0]),
             // e1, e2, e3, e4
@@ -2471,13 +2369,12 @@ impl std::ops::Add<VersorOddAtInfinity> for AntiFlector {
             // e3215
             other.group2()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorOddOrthogonalOrigin> for AntiFlector {
     type Output = MultiVector;
     fn add(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], 0.0]),
             // e1, e2, e3, e4
@@ -2501,14 +2398,17 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for AntiFlector {
             // e3215
             other.group1()[3],
         );
-        return addition;
     }
 }
 impl std::ops::BitXor<AntiCircleOnOrigin> for AntiFlector {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        7       18        0
+    //           add/sub      mul      div
+    //      f32        4       12        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        5       14        0
+    //  no simd        7       18        0
     fn bitxor(self, other: AntiCircleOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2516,8 +2416,12 @@ impl std::ops::BitXor<AntiCircleOnOrigin> for AntiFlector {
 impl std::ops::BitXor<AntiCircleRotor> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       21       36        0
+    //           add/sub      mul      div
+    //      f32       17       32        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       18       33        0
+    //  no simd       21       36        0
     fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -2534,8 +2438,12 @@ impl std::ops::BitXor<AntiCircleRotorAligningOrigin> for AntiFlector {
 impl std::ops::BitXor<AntiCircleRotorAligningOriginAtInfinity> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        3        0
+    // Totals...
+    // yes simd        6       11        0
+    //  no simd       12       20        0
     fn bitxor(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2548,8 +2456,12 @@ impl std::ops::BitXorAssign<AntiCircleRotorAligningOriginAtInfinity> for AntiFle
 impl std::ops::BitXor<AntiCircleRotorAtInfinity> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       28        0
+    //           add/sub      mul      div
+    //      f32       12       27        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       12       28        0
+    //  no simd       12       31        0
     fn bitxor(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2557,8 +2469,12 @@ impl std::ops::BitXor<AntiCircleRotorAtInfinity> for AntiFlector {
 impl std::ops::BitXor<AntiCircleRotorOnOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       11       26        0
+    //           add/sub      mul      div
+    //      f32        7       22        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        8       23        0
+    //  no simd       11       26        0
     fn bitxor(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2566,8 +2482,13 @@ impl std::ops::BitXor<AntiCircleRotorOnOrigin> for AntiFlector {
 impl std::ops::BitXor<AntiDipoleInversion> for AntiFlector {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       25       44        0
+    //           add/sub      mul      div
+    //      f32        9       25        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       13       31        0
+    //  no simd       25       47        0
     fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -2575,8 +2496,13 @@ impl std::ops::BitXor<AntiDipoleInversion> for AntiFlector {
 impl std::ops::BitXor<AntiDipoleInversionAtInfinity> for AntiFlector {
     type Output = DipoleInversionAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       26        0
+    //           add/sub      mul      div
+    //      f32        9       16        0
+    //    simd3        1        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       11       19        0
+    //  no simd       16       26        0
     fn bitxor(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2584,8 +2510,13 @@ impl std::ops::BitXor<AntiDipoleInversionAtInfinity> for AntiFlector {
 impl std::ops::BitXor<AntiDipoleInversionOnOrigin> for AntiFlector {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       34        0
+    //           add/sub      mul      div
+    //      f32        8       27        0
+    //    simd3        0        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        9       30        0
+    //  no simd       12       37        0
     fn bitxor(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2593,8 +2524,12 @@ impl std::ops::BitXor<AntiDipoleInversionOnOrigin> for AntiFlector {
 impl std::ops::BitXor<AntiDipoleInversionOrthogonalOrigin> for AntiFlector {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       31        0
+    //           add/sub      mul      div
+    //      f32        3       11        0
+    //    simd4        3        5        0
+    // Totals...
+    // yes simd        6       16        0
+    //  no simd       15       31        0
     fn bitxor(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2602,8 +2537,12 @@ impl std::ops::BitXor<AntiDipoleInversionOrthogonalOrigin> for AntiFlector {
 impl std::ops::BitXor<AntiDipoleOnOrigin> for AntiFlector {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2       11        0
+    //           add/sub      mul      div
+    //      f32        2        3        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        2        5        0
+    //  no simd        2       11        0
     fn bitxor(self, other: AntiDipoleOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2611,8 +2550,12 @@ impl std::ops::BitXor<AntiDipoleOnOrigin> for AntiFlector {
 impl std::ops::BitXor<AntiDualNum> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        9        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        9        0
     fn bitxor(self, other: AntiDualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -2639,8 +2582,12 @@ impl std::ops::BitXor<AntiFlatPoint> for AntiFlector {
 impl std::ops::BitXor<AntiFlector> for AntiFlector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       13       20        0
+    //           add/sub      mul      div
+    //      f32        8       12        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       10       14        0
+    //  no simd       16       20        0
     fn bitxor(self, other: AntiFlector) -> Self::Output {
         return self.wedge(other);
     }
@@ -2657,8 +2604,12 @@ impl std::ops::BitXor<AntiFlectorOnOrigin> for AntiFlector {
 impl std::ops::BitXor<AntiLine> for AntiFlector {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn bitxor(self, other: AntiLine) -> Self::Output {
         return self.wedge(other);
     }
@@ -2675,8 +2626,12 @@ impl std::ops::BitXor<AntiLineOnOrigin> for AntiFlector {
 impl std::ops::BitXor<AntiMotor> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        3        0
+    // Totals...
+    // yes simd        6       11        0
+    //  no simd       12       20        0
     fn bitxor(self, other: AntiMotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -2689,8 +2644,12 @@ impl std::ops::BitXorAssign<AntiMotor> for AntiFlector {
 impl std::ops::BitXor<AntiMotorOnOrigin> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       14        0
+    //           add/sub      mul      div
+    //      f32        2        6        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd        3        8        0
+    //  no simd        6       14        0
     fn bitxor(self, other: AntiMotorOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2703,8 +2662,12 @@ impl std::ops::BitXorAssign<AntiMotorOnOrigin> for AntiFlector {
 impl std::ops::BitXor<AntiMysteryCircleRotor> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       22        0
+    //           add/sub      mul      div
+    //      f32        6       21        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        6       22        0
+    //  no simd        6       25        0
     fn bitxor(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2713,8 +2676,13 @@ impl std::ops::BitXor<AntiMysteryCircleRotor> for AntiFlector {
 impl std::ops::BitXor<AntiMysteryDipoleInversion> for AntiFlector {
     type Output = DipoleInversionAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       22        0
+    //           add/sub      mul      div
+    //      f32        5       12        0
+    //    simd3        0        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        6       15        0
+    //  no simd        9       22        0
     fn bitxor(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -2722,8 +2690,12 @@ impl std::ops::BitXor<AntiMysteryDipoleInversion> for AntiFlector {
 impl std::ops::BitXor<AntiPlane> for AntiFlector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       16        0
+    //           add/sub      mul      div
+    //      f32        5       15        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        6       16        0
+    //  no simd        9       19        0
     fn bitxor(self, other: AntiPlane) -> Self::Output {
         return self.wedge(other);
     }
@@ -2740,8 +2712,13 @@ impl std::ops::BitXor<AntiPlaneOnOrigin> for AntiFlector {
 impl std::ops::BitXor<AntiSphereOnOrigin> for AntiFlector {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       31        0
+    //           add/sub      mul      div
+    //      f32        5       17        0
+    //    simd3        0        2        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        5       21        0
+    //  no simd        5       31        0
     fn bitxor(self, other: AntiSphereOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2749,8 +2726,12 @@ impl std::ops::BitXor<AntiSphereOnOrigin> for AntiFlector {
 impl std::ops::BitXor<AntiVersorEvenOnOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       27        0
+    //           add/sub      mul      div
+    //      f32        7       19        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        9       21        0
+    //  no simd       15       27        0
     fn bitxor(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2758,8 +2739,12 @@ impl std::ops::BitXor<AntiVersorEvenOnOrigin> for AntiFlector {
 impl std::ops::BitXor<Circle> for AntiFlector {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       11       16        0
+    //           add/sub      mul      div
+    //      f32        3        8        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        5       10        0
+    //  no simd       11       16        0
     fn bitxor(self, other: Circle) -> Self::Output {
         return self.wedge(other);
     }
@@ -2767,8 +2752,12 @@ impl std::ops::BitXor<Circle> for AntiFlector {
 impl std::ops::BitXor<CircleAligningOrigin> for AntiFlector {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       10       15        0
+    //           add/sub      mul      div
+    //      f32        2        8        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        4       10        0
+    //  no simd       10       16        0
     fn bitxor(self, other: CircleAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2776,8 +2765,12 @@ impl std::ops::BitXor<CircleAligningOrigin> for AntiFlector {
 impl std::ops::BitXor<CircleAtInfinity> for AntiFlector {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       10        0
+    //           add/sub      mul      div
+    //      f32        2        6        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        3        7        0
+    //  no simd        6       10        0
     fn bitxor(self, other: CircleAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2794,8 +2787,12 @@ impl std::ops::BitXor<CircleAtOrigin> for AntiFlector {
 impl std::ops::BitXor<CircleOnOrigin> for AntiFlector {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn bitxor(self, other: CircleOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2812,8 +2809,12 @@ impl std::ops::BitXor<CircleOrthogonalOrigin> for AntiFlector {
 impl std::ops::BitXor<CircleRotor> for AntiFlector {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       11       16        0
+    //           add/sub      mul      div
+    //      f32        3        8        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        5       10        0
+    //  no simd       11       16        0
     fn bitxor(self, other: CircleRotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -2821,8 +2822,12 @@ impl std::ops::BitXor<CircleRotor> for AntiFlector {
 impl std::ops::BitXor<CircleRotorAligningOrigin> for AntiFlector {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       10       15        0
+    //           add/sub      mul      div
+    //      f32        2        8        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        4       10        0
+    //  no simd       10       16        0
     fn bitxor(self, other: CircleRotorAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2830,8 +2835,12 @@ impl std::ops::BitXor<CircleRotorAligningOrigin> for AntiFlector {
 impl std::ops::BitXor<CircleRotorAligningOriginAtInfinity> for AntiFlector {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5        9        0
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        2        6        0
+    //  no simd        5        9        0
     fn bitxor(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2839,8 +2848,12 @@ impl std::ops::BitXor<CircleRotorAligningOriginAtInfinity> for AntiFlector {
 impl std::ops::BitXor<CircleRotorAtInfinity> for AntiFlector {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       10        0
+    //           add/sub      mul      div
+    //      f32        2        6        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        3        7        0
+    //  no simd        6       10        0
     fn bitxor(self, other: CircleRotorAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2848,8 +2861,12 @@ impl std::ops::BitXor<CircleRotorAtInfinity> for AntiFlector {
 impl std::ops::BitXor<CircleRotorOnOrigin> for AntiFlector {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn bitxor(self, other: CircleRotorOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2857,8 +2874,13 @@ impl std::ops::BitXor<CircleRotorOnOrigin> for AntiFlector {
 impl std::ops::BitXor<Dipole> for AntiFlector {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       17       28        0
+    //           add/sub      mul      div
+    //      f32       10       18        0
+    //    simd3        1        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       12       21        0
+    //  no simd       17       28        0
     fn bitxor(self, other: Dipole) -> Self::Output {
         return self.wedge(other);
     }
@@ -2866,8 +2888,12 @@ impl std::ops::BitXor<Dipole> for AntiFlector {
 impl std::ops::BitXor<DipoleAligningOrigin> for AntiFlector {
     type Output = CircleRotorAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       22        0
+    //           add/sub      mul      div
+    //      f32        9       16        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd       10       18        0
+    //  no simd       12       22        0
     fn bitxor(self, other: DipoleAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2884,8 +2910,12 @@ impl std::ops::BitXor<DipoleAtInfinity> for AntiFlector {
 impl std::ops::BitXor<DipoleAtOrigin> for AntiFlector {
     type Output = CircleRotorAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       18        0
+    //           add/sub      mul      div
+    //      f32        5        9        0
+    //    simd3        1        3        0
+    // Totals...
+    // yes simd        6       12        0
+    //  no simd        8       18        0
     fn bitxor(self, other: DipoleAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2893,8 +2923,13 @@ impl std::ops::BitXor<DipoleAtOrigin> for AntiFlector {
 impl std::ops::BitXor<DipoleInversion> for AntiFlector {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       21       32        0
+    //           add/sub      mul      div
+    //      f32        6       17        0
+    //    simd3        1        2        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       10       22        0
+    //  no simd       21       35        0
     fn bitxor(self, other: DipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -2902,8 +2937,13 @@ impl std::ops::BitXor<DipoleInversion> for AntiFlector {
 impl std::ops::BitXor<DipoleInversionAligningOrigin> for AntiFlector {
     type Output = CircleRotorAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       26        0
+    //           add/sub      mul      div
+    //      f32        9       19        0
+    //    simd3        1        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       11       22        0
+    //  no simd       16       29        0
     fn bitxor(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2911,8 +2951,12 @@ impl std::ops::BitXor<DipoleInversionAligningOrigin> for AntiFlector {
 impl std::ops::BitXor<DipoleInversionAtInfinity> for AntiFlector {
     type Output = CircleRotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       11       22        0
+    //           add/sub      mul      div
+    //      f32        3       17        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        5       19        0
+    //  no simd       11       25        0
     fn bitxor(self, other: DipoleInversionAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2920,8 +2964,13 @@ impl std::ops::BitXor<DipoleInversionAtInfinity> for AntiFlector {
 impl std::ops::BitXor<DipoleInversionAtOrigin> for AntiFlector {
     type Output = CircleRotorAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       19        0
+    //           add/sub      mul      div
+    //      f32        5       15        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        6       17        0
+    //  no simd        9       22        0
     fn bitxor(self, other: DipoleInversionAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2929,8 +2978,13 @@ impl std::ops::BitXor<DipoleInversionAtOrigin> for AntiFlector {
 impl std::ops::BitXor<DipoleInversionOnOrigin> for AntiFlector {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       13       20        0
+    //           add/sub      mul      div
+    //      f32        5        6        0
+    //    simd3        1        2        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        8       10        0
+    //  no simd       16       20        0
     fn bitxor(self, other: DipoleInversionOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2938,8 +2992,12 @@ impl std::ops::BitXor<DipoleInversionOnOrigin> for AntiFlector {
 impl std::ops::BitXor<DipoleInversionOrthogonalOrigin> for AntiFlector {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       25        0
+    //           add/sub      mul      div
+    //      f32       10       21        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       11       22        0
+    //  no simd       14       25        0
     fn bitxor(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2947,8 +3005,13 @@ impl std::ops::BitXor<DipoleInversionOrthogonalOrigin> for AntiFlector {
 impl std::ops::BitXor<DipoleOnOrigin> for AntiFlector {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       16        0
+    //           add/sub      mul      div
+    //      f32        2        6        0
+    //    simd3        1        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        4        9        0
+    //  no simd        9       16        0
     fn bitxor(self, other: DipoleOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2956,8 +3019,12 @@ impl std::ops::BitXor<DipoleOnOrigin> for AntiFlector {
 impl std::ops::BitXor<DipoleOrthogonalOrigin> for AntiFlector {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       13       24        0
+    //           add/sub      mul      div
+    //      f32       10       18        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd       11       20        0
+    //  no simd       13       24        0
     fn bitxor(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2965,8 +3032,9 @@ impl std::ops::BitXor<DipoleOrthogonalOrigin> for AntiFlector {
 impl std::ops::BitXor<DualNum> for AntiFlector {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn bitxor(self, other: DualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -2974,8 +3042,9 @@ impl std::ops::BitXor<DualNum> for AntiFlector {
 impl std::ops::BitXor<FlatOrigin> for AntiFlector {
     type Output = MotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn bitxor(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2984,8 +3053,12 @@ impl std::ops::BitXor<FlatOrigin> for AntiFlector {
 impl std::ops::BitXor<FlatPoint> for AntiFlector {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3       14        0
+    //           add/sub      mul      div
+    //      f32        3        8        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        3       10        0
+    //  no simd        3       14        0
     fn bitxor(self, other: FlatPoint) -> Self::Output {
         return self.wedge(other);
     }
@@ -2993,8 +3066,9 @@ impl std::ops::BitXor<FlatPoint> for AntiFlector {
 impl std::ops::BitXor<FlatPointAtInfinity> for AntiFlector {
     type Output = LineAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        6        0
+    //          add/sub      mul      div
+    //   simd3        1        2        0
+    // no simd        3        6        0
     fn bitxor(self, other: FlatPointAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3002,8 +3076,13 @@ impl std::ops::BitXor<FlatPointAtInfinity> for AntiFlector {
 impl std::ops::BitXor<Flector> for AntiFlector {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       16        0
+    //           add/sub      mul      div
+    //      f32        1        2        0
+    //    simd3        0        2        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        3        6        0
+    //  no simd        9       16        0
     fn bitxor(self, other: Flector) -> Self::Output {
         return self.wedge(other);
     }
@@ -3029,8 +3108,9 @@ impl std::ops::BitXor<FlectorOnOrigin> for AntiFlector {
 impl std::ops::BitXor<Infinity> for AntiFlector {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn bitxor(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3039,8 +3119,12 @@ impl std::ops::BitXor<Infinity> for AntiFlector {
 impl std::ops::BitXor<Line> for AntiFlector {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5        9        0
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        2        6        0
+    //  no simd        5        9        0
     fn bitxor(self, other: Line) -> Self::Output {
         return self.wedge(other);
     }
@@ -3057,8 +3141,9 @@ impl std::ops::BitXor<LineAtInfinity> for AntiFlector {
 impl std::ops::BitXor<LineOnOrigin> for AntiFlector {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        6        0
+    //          add/sub      mul      div
+    //   simd3        1        2        0
+    // no simd        3        6        0
     fn bitxor(self, other: LineOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3066,8 +3151,12 @@ impl std::ops::BitXor<LineOnOrigin> for AntiFlector {
 impl std::ops::BitXor<Motor> for AntiFlector {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       13        0
+    //           add/sub      mul      div
+    //      f32        2        9        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        3       10        0
+    //  no simd        6       13        0
     fn bitxor(self, other: Motor) -> Self::Output {
         return self.wedge(other);
     }
@@ -3093,8 +3182,13 @@ impl std::ops::BitXor<MotorOnOrigin> for AntiFlector {
 impl std::ops::BitXor<MultiVector> for AntiFlector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       50       84        0
+    //           add/sub      mul      div
+    //      f32       26       46        0
+    //    simd3        4        6        0
+    //    simd4        3        5        0
+    // Totals...
+    // yes simd       33       57        0
+    //  no simd       50       84        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3121,8 +3215,12 @@ impl std::ops::BitXor<MysteryCircleRotor> for AntiFlector {
 impl std::ops::BitXor<MysteryDipole> for AntiFlector {
     type Output = CircleRotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2       14        0
+    //           add/sub      mul      div
+    //      f32        2        9        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        2       11        0
+    //  no simd        2       17        0
     fn bitxor(self, other: MysteryDipole) -> Self::Output {
         return self.wedge(other);
     }
@@ -3139,8 +3237,13 @@ impl std::ops::BitXor<MysteryDipoleInversion> for AntiFlector {
 impl std::ops::BitXor<MysteryVersorEven> for AntiFlector {
     type Output = DipoleInversionAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       22        0
+    //           add/sub      mul      div
+    //      f32        5       12        0
+    //    simd3        0        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        6       15        0
+    //  no simd        9       22        0
     fn bitxor(self, other: MysteryVersorEven) -> Self::Output {
         return self.wedge(other);
     }
@@ -3166,8 +3269,12 @@ impl std::ops::BitXor<NullCircleAtOrigin> for AntiFlector {
 impl std::ops::BitXor<NullDipoleAtOrigin> for AntiFlector {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       12        0
+    //           add/sub      mul      div
+    //      f32        5        9        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        5       10        0
+    //  no simd        5       12        0
     fn bitxor(self, other: NullDipoleAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3175,8 +3282,13 @@ impl std::ops::BitXor<NullDipoleAtOrigin> for AntiFlector {
 impl std::ops::BitXor<NullDipoleInversionAtOrigin> for AntiFlector {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       13        0
+    //           add/sub      mul      div
+    //      f32        1        2        0
+    //    simd3        0        1        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        3        5        0
+    //  no simd        9       13        0
     fn bitxor(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3194,8 +3306,12 @@ impl std::ops::BitXor<NullSphereAtOrigin> for AntiFlector {
 impl std::ops::BitXor<NullVersorEvenAtOrigin> for AntiFlector {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       18        0
+    //           add/sub      mul      div
+    //      f32        2        9        0
+    //    simd4        1        3        0
+    // Totals...
+    // yes simd        3       12        0
+    //  no simd        6       21        0
     fn bitxor(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3203,8 +3319,9 @@ impl std::ops::BitXor<NullVersorEvenAtOrigin> for AntiFlector {
 impl std::ops::BitXor<Origin> for AntiFlector {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn bitxor(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3231,8 +3348,12 @@ impl std::ops::BitXor<PlaneOnOrigin> for AntiFlector {
 impl std::ops::BitXor<RoundPoint> for AntiFlector {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       32        0
+    //           add/sub      mul      div
+    //      f32        9       26        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        9       28        0
+    //  no simd        9       32        0
     fn bitxor(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3241,8 +3362,12 @@ impl std::ops::BitXor<RoundPoint> for AntiFlector {
 impl std::ops::BitXor<RoundPointAtOrigin> for AntiFlector {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       20        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        5        0
+    // Totals...
+    // yes simd        0        9        0
+    //  no simd        0       24        0
     fn bitxor(self, other: RoundPointAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3250,8 +3375,9 @@ impl std::ops::BitXor<RoundPointAtOrigin> for AntiFlector {
 impl std::ops::BitXor<Scalar> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn bitxor(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3294,8 +3420,13 @@ impl std::ops::BitXor<SphereOnOrigin> for AntiFlector {
 impl std::ops::BitXor<VersorEven> for AntiFlector {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       25       44        0
+    //           add/sub      mul      div
+    //      f32       12       22        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       16       28        0
+    //  no simd       28       44        0
     fn bitxor(self, other: VersorEven) -> Self::Output {
         return self.wedge(other);
     }
@@ -3303,8 +3434,12 @@ impl std::ops::BitXor<VersorEven> for AntiFlector {
 impl std::ops::BitXor<VersorEvenAligningOrigin> for AntiFlector {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       31        0
+    //           add/sub      mul      div
+    //      f32        7       15        0
+    //    simd4        2        4        0
+    // Totals...
+    // yes simd        9       19        0
+    //  no simd       15       31        0
     fn bitxor(self, other: VersorEvenAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3312,8 +3447,13 @@ impl std::ops::BitXor<VersorEvenAligningOrigin> for AntiFlector {
 impl std::ops::BitXor<VersorEvenAtInfinity> for AntiFlector {
     type Output = DipoleInversionAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       26        0
+    //           add/sub      mul      div
+    //      f32        9       16        0
+    //    simd3        1        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       11       19        0
+    //  no simd       16       26        0
     fn bitxor(self, other: VersorEvenAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3321,8 +3461,12 @@ impl std::ops::BitXor<VersorEvenAtInfinity> for AntiFlector {
 impl std::ops::BitXor<VersorEvenAtOrigin> for AntiFlector {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       25        0
+    //           add/sub      mul      div
+    //      f32        5       16        0
+    //    simd4        1        3        0
+    // Totals...
+    // yes simd        6       19        0
+    //  no simd        9       28        0
     fn bitxor(self, other: VersorEvenAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3330,8 +3474,12 @@ impl std::ops::BitXor<VersorEvenAtOrigin> for AntiFlector {
 impl std::ops::BitXor<VersorEvenOnOrigin> for AntiFlector {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       24        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        4        0
+    // Totals...
+    // yes simd        6       12        0
+    //  no simd       12       24        0
     fn bitxor(self, other: VersorEvenOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3339,8 +3487,13 @@ impl std::ops::BitXor<VersorEvenOnOrigin> for AntiFlector {
 impl std::ops::BitXor<VersorEvenOrthogonalOrigin> for AntiFlector {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       19       38        0
+    //           add/sub      mul      div
+    //      f32       10       23        0
+    //    simd3        0        2        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       13       28        0
+    //  no simd       22       41        0
     fn bitxor(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3348,8 +3501,12 @@ impl std::ops::BitXor<VersorEvenOrthogonalOrigin> for AntiFlector {
 impl std::ops::BitXor<VersorOdd> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       25       40        0
+    //           add/sub      mul      div
+    //      f32       15       24        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       19       28        0
+    //  no simd       31       40        0
     fn bitxor(self, other: VersorOdd) -> Self::Output {
         return self.wedge(other);
     }
@@ -3366,8 +3523,12 @@ impl std::ops::BitXor<VersorOddAtInfinity> for AntiFlector {
 impl std::ops::BitXor<VersorOddOrthogonalOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       18       33        0
+    //           add/sub      mul      div
+    //      f32       13       25        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       15       27        0
+    //  no simd       21       33        0
     fn bitxor(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3471,8 +3632,12 @@ impl From<MotorAtInfinity> for AntiFlector {
 impl std::ops::Mul<AntiCircleOnOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       44       60        0
+    //           add/sub      mul      div
+    //      f32       28       45        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       32       49        0
+    //  no simd       44       61        0
     fn mul(self, other: AntiCircleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3480,8 +3645,12 @@ impl std::ops::Mul<AntiCircleOnOrigin> for AntiFlector {
 impl std::ops::Mul<AntiCircleRotor> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       28       45        0
+    //    simd4       11       11        0
+    // Totals...
+    // yes simd       39       56        0
+    //  no simd       72       89        0
     fn mul(self, other: AntiCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3489,8 +3658,12 @@ impl std::ops::Mul<AntiCircleRotor> for AntiFlector {
 impl std::ops::Mul<AntiCircleRotorAligningOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       64       80        0
+    //           add/sub      mul      div
+    //      f32       32       49        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       40       57        0
+    //  no simd       64       81        0
     fn mul(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3498,8 +3671,12 @@ impl std::ops::Mul<AntiCircleRotorAligningOrigin> for AntiFlector {
 impl std::ops::Mul<AntiCircleRotorAligningOriginAtInfinity> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       44        0
+    //           add/sub      mul      div
+    //      f32       20       28        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       24       32        0
+    //  no simd       36       44        0
     fn mul(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3512,8 +3689,12 @@ impl std::ops::MulAssign<AntiCircleRotorAligningOriginAtInfinity> for AntiFlecto
 impl std::ops::Mul<AntiCircleRotorAtInfinity> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       56        0
+    //           add/sub      mul      div
+    //      f32       12       28        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       19       35        0
+    //  no simd       40       56        0
     fn mul(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3521,8 +3702,12 @@ impl std::ops::Mul<AntiCircleRotorAtInfinity> for AntiFlector {
 impl std::ops::Mul<AntiCircleRotorOnOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       52       68        0
+    //           add/sub      mul      div
+    //      f32       21       39        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       29       47        0
+    //  no simd       53       71        0
     fn mul(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3530,8 +3715,12 @@ impl std::ops::Mul<AntiCircleRotorOnOrigin> for AntiFlector {
 impl std::ops::Mul<AntiDipoleInversion> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      104      120        0
+    //           add/sub      mul      div
+    //      f32       36       58        0
+    //    simd4       17       17        0
+    // Totals...
+    // yes simd       53       75        0
+    //  no simd      104      126        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3539,8 +3728,12 @@ impl std::ops::Mul<AntiDipoleInversion> for AntiFlector {
 impl std::ops::Mul<AntiDipoleInversionAtInfinity> for AntiFlector {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       60       72        0
+    //           add/sub      mul      div
+    //      f32       28       37        0
+    //    simd4        9        9        0
+    // Totals...
+    // yes simd       37       46        0
+    //  no simd       64       73        0
     fn mul(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3548,8 +3741,12 @@ impl std::ops::Mul<AntiDipoleInversionAtInfinity> for AntiFlector {
 impl std::ops::Mul<AntiDipoleInversionOnOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       64       80        0
+    //           add/sub      mul      div
+    //      f32       32       51        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       40       59        0
+    //  no simd       64       83        0
     fn mul(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3557,8 +3754,12 @@ impl std::ops::Mul<AntiDipoleInversionOnOrigin> for AntiFlector {
 impl std::ops::Mul<AntiDipoleInversionOrthogonalOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       20       39        0
+    //    simd4       13       13        0
+    // Totals...
+    // yes simd       33       52        0
+    //  no simd       72       91        0
     fn mul(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3566,8 +3767,12 @@ impl std::ops::Mul<AntiDipoleInversionOrthogonalOrigin> for AntiFlector {
 impl std::ops::Mul<AntiDipoleOnOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       48        0
+    //           add/sub      mul      div
+    //      f32       16       39        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       19       42        0
+    //  no simd       28       51        0
     fn mul(self, other: AntiDipoleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3575,8 +3780,12 @@ impl std::ops::Mul<AntiDipoleOnOrigin> for AntiFlector {
 impl std::ops::Mul<AntiDualNum> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       20        0
+    //           add/sub      mul      div
+    //      f32        4       12        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        4       14        0
+    //  no simd        4       20        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3584,8 +3793,9 @@ impl std::ops::Mul<AntiDualNum> for AntiFlector {
 impl std::ops::Mul<AntiFlatOrigin> for AntiFlector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn mul(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3594,8 +3804,12 @@ impl std::ops::Mul<AntiFlatOrigin> for AntiFlector {
 impl std::ops::Mul<AntiFlatPoint> for AntiFlector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       24        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        4        0
+    // Totals...
+    // yes simd        6       12        0
+    //  no simd       12       24        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3603,8 +3817,12 @@ impl std::ops::Mul<AntiFlatPoint> for AntiFlector {
 impl std::ops::Mul<AntiFlector> for AntiFlector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       48        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       16       24        0
+    //  no simd       40       48        0
     fn mul(self, other: AntiFlector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3612,8 +3830,12 @@ impl std::ops::Mul<AntiFlector> for AntiFlector {
 impl std::ops::Mul<AntiFlectorOnOrigin> for AntiFlector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       12       20        0
+    //  no simd       24       32        0
     fn mul(self, other: AntiFlectorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3621,8 +3843,12 @@ impl std::ops::Mul<AntiFlectorOnOrigin> for AntiFlector {
 impl std::ops::Mul<AntiLine> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       36        0
+    //           add/sub      mul      div
+    //      f32       20       28        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       22       30        0
+    //  no simd       28       36        0
     fn mul(self, other: AntiLine) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3649,8 +3875,12 @@ impl std::ops::MulAssign<AntiLineOnOrigin> for AntiFlector {
 impl std::ops::Mul<AntiMotor> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       48        0
+    //           add/sub      mul      div
+    //      f32       12       16        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       20       24        0
+    //  no simd       44       48        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3663,8 +3893,12 @@ impl std::ops::MulAssign<AntiMotor> for AntiFlector {
 impl std::ops::Mul<AntiMotorOnOrigin> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       12       20        0
+    //  no simd       24       32        0
     fn mul(self, other: AntiMotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3677,8 +3911,12 @@ impl std::ops::MulAssign<AntiMotorOnOrigin> for AntiFlector {
 impl std::ops::Mul<AntiMysteryCircleRotor> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       44        0
+    //           add/sub      mul      div
+    //      f32       16       32        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       19       35        0
+    //  no simd       28       44        0
     fn mul(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3687,8 +3925,12 @@ impl std::ops::Mul<AntiMysteryCircleRotor> for AntiFlector {
 impl std::ops::Mul<AntiMysteryDipoleInversion> for AntiFlector {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       44       56        0
+    //           add/sub      mul      div
+    //      f32       23       33        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       29       39        0
+    //  no simd       47       57        0
     fn mul(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3696,8 +3938,12 @@ impl std::ops::Mul<AntiMysteryDipoleInversion> for AntiFlector {
 impl std::ops::Mul<AntiPlane> for AntiFlector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       28        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       11       19        0
+    //  no simd       20       28        0
     fn mul(self, other: AntiPlane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3705,8 +3951,12 @@ impl std::ops::Mul<AntiPlane> for AntiFlector {
 impl std::ops::Mul<AntiPlaneOnOrigin> for AntiFlector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       24        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       10       18        0
+    //  no simd       16       24        0
     fn mul(self, other: AntiPlaneOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3714,8 +3964,9 @@ impl std::ops::Mul<AntiPlaneOnOrigin> for AntiFlector {
 impl std::ops::Mul<AntiScalar> for AntiFlector {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       12        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn mul(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3733,8 +3984,12 @@ impl std::ops::Mul<AntiSphereOnOrigin> for AntiFlector {
 impl std::ops::Mul<AntiVersorEvenOnOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       64       80        0
+    //           add/sub      mul      div
+    //      f32       21       39        0
+    //    simd4       11       11        0
+    // Totals...
+    // yes simd       32       50        0
+    //  no simd       65       83        0
     fn mul(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3742,8 +3997,12 @@ impl std::ops::Mul<AntiVersorEvenOnOrigin> for AntiFlector {
 impl std::ops::Mul<Circle> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       64       80        0
+    //           add/sub      mul      div
+    //      f32       24       46        0
+    //    simd4       10       10        0
+    // Totals...
+    // yes simd       34       56        0
+    //  no simd       64       86        0
     fn mul(self, other: Circle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3751,8 +4010,12 @@ impl std::ops::Mul<Circle> for AntiFlector {
 impl std::ops::Mul<CircleAligningOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       56       72        0
+    //           add/sub      mul      div
+    //      f32       28       47        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       35       54        0
+    //  no simd       56       75        0
     fn mul(self, other: CircleAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3760,8 +4023,12 @@ impl std::ops::Mul<CircleAligningOrigin> for AntiFlector {
 impl std::ops::Mul<CircleAtInfinity> for AntiFlector {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       32       48        0
+    //           add/sub      mul      div
+    //      f32       23       36        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       26       39        0
+    //  no simd       35       48        0
     fn mul(self, other: CircleAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3769,8 +4036,12 @@ impl std::ops::Mul<CircleAtInfinity> for AntiFlector {
 impl std::ops::Mul<CircleAtOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       32       48        0
+    //           add/sub      mul      div
+    //      f32       20       36        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       23       39        0
+    //  no simd       32       48        0
     fn mul(self, other: CircleAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3778,8 +4049,12 @@ impl std::ops::Mul<CircleAtOrigin> for AntiFlector {
 impl std::ops::Mul<CircleOnOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       44       60        0
+    //           add/sub      mul      div
+    //      f32       28       47        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       32       51        0
+    //  no simd       44       63        0
     fn mul(self, other: CircleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3787,8 +4062,12 @@ impl std::ops::Mul<CircleOnOrigin> for AntiFlector {
 impl std::ops::Mul<CircleOrthogonalOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       56        0
+    //           add/sub      mul      div
+    //      f32       16       35        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       22       41        0
+    //  no simd       40       59        0
     fn mul(self, other: CircleOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3796,8 +4075,12 @@ impl std::ops::Mul<CircleOrthogonalOrigin> for AntiFlector {
 impl std::ops::Mul<CircleRotor> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       32       51        0
+    //    simd4       10       10        0
+    // Totals...
+    // yes simd       42       61        0
+    //  no simd       72       91        0
     fn mul(self, other: CircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3805,8 +4088,12 @@ impl std::ops::Mul<CircleRotor> for AntiFlector {
 impl std::ops::Mul<CircleRotorAligningOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       64       80        0
+    //           add/sub      mul      div
+    //      f32       36       55        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       43       62        0
+    //  no simd       64       83        0
     fn mul(self, other: CircleRotorAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3814,8 +4101,12 @@ impl std::ops::Mul<CircleRotorAligningOrigin> for AntiFlector {
 impl std::ops::Mul<CircleRotorAligningOriginAtInfinity> for AntiFlector {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       44        0
+    //           add/sub      mul      div
+    //      f32       16       25        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       21       30        0
+    //  no simd       36       45        0
     fn mul(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3823,8 +4114,12 @@ impl std::ops::Mul<CircleRotorAligningOriginAtInfinity> for AntiFlector {
 impl std::ops::Mul<CircleRotorAtInfinity> for AntiFlector {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       56        0
+    //           add/sub      mul      div
+    //      f32       28       44        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       31       47        0
+    //  no simd       40       56        0
     fn mul(self, other: CircleRotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3832,8 +4127,12 @@ impl std::ops::Mul<CircleRotorAtInfinity> for AntiFlector {
 impl std::ops::Mul<CircleRotorOnOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       52       68        0
+    //           add/sub      mul      div
+    //      f32       28       47        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       34       53        0
+    //  no simd       52       71        0
     fn mul(self, other: CircleRotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3841,8 +4140,12 @@ impl std::ops::Mul<CircleRotorOnOrigin> for AntiFlector {
 impl std::ops::Mul<Dipole> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       64       80        0
+    //           add/sub      mul      div
+    //      f32       24       41        0
+    //    simd4       10       10        0
+    // Totals...
+    // yes simd       34       51        0
+    //  no simd       64       81        0
     fn mul(self, other: Dipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3850,8 +4153,12 @@ impl std::ops::Mul<Dipole> for AntiFlector {
 impl std::ops::Mul<DipoleAligningOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       56        0
+    //           add/sub      mul      div
+    //      f32       12       29        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       19       36        0
+    //  no simd       40       57        0
     fn mul(self, other: DipoleAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3859,8 +4166,12 @@ impl std::ops::Mul<DipoleAligningOrigin> for AntiFlector {
 impl std::ops::Mul<DipoleAtInfinity> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       32       48        0
+    //           add/sub      mul      div
+    //      f32        8       24        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       14       30        0
+    //  no simd       32       48        0
     fn mul(self, other: DipoleAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3868,8 +4179,12 @@ impl std::ops::Mul<DipoleAtInfinity> for AntiFlector {
 impl std::ops::Mul<DipoleAtOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       32       48        0
+    //           add/sub      mul      div
+    //      f32       20       36        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       23       39        0
+    //  no simd       32       48        0
     fn mul(self, other: DipoleAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3877,8 +4192,12 @@ impl std::ops::Mul<DipoleAtOrigin> for AntiFlector {
 impl std::ops::Mul<DipoleInversion> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      104      120        0
+    //           add/sub      mul      div
+    //      f32       32       49        0
+    //    simd4       18       18        0
+    // Totals...
+    // yes simd       50       67        0
+    //  no simd      104      121        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3886,8 +4205,12 @@ impl std::ops::Mul<DipoleInversion> for AntiFlector {
 impl std::ops::Mul<DipoleInversionAligningOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       80       96        0
+    //           add/sub      mul      div
+    //      f32       25       44        0
+    //    simd4       14       14        0
+    // Totals...
+    // yes simd       39       58        0
+    //  no simd       81      100        0
     fn mul(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3895,8 +4218,12 @@ impl std::ops::Mul<DipoleInversionAligningOrigin> for AntiFlector {
 impl std::ops::Mul<DipoleInversionAtInfinity> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       60       72        0
+    //           add/sub      mul      div
+    //      f32        8       21        0
+    //    simd4       13       13        0
+    // Totals...
+    // yes simd       21       34        0
+    //  no simd       60       73        0
     fn mul(self, other: DipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3904,8 +4231,12 @@ impl std::ops::Mul<DipoleInversionAtInfinity> for AntiFlector {
 impl std::ops::Mul<DipoleInversionAtOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       48       64        0
+    //           add/sub      mul      div
+    //      f32        8       32        0
+    //    simd4       10       10        0
+    // Totals...
+    // yes simd       18       42        0
+    //  no simd       48       72        0
     fn mul(self, other: DipoleInversionAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3913,8 +4244,12 @@ impl std::ops::Mul<DipoleInversionAtOrigin> for AntiFlector {
 impl std::ops::Mul<DipoleInversionOnOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       64       80        0
+    //           add/sub      mul      div
+    //      f32       17       36        0
+    //    simd4       12       12        0
+    // Totals...
+    // yes simd       29       48        0
+    //  no simd       65       84        0
     fn mul(self, other: DipoleInversionOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3922,8 +4257,12 @@ impl std::ops::Mul<DipoleInversionOnOrigin> for AntiFlector {
 impl std::ops::Mul<DipoleInversionOrthogonalOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       72       88        0
+    //           add/sub      mul      div
+    //      f32       17       35        0
+    //    simd4       14       14        0
+    // Totals...
+    // yes simd       31       49        0
+    //  no simd       73       91        0
     fn mul(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3931,8 +4270,12 @@ impl std::ops::Mul<DipoleInversionOrthogonalOrigin> for AntiFlector {
 impl std::ops::Mul<DipoleOnOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       48        0
+    //           add/sub      mul      div
+    //      f32        8       21        0
+    //    simd4        5        7        0
+    // Totals...
+    // yes simd       13       28        0
+    //  no simd       28       49        0
     fn mul(self, other: DipoleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3940,8 +4283,12 @@ impl std::ops::Mul<DipoleOnOrigin> for AntiFlector {
 impl std::ops::Mul<DipoleOrthogonalOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       56       72        0
+    //           add/sub      mul      div
+    //      f32       28       45        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       35       52        0
+    //  no simd       56       73        0
     fn mul(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3949,8 +4296,12 @@ impl std::ops::Mul<DipoleOrthogonalOrigin> for AntiFlector {
 impl std::ops::Mul<DualNum> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       32        0
+    //           add/sub      mul      div
+    //      f32        4       16        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        4       20        0
+    //  no simd        4       32        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3958,8 +4309,9 @@ impl std::ops::Mul<DualNum> for AntiFlector {
 impl std::ops::Mul<FlatOrigin> for AntiFlector {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn mul(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3968,8 +4320,12 @@ impl std::ops::Mul<FlatOrigin> for AntiFlector {
 impl std::ops::Mul<FlatPoint> for AntiFlector {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       24        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        4        0
+    // Totals...
+    // yes simd        6       12        0
+    //  no simd       12       24        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3977,8 +4333,12 @@ impl std::ops::Mul<FlatPoint> for AntiFlector {
 impl std::ops::Mul<FlatPointAtInfinity> for AntiFlector {
     type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn mul(self, other: FlatPointAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3986,8 +4346,12 @@ impl std::ops::Mul<FlatPointAtInfinity> for AntiFlector {
 impl std::ops::Mul<Flector> for AntiFlector {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       48        0
+    //           add/sub      mul      div
+    //      f32       16       24        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       22       30        0
+    //  no simd       40       48        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3995,8 +4359,12 @@ impl std::ops::Mul<Flector> for AntiFlector {
 impl std::ops::Mul<FlectorAtInfinity> for AntiFlector {
     type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       16        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        6       10        0
+    //  no simd       12       16        0
     fn mul(self, other: FlectorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4004,8 +4372,12 @@ impl std::ops::Mul<FlectorAtInfinity> for AntiFlector {
 impl std::ops::Mul<FlectorOnOrigin> for AntiFlector {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       12       20        0
+    //  no simd       24       32        0
     fn mul(self, other: FlectorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4013,8 +4385,9 @@ impl std::ops::Mul<FlectorOnOrigin> for AntiFlector {
 impl std::ops::Mul<Horizon> for AntiFlector {
     type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn mul(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4023,8 +4396,9 @@ impl std::ops::Mul<Horizon> for AntiFlector {
 impl std::ops::Mul<Infinity> for AntiFlector {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn mul(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4033,8 +4407,12 @@ impl std::ops::Mul<Infinity> for AntiFlector {
 impl std::ops::Mul<Line> for AntiFlector {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       36        0
+    //           add/sub      mul      div
+    //      f32       12       21        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       16       25        0
+    //  no simd       28       37        0
     fn mul(self, other: Line) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4042,8 +4420,12 @@ impl std::ops::Mul<Line> for AntiFlector {
 impl std::ops::Mul<LineAtInfinity> for AntiFlector {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn mul(self, other: LineAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4051,8 +4433,12 @@ impl std::ops::Mul<LineAtInfinity> for AntiFlector {
 impl std::ops::Mul<LineOnOrigin> for AntiFlector {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       24        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       10       18        0
+    //  no simd       16       24        0
     fn mul(self, other: LineOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4060,8 +4446,12 @@ impl std::ops::Mul<LineOnOrigin> for AntiFlector {
 impl std::ops::Mul<Motor> for AntiFlector {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       48        0
+    //           add/sub      mul      div
+    //      f32       12       16        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       20       24        0
+    //  no simd       44       48        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4069,8 +4459,12 @@ impl std::ops::Mul<Motor> for AntiFlector {
 impl std::ops::Mul<MotorAtInfinity> for AntiFlector {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       16        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        6       10        0
+    //  no simd       12       16        0
     fn mul(self, other: MotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4078,8 +4472,9 @@ impl std::ops::Mul<MotorAtInfinity> for AntiFlector {
 impl std::ops::Mul<MotorOnOrigin> for AntiFlector {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //          add/sub      mul      div
+    //   simd4        6        8        0
+    // no simd       24       32        0
     fn mul(self, other: MotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4087,8 +4482,14 @@ impl std::ops::Mul<MotorOnOrigin> for AntiFlector {
 impl std::ops::Mul<MultiVector> for AntiFlector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      224      256        0
+    //           add/sub      mul      div
+    //      f32       79      110        0
+    //    simd2        4        4        0
+    //    simd3       26       26        0
+    //    simd4       15       15        0
+    // Totals...
+    // yes simd      124      155        0
+    //  no simd      225      256        0
     fn mul(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4097,8 +4498,12 @@ impl std::ops::Mul<MultiVector> for AntiFlector {
 impl std::ops::Mul<MysteryCircle> for AntiFlector {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       36        0
+    //           add/sub      mul      div
+    //      f32       11       24        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       14       27        0
+    //  no simd       23       36        0
     fn mul(self, other: MysteryCircle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4106,8 +4511,12 @@ impl std::ops::Mul<MysteryCircle> for AntiFlector {
 impl std::ops::Mul<MysteryCircleRotor> for AntiFlector {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       44        0
+    //           add/sub      mul      div
+    //      f32       16       32        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       19       35        0
+    //  no simd       28       44        0
     fn mul(self, other: MysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4116,8 +4525,12 @@ impl std::ops::Mul<MysteryCircleRotor> for AntiFlector {
 impl std::ops::Mul<MysteryDipole> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       36        0
+    //           add/sub      mul      div
+    //      f32       12       28        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       14       30        0
+    //  no simd       20       36        0
     fn mul(self, other: MysteryDipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4125,8 +4538,12 @@ impl std::ops::Mul<MysteryDipole> for AntiFlector {
 impl std::ops::Mul<MysteryDipoleInversion> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       44       56        0
+    //           add/sub      mul      div
+    //      f32        4       17        0
+    //    simd4       10       10        0
+    // Totals...
+    // yes simd       14       27        0
+    //  no simd       44       57        0
     fn mul(self, other: MysteryDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4134,8 +4551,12 @@ impl std::ops::Mul<MysteryDipoleInversion> for AntiFlector {
 impl std::ops::Mul<MysteryVersorEven> for AntiFlector {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       52       64        0
+    //           add/sub      mul      div
+    //      f32       19       32        0
+    //    simd4        9        9        0
+    // Totals...
+    // yes simd       28       41        0
+    //  no simd       55       68        0
     fn mul(self, other: MysteryVersorEven) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4143,8 +4564,12 @@ impl std::ops::Mul<MysteryVersorEven> for AntiFlector {
 impl std::ops::Mul<MysteryVersorOdd> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       52       64        0
+    //           add/sub      mul      div
+    //      f32        0       12        0
+    //    simd4       13       14        0
+    // Totals...
+    // yes simd       13       26        0
+    //  no simd       52       68        0
     fn mul(self, other: MysteryVersorOdd) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4152,8 +4577,12 @@ impl std::ops::Mul<MysteryVersorOdd> for AntiFlector {
 impl std::ops::Mul<NullCircleAtOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       36        0
+    //           add/sub      mul      div
+    //      f32       20       32        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       21       33        0
+    //  no simd       24       36        0
     fn mul(self, other: NullCircleAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4161,8 +4590,12 @@ impl std::ops::Mul<NullCircleAtOrigin> for AntiFlector {
 impl std::ops::Mul<NullDipoleAtOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       36        0
+    //           add/sub      mul      div
+    //      f32       16       28        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       18       30        0
+    //  no simd       24       36        0
     fn mul(self, other: NullDipoleAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4170,8 +4603,12 @@ impl std::ops::Mul<NullDipoleAtOrigin> for AntiFlector {
 impl std::ops::Mul<NullDipoleInversionAtOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       48        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        8       10        0
+    // Totals...
+    // yes simd       12       18        0
+    //  no simd       36       48        0
     fn mul(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4179,8 +4616,9 @@ impl std::ops::Mul<NullDipoleInversionAtOrigin> for AntiFlector {
 impl std::ops::Mul<NullSphereAtOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        5        0
+    // no simd        0       20        0
     fn mul(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4189,8 +4627,12 @@ impl std::ops::Mul<NullSphereAtOrigin> for AntiFlector {
 impl std::ops::Mul<NullVersorEvenAtOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       48        0
+    //           add/sub      mul      div
+    //      f32       20       32        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       24       36        0
+    //  no simd       36       48        0
     fn mul(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4198,8 +4640,12 @@ impl std::ops::Mul<NullVersorEvenAtOrigin> for AntiFlector {
 impl std::ops::Mul<Origin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       24        0
+    //           add/sub      mul      div
+    //      f32        0        8        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        0       12        0
+    //  no simd        0       24        0
     fn mul(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4208,8 +4654,12 @@ impl std::ops::Mul<Origin> for AntiFlector {
 impl std::ops::Mul<Plane> for AntiFlector {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       28        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       11       19        0
+    //  no simd       20       28        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4217,8 +4667,12 @@ impl std::ops::Mul<Plane> for AntiFlector {
 impl std::ops::Mul<PlaneOnOrigin> for AntiFlector {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       24        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       10       18        0
+    //  no simd       16       24        0
     fn mul(self, other: PlaneOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4236,8 +4690,12 @@ impl std::ops::Mul<RoundPoint> for AntiFlector {
 impl std::ops::Mul<RoundPointAtOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       28        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        7        0
+    // Totals...
+    // yes simd        0       11        0
+    //  no simd        0       32        0
     fn mul(self, other: RoundPointAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4245,8 +4703,9 @@ impl std::ops::Mul<RoundPointAtOrigin> for AntiFlector {
 impl std::ops::Mul<Scalar> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn mul(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4261,8 +4720,12 @@ impl std::ops::MulAssign<Scalar> for AntiFlector {
 impl std::ops::Mul<Sphere> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       44        0
+    //           add/sub      mul      div
+    //      f32       16       29        0
+    //    simd4        2        4        0
+    // Totals...
+    // yes simd       18       33        0
+    //  no simd       24       45        0
     fn mul(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4271,8 +4734,9 @@ impl std::ops::Mul<Sphere> for AntiFlector {
 impl std::ops::Mul<SphereAtOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       24        0
+    //          add/sub      mul      div
+    //   simd4        0        7        0
+    // no simd        0       28        0
     fn mul(self, other: SphereAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4280,8 +4744,12 @@ impl std::ops::Mul<SphereAtOrigin> for AntiFlector {
 impl std::ops::Mul<SphereOnOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       40        0
+    //           add/sub      mul      div
+    //      f32       16       29        0
+    //    simd4        1        3        0
+    // Totals...
+    // yes simd       17       32        0
+    //  no simd       20       41        0
     fn mul(self, other: SphereOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4289,8 +4757,12 @@ impl std::ops::Mul<SphereOnOrigin> for AntiFlector {
 impl std::ops::Mul<VersorEven> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      112      128        0
+    //           add/sub      mul      div
+    //      f32       44       63        0
+    //    simd4       17       17        0
+    // Totals...
+    // yes simd       61       80        0
+    //  no simd      112      131        0
     fn mul(self, other: VersorEven) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4298,8 +4770,12 @@ impl std::ops::Mul<VersorEven> for AntiFlector {
 impl std::ops::Mul<VersorEvenAligningOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       80       96        0
+    //           add/sub      mul      div
+    //      f32       24       43        0
+    //    simd4       14       14        0
+    // Totals...
+    // yes simd       38       57        0
+    //  no simd       80       99        0
     fn mul(self, other: VersorEvenAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4307,8 +4783,12 @@ impl std::ops::Mul<VersorEvenAligningOrigin> for AntiFlector {
 impl std::ops::Mul<VersorEvenAtInfinity> for AntiFlector {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       68       80        0
+    //           add/sub      mul      div
+    //      f32       28       40        0
+    //    simd4       11       11        0
+    // Totals...
+    // yes simd       39       51        0
+    //  no simd       72       84        0
     fn mul(self, other: VersorEvenAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4316,8 +4796,12 @@ impl std::ops::Mul<VersorEvenAtInfinity> for AntiFlector {
 impl std::ops::Mul<VersorEvenAtOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       48       64        0
+    //           add/sub      mul      div
+    //      f32       16       32        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       24       40        0
+    //  no simd       48       64        0
     fn mul(self, other: VersorEvenAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4325,8 +4809,12 @@ impl std::ops::Mul<VersorEvenAtOrigin> for AntiFlector {
 impl std::ops::Mul<VersorEvenOnOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       64       80        0
+    //           add/sub      mul      div
+    //      f32       25       43        0
+    //    simd4       10       10        0
+    // Totals...
+    // yes simd       35       53        0
+    //  no simd       65       83        0
     fn mul(self, other: VersorEvenOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4334,8 +4822,12 @@ impl std::ops::Mul<VersorEvenOnOrigin> for AntiFlector {
 impl std::ops::Mul<VersorEvenOrthogonalOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       80       96        0
+    //           add/sub      mul      div
+    //      f32       36       58        0
+    //    simd4       11       11        0
+    // Totals...
+    // yes simd       47       69        0
+    //  no simd       80      102        0
     fn mul(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4343,8 +4835,12 @@ impl std::ops::Mul<VersorEvenOrthogonalOrigin> for AntiFlector {
 impl std::ops::Mul<VersorOdd> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      112      128        0
+    //           add/sub      mul      div
+    //      f32       25       40        0
+    //    simd4       22       22        0
+    // Totals...
+    // yes simd       47       62        0
+    //  no simd      113      128        0
     fn mul(self, other: VersorOdd) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4352,8 +4848,12 @@ impl std::ops::Mul<VersorOdd> for AntiFlector {
 impl std::ops::Mul<VersorOddAtInfinity> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       68       80        0
+    //           add/sub      mul      div
+    //      f32        8       20        0
+    //    simd4       15       15        0
+    // Totals...
+    // yes simd       23       35        0
+    //  no simd       68       80        0
     fn mul(self, other: VersorOddAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4361,8 +4861,12 @@ impl std::ops::Mul<VersorOddAtInfinity> for AntiFlector {
 impl std::ops::Mul<VersorOddOrthogonalOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       80       96        0
+    //           add/sub      mul      div
+    //      f32       21       39        0
+    //    simd4       15       15        0
+    // Totals...
+    // yes simd       36       54        0
+    //  no simd       81       99        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4373,13 +4877,12 @@ impl std::ops::Neg for AntiFlector {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn neg(self) -> Self {
-        let negation = AntiFlector::from_groups(
+        return AntiFlector::from_groups(
             // e235, e315, e125, e321
             (self.group0() * Simd32x4::from(-1.0)),
             // e1, e2, e3, e5
             (self.group1() * Simd32x4::from(-1.0)),
         );
-        return negation;
     }
 }
 impl std::ops::Not for AntiFlector {
@@ -4401,7 +4904,7 @@ impl std::ops::Sub<AntiCircleOnOrigin> for AntiFlector {
     // yes simd        0        4        0
     //  no simd        0        6        0
     fn sub(self, other: AntiCircleOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -4425,7 +4928,6 @@ impl std::ops::Sub<AntiCircleOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotor> for AntiFlector {
@@ -4439,7 +4941,7 @@ impl std::ops::Sub<AntiCircleRotor> for AntiFlector {
     // yes simd        0        4        0
     //  no simd        0       11        0
     fn sub(self, other: AntiCircleRotor) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group2()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -4463,7 +4965,6 @@ impl std::ops::Sub<AntiCircleRotor> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorAligningOrigin> for AntiFlector {
@@ -4476,7 +4977,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for AntiFlector {
     // yes simd        0        6        0
     //  no simd        0       10        0
     fn sub(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group2()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -4500,7 +5001,6 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for AntiFlector {
@@ -4513,7 +5013,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for AntiFlector {
     // yes simd        0        3        0
     //  no simd        0        7        0
     fn sub(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group1()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -4537,7 +5037,6 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorAtInfinity> for AntiFlector {
@@ -4550,7 +5049,7 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for AntiFlector {
     // yes simd        0        4        0
     //  no simd        0        8        0
     fn sub(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group1()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -4574,7 +5073,6 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorOnOrigin> for AntiFlector {
@@ -4587,7 +5085,7 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for AntiFlector {
     // yes simd        0        5        0
     //  no simd        0        7        0
     fn sub(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -4611,7 +5109,6 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversion> for AntiFlector {
@@ -4625,7 +5122,7 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiFlector {
     // yes simd        5        5        0
     //  no simd        8        7        0
     fn sub(self, other: AntiDipoleInversion) -> Self::Output {
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
@@ -4645,7 +5142,6 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiFlector {
             // e1, e2, e3, e5
             (-other.group3() + self.group1()),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversionAtInfinity> for AntiFlector {
@@ -4659,7 +5155,7 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for AntiFlector {
     // yes simd        3        3        0
     //  no simd        8        3        0
     fn sub(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
-        let subtraction = AntiDipoleInversionAtInfinity::from_groups(
+        return AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -4672,7 +5168,6 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for AntiFlector {
             // e1, e2, e3, e5
             (-other.group2() + self.group1()),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversionOnOrigin> for AntiFlector {
@@ -4681,7 +5176,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        4        0
     fn sub(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -4699,7 +5194,6 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for AntiFlector {
                 (other.group1()[0] * -1.0),
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for AntiFlector {
@@ -4712,7 +5206,7 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for AntiFlector {
     // yes simd        4        5        0
     //  no simd        4        7        0
     fn sub(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
@@ -4727,7 +5221,6 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for AntiFlector {
             // e1, e2, e3, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[3] + self.group1()[3])]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleOnOrigin> for AntiFlector {
@@ -4736,7 +5229,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        1        3        0
     fn sub(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -4749,7 +5242,6 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDualNum> for AntiFlector {
@@ -4758,7 +5250,7 @@ impl std::ops::Sub<AntiDualNum> for AntiFlector {
     //      add/sub      mul      div
     // f32        0        2        0
     fn sub(self, other: AntiDualNum) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[1] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -4782,7 +5274,6 @@ impl std::ops::Sub<AntiDualNum> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiFlatOrigin> for AntiFlector {
@@ -4792,25 +5283,23 @@ impl std::ops::Sub<AntiFlatOrigin> for AntiFlector {
     // f32        1        0        0
     fn sub(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiFlector::from_groups(
+        return AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other[e321])]),
             // e1, e2, e3, e5
             self.group1(),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiFlatOrigin> for AntiFlector {
     fn sub_assign(&mut self, other: AntiFlatOrigin) {
         use crate::elements::*;
-        let subtraction = AntiFlector::from_groups(
+        *self = AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other[e321])]),
             // e1, e2, e3, e5
             self.group1(),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiFlatPoint> for AntiFlector {
@@ -4820,14 +5309,12 @@ impl std::ops::Sub<AntiFlatPoint> for AntiFlector {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: AntiFlatPoint) -> Self::Output {
-        let subtraction = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (-other.group0() + self.group0()), /* e1, e2, e3, e5 */ self.group1());
-        return subtraction;
+        return AntiFlector::from_groups(/* e235, e315, e125, e321 */ (-other.group0() + self.group0()), /* e1, e2, e3, e5 */ self.group1());
     }
 }
 impl std::ops::SubAssign<AntiFlatPoint> for AntiFlector {
     fn sub_assign(&mut self, other: AntiFlatPoint) {
-        let subtraction = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (-other.group0() + self.group0()), /* e1, e2, e3, e5 */ self.group1());
-        *self = subtraction;
+        *self = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (-other.group0() + self.group0()), /* e1, e2, e3, e5 */ self.group1());
     }
 }
 impl std::ops::Sub<AntiFlector> for AntiFlector {
@@ -4837,24 +5324,22 @@ impl std::ops::Sub<AntiFlector> for AntiFlector {
     //   simd4        2        0        0
     // no simd        8        0        0
     fn sub(self, other: AntiFlector) -> Self::Output {
-        let subtraction = AntiFlector::from_groups(
+        return AntiFlector::from_groups(
             // e235, e315, e125, e321
             (-other.group0() + self.group0()),
             // e1, e2, e3, e5
             (-other.group1() + self.group1()),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiFlector> for AntiFlector {
     fn sub_assign(&mut self, other: AntiFlector) {
-        let subtraction = AntiFlector::from_groups(
+        *self = AntiFlector::from_groups(
             // e235, e315, e125, e321
             (-other.group0() + self.group0()),
             // e1, e2, e3, e5
             (-other.group1() + self.group1()),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiFlectorOnOrigin> for AntiFlector {
@@ -4863,7 +5348,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        0        0
     fn sub(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        let subtraction = AntiFlector::from_groups(
+        return AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[0])]),
             // e1, e2, e3, e5
@@ -4874,12 +5359,11 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for AntiFlector {
                 self.group1()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiFlectorOnOrigin> for AntiFlector {
     fn sub_assign(&mut self, other: AntiFlectorOnOrigin) {
-        let subtraction = AntiFlector::from_groups(
+        *self = AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[0])]),
             // e1, e2, e3, e5
@@ -4890,7 +5374,6 @@ impl std::ops::SubAssign<AntiFlectorOnOrigin> for AntiFlector {
                 self.group1()[3],
             ]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiLine> for AntiFlector {
@@ -4900,7 +5383,7 @@ impl std::ops::Sub<AntiLine> for AntiFlector {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn sub(self, other: AntiLine) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -4924,7 +5407,6 @@ impl std::ops::Sub<AntiLine> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiLineOnOrigin> for AntiFlector {
@@ -4934,7 +5416,7 @@ impl std::ops::Sub<AntiLineOnOrigin> for AntiFlector {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn sub(self, other: AntiLineOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -4958,7 +5440,6 @@ impl std::ops::Sub<AntiLineOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiMotor> for AntiFlector {
@@ -4971,7 +5452,7 @@ impl std::ops::Sub<AntiMotor> for AntiFlector {
     // yes simd        0        4        0
     //  no simd        0        8        0
     fn sub(self, other: AntiMotor) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -4995,7 +5476,6 @@ impl std::ops::Sub<AntiMotor> for AntiFlector {
             // e3215
             (other.group1()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiMotorOnOrigin> for AntiFlector {
@@ -5008,7 +5488,7 @@ impl std::ops::Sub<AntiMotorOnOrigin> for AntiFlector {
     // yes simd        0        2        0
     //  no simd        0        4        0
     fn sub(self, other: AntiMotorOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -5032,7 +5512,6 @@ impl std::ops::Sub<AntiMotorOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiMysteryCircleRotor> for AntiFlector {
@@ -5046,7 +5525,7 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for AntiFlector {
     //  no simd        0        5        0
     fn sub(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other[e31] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -5070,7 +5549,6 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiMysteryDipoleInversion> for AntiFlector {
@@ -5079,7 +5557,7 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        3        0
     fn sub(self, other: AntiMysteryDipoleInversion) -> Self::Output {
-        let subtraction = AntiDipoleInversionAtInfinity::from_groups(
+        return AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -5097,7 +5575,6 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for AntiFlector {
                 self.group1()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiPlane> for AntiFlector {
@@ -5107,14 +5584,12 @@ impl std::ops::Sub<AntiPlane> for AntiFlector {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: AntiPlane) -> Self::Output {
-        let subtraction = AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0(), /* e1, e2, e3, e5 */ (self.group1() - other.group0()));
-        return subtraction;
+        return AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0(), /* e1, e2, e3, e5 */ (self.group1() - other.group0()));
     }
 }
 impl std::ops::SubAssign<AntiPlane> for AntiFlector {
     fn sub_assign(&mut self, other: AntiPlane) {
-        let subtraction = AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0(), /* e1, e2, e3, e5 */ (self.group1() - other.group0()));
-        *self = subtraction;
+        *self = AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0(), /* e1, e2, e3, e5 */ (self.group1() - other.group0()));
     }
 }
 impl std::ops::Sub<AntiPlaneOnOrigin> for AntiFlector {
@@ -5123,7 +5598,7 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        3        0        0
     fn sub(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        let subtraction = AntiFlector::from_groups(
+        return AntiFlector::from_groups(
             // e235, e315, e125, e321
             self.group0(),
             // e1, e2, e3, e5
@@ -5134,12 +5609,11 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for AntiFlector {
                 self.group1()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiPlaneOnOrigin> for AntiFlector {
     fn sub_assign(&mut self, other: AntiPlaneOnOrigin) {
-        let subtraction = AntiFlector::from_groups(
+        *self = AntiFlector::from_groups(
             // e235, e315, e125, e321
             self.group0(),
             // e1, e2, e3, e5
@@ -5150,7 +5624,6 @@ impl std::ops::SubAssign<AntiPlaneOnOrigin> for AntiFlector {
                 self.group1()[3],
             ]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiScalar> for AntiFlector {
@@ -5160,7 +5633,7 @@ impl std::ops::Sub<AntiScalar> for AntiFlector {
     // f32        0        1        0
     fn sub(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([(other[e12345] * -1.0), self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
@@ -5168,7 +5641,6 @@ impl std::ops::Sub<AntiScalar> for AntiFlector {
             // e235, e315, e125, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiSphereOnOrigin> for AntiFlector {
@@ -5177,7 +5649,7 @@ impl std::ops::Sub<AntiSphereOnOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        3        1        0
     fn sub(self, other: AntiSphereOnOrigin) -> Self::Output {
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e235, e315, e125, e5
@@ -5190,7 +5662,6 @@ impl std::ops::Sub<AntiSphereOnOrigin> for AntiFlector {
                 (other.group0()[3] * -1.0),
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiVersorEvenOnOrigin> for AntiFlector {
@@ -5203,7 +5674,7 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for AntiFlector {
     // yes simd        0        6        0
     //  no simd        0        8        0
     fn sub(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -5227,7 +5698,6 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Circle> for AntiFlector {
@@ -5240,7 +5710,7 @@ impl std::ops::Sub<Circle> for AntiFlector {
     // yes simd        4        4        0
     //  no simd        4        6        0
     fn sub(self, other: Circle) -> Self::Output {
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
@@ -5260,7 +5730,6 @@ impl std::ops::Sub<Circle> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleAligningOrigin> for AntiFlector {
@@ -5273,7 +5742,7 @@ impl std::ops::Sub<CircleAligningOrigin> for AntiFlector {
     // yes simd        3        4        0
     //  no simd        3        6        0
     fn sub(self, other: CircleAligningOrigin) -> Self::Output {
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
@@ -5288,7 +5757,6 @@ impl std::ops::Sub<CircleAligningOrigin> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleAtInfinity> for AntiFlector {
@@ -5301,7 +5769,7 @@ impl std::ops::Sub<CircleAtInfinity> for AntiFlector {
     // yes simd        2        3        0
     //  no simd        4        3        0
     fn sub(self, other: CircleAtInfinity) -> Self::Output {
-        let subtraction = AntiDipoleInversionAtInfinity::from_groups(
+        return AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -5314,7 +5782,6 @@ impl std::ops::Sub<CircleAtInfinity> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleAtOrigin> for AntiFlector {
@@ -5323,7 +5790,7 @@ impl std::ops::Sub<CircleAtOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        3        3        0
     fn sub(self, other: CircleAtOrigin) -> Self::Output {
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e235, e315, e125, e5
@@ -5336,7 +5803,6 @@ impl std::ops::Sub<CircleAtOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleOnOrigin> for AntiFlector {
@@ -5349,7 +5815,7 @@ impl std::ops::Sub<CircleOnOrigin> for AntiFlector {
     // yes simd        0        4        0
     //  no simd        0        6        0
     fn sub(self, other: CircleOnOrigin) -> Self::Output {
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
@@ -5359,7 +5825,6 @@ impl std::ops::Sub<CircleOnOrigin> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleOrthogonalOrigin> for AntiFlector {
@@ -5368,7 +5833,7 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        3        0
     fn sub(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -5386,7 +5851,6 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotor> for AntiFlector {
@@ -5399,7 +5863,7 @@ impl std::ops::Sub<CircleRotor> for AntiFlector {
     // yes simd        4        4        0
     //  no simd        4        7        0
     fn sub(self, other: CircleRotor) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]) * Simd32x4::from(-1.0)),
             // e415, e425, e435, e321
@@ -5419,7 +5883,6 @@ impl std::ops::Sub<CircleRotor> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorAligningOrigin> for AntiFlector {
@@ -5432,7 +5895,7 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for AntiFlector {
     // yes simd        3        4        0
     //  no simd        3        7        0
     fn sub(self, other: CircleRotorAligningOrigin) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]) * Simd32x4::from(-1.0)),
             // e415, e425, e435, e321
@@ -5447,7 +5910,6 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for AntiFlector {
@@ -5456,7 +5918,7 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for AntiFlector {
     //      add/sub      mul      div
     // f32        3        4        0
     fn sub(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([(other.group1()[3] * -1.0), self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
@@ -5469,7 +5931,6 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for AntiFlector {
                 self.group1()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorAtInfinity> for AntiFlector {
@@ -5478,7 +5939,7 @@ impl std::ops::Sub<CircleRotorAtInfinity> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        4        0
     fn sub(self, other: CircleRotorAtInfinity) -> Self::Output {
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([(other.group1()[3] * -1.0), self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
@@ -5496,7 +5957,6 @@ impl std::ops::Sub<CircleRotorAtInfinity> for AntiFlector {
                 self.group1()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorOnOrigin> for AntiFlector {
@@ -5509,7 +5969,7 @@ impl std::ops::Sub<CircleRotorOnOrigin> for AntiFlector {
     // yes simd        0        4        0
     //  no simd        0        7        0
     fn sub(self, other: CircleRotorOnOrigin) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             (other.group0() * Simd32x4::from(-1.0)),
             // e415, e425, e435, e321
@@ -5519,7 +5979,6 @@ impl std::ops::Sub<CircleRotorOnOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Dipole> for AntiFlector {
@@ -5532,7 +5991,7 @@ impl std::ops::Sub<Dipole> for AntiFlector {
     // yes simd        0        3        0
     //  no simd        0       10        0
     fn sub(self, other: Dipole) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5556,7 +6015,6 @@ impl std::ops::Sub<Dipole> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleAligningOrigin> for AntiFlector {
@@ -5569,7 +6027,7 @@ impl std::ops::Sub<DipoleAligningOrigin> for AntiFlector {
     // yes simd        0        2        0
     //  no simd        0        7        0
     fn sub(self, other: DipoleAligningOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5593,7 +6051,6 @@ impl std::ops::Sub<DipoleAligningOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleAtInfinity> for AntiFlector {
@@ -5606,7 +6063,7 @@ impl std::ops::Sub<DipoleAtInfinity> for AntiFlector {
     // yes simd        0        3        0
     //  no simd        0        7        0
     fn sub(self, other: DipoleAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5630,7 +6087,6 @@ impl std::ops::Sub<DipoleAtInfinity> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleAtOrigin> for AntiFlector {
@@ -5643,7 +6099,7 @@ impl std::ops::Sub<DipoleAtOrigin> for AntiFlector {
     // yes simd        0        4        0
     //  no simd        0        6        0
     fn sub(self, other: DipoleAtOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5667,7 +6123,6 @@ impl std::ops::Sub<DipoleAtOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversion> for AntiFlector {
@@ -5681,7 +6136,7 @@ impl std::ops::Sub<DipoleInversion> for AntiFlector {
     // yes simd        0        5        0
     //  no simd        0       15        0
     fn sub(self, other: DipoleInversion) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5705,7 +6160,6 @@ impl std::ops::Sub<DipoleInversion> for AntiFlector {
             // e3215
             (other.group3()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionAligningOrigin> for AntiFlector {
@@ -5719,7 +6173,7 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for AntiFlector {
     // yes simd        0        4        0
     //  no simd        0       12        0
     fn sub(self, other: DipoleInversionAligningOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5743,7 +6197,6 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for AntiFlector {
             // e3215
             (other.group2()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionAtInfinity> for AntiFlector {
@@ -5756,7 +6209,7 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for AntiFlector {
     // yes simd        0        7        0
     //  no simd        0       11        0
     fn sub(self, other: DipoleInversionAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5780,7 +6233,6 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for AntiFlector {
             // e3215
             (other.group2()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionAtOrigin> for AntiFlector {
@@ -5793,7 +6245,7 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for AntiFlector {
     // yes simd        0        6        0
     //  no simd        0        8        0
     fn sub(self, other: DipoleInversionAtOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5817,7 +6269,6 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for AntiFlector {
             // e3215
             (other.group0()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionOnOrigin> for AntiFlector {
@@ -5827,7 +6278,7 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for AntiFlector {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn sub(self, other: DipoleInversionOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5851,7 +6302,6 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for AntiFlector {
@@ -5864,7 +6314,7 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for AntiFlector {
     // yes simd        0        7        0
     //  no simd        0       11        0
     fn sub(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5888,7 +6338,6 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for AntiFlector {
             // e3215
             (other.group0()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleOnOrigin> for AntiFlector {
@@ -5898,7 +6347,7 @@ impl std::ops::Sub<DipoleOnOrigin> for AntiFlector {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn sub(self, other: DipoleOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5922,7 +6371,6 @@ impl std::ops::Sub<DipoleOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleOrthogonalOrigin> for AntiFlector {
@@ -5935,7 +6383,7 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for AntiFlector {
     // yes simd        0        5        0
     //  no simd        0        9        0
     fn sub(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5959,7 +6407,6 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DualNum> for AntiFlector {
@@ -5968,7 +6415,7 @@ impl std::ops::Sub<DualNum> for AntiFlector {
     //      add/sub      mul      div
     // f32        0        2        0
     fn sub(self, other: DualNum) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
             // e415, e425, e435, e321
@@ -5978,7 +6425,6 @@ impl std::ops::Sub<DualNum> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlatOrigin> for AntiFlector {
@@ -5988,7 +6434,7 @@ impl std::ops::Sub<FlatOrigin> for AntiFlector {
     // f32        0        1        0
     fn sub(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6012,7 +6458,6 @@ impl std::ops::Sub<FlatOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlatPoint> for AntiFlector {
@@ -6025,7 +6470,7 @@ impl std::ops::Sub<FlatPoint> for AntiFlector {
     // yes simd        0        2        0
     //  no simd        0        4        0
     fn sub(self, other: FlatPoint) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6049,7 +6494,6 @@ impl std::ops::Sub<FlatPoint> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlatPointAtInfinity> for AntiFlector {
@@ -6059,7 +6503,7 @@ impl std::ops::Sub<FlatPointAtInfinity> for AntiFlector {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn sub(self, other: FlatPointAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6083,7 +6527,6 @@ impl std::ops::Sub<FlatPointAtInfinity> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Flector> for AntiFlector {
@@ -6096,7 +6539,7 @@ impl std::ops::Sub<Flector> for AntiFlector {
     // yes simd        0        6        0
     //  no simd        0        8        0
     fn sub(self, other: Flector) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6120,7 +6563,6 @@ impl std::ops::Sub<Flector> for AntiFlector {
             // e3215
             (other.group1()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlectorAtInfinity> for AntiFlector {
@@ -6133,7 +6575,7 @@ impl std::ops::Sub<FlectorAtInfinity> for AntiFlector {
     // yes simd        0        2        0
     //  no simd        0        4        0
     fn sub(self, other: FlectorAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6157,7 +6599,6 @@ impl std::ops::Sub<FlectorAtInfinity> for AntiFlector {
             // e3215
             (other.group0()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlectorOnOrigin> for AntiFlector {
@@ -6166,7 +6607,7 @@ impl std::ops::Sub<FlectorOnOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: FlectorOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6190,7 +6631,6 @@ impl std::ops::Sub<FlectorOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Horizon> for AntiFlector {
@@ -6200,7 +6640,7 @@ impl std::ops::Sub<Horizon> for AntiFlector {
     // f32        0        1        0
     fn sub(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6224,7 +6664,6 @@ impl std::ops::Sub<Horizon> for AntiFlector {
             // e3215
             (other[e3215] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Infinity> for AntiFlector {
@@ -6234,25 +6673,23 @@ impl std::ops::Sub<Infinity> for AntiFlector {
     // f32        1        0        0
     fn sub(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiFlector::from_groups(
+        return AntiFlector::from_groups(
             // e235, e315, e125, e321
             self.group0(),
             // e1, e2, e3, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other[e5])]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<Infinity> for AntiFlector {
     fn sub_assign(&mut self, other: Infinity) {
         use crate::elements::*;
-        let subtraction = AntiFlector::from_groups(
+        *self = AntiFlector::from_groups(
             // e235, e315, e125, e321
             self.group0(),
             // e1, e2, e3, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other[e5])]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<Line> for AntiFlector {
@@ -6265,7 +6702,7 @@ impl std::ops::Sub<Line> for AntiFlector {
     // yes simd        1        3        0
     //  no simd        3        3        0
     fn sub(self, other: Line) -> Self::Output {
-        let subtraction = AntiDipoleInversionAtInfinity::from_groups(
+        return AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e235, e315, e125
@@ -6273,7 +6710,6 @@ impl std::ops::Sub<Line> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<LineAtInfinity> for AntiFlector {
@@ -6282,7 +6718,7 @@ impl std::ops::Sub<LineAtInfinity> for AntiFlector {
     //      add/sub      mul      div
     // f32        3        0        0
     fn sub(self, other: LineAtInfinity) -> Self::Output {
-        let subtraction = AntiFlector::from_groups(
+        return AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([
                 (-other.group0()[0] + self.group0()[0]),
@@ -6293,12 +6729,11 @@ impl std::ops::Sub<LineAtInfinity> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<LineAtInfinity> for AntiFlector {
     fn sub_assign(&mut self, other: LineAtInfinity) {
-        let subtraction = AntiFlector::from_groups(
+        *self = AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([
                 (-other.group0()[0] + self.group0()[0]),
@@ -6309,7 +6744,6 @@ impl std::ops::SubAssign<LineAtInfinity> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<LineOnOrigin> for AntiFlector {
@@ -6318,7 +6752,7 @@ impl std::ops::Sub<LineOnOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        0        3        0
     fn sub(self, other: LineOnOrigin) -> Self::Output {
-        let subtraction = AntiDipoleInversionAtInfinity::from_groups(
+        return AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e235, e315, e125
@@ -6326,7 +6760,6 @@ impl std::ops::Sub<LineOnOrigin> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Motor> for AntiFlector {
@@ -6339,7 +6772,7 @@ impl std::ops::Sub<Motor> for AntiFlector {
     // yes simd        1        4        0
     //  no simd        4        4        0
     fn sub(self, other: Motor) -> Self::Output {
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([(other.group0()[3] * -1.0), self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
@@ -6347,7 +6780,6 @@ impl std::ops::Sub<Motor> for AntiFlector {
             // e235, e315, e125, e5
             (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]) - other.group1()),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MotorAtInfinity> for AntiFlector {
@@ -6356,7 +6788,7 @@ impl std::ops::Sub<MotorAtInfinity> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        0        0
     fn sub(self, other: MotorAtInfinity) -> Self::Output {
-        let subtraction = AntiFlector::from_groups(
+        return AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([
                 (self.group0()[0] - other.group0()[0]),
@@ -6367,12 +6799,11 @@ impl std::ops::Sub<MotorAtInfinity> for AntiFlector {
             // e1, e2, e3, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[3])]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<MotorAtInfinity> for AntiFlector {
     fn sub_assign(&mut self, other: MotorAtInfinity) {
-        let subtraction = AntiFlector::from_groups(
+        *self = AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([
                 (self.group0()[0] - other.group0()[0]),
@@ -6383,7 +6814,6 @@ impl std::ops::SubAssign<MotorAtInfinity> for AntiFlector {
             // e1, e2, e3, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other.group0()[3])]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<MotorOnOrigin> for AntiFlector {
@@ -6392,7 +6822,7 @@ impl std::ops::Sub<MotorOnOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: MotorOnOrigin) -> Self::Output {
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([(other.group0()[3] * -1.0), self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
@@ -6400,7 +6830,6 @@ impl std::ops::Sub<MotorOnOrigin> for AntiFlector {
             // e235, e315, e125, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MultiVector> for AntiFlector {
@@ -6416,7 +6845,7 @@ impl std::ops::Sub<MultiVector> for AntiFlector {
     //  no simd        8       24        0
     fn sub(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             (other.group0() * Simd32x2::from(-1.0)),
             // e1, e2, e3, e4
@@ -6450,7 +6879,6 @@ impl std::ops::Sub<MultiVector> for AntiFlector {
             // e3215
             (other[e45] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryCircle> for AntiFlector {
@@ -6459,7 +6887,7 @@ impl std::ops::Sub<MysteryCircle> for AntiFlector {
     //      add/sub      mul      div
     // f32        1        3        0
     fn sub(self, other: MysteryCircle) -> Self::Output {
-        let subtraction = AntiDipoleInversionAtInfinity::from_groups(
+        return AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -6472,7 +6900,6 @@ impl std::ops::Sub<MysteryCircle> for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryCircleRotor> for AntiFlector {
@@ -6482,7 +6909,7 @@ impl std::ops::Sub<MysteryCircleRotor> for AntiFlector {
     // f32        1        4        0
     fn sub(self, other: MysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([(other[e425] * -1.0), self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
@@ -6495,7 +6922,6 @@ impl std::ops::Sub<MysteryCircleRotor> for AntiFlector {
             // e235, e315, e125, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryDipole> for AntiFlector {
@@ -6508,7 +6934,7 @@ impl std::ops::Sub<MysteryDipole> for AntiFlector {
     // yes simd        0        2        0
     //  no simd        0        4        0
     fn sub(self, other: MysteryDipole) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6532,7 +6958,6 @@ impl std::ops::Sub<MysteryDipole> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryDipoleInversion> for AntiFlector {
@@ -6545,7 +6970,7 @@ impl std::ops::Sub<MysteryDipoleInversion> for AntiFlector {
     // yes simd        0        5        0
     //  no simd        0        7        0
     fn sub(self, other: MysteryDipoleInversion) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6569,7 +6994,6 @@ impl std::ops::Sub<MysteryDipoleInversion> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryVersorEven> for AntiFlector {
@@ -6578,7 +7002,7 @@ impl std::ops::Sub<MysteryVersorEven> for AntiFlector {
     //      add/sub      mul      div
     // f32        4        4        0
     fn sub(self, other: MysteryVersorEven) -> Self::Output {
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -6596,7 +7020,6 @@ impl std::ops::Sub<MysteryVersorEven> for AntiFlector {
             // e235, e315, e125, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryVersorOdd> for AntiFlector {
@@ -6609,7 +7032,7 @@ impl std::ops::Sub<MysteryVersorOdd> for AntiFlector {
     // yes simd        0        6        0
     //  no simd        0        8        0
     fn sub(self, other: MysteryVersorOdd) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[0] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -6633,7 +7056,6 @@ impl std::ops::Sub<MysteryVersorOdd> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullCircleAtOrigin> for AntiFlector {
@@ -6642,7 +7064,7 @@ impl std::ops::Sub<NullCircleAtOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        0        3        0
     fn sub(self, other: NullCircleAtOrigin) -> Self::Output {
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e235, e315, e125, e5
@@ -6650,7 +7072,6 @@ impl std::ops::Sub<NullCircleAtOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullDipoleAtOrigin> for AntiFlector {
@@ -6659,7 +7080,7 @@ impl std::ops::Sub<NullDipoleAtOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        0        3        0
     fn sub(self, other: NullDipoleAtOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6683,7 +7104,6 @@ impl std::ops::Sub<NullDipoleAtOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullDipoleInversionAtOrigin> for AntiFlector {
@@ -6692,7 +7112,7 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6716,7 +7136,6 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullSphereAtOrigin> for AntiFlector {
@@ -6726,7 +7145,7 @@ impl std::ops::Sub<NullSphereAtOrigin> for AntiFlector {
     // f32        0        1        0
     fn sub(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6750,7 +7169,6 @@ impl std::ops::Sub<NullSphereAtOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullVersorEvenAtOrigin> for AntiFlector {
@@ -6759,7 +7177,7 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: NullVersorEvenAtOrigin) -> Self::Output {
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e235, e315, e125, e5
@@ -6767,7 +7185,6 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[3] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Origin> for AntiFlector {
@@ -6777,7 +7194,7 @@ impl std::ops::Sub<Origin> for AntiFlector {
     // f32        0        1        0
     fn sub(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e235, e315, e125, e5
@@ -6785,7 +7202,6 @@ impl std::ops::Sub<Origin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other[e4] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Plane> for AntiFlector {
@@ -6794,7 +7210,7 @@ impl std::ops::Sub<Plane> for AntiFlector {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: Plane) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6818,7 +7234,6 @@ impl std::ops::Sub<Plane> for AntiFlector {
             // e3215
             (other.group0()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<PlaneOnOrigin> for AntiFlector {
@@ -6827,7 +7242,7 @@ impl std::ops::Sub<PlaneOnOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        0        3        0
     fn sub(self, other: PlaneOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6851,7 +7266,6 @@ impl std::ops::Sub<PlaneOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<RoundPoint> for AntiFlector {
@@ -6861,7 +7275,7 @@ impl std::ops::Sub<RoundPoint> for AntiFlector {
     // f32        4        1        0
     fn sub(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e235, e315, e125, e5
@@ -6874,7 +7288,6 @@ impl std::ops::Sub<RoundPoint> for AntiFlector {
                 (other.group0()[3] * -1.0),
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<RoundPointAtOrigin> for AntiFlector {
@@ -6883,7 +7296,7 @@ impl std::ops::Sub<RoundPointAtOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        1        1        0
     fn sub(self, other: RoundPointAtOrigin) -> Self::Output {
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e235, e315, e125, e5
@@ -6891,7 +7304,6 @@ impl std::ops::Sub<RoundPointAtOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Scalar> for AntiFlector {
@@ -6901,7 +7313,7 @@ impl std::ops::Sub<Scalar> for AntiFlector {
     // f32        0        1        0
     fn sub(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other[scalar] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -6925,7 +7337,6 @@ impl std::ops::Sub<Scalar> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Sphere> for AntiFlector {
@@ -6939,7 +7350,7 @@ impl std::ops::Sub<Sphere> for AntiFlector {
     //  no simd        0        5        0
     fn sub(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6963,7 +7374,6 @@ impl std::ops::Sub<Sphere> for AntiFlector {
             // e3215
             (other.group0()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<SphereAtOrigin> for AntiFlector {
@@ -6972,7 +7382,7 @@ impl std::ops::Sub<SphereAtOrigin> for AntiFlector {
     //      add/sub      mul      div
     // f32        0        2        0
     fn sub(self, other: SphereAtOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6996,7 +7406,6 @@ impl std::ops::Sub<SphereAtOrigin> for AntiFlector {
             // e3215
             (other.group0()[0] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<SphereOnOrigin> for AntiFlector {
@@ -7006,7 +7415,7 @@ impl std::ops::Sub<SphereOnOrigin> for AntiFlector {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn sub(self, other: SphereOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -7030,7 +7439,6 @@ impl std::ops::Sub<SphereOnOrigin> for AntiFlector {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEven> for AntiFlector {
@@ -7043,7 +7451,7 @@ impl std::ops::Sub<VersorEven> for AntiFlector {
     // yes simd        5        5        0
     //  no simd        8        8        0
     fn sub(self, other: VersorEven) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             (other.group0() * Simd32x4::from(-1.0)),
             // e415, e425, e435, e321
@@ -7063,7 +7471,6 @@ impl std::ops::Sub<VersorEven> for AntiFlector {
                 (other.group3()[3] * -1.0),
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenAligningOrigin> for AntiFlector {
@@ -7076,7 +7483,7 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for AntiFlector {
     // yes simd        1        5        0
     //  no simd        4        8        0
     fn sub(self, other: VersorEvenAligningOrigin) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             (other.group0() * Simd32x4::from(-1.0)),
             // e415, e425, e435, e321
@@ -7086,7 +7493,6 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group1()[3] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenAtInfinity> for AntiFlector {
@@ -7099,7 +7505,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for AntiFlector {
     // yes simd        5        4        0
     //  no simd        8        4        0
     fn sub(self, other: VersorEvenAtInfinity) -> Self::Output {
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -7117,7 +7523,6 @@ impl std::ops::Sub<VersorEvenAtInfinity> for AntiFlector {
             // e235, e315, e125, e5
             (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]) - other.group2()),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenAtOrigin> for AntiFlector {
@@ -7130,7 +7535,7 @@ impl std::ops::Sub<VersorEvenAtOrigin> for AntiFlector {
     // yes simd        1        4        0
     //  no simd        4        4        0
     fn sub(self, other: VersorEvenAtOrigin) -> Self::Output {
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e235, e315, e125, e5
@@ -7138,7 +7543,6 @@ impl std::ops::Sub<VersorEvenAtOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[3] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenOnOrigin> for AntiFlector {
@@ -7151,7 +7555,7 @@ impl std::ops::Sub<VersorEvenOnOrigin> for AntiFlector {
     // yes simd        0        5        0
     //  no simd        0        8        0
     fn sub(self, other: VersorEvenOnOrigin) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             (other.group0() * Simd32x4::from(-1.0)),
             // e415, e425, e435, e321
@@ -7161,7 +7565,6 @@ impl std::ops::Sub<VersorEvenOnOrigin> for AntiFlector {
             // e1, e2, e3, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group1()[3] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenOrthogonalOrigin> for AntiFlector {
@@ -7174,7 +7577,7 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for AntiFlector {
     // yes simd        5        4        0
     //  no simd        8        4        0
     fn sub(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -7192,7 +7595,6 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for AntiFlector {
                 (other.group2()[3] * -1.0),
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorOdd> for AntiFlector {
@@ -7206,7 +7608,7 @@ impl std::ops::Sub<VersorOdd> for AntiFlector {
     // yes simd        0        6        0
     //  no simd        0       16        0
     fn sub(self, other: VersorOdd) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -7230,7 +7632,6 @@ impl std::ops::Sub<VersorOdd> for AntiFlector {
             // e3215
             (other.group3()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorOddAtInfinity> for AntiFlector {
@@ -7243,7 +7644,7 @@ impl std::ops::Sub<VersorOddAtInfinity> for AntiFlector {
     // yes simd        0        8        0
     //  no simd        0       12        0
     fn sub(self, other: VersorOddAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[0] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -7267,7 +7668,6 @@ impl std::ops::Sub<VersorOddAtInfinity> for AntiFlector {
             // e3215
             (other.group2()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorOddOrthogonalOrigin> for AntiFlector {
@@ -7280,7 +7680,7 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for AntiFlector {
     // yes simd        0        8        0
     //  no simd        0       12        0
     fn sub(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -7304,7 +7704,6 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for AntiFlector {
             // e3215
             (other.group1()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 

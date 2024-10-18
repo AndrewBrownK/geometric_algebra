@@ -12,20 +12,20 @@ use crate::traits::Wedge;
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         1       5       0
-//  Average:         6      13       0
-//  Maximum:       128     160       0
+//   Median:         1       4       0
+//  Average:         4       9       0
+//  Maximum:        52      85       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         2       7       0
-//  Average:         7      13       0
-//  Maximum:       128     160       0
+//  Average:         7      14       0
+//  Maximum:       128     165       0
 impl std::ops::Add<AntiCircleOnOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: AntiCircleOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -49,14 +49,13 @@ impl std::ops::Add<AntiCircleOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiCircleRotor> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -80,14 +79,13 @@ impl std::ops::Add<AntiCircleRotor> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorAligningOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group2()[3], 0.0]),
             // e1, e2, e3, e4
@@ -111,14 +109,13 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group1()[3], 0.0]),
             // e1, e2, e3, e4
@@ -142,14 +139,13 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorAtInfinity> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group1()[3], 0.0]),
             // e1, e2, e3, e4
@@ -173,14 +169,13 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorOnOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], 0.0]),
             // e1, e2, e3, e4
@@ -204,7 +199,6 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversion> for RoundPoint {
@@ -218,7 +212,7 @@ impl std::ops::Add<AntiDipoleInversion> for RoundPoint {
     //  no simd        5        0        0
     fn add(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
@@ -228,7 +222,6 @@ impl std::ops::Add<AntiDipoleInversion> for RoundPoint {
             // e1, e2, e3, e5
             (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]) + other.group3()),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversionAtInfinity> for RoundPoint {
@@ -239,7 +232,7 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for RoundPoint {
     // no simd        4        0        0
     fn add(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -249,7 +242,6 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for RoundPoint {
             // e1, e2, e3, e5
             (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]) + other.group2()),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversionOnOrigin> for RoundPoint {
@@ -260,7 +252,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for RoundPoint {
     // no simd        4        0        0
     fn add(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             other.group0(),
             // e235, e315, e125, e5
@@ -268,7 +260,6 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for RoundPoint {
             // e1, e2, e3, e4
             (swizzle!(other.group1(), 1, 2, 3, 0) + self.group0()),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for RoundPoint {
@@ -278,7 +269,7 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for RoundPoint {
     // f32        2        0        0
     fn add(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e415, e425, e435, e321
@@ -288,14 +279,13 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] + self[e2])]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleOnOrigin> for RoundPoint {
     type Output = VersorEvenOrthogonalOrigin;
     fn add(self, other: AntiDipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             other.group0(),
             // e235, e315, e125, e5
@@ -303,14 +293,13 @@ impl std::ops::Add<AntiDipoleOnOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDualNum> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[1], 0.0]),
             // e1, e2, e3, e4
@@ -334,14 +323,13 @@ impl std::ops::Add<AntiDualNum> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiFlatOrigin> for RoundPoint {
     type Output = VersorEvenOrthogonalOrigin;
     fn add(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
             // e235, e315, e125, e5
@@ -349,14 +337,13 @@ impl std::ops::Add<AntiFlatOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiFlatPoint> for RoundPoint {
     type Output = VersorEvenOrthogonalOrigin;
     fn add(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
             // e235, e315, e125, e5
@@ -364,7 +351,6 @@ impl std::ops::Add<AntiFlatPoint> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiFlector> for RoundPoint {
@@ -374,7 +360,7 @@ impl std::ops::Add<AntiFlector> for RoundPoint {
     // f32        4        0        0
     fn add(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
             // e235, e315, e125, e5
@@ -387,7 +373,6 @@ impl std::ops::Add<AntiFlector> for RoundPoint {
                 self.group0()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiFlectorOnOrigin> for RoundPoint {
@@ -397,7 +382,7 @@ impl std::ops::Add<AntiFlectorOnOrigin> for RoundPoint {
     // f32        3        0        0
     fn add(self, other: AntiFlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
             // e235, e315, e125, e5
@@ -410,14 +395,13 @@ impl std::ops::Add<AntiFlectorOnOrigin> for RoundPoint {
                 self.group0()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiLine> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -441,14 +425,13 @@ impl std::ops::Add<AntiLine> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiLineOnOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: AntiLineOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -472,14 +455,13 @@ impl std::ops::Add<AntiLineOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiMotor> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], 0.0]),
             // e1, e2, e3, e4
@@ -503,14 +485,13 @@ impl std::ops::Add<AntiMotor> for RoundPoint {
             // e3215
             other.group1()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiMotorOnOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: AntiMotorOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], 0.0]),
             // e1, e2, e3, e4
@@ -534,14 +515,13 @@ impl std::ops::Add<AntiMotorOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiMysteryCircleRotor> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other[e31], 0.0]),
             // e1, e2, e3, e4
@@ -565,7 +545,6 @@ impl std::ops::Add<AntiMysteryCircleRotor> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiMysteryDipoleInversion> for RoundPoint {
@@ -575,7 +554,7 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for RoundPoint {
     // f32        3        0        0
     fn add(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -590,7 +569,6 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for RoundPoint {
                 self[e2],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiPlane> for RoundPoint {
@@ -600,7 +578,7 @@ impl std::ops::Add<AntiPlane> for RoundPoint {
     // f32        4        0        0
     fn add(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let addition = RoundPoint::from_groups(
+        return RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other.group0()[0] + self.group0()[0]),
@@ -611,13 +589,12 @@ impl std::ops::Add<AntiPlane> for RoundPoint {
             // e5
             (other.group0()[3] + self[e2]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiPlane> for RoundPoint {
     fn add_assign(&mut self, other: AntiPlane) {
         use crate::elements::*;
-        let addition = RoundPoint::from_groups(
+        *self = RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other.group0()[0] + self.group0()[0]),
@@ -628,7 +605,6 @@ impl std::ops::AddAssign<AntiPlane> for RoundPoint {
             // e5
             (other.group0()[3] + self[e2]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiPlaneOnOrigin> for RoundPoint {
@@ -638,7 +614,7 @@ impl std::ops::Add<AntiPlaneOnOrigin> for RoundPoint {
     // f32        3        0        0
     fn add(self, other: AntiPlaneOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = RoundPoint::from_groups(
+        return RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other.group0()[0] + self.group0()[0]),
@@ -649,13 +625,12 @@ impl std::ops::Add<AntiPlaneOnOrigin> for RoundPoint {
             // e5
             self[e2],
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiPlaneOnOrigin> for RoundPoint {
     fn add_assign(&mut self, other: AntiPlaneOnOrigin) {
         use crate::elements::*;
-        let addition = RoundPoint::from_groups(
+        *self = RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other.group0()[0] + self.group0()[0]),
@@ -666,14 +641,13 @@ impl std::ops::AddAssign<AntiPlaneOnOrigin> for RoundPoint {
             // e5
             self[e2],
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiScalar> for RoundPoint {
     type Output = VersorEven;
     fn add(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, other[e12345]]),
             // e415, e425, e435, e321
@@ -683,7 +657,6 @@ impl std::ops::Add<AntiScalar> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiSphereOnOrigin> for RoundPoint {
@@ -694,22 +667,20 @@ impl std::ops::Add<AntiSphereOnOrigin> for RoundPoint {
     // no simd        4        0        0
     fn add(self, other: AntiSphereOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (other.group0() + self.group0()), /* e5 */ self[e2]);
-        return addition;
+        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ (other.group0() + self.group0()), /* e5 */ self[e2]);
     }
 }
 impl std::ops::AddAssign<AntiSphereOnOrigin> for RoundPoint {
     fn add_assign(&mut self, other: AntiSphereOnOrigin) {
         use crate::elements::*;
-        let addition = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (other.group0() + self.group0()), /* e5 */ self[e2]);
-        *self = addition;
+        *self = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (other.group0() + self.group0()), /* e5 */ self[e2]);
     }
 }
 impl std::ops::Add<AntiVersorEvenOnOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], 0.0]),
             // e1, e2, e3, e4
@@ -733,14 +704,13 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Circle> for RoundPoint {
     type Output = AntiDipoleInversion;
     fn add(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
@@ -750,14 +720,13 @@ impl std::ops::Add<Circle> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleAligningOrigin> for RoundPoint {
     type Output = AntiDipoleInversion;
     fn add(self, other: CircleAligningOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
@@ -767,14 +736,13 @@ impl std::ops::Add<CircleAligningOrigin> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleAtInfinity> for RoundPoint {
     type Output = AntiDipoleInversion;
     fn add(self, other: CircleAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -784,14 +752,13 @@ impl std::ops::Add<CircleAtInfinity> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleAtOrigin> for RoundPoint {
     type Output = VersorEvenOrthogonalOrigin;
     fn add(self, other: CircleAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             // e235, e315, e125, e5
@@ -799,14 +766,13 @@ impl std::ops::Add<CircleAtOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleOnOrigin> for RoundPoint {
     type Output = AntiDipoleInversion;
     fn add(self, other: CircleOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
@@ -816,14 +782,13 @@ impl std::ops::Add<CircleOnOrigin> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleOrthogonalOrigin> for RoundPoint {
     type Output = VersorEvenOrthogonalOrigin;
     fn add(self, other: CircleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             other.group0(),
             // e235, e315, e125, e5
@@ -831,14 +796,13 @@ impl std::ops::Add<CircleOrthogonalOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotor> for RoundPoint {
     type Output = VersorEven;
     fn add(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]),
             // e415, e425, e435, e321
@@ -848,14 +812,13 @@ impl std::ops::Add<CircleRotor> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorAligningOrigin> for RoundPoint {
     type Output = VersorEven;
     fn add(self, other: CircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]),
             // e415, e425, e435, e321
@@ -865,14 +828,13 @@ impl std::ops::Add<CircleRotorAligningOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for RoundPoint {
     type Output = VersorEven;
     fn add(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, other.group1()[3]]),
             // e415, e425, e435, e321
@@ -882,14 +844,13 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorAtInfinity> for RoundPoint {
     type Output = VersorEven;
     fn add(self, other: CircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, other.group1()[3]]),
             // e415, e425, e435, e321
@@ -899,14 +860,13 @@ impl std::ops::Add<CircleRotorAtInfinity> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorOnOrigin> for RoundPoint {
     type Output = VersorEven;
     fn add(self, other: CircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             other.group0(),
             // e415, e425, e435, e321
@@ -916,14 +876,13 @@ impl std::ops::Add<CircleRotorOnOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Dipole> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -947,14 +906,13 @@ impl std::ops::Add<Dipole> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleAligningOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: DipoleAligningOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -978,14 +936,13 @@ impl std::ops::Add<DipoleAligningOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleAtInfinity> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: DipoleAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1009,14 +966,13 @@ impl std::ops::Add<DipoleAtInfinity> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleAtOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: DipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1040,14 +996,13 @@ impl std::ops::Add<DipoleAtOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversion> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1071,14 +1026,13 @@ impl std::ops::Add<DipoleInversion> for RoundPoint {
             // e3215
             other.group3()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionAligningOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1102,14 +1056,13 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for RoundPoint {
             // e3215
             other.group2()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionAtInfinity> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: DipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1133,14 +1086,13 @@ impl std::ops::Add<DipoleInversionAtInfinity> for RoundPoint {
             // e3215
             other.group2()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionAtOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: DipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1164,14 +1116,13 @@ impl std::ops::Add<DipoleInversionAtOrigin> for RoundPoint {
             // e3215
             other.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionOnOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: DipoleInversionOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1195,14 +1146,13 @@ impl std::ops::Add<DipoleInversionOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionOrthogonalOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1226,14 +1176,13 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for RoundPoint {
             // e3215
             other.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleOnOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: DipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1257,14 +1206,13 @@ impl std::ops::Add<DipoleOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleOrthogonalOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1288,7 +1236,6 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DualNum> for RoundPoint {
@@ -1298,7 +1245,7 @@ impl std::ops::Add<DualNum> for RoundPoint {
     // f32        1        0        0
     fn add(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
             // e415, e425, e435, e321
@@ -1308,14 +1255,13 @@ impl std::ops::Add<DualNum> for RoundPoint {
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[0] + self.group0()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlatOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1339,14 +1285,13 @@ impl std::ops::Add<FlatOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlatPoint> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1370,14 +1315,13 @@ impl std::ops::Add<FlatPoint> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlatPointAtInfinity> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: FlatPointAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1401,14 +1345,13 @@ impl std::ops::Add<FlatPointAtInfinity> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Flector> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1432,14 +1375,13 @@ impl std::ops::Add<Flector> for RoundPoint {
             // e3215
             other.group1()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlectorAtInfinity> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: FlectorAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1463,14 +1405,13 @@ impl std::ops::Add<FlectorAtInfinity> for RoundPoint {
             // e3215
             other.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlectorOnOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: FlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1494,14 +1435,13 @@ impl std::ops::Add<FlectorOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Horizon> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1525,7 +1465,6 @@ impl std::ops::Add<Horizon> for RoundPoint {
             // e3215
             other[e3215],
         );
-        return addition;
     }
 }
 impl std::ops::Add<Infinity> for RoundPoint {
@@ -1535,22 +1474,20 @@ impl std::ops::Add<Infinity> for RoundPoint {
     // f32        1        0        0
     fn add(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
-        let addition = RoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e5 */ (other[e5] + self[e2]));
-        return addition;
+        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e5 */ (other[e5] + self[e2]));
     }
 }
 impl std::ops::AddAssign<Infinity> for RoundPoint {
     fn add_assign(&mut self, other: Infinity) {
         use crate::elements::*;
-        let addition = RoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e5 */ (other[e5] + self[e2]));
-        *self = addition;
+        *self = RoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e5 */ (other[e5] + self[e2]));
     }
 }
 impl std::ops::Add<Line> for RoundPoint {
     type Output = AntiDipoleInversion;
     fn add(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1560,14 +1497,13 @@ impl std::ops::Add<Line> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<LineAtInfinity> for RoundPoint {
     type Output = VersorEvenOrthogonalOrigin;
     fn add(self, other: LineAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -1575,14 +1511,13 @@ impl std::ops::Add<LineAtInfinity> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<LineOnOrigin> for RoundPoint {
     type Output = AntiDipoleInversion;
     fn add(self, other: LineOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1592,7 +1527,6 @@ impl std::ops::Add<LineOnOrigin> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Motor> for RoundPoint {
@@ -1602,7 +1536,7 @@ impl std::ops::Add<Motor> for RoundPoint {
     // f32        1        0        0
     fn add(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
             // e415, e425, e435, e321
@@ -1612,7 +1546,6 @@ impl std::ops::Add<Motor> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<MotorAtInfinity> for RoundPoint {
@@ -1622,7 +1555,7 @@ impl std::ops::Add<MotorAtInfinity> for RoundPoint {
     // f32        1        0        0
     fn add(self, other: MotorAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -1630,14 +1563,13 @@ impl std::ops::Add<MotorAtInfinity> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<MotorOnOrigin> for RoundPoint {
     type Output = VersorEven;
     fn add(self, other: MotorOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
             // e415, e425, e435, e321
@@ -1647,7 +1579,6 @@ impl std::ops::Add<MotorOnOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<MultiVector> for RoundPoint {
@@ -1661,7 +1592,7 @@ impl std::ops::Add<MultiVector> for RoundPoint {
     //  no simd        5        0        0
     fn add(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             other.group0(),
             // e1, e2, e3, e4
@@ -1685,14 +1616,13 @@ impl std::ops::Add<MultiVector> for RoundPoint {
             // e3215
             other[e45],
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryCircle> for RoundPoint {
     type Output = AntiDipoleInversion;
     fn add(self, other: MysteryCircle) -> Self::Output {
         use crate::elements::*;
-        let addition = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1702,14 +1632,13 @@ impl std::ops::Add<MysteryCircle> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryCircleRotor> for RoundPoint {
     type Output = VersorEven;
     fn add(self, other: MysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, other[e425]]),
             // e415, e425, e435, e321
@@ -1719,14 +1648,13 @@ impl std::ops::Add<MysteryCircleRotor> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryDipole> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: MysteryDipole) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1750,14 +1678,13 @@ impl std::ops::Add<MysteryDipole> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryDipoleInversion> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: MysteryDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1781,7 +1708,6 @@ impl std::ops::Add<MysteryDipoleInversion> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryVersorEven> for RoundPoint {
@@ -1791,7 +1717,7 @@ impl std::ops::Add<MysteryVersorEven> for RoundPoint {
     // f32        3        0        0
     fn add(self, other: MysteryVersorEven) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
             // e415, e425, e435, e321
@@ -1806,14 +1732,13 @@ impl std::ops::Add<MysteryVersorEven> for RoundPoint {
                 self.group0()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryVersorOdd> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: MysteryVersorOdd) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[0], 0.0]),
             // e1, e2, e3, e4
@@ -1837,14 +1762,13 @@ impl std::ops::Add<MysteryVersorOdd> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullCircleAtOrigin> for RoundPoint {
     type Output = VersorEvenOrthogonalOrigin;
     fn add(self, other: NullCircleAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             // e235, e315, e125, e5
@@ -1852,14 +1776,13 @@ impl std::ops::Add<NullCircleAtOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullDipoleAtOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: NullDipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1883,14 +1806,13 @@ impl std::ops::Add<NullDipoleAtOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullDipoleInversionAtOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1914,14 +1836,13 @@ impl std::ops::Add<NullDipoleInversionAtOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullSphereAtOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -1945,7 +1866,6 @@ impl std::ops::Add<NullSphereAtOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullVersorEvenAtOrigin> for RoundPoint {
@@ -1955,7 +1875,7 @@ impl std::ops::Add<NullVersorEvenAtOrigin> for RoundPoint {
     // f32        1        0        0
     fn add(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             // e235, e315, e125, e5
@@ -1963,7 +1883,6 @@ impl std::ops::Add<NullVersorEvenAtOrigin> for RoundPoint {
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] + self.group0()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Origin> for RoundPoint {
@@ -1973,32 +1892,30 @@ impl std::ops::Add<Origin> for RoundPoint {
     // f32        1        0        0
     fn add(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let addition = RoundPoint::from_groups(
+        return RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other[e4])]),
             // e5
             self[e2],
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<Origin> for RoundPoint {
     fn add_assign(&mut self, other: Origin) {
         use crate::elements::*;
-        let addition = RoundPoint::from_groups(
+        *self = RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other[e4])]),
             // e5
             self[e2],
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<Plane> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -2022,14 +1939,13 @@ impl std::ops::Add<Plane> for RoundPoint {
             // e3215
             other.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<PlaneOnOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: PlaneOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -2053,7 +1969,6 @@ impl std::ops::Add<PlaneOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<RoundPoint> for RoundPoint {
@@ -2067,15 +1982,13 @@ impl std::ops::Add<RoundPoint> for RoundPoint {
     //  no simd        5        0        0
     fn add(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let addition = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (other.group0() + self.group0()), /* e5 */ (other[e2] + self[e2]));
-        return addition;
+        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ (other.group0() + self.group0()), /* e5 */ (other[e2] + self[e2]));
     }
 }
 impl std::ops::AddAssign<RoundPoint> for RoundPoint {
     fn add_assign(&mut self, other: RoundPoint) {
         use crate::elements::*;
-        let addition = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (other.group0() + self.group0()), /* e5 */ (other[e2] + self[e2]));
-        *self = addition;
+        *self = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (other.group0() + self.group0()), /* e5 */ (other[e2] + self[e2]));
     }
 }
 impl std::ops::Add<RoundPointAtOrigin> for RoundPoint {
@@ -2085,32 +1998,30 @@ impl std::ops::Add<RoundPointAtOrigin> for RoundPoint {
     // f32        2        0        0
     fn add(self, other: RoundPointAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = RoundPoint::from_groups(
+        return RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[0] + self.group0()[3])]),
             // e5
             (other.group0()[1] + self[e2]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<RoundPointAtOrigin> for RoundPoint {
     fn add_assign(&mut self, other: RoundPointAtOrigin) {
         use crate::elements::*;
-        let addition = RoundPoint::from_groups(
+        *self = RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[0] + self.group0()[3])]),
             // e5
             (other.group0()[1] + self[e2]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<Scalar> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
@@ -2134,14 +2045,13 @@ impl std::ops::Add<Scalar> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Sphere> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -2165,14 +2075,13 @@ impl std::ops::Add<Sphere> for RoundPoint {
             // e3215
             other.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<SphereAtOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: SphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -2196,14 +2105,13 @@ impl std::ops::Add<SphereAtOrigin> for RoundPoint {
             // e3215
             other.group0()[0],
         );
-        return addition;
     }
 }
 impl std::ops::Add<SphereOnOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: SphereOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -2227,7 +2135,6 @@ impl std::ops::Add<SphereOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEven> for RoundPoint {
@@ -2241,7 +2148,7 @@ impl std::ops::Add<VersorEven> for RoundPoint {
     //  no simd        5        0        0
     fn add(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             other.group0(),
             // e415, e425, e435, e321
@@ -2251,7 +2158,6 @@ impl std::ops::Add<VersorEven> for RoundPoint {
             // e1, e2, e3, e4
             (self.group0() + other.group3()),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenAligningOrigin> for RoundPoint {
@@ -2261,7 +2167,7 @@ impl std::ops::Add<VersorEvenAligningOrigin> for RoundPoint {
     // f32        2        0        0
     fn add(self, other: VersorEvenAligningOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             other.group0(),
             // e415, e425, e435, e321
@@ -2271,7 +2177,6 @@ impl std::ops::Add<VersorEvenAligningOrigin> for RoundPoint {
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group1()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenAtInfinity> for RoundPoint {
@@ -2281,7 +2186,7 @@ impl std::ops::Add<VersorEvenAtInfinity> for RoundPoint {
     // f32        4        0        0
     fn add(self, other: VersorEvenAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
             // e415, e425, e435, e321
@@ -2296,7 +2201,6 @@ impl std::ops::Add<VersorEvenAtInfinity> for RoundPoint {
                 self.group0()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenAtOrigin> for RoundPoint {
@@ -2306,7 +2210,7 @@ impl std::ops::Add<VersorEvenAtOrigin> for RoundPoint {
     // f32        2        0        0
     fn add(self, other: VersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             // e235, e315, e125, e5
@@ -2314,7 +2218,6 @@ impl std::ops::Add<VersorEvenAtOrigin> for RoundPoint {
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group0()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenOnOrigin> for RoundPoint {
@@ -2324,7 +2227,7 @@ impl std::ops::Add<VersorEvenOnOrigin> for RoundPoint {
     // f32        1        0        0
     fn add(self, other: VersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             other.group0(),
             // e415, e425, e435, e321
@@ -2334,7 +2237,6 @@ impl std::ops::Add<VersorEvenOnOrigin> for RoundPoint {
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other.group1()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenOrthogonalOrigin> for RoundPoint {
@@ -2348,7 +2250,7 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for RoundPoint {
     //  no simd        5        0        0
     fn add(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             other.group0(),
             // e235, e315, e125, e5
@@ -2356,14 +2258,13 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for RoundPoint {
             // e1, e2, e3, e4
             (self.group0() + other.group2()),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorOdd> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], 0.0]),
             // e1, e2, e3, e4
@@ -2387,14 +2288,13 @@ impl std::ops::Add<VersorOdd> for RoundPoint {
             // e3215
             other.group3()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorOddAtInfinity> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: VersorOddAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[0], 0.0]),
             // e1, e2, e3, e4
@@ -2418,14 +2318,13 @@ impl std::ops::Add<VersorOddAtInfinity> for RoundPoint {
             // e3215
             other.group2()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorOddOrthogonalOrigin> for RoundPoint {
     type Output = MultiVector;
     fn add(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], 0.0]),
             // e1, e2, e3, e4
@@ -2449,14 +2348,17 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for RoundPoint {
             // e3215
             other.group1()[3],
         );
-        return addition;
     }
 }
 impl std::ops::BitXor<AntiCircleOnOrigin> for RoundPoint {
     type Output = Circle;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       18        0
+    //           add/sub      mul      div
+    //      f32        2        6        0
+    //    simd3        2        4        0
+    // Totals...
+    // yes simd        4       10        0
+    //  no simd        8       18        0
     fn bitxor(self, other: AntiCircleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2465,8 +2367,13 @@ impl std::ops::BitXor<AntiCircleOnOrigin> for RoundPoint {
 impl std::ops::BitXor<AntiCircleRotor> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       35        0
+    //           add/sub      mul      div
+    //      f32       10       18        0
+    //    simd3        2        3        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd       13       23        0
+    //  no simd       20       35        0
     fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2475,8 +2382,13 @@ impl std::ops::BitXor<AntiCircleRotor> for RoundPoint {
 impl std::ops::BitXor<AntiCircleRotorAligningOrigin> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       17       32        0
+    //           add/sub      mul      div
+    //      f32       11       19        0
+    //    simd3        2        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       13       23        0
+    //  no simd       17       32        0
     fn bitxor(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2485,8 +2397,13 @@ impl std::ops::BitXor<AntiCircleRotorAligningOrigin> for RoundPoint {
 impl std::ops::BitXor<AntiCircleRotorAligningOriginAtInfinity> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       23        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        8       18        0
+    //  no simd        8       23        0
     fn bitxor(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2495,8 +2412,13 @@ impl std::ops::BitXor<AntiCircleRotorAligningOriginAtInfinity> for RoundPoint {
 impl std::ops::BitXor<AntiCircleRotorAtInfinity> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       11       26        0
+    //           add/sub      mul      div
+    //      f32        7       15        0
+    //    simd3        0        1        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd        8       18        0
+    //  no simd       11       26        0
     fn bitxor(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2505,8 +2427,13 @@ impl std::ops::BitXor<AntiCircleRotorAtInfinity> for RoundPoint {
 impl std::ops::BitXor<AntiCircleRotorOnOrigin> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       23        0
+    //           add/sub      mul      div
+    //      f32        5       16        0
+    //    simd3        1        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        6       18        0
+    //  no simd        8       23        0
     fn bitxor(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2515,8 +2442,13 @@ impl std::ops::BitXor<AntiCircleRotorOnOrigin> for RoundPoint {
 impl std::ops::BitXor<AntiDipoleInversion> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       25       40        0
+    //           add/sub      mul      div
+    //      f32        6       25        0
+    //    simd3        1        2        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       11       31        0
+    //  no simd       25       47        0
     fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2525,8 +2457,13 @@ impl std::ops::BitXor<AntiDipoleInversion> for RoundPoint {
 impl std::ops::BitXor<AntiDipoleInversionAtInfinity> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       30        0
+    //           add/sub      mul      div
+    //      f32       11       23        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       12       25        0
+    //  no simd       15       30        0
     fn bitxor(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2535,8 +2472,13 @@ impl std::ops::BitXor<AntiDipoleInversionAtInfinity> for RoundPoint {
 impl std::ops::BitXor<AntiDipoleInversionOnOrigin> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       32        0
+    //           add/sub      mul      div
+    //      f32        6       18        0
+    //    simd3        1        2        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        7       22        0
+    //  no simd        9       32        0
     fn bitxor(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2545,8 +2487,12 @@ impl std::ops::BitXor<AntiDipoleInversionOnOrigin> for RoundPoint {
 impl std::ops::BitXor<AntiDipoleInversionOrthogonalOrigin> for RoundPoint {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       29        0
+    //           add/sub      mul      div
+    //      f32       10       25        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       11       26        0
+    //  no simd       14       29        0
     fn bitxor(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2555,8 +2501,12 @@ impl std::ops::BitXor<AntiDipoleInversionOrthogonalOrigin> for RoundPoint {
 impl std::ops::BitXor<AntiDipoleOnOrigin> for RoundPoint {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3       12        0
+    //           add/sub      mul      div
+    //      f32        3        4        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        3        6        0
+    //  no simd        3       12        0
     fn bitxor(self, other: AntiDipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2565,8 +2515,12 @@ impl std::ops::BitXor<AntiDipoleOnOrigin> for RoundPoint {
 impl std::ops::BitXor<AntiDualNum> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        6        0
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        6        0
     fn bitxor(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2575,8 +2529,9 @@ impl std::ops::BitXor<AntiDualNum> for RoundPoint {
 impl std::ops::BitXor<AntiFlatOrigin> for RoundPoint {
     type Output = SphereAtOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd2        0        2        0
+    // no simd        0        4        0
     fn bitxor(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2595,8 +2550,12 @@ impl std::ops::BitXor<AntiFlatPoint> for RoundPoint {
 impl std::ops::BitXor<AntiFlector> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       24        0
+    //           add/sub      mul      div
+    //      f32        9       21        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        9       22        0
+    //  no simd        9       24        0
     fn bitxor(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2605,8 +2564,12 @@ impl std::ops::BitXor<AntiFlector> for RoundPoint {
 impl std::ops::BitXor<AntiFlectorOnOrigin> for RoundPoint {
     type Output = DipoleInversionOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3       18        0
+    //           add/sub      mul      div
+    //      f32        3        6        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        3       10        0
+    //  no simd        3       22        0
     fn bitxor(self, other: AntiFlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2615,8 +2578,12 @@ impl std::ops::BitXor<AntiFlectorOnOrigin> for RoundPoint {
 impl std::ops::BitXor<AntiLine> for RoundPoint {
     type Output = Circle;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       18        0
+    //           add/sub      mul      div
+    //      f32        2        6        0
+    //    simd3        2        4        0
+    // Totals...
+    // yes simd        4       10        0
+    //  no simd        8       18        0
     fn bitxor(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2625,8 +2592,12 @@ impl std::ops::BitXor<AntiLine> for RoundPoint {
 impl std::ops::BitXor<AntiLineOnOrigin> for RoundPoint {
     type Output = CircleOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        9        0
+    //           add/sub      mul      div
+    //      f32        2        6        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        2        7        0
+    //  no simd        2        9        0
     fn bitxor(self, other: AntiLineOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2635,8 +2606,12 @@ impl std::ops::BitXor<AntiLineOnOrigin> for RoundPoint {
 impl std::ops::BitXor<AntiMotor> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       24        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        8       18        0
+    //  no simd        8       24        0
     fn bitxor(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2645,8 +2620,12 @@ impl std::ops::BitXor<AntiMotor> for RoundPoint {
 impl std::ops::BitXor<AntiMotorOnOrigin> for RoundPoint {
     type Output = VersorEvenOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2       14        0
+    //           add/sub      mul      div
+    //      f32        2        6        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        2        8        0
+    //  no simd        2       14        0
     fn bitxor(self, other: AntiMotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2655,8 +2634,13 @@ impl std::ops::BitXor<AntiMotorOnOrigin> for RoundPoint {
 impl std::ops::BitXor<AntiMysteryCircleRotor> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2       20        0
+    //           add/sub      mul      div
+    //      f32        2       13        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2       15        0
+    //  no simd        2       20        0
     fn bitxor(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2665,8 +2649,13 @@ impl std::ops::BitXor<AntiMysteryCircleRotor> for RoundPoint {
 impl std::ops::BitXor<AntiMysteryDipoleInversion> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       24        0
+    //           add/sub      mul      div
+    //      f32        6       18        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        6       20        0
+    //  no simd        6       25        0
     fn bitxor(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2675,8 +2664,12 @@ impl std::ops::BitXor<AntiMysteryDipoleInversion> for RoundPoint {
 impl std::ops::BitXor<AntiPlane> for RoundPoint {
     type Output = Dipole;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       16        0
+    //           add/sub      mul      div
+    //      f32        3        7        0
+    //    simd3        1        3        0
+    // Totals...
+    // yes simd        4       10        0
+    //  no simd        6       16        0
     fn bitxor(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2685,8 +2678,9 @@ impl std::ops::BitXor<AntiPlane> for RoundPoint {
 impl std::ops::BitXor<AntiPlaneOnOrigin> for RoundPoint {
     type Output = DipoleOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3       15        0
+    //          add/sub      mul      div
+    //   simd3        1        5        0
+    // no simd        3       15        0
     fn bitxor(self, other: AntiPlaneOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2695,8 +2689,12 @@ impl std::ops::BitXor<AntiPlaneOnOrigin> for RoundPoint {
 impl std::ops::BitXor<AntiSphereOnOrigin> for RoundPoint {
     type Output = Dipole;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       20        0
+    //           add/sub      mul      div
+    //      f32        3        8        0
+    //    simd3        1        4        0
+    // Totals...
+    // yes simd        4       12        0
+    //  no simd        6       20        0
     fn bitxor(self, other: AntiSphereOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2705,8 +2703,12 @@ impl std::ops::BitXor<AntiSphereOnOrigin> for RoundPoint {
 impl std::ops::BitXor<AntiVersorEvenOnOrigin> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       24        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        8       18        0
+    //  no simd        8       24        0
     fn bitxor(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2715,8 +2717,12 @@ impl std::ops::BitXor<AntiVersorEvenOnOrigin> for RoundPoint {
 impl std::ops::BitXor<Circle> for RoundPoint {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       20        0
+    //           add/sub      mul      div
+    //      f32        7       12        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        9       14        0
+    //  no simd       15       20        0
     fn bitxor(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2725,8 +2731,12 @@ impl std::ops::BitXor<Circle> for RoundPoint {
 impl std::ops::BitXor<CircleAligningOrigin> for RoundPoint {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       13       18        0
+    //           add/sub      mul      div
+    //      f32        9       14        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       10       15        0
+    //  no simd       13       18        0
     fn bitxor(self, other: CircleAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2735,8 +2745,12 @@ impl std::ops::BitXor<CircleAligningOrigin> for RoundPoint {
 impl std::ops::BitXor<CircleAtInfinity> for RoundPoint {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       14        0
+    //           add/sub      mul      div
+    //      f32        5       10        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        6       11        0
+    //  no simd        9       14        0
     fn bitxor(self, other: CircleAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2755,8 +2769,12 @@ impl std::ops::BitXor<CircleAtOrigin> for RoundPoint {
 impl std::ops::BitXor<CircleOnOrigin> for RoundPoint {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn bitxor(self, other: CircleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2765,8 +2783,12 @@ impl std::ops::BitXor<CircleOnOrigin> for RoundPoint {
 impl std::ops::BitXor<CircleOrthogonalOrigin> for RoundPoint {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       14        0
+    //           add/sub      mul      div
+    //      f32        5       10        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        6       11        0
+    //  no simd        9       14        0
     fn bitxor(self, other: CircleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2775,8 +2797,12 @@ impl std::ops::BitXor<CircleOrthogonalOrigin> for RoundPoint {
 impl std::ops::BitXor<CircleRotor> for RoundPoint {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       20        0
+    //           add/sub      mul      div
+    //      f32        7       12        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        9       14        0
+    //  no simd       15       20        0
     fn bitxor(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2785,8 +2811,12 @@ impl std::ops::BitXor<CircleRotor> for RoundPoint {
 impl std::ops::BitXor<CircleRotorAligningOrigin> for RoundPoint {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       13       18        0
+    //           add/sub      mul      div
+    //      f32        9       14        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       10       15        0
+    //  no simd       13       18        0
     fn bitxor(self, other: CircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2795,8 +2825,12 @@ impl std::ops::BitXor<CircleRotorAligningOrigin> for RoundPoint {
 impl std::ops::BitXor<CircleRotorAligningOriginAtInfinity> for RoundPoint {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn bitxor(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2804,8 +2838,12 @@ impl std::ops::BitXor<CircleRotorAligningOriginAtInfinity> for RoundPoint {
 impl std::ops::BitXor<CircleRotorAtInfinity> for RoundPoint {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       14        0
+    //           add/sub      mul      div
+    //      f32        5       10        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        6       11        0
+    //  no simd        9       14        0
     fn bitxor(self, other: CircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2814,8 +2852,12 @@ impl std::ops::BitXor<CircleRotorAtInfinity> for RoundPoint {
 impl std::ops::BitXor<CircleRotorOnOrigin> for RoundPoint {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn bitxor(self, other: CircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2824,8 +2866,13 @@ impl std::ops::BitXor<CircleRotorOnOrigin> for RoundPoint {
 impl std::ops::BitXor<Dipole> for RoundPoint {
     type Output = Circle;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       30        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd3        4        6        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        9       15        0
+    //  no simd       20       30        0
     fn bitxor(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2834,8 +2881,12 @@ impl std::ops::BitXor<Dipole> for RoundPoint {
 impl std::ops::BitXor<DipoleAligningOrigin> for RoundPoint {
     type Output = CircleAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       21        0
+    //           add/sub      mul      div
+    //      f32        3        6        0
+    //    simd3        3        5        0
+    // Totals...
+    // yes simd        6       11        0
+    //  no simd       12       21        0
     fn bitxor(self, other: DipoleAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2844,8 +2895,13 @@ impl std::ops::BitXor<DipoleAligningOrigin> for RoundPoint {
 impl std::ops::BitXor<DipoleAtInfinity> for RoundPoint {
     type Output = Circle;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       11       21        0
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd3        2        4        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        4       10        0
+    //  no simd       11       21        0
     fn bitxor(self, other: DipoleAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2854,8 +2910,9 @@ impl std::ops::BitXor<DipoleAtInfinity> for RoundPoint {
 impl std::ops::BitXor<DipoleAtOrigin> for RoundPoint {
     type Output = CircleAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       18        0
+    //          add/sub      mul      div
+    //   simd3        3        6        0
+    // no simd        9       18        0
     fn bitxor(self, other: DipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2864,8 +2921,13 @@ impl std::ops::BitXor<DipoleAtOrigin> for RoundPoint {
 impl std::ops::BitXor<DipoleInversion> for RoundPoint {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       35        0
+    //           add/sub      mul      div
+    //      f32        6       17        0
+    //    simd3        2        3        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       11       23        0
+    //  no simd       24       38        0
     fn bitxor(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2874,8 +2936,13 @@ impl std::ops::BitXor<DipoleInversion> for RoundPoint {
 impl std::ops::BitXor<DipoleInversionAligningOrigin> for RoundPoint {
     type Output = CircleRotorAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       26        0
+    //           add/sub      mul      div
+    //      f32        6       16        0
+    //    simd3        2        3        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        9       20        0
+    //  no simd       16       29        0
     fn bitxor(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2884,8 +2951,13 @@ impl std::ops::BitXor<DipoleInversionAligningOrigin> for RoundPoint {
 impl std::ops::BitXor<DipoleInversionAtInfinity> for RoundPoint {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       25        0
+    //           add/sub      mul      div
+    //      f32        6       14        0
+    //    simd3        0        1        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        8       17        0
+    //  no simd       14       25        0
     fn bitxor(self, other: DipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2894,8 +2966,13 @@ impl std::ops::BitXor<DipoleInversionAtInfinity> for RoundPoint {
 impl std::ops::BitXor<DipoleInversionAtOrigin> for RoundPoint {
     type Output = CircleRotorAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       10       20        0
+    //           add/sub      mul      div
+    //      f32        3       13        0
+    //    simd3        1        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5       16        0
+    //  no simd       10       23        0
     fn bitxor(self, other: DipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2904,8 +2981,13 @@ impl std::ops::BitXor<DipoleInversionAtOrigin> for RoundPoint {
 impl std::ops::BitXor<DipoleInversionOnOrigin> for RoundPoint {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       16        0
+    //           add/sub      mul      div
+    //      f32        2        9        0
+    //    simd3        1        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        4       12        0
+    //  no simd        9       19        0
     fn bitxor(self, other: DipoleInversionOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2914,8 +2996,13 @@ impl std::ops::BitXor<DipoleInversionOnOrigin> for RoundPoint {
 impl std::ops::BitXor<DipoleInversionOrthogonalOrigin> for RoundPoint {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       18       29        0
+    //           add/sub      mul      div
+    //      f32        8       21        0
+    //    simd3        1        1        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       11       24        0
+    //  no simd       19       32        0
     fn bitxor(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2924,8 +3011,12 @@ impl std::ops::BitXor<DipoleInversionOrthogonalOrigin> for RoundPoint {
 impl std::ops::BitXor<DipoleOnOrigin> for RoundPoint {
     type Output = CircleOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       12        0
+    //           add/sub      mul      div
+    //      f32        3        6        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        4        8        0
+    //  no simd        6       12        0
     fn bitxor(self, other: DipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2934,8 +3025,12 @@ impl std::ops::BitXor<DipoleOnOrigin> for RoundPoint {
 impl std::ops::BitXor<DipoleOrthogonalOrigin> for RoundPoint {
     type Output = Circle;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       17       27        0
+    //           add/sub      mul      div
+    //      f32        5        9        0
+    //    simd3        4        6        0
+    // Totals...
+    // yes simd        9       15        0
+    //  no simd       17       27        0
     fn bitxor(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2944,8 +3039,9 @@ impl std::ops::BitXor<DipoleOrthogonalOrigin> for RoundPoint {
 impl std::ops::BitXor<DualNum> for RoundPoint {
     type Output = DipoleOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn bitxor(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2954,8 +3050,9 @@ impl std::ops::BitXor<DualNum> for RoundPoint {
 impl std::ops::BitXor<FlatOrigin> for RoundPoint {
     type Output = LineOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        6        0
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
     fn bitxor(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2964,8 +3061,12 @@ impl std::ops::BitXor<FlatOrigin> for RoundPoint {
 impl std::ops::BitXor<FlatPoint> for RoundPoint {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       12        0
+    //           add/sub      mul      div
+    //      f32        3        6        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        4        8        0
+    //  no simd        6       12        0
     fn bitxor(self, other: FlatPoint) -> Self::Output {
         return self.wedge(other);
     }
@@ -2973,8 +3074,9 @@ impl std::ops::BitXor<FlatPoint> for RoundPoint {
 impl std::ops::BitXor<FlatPointAtInfinity> for RoundPoint {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        9        0
+    //          add/sub      mul      div
+    //   simd3        1        3        0
+    // no simd        3        9        0
     fn bitxor(self, other: FlatPointAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2982,8 +3084,13 @@ impl std::ops::BitXor<FlatPointAtInfinity> for RoundPoint {
 impl std::ops::BitXor<Flector> for RoundPoint {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       16        0
+    //           add/sub      mul      div
+    //      f32        2        9        0
+    //    simd3        1        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        4       12        0
+    //  no simd        9       19        0
     fn bitxor(self, other: Flector) -> Self::Output {
         return self.wedge(other);
     }
@@ -2991,8 +3098,12 @@ impl std::ops::BitXor<Flector> for RoundPoint {
 impl std::ops::BitXor<FlectorAtInfinity> for RoundPoint {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3       10        0
+    //           add/sub      mul      div
+    //      f32        3        7        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        3        8        0
+    //  no simd        3       10        0
     fn bitxor(self, other: FlectorAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3019,8 +3130,9 @@ impl std::ops::BitXor<Horizon> for RoundPoint {
 impl std::ops::BitXor<Infinity> for RoundPoint {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn bitxor(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3029,8 +3141,12 @@ impl std::ops::BitXor<Infinity> for RoundPoint {
 impl std::ops::BitXor<Line> for RoundPoint {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn bitxor(self, other: Line) -> Self::Output {
         return self.wedge(other);
     }
@@ -3047,8 +3163,9 @@ impl std::ops::BitXor<LineAtInfinity> for RoundPoint {
 impl std::ops::BitXor<LineOnOrigin> for RoundPoint {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        6        0
+    //          add/sub      mul      div
+    //   simd3        1        2        0
+    // no simd        3        6        0
     fn bitxor(self, other: LineOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3056,8 +3173,12 @@ impl std::ops::BitXor<LineOnOrigin> for RoundPoint {
 impl std::ops::BitXor<Motor> for RoundPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       16        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd        5       10        0
+    //  no simd        8       16        0
     fn bitxor(self, other: Motor) -> Self::Output {
         return self.wedge(other);
     }
@@ -3065,8 +3186,12 @@ impl std::ops::BitXor<Motor> for RoundPoint {
 impl std::ops::BitXor<MotorAtInfinity> for RoundPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2       10        0
+    //           add/sub      mul      div
+    //      f32        2        6        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        7        0
+    //  no simd        2       10        0
     fn bitxor(self, other: MotorAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3083,8 +3208,13 @@ impl std::ops::BitXor<MotorOnOrigin> for RoundPoint {
 impl std::ops::BitXor<MultiVector> for RoundPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       49       80        0
+    //           add/sub      mul      div
+    //      f32       21       38        0
+    //    simd3        4        6        0
+    //    simd4        4        6        0
+    // Totals...
+    // yes simd       29       50        0
+    //  no simd       49       80        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3113,8 +3243,12 @@ impl std::ops::BitXor<MysteryCircleRotor> for RoundPoint {
 impl std::ops::BitXor<MysteryDipole> for RoundPoint {
     type Output = Circle;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2       15        0
+    //           add/sub      mul      div
+    //      f32        2        9        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        2       11        0
+    //  no simd        2       15        0
     fn bitxor(self, other: MysteryDipole) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3123,8 +3257,12 @@ impl std::ops::BitXor<MysteryDipole> for RoundPoint {
 impl std::ops::BitXor<MysteryDipoleInversion> for RoundPoint {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       18        0
+    //           add/sub      mul      div
+    //      f32        4       15        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        4       16        0
+    //  no simd        4       18        0
     fn bitxor(self, other: MysteryDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3133,8 +3271,13 @@ impl std::ops::BitXor<MysteryDipoleInversion> for RoundPoint {
 impl std::ops::BitXor<MysteryVersorEven> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       24        0
+    //           add/sub      mul      div
+    //      f32        6       18        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        6       20        0
+    //  no simd        6       25        0
     fn bitxor(self, other: MysteryVersorEven) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3143,8 +3286,12 @@ impl std::ops::BitXor<MysteryVersorEven> for RoundPoint {
 impl std::ops::BitXor<MysteryVersorOdd> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       23        0
+    //           add/sub      mul      div
+    //      f32        4       15        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        4       17        0
+    //  no simd        4       23        0
     fn bitxor(self, other: MysteryVersorOdd) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3163,8 +3310,9 @@ impl std::ops::BitXor<NullCircleAtOrigin> for RoundPoint {
 impl std::ops::BitXor<NullDipoleAtOrigin> for RoundPoint {
     type Output = CircleOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        9        0
+    //          add/sub      mul      div
+    //   simd3        1        3        0
+    // no simd        3        9        0
     fn bitxor(self, other: NullDipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3173,8 +3321,12 @@ impl std::ops::BitXor<NullDipoleAtOrigin> for RoundPoint {
 impl std::ops::BitXor<NullDipoleInversionAtOrigin> for RoundPoint {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3       10        0
+    //           add/sub      mul      div
+    //      f32        3        7        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        3        8        0
+    //  no simd        3       10        0
     fn bitxor(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3193,8 +3345,12 @@ impl std::ops::BitXor<NullSphereAtOrigin> for RoundPoint {
 impl std::ops::BitXor<NullVersorEvenAtOrigin> for RoundPoint {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2       17        0
+    //           add/sub      mul      div
+    //      f32        2        9        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        2       11        0
+    //  no simd        2       17        0
     fn bitxor(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3203,8 +3359,9 @@ impl std::ops::BitXor<NullVersorEvenAtOrigin> for RoundPoint {
 impl std::ops::BitXor<Origin> for RoundPoint {
     type Output = DipoleOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn bitxor(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3231,8 +3388,12 @@ impl std::ops::BitXor<PlaneOnOrigin> for RoundPoint {
 impl std::ops::BitXor<RoundPoint> for RoundPoint {
     type Output = Dipole;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       10       20        0
+    //           add/sub      mul      div
+    //    simd3        2        4        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd        3        6        0
+    //  no simd       10       20        0
     fn bitxor(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3241,8 +3402,12 @@ impl std::ops::BitXor<RoundPoint> for RoundPoint {
 impl std::ops::BitXor<RoundPointAtOrigin> for RoundPoint {
     type Output = DipoleAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1       11        0
+    //           add/sub      mul      div
+    //      f32        1        8        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        1        9        0
+    //  no simd        1       11        0
     fn bitxor(self, other: RoundPointAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3251,8 +3416,12 @@ impl std::ops::BitXor<RoundPointAtOrigin> for RoundPoint {
 impl std::ops::BitXor<Scalar> for RoundPoint {
     type Output = RoundPoint;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        5        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn bitxor(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3297,8 +3466,13 @@ impl std::ops::BitXor<SphereOnOrigin> for RoundPoint {
 impl std::ops::BitXor<VersorEven> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       25       40        0
+    //           add/sub      mul      div
+    //      f32        6       17        0
+    //    simd3        1        2        0
+    //    simd4        4        5        0
+    // Totals...
+    // yes simd       11       24        0
+    //  no simd       25       43        0
     fn bitxor(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3307,8 +3481,12 @@ impl std::ops::BitXor<VersorEven> for RoundPoint {
 impl std::ops::BitXor<VersorEvenAligningOrigin> for RoundPoint {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       29        0
+    //           add/sub      mul      div
+    //      f32       10       25        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       11       26        0
+    //  no simd       14       29        0
     fn bitxor(self, other: VersorEvenAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3317,8 +3495,13 @@ impl std::ops::BitXor<VersorEvenAligningOrigin> for RoundPoint {
 impl std::ops::BitXor<VersorEvenAtInfinity> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       30        0
+    //           add/sub      mul      div
+    //      f32       11       23        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       12       25        0
+    //  no simd       15       30        0
     fn bitxor(self, other: VersorEvenAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3337,8 +3520,12 @@ impl std::ops::BitXor<VersorEvenAtOrigin> for RoundPoint {
 impl std::ops::BitXor<VersorEvenOnOrigin> for RoundPoint {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       20        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        3        0
+    // Totals...
+    // yes simd        5       11        0
+    //  no simd        8       20        0
     fn bitxor(self, other: VersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3347,8 +3534,13 @@ impl std::ops::BitXor<VersorEvenOnOrigin> for RoundPoint {
 impl std::ops::BitXor<VersorEvenOrthogonalOrigin> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       19       34        0
+    //           add/sub      mul      div
+    //      f32        4       15        0
+    //    simd3        1        2        0
+    //    simd4        3        4        0
+    // Totals...
+    // yes simd        8       21        0
+    //  no simd       19       37        0
     fn bitxor(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3357,8 +3549,12 @@ impl std::ops::BitXor<VersorEvenOrthogonalOrigin> for RoundPoint {
 impl std::ops::BitXor<VersorOdd> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       40        0
+    //           add/sub      mul      div
+    //      f32       12       27        0
+    //    simd4        3        4        0
+    // Totals...
+    // yes simd       15       31        0
+    //  no simd       24       43        0
     fn bitxor(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3367,8 +3563,12 @@ impl std::ops::BitXor<VersorOdd> for RoundPoint {
 impl std::ops::BitXor<VersorOddAtInfinity> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       30        0
+    //           add/sub      mul      div
+    //      f32       10       22        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd       11       24        0
+    //  no simd       14       30        0
     fn bitxor(self, other: VersorOddAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3377,8 +3577,12 @@ impl std::ops::BitXor<VersorOddAtInfinity> for RoundPoint {
 impl std::ops::BitXor<VersorOddOrthogonalOrigin> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       18       34        0
+    //           add/sub      mul      div
+    //      f32       14       26        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd       15       28        0
+    //  no simd       18       34        0
     fn bitxor(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -3449,8 +3653,12 @@ impl From<RoundPointAtOrigin> for RoundPoint {
 impl std::ops::Mul<AntiCircleOnOrigin> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       30        0
+    //           add/sub      mul      div
+    //      f32       10       21        0
+    //    simd3        2        3        0
+    // Totals...
+    // yes simd       12       24        0
+    //  no simd       16       30        0
     fn mul(self, other: AntiCircleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3459,8 +3667,13 @@ impl std::ops::Mul<AntiCircleOnOrigin> for RoundPoint {
 impl std::ops::Mul<AntiCircleRotor> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       55        0
+    //           add/sub      mul      div
+    //      f32        5       17        0
+    //    simd3        2        3        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       15       28        0
+    //  no simd       43       58        0
     fn mul(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3469,8 +3682,13 @@ impl std::ops::Mul<AntiCircleRotor> for RoundPoint {
 impl std::ops::Mul<AntiCircleRotorAligningOrigin> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       35       50        0
+    //           add/sub      mul      div
+    //      f32        9       21        0
+    //    simd3        2        3        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       16       29        0
+    //  no simd       35       50        0
     fn mul(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3479,8 +3697,13 @@ impl std::ops::Mul<AntiCircleRotorAligningOrigin> for RoundPoint {
 impl std::ops::Mul<AntiCircleRotorAligningOriginAtInfinity> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       35        0
+    //           add/sub      mul      div
+    //      f32        8       23        0
+    //    simd3        0        1        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       11       27        0
+    //  no simd       20       38        0
     fn mul(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3489,8 +3712,13 @@ impl std::ops::Mul<AntiCircleRotorAligningOriginAtInfinity> for RoundPoint {
 impl std::ops::Mul<AntiCircleRotorAtInfinity> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       25       40        0
+    //           add/sub      mul      div
+    //      f32        1       12        0
+    //    simd3        0        1        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd        8       20        0
+    //  no simd       29       43        0
     fn mul(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3499,8 +3727,12 @@ impl std::ops::Mul<AntiCircleRotorAtInfinity> for RoundPoint {
 impl std::ops::Mul<AntiCircleRotorOnOrigin> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       35        0
+    //           add/sub      mul      div
+    //      f32       17       32        0
+    //    simd3        1        1        0
+    // Totals...
+    // yes simd       18       33        0
+    //  no simd       20       35        0
     fn mul(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3509,8 +3741,12 @@ impl std::ops::Mul<AntiCircleRotorOnOrigin> for RoundPoint {
 impl std::ops::Mul<AntiDipoleInversion> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       59       75        0
+    //           add/sub      mul      div
+    //      f32       11       26        0
+    //    simd4       12       13        0
+    // Totals...
+    // yes simd       23       39        0
+    //  no simd       59       78        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3519,8 +3755,12 @@ impl std::ops::Mul<AntiDipoleInversion> for RoundPoint {
 impl std::ops::Mul<AntiDipoleInversionAtInfinity> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       39       55        0
+    //           add/sub      mul      div
+    //      f32       18       27        0
+    //    simd4        6        7        0
+    // Totals...
+    // yes simd       24       34        0
+    //  no simd       42       55        0
     fn mul(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3529,8 +3769,12 @@ impl std::ops::Mul<AntiDipoleInversionAtInfinity> for RoundPoint {
 impl std::ops::Mul<AntiDipoleInversionOnOrigin> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       48        0
+    //           add/sub      mul      div
+    //      f32       12       31        0
+    //    simd4        3        5        0
+    // Totals...
+    // yes simd       15       36        0
+    //  no simd       24       51        0
     fn mul(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3539,8 +3783,12 @@ impl std::ops::Mul<AntiDipoleInversionOnOrigin> for RoundPoint {
 impl std::ops::Mul<AntiDipoleInversionOrthogonalOrigin> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       39       55        0
+    //           add/sub      mul      div
+    //      f32       15       27        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       22       34        0
+    //  no simd       43       55        0
     fn mul(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3549,8 +3797,12 @@ impl std::ops::Mul<AntiDipoleInversionOrthogonalOrigin> for RoundPoint {
 impl std::ops::Mul<AntiDipoleOnOrigin> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       24        0
+    //           add/sub      mul      div
+    //      f32        9       16        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        9       18        0
+    //  no simd        9       24        0
     fn mul(self, other: AntiDipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3559,8 +3811,12 @@ impl std::ops::Mul<AntiDipoleOnOrigin> for RoundPoint {
 impl std::ops::Mul<AntiDualNum> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       11        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0       11        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3569,8 +3825,12 @@ impl std::ops::Mul<AntiDualNum> for RoundPoint {
 impl std::ops::Mul<AntiFlatOrigin> for RoundPoint {
     type Output = DipoleInversionOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        9        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        9        0
     fn mul(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3599,8 +3859,12 @@ impl std::ops::Mul<AntiFlector> for RoundPoint {
 impl std::ops::Mul<AntiFlectorOnOrigin> for RoundPoint {
     type Output = VersorOddOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       24        0
+    //           add/sub      mul      div
+    //      f32        8       17        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        8       19        0
+    //  no simd        8       25        0
     fn mul(self, other: AntiFlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3609,8 +3873,13 @@ impl std::ops::Mul<AntiFlectorOnOrigin> for RoundPoint {
 impl std::ops::Mul<AntiLine> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       30        0
+    //           add/sub      mul      div
+    //      f32        8       22        0
+    //    simd3        0        1        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       10       25        0
+    //  no simd       16       33        0
     fn mul(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3629,8 +3898,12 @@ impl std::ops::Mul<AntiLineOnOrigin> for RoundPoint {
 impl std::ops::Mul<AntiMotor> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       40        0
+    //           add/sub      mul      div
+    //      f32       16       28        0
+    //    simd4        2        3        0
+    // Totals...
+    // yes simd       18       31        0
+    //  no simd       24       40        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3639,8 +3912,12 @@ impl std::ops::Mul<AntiMotor> for RoundPoint {
 impl std::ops::Mul<AntiMotorOnOrigin> for RoundPoint {
     type Output = VersorEvenOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       20        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        8       17        0
+    //  no simd        8       20        0
     fn mul(self, other: AntiMotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3649,8 +3926,13 @@ impl std::ops::Mul<AntiMotorOnOrigin> for RoundPoint {
 impl std::ops::Mul<AntiMysteryCircleRotor> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       10       28        0
+    //           add/sub      mul      div
+    //      f32        3       17        0
+    //    simd3        0        1        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        5       20        0
+    //  no simd       11       28        0
     fn mul(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3659,8 +3941,12 @@ impl std::ops::Mul<AntiMysteryCircleRotor> for RoundPoint {
 impl std::ops::Mul<AntiMysteryDipoleInversion> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       19       36        0
+    //           add/sub      mul      div
+    //      f32        7       28        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       10       31        0
+    //  no simd       19       40        0
     fn mul(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3669,8 +3955,13 @@ impl std::ops::Mul<AntiMysteryDipoleInversion> for RoundPoint {
 impl std::ops::Mul<AntiPlane> for RoundPoint {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       20        0
+    //           add/sub      mul      div
+    //      f32        4        9        0
+    //    simd3        0        1        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        6       12        0
+    //  no simd       12       20        0
     fn mul(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3679,8 +3970,12 @@ impl std::ops::Mul<AntiPlane> for RoundPoint {
 impl std::ops::Mul<AntiPlaneOnOrigin> for RoundPoint {
     type Output = AntiCircleRotorAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       18        0
+    //           add/sub      mul      div
+    //      f32        2        9        0
+    //    simd3        1        3        0
+    // Totals...
+    // yes simd        3       12        0
+    //  no simd        5       18        0
     fn mul(self, other: AntiPlaneOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3689,8 +3984,12 @@ impl std::ops::Mul<AntiPlaneOnOrigin> for RoundPoint {
 impl std::ops::Mul<AntiScalar> for RoundPoint {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        7        0
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0       10        0
     fn mul(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3699,8 +3998,12 @@ impl std::ops::Mul<AntiScalar> for RoundPoint {
 impl std::ops::Mul<AntiSphereOnOrigin> for RoundPoint {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       24        0
+    //           add/sub      mul      div
+    //      f32        6       18        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        7       20        0
+    //  no simd        9       24        0
     fn mul(self, other: AntiSphereOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3709,8 +4012,12 @@ impl std::ops::Mul<AntiSphereOnOrigin> for RoundPoint {
 impl std::ops::Mul<AntiVersorEvenOnOrigin> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       40        0
+    //           add/sub      mul      div
+    //      f32       12       25        0
+    //    simd4        3        4        0
+    // Totals...
+    // yes simd       15       29        0
+    //  no simd       24       41        0
     fn mul(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3719,8 +4026,13 @@ impl std::ops::Mul<AntiVersorEvenOnOrigin> for RoundPoint {
 impl std::ops::Mul<Circle> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       35       50        0
+    //           add/sub      mul      div
+    //      f32        9       25        0
+    //    simd3        2        3        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       16       33        0
+    //  no simd       35       54        0
     fn mul(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3729,8 +4041,13 @@ impl std::ops::Mul<Circle> for RoundPoint {
 impl std::ops::Mul<CircleAligningOrigin> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       30       45        0
+    //           add/sub      mul      div
+    //      f32       12       27        0
+    //    simd3        2        3        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       17       33        0
+    //  no simd       30       48        0
     fn mul(self, other: CircleAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3739,8 +4056,13 @@ impl std::ops::Mul<CircleAligningOrigin> for RoundPoint {
 impl std::ops::Mul<CircleAtInfinity> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       38        0
+    //           add/sub      mul      div
+    //      f32       11       21        0
+    //    simd3        0        2        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       14       26        0
+    //  no simd       23       39        0
     fn mul(self, other: CircleAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3749,8 +4071,13 @@ impl std::ops::Mul<CircleAtInfinity> for RoundPoint {
 impl std::ops::Mul<CircleAtOrigin> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       30        0
+    //           add/sub      mul      div
+    //      f32        9       23        0
+    //    simd3        1        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       11       26        0
+    //  no simd       16       33        0
     fn mul(self, other: CircleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3759,8 +4086,12 @@ impl std::ops::Mul<CircleAtOrigin> for RoundPoint {
 impl std::ops::Mul<CircleOnOrigin> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       36        0
+    //           add/sub      mul      div
+    //      f32       10       27        0
+    //    simd3        2        3        0
+    // Totals...
+    // yes simd       12       30        0
+    //  no simd       16       36        0
     fn mul(self, other: CircleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3769,8 +4100,12 @@ impl std::ops::Mul<CircleOnOrigin> for RoundPoint {
 impl std::ops::Mul<CircleOrthogonalOrigin> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       21       35        0
+    //           add/sub      mul      div
+    //      f32       13       30        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       15       32        0
+    //  no simd       21       38        0
     fn mul(self, other: CircleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3779,8 +4114,13 @@ impl std::ops::Mul<CircleOrthogonalOrigin> for RoundPoint {
 impl std::ops::Mul<CircleRotor> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       40       55        0
+    //           add/sub      mul      div
+    //      f32       10       29        0
+    //    simd3        2        3        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       18       38        0
+    //  no simd       40       62        0
     fn mul(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3789,8 +4129,13 @@ impl std::ops::Mul<CircleRotor> for RoundPoint {
 impl std::ops::Mul<CircleRotorAligningOrigin> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       35       50        0
+    //           add/sub      mul      div
+    //      f32        9       27        0
+    //    simd3        2        3        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       16       35        0
+    //  no simd       35       56        0
     fn mul(self, other: CircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3799,8 +4144,13 @@ impl std::ops::Mul<CircleRotorAligningOrigin> for RoundPoint {
 impl std::ops::Mul<CircleRotorAligningOriginAtInfinity> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       42        0
+    //           add/sub      mul      div
+    //      f32       16       32        0
+    //    simd3        0        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       17       35        0
+    //  no simd       20       42        0
     fn mul(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3809,8 +4159,13 @@ impl std::ops::Mul<CircleRotorAligningOriginAtInfinity> for RoundPoint {
 impl std::ops::Mul<CircleRotorAtInfinity> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       25       43        0
+    //           add/sub      mul      div
+    //      f32        9       21        0
+    //    simd3        0        2        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       14       28        0
+    //  no simd       29       47        0
     fn mul(self, other: CircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3819,8 +4174,12 @@ impl std::ops::Mul<CircleRotorAtInfinity> for RoundPoint {
 impl std::ops::Mul<CircleRotorOnOrigin> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       42        0
+    //           add/sub      mul      div
+    //      f32       17       39        0
+    //    simd3        1        1        0
+    // Totals...
+    // yes simd       18       40        0
+    //  no simd       20       42        0
     fn mul(self, other: CircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3829,8 +4188,13 @@ impl std::ops::Mul<CircleRotorOnOrigin> for RoundPoint {
 impl std::ops::Mul<Dipole> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       35       50        0
+    //           add/sub      mul      div
+    //      f32        5       20        0
+    //    simd3        2        3        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       13       29        0
+    //  no simd       35       53        0
     fn mul(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3839,8 +4203,12 @@ impl std::ops::Mul<Dipole> for RoundPoint {
 impl std::ops::Mul<DipoleAligningOrigin> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       21       35        0
+    //           add/sub      mul      div
+    //      f32       11       19        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       15       23        0
+    //  no simd       27       35        0
     fn mul(self, other: DipoleAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3849,8 +4217,13 @@ impl std::ops::Mul<DipoleAligningOrigin> for RoundPoint {
 impl std::ops::Mul<DipoleAtInfinity> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       35        0
+    //           add/sub      mul      div
+    //      f32        7       16        0
+    //    simd3        0        1        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       11       21        0
+    //  no simd       23       35        0
     fn mul(self, other: DipoleAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3859,8 +4232,13 @@ impl std::ops::Mul<DipoleAtInfinity> for RoundPoint {
 impl std::ops::Mul<DipoleAtOrigin> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       30        0
+    //           add/sub      mul      div
+    //      f32        5       19        0
+    //    simd3        1        2        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        8       23        0
+    //  no simd       16       33        0
     fn mul(self, other: DipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3869,8 +4247,12 @@ impl std::ops::Mul<DipoleAtOrigin> for RoundPoint {
 impl std::ops::Mul<DipoleInversion> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       59       75        0
+    //           add/sub      mul      div
+    //      f32       15       34        0
+    //    simd4       11       11        0
+    // Totals...
+    // yes simd       26       45        0
+    //  no simd       59       78        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3879,8 +4261,12 @@ impl std::ops::Mul<DipoleInversion> for RoundPoint {
 impl std::ops::Mul<DipoleInversionAligningOrigin> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       44       60        0
+    //           add/sub      mul      div
+    //      f32       15       32        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       23       40        0
+    //  no simd       47       64        0
     fn mul(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3889,8 +4275,12 @@ impl std::ops::Mul<DipoleInversionAligningOrigin> for RoundPoint {
 impl std::ops::Mul<DipoleInversionAtInfinity> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       39       55        0
+    //           add/sub      mul      div
+    //      f32       14       28        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       21       35        0
+    //  no simd       42       56        0
     fn mul(self, other: DipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3899,8 +4289,12 @@ impl std::ops::Mul<DipoleInversionAtInfinity> for RoundPoint {
 impl std::ops::Mul<DipoleInversionAtOrigin> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       40        0
+    //           add/sub      mul      div
+    //      f32        5       24        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       10       29        0
+    //  no simd       25       44        0
     fn mul(self, other: DipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3909,8 +4303,12 @@ impl std::ops::Mul<DipoleInversionAtOrigin> for RoundPoint {
 impl std::ops::Mul<DipoleInversionOnOrigin> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       48        0
+    //           add/sub      mul      div
+    //      f32       12       31        0
+    //    simd4        3        5        0
+    // Totals...
+    // yes simd       15       36        0
+    //  no simd       24       51        0
     fn mul(self, other: DipoleInversionOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3919,8 +4317,12 @@ impl std::ops::Mul<DipoleInversionOnOrigin> for RoundPoint {
 impl std::ops::Mul<DipoleInversionOrthogonalOrigin> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       39       55        0
+    //           add/sub      mul      div
+    //      f32       16       32        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       22       38        0
+    //  no simd       40       56        0
     fn mul(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3929,8 +4331,12 @@ impl std::ops::Mul<DipoleInversionOrthogonalOrigin> for RoundPoint {
 impl std::ops::Mul<DipoleOnOrigin> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       24        0
+    //           add/sub      mul      div
+    //      f32        9       16        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        9       18        0
+    //  no simd        9       24        0
     fn mul(self, other: DipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3939,8 +4345,13 @@ impl std::ops::Mul<DipoleOnOrigin> for RoundPoint {
 impl std::ops::Mul<DipoleOrthogonalOrigin> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       30       45        0
+    //           add/sub      mul      div
+    //      f32       12       24        0
+    //    simd3        2        3        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       17       30        0
+    //  no simd       30       45        0
     fn mul(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3949,8 +4360,12 @@ impl std::ops::Mul<DipoleOrthogonalOrigin> for RoundPoint {
 impl std::ops::Mul<DualNum> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       17        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        0        8        0
+    //  no simd        0       20        0
     fn mul(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3959,8 +4374,12 @@ impl std::ops::Mul<DualNum> for RoundPoint {
 impl std::ops::Mul<FlatOrigin> for RoundPoint {
     type Output = AntiDipoleInversionOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        9        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        9        0
     fn mul(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3979,8 +4398,12 @@ impl std::ops::Mul<FlatPoint> for RoundPoint {
 impl std::ops::Mul<FlatPointAtInfinity> for RoundPoint {
     type Output = AntiDipoleInversionAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       15        0
+    //           add/sub      mul      div
+    //      f32        2        9        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        3       11        0
+    //  no simd        5       15        0
     fn mul(self, other: FlatPointAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3988,8 +4411,12 @@ impl std::ops::Mul<FlatPointAtInfinity> for RoundPoint {
 impl std::ops::Mul<Flector> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       40        0
+    //           add/sub      mul      div
+    //      f32       16       28        0
+    //    simd4        2        3        0
+    // Totals...
+    // yes simd       18       31        0
+    //  no simd       24       40        0
     fn mul(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3998,8 +4425,12 @@ impl std::ops::Mul<Flector> for RoundPoint {
 impl std::ops::Mul<FlectorAtInfinity> for RoundPoint {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       20        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        3        0
+    // Totals...
+    // yes simd        5       11        0
+    //  no simd        8       20        0
     fn mul(self, other: FlectorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4007,8 +4438,12 @@ impl std::ops::Mul<FlectorAtInfinity> for RoundPoint {
 impl std::ops::Mul<FlectorOnOrigin> for RoundPoint {
     type Output = VersorEvenAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       24        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        8       18        0
+    //  no simd        8       24        0
     fn mul(self, other: FlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4017,8 +4452,12 @@ impl std::ops::Mul<FlectorOnOrigin> for RoundPoint {
 impl std::ops::Mul<Horizon> for RoundPoint {
     type Output = CircleRotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        9        0
     fn mul(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4027,8 +4466,12 @@ impl std::ops::Mul<Horizon> for RoundPoint {
 impl std::ops::Mul<Infinity> for RoundPoint {
     type Output = AntiCircleRotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        6        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        9        0
     fn mul(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4037,8 +4480,13 @@ impl std::ops::Mul<Infinity> for RoundPoint {
 impl std::ops::Mul<Line> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       36        0
+    //           add/sub      mul      div
+    //      f32       12       26        0
+    //    simd3        0        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       13       29        0
+    //  no simd       16       36        0
     fn mul(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4047,8 +4495,12 @@ impl std::ops::Mul<Line> for RoundPoint {
 impl std::ops::Mul<LineAtInfinity> for RoundPoint {
     type Output = DipoleInversionAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       18        0
+    //           add/sub      mul      div
+    //      f32        2       12        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        3       14        0
+    //  no simd        5       18        0
     fn mul(self, other: LineAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4066,8 +4518,12 @@ impl std::ops::Mul<LineOnOrigin> for RoundPoint {
 impl std::ops::Mul<Motor> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       48        0
+    //           add/sub      mul      div
+    //      f32       20       36        0
+    //    simd4        1        3        0
+    // Totals...
+    // yes simd       21       39        0
+    //  no simd       24       48        0
     fn mul(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4076,8 +4532,12 @@ impl std::ops::Mul<Motor> for RoundPoint {
 impl std::ops::Mul<MotorAtInfinity> for RoundPoint {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       24        0
+    //           add/sub      mul      div
+    //      f32        8       17        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        8       19        0
+    //  no simd        8       25        0
     fn mul(self, other: MotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4085,8 +4545,12 @@ impl std::ops::Mul<MotorAtInfinity> for RoundPoint {
 impl std::ops::Mul<MotorOnOrigin> for RoundPoint {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       28        0
+    //           add/sub      mul      div
+    //      f32        8       20        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        8       22        0
+    //  no simd        8       28        0
     fn mul(self, other: MotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4095,8 +4559,14 @@ impl std::ops::Mul<MotorOnOrigin> for RoundPoint {
 impl std::ops::Mul<MultiVector> for RoundPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      128      160        0
+    //           add/sub      mul      div
+    //      f32       20       51        0
+    //    simd2        3        3        0
+    //    simd3       14       16        0
+    //    simd4       15       15        0
+    // Totals...
+    // yes simd       52       85        0
+    //  no simd      128      165        0
     fn mul(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4105,8 +4575,13 @@ impl std::ops::Mul<MultiVector> for RoundPoint {
 impl std::ops::Mul<MysteryCircle> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       30        0
+    //           add/sub      mul      div
+    //      f32        5       17        0
+    //    simd3        0        2        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        5       21        0
+    //  no simd        5       31        0
     fn mul(self, other: MysteryCircle) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4115,8 +4590,13 @@ impl std::ops::Mul<MysteryCircle> for RoundPoint {
 impl std::ops::Mul<MysteryCircleRotor> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       10       34        0
+    //           add/sub      mul      div
+    //      f32        6       25        0
+    //    simd3        0        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        7       28        0
+    //  no simd       10       35        0
     fn mul(self, other: MysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4125,8 +4605,13 @@ impl std::ops::Mul<MysteryCircleRotor> for RoundPoint {
 impl std::ops::Mul<MysteryDipole> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       24        0
+    //           add/sub      mul      div
+    //      f32        5       17        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        5       19        0
+    //  no simd        5       24        0
     fn mul(self, other: MysteryDipole) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4135,8 +4620,12 @@ impl std::ops::Mul<MysteryDipole> for RoundPoint {
 impl std::ops::Mul<MysteryDipoleInversion> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       19       36        0
+    //           add/sub      mul      div
+    //      f32        6       21        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       10       25        0
+    //  no simd       22       37        0
     fn mul(self, other: MysteryDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4145,8 +4634,12 @@ impl std::ops::Mul<MysteryDipoleInversion> for RoundPoint {
 impl std::ops::Mul<MysteryVersorEven> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       40        0
+    //           add/sub      mul      div
+    //      f32        4       28        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd        9       33        0
+    //  no simd       24       48        0
     fn mul(self, other: MysteryVersorEven) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4155,8 +4648,12 @@ impl std::ops::Mul<MysteryVersorEven> for RoundPoint {
 impl std::ops::Mul<MysteryVersorOdd> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       40        0
+    //           add/sub      mul      div
+    //      f32        0       12        0
+    //    simd4        7        8        0
+    // Totals...
+    // yes simd        7       20        0
+    //  no simd       28       44        0
     fn mul(self, other: MysteryVersorOdd) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4165,8 +4662,12 @@ impl std::ops::Mul<MysteryVersorOdd> for RoundPoint {
 impl std::ops::Mul<NullCircleAtOrigin> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       21        0
+    //           add/sub      mul      div
+    //      f32        2       15        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        3       17        0
+    //  no simd        5       21        0
     fn mul(self, other: NullCircleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4175,8 +4676,12 @@ impl std::ops::Mul<NullCircleAtOrigin> for RoundPoint {
 impl std::ops::Mul<NullDipoleAtOrigin> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       18        0
+    //           add/sub      mul      div
+    //      f32        2       12        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        3       14        0
+    //  no simd        5       18        0
     fn mul(self, other: NullDipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4185,8 +4690,12 @@ impl std::ops::Mul<NullDipoleAtOrigin> for RoundPoint {
 impl std::ops::Mul<NullDipoleInversionAtOrigin> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       24        0
+    //           add/sub      mul      div
+    //      f32        8       19        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        8       21        0
+    //  no simd        8       27        0
     fn mul(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4195,8 +4704,12 @@ impl std::ops::Mul<NullDipoleInversionAtOrigin> for RoundPoint {
 impl std::ops::Mul<NullSphereAtOrigin> for RoundPoint {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        6        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        6        0
     fn mul(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4205,8 +4718,12 @@ impl std::ops::Mul<NullSphereAtOrigin> for RoundPoint {
 impl std::ops::Mul<NullVersorEvenAtOrigin> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       28        0
+    //           add/sub      mul      div
+    //      f32        8       20        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        8       22        0
+    //  no simd        8       28        0
     fn mul(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4215,8 +4732,12 @@ impl std::ops::Mul<NullVersorEvenAtOrigin> for RoundPoint {
 impl std::ops::Mul<Origin> for RoundPoint {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       10        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        0        6        0
+    //  no simd        0       10        0
     fn mul(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4225,8 +4746,12 @@ impl std::ops::Mul<Origin> for RoundPoint {
 impl std::ops::Mul<Plane> for RoundPoint {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       20        0
+    //           add/sub      mul      div
+    //      f32        9       17        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        9       18        0
+    //  no simd        9       20        0
     fn mul(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4235,8 +4760,12 @@ impl std::ops::Mul<Plane> for RoundPoint {
 impl std::ops::Mul<PlaneOnOrigin> for RoundPoint {
     type Output = CircleRotorAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       18        0
+    //           add/sub      mul      div
+    //      f32        2        9        0
+    //    simd3        1        3        0
+    // Totals...
+    // yes simd        3       12        0
+    //  no simd        5       18        0
     fn mul(self, other: PlaneOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4245,8 +4774,13 @@ impl std::ops::Mul<PlaneOnOrigin> for RoundPoint {
 impl std::ops::Mul<RoundPoint> for RoundPoint {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       25        0
+    //           add/sub      mul      div
+    //      f32        2        3        0
+    //    simd3        1        2        0
+    //    simd4        3        4        0
+    // Totals...
+    // yes simd        6        9        0
+    //  no simd       17       25        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4255,8 +4789,12 @@ impl std::ops::Mul<RoundPoint> for RoundPoint {
 impl std::ops::Mul<RoundPointAtOrigin> for RoundPoint {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2       13        0
+    //           add/sub      mul      div
+    //      f32        2        7        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        2        9        0
+    //  no simd        2       13        0
     fn mul(self, other: RoundPointAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4265,8 +4803,12 @@ impl std::ops::Mul<RoundPointAtOrigin> for RoundPoint {
 impl std::ops::Mul<Scalar> for RoundPoint {
     type Output = RoundPoint;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        5        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn mul(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4281,8 +4823,13 @@ impl std::ops::MulAssign<Scalar> for RoundPoint {
 impl std::ops::Mul<Sphere> for RoundPoint {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       25        0
+    //           add/sub      mul      div
+    //      f32        7       19        0
+    //    simd3        1        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        9       22        0
+    //  no simd       14       29        0
     fn mul(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4291,8 +4838,12 @@ impl std::ops::Mul<Sphere> for RoundPoint {
 impl std::ops::Mul<SphereAtOrigin> for RoundPoint {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2       13        0
+    //           add/sub      mul      div
+    //      f32        2       10        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        2       11        0
+    //  no simd        2       13        0
     fn mul(self, other: SphereAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4301,8 +4852,12 @@ impl std::ops::Mul<SphereAtOrigin> for RoundPoint {
 impl std::ops::Mul<SphereOnOrigin> for RoundPoint {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       24        0
+    //           add/sub      mul      div
+    //      f32        6       18        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        7       20        0
+    //  no simd        9       24        0
     fn mul(self, other: SphereOnOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4311,8 +4866,12 @@ impl std::ops::Mul<SphereOnOrigin> for RoundPoint {
 impl std::ops::Mul<VersorEven> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       64       80        0
+    //           add/sub      mul      div
+    //      f32       16       28        0
+    //    simd4       12       13        0
+    // Totals...
+    // yes simd       28       41        0
+    //  no simd       64       80        0
     fn mul(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4321,8 +4880,12 @@ impl std::ops::Mul<VersorEven> for RoundPoint {
 impl std::ops::Mul<VersorEvenAligningOrigin> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       44       60        0
+    //           add/sub      mul      div
+    //      f32       12       27        0
+    //    simd4        9        9        0
+    // Totals...
+    // yes simd       21       36        0
+    //  no simd       48       63        0
     fn mul(self, other: VersorEvenAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4331,8 +4894,12 @@ impl std::ops::Mul<VersorEvenAligningOrigin> for RoundPoint {
 impl std::ops::Mul<VersorEvenAtInfinity> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       44       60        0
+    //           add/sub      mul      div
+    //      f32       16       24        0
+    //    simd4        8        9        0
+    // Totals...
+    // yes simd       24       33        0
+    //  no simd       48       60        0
     fn mul(self, other: VersorEvenAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4341,8 +4908,12 @@ impl std::ops::Mul<VersorEvenAtInfinity> for RoundPoint {
 impl std::ops::Mul<VersorEvenAtOrigin> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       40        0
+    //           add/sub      mul      div
+    //      f32        5       26        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       10       31        0
+    //  no simd       25       46        0
     fn mul(self, other: VersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4361,8 +4932,12 @@ impl std::ops::Mul<VersorEvenOnOrigin> for RoundPoint {
 impl std::ops::Mul<VersorEvenOrthogonalOrigin> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       44       60        0
+    //           add/sub      mul      div
+    //      f32       13       31        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       21       39        0
+    //  no simd       45       63        0
     fn mul(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4371,8 +4946,12 @@ impl std::ops::Mul<VersorEvenOrthogonalOrigin> for RoundPoint {
 impl std::ops::Mul<VersorOdd> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       64       80        0
+    //           add/sub      mul      div
+    //      f32        8       28        0
+    //    simd4       14       14        0
+    // Totals...
+    // yes simd       22       42        0
+    //  no simd       64       84        0
     fn mul(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4381,8 +4960,12 @@ impl std::ops::Mul<VersorOdd> for RoundPoint {
 impl std::ops::Mul<VersorOddAtInfinity> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       44       60        0
+    //           add/sub      mul      div
+    //      f32        8       21        0
+    //    simd4       10       10        0
+    // Totals...
+    // yes simd       18       31        0
+    //  no simd       48       61        0
     fn mul(self, other: VersorOddAtInfinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4391,8 +4974,12 @@ impl std::ops::Mul<VersorOddAtInfinity> for RoundPoint {
 impl std::ops::Mul<VersorOddOrthogonalOrigin> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       44       60        0
+    //           add/sub      mul      div
+    //      f32       16       33        0
+    //    simd4        7        7        0
+    // Totals...
+    // yes simd       23       40        0
+    //  no simd       44       61        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -4408,8 +4995,7 @@ impl std::ops::Neg for RoundPoint {
     //  no simd        0        5        0
     fn neg(self) -> Self {
         use crate::elements::*;
-        let negation = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (self.group0() * Simd32x4::from(-1.0)), /* e5 */ (self[e2] * -1.0));
-        return negation;
+        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ (self.group0() * Simd32x4::from(-1.0)), /* e5 */ (self[e2] * -1.0));
     }
 }
 impl std::ops::Not for RoundPoint {
@@ -4433,7 +5019,7 @@ impl std::ops::Sub<AntiCircleOnOrigin> for RoundPoint {
     //  no simd        0        6        0
     fn sub(self, other: AntiCircleOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -4457,7 +5043,6 @@ impl std::ops::Sub<AntiCircleOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotor> for RoundPoint {
@@ -4472,7 +5057,7 @@ impl std::ops::Sub<AntiCircleRotor> for RoundPoint {
     //  no simd        0       11        0
     fn sub(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group2()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -4496,7 +5081,6 @@ impl std::ops::Sub<AntiCircleRotor> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorAligningOrigin> for RoundPoint {
@@ -4510,7 +5094,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for RoundPoint {
     //  no simd        0       10        0
     fn sub(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group2()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -4534,7 +5118,6 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for RoundPoint {
@@ -4548,7 +5131,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for RoundPoint {
     //  no simd        0        7        0
     fn sub(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group1()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -4572,7 +5155,6 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorAtInfinity> for RoundPoint {
@@ -4586,7 +5168,7 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for RoundPoint {
     //  no simd        0        8        0
     fn sub(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group1()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -4610,7 +5192,6 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorOnOrigin> for RoundPoint {
@@ -4624,7 +5205,7 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for RoundPoint {
     //  no simd        0        7        0
     fn sub(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -4648,7 +5229,6 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversion> for RoundPoint {
@@ -4663,7 +5243,7 @@ impl std::ops::Sub<AntiDipoleInversion> for RoundPoint {
     //  no simd        5       10        0
     fn sub(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
@@ -4678,7 +5258,6 @@ impl std::ops::Sub<AntiDipoleInversion> for RoundPoint {
             // e1, e2, e3, e5
             (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]) - other.group3()),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversionAtInfinity> for RoundPoint {
@@ -4692,7 +5271,7 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for RoundPoint {
     //  no simd        4        7        0
     fn sub(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -4702,7 +5281,6 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for RoundPoint {
             // e1, e2, e3, e5
             (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]) - other.group2()),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversionOnOrigin> for RoundPoint {
@@ -4713,7 +5291,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for RoundPoint {
     // no simd        4        4        0
     fn sub(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             (other.group0() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e5
@@ -4721,7 +5299,6 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for RoundPoint {
             // e1, e2, e3, e4
             (-swizzle!(other.group1(), 1, 2, 3, 0) + self.group0()),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for RoundPoint {
@@ -4735,7 +5312,7 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for RoundPoint {
     //  no simd        2        9        0
     fn sub(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
@@ -4750,7 +5327,6 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[3] + self[e2])]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleOnOrigin> for RoundPoint {
@@ -4761,7 +5337,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for RoundPoint {
     // no simd        0        4        0
     fn sub(self, other: AntiDipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             (other.group0() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e5
@@ -4769,7 +5345,6 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDualNum> for RoundPoint {
@@ -4779,7 +5354,7 @@ impl std::ops::Sub<AntiDualNum> for RoundPoint {
     // f32        0        2        0
     fn sub(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[1] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -4803,7 +5378,6 @@ impl std::ops::Sub<AntiDualNum> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiFlatOrigin> for RoundPoint {
@@ -4813,7 +5387,7 @@ impl std::ops::Sub<AntiFlatOrigin> for RoundPoint {
     // f32        0        1        0
     fn sub(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, (other[e321] * -1.0)]),
             // e235, e315, e125, e5
@@ -4821,7 +5395,6 @@ impl std::ops::Sub<AntiFlatOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiFlatPoint> for RoundPoint {
@@ -4831,7 +5404,7 @@ impl std::ops::Sub<AntiFlatPoint> for RoundPoint {
     // f32        0        4        0
     fn sub(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
             // e235, e315, e125, e5
@@ -4839,7 +5412,6 @@ impl std::ops::Sub<AntiFlatPoint> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiFlector> for RoundPoint {
@@ -4849,7 +5421,7 @@ impl std::ops::Sub<AntiFlector> for RoundPoint {
     // f32        4        4        0
     fn sub(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
             // e235, e315, e125, e5
@@ -4862,7 +5434,6 @@ impl std::ops::Sub<AntiFlector> for RoundPoint {
                 self.group0()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiFlectorOnOrigin> for RoundPoint {
@@ -4872,7 +5443,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for RoundPoint {
     // f32        3        1        0
     fn sub(self, other: AntiFlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
             // e235, e315, e125, e5
@@ -4885,7 +5456,6 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for RoundPoint {
                 self.group0()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiLine> for RoundPoint {
@@ -4896,7 +5466,7 @@ impl std::ops::Sub<AntiLine> for RoundPoint {
     // no simd        0        6        0
     fn sub(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -4920,7 +5490,6 @@ impl std::ops::Sub<AntiLine> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiLineOnOrigin> for RoundPoint {
@@ -4931,7 +5500,7 @@ impl std::ops::Sub<AntiLineOnOrigin> for RoundPoint {
     // no simd        0        3        0
     fn sub(self, other: AntiLineOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -4955,7 +5524,6 @@ impl std::ops::Sub<AntiLineOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiMotor> for RoundPoint {
@@ -4969,7 +5537,7 @@ impl std::ops::Sub<AntiMotor> for RoundPoint {
     //  no simd        0        8        0
     fn sub(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -4993,7 +5561,6 @@ impl std::ops::Sub<AntiMotor> for RoundPoint {
             // e3215
             (other.group1()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiMotorOnOrigin> for RoundPoint {
@@ -5007,7 +5574,7 @@ impl std::ops::Sub<AntiMotorOnOrigin> for RoundPoint {
     //  no simd        0        4        0
     fn sub(self, other: AntiMotorOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -5031,7 +5598,6 @@ impl std::ops::Sub<AntiMotorOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiMysteryCircleRotor> for RoundPoint {
@@ -5045,7 +5611,7 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for RoundPoint {
     //  no simd        0        5        0
     fn sub(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other[e31] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -5069,7 +5635,6 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiMysteryDipoleInversion> for RoundPoint {
@@ -5083,7 +5648,7 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for RoundPoint {
     //  no simd        3        4        0
     fn sub(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -5098,7 +5663,6 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for RoundPoint {
                 self[e2],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiPlane> for RoundPoint {
@@ -5108,7 +5672,7 @@ impl std::ops::Sub<AntiPlane> for RoundPoint {
     // f32        4        0        0
     fn sub(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        let subtraction = RoundPoint::from_groups(
+        return RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (-other.group0()[0] + self.group0()[0]),
@@ -5119,13 +5683,12 @@ impl std::ops::Sub<AntiPlane> for RoundPoint {
             // e5
             (-other.group0()[3] + self[e2]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiPlane> for RoundPoint {
     fn sub_assign(&mut self, other: AntiPlane) {
         use crate::elements::*;
-        let subtraction = RoundPoint::from_groups(
+        *self = RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (-other.group0()[0] + self.group0()[0]),
@@ -5136,7 +5699,6 @@ impl std::ops::SubAssign<AntiPlane> for RoundPoint {
             // e5
             (-other.group0()[3] + self[e2]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiPlaneOnOrigin> for RoundPoint {
@@ -5146,7 +5708,7 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for RoundPoint {
     // f32        3        0        0
     fn sub(self, other: AntiPlaneOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = RoundPoint::from_groups(
+        return RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (-other.group0()[0] + self.group0()[0]),
@@ -5157,13 +5719,12 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for RoundPoint {
             // e5
             self[e2],
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiPlaneOnOrigin> for RoundPoint {
     fn sub_assign(&mut self, other: AntiPlaneOnOrigin) {
         use crate::elements::*;
-        let subtraction = RoundPoint::from_groups(
+        *self = RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
                 (-other.group0()[0] + self.group0()[0]),
@@ -5174,7 +5735,6 @@ impl std::ops::SubAssign<AntiPlaneOnOrigin> for RoundPoint {
             // e5
             self[e2],
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiScalar> for RoundPoint {
@@ -5184,7 +5744,7 @@ impl std::ops::Sub<AntiScalar> for RoundPoint {
     // f32        0        1        0
     fn sub(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (other[e12345] * -1.0)]),
             // e415, e425, e435, e321
@@ -5194,7 +5754,6 @@ impl std::ops::Sub<AntiScalar> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiSphereOnOrigin> for RoundPoint {
@@ -5205,15 +5764,13 @@ impl std::ops::Sub<AntiSphereOnOrigin> for RoundPoint {
     // no simd        4        0        0
     fn sub(self, other: AntiSphereOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (-other.group0() + self.group0()), /* e5 */ self[e2]);
-        return subtraction;
+        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ (-other.group0() + self.group0()), /* e5 */ self[e2]);
     }
 }
 impl std::ops::SubAssign<AntiSphereOnOrigin> for RoundPoint {
     fn sub_assign(&mut self, other: AntiSphereOnOrigin) {
         use crate::elements::*;
-        let subtraction = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (-other.group0() + self.group0()), /* e5 */ self[e2]);
-        *self = subtraction;
+        *self = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (-other.group0() + self.group0()), /* e5 */ self[e2]);
     }
 }
 impl std::ops::Sub<AntiVersorEvenOnOrigin> for RoundPoint {
@@ -5227,7 +5784,7 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for RoundPoint {
     //  no simd        0        8        0
     fn sub(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -5251,7 +5808,6 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Circle> for RoundPoint {
@@ -5266,7 +5822,7 @@ impl std::ops::Sub<Circle> for RoundPoint {
     //  no simd        0       10        0
     fn sub(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
@@ -5276,7 +5832,6 @@ impl std::ops::Sub<Circle> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleAligningOrigin> for RoundPoint {
@@ -5290,7 +5845,7 @@ impl std::ops::Sub<CircleAligningOrigin> for RoundPoint {
     //  no simd        0        9        0
     fn sub(self, other: CircleAligningOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
@@ -5300,7 +5855,6 @@ impl std::ops::Sub<CircleAligningOrigin> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleAtInfinity> for RoundPoint {
@@ -5314,7 +5868,7 @@ impl std::ops::Sub<CircleAtInfinity> for RoundPoint {
     //  no simd        0        7        0
     fn sub(self, other: CircleAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -5324,7 +5878,6 @@ impl std::ops::Sub<CircleAtInfinity> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleAtOrigin> for RoundPoint {
@@ -5334,7 +5887,7 @@ impl std::ops::Sub<CircleAtOrigin> for RoundPoint {
     // f32        0        6        0
     fn sub(self, other: CircleAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
             // e235, e315, e125, e5
@@ -5342,7 +5895,6 @@ impl std::ops::Sub<CircleAtOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleOnOrigin> for RoundPoint {
@@ -5356,7 +5908,7 @@ impl std::ops::Sub<CircleOnOrigin> for RoundPoint {
     //  no simd        0        6        0
     fn sub(self, other: CircleOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
@@ -5366,7 +5918,6 @@ impl std::ops::Sub<CircleOnOrigin> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleOrthogonalOrigin> for RoundPoint {
@@ -5380,7 +5931,7 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for RoundPoint {
     //  no simd        0        7        0
     fn sub(self, other: CircleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             (other.group0() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e5
@@ -5388,7 +5939,6 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotor> for RoundPoint {
@@ -5402,7 +5952,7 @@ impl std::ops::Sub<CircleRotor> for RoundPoint {
     //  no simd        0       11        0
     fn sub(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]) * Simd32x4::from(-1.0)),
             // e415, e425, e435, e321
@@ -5412,7 +5962,6 @@ impl std::ops::Sub<CircleRotor> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorAligningOrigin> for RoundPoint {
@@ -5426,7 +5975,7 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for RoundPoint {
     //  no simd        0       10        0
     fn sub(self, other: CircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]) * Simd32x4::from(-1.0)),
             // e415, e425, e435, e321
@@ -5436,7 +5985,6 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for RoundPoint {
@@ -5446,7 +5994,7 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for RoundPoint {
     // f32        0        7        0
     fn sub(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[3] * -1.0)]),
             // e415, e425, e435, e321
@@ -5456,7 +6004,6 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorAtInfinity> for RoundPoint {
@@ -5470,7 +6017,7 @@ impl std::ops::Sub<CircleRotorAtInfinity> for RoundPoint {
     //  no simd        0        8        0
     fn sub(self, other: CircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[3] * -1.0)]),
             // e415, e425, e435, e321
@@ -5480,7 +6027,6 @@ impl std::ops::Sub<CircleRotorAtInfinity> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorOnOrigin> for RoundPoint {
@@ -5494,7 +6040,7 @@ impl std::ops::Sub<CircleRotorOnOrigin> for RoundPoint {
     //  no simd        0        7        0
     fn sub(self, other: CircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             (other.group0() * Simd32x4::from(-1.0)),
             // e415, e425, e435, e321
@@ -5504,7 +6050,6 @@ impl std::ops::Sub<CircleRotorOnOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Dipole> for RoundPoint {
@@ -5518,7 +6063,7 @@ impl std::ops::Sub<Dipole> for RoundPoint {
     //  no simd        0       10        0
     fn sub(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5542,7 +6087,6 @@ impl std::ops::Sub<Dipole> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleAligningOrigin> for RoundPoint {
@@ -5556,7 +6100,7 @@ impl std::ops::Sub<DipoleAligningOrigin> for RoundPoint {
     //  no simd        0        7        0
     fn sub(self, other: DipoleAligningOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5580,7 +6124,6 @@ impl std::ops::Sub<DipoleAligningOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleAtInfinity> for RoundPoint {
@@ -5594,7 +6137,7 @@ impl std::ops::Sub<DipoleAtInfinity> for RoundPoint {
     //  no simd        0        7        0
     fn sub(self, other: DipoleAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5618,7 +6161,6 @@ impl std::ops::Sub<DipoleAtInfinity> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleAtOrigin> for RoundPoint {
@@ -5632,7 +6174,7 @@ impl std::ops::Sub<DipoleAtOrigin> for RoundPoint {
     //  no simd        0        6        0
     fn sub(self, other: DipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5656,7 +6198,6 @@ impl std::ops::Sub<DipoleAtOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversion> for RoundPoint {
@@ -5671,7 +6212,7 @@ impl std::ops::Sub<DipoleInversion> for RoundPoint {
     //  no simd        0       15        0
     fn sub(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5695,7 +6236,6 @@ impl std::ops::Sub<DipoleInversion> for RoundPoint {
             // e3215
             (other.group3()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionAligningOrigin> for RoundPoint {
@@ -5710,7 +6250,7 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for RoundPoint {
     //  no simd        0       12        0
     fn sub(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5734,7 +6274,6 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for RoundPoint {
             // e3215
             (other.group2()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionAtInfinity> for RoundPoint {
@@ -5748,7 +6287,7 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for RoundPoint {
     //  no simd        0       11        0
     fn sub(self, other: DipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5772,7 +6311,6 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for RoundPoint {
             // e3215
             (other.group2()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionAtOrigin> for RoundPoint {
@@ -5786,7 +6324,7 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for RoundPoint {
     //  no simd        0        8        0
     fn sub(self, other: DipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5810,7 +6348,6 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for RoundPoint {
             // e3215
             (other.group0()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionOnOrigin> for RoundPoint {
@@ -5821,7 +6358,7 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for RoundPoint {
     // no simd        0        8        0
     fn sub(self, other: DipoleInversionOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5845,7 +6382,6 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for RoundPoint {
@@ -5859,7 +6395,7 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for RoundPoint {
     //  no simd        0       11        0
     fn sub(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5883,7 +6419,6 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for RoundPoint {
             // e3215
             (other.group0()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleOnOrigin> for RoundPoint {
@@ -5894,7 +6429,7 @@ impl std::ops::Sub<DipoleOnOrigin> for RoundPoint {
     // no simd        0        4        0
     fn sub(self, other: DipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5918,7 +6453,6 @@ impl std::ops::Sub<DipoleOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleOrthogonalOrigin> for RoundPoint {
@@ -5932,7 +6466,7 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for RoundPoint {
     //  no simd        0        9        0
     fn sub(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -5956,7 +6490,6 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DualNum> for RoundPoint {
@@ -5966,7 +6499,7 @@ impl std::ops::Sub<DualNum> for RoundPoint {
     // f32        1        1        0
     fn sub(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
             // e415, e425, e435, e321
@@ -5976,7 +6509,6 @@ impl std::ops::Sub<DualNum> for RoundPoint {
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[0] + self.group0()[3])]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlatOrigin> for RoundPoint {
@@ -5986,7 +6518,7 @@ impl std::ops::Sub<FlatOrigin> for RoundPoint {
     // f32        0        1        0
     fn sub(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6010,7 +6542,6 @@ impl std::ops::Sub<FlatOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlatPoint> for RoundPoint {
@@ -6024,7 +6555,7 @@ impl std::ops::Sub<FlatPoint> for RoundPoint {
     //  no simd        0        4        0
     fn sub(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6048,7 +6579,6 @@ impl std::ops::Sub<FlatPoint> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlatPointAtInfinity> for RoundPoint {
@@ -6059,7 +6589,7 @@ impl std::ops::Sub<FlatPointAtInfinity> for RoundPoint {
     // no simd        0        3        0
     fn sub(self, other: FlatPointAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6083,7 +6613,6 @@ impl std::ops::Sub<FlatPointAtInfinity> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Flector> for RoundPoint {
@@ -6097,7 +6626,7 @@ impl std::ops::Sub<Flector> for RoundPoint {
     //  no simd        0        8        0
     fn sub(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6121,7 +6650,6 @@ impl std::ops::Sub<Flector> for RoundPoint {
             // e3215
             (other.group1()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlectorAtInfinity> for RoundPoint {
@@ -6135,7 +6663,7 @@ impl std::ops::Sub<FlectorAtInfinity> for RoundPoint {
     //  no simd        0        4        0
     fn sub(self, other: FlectorAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6159,7 +6687,6 @@ impl std::ops::Sub<FlectorAtInfinity> for RoundPoint {
             // e3215
             (other.group0()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlectorOnOrigin> for RoundPoint {
@@ -6169,7 +6696,7 @@ impl std::ops::Sub<FlectorOnOrigin> for RoundPoint {
     // f32        0        4        0
     fn sub(self, other: FlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6193,7 +6720,6 @@ impl std::ops::Sub<FlectorOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Horizon> for RoundPoint {
@@ -6203,7 +6729,7 @@ impl std::ops::Sub<Horizon> for RoundPoint {
     // f32        0        1        0
     fn sub(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6227,7 +6753,6 @@ impl std::ops::Sub<Horizon> for RoundPoint {
             // e3215
             (other[e3215] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Infinity> for RoundPoint {
@@ -6237,15 +6762,13 @@ impl std::ops::Sub<Infinity> for RoundPoint {
     // f32        1        0        0
     fn sub(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = RoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e5 */ (-other[e5] + self[e2]));
-        return subtraction;
+        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e5 */ (-other[e5] + self[e2]));
     }
 }
 impl std::ops::SubAssign<Infinity> for RoundPoint {
     fn sub_assign(&mut self, other: Infinity) {
         use crate::elements::*;
-        let subtraction = RoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e5 */ (-other[e5] + self[e2]));
-        *self = subtraction;
+        *self = RoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e5 */ (-other[e5] + self[e2]));
     }
 }
 impl std::ops::Sub<Line> for RoundPoint {
@@ -6255,7 +6778,7 @@ impl std::ops::Sub<Line> for RoundPoint {
     // f32        0        6        0
     fn sub(self, other: Line) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6265,7 +6788,6 @@ impl std::ops::Sub<Line> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<LineAtInfinity> for RoundPoint {
@@ -6275,7 +6797,7 @@ impl std::ops::Sub<LineAtInfinity> for RoundPoint {
     // f32        0        3        0
     fn sub(self, other: LineAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -6283,7 +6805,6 @@ impl std::ops::Sub<LineAtInfinity> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<LineOnOrigin> for RoundPoint {
@@ -6293,7 +6814,7 @@ impl std::ops::Sub<LineOnOrigin> for RoundPoint {
     // f32        0        3        0
     fn sub(self, other: LineOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6303,7 +6824,6 @@ impl std::ops::Sub<LineOnOrigin> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Motor> for RoundPoint {
@@ -6313,7 +6833,7 @@ impl std::ops::Sub<Motor> for RoundPoint {
     // f32        1        7        0
     fn sub(self, other: Motor) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
             // e415, e425, e435, e321
@@ -6323,7 +6843,6 @@ impl std::ops::Sub<Motor> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MotorAtInfinity> for RoundPoint {
@@ -6333,7 +6852,7 @@ impl std::ops::Sub<MotorAtInfinity> for RoundPoint {
     // f32        1        3        0
     fn sub(self, other: MotorAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -6341,7 +6860,6 @@ impl std::ops::Sub<MotorAtInfinity> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MotorOnOrigin> for RoundPoint {
@@ -6351,7 +6869,7 @@ impl std::ops::Sub<MotorOnOrigin> for RoundPoint {
     // f32        0        4        0
     fn sub(self, other: MotorOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
             // e415, e425, e435, e321
@@ -6361,7 +6879,6 @@ impl std::ops::Sub<MotorOnOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MultiVector> for RoundPoint {
@@ -6377,7 +6894,7 @@ impl std::ops::Sub<MultiVector> for RoundPoint {
     //  no simd        5       27        0
     fn sub(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             (other.group0() * Simd32x2::from(-1.0)),
             // e1, e2, e3, e4
@@ -6401,7 +6918,6 @@ impl std::ops::Sub<MultiVector> for RoundPoint {
             // e3215
             (other[e45] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryCircle> for RoundPoint {
@@ -6412,7 +6928,7 @@ impl std::ops::Sub<MysteryCircle> for RoundPoint {
     // no simd        0        4        0
     fn sub(self, other: MysteryCircle) -> Self::Output {
         use crate::elements::*;
-        let subtraction = AntiDipoleInversion::from_groups(
+        return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6422,7 +6938,6 @@ impl std::ops::Sub<MysteryCircle> for RoundPoint {
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryCircleRotor> for RoundPoint {
@@ -6436,7 +6951,7 @@ impl std::ops::Sub<MysteryCircleRotor> for RoundPoint {
     //  no simd        0        5        0
     fn sub(self, other: MysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (other[e425] * -1.0)]),
             // e415, e425, e435, e321
@@ -6446,7 +6961,6 @@ impl std::ops::Sub<MysteryCircleRotor> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryDipole> for RoundPoint {
@@ -6460,7 +6974,7 @@ impl std::ops::Sub<MysteryDipole> for RoundPoint {
     //  no simd        0        4        0
     fn sub(self, other: MysteryDipole) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6484,7 +6998,6 @@ impl std::ops::Sub<MysteryDipole> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryDipoleInversion> for RoundPoint {
@@ -6498,7 +7011,7 @@ impl std::ops::Sub<MysteryDipoleInversion> for RoundPoint {
     //  no simd        0        7        0
     fn sub(self, other: MysteryDipoleInversion) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6522,7 +7035,6 @@ impl std::ops::Sub<MysteryDipoleInversion> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryVersorEven> for RoundPoint {
@@ -6536,7 +7048,7 @@ impl std::ops::Sub<MysteryVersorEven> for RoundPoint {
     //  no simd        3        5        0
     fn sub(self, other: MysteryVersorEven) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
             // e415, e425, e435, e321
@@ -6551,7 +7063,6 @@ impl std::ops::Sub<MysteryVersorEven> for RoundPoint {
                 self.group0()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryVersorOdd> for RoundPoint {
@@ -6565,7 +7076,7 @@ impl std::ops::Sub<MysteryVersorOdd> for RoundPoint {
     //  no simd        0        8        0
     fn sub(self, other: MysteryVersorOdd) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[0] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -6589,7 +7100,6 @@ impl std::ops::Sub<MysteryVersorOdd> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullCircleAtOrigin> for RoundPoint {
@@ -6599,7 +7109,7 @@ impl std::ops::Sub<NullCircleAtOrigin> for RoundPoint {
     // f32        0        3        0
     fn sub(self, other: NullCircleAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
             // e235, e315, e125, e5
@@ -6607,7 +7117,6 @@ impl std::ops::Sub<NullCircleAtOrigin> for RoundPoint {
             // e1, e2, e3, e4
             self.group0(),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullDipoleAtOrigin> for RoundPoint {
@@ -6617,7 +7126,7 @@ impl std::ops::Sub<NullDipoleAtOrigin> for RoundPoint {
     // f32        0        3        0
     fn sub(self, other: NullDipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6641,7 +7150,6 @@ impl std::ops::Sub<NullDipoleAtOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullDipoleInversionAtOrigin> for RoundPoint {
@@ -6651,7 +7159,7 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for RoundPoint {
     // f32        0        4        0
     fn sub(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6675,7 +7183,6 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullSphereAtOrigin> for RoundPoint {
@@ -6685,7 +7192,7 @@ impl std::ops::Sub<NullSphereAtOrigin> for RoundPoint {
     // f32        0        1        0
     fn sub(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6709,7 +7216,6 @@ impl std::ops::Sub<NullSphereAtOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullVersorEvenAtOrigin> for RoundPoint {
@@ -6719,7 +7225,7 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for RoundPoint {
     // f32        1        3        0
     fn sub(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
             // e235, e315, e125, e5
@@ -6727,7 +7233,6 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for RoundPoint {
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[3] + self.group0()[3])]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Origin> for RoundPoint {
@@ -6737,25 +7242,23 @@ impl std::ops::Sub<Origin> for RoundPoint {
     // f32        1        0        0
     fn sub(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = RoundPoint::from_groups(
+        return RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other[e4])]),
             // e5
             self[e2],
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<Origin> for RoundPoint {
     fn sub_assign(&mut self, other: Origin) {
         use crate::elements::*;
-        let subtraction = RoundPoint::from_groups(
+        *self = RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other[e4])]),
             // e5
             self[e2],
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<Plane> for RoundPoint {
@@ -6765,7 +7268,7 @@ impl std::ops::Sub<Plane> for RoundPoint {
     // f32        0        4        0
     fn sub(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6789,7 +7292,6 @@ impl std::ops::Sub<Plane> for RoundPoint {
             // e3215
             (other.group0()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<PlaneOnOrigin> for RoundPoint {
@@ -6799,7 +7301,7 @@ impl std::ops::Sub<PlaneOnOrigin> for RoundPoint {
     // f32        0        3        0
     fn sub(self, other: PlaneOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6823,7 +7325,6 @@ impl std::ops::Sub<PlaneOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<RoundPoint> for RoundPoint {
@@ -6837,15 +7338,13 @@ impl std::ops::Sub<RoundPoint> for RoundPoint {
     //  no simd        5        0        0
     fn sub(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let subtraction = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (-other.group0() + self.group0()), /* e5 */ (-other[e2] + self[e2]));
-        return subtraction;
+        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ (-other.group0() + self.group0()), /* e5 */ (-other[e2] + self[e2]));
     }
 }
 impl std::ops::SubAssign<RoundPoint> for RoundPoint {
     fn sub_assign(&mut self, other: RoundPoint) {
         use crate::elements::*;
-        let subtraction = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (-other.group0() + self.group0()), /* e5 */ (-other[e2] + self[e2]));
-        *self = subtraction;
+        *self = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (-other.group0() + self.group0()), /* e5 */ (-other[e2] + self[e2]));
     }
 }
 impl std::ops::Sub<RoundPointAtOrigin> for RoundPoint {
@@ -6855,25 +7354,23 @@ impl std::ops::Sub<RoundPointAtOrigin> for RoundPoint {
     // f32        2        0        0
     fn sub(self, other: RoundPointAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = RoundPoint::from_groups(
+        return RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[0] + self.group0()[3])]),
             // e5
             (-other.group0()[1] + self[e2]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<RoundPointAtOrigin> for RoundPoint {
     fn sub_assign(&mut self, other: RoundPointAtOrigin) {
         use crate::elements::*;
-        let subtraction = RoundPoint::from_groups(
+        *self = RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[0] + self.group0()[3])]),
             // e5
             (-other.group0()[1] + self[e2]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<Scalar> for RoundPoint {
@@ -6883,7 +7380,7 @@ impl std::ops::Sub<Scalar> for RoundPoint {
     // f32        0        1        0
     fn sub(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other[scalar] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -6907,7 +7404,6 @@ impl std::ops::Sub<Scalar> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Sphere> for RoundPoint {
@@ -6921,7 +7417,7 @@ impl std::ops::Sub<Sphere> for RoundPoint {
     //  no simd        0        5        0
     fn sub(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6945,7 +7441,6 @@ impl std::ops::Sub<Sphere> for RoundPoint {
             // e3215
             (other.group0()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<SphereAtOrigin> for RoundPoint {
@@ -6955,7 +7450,7 @@ impl std::ops::Sub<SphereAtOrigin> for RoundPoint {
     // f32        0        2        0
     fn sub(self, other: SphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -6979,7 +7474,6 @@ impl std::ops::Sub<SphereAtOrigin> for RoundPoint {
             // e3215
             (other.group0()[0] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<SphereOnOrigin> for RoundPoint {
@@ -6990,7 +7484,7 @@ impl std::ops::Sub<SphereOnOrigin> for RoundPoint {
     // no simd        0        4        0
     fn sub(self, other: SphereOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
@@ -7014,7 +7508,6 @@ impl std::ops::Sub<SphereOnOrigin> for RoundPoint {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEven> for RoundPoint {
@@ -7028,7 +7521,7 @@ impl std::ops::Sub<VersorEven> for RoundPoint {
     //  no simd        5       11        0
     fn sub(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             (other.group0() * Simd32x4::from(-1.0)),
             // e415, e425, e435, e321
@@ -7038,7 +7531,6 @@ impl std::ops::Sub<VersorEven> for RoundPoint {
             // e1, e2, e3, e4
             (self.group0() - other.group3()),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenAligningOrigin> for RoundPoint {
@@ -7052,7 +7544,7 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for RoundPoint {
     //  no simd        2       10        0
     fn sub(self, other: VersorEvenAligningOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             (other.group0() * Simd32x4::from(-1.0)),
             // e415, e425, e435, e321
@@ -7062,7 +7554,6 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for RoundPoint {
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group1()[3])]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenAtInfinity> for RoundPoint {
@@ -7076,7 +7567,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for RoundPoint {
     //  no simd        4        8        0
     fn sub(self, other: VersorEvenAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
             // e415, e425, e435, e321
@@ -7091,7 +7582,6 @@ impl std::ops::Sub<VersorEvenAtInfinity> for RoundPoint {
                 self.group0()[3],
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenAtOrigin> for RoundPoint {
@@ -7101,7 +7591,7 @@ impl std::ops::Sub<VersorEvenAtOrigin> for RoundPoint {
     // f32        2        6        0
     fn sub(self, other: VersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
             // e235, e315, e125, e5
@@ -7109,7 +7599,6 @@ impl std::ops::Sub<VersorEvenAtOrigin> for RoundPoint {
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group0()[3])]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenOnOrigin> for RoundPoint {
@@ -7123,7 +7612,7 @@ impl std::ops::Sub<VersorEvenOnOrigin> for RoundPoint {
     //  no simd        1        7        0
     fn sub(self, other: VersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             (other.group0() * Simd32x4::from(-1.0)),
             // e415, e425, e435, e321
@@ -7133,7 +7622,6 @@ impl std::ops::Sub<VersorEvenOnOrigin> for RoundPoint {
             // e1, e2, e3, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other.group1()[3])]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenOrthogonalOrigin> for RoundPoint {
@@ -7147,7 +7635,7 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for RoundPoint {
     //  no simd        5        7        0
     fn sub(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOrthogonalOrigin::from_groups(
+        return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             (other.group0() * Simd32x4::from(-1.0)),
             // e235, e315, e125, e5
@@ -7155,7 +7643,6 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for RoundPoint {
             // e1, e2, e3, e4
             (self.group0() - other.group2()),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorOdd> for RoundPoint {
@@ -7170,7 +7657,7 @@ impl std::ops::Sub<VersorOdd> for RoundPoint {
     //  no simd        0       16        0
     fn sub(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -7194,7 +7681,6 @@ impl std::ops::Sub<VersorOdd> for RoundPoint {
             // e3215
             (other.group3()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorOddAtInfinity> for RoundPoint {
@@ -7208,7 +7694,7 @@ impl std::ops::Sub<VersorOddAtInfinity> for RoundPoint {
     //  no simd        0       12        0
     fn sub(self, other: VersorOddAtInfinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[0] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -7232,7 +7718,6 @@ impl std::ops::Sub<VersorOddAtInfinity> for RoundPoint {
             // e3215
             (other.group2()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorOddOrthogonalOrigin> for RoundPoint {
@@ -7246,7 +7731,7 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for RoundPoint {
     //  no simd        0       12        0
     fn sub(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
             // e1, e2, e3, e4
@@ -7270,7 +7755,6 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for RoundPoint {
             // e3215
             (other.group1()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 

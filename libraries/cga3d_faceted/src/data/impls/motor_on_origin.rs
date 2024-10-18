@@ -13,8 +13,8 @@ use crate::traits::Wedge;
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       3       0
-//  Average:         5       9       0
-//  Maximum:        96     128       0
+//  Average:         3       6       0
+//  Maximum:        40      56       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -24,7 +24,7 @@ use crate::traits::Wedge;
 impl std::ops::Add<AntiCircleOnOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiCircleOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -48,13 +48,12 @@ impl std::ops::Add<AntiCircleOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiCircleRotor> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotor) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group2()[3], self.group0()[3]]),
             // e1, e2, e3, e4
@@ -78,13 +77,12 @@ impl std::ops::Add<AntiCircleRotor> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorAligningOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group2()[3], self.group0()[3]]),
             // e1, e2, e3, e4
@@ -108,13 +106,12 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group1()[3], self.group0()[3]]),
             // e1, e2, e3, e4
@@ -138,13 +135,12 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorAtInfinity> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group1()[3], self.group0()[3]]),
             // e1, e2, e3, e4
@@ -168,13 +164,12 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiCircleRotorOnOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], self.group0()[3]]),
             // e1, e2, e3, e4
@@ -198,7 +193,6 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversion> for MotorOnOrigin {
@@ -207,7 +201,7 @@ impl std::ops::Add<AntiDipoleInversion> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: AntiDipoleInversion) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e415, e425, e435, e321
@@ -222,7 +216,6 @@ impl std::ops::Add<AntiDipoleInversion> for MotorOnOrigin {
             // e1, e2, e3, e4
             Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversionAtInfinity> for MotorOnOrigin {
@@ -231,7 +224,7 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
-        let addition = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([self.group0()[3], other.group2()[0], other.group2()[1], other.group2()[2]]),
             // e415, e425, e435, e321
@@ -244,13 +237,12 @@ impl std::ops::Add<AntiDipoleInversionAtInfinity> for MotorOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group2()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversionOnOrigin> for MotorOnOrigin {
     type Output = VersorEven;
     fn add(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e415, e425, e435, e321
@@ -260,7 +252,6 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for MotorOnOrigin {
             // e1, e2, e3, e4
             Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[3], other.group1()[0]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for MotorOnOrigin {
@@ -269,7 +260,7 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
-        let addition = VersorEvenAligningOrigin::from_groups(
+        return VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e415, e425, e435, e4
@@ -282,13 +273,12 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for MotorOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleOnOrigin> for MotorOnOrigin {
     type Output = CircleRotor;
     fn add(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        let addition = CircleRotor::from_groups(
+        return CircleRotor::from_groups(
             // e423, e431, e412
             Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e415, e425, e435, e321
@@ -296,13 +286,12 @@ impl std::ops::Add<AntiDipoleOnOrigin> for MotorOnOrigin {
             // e235, e315, e125, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDualNum> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiDualNum) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[1], self.group0()[3]]),
             // e1, e2, e3, e4
@@ -326,38 +315,35 @@ impl std::ops::Add<AntiDualNum> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiFlatOrigin> for MotorOnOrigin {
     type Output = MysteryCircleRotor;
     fn add(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MysteryCircleRotor::from_groups(
+        return MysteryCircleRotor::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other[e321]]),
             // e12345
             self.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiFlatPoint> for MotorOnOrigin {
     type Output = CircleRotorAtInfinity;
     fn add(self, other: AntiFlatPoint) -> Self::Output {
-        let addition = CircleRotorAtInfinity::from_groups(
+        return CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[3]]),
             // e235, e315, e125, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiFlector> for MotorOnOrigin {
     type Output = VersorEvenAtInfinity;
     fn add(self, other: AntiFlector) -> Self::Output {
-        let addition = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([self.group0()[3], other.group1()[0], other.group1()[1], other.group1()[2]]),
             // e415, e425, e435, e321
@@ -365,25 +351,23 @@ impl std::ops::Add<AntiFlector> for MotorOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiFlectorOnOrigin> for MotorOnOrigin {
     type Output = MysteryVersorEven;
     fn add(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        let addition = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([self.group0()[3], other.group0()[1], other.group0()[2], other.group0()[3]]),
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[0]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiLine> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiLine) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -407,13 +391,12 @@ impl std::ops::Add<AntiLine> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiLineOnOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiLineOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -437,13 +420,12 @@ impl std::ops::Add<AntiLineOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiMotor> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiMotor) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], self.group0()[3]]),
             // e1, e2, e3, e4
@@ -467,13 +449,12 @@ impl std::ops::Add<AntiMotor> for MotorOnOrigin {
             // e3215
             other.group1()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiMotorOnOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiMotorOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], self.group0()[3]]),
             // e1, e2, e3, e4
@@ -497,14 +478,13 @@ impl std::ops::Add<AntiMotorOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiMysteryCircleRotor> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other[e31], self.group0()[3]]),
             // e1, e2, e3, e4
@@ -528,7 +508,6 @@ impl std::ops::Add<AntiMysteryCircleRotor> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiMysteryDipoleInversion> for MotorOnOrigin {
@@ -537,7 +516,7 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: AntiMysteryDipoleInversion) -> Self::Output {
-        let addition = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([self.group0()[3], other.group1()[0], other.group1()[1], other.group1()[2]]),
             // e415, e425, e435, e321
@@ -548,13 +527,12 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for MotorOnOrigin {
                 other.group0()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiPlane> for MotorOnOrigin {
     type Output = VersorEvenAtInfinity;
     fn add(self, other: AntiPlane) -> Self::Output {
-        let addition = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([self.group0()[3], other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e415, e425, e435, e321
@@ -562,19 +540,17 @@ impl std::ops::Add<AntiPlane> for MotorOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiPlaneOnOrigin> for MotorOnOrigin {
     type Output = MysteryVersorEven;
     fn add(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        let addition = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([self.group0()[3], other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiScalar> for MotorOnOrigin {
@@ -584,27 +560,25 @@ impl std::ops::Add<AntiScalar> for MotorOnOrigin {
     // f32        1        0        0
     fn add(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let addition = MotorOnOrigin::from_groups(
+        return MotorOnOrigin::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other[e12345])]),
         );
-        return addition;
     }
 }
 impl std::ops::AddAssign<AntiScalar> for MotorOnOrigin {
     fn add_assign(&mut self, other: AntiScalar) {
         use crate::elements::*;
-        let addition = MotorOnOrigin::from_groups(
+        *self = MotorOnOrigin::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other[e12345])]),
         );
-        *self = addition;
     }
 }
 impl std::ops::Add<AntiSphereOnOrigin> for MotorOnOrigin {
     type Output = VersorEven;
     fn add(self, other: AntiSphereOnOrigin) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e321
@@ -614,13 +588,12 @@ impl std::ops::Add<AntiSphereOnOrigin> for MotorOnOrigin {
             // e1, e2, e3, e4
             other.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiVersorEvenOnOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], self.group0()[3]]),
             // e1, e2, e3, e4
@@ -644,7 +617,6 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Circle> for MotorOnOrigin {
@@ -653,7 +625,7 @@ impl std::ops::Add<Circle> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: Circle) -> Self::Output {
-        let addition = CircleRotor::from_groups(
+        return CircleRotor::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
@@ -666,7 +638,6 @@ impl std::ops::Add<Circle> for MotorOnOrigin {
             // e235, e315, e125, e12345
             Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], self.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleAligningOrigin> for MotorOnOrigin {
@@ -676,7 +647,7 @@ impl std::ops::Add<CircleAligningOrigin> for MotorOnOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: CircleAligningOrigin) -> Self::Output {
-        let addition = CircleRotorAligningOrigin::from_groups(
+        return CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435
@@ -684,7 +655,6 @@ impl std::ops::Add<CircleAligningOrigin> for MotorOnOrigin {
             // e235, e315, e125, e12345
             Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], self.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleAtInfinity> for MotorOnOrigin {
@@ -693,7 +663,7 @@ impl std::ops::Add<CircleAtInfinity> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: CircleAtInfinity) -> Self::Output {
-        let addition = CircleRotorAtInfinity::from_groups(
+        return CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other.group0()[0] + self.group0()[0]),
@@ -704,13 +674,12 @@ impl std::ops::Add<CircleAtInfinity> for MotorOnOrigin {
             // e235, e315, e125, e12345
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleAtOrigin> for MotorOnOrigin {
     type Output = CircleRotorAligningOrigin;
     fn add(self, other: CircleAtOrigin) -> Self::Output {
-        let addition = CircleRotorAligningOrigin::from_groups(
+        return CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435
@@ -718,7 +687,6 @@ impl std::ops::Add<CircleAtOrigin> for MotorOnOrigin {
             // e235, e315, e125, e12345
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleOnOrigin> for MotorOnOrigin {
@@ -728,19 +696,18 @@ impl std::ops::Add<CircleOnOrigin> for MotorOnOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: CircleOnOrigin) -> Self::Output {
-        let addition = CircleRotorOnOrigin::from_groups(
+        return CircleRotorOnOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e415, e425, e435
             (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1()),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleOrthogonalOrigin> for MotorOnOrigin {
     type Output = CircleRotor;
     fn add(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        let addition = CircleRotor::from_groups(
+        return CircleRotor::from_groups(
             // e423, e431, e412
             Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             // e415, e425, e435, e321
@@ -748,7 +715,6 @@ impl std::ops::Add<CircleOrthogonalOrigin> for MotorOnOrigin {
             // e235, e315, e125, e12345
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotor> for MotorOnOrigin {
@@ -757,7 +723,7 @@ impl std::ops::Add<CircleRotor> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: CircleRotor) -> Self::Output {
-        let addition = CircleRotor::from_groups(
+        return CircleRotor::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435, e321
@@ -770,7 +736,6 @@ impl std::ops::Add<CircleRotor> for MotorOnOrigin {
             // e235, e315, e125, e12345
             Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (other.group2()[3] + self.group0()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorAligningOrigin> for MotorOnOrigin {
@@ -783,7 +748,7 @@ impl std::ops::Add<CircleRotorAligningOrigin> for MotorOnOrigin {
     // yes simd        2        0        0
     //  no simd        4        0        0
     fn add(self, other: CircleRotorAligningOrigin) -> Self::Output {
-        let addition = CircleRotorAligningOrigin::from_groups(
+        return CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
             other.group0(),
             // e415, e425, e435
@@ -791,7 +756,6 @@ impl std::ops::Add<CircleRotorAligningOrigin> for MotorOnOrigin {
             // e235, e315, e125, e12345
             Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], (other.group2()[3] + self.group0()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for MotorOnOrigin {
@@ -804,13 +768,12 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for MotorOnOrigin {
     // yes simd        2        0        0
     //  no simd        4        0        0
     fn add(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
-        let addition = CircleRotorAligningOriginAtInfinity::from_groups(
+        return CircleRotorAligningOriginAtInfinity::from_groups(
             // e415, e425, e435
             (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group0()),
             // e235, e315, e125, e12345
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self.group0()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorAtInfinity> for MotorOnOrigin {
@@ -819,7 +782,7 @@ impl std::ops::Add<CircleRotorAtInfinity> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: CircleRotorAtInfinity) -> Self::Output {
-        let addition = CircleRotorAtInfinity::from_groups(
+        return CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other.group0()[0] + self.group0()[0]),
@@ -830,7 +793,6 @@ impl std::ops::Add<CircleRotorAtInfinity> for MotorOnOrigin {
             // e235, e315, e125, e12345
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self.group0()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotorOnOrigin> for MotorOnOrigin {
@@ -843,19 +805,18 @@ impl std::ops::Add<CircleRotorOnOrigin> for MotorOnOrigin {
     // yes simd        2        0        0
     //  no simd        4        0        0
     fn add(self, other: CircleRotorOnOrigin) -> Self::Output {
-        let addition = CircleRotorOnOrigin::from_groups(
+        return CircleRotorOnOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self.group0()[3])]),
             // e415, e425, e435
             (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1()),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Dipole> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: Dipole) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -879,13 +840,12 @@ impl std::ops::Add<Dipole> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleAligningOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: DipoleAligningOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -909,13 +869,12 @@ impl std::ops::Add<DipoleAligningOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleAtInfinity> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: DipoleAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -939,13 +898,12 @@ impl std::ops::Add<DipoleAtInfinity> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleAtOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: DipoleAtOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -969,13 +927,12 @@ impl std::ops::Add<DipoleAtOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversion> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: DipoleInversion) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -999,13 +956,12 @@ impl std::ops::Add<DipoleInversion> for MotorOnOrigin {
             // e3215
             other.group3()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionAligningOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: DipoleInversionAligningOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1029,13 +985,12 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for MotorOnOrigin {
             // e3215
             other.group2()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionAtInfinity> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: DipoleInversionAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1059,13 +1014,12 @@ impl std::ops::Add<DipoleInversionAtInfinity> for MotorOnOrigin {
             // e3215
             other.group2()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionAtOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: DipoleInversionAtOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1089,13 +1043,12 @@ impl std::ops::Add<DipoleInversionAtOrigin> for MotorOnOrigin {
             // e3215
             other.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionOnOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: DipoleInversionOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1119,13 +1072,12 @@ impl std::ops::Add<DipoleInversionOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversionOrthogonalOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1149,13 +1101,12 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for MotorOnOrigin {
             // e3215
             other.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleOnOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: DipoleOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1179,13 +1130,12 @@ impl std::ops::Add<DipoleOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleOrthogonalOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1209,7 +1159,6 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DualNum> for MotorOnOrigin {
@@ -1218,20 +1167,19 @@ impl std::ops::Add<DualNum> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        1        0        0
     fn add(self, other: DualNum) -> Self::Output {
-        let addition = VersorEvenOnOrigin::from_groups(
+        return VersorEvenOnOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] + self.group0()[3])]),
             // e415, e425, e435, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[0]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlatOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1255,13 +1203,12 @@ impl std::ops::Add<FlatOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlatPoint> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: FlatPoint) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1285,13 +1232,12 @@ impl std::ops::Add<FlatPoint> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlatPointAtInfinity> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: FlatPointAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1315,13 +1261,12 @@ impl std::ops::Add<FlatPointAtInfinity> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Flector> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: Flector) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1345,13 +1290,12 @@ impl std::ops::Add<Flector> for MotorOnOrigin {
             // e3215
             other.group1()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlectorAtInfinity> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: FlectorAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1375,13 +1319,12 @@ impl std::ops::Add<FlectorAtInfinity> for MotorOnOrigin {
             // e3215
             other.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<FlectorOnOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: FlectorOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1405,14 +1348,13 @@ impl std::ops::Add<FlectorOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Horizon> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1436,20 +1378,18 @@ impl std::ops::Add<Horizon> for MotorOnOrigin {
             // e3215
             other[e3215],
         );
-        return addition;
     }
 }
 impl std::ops::Add<Infinity> for MotorOnOrigin {
     type Output = Motor;
     fn add(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
-        let addition = Motor::from_groups(
+        return Motor::from_groups(
             // e415, e425, e435, e12345
             self.group0(),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, other[e5]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Line> for MotorOnOrigin {
@@ -1459,25 +1399,23 @@ impl std::ops::Add<Line> for MotorOnOrigin {
     //   simd3        1        0        0
     // no simd        3        0        0
     fn add(self, other: Line) -> Self::Output {
-        let addition = CircleRotorAligningOriginAtInfinity::from_groups(
+        return CircleRotorAligningOriginAtInfinity::from_groups(
             // e415, e425, e435
             (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group0()),
             // e235, e315, e125, e12345
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<LineAtInfinity> for MotorOnOrigin {
     type Output = CircleRotorAligningOriginAtInfinity;
     fn add(self, other: LineAtInfinity) -> Self::Output {
-        let addition = CircleRotorAligningOriginAtInfinity::from_groups(
+        return CircleRotorAligningOriginAtInfinity::from_groups(
             // e415, e425, e435
             Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
             // e235, e315, e125, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<LineOnOrigin> for MotorOnOrigin {
@@ -1486,24 +1424,22 @@ impl std::ops::Add<LineOnOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: LineOnOrigin) -> Self::Output {
-        let addition = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
+        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
             (other.group0()[0] + self.group0()[0]),
             (other.group0()[1] + self.group0()[1]),
             (other.group0()[2] + self.group0()[2]),
             self.group0()[3],
         ]));
-        return addition;
     }
 }
 impl std::ops::AddAssign<LineOnOrigin> for MotorOnOrigin {
     fn add_assign(&mut self, other: LineOnOrigin) {
-        let addition = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
+        *self = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
             (other.group0()[0] + self.group0()[0]),
             (other.group0()[1] + self.group0()[1]),
             (other.group0()[2] + self.group0()[2]),
             self.group0()[3],
         ]));
-        *self = addition;
     }
 }
 impl std::ops::Add<Motor> for MotorOnOrigin {
@@ -1513,15 +1449,13 @@ impl std::ops::Add<Motor> for MotorOnOrigin {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: Motor) -> Self::Output {
-        let addition = Motor::from_groups(/* e415, e425, e435, e12345 */ (other.group0() + self.group0()), /* e235, e315, e125, e5 */ other.group1());
-        return addition;
+        return Motor::from_groups(/* e415, e425, e435, e12345 */ (other.group0() + self.group0()), /* e235, e315, e125, e5 */ other.group1());
     }
 }
 impl std::ops::Add<MotorAtInfinity> for MotorOnOrigin {
     type Output = Motor;
     fn add(self, other: MotorAtInfinity) -> Self::Output {
-        let addition = Motor::from_groups(/* e415, e425, e435, e12345 */ self.group0(), /* e235, e315, e125, e5 */ other.group0());
-        return addition;
+        return Motor::from_groups(/* e415, e425, e435, e12345 */ self.group0(), /* e235, e315, e125, e5 */ other.group0());
     }
 }
 impl std::ops::Add<MotorOnOrigin> for MotorOnOrigin {
@@ -1531,14 +1465,12 @@ impl std::ops::Add<MotorOnOrigin> for MotorOnOrigin {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: MotorOnOrigin) -> Self::Output {
-        let addition = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ (other.group0() + self.group0()));
-        return addition;
+        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ (other.group0() + self.group0()));
     }
 }
 impl std::ops::AddAssign<MotorOnOrigin> for MotorOnOrigin {
     fn add_assign(&mut self, other: MotorOnOrigin) {
-        let addition = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ (other.group0() + self.group0()));
-        *self = addition;
+        *self = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ (other.group0() + self.group0()));
     }
 }
 impl std::ops::Add<MultiVector> for MotorOnOrigin {
@@ -1548,7 +1480,7 @@ impl std::ops::Add<MultiVector> for MotorOnOrigin {
     // f32        4        0        0
     fn add(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[0], (other.group0()[1] + self.group0()[3])]),
             // e1, e2, e3, e4
@@ -1577,7 +1509,6 @@ impl std::ops::Add<MultiVector> for MotorOnOrigin {
             // e3215
             other[e45],
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryCircle> for MotorOnOrigin {
@@ -1586,7 +1517,7 @@ impl std::ops::Add<MysteryCircle> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        3        0        0
     fn add(self, other: MysteryCircle) -> Self::Output {
-        let addition = MysteryCircleRotor::from_groups(
+        return MysteryCircleRotor::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self.group0()[0] + other.group0()[0]),
@@ -1597,7 +1528,6 @@ impl std::ops::Add<MysteryCircle> for MotorOnOrigin {
             // e12345
             self.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryCircleRotor> for MotorOnOrigin {
@@ -1607,7 +1537,7 @@ impl std::ops::Add<MysteryCircleRotor> for MotorOnOrigin {
     // f32        4        0        0
     fn add(self, other: MysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let addition = MysteryCircleRotor::from_groups(
+        return MysteryCircleRotor::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self.group0()[0] + other.group0()[0]),
@@ -1618,13 +1548,12 @@ impl std::ops::Add<MysteryCircleRotor> for MotorOnOrigin {
             // e12345
             (self.group0()[3] + other[e425]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryDipole> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: MysteryDipole) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1648,13 +1577,12 @@ impl std::ops::Add<MysteryDipole> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryDipoleInversion> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: MysteryDipoleInversion) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1678,7 +1606,6 @@ impl std::ops::Add<MysteryDipoleInversion> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryVersorEven> for MotorOnOrigin {
@@ -1687,7 +1614,7 @@ impl std::ops::Add<MysteryVersorEven> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: MysteryVersorEven) -> Self::Output {
-        let addition = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([(self.group0()[3] + other.group0()[0]), other.group0()[1], other.group0()[2], other.group0()[3]]),
             // e415, e425, e435, e321
@@ -1698,13 +1625,12 @@ impl std::ops::Add<MysteryVersorEven> for MotorOnOrigin {
                 other.group1()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<MysteryVersorOdd> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: MysteryVersorOdd) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[0], self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1728,25 +1654,23 @@ impl std::ops::Add<MysteryVersorOdd> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullCircleAtOrigin> for MotorOnOrigin {
     type Output = CircleRotorOnOrigin;
     fn add(self, other: NullCircleAtOrigin) -> Self::Output {
-        let addition = CircleRotorOnOrigin::from_groups(
+        return CircleRotorOnOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e415, e425, e435
             Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullDipoleAtOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: NullDipoleAtOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1770,13 +1694,12 @@ impl std::ops::Add<NullDipoleAtOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullDipoleInversionAtOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1800,14 +1723,13 @@ impl std::ops::Add<NullDipoleInversionAtOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullSphereAtOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1831,38 +1753,35 @@ impl std::ops::Add<NullSphereAtOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<NullVersorEvenAtOrigin> for MotorOnOrigin {
     type Output = VersorEvenOnOrigin;
     fn add(self, other: NullVersorEvenAtOrigin) -> Self::Output {
-        let addition = VersorEvenOnOrigin::from_groups(
+        return VersorEvenOnOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e415, e425, e435, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[3]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Origin> for MotorOnOrigin {
     type Output = VersorEvenOnOrigin;
     fn add(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEvenOnOrigin::from_groups(
+        return VersorEvenOnOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other[e4]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Plane> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: Plane) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1886,13 +1805,12 @@ impl std::ops::Add<Plane> for MotorOnOrigin {
             // e3215
             other.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<PlaneOnOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: PlaneOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1916,14 +1834,13 @@ impl std::ops::Add<PlaneOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<RoundPoint> for MotorOnOrigin {
     type Output = VersorEven;
     fn add(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e321
@@ -1933,13 +1850,12 @@ impl std::ops::Add<RoundPoint> for MotorOnOrigin {
             // e1, e2, e3, e4
             other.group0(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<RoundPointAtOrigin> for MotorOnOrigin {
     type Output = VersorEvenAligningOrigin;
     fn add(self, other: RoundPointAtOrigin) -> Self::Output {
-        let addition = VersorEvenAligningOrigin::from_groups(
+        return VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e4
@@ -1947,14 +1863,13 @@ impl std::ops::Add<RoundPointAtOrigin> for MotorOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Scalar> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other[scalar], self.group0()[3]]),
             // e1, e2, e3, e4
@@ -1978,14 +1893,13 @@ impl std::ops::Add<Scalar> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Sphere> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -2009,13 +1923,12 @@ impl std::ops::Add<Sphere> for MotorOnOrigin {
             // e3215
             other.group0()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<SphereAtOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: SphereAtOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -2039,13 +1952,12 @@ impl std::ops::Add<SphereAtOrigin> for MotorOnOrigin {
             // e3215
             other.group0()[0],
         );
-        return addition;
     }
 }
 impl std::ops::Add<SphereOnOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: SphereOnOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -2069,7 +1981,6 @@ impl std::ops::Add<SphereOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEven> for MotorOnOrigin {
@@ -2078,7 +1989,7 @@ impl std::ops::Add<VersorEven> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: VersorEven) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[3] + other.group0()[3])]),
             // e415, e425, e435, e321
@@ -2093,7 +2004,6 @@ impl std::ops::Add<VersorEven> for MotorOnOrigin {
             // e1, e2, e3, e4
             other.group3(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenAligningOrigin> for MotorOnOrigin {
@@ -2102,7 +2012,7 @@ impl std::ops::Add<VersorEvenAligningOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: VersorEvenAligningOrigin) -> Self::Output {
-        let addition = VersorEvenAligningOrigin::from_groups(
+        return VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[3] + other.group0()[3])]),
             // e415, e425, e435, e4
@@ -2115,7 +2025,6 @@ impl std::ops::Add<VersorEvenAligningOrigin> for MotorOnOrigin {
             // e235, e315, e125, e5
             other.group2(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenAtInfinity> for MotorOnOrigin {
@@ -2124,7 +2033,7 @@ impl std::ops::Add<VersorEvenAtInfinity> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: VersorEvenAtInfinity) -> Self::Output {
-        let addition = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([(self.group0()[3] + other.group0()[0]), other.group0()[1], other.group0()[2], other.group0()[3]]),
             // e415, e425, e435, e321
@@ -2137,13 +2046,12 @@ impl std::ops::Add<VersorEvenAtInfinity> for MotorOnOrigin {
             // e235, e315, e125, e5
             other.group2(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenAtOrigin> for MotorOnOrigin {
     type Output = VersorEvenAligningOrigin;
     fn add(self, other: VersorEvenAtOrigin) -> Self::Output {
-        let addition = VersorEvenAligningOrigin::from_groups(
+        return VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e415, e425, e435, e4
@@ -2151,7 +2059,6 @@ impl std::ops::Add<VersorEvenAtOrigin> for MotorOnOrigin {
             // e235, e315, e125, e5
             other.group1(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenOnOrigin> for MotorOnOrigin {
@@ -2160,7 +2067,7 @@ impl std::ops::Add<VersorEvenOnOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        4        0        0
     fn add(self, other: VersorEvenOnOrigin) -> Self::Output {
-        let addition = VersorEvenOnOrigin::from_groups(
+        return VersorEvenOnOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[3] + other.group0()[3])]),
             // e415, e425, e435, e4
@@ -2171,13 +2078,12 @@ impl std::ops::Add<VersorEvenOnOrigin> for MotorOnOrigin {
                 other.group1()[3],
             ]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEvenOrthogonalOrigin> for MotorOnOrigin {
     type Output = VersorEven;
     fn add(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[3]]),
             // e415, e425, e435, e321
@@ -2187,13 +2093,12 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for MotorOnOrigin {
             // e1, e2, e3, e4
             other.group2(),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorOdd> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: VersorOdd) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], self.group0()[3]]),
             // e1, e2, e3, e4
@@ -2217,13 +2122,12 @@ impl std::ops::Add<VersorOdd> for MotorOnOrigin {
             // e3215
             other.group3()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorOddAtInfinity> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: VersorOddAtInfinity) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[0], self.group0()[3]]),
             // e1, e2, e3, e4
@@ -2247,13 +2151,12 @@ impl std::ops::Add<VersorOddAtInfinity> for MotorOnOrigin {
             // e3215
             other.group2()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorOddOrthogonalOrigin> for MotorOnOrigin {
     type Output = MultiVector;
     fn add(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], self.group0()[3]]),
             // e1, e2, e3, e4
@@ -2277,7 +2180,6 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for MotorOnOrigin {
             // e3215
             other.group1()[3],
         );
-        return addition;
     }
 }
 impl std::ops::BitXor<AntiCircleOnOrigin> for MotorOnOrigin {
@@ -2389,8 +2291,9 @@ impl std::ops::BitXor<AntiDipoleInversionOnOrigin> for MotorOnOrigin {
 impl std::ops::BitXor<AntiDualNum> for MotorOnOrigin {
     type Output = MotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn bitxor(self, other: AntiDualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -2483,8 +2386,9 @@ impl std::ops::BitXorAssign<AntiMysteryCircleRotor> for MotorOnOrigin {
 impl std::ops::BitXor<AntiMysteryDipoleInversion> for MotorOnOrigin {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        6        0
+    //          add/sub      mul      div
+    //   simd3        1        2        0
+    // no simd        3        6        0
     fn bitxor(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -2501,8 +2405,9 @@ impl std::ops::BitXor<AntiPlane> for MotorOnOrigin {
 impl std::ops::BitXor<AntiPlaneOnOrigin> for MotorOnOrigin {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        6        0
+    //          add/sub      mul      div
+    //   simd3        1        2        0
+    // no simd        3        6        0
     fn bitxor(self, other: AntiPlaneOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2646,8 +2551,9 @@ impl std::ops::BitXor<RoundPoint> for MotorOnOrigin {
 impl std::ops::BitXor<Scalar> for MotorOnOrigin {
     type Output = MotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn bitxor(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -2748,8 +2654,12 @@ impl From<LineOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<AntiCircleOnOrigin> for MotorOnOrigin {
     type Output = VersorEvenOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       24        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       10       18        0
+    //  no simd       16       24        0
     fn mul(self, other: AntiCircleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2757,8 +2667,12 @@ impl std::ops::Mul<AntiCircleOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<AntiCircleRotor> for MotorOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       48        0
+    //           add/sub      mul      div
+    //      f32       16       36        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       19       39        0
+    //  no simd       28       48        0
     fn mul(self, other: AntiCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2766,8 +2680,12 @@ impl std::ops::Mul<AntiCircleRotor> for MotorOnOrigin {
 impl std::ops::Mul<AntiCircleRotorAligningOrigin> for MotorOnOrigin {
     type Output = VersorEvenAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       40        0
+    //           add/sub      mul      div
+    //      f32       12       24        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       16       28        0
+    //  no simd       28       40        0
     fn mul(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2775,8 +2693,12 @@ impl std::ops::Mul<AntiCircleRotorAligningOrigin> for MotorOnOrigin {
 impl std::ops::Mul<AntiCircleRotorAligningOriginAtInfinity> for MotorOnOrigin {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       28        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       11       19        0
+    //  no simd       20       28        0
     fn mul(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2784,8 +2706,12 @@ impl std::ops::Mul<AntiCircleRotorAligningOriginAtInfinity> for MotorOnOrigin {
 impl std::ops::Mul<AntiCircleRotorAtInfinity> for MotorOnOrigin {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       36        0
+    //           add/sub      mul      div
+    //      f32       16       32        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       17       33        0
+    //  no simd       20       36        0
     fn mul(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2793,8 +2719,12 @@ impl std::ops::Mul<AntiCircleRotorAtInfinity> for MotorOnOrigin {
 impl std::ops::Mul<AntiCircleRotorOnOrigin> for MotorOnOrigin {
     type Output = VersorEvenOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       28        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       11       19        0
+    //  no simd       20       28        0
     fn mul(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2802,8 +2732,12 @@ impl std::ops::Mul<AntiCircleRotorOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<AntiDipoleInversion> for MotorOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       44       60        0
+    //           add/sub      mul      div
+    //      f32       11       21        0
+    //    simd4        9       10        0
+    // Totals...
+    // yes simd       20       31        0
+    //  no simd       47       61        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2811,8 +2745,12 @@ impl std::ops::Mul<AntiDipoleInversion> for MotorOnOrigin {
 impl std::ops::Mul<AntiDipoleInversionAtInfinity> for MotorOnOrigin {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       32       44        0
+    //           add/sub      mul      div
+    //      f32        7       13        0
+    //    simd4        7        8        0
+    // Totals...
+    // yes simd       14       21        0
+    //  no simd       35       45        0
     fn mul(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2820,8 +2758,9 @@ impl std::ops::Mul<AntiDipoleInversionAtInfinity> for MotorOnOrigin {
 impl std::ops::Mul<AntiDipoleInversionOnOrigin> for MotorOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //          add/sub      mul      div
+    //   simd4        6        8        0
+    // no simd       24       32        0
     fn mul(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2829,8 +2768,12 @@ impl std::ops::Mul<AntiDipoleInversionOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<AntiDipoleInversionOrthogonalOrigin> for MotorOnOrigin {
     type Output = VersorOddOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       32       44        0
+    //           add/sub      mul      div
+    //      f32       12       27        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       17       32        0
+    //  no simd       32       47        0
     fn mul(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2847,8 +2790,9 @@ impl std::ops::Mul<AntiDipoleOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<AntiDualNum> for MotorOnOrigin {
     type Output = VersorEvenOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2856,8 +2800,9 @@ impl std::ops::Mul<AntiDualNum> for MotorOnOrigin {
 impl std::ops::Mul<AntiFlatOrigin> for MotorOnOrigin {
     type Output = FlectorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn mul(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -2875,8 +2820,9 @@ impl std::ops::Mul<AntiFlatPoint> for MotorOnOrigin {
 impl std::ops::Mul<AntiFlector> for MotorOnOrigin {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //          add/sub      mul      div
+    //   simd4        6        8        0
+    // no simd       24       32        0
     fn mul(self, other: AntiFlector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2884,8 +2830,12 @@ impl std::ops::Mul<AntiFlector> for MotorOnOrigin {
 impl std::ops::Mul<AntiFlectorOnOrigin> for MotorOnOrigin {
     type Output = FlectorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       16        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        6       10        0
+    //  no simd       12       16        0
     fn mul(self, other: AntiFlectorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2893,8 +2843,12 @@ impl std::ops::Mul<AntiFlectorOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<AntiLine> for MotorOnOrigin {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       24        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       10       18        0
+    //  no simd       16       24        0
     fn mul(self, other: AntiLine) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2902,8 +2856,12 @@ impl std::ops::Mul<AntiLine> for MotorOnOrigin {
 impl std::ops::Mul<AntiLineOnOrigin> for MotorOnOrigin {
     type Output = MotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn mul(self, other: AntiLineOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2916,8 +2874,12 @@ impl std::ops::MulAssign<AntiLineOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<AntiMotor> for MotorOnOrigin {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       12       20        0
+    //  no simd       24       32        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2925,8 +2887,12 @@ impl std::ops::Mul<AntiMotor> for MotorOnOrigin {
 impl std::ops::Mul<AntiMotorOnOrigin> for MotorOnOrigin {
     type Output = MotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       16        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        6       10        0
+    //  no simd       12       16        0
     fn mul(self, other: AntiMotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2949,8 +2915,12 @@ impl std::ops::Mul<AntiMysteryCircleRotor> for MotorOnOrigin {
 impl std::ops::Mul<AntiMysteryDipoleInversion> for MotorOnOrigin {
     type Output = MysteryVersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       28        0
+    //           add/sub      mul      div
+    //      f32        0        8        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd        6       14        0
+    //  no simd       24       32        0
     fn mul(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2967,8 +2937,12 @@ impl std::ops::Mul<AntiPlane> for MotorOnOrigin {
 impl std::ops::Mul<AntiPlaneOnOrigin> for MotorOnOrigin {
     type Output = FlectorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn mul(self, other: AntiPlaneOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2976,8 +2950,9 @@ impl std::ops::Mul<AntiPlaneOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<AntiScalar> for MotorOnOrigin {
     type Output = AntiMotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn mul(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -2995,8 +2970,12 @@ impl std::ops::Mul<AntiSphereOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<AntiVersorEvenOnOrigin> for MotorOnOrigin {
     type Output = VersorEvenOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       12       20        0
+    //  no simd       24       32        0
     fn mul(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3004,8 +2983,12 @@ impl std::ops::Mul<AntiVersorEvenOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<Circle> for MotorOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       40        0
+    //           add/sub      mul      div
+    //      f32       16       32        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       18       34        0
+    //  no simd       24       40        0
     fn mul(self, other: Circle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3013,8 +2996,12 @@ impl std::ops::Mul<Circle> for MotorOnOrigin {
 impl std::ops::Mul<CircleAligningOrigin> for MotorOnOrigin {
     type Output = VersorOddOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       36        0
+    //           add/sub      mul      div
+    //      f32       12       24        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       15       27        0
+    //  no simd       24       36        0
     fn mul(self, other: CircleAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3022,8 +3009,12 @@ impl std::ops::Mul<CircleAligningOrigin> for MotorOnOrigin {
 impl std::ops::Mul<CircleAtInfinity> for MotorOnOrigin {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       28        0
+    //           add/sub      mul      div
+    //      f32       12       24        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       13       25        0
+    //  no simd       16       28        0
     fn mul(self, other: CircleAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3031,8 +3022,12 @@ impl std::ops::Mul<CircleAtInfinity> for MotorOnOrigin {
 impl std::ops::Mul<CircleAtOrigin> for MotorOnOrigin {
     type Output = DipoleInversionAtOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       24        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       10       18        0
+    //  no simd       16       24        0
     fn mul(self, other: CircleAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3040,8 +3035,12 @@ impl std::ops::Mul<CircleAtOrigin> for MotorOnOrigin {
 impl std::ops::Mul<CircleOnOrigin> for MotorOnOrigin {
     type Output = AntiVersorEvenOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       24        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       10       18        0
+    //  no simd       16       24        0
     fn mul(self, other: CircleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3049,8 +3048,12 @@ impl std::ops::Mul<CircleOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<CircleOrthogonalOrigin> for MotorOnOrigin {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       28        0
+    //           add/sub      mul      div
+    //      f32       12       24        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       13       25        0
+    //  no simd       16       28        0
     fn mul(self, other: CircleOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3058,8 +3061,12 @@ impl std::ops::Mul<CircleOrthogonalOrigin> for MotorOnOrigin {
 impl std::ops::Mul<CircleRotor> for MotorOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       44        0
+    //           add/sub      mul      div
+    //      f32       16       35        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       19       38        0
+    //  no simd       28       47        0
     fn mul(self, other: CircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3067,8 +3074,12 @@ impl std::ops::Mul<CircleRotor> for MotorOnOrigin {
 impl std::ops::Mul<CircleRotorAligningOrigin> for MotorOnOrigin {
     type Output = VersorOddOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       40        0
+    //           add/sub      mul      div
+    //      f32       12       27        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       16       31        0
+    //  no simd       28       43        0
     fn mul(self, other: CircleRotorAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3076,8 +3087,12 @@ impl std::ops::Mul<CircleRotorAligningOrigin> for MotorOnOrigin {
 impl std::ops::Mul<CircleRotorAligningOriginAtInfinity> for MotorOnOrigin {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       28        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       11       19        0
+    //  no simd       20       28        0
     fn mul(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3085,8 +3100,12 @@ impl std::ops::Mul<CircleRotorAligningOriginAtInfinity> for MotorOnOrigin {
 impl std::ops::Mul<CircleRotorAtInfinity> for MotorOnOrigin {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       32        0
+    //           add/sub      mul      div
+    //      f32       12       27        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       14       29        0
+    //  no simd       20       35        0
     fn mul(self, other: CircleRotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3094,8 +3113,12 @@ impl std::ops::Mul<CircleRotorAtInfinity> for MotorOnOrigin {
 impl std::ops::Mul<CircleRotorOnOrigin> for MotorOnOrigin {
     type Output = AntiVersorEvenOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       28        0
+    //           add/sub      mul      div
+    //      f32        8       19        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       11       22        0
+    //  no simd       20       31        0
     fn mul(self, other: CircleRotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3103,8 +3126,12 @@ impl std::ops::Mul<CircleRotorOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<Dipole> for MotorOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       44        0
+    //           add/sub      mul      div
+    //      f32       16       36        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       18       38        0
+    //  no simd       24       44        0
     fn mul(self, other: Dipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3112,8 +3139,12 @@ impl std::ops::Mul<Dipole> for MotorOnOrigin {
 impl std::ops::Mul<DipoleAligningOrigin> for MotorOnOrigin {
     type Output = VersorEvenOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       32        0
+    //           add/sub      mul      div
+    //      f32       12       28        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       13       29        0
+    //  no simd       16       32        0
     fn mul(self, other: DipoleAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3121,8 +3152,12 @@ impl std::ops::Mul<DipoleAligningOrigin> for MotorOnOrigin {
 impl std::ops::Mul<DipoleAtInfinity> for MotorOnOrigin {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       32        0
+    //           add/sub      mul      div
+    //      f32       12       28        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd       13       29        0
+    //  no simd       16       32        0
     fn mul(self, other: DipoleAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3130,8 +3165,12 @@ impl std::ops::Mul<DipoleAtInfinity> for MotorOnOrigin {
 impl std::ops::Mul<DipoleAtOrigin> for MotorOnOrigin {
     type Output = VersorEvenAtOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       24        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       10       18        0
+    //  no simd       16       24        0
     fn mul(self, other: DipoleAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3139,8 +3178,12 @@ impl std::ops::Mul<DipoleAtOrigin> for MotorOnOrigin {
 impl std::ops::Mul<DipoleInversion> for MotorOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       44       60        0
+    //           add/sub      mul      div
+    //      f32       11       20        0
+    //    simd4        9       10        0
+    // Totals...
+    // yes simd       20       30        0
+    //  no simd       47       60        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3148,8 +3191,12 @@ impl std::ops::Mul<DipoleInversion> for MotorOnOrigin {
 impl std::ops::Mul<DipoleInversionAligningOrigin> for MotorOnOrigin {
     type Output = VersorEvenOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       48        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        8       10        0
+    // Totals...
+    // yes simd       12       18        0
+    //  no simd       36       48        0
     fn mul(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3157,8 +3204,12 @@ impl std::ops::Mul<DipoleInversionAligningOrigin> for MotorOnOrigin {
 impl std::ops::Mul<DipoleInversionAtInfinity> for MotorOnOrigin {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       32       44        0
+    //           add/sub      mul      div
+    //      f32        4       12        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       12       20        0
+    //  no simd       36       44        0
     fn mul(self, other: DipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3166,8 +3217,12 @@ impl std::ops::Mul<DipoleInversionAtInfinity> for MotorOnOrigin {
 impl std::ops::Mul<DipoleInversionAtOrigin> for MotorOnOrigin {
     type Output = VersorEvenAtOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       12       20        0
+    //  no simd       24       32        0
     fn mul(self, other: DipoleInversionAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3175,8 +3230,9 @@ impl std::ops::Mul<DipoleInversionAtOrigin> for MotorOnOrigin {
 impl std::ops::Mul<DipoleInversionOnOrigin> for MotorOnOrigin {
     type Output = AntiDipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //          add/sub      mul      div
+    //   simd4        6        8        0
+    // no simd       24       32        0
     fn mul(self, other: DipoleInversionOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3184,8 +3240,12 @@ impl std::ops::Mul<DipoleInversionOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<DipoleInversionOrthogonalOrigin> for MotorOnOrigin {
     type Output = VersorEvenAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       32       44        0
+    //           add/sub      mul      div
+    //      f32       12       24        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       17       29        0
+    //  no simd       32       44        0
     fn mul(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3202,8 +3262,12 @@ impl std::ops::Mul<DipoleOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<DipoleOrthogonalOrigin> for MotorOnOrigin {
     type Output = VersorEvenAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       36        0
+    //           add/sub      mul      div
+    //      f32       12       24        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       15       27        0
+    //  no simd       24       36        0
     fn mul(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3211,8 +3275,9 @@ impl std::ops::Mul<DipoleOrthogonalOrigin> for MotorOnOrigin {
 impl std::ops::Mul<DualNum> for MotorOnOrigin {
     type Output = AntiVersorEvenOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3220,8 +3285,9 @@ impl std::ops::Mul<DualNum> for MotorOnOrigin {
 impl std::ops::Mul<FlatOrigin> for MotorOnOrigin {
     type Output = AntiFlectorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn mul(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3239,8 +3305,12 @@ impl std::ops::Mul<FlatPoint> for MotorOnOrigin {
 impl std::ops::Mul<FlatPointAtInfinity> for MotorOnOrigin {
     type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn mul(self, other: FlatPointAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3248,8 +3318,9 @@ impl std::ops::Mul<FlatPointAtInfinity> for MotorOnOrigin {
 impl std::ops::Mul<Flector> for MotorOnOrigin {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //          add/sub      mul      div
+    //   simd4        6        8        0
+    // no simd       24       32        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3257,8 +3328,12 @@ impl std::ops::Mul<Flector> for MotorOnOrigin {
 impl std::ops::Mul<FlectorAtInfinity> for MotorOnOrigin {
     type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       16        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        6       10        0
+    //  no simd       12       16        0
     fn mul(self, other: FlectorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3266,8 +3341,12 @@ impl std::ops::Mul<FlectorAtInfinity> for MotorOnOrigin {
 impl std::ops::Mul<FlectorOnOrigin> for MotorOnOrigin {
     type Output = AntiFlectorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       16        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        6       10        0
+    //  no simd       12       16        0
     fn mul(self, other: FlectorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3275,8 +3354,9 @@ impl std::ops::Mul<FlectorOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<Horizon> for MotorOnOrigin {
     type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn mul(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3285,8 +3365,9 @@ impl std::ops::Mul<Horizon> for MotorOnOrigin {
 impl std::ops::Mul<Infinity> for MotorOnOrigin {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn mul(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3295,8 +3376,12 @@ impl std::ops::Mul<Infinity> for MotorOnOrigin {
 impl std::ops::Mul<Line> for MotorOnOrigin {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       24        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       10       18        0
+    //  no simd       16       24        0
     fn mul(self, other: Line) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3304,8 +3389,12 @@ impl std::ops::Mul<Line> for MotorOnOrigin {
 impl std::ops::Mul<LineAtInfinity> for MotorOnOrigin {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn mul(self, other: LineAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3313,8 +3402,12 @@ impl std::ops::Mul<LineAtInfinity> for MotorOnOrigin {
 impl std::ops::Mul<LineOnOrigin> for MotorOnOrigin {
     type Output = AntiMotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn mul(self, other: LineOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3322,8 +3415,12 @@ impl std::ops::Mul<LineOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<Motor> for MotorOnOrigin {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       12       20        0
+    //  no simd       24       32        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3331,8 +3428,12 @@ impl std::ops::Mul<Motor> for MotorOnOrigin {
 impl std::ops::Mul<MotorAtInfinity> for MotorOnOrigin {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       16        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        6       10        0
+    //  no simd       12       16        0
     fn mul(self, other: MotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3340,8 +3441,12 @@ impl std::ops::Mul<MotorAtInfinity> for MotorOnOrigin {
 impl std::ops::Mul<MotorOnOrigin> for MotorOnOrigin {
     type Output = AntiMotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       16        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        6       10        0
+    //  no simd       12       16        0
     fn mul(self, other: MotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3349,8 +3454,13 @@ impl std::ops::Mul<MotorOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<MultiVector> for MotorOnOrigin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       96      128        0
+    //           add/sub      mul      div
+    //      f32       18       28        0
+    //    simd3       10       12        0
+    //    simd4       12       16        0
+    // Totals...
+    // yes simd       40       56        0
+    //  no simd       96      128        0
     fn mul(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3387,8 +3497,12 @@ impl std::ops::Mul<MysteryDipole> for MotorOnOrigin {
 impl std::ops::Mul<MysteryDipoleInversion> for MotorOnOrigin {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       28        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd        6       10        0
+    //  no simd       24       28        0
     fn mul(self, other: MysteryDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3396,8 +3510,9 @@ impl std::ops::Mul<MysteryDipoleInversion> for MotorOnOrigin {
 impl std::ops::Mul<MysteryVersorEven> for MotorOnOrigin {
     type Output = MysteryVersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //          add/sub      mul      div
+    //   simd4        6        8        0
+    // no simd       24       32        0
     fn mul(self, other: MysteryVersorEven) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3405,8 +3520,9 @@ impl std::ops::Mul<MysteryVersorEven> for MotorOnOrigin {
 impl std::ops::Mul<MysteryVersorOdd> for MotorOnOrigin {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //          add/sub      mul      div
+    //   simd4        6        8        0
+    // no simd       24       32        0
     fn mul(self, other: MysteryVersorOdd) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3414,8 +3530,12 @@ impl std::ops::Mul<MysteryVersorOdd> for MotorOnOrigin {
 impl std::ops::Mul<NullCircleAtOrigin> for MotorOnOrigin {
     type Output = NullDipoleInversionAtOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn mul(self, other: NullCircleAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3423,8 +3543,12 @@ impl std::ops::Mul<NullCircleAtOrigin> for MotorOnOrigin {
 impl std::ops::Mul<NullDipoleAtOrigin> for MotorOnOrigin {
     type Output = NullVersorEvenAtOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn mul(self, other: NullDipoleAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3432,8 +3556,12 @@ impl std::ops::Mul<NullDipoleAtOrigin> for MotorOnOrigin {
 impl std::ops::Mul<NullDipoleInversionAtOrigin> for MotorOnOrigin {
     type Output = NullVersorEvenAtOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       16        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        6       10        0
+    //  no simd       12       16        0
     fn mul(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3441,8 +3569,9 @@ impl std::ops::Mul<NullDipoleInversionAtOrigin> for MotorOnOrigin {
 impl std::ops::Mul<NullSphereAtOrigin> for MotorOnOrigin {
     type Output = NullVersorEvenAtOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn mul(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3451,8 +3580,12 @@ impl std::ops::Mul<NullSphereAtOrigin> for MotorOnOrigin {
 impl std::ops::Mul<NullVersorEvenAtOrigin> for MotorOnOrigin {
     type Output = NullDipoleInversionAtOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       16        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd        6       10        0
+    //  no simd       12       16        0
     fn mul(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3460,8 +3593,9 @@ impl std::ops::Mul<NullVersorEvenAtOrigin> for MotorOnOrigin {
 impl std::ops::Mul<Origin> for MotorOnOrigin {
     type Output = NullDipoleInversionAtOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn mul(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3479,8 +3613,12 @@ impl std::ops::Mul<Plane> for MotorOnOrigin {
 impl std::ops::Mul<PlaneOnOrigin> for MotorOnOrigin {
     type Output = AntiFlectorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn mul(self, other: PlaneOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3488,8 +3626,12 @@ impl std::ops::Mul<PlaneOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<RoundPoint> for MotorOnOrigin {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       28        0
+    //           add/sub      mul      div
+    //      f32        8       20        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        8       22        0
+    //  no simd        8       28        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3498,8 +3640,9 @@ impl std::ops::Mul<RoundPoint> for MotorOnOrigin {
 impl std::ops::Mul<RoundPointAtOrigin> for MotorOnOrigin {
     type Output = DipoleInversionAtOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn mul(self, other: RoundPointAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3507,8 +3650,9 @@ impl std::ops::Mul<RoundPointAtOrigin> for MotorOnOrigin {
 impl std::ops::Mul<Scalar> for MotorOnOrigin {
     type Output = MotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn mul(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3523,8 +3667,12 @@ impl std::ops::MulAssign<Scalar> for MotorOnOrigin {
 impl std::ops::Mul<Sphere> for MotorOnOrigin {
     type Output = VersorEvenOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       20        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        8       17        0
+    //  no simd        8       20        0
     fn mul(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -3533,8 +3681,9 @@ impl std::ops::Mul<Sphere> for MotorOnOrigin {
 impl std::ops::Mul<SphereAtOrigin> for MotorOnOrigin {
     type Output = VersorEvenAtOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn mul(self, other: SphereAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3551,8 +3700,12 @@ impl std::ops::Mul<SphereOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<VersorEven> for MotorOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       48       64        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4       10       12        0
+    // Totals...
+    // yes simd       18       28        0
+    //  no simd       48       64        0
     fn mul(self, other: VersorEven) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3560,8 +3713,12 @@ impl std::ops::Mul<VersorEven> for MotorOnOrigin {
 impl std::ops::Mul<VersorEvenAligningOrigin> for MotorOnOrigin {
     type Output = VersorOddOrthogonalOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       48        0
+    //           add/sub      mul      div
+    //      f32       12       24        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       18       30        0
+    //  no simd       36       48        0
     fn mul(self, other: VersorEvenAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3569,8 +3726,12 @@ impl std::ops::Mul<VersorEvenAligningOrigin> for MotorOnOrigin {
 impl std::ops::Mul<VersorEvenAtInfinity> for MotorOnOrigin {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       48        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        8       10        0
+    // Totals...
+    // yes simd       12       18        0
+    //  no simd       36       48        0
     fn mul(self, other: VersorEvenAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3578,8 +3739,12 @@ impl std::ops::Mul<VersorEvenAtInfinity> for MotorOnOrigin {
 impl std::ops::Mul<VersorEvenAtOrigin> for MotorOnOrigin {
     type Output = DipoleInversionAtOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       12       20        0
+    //  no simd       24       32        0
     fn mul(self, other: VersorEvenAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3587,8 +3752,12 @@ impl std::ops::Mul<VersorEvenAtOrigin> for MotorOnOrigin {
 impl std::ops::Mul<VersorEvenOnOrigin> for MotorOnOrigin {
     type Output = AntiVersorEvenOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       32        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       12       20        0
+    //  no simd       24       32        0
     fn mul(self, other: VersorEvenOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3596,8 +3765,12 @@ impl std::ops::Mul<VersorEvenOnOrigin> for MotorOnOrigin {
 impl std::ops::Mul<VersorEvenOrthogonalOrigin> for MotorOnOrigin {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       48        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        8       10        0
+    // Totals...
+    // yes simd       12       18        0
+    //  no simd       36       48        0
     fn mul(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3605,8 +3778,12 @@ impl std::ops::Mul<VersorEvenOrthogonalOrigin> for MotorOnOrigin {
 impl std::ops::Mul<VersorOdd> for MotorOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       48       64        0
+    //           add/sub      mul      div
+    //      f32        8       16        0
+    //    simd4       10       12        0
+    // Totals...
+    // yes simd       18       28        0
+    //  no simd       48       64        0
     fn mul(self, other: VersorOdd) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3614,8 +3791,12 @@ impl std::ops::Mul<VersorOdd> for MotorOnOrigin {
 impl std::ops::Mul<VersorOddAtInfinity> for MotorOnOrigin {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       48        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        8       10        0
+    // Totals...
+    // yes simd       12       18        0
+    //  no simd       36       48        0
     fn mul(self, other: VersorOddAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3623,8 +3804,12 @@ impl std::ops::Mul<VersorOddAtInfinity> for MotorOnOrigin {
 impl std::ops::Mul<VersorOddOrthogonalOrigin> for MotorOnOrigin {
     type Output = VersorEvenAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       48        0
+    //           add/sub      mul      div
+    //      f32       12       24        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       18       30        0
+    //  no simd       36       48        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3635,8 +3820,7 @@ impl std::ops::Neg for MotorOnOrigin {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn neg(self) -> Self {
-        let negation = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ (self.group0() * Simd32x4::from(-1.0)));
-        return negation;
+        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ (self.group0() * Simd32x4::from(-1.0)));
     }
 }
 impl std::ops::Not for MotorOnOrigin {
@@ -3658,7 +3842,7 @@ impl std::ops::Sub<AntiCircleOnOrigin> for MotorOnOrigin {
     // yes simd        0        4        0
     //  no simd        0        6        0
     fn sub(self, other: AntiCircleOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -3682,7 +3866,6 @@ impl std::ops::Sub<AntiCircleOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotor> for MotorOnOrigin {
@@ -3696,7 +3879,7 @@ impl std::ops::Sub<AntiCircleRotor> for MotorOnOrigin {
     // yes simd        0        4        0
     //  no simd        0       11        0
     fn sub(self, other: AntiCircleRotor) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group2()[3] * -1.0), self.group0()[3]]),
             // e1, e2, e3, e4
@@ -3720,7 +3903,6 @@ impl std::ops::Sub<AntiCircleRotor> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorAligningOrigin> for MotorOnOrigin {
@@ -3733,7 +3915,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for MotorOnOrigin {
     // yes simd        0        6        0
     //  no simd        0       10        0
     fn sub(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group2()[3] * -1.0), self.group0()[3]]),
             // e1, e2, e3, e4
@@ -3757,7 +3939,6 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for MotorOnOrigin {
@@ -3770,7 +3951,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for MotorOnOrigin {
     // yes simd        0        3        0
     //  no simd        0        7        0
     fn sub(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group1()[3] * -1.0), self.group0()[3]]),
             // e1, e2, e3, e4
@@ -3794,7 +3975,6 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorAtInfinity> for MotorOnOrigin {
@@ -3807,7 +3987,7 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for MotorOnOrigin {
     // yes simd        0        4        0
     //  no simd        0        8        0
     fn sub(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group1()[3] * -1.0), self.group0()[3]]),
             // e1, e2, e3, e4
@@ -3831,7 +4011,6 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiCircleRotorOnOrigin> for MotorOnOrigin {
@@ -3844,7 +4023,7 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for MotorOnOrigin {
     // yes simd        0        5        0
     //  no simd        0        7        0
     fn sub(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), self.group0()[3]]),
             // e1, e2, e3, e4
@@ -3868,7 +4047,6 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversion> for MotorOnOrigin {
@@ -3881,7 +4059,7 @@ impl std::ops::Sub<AntiDipoleInversion> for MotorOnOrigin {
     // yes simd        3        6        0
     //  no simd        3       12        0
     fn sub(self, other: AntiDipoleInversion) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e415, e425, e435, e321
@@ -3896,7 +4074,6 @@ impl std::ops::Sub<AntiDipoleInversion> for MotorOnOrigin {
             // e1, e2, e3, e4
             (Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]]) * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversionAtInfinity> for MotorOnOrigin {
@@ -3909,7 +4086,7 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for MotorOnOrigin {
     // yes simd        3        5        0
     //  no simd        3        8        0
     fn sub(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([self.group0()[3], (other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0)]),
             // e415, e425, e435, e321
@@ -3922,7 +4099,6 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for MotorOnOrigin {
             // e235, e315, e125, e5
             (Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group2()[3]]) * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversionOnOrigin> for MotorOnOrigin {
@@ -3935,7 +4111,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for MotorOnOrigin {
     // yes simd        0        5        0
     //  no simd        0        8        0
     fn sub(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e415, e425, e435, e321
@@ -3945,7 +4121,6 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for MotorOnOrigin {
             // e1, e2, e3, e4
             (swizzle!(other.group1(), 1, 2, 3, 0) * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for MotorOnOrigin {
@@ -3958,7 +4133,7 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for MotorOnOrigin {
     // yes simd        3        5        0
     //  no simd        3        8        0
     fn sub(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
-        let subtraction = VersorEvenAligningOrigin::from_groups(
+        return VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e415, e425, e435, e4
@@ -3971,7 +4146,6 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for MotorOnOrigin {
             // e235, e315, e125, e5
             (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group0()[3]]) * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleOnOrigin> for MotorOnOrigin {
@@ -3984,7 +4158,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for MotorOnOrigin {
     // yes simd        0        2        0
     //  no simd        0        4        0
     fn sub(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        let subtraction = CircleRotor::from_groups(
+        return CircleRotor::from_groups(
             // e423, e431, e412
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
@@ -3992,7 +4166,6 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for MotorOnOrigin {
             // e235, e315, e125, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDualNum> for MotorOnOrigin {
@@ -4001,7 +4174,7 @@ impl std::ops::Sub<AntiDualNum> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        0        2        0
     fn sub(self, other: AntiDualNum) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[1] * -1.0), self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4025,7 +4198,6 @@ impl std::ops::Sub<AntiDualNum> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiFlatOrigin> for MotorOnOrigin {
@@ -4035,13 +4207,12 @@ impl std::ops::Sub<AntiFlatOrigin> for MotorOnOrigin {
     // f32        0        1        0
     fn sub(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MysteryCircleRotor::from_groups(
+        return MysteryCircleRotor::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other[e321] * -1.0)]),
             // e12345
             self.group0()[3],
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiFlatPoint> for MotorOnOrigin {
@@ -4050,13 +4221,12 @@ impl std::ops::Sub<AntiFlatPoint> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: AntiFlatPoint) -> Self::Output {
-        let subtraction = CircleRotorAtInfinity::from_groups(
+        return CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] * -1.0)]),
             // e235, e315, e125, e12345
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiFlector> for MotorOnOrigin {
@@ -4069,7 +4239,7 @@ impl std::ops::Sub<AntiFlector> for MotorOnOrigin {
     // yes simd        0        5        0
     //  no simd        0        8        0
     fn sub(self, other: AntiFlector) -> Self::Output {
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([self.group0()[3], (other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]),
             // e415, e425, e435, e321
@@ -4077,7 +4247,6 @@ impl std::ops::Sub<AntiFlector> for MotorOnOrigin {
             // e235, e315, e125, e5
             (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]) * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiFlectorOnOrigin> for MotorOnOrigin {
@@ -4086,13 +4255,12 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([self.group0()[3], (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group0()[3] * -1.0)]),
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[0] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiLine> for MotorOnOrigin {
@@ -4102,7 +4270,7 @@ impl std::ops::Sub<AntiLine> for MotorOnOrigin {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn sub(self, other: AntiLine) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4126,7 +4294,6 @@ impl std::ops::Sub<AntiLine> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiLineOnOrigin> for MotorOnOrigin {
@@ -4136,7 +4303,7 @@ impl std::ops::Sub<AntiLineOnOrigin> for MotorOnOrigin {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn sub(self, other: AntiLineOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4160,7 +4327,6 @@ impl std::ops::Sub<AntiLineOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiMotor> for MotorOnOrigin {
@@ -4173,7 +4339,7 @@ impl std::ops::Sub<AntiMotor> for MotorOnOrigin {
     // yes simd        0        4        0
     //  no simd        0        8        0
     fn sub(self, other: AntiMotor) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4197,7 +4363,6 @@ impl std::ops::Sub<AntiMotor> for MotorOnOrigin {
             // e3215
             (other.group1()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiMotorOnOrigin> for MotorOnOrigin {
@@ -4210,7 +4375,7 @@ impl std::ops::Sub<AntiMotorOnOrigin> for MotorOnOrigin {
     // yes simd        0        2        0
     //  no simd        0        4        0
     fn sub(self, other: AntiMotorOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4234,7 +4399,6 @@ impl std::ops::Sub<AntiMotorOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiMysteryCircleRotor> for MotorOnOrigin {
@@ -4248,7 +4412,7 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for MotorOnOrigin {
     //  no simd        0        5        0
     fn sub(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other[e31] * -1.0), self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4272,7 +4436,6 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiMysteryDipoleInversion> for MotorOnOrigin {
@@ -4281,7 +4444,7 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        3        4        0
     fn sub(self, other: AntiMysteryDipoleInversion) -> Self::Output {
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([self.group0()[3], (other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0)]),
             // e415, e425, e435, e321
@@ -4292,7 +4455,6 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for MotorOnOrigin {
                 (other.group0()[3] * -1.0),
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiPlane> for MotorOnOrigin {
@@ -4301,7 +4463,7 @@ impl std::ops::Sub<AntiPlane> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: AntiPlane) -> Self::Output {
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([self.group0()[3], (other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]),
             // e415, e425, e435, e321
@@ -4309,7 +4471,6 @@ impl std::ops::Sub<AntiPlane> for MotorOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiPlaneOnOrigin> for MotorOnOrigin {
@@ -4318,13 +4479,12 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        0        3        0
     fn sub(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([self.group0()[3], (other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]),
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiScalar> for MotorOnOrigin {
@@ -4334,21 +4494,19 @@ impl std::ops::Sub<AntiScalar> for MotorOnOrigin {
     // f32        1        0        0
     fn sub(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MotorOnOrigin::from_groups(
+        return MotorOnOrigin::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other[e12345])]),
         );
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<AntiScalar> for MotorOnOrigin {
     fn sub_assign(&mut self, other: AntiScalar) {
         use crate::elements::*;
-        let subtraction = MotorOnOrigin::from_groups(
+        *self = MotorOnOrigin::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other[e12345])]),
         );
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<AntiSphereOnOrigin> for MotorOnOrigin {
@@ -4358,7 +4516,7 @@ impl std::ops::Sub<AntiSphereOnOrigin> for MotorOnOrigin {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn sub(self, other: AntiSphereOnOrigin) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e321
@@ -4368,7 +4526,6 @@ impl std::ops::Sub<AntiSphereOnOrigin> for MotorOnOrigin {
             // e1, e2, e3, e4
             (other.group0() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiVersorEvenOnOrigin> for MotorOnOrigin {
@@ -4381,7 +4538,7 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for MotorOnOrigin {
     // yes simd        0        6        0
     //  no simd        0        8        0
     fn sub(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4405,7 +4562,6 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Circle> for MotorOnOrigin {
@@ -4418,7 +4574,7 @@ impl std::ops::Sub<Circle> for MotorOnOrigin {
     // yes simd        3        5        0
     //  no simd        3        7        0
     fn sub(self, other: Circle) -> Self::Output {
-        let subtraction = CircleRotor::from_groups(
+        return CircleRotor::from_groups(
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
@@ -4431,7 +4587,6 @@ impl std::ops::Sub<Circle> for MotorOnOrigin {
             // e235, e315, e125, e12345
             Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), self.group0()[3]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleAligningOrigin> for MotorOnOrigin {
@@ -4444,7 +4599,7 @@ impl std::ops::Sub<CircleAligningOrigin> for MotorOnOrigin {
     // yes simd        1        4        0
     //  no simd        3        6        0
     fn sub(self, other: CircleAligningOrigin) -> Self::Output {
-        let subtraction = CircleRotorAligningOrigin::from_groups(
+        return CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435
@@ -4452,7 +4607,6 @@ impl std::ops::Sub<CircleAligningOrigin> for MotorOnOrigin {
             // e235, e315, e125, e12345
             Simd32x4::from([(other.group2()[0] * -1.0), (other.group2()[1] * -1.0), (other.group2()[2] * -1.0), self.group0()[3]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleAtInfinity> for MotorOnOrigin {
@@ -4461,7 +4615,7 @@ impl std::ops::Sub<CircleAtInfinity> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        3        4        0
     fn sub(self, other: CircleAtInfinity) -> Self::Output {
-        let subtraction = CircleRotorAtInfinity::from_groups(
+        return CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
                 (-other.group0()[0] + self.group0()[0]),
@@ -4472,7 +4626,6 @@ impl std::ops::Sub<CircleAtInfinity> for MotorOnOrigin {
             // e235, e315, e125, e12345
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self.group0()[3]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleAtOrigin> for MotorOnOrigin {
@@ -4485,7 +4638,7 @@ impl std::ops::Sub<CircleAtOrigin> for MotorOnOrigin {
     // yes simd        0        4        0
     //  no simd        0        6        0
     fn sub(self, other: CircleAtOrigin) -> Self::Output {
-        let subtraction = CircleRotorAligningOrigin::from_groups(
+        return CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435
@@ -4493,7 +4646,6 @@ impl std::ops::Sub<CircleAtOrigin> for MotorOnOrigin {
             // e235, e315, e125, e12345
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self.group0()[3]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleOnOrigin> for MotorOnOrigin {
@@ -4506,13 +4658,12 @@ impl std::ops::Sub<CircleOnOrigin> for MotorOnOrigin {
     // yes simd        1        3        0
     //  no simd        3        3        0
     fn sub(self, other: CircleOnOrigin) -> Self::Output {
-        let subtraction = CircleRotorOnOrigin::from_groups(
+        return CircleRotorOnOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e415, e425, e435
             (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1()),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleOrthogonalOrigin> for MotorOnOrigin {
@@ -4525,7 +4676,7 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for MotorOnOrigin {
     // yes simd        0        5        0
     //  no simd        0        7        0
     fn sub(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        let subtraction = CircleRotor::from_groups(
+        return CircleRotor::from_groups(
             // e423, e431, e412
             (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
@@ -4533,7 +4684,6 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for MotorOnOrigin {
             // e235, e315, e125, e12345
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self.group0()[3]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotor> for MotorOnOrigin {
@@ -4546,7 +4696,7 @@ impl std::ops::Sub<CircleRotor> for MotorOnOrigin {
     // yes simd        4        5        0
     //  no simd        4        7        0
     fn sub(self, other: CircleRotor) -> Self::Output {
-        let subtraction = CircleRotor::from_groups(
+        return CircleRotor::from_groups(
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435, e321
@@ -4564,7 +4714,6 @@ impl std::ops::Sub<CircleRotor> for MotorOnOrigin {
                 (-other.group2()[3] + self.group0()[3]),
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorAligningOrigin> for MotorOnOrigin {
@@ -4577,7 +4726,7 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for MotorOnOrigin {
     // yes simd        2        4        0
     //  no simd        4        6        0
     fn sub(self, other: CircleRotorAligningOrigin) -> Self::Output {
-        let subtraction = CircleRotorAligningOrigin::from_groups(
+        return CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
             (other.group0() * Simd32x3::from(-1.0)),
             // e415, e425, e435
@@ -4590,7 +4739,6 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for MotorOnOrigin {
                 (-other.group2()[3] + self.group0()[3]),
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for MotorOnOrigin {
@@ -4603,7 +4751,7 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for MotorOnOrigin {
     // yes simd        2        3        0
     //  no simd        4        3        0
     fn sub(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
-        let subtraction = CircleRotorAligningOriginAtInfinity::from_groups(
+        return CircleRotorAligningOriginAtInfinity::from_groups(
             // e415, e425, e435
             (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group0()),
             // e235, e315, e125, e12345
@@ -4614,7 +4762,6 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for MotorOnOrigin {
                 (-other.group1()[3] + self.group0()[3]),
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorAtInfinity> for MotorOnOrigin {
@@ -4623,7 +4770,7 @@ impl std::ops::Sub<CircleRotorAtInfinity> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        4        4        0
     fn sub(self, other: CircleRotorAtInfinity) -> Self::Output {
-        let subtraction = CircleRotorAtInfinity::from_groups(
+        return CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
                 (-other.group0()[0] + self.group0()[0]),
@@ -4639,7 +4786,6 @@ impl std::ops::Sub<CircleRotorAtInfinity> for MotorOnOrigin {
                 (-other.group1()[3] + self.group0()[3]),
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotorOnOrigin> for MotorOnOrigin {
@@ -4652,7 +4798,7 @@ impl std::ops::Sub<CircleRotorOnOrigin> for MotorOnOrigin {
     // yes simd        2        3        0
     //  no simd        4        3        0
     fn sub(self, other: CircleRotorOnOrigin) -> Self::Output {
-        let subtraction = CircleRotorOnOrigin::from_groups(
+        return CircleRotorOnOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -4663,7 +4809,6 @@ impl std::ops::Sub<CircleRotorOnOrigin> for MotorOnOrigin {
             // e415, e425, e435
             (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1()),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Dipole> for MotorOnOrigin {
@@ -4676,7 +4821,7 @@ impl std::ops::Sub<Dipole> for MotorOnOrigin {
     // yes simd        0        3        0
     //  no simd        0       10        0
     fn sub(self, other: Dipole) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4700,7 +4845,6 @@ impl std::ops::Sub<Dipole> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleAligningOrigin> for MotorOnOrigin {
@@ -4713,7 +4857,7 @@ impl std::ops::Sub<DipoleAligningOrigin> for MotorOnOrigin {
     // yes simd        0        2        0
     //  no simd        0        7        0
     fn sub(self, other: DipoleAligningOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4737,7 +4881,6 @@ impl std::ops::Sub<DipoleAligningOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleAtInfinity> for MotorOnOrigin {
@@ -4750,7 +4893,7 @@ impl std::ops::Sub<DipoleAtInfinity> for MotorOnOrigin {
     // yes simd        0        3        0
     //  no simd        0        7        0
     fn sub(self, other: DipoleAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4774,7 +4917,6 @@ impl std::ops::Sub<DipoleAtInfinity> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleAtOrigin> for MotorOnOrigin {
@@ -4787,7 +4929,7 @@ impl std::ops::Sub<DipoleAtOrigin> for MotorOnOrigin {
     // yes simd        0        4        0
     //  no simd        0        6        0
     fn sub(self, other: DipoleAtOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4811,7 +4953,6 @@ impl std::ops::Sub<DipoleAtOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversion> for MotorOnOrigin {
@@ -4825,7 +4966,7 @@ impl std::ops::Sub<DipoleInversion> for MotorOnOrigin {
     // yes simd        0        5        0
     //  no simd        0       15        0
     fn sub(self, other: DipoleInversion) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4849,7 +4990,6 @@ impl std::ops::Sub<DipoleInversion> for MotorOnOrigin {
             // e3215
             (other.group3()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionAligningOrigin> for MotorOnOrigin {
@@ -4863,7 +5003,7 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for MotorOnOrigin {
     // yes simd        0        4        0
     //  no simd        0       12        0
     fn sub(self, other: DipoleInversionAligningOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4887,7 +5027,6 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for MotorOnOrigin {
             // e3215
             (other.group2()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionAtInfinity> for MotorOnOrigin {
@@ -4900,7 +5039,7 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for MotorOnOrigin {
     // yes simd        0        7        0
     //  no simd        0       11        0
     fn sub(self, other: DipoleInversionAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4924,7 +5063,6 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for MotorOnOrigin {
             // e3215
             (other.group2()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionAtOrigin> for MotorOnOrigin {
@@ -4937,7 +5075,7 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for MotorOnOrigin {
     // yes simd        0        6        0
     //  no simd        0        8        0
     fn sub(self, other: DipoleInversionAtOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4961,7 +5099,6 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for MotorOnOrigin {
             // e3215
             (other.group0()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionOnOrigin> for MotorOnOrigin {
@@ -4971,7 +5108,7 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for MotorOnOrigin {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn sub(self, other: DipoleInversionOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -4995,7 +5132,6 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for MotorOnOrigin {
@@ -5008,7 +5144,7 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for MotorOnOrigin {
     // yes simd        0        7        0
     //  no simd        0       11        0
     fn sub(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5032,7 +5168,6 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for MotorOnOrigin {
             // e3215
             (other.group0()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleOnOrigin> for MotorOnOrigin {
@@ -5042,7 +5177,7 @@ impl std::ops::Sub<DipoleOnOrigin> for MotorOnOrigin {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn sub(self, other: DipoleOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5066,7 +5201,6 @@ impl std::ops::Sub<DipoleOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleOrthogonalOrigin> for MotorOnOrigin {
@@ -5079,7 +5213,7 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for MotorOnOrigin {
     // yes simd        0        5        0
     //  no simd        0        9        0
     fn sub(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5103,7 +5237,6 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DualNum> for MotorOnOrigin {
@@ -5112,13 +5245,12 @@ impl std::ops::Sub<DualNum> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        1        1        0
     fn sub(self, other: DualNum) -> Self::Output {
-        let subtraction = VersorEvenOnOrigin::from_groups(
+        return VersorEvenOnOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (-other.group0()[1] + self.group0()[3])]),
             // e415, e425, e435, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[0] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlatOrigin> for MotorOnOrigin {
@@ -5128,7 +5260,7 @@ impl std::ops::Sub<FlatOrigin> for MotorOnOrigin {
     // f32        0        1        0
     fn sub(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5152,7 +5284,6 @@ impl std::ops::Sub<FlatOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlatPoint> for MotorOnOrigin {
@@ -5165,7 +5296,7 @@ impl std::ops::Sub<FlatPoint> for MotorOnOrigin {
     // yes simd        0        2        0
     //  no simd        0        4        0
     fn sub(self, other: FlatPoint) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5189,7 +5320,6 @@ impl std::ops::Sub<FlatPoint> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlatPointAtInfinity> for MotorOnOrigin {
@@ -5199,7 +5329,7 @@ impl std::ops::Sub<FlatPointAtInfinity> for MotorOnOrigin {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn sub(self, other: FlatPointAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5223,7 +5353,6 @@ impl std::ops::Sub<FlatPointAtInfinity> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Flector> for MotorOnOrigin {
@@ -5236,7 +5365,7 @@ impl std::ops::Sub<Flector> for MotorOnOrigin {
     // yes simd        0        6        0
     //  no simd        0        8        0
     fn sub(self, other: Flector) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5260,7 +5389,6 @@ impl std::ops::Sub<Flector> for MotorOnOrigin {
             // e3215
             (other.group1()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlectorAtInfinity> for MotorOnOrigin {
@@ -5273,7 +5401,7 @@ impl std::ops::Sub<FlectorAtInfinity> for MotorOnOrigin {
     // yes simd        0        2        0
     //  no simd        0        4        0
     fn sub(self, other: FlectorAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5297,7 +5425,6 @@ impl std::ops::Sub<FlectorAtInfinity> for MotorOnOrigin {
             // e3215
             (other.group0()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<FlectorOnOrigin> for MotorOnOrigin {
@@ -5306,7 +5433,7 @@ impl std::ops::Sub<FlectorOnOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: FlectorOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5330,7 +5457,6 @@ impl std::ops::Sub<FlectorOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Horizon> for MotorOnOrigin {
@@ -5340,7 +5466,7 @@ impl std::ops::Sub<Horizon> for MotorOnOrigin {
     // f32        0        1        0
     fn sub(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5364,7 +5490,6 @@ impl std::ops::Sub<Horizon> for MotorOnOrigin {
             // e3215
             (other[e3215] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Infinity> for MotorOnOrigin {
@@ -5374,13 +5499,12 @@ impl std::ops::Sub<Infinity> for MotorOnOrigin {
     // f32        0        1        0
     fn sub(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
-        let subtraction = Motor::from_groups(
+        return Motor::from_groups(
             // e415, e425, e435, e12345
             self.group0(),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, (other[e5] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Line> for MotorOnOrigin {
@@ -5393,13 +5517,12 @@ impl std::ops::Sub<Line> for MotorOnOrigin {
     // yes simd        1        3        0
     //  no simd        3        3        0
     fn sub(self, other: Line) -> Self::Output {
-        let subtraction = CircleRotorAligningOriginAtInfinity::from_groups(
+        return CircleRotorAligningOriginAtInfinity::from_groups(
             // e415, e425, e435
             (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group0()),
             // e235, e315, e125, e12345
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self.group0()[3]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<LineAtInfinity> for MotorOnOrigin {
@@ -5408,13 +5531,12 @@ impl std::ops::Sub<LineAtInfinity> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        0        3        0
     fn sub(self, other: LineAtInfinity) -> Self::Output {
-        let subtraction = CircleRotorAligningOriginAtInfinity::from_groups(
+        return CircleRotorAligningOriginAtInfinity::from_groups(
             // e415, e425, e435
             Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
             // e235, e315, e125, e12345
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<LineOnOrigin> for MotorOnOrigin {
@@ -5423,24 +5545,22 @@ impl std::ops::Sub<LineOnOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        3        0        0
     fn sub(self, other: LineOnOrigin) -> Self::Output {
-        let subtraction = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
+        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
             (-other.group0()[0] + self.group0()[0]),
             (-other.group0()[1] + self.group0()[1]),
             (-other.group0()[2] + self.group0()[2]),
             self.group0()[3],
         ]));
-        return subtraction;
     }
 }
 impl std::ops::SubAssign<LineOnOrigin> for MotorOnOrigin {
     fn sub_assign(&mut self, other: LineOnOrigin) {
-        let subtraction = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
+        *self = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
             (-other.group0()[0] + self.group0()[0]),
             (-other.group0()[1] + self.group0()[1]),
             (-other.group0()[2] + self.group0()[2]),
             self.group0()[3],
         ]));
-        *self = subtraction;
     }
 }
 impl std::ops::Sub<Motor> for MotorOnOrigin {
@@ -5450,13 +5570,12 @@ impl std::ops::Sub<Motor> for MotorOnOrigin {
     //   simd4        1        1        0
     // no simd        4        4        0
     fn sub(self, other: Motor) -> Self::Output {
-        let subtraction = Motor::from_groups(
+        return Motor::from_groups(
             // e415, e425, e435, e12345
             (-other.group0() + self.group0()),
             // e235, e315, e125, e5
             (other.group1() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MotorAtInfinity> for MotorOnOrigin {
@@ -5466,13 +5585,12 @@ impl std::ops::Sub<MotorAtInfinity> for MotorOnOrigin {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn sub(self, other: MotorAtInfinity) -> Self::Output {
-        let subtraction = Motor::from_groups(
+        return Motor::from_groups(
             // e415, e425, e435, e12345
             self.group0(),
             // e235, e315, e125, e5
             (other.group0() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MotorOnOrigin> for MotorOnOrigin {
@@ -5482,14 +5600,12 @@ impl std::ops::Sub<MotorOnOrigin> for MotorOnOrigin {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: MotorOnOrigin) -> Self::Output {
-        let subtraction = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ (-other.group0() + self.group0()));
-        return subtraction;
+        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ (-other.group0() + self.group0()));
     }
 }
 impl std::ops::SubAssign<MotorOnOrigin> for MotorOnOrigin {
     fn sub_assign(&mut self, other: MotorOnOrigin) {
-        let subtraction = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ (-other.group0() + self.group0()));
-        *self = subtraction;
+        *self = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ (-other.group0() + self.group0()));
     }
 }
 impl std::ops::Sub<MultiVector> for MotorOnOrigin {
@@ -5504,7 +5620,7 @@ impl std::ops::Sub<MultiVector> for MotorOnOrigin {
     //  no simd        4       28        0
     fn sub(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[0] * -1.0), (-other.group0()[1] + self.group0()[3])]),
             // e1, e2, e3, e4
@@ -5533,7 +5649,6 @@ impl std::ops::Sub<MultiVector> for MotorOnOrigin {
             // e3215
             (other[e45] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryCircle> for MotorOnOrigin {
@@ -5542,7 +5657,7 @@ impl std::ops::Sub<MysteryCircle> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        3        1        0
     fn sub(self, other: MysteryCircle) -> Self::Output {
-        let subtraction = MysteryCircleRotor::from_groups(
+        return MysteryCircleRotor::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self.group0()[0] - other.group0()[0]),
@@ -5553,7 +5668,6 @@ impl std::ops::Sub<MysteryCircle> for MotorOnOrigin {
             // e12345
             self.group0()[3],
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryCircleRotor> for MotorOnOrigin {
@@ -5563,7 +5677,7 @@ impl std::ops::Sub<MysteryCircleRotor> for MotorOnOrigin {
     // f32        4        1        0
     fn sub(self, other: MysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MysteryCircleRotor::from_groups(
+        return MysteryCircleRotor::from_groups(
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self.group0()[0] - other.group0()[0]),
@@ -5574,7 +5688,6 @@ impl std::ops::Sub<MysteryCircleRotor> for MotorOnOrigin {
             // e12345
             (self.group0()[3] - other[e425]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryDipole> for MotorOnOrigin {
@@ -5587,7 +5700,7 @@ impl std::ops::Sub<MysteryDipole> for MotorOnOrigin {
     // yes simd        0        2        0
     //  no simd        0        4        0
     fn sub(self, other: MysteryDipole) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5611,7 +5724,6 @@ impl std::ops::Sub<MysteryDipole> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryDipoleInversion> for MotorOnOrigin {
@@ -5624,7 +5736,7 @@ impl std::ops::Sub<MysteryDipoleInversion> for MotorOnOrigin {
     // yes simd        0        5        0
     //  no simd        0        7        0
     fn sub(self, other: MysteryDipoleInversion) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5648,7 +5760,6 @@ impl std::ops::Sub<MysteryDipoleInversion> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryVersorEven> for MotorOnOrigin {
@@ -5657,7 +5768,7 @@ impl std::ops::Sub<MysteryVersorEven> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        4        4        0
     fn sub(self, other: MysteryVersorEven) -> Self::Output {
-        let subtraction = MysteryVersorEven::from_groups(
+        return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (self.group0()[3] - other.group0()[0]),
@@ -5673,7 +5784,6 @@ impl std::ops::Sub<MysteryVersorEven> for MotorOnOrigin {
                 (other.group1()[3] * -1.0),
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MysteryVersorOdd> for MotorOnOrigin {
@@ -5686,7 +5796,7 @@ impl std::ops::Sub<MysteryVersorOdd> for MotorOnOrigin {
     // yes simd        0        6        0
     //  no simd        0        8        0
     fn sub(self, other: MysteryVersorOdd) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[0] * -1.0), self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5710,7 +5820,6 @@ impl std::ops::Sub<MysteryVersorOdd> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullCircleAtOrigin> for MotorOnOrigin {
@@ -5719,13 +5828,12 @@ impl std::ops::Sub<NullCircleAtOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        0        3        0
     fn sub(self, other: NullCircleAtOrigin) -> Self::Output {
-        let subtraction = CircleRotorOnOrigin::from_groups(
+        return CircleRotorOnOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e415, e425, e435
             Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullDipoleAtOrigin> for MotorOnOrigin {
@@ -5734,7 +5842,7 @@ impl std::ops::Sub<NullDipoleAtOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        0        3        0
     fn sub(self, other: NullDipoleAtOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5758,7 +5866,6 @@ impl std::ops::Sub<NullDipoleAtOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullDipoleInversionAtOrigin> for MotorOnOrigin {
@@ -5767,7 +5874,7 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5791,7 +5898,6 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullSphereAtOrigin> for MotorOnOrigin {
@@ -5801,7 +5907,7 @@ impl std::ops::Sub<NullSphereAtOrigin> for MotorOnOrigin {
     // f32        0        1        0
     fn sub(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5825,7 +5931,6 @@ impl std::ops::Sub<NullSphereAtOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<NullVersorEvenAtOrigin> for MotorOnOrigin {
@@ -5834,13 +5939,12 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: NullVersorEvenAtOrigin) -> Self::Output {
-        let subtraction = VersorEvenOnOrigin::from_groups(
+        return VersorEvenOnOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e415, e425, e435, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Origin> for MotorOnOrigin {
@@ -5850,13 +5954,12 @@ impl std::ops::Sub<Origin> for MotorOnOrigin {
     // f32        0        1        0
     fn sub(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEvenOnOrigin::from_groups(
+        return VersorEvenOnOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e4
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other[e4] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Plane> for MotorOnOrigin {
@@ -5865,7 +5968,7 @@ impl std::ops::Sub<Plane> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: Plane) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5889,7 +5992,6 @@ impl std::ops::Sub<Plane> for MotorOnOrigin {
             // e3215
             (other.group0()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<PlaneOnOrigin> for MotorOnOrigin {
@@ -5898,7 +6000,7 @@ impl std::ops::Sub<PlaneOnOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        0        3        0
     fn sub(self, other: PlaneOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5922,7 +6024,6 @@ impl std::ops::Sub<PlaneOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<RoundPoint> for MotorOnOrigin {
@@ -5936,7 +6037,7 @@ impl std::ops::Sub<RoundPoint> for MotorOnOrigin {
     //  no simd        0        5        0
     fn sub(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e321
@@ -5946,7 +6047,6 @@ impl std::ops::Sub<RoundPoint> for MotorOnOrigin {
             // e1, e2, e3, e4
             (other.group0() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<RoundPointAtOrigin> for MotorOnOrigin {
@@ -5955,7 +6055,7 @@ impl std::ops::Sub<RoundPointAtOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        0        2        0
     fn sub(self, other: RoundPointAtOrigin) -> Self::Output {
-        let subtraction = VersorEvenAligningOrigin::from_groups(
+        return VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             // e415, e425, e435, e4
@@ -5963,7 +6063,6 @@ impl std::ops::Sub<RoundPointAtOrigin> for MotorOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Scalar> for MotorOnOrigin {
@@ -5973,7 +6072,7 @@ impl std::ops::Sub<Scalar> for MotorOnOrigin {
     // f32        0        1        0
     fn sub(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other[scalar] * -1.0), self.group0()[3]]),
             // e1, e2, e3, e4
@@ -5997,7 +6096,6 @@ impl std::ops::Sub<Scalar> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Sphere> for MotorOnOrigin {
@@ -6011,7 +6109,7 @@ impl std::ops::Sub<Sphere> for MotorOnOrigin {
     //  no simd        0        5        0
     fn sub(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -6035,7 +6133,6 @@ impl std::ops::Sub<Sphere> for MotorOnOrigin {
             // e3215
             (other.group0()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<SphereAtOrigin> for MotorOnOrigin {
@@ -6044,7 +6141,7 @@ impl std::ops::Sub<SphereAtOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        0        2        0
     fn sub(self, other: SphereAtOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -6068,7 +6165,6 @@ impl std::ops::Sub<SphereAtOrigin> for MotorOnOrigin {
             // e3215
             (other.group0()[0] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<SphereOnOrigin> for MotorOnOrigin {
@@ -6078,7 +6174,7 @@ impl std::ops::Sub<SphereOnOrigin> for MotorOnOrigin {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn sub(self, other: SphereOnOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[3]]),
             // e1, e2, e3, e4
@@ -6102,7 +6198,6 @@ impl std::ops::Sub<SphereOnOrigin> for MotorOnOrigin {
             // e3215
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEven> for MotorOnOrigin {
@@ -6115,7 +6210,7 @@ impl std::ops::Sub<VersorEven> for MotorOnOrigin {
     // yes simd        4        6        0
     //  no simd        4       12        0
     fn sub(self, other: VersorEven) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -6135,7 +6230,6 @@ impl std::ops::Sub<VersorEven> for MotorOnOrigin {
             // e1, e2, e3, e4
             (other.group3() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenAligningOrigin> for MotorOnOrigin {
@@ -6148,7 +6242,7 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for MotorOnOrigin {
     // yes simd        4        5        0
     //  no simd        4        8        0
     fn sub(self, other: VersorEvenAligningOrigin) -> Self::Output {
-        let subtraction = VersorEvenAligningOrigin::from_groups(
+        return VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -6166,7 +6260,6 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for MotorOnOrigin {
             // e235, e315, e125, e5
             (other.group2() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenAtInfinity> for MotorOnOrigin {
@@ -6179,7 +6272,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for MotorOnOrigin {
     // yes simd        4        5        0
     //  no simd        4        8        0
     fn sub(self, other: VersorEvenAtInfinity) -> Self::Output {
-        let subtraction = VersorEvenAtInfinity::from_groups(
+        return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
                 (self.group0()[3] - other.group0()[0]),
@@ -6197,7 +6290,6 @@ impl std::ops::Sub<VersorEvenAtInfinity> for MotorOnOrigin {
             // e235, e315, e125, e5
             (other.group2() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenAtOrigin> for MotorOnOrigin {
@@ -6210,7 +6302,7 @@ impl std::ops::Sub<VersorEvenAtOrigin> for MotorOnOrigin {
     // yes simd        0        5        0
     //  no simd        0        8        0
     fn sub(self, other: VersorEvenAtOrigin) -> Self::Output {
-        let subtraction = VersorEvenAligningOrigin::from_groups(
+        return VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e415, e425, e435, e4
@@ -6218,7 +6310,6 @@ impl std::ops::Sub<VersorEvenAtOrigin> for MotorOnOrigin {
             // e235, e315, e125, e5
             (other.group1() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenOnOrigin> for MotorOnOrigin {
@@ -6227,7 +6318,7 @@ impl std::ops::Sub<VersorEvenOnOrigin> for MotorOnOrigin {
     //      add/sub      mul      div
     // f32        4        4        0
     fn sub(self, other: VersorEvenOnOrigin) -> Self::Output {
-        let subtraction = VersorEvenOnOrigin::from_groups(
+        return VersorEvenOnOrigin::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -6243,7 +6334,6 @@ impl std::ops::Sub<VersorEvenOnOrigin> for MotorOnOrigin {
                 (other.group1()[3] * -1.0),
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEvenOrthogonalOrigin> for MotorOnOrigin {
@@ -6256,7 +6346,7 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for MotorOnOrigin {
     // yes simd        0        6        0
     //  no simd        0       12        0
     fn sub(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[3]]),
             // e415, e425, e435, e321
@@ -6266,7 +6356,6 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for MotorOnOrigin {
             // e1, e2, e3, e4
             (other.group2() * Simd32x4::from(-1.0)),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorOdd> for MotorOnOrigin {
@@ -6280,7 +6369,7 @@ impl std::ops::Sub<VersorOdd> for MotorOnOrigin {
     // yes simd        0        6        0
     //  no simd        0       16        0
     fn sub(self, other: VersorOdd) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), self.group0()[3]]),
             // e1, e2, e3, e4
@@ -6304,7 +6393,6 @@ impl std::ops::Sub<VersorOdd> for MotorOnOrigin {
             // e3215
             (other.group3()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorOddAtInfinity> for MotorOnOrigin {
@@ -6317,7 +6405,7 @@ impl std::ops::Sub<VersorOddAtInfinity> for MotorOnOrigin {
     // yes simd        0        8        0
     //  no simd        0       12        0
     fn sub(self, other: VersorOddAtInfinity) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[0] * -1.0), self.group0()[3]]),
             // e1, e2, e3, e4
@@ -6341,7 +6429,6 @@ impl std::ops::Sub<VersorOddAtInfinity> for MotorOnOrigin {
             // e3215
             (other.group2()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorOddOrthogonalOrigin> for MotorOnOrigin {
@@ -6354,7 +6441,7 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for MotorOnOrigin {
     // yes simd        0        8        0
     //  no simd        0       12        0
     fn sub(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), self.group0()[3]]),
             // e1, e2, e3, e4
@@ -6378,7 +6465,6 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for MotorOnOrigin {
             // e3215
             (other.group1()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 
