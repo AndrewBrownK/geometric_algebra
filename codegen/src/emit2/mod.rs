@@ -8,9 +8,9 @@ use crate::ast2::traits::{RawTraitImplementation, TraitKey};
 use crate::utility::CollectResults;
 
 pub mod rust;
-mod wgsl;
-mod glsl;
-mod sql;
+pub mod wgsl;
+pub mod glsl;
+pub mod sql;
 
 fn sort_trait_impls(trait_implementations: &mut Vec<Arc<RawTraitImplementation>>, mut already_ordered: HashSet<TraitKey>) -> anyhow::Result<()> {
     // Start with a sort by name, so we get stable outputs

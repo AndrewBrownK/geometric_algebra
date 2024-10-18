@@ -52,6 +52,7 @@ mod build_scripts {
 const SIMD_SRC: &'static str = include_str!("simd.rs");
 
 pub use emit2::rust::Rust;
+pub use emit2::wgsl::Wgsl;
 pub mod elements {
     pub use crate::algebra2::basis::elements::*;
 }

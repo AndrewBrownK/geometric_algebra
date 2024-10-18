@@ -4,7 +4,7 @@ use std::io::Write;
 use std::ops::Deref;
 use std::path::Path;
 use std::sync::Arc;
-use anyhow::bail;
+use anyhow::{anyhow, bail};
 use indicatif::ProgressFinish;
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
@@ -105,37 +105,43 @@ impl Wgsl {
 
         let src_folder = src_folder.as_ref().to_path_buf();
         let folder_integrations = src_folder.join(Path::new("integrations"));
-        fs::create_dir_all(&folder_integrations)?;
+        let mut mvs = multi_vecs.declarations();
+        mvs.sort_by(|a, b| a.name.cmp(&b.name));
+        let mvs = mvs;
+        let mut rt = tokio::runtime::Runtime::new().expect("Tokio must work");
+        let impls = rt.block_on(async {
+            impls.get_impls().await
+        });
 
         let file_name = format!("{algebra_name}.wgsl");
         let file_path = folder_integrations.join(Path::new(file_name.as_str()));
+        let mut additional_authors = String::new();
+        for a in authors {
+            additional_authors.push_str(", \"");
+            additional_authors.push_str(a);
+            additional_authors.push('"');
+        }
 
         let e: anyhow::Result<()> = try {
-            let mut file = fs::OpenOptions::new().truncate(true).write(true).open(&file_path)?;
+            fs::create_dir_all(&folder_integrations)?;
+            let mut file = fs::OpenOptions::new().create(true).truncate(true).write(true).open(&file_path)?;
             let mut pre = version_pre.to_string();
             if !pre.is_empty() {
                 pre = format!("-{pre}");
             }
-            writeln!(&mut file, r#"
-
-#define_import_path {algebra_name}
-
+            writeln!(&mut file, r#"#define_import_path {algebra_name}
 //
 // AUTO-GENERATED - DO NOT MODIFY
 //
 // To contribute to this file, see the adjacent codegen package.
 // https://github.com/AndrewBrownK/projective_ga/
 //
-
 // v{version_major}.{version_minor}.{version_patch}{pre}
 // {description}
-// authors = ["Andrew Brown <Andrew.Brown.UNL@gmail.com>", "{additional_authors}]
+// authors = ["Andrew Brown <Andrew.Brown.UNL@gmail.com>"{additional_authors}]
 // License: MIWT
-
+//
 "#)?;
-            let mut mvs = multi_vecs.declarations();
-            mvs.sort_by(|a, b| a.name.cmp(&b.name));
-            let mvs = mvs;
 
             let multi_progress = Arc::new(indicatif::MultiProgress::new());
             let qty_mvs = mvs.len() as u64;
@@ -157,8 +163,6 @@ impl Wgsl {
                 self.declare_trait_impl(&mut file, i)?;
                 impls_pb.inc(1);
             }
-
-            Ok(())
         };
         if let Err(e) = e {
             panic!("WGSL Errors: {e:?}");
@@ -184,9 +188,13 @@ impl Wgsl {
                 write!(w, "{el}")?;
             }
             let l = g.len();
-            write!(w, "\n    g{i}_: vec{l}<f32>")?;
+            if l > 1 {
+                write!(w, "\n    g{i}_: vec{l}<f32>")?;
+            } else {
+                write!(w, "\n    g{i}_: f32")?;
+            }
         }
-        writeln!(w, "}}")?;
+        writeln!(w, "\n}}")?;
         Ok(())
     }
 
@@ -236,7 +244,7 @@ impl Wgsl {
             }
             _ => panic!("Arity 2 should always have other type"),
         }
-        writeln!(w, ") -> ")?;
+        write!(w, ") -> ")?;
         let output_ty = impls.return_expr.expression_type();
         self.write_type(w, output_ty, true)?;
         writeln!(w, " {{")?;
@@ -259,7 +267,8 @@ impl Wgsl {
                         no += 1;
                         write!(w, "    let {name}_{no}: ")?;
                     }
-                    let x = expr.read().deref();
+                    let guard = expr.read();
+                    let x = guard.deref();
                     let x_ty = x.expression_type();
                     self.write_type(w, x_ty, true)?;
                     write!(w, " = ")?;
@@ -344,7 +353,11 @@ impl Wgsl {
                 let name = &v.decl.name.0;
                 let mut no = v.decl.name.1;
                 if no == 0 {
-                    write!(w, "{name}")?;
+                    if name.as_str() == "self" {
+                        write!(w, "self_")?;
+                    } else {
+                        write!(w, "{name}")?;
+                    }
                 } else {
                     no += 1;
                     write!(w, "{name}_{no}")?;
@@ -377,7 +390,11 @@ impl Wgsl {
                 let name = &v.decl.name.0;
                 let mut no = v.decl.name.1;
                 if no == 0 {
-                    write!(w, "{name}")?;
+                    if name.as_str() == "self" {
+                        write!(w, "self_")?;
+                    } else {
+                        write!(w, "{name}")?;
+                    }
                 } else {
                     no += 1;
                     write!(w, "{name}_{no}")?;
@@ -612,7 +629,11 @@ impl Wgsl {
                 let name = &v.decl.name.0;
                 let mut no = v.decl.name.1;
                 if no == 0 {
-                    write!(w, "{name}")?;
+                    if name.as_str() == "self" {
+                        write!(w, "self_")?;
+                    } else {
+                        write!(w, "{name}")?;
+                    }
                 } else {
                     no += 1;
                     write!(w, "{name}_{no}")?;
@@ -807,7 +828,11 @@ impl Wgsl {
                 let name = &v.decl.name.0;
                 let mut no = v.decl.name.1;
                 if no == 0 {
-                    write!(w, "{name}")?;
+                    if name.as_str() == "self" {
+                        write!(w, "self_")?;
+                    } else {
+                        write!(w, "{name}")?;
+                    }
                 } else {
                     no += 1;
                     write!(w, "{name}_{no}")?;
@@ -1018,19 +1043,23 @@ impl Wgsl {
                 let name = &v.decl.name.0;
                 let mut no = v.decl.name.1;
                 if no == 0 {
-                    write!(w, "{name}")?;
+                    if name.as_str() == "self" {
+                        write!(w, "self_")?;
+                    } else {
+                        write!(w, "{name}")?;
+                    }
                 } else {
                     no += 1;
                     write!(w, "{name}_{no}")?;
                 }
             }
             Vec4Expr::Gather1(f) => {
-                write!(w, "vec3<f32>(")?;
+                write!(w, "vec4<f32>(")?;
                 self.write_float(w, f)?;
                 write!(w, ")")?;
             }
             Vec4Expr::Gather4(f0, f1, f2, f3) => {
-                write!(w, "vec3<f32>(")?;
+                write!(w, "vec4<f32>(")?;
                 self.write_float(w, f0)?;
                 write!(w, ", ")?;
                 self.write_float(w, f1)?;
@@ -1228,14 +1257,14 @@ impl Wgsl {
                     3 => "w",
                     _ => bail!("swizzle index out of bounds")
                 };
-                let w = match *i3 {
+                let w2 = match *i3 {
                     0 => "x",
                     1 => "y",
                     2 => "z",
                     3 => "w",
                     _ => bail!("swizzle index out of bounds")
                 };
-                write!(w, ".{x}{y}{z}{w}")?;
+                write!(w, ".{x}{y}{z}{w2}")?;
             }
         }
         Ok(())
@@ -1248,7 +1277,11 @@ impl Wgsl {
                 let name = &v.decl.name.0;
                 let mut no = v.decl.name.1;
                 if no == 0 {
-                    write!(w, "{name}")?;
+                    if name.as_str() == "self" {
+                        write!(w, "self_")?;
+                    } else {
+                        write!(w, "{name}")?;
+                    }
                 } else {
                     no += 1;
                     write!(w, "{name}_{no}")?;
@@ -1269,7 +1302,7 @@ impl Wgsl {
                         }
                         write!(w, "{el}")?;
                     }
-                    write!(w, " */")?;
+                    write!(w, " */ ")?;
                     match g {
                         MultiVectorGroupExpr::JustFloat(f) => self.write_float(w, f)?,
                         MultiVectorGroupExpr::Vec2(g) => self.write_vec2(w, g)?,
