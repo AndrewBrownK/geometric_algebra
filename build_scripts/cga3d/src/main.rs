@@ -90,6 +90,21 @@ fn main() {
     }
     let traits = traits.finish();
 
+    let mut wgsl = codegen::Wgsl::new();
+    wgsl.write_shader_file(
+        "libraries/cga3d/src/",
+        "cga3d",
+        1,
+        0,
+        0,
+        "",
+        "Latest generation test case",
+        "https://github.com/AndrewBrownK/projective_ga/",
+        &[],
+        repo.clone(),
+        traits.clone(),
+    );
+
     let mut rust = codegen::Rust::new(true).all_features();
     rust.sql = false;
     rust.write_crate(

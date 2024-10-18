@@ -11,24 +11,25 @@ use crate::traits::GeometricAntiProduct;
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       2       0
-//   Median:        84     118       0
-//  Average:       162     196       0
-//  Maximum:      1543    1623       0
+//   Median:        56      90       0
+//  Average:       100     129       0
+//  Maximum:      1102    1164       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       2       0
-//   Median:        99     134       0
-//  Average:       187     224       0
+//   Median:        99     137       0
+//  Average:       188     225       0
 //  Maximum:      1984    2068       0
 impl InfixAntiSandwich for AntiCircleRotor {}
 impl AntiSandwich<AntiCircleRotor> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      205      247        0
-    //    simd4       15       15        0
+    //      f32      101      136        0
+    //    simd3        0        1        0
+    //    simd4       41       42        0
     // Totals...
-    // yes simd      220      262        0
+    // yes simd      142      179        0
     //  no simd      265      307        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -97,10 +98,11 @@ impl AntiSandwich<AntiDipoleInversion> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      209      251        0
-    //    simd4       25       25        0
+    //      f32       89      124        0
+    //    simd3        0        1        0
+    //    simd4       55       56        0
     // Totals...
-    // yes simd      234      276        0
+    // yes simd      144      181        0
     //  no simd      309      351        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -186,8 +188,13 @@ impl AntiSandwich<AntiDipoleInversion> for AntiCircleRotor {
 impl AntiSandwich<AntiDualNum> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      167      215        0
+    //           add/sub      mul      div
+    //      f32       63      104        0
+    //    simd3        0        1        0
+    //    simd4       26       27        0
+    // Totals...
+    // yes simd       89      132        0
+    //  no simd      167      215        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -226,10 +233,11 @@ impl AntiSandwich<AntiFlatPoint> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      177      219        0
-    //    simd4        3        3        0
+    //      f32       57       92        0
+    //    simd3        0        1        0
+    //    simd4       33       34        0
     // Totals...
-    // yes simd      180      222        0
+    // yes simd       90      127        0
     //  no simd      189      231        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -278,10 +286,11 @@ impl AntiSandwich<AntiFlector> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      196      238        0
-    //    simd4        9        9        0
+    //      f32       76      111        0
+    //    simd3        0        1        0
+    //    simd4       39       40        0
     // Totals...
-    // yes simd      205      247        0
+    // yes simd      115      152        0
     //  no simd      232      274        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -345,10 +354,11 @@ impl AntiSandwich<AntiLine> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      198      240        0
-    //    simd4        3        3        0
+    //      f32       94      129        0
+    //    simd3        0        1        0
+    //    simd4       29       30        0
     // Totals...
-    // yes simd      201      243        0
+    // yes simd      123      160        0
     //  no simd      210      252        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -400,10 +410,11 @@ impl AntiSandwich<AntiMotor> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      192      238        0
-    //    simd4       10       10        0
+    //      f32       88      127        0
+    //    simd3        0        1        0
+    //    simd4       36       37        0
     // Totals...
-    // yes simd      202      248        0
+    // yes simd      124      165        0
     //  no simd      232      278        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -462,11 +473,11 @@ impl AntiSandwich<AntiPlane> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      155      199        0
-    //    simd3        1        2        0
-    //    simd4        5        5        0
+    //      f32       51       88        0
+    //    simd3        1        3        0
+    //    simd4       31       32        0
     // Totals...
-    // yes simd      161      206        0
+    // yes simd       83      123        0
     //  no simd      178      225        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -504,11 +515,11 @@ impl AntiSandwich<AntiScalar> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      105      131        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //      f32       45       64        0
+    //    simd3        0        2        0
+    //    simd4       15       18        0
     // Totals...
-    // yes simd      105      134        0
+    // yes simd       60       84        0
     //  no simd      105      142        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -527,10 +538,11 @@ impl AntiSandwich<Circle> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      210      252        0
-    //    simd4       11       11        0
+    //      f32       90      125        0
+    //    simd3        0        1        0
+    //    simd4       41       42        0
     // Totals...
-    // yes simd      221      263        0
+    // yes simd      131      168        0
     //  no simd      254      296        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -604,10 +616,11 @@ impl AntiSandwich<CircleRotor> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      205      247        0
-    //    simd4       15       15        0
+    //      f32       85      120        0
+    //    simd3        0        1        0
+    //    simd4       45       46        0
     // Totals...
-    // yes simd      220      262        0
+    // yes simd      130      167        0
     //  no simd      265      307        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -677,10 +690,11 @@ impl AntiSandwich<Dipole> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      210      252        0
-    //    simd4       11       11        0
+    //      f32      106      141        0
+    //    simd3        0        1        0
+    //    simd4       37       38        0
     // Totals...
-    // yes simd      221      263        0
+    // yes simd      143      180        0
     //  no simd      254      296        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -754,10 +768,11 @@ impl AntiSandwich<DipoleInversion> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      217      259        0
-    //    simd4       23       23        0
+    //      f32      113      148        0
+    //    simd3        0        1        0
+    //    simd4       49       50        0
     // Totals...
-    // yes simd      240      282        0
+    // yes simd      162      199        0
     //  no simd      309      351        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -852,8 +867,13 @@ impl AntiSandwich<DipoleInversion> for AntiCircleRotor {
 impl AntiSandwich<DualNum> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      167      211        0
+    //           add/sub      mul      div
+    //      f32       47       84        0
+    //    simd3        0        1        0
+    //    simd4       30       31        0
+    // Totals...
+    // yes simd       77      116        0
+    //  no simd      167      211        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -892,10 +912,11 @@ impl AntiSandwich<FlatPoint> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      176      214        0
-    //    simd4        4        4        0
+    //      f32       72      103        0
+    //    simd3        0        1        0
+    //    simd4       30       31        0
     // Totals...
-    // yes simd      180      218        0
+    // yes simd      102      135        0
     //  no simd      192      230        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -933,10 +954,11 @@ impl AntiSandwich<Flector> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      195      234        0
-    //    simd4       10       10        0
+    //      f32       91      123        0
+    //    simd3        0        1        0
+    //    simd4       36       37        0
     // Totals...
-    // yes simd      205      244        0
+    // yes simd      127      161        0
     //  no simd      235      274        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -1002,8 +1024,13 @@ impl AntiSandwich<Flector> for AntiCircleRotor {
 impl AntiSandwich<Line> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      210      252        0
+    //           add/sub      mul      div
+    //      f32       90      125        0
+    //    simd3        0        1        0
+    //    simd4       30       31        0
+    // Totals...
+    // yes simd      120      157        0
+    //  no simd      210      252        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -1067,10 +1094,11 @@ impl AntiSandwich<Motor> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      204      246        0
-    //    simd4        7        7        0
+    //      f32       84      119        0
+    //    simd3        0        1        0
+    //    simd4       37       38        0
     // Totals...
-    // yes simd      211      253        0
+    // yes simd      121      158        0
     //  no simd      232      274        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -1137,12 +1165,12 @@ impl AntiSandwich<MultiVector> for AntiCircleRotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      418      486        0
-    //    simd2        1        1        0
-    //    simd3       36       38        0
-    //    simd4       28       28        0
+    //      f32      200      255        0
+    //    simd2        2        2        0
+    //    simd3       72       77        0
+    //    simd4       55       56        0
     // Totals...
-    // yes simd      483      553        0
+    // yes simd      329      390        0
     //  no simd      640      714        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -1328,11 +1356,11 @@ impl AntiSandwich<Plane> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      149      183        0
-    //    simd3        1        2        0
-    //    simd4        8        8        0
+    //      f32       53       80        0
+    //    simd3        1        3        0
+    //    simd4       32       33        0
     // Totals...
-    // yes simd      158      193        0
+    // yes simd       86      116        0
     //  no simd      184      221        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -1365,11 +1393,11 @@ impl AntiSandwich<RoundPoint> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      158      193        0
-    //    simd3        2        3        0
-    //    simd4        7        7        0
+    //      f32       54       82        0
+    //    simd3        2        4        0
+    //    simd4       33       34        0
     // Totals...
-    // yes simd      167      203        0
+    // yes simd       89      120        0
     //  no simd      192      230        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -1407,11 +1435,11 @@ impl AntiSandwich<Scalar> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      105      131        0
-    //    simd3        0        2        0
-    //    simd4        0        4        0
+    //      f32       49       68        0
+    //    simd3        0        3        0
+    //    simd4       14       19        0
     // Totals...
-    // yes simd      105      137        0
+    // yes simd       63       90        0
     //  no simd      105      153        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -1430,11 +1458,11 @@ impl AntiSandwich<Sphere> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      151      196        0
-    //    simd3        2        3        0
-    //    simd4        8        8        0
+    //      f32       55       93        0
+    //    simd3        2        4        0
+    //    simd4       32       33        0
     // Totals...
-    // yes simd      161      207        0
+    // yes simd       89      130        0
     //  no simd      189      237        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -1477,10 +1505,11 @@ impl AntiSandwich<VersorEven> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      216      258        0
-    //    simd4       26       26        0
+    //      f32       96      131        0
+    //    simd3        0        1        0
+    //    simd4       56       57        0
     // Totals...
-    // yes simd      242      284        0
+    // yes simd      152      189        0
     //  no simd      320      362        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -1570,10 +1599,11 @@ impl AntiSandwich<VersorOdd> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      220      262        0
-    //    simd4       25       25        0
+    //      f32      116      151        0
+    //    simd3        0        1        0
+    //    simd4       51       52        0
     // Totals...
-    // yes simd      245      287        0
+    // yes simd      167      204        0
     //  no simd      320      362        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -1674,10 +1704,11 @@ impl AntiSandwich<AntiCircleRotor> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      277      319        0
-    //    simd4       24       24        0
+    //      f32      109      144        0
+    //    simd3        0        1        0
+    //    simd4       66       67        0
     // Totals...
-    // yes simd      301      343        0
+    // yes simd      175      212        0
     //  no simd      373      415        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -1765,10 +1796,11 @@ impl AntiSandwich<AntiDipoleInversion> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      301      343        0
-    //    simd4       33       33        0
+    //      f32      165      200        0
+    //    simd3        0        1        0
+    //    simd4       67       68        0
     // Totals...
-    // yes simd      334      376        0
+    // yes simd      232      269        0
     //  no simd      433      475        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -1898,8 +1930,13 @@ impl AntiSandwich<AntiDipoleInversion> for AntiDipoleInversion {
 impl AntiSandwich<AntiDualNum> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      238      280        0
+    //           add/sub      mul      div
+    //      f32       70      105        0
+    //    simd3        0        1        0
+    //    simd4       42       43        0
+    // Totals...
+    // yes simd      112      149        0
+    //  no simd      238      280        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -1938,10 +1975,11 @@ impl AntiSandwich<AntiFlatPoint> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      245      289        0
-    //    simd4        6        6        0
+    //      f32      109      146        0
+    //    simd3        0        1        0
+    //    simd4       40       41        0
     // Totals...
-    // yes simd      251      295        0
+    // yes simd      149      188        0
     //  no simd      269      313        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -1991,10 +2029,11 @@ impl AntiSandwich<AntiFlector> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      260      303        0
-    //    simd4       17       17        0
+    //      f32      124      160        0
+    //    simd3        0        1        0
+    //    simd4       51       52        0
     // Totals...
-    // yes simd      277      320        0
+    // yes simd      175      213        0
     //  no simd      328      371        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -2060,10 +2099,11 @@ impl AntiSandwich<AntiLine> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      290      332        0
-    //    simd4        2        2        0
+    //      f32      122      157        0
+    //    simd3        0        1        0
+    //    simd4       44       45        0
     // Totals...
-    // yes simd      292      334        0
+    // yes simd      166      203        0
     //  no simd      298      340        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -2141,10 +2181,11 @@ impl AntiSandwich<AntiMotor> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      268      310        0
-    //    simd4       15       15        0
+    //      f32      100      135        0
+    //    simd3        0        1        0
+    //    simd4       57       58        0
     // Totals...
-    // yes simd      283      325        0
+    // yes simd      157      194        0
     //  no simd      328      370        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -2224,10 +2265,11 @@ impl AntiSandwich<AntiPlane> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      236      279        0
-    //    simd4        8        8        0
+    //      f32      100      136        0
+    //    simd3        0        1        0
+    //    simd4       42       43        0
     // Totals...
-    // yes simd      244      287        0
+    // yes simd      142      180        0
     //  no simd      268      311        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -2271,11 +2313,11 @@ impl AntiSandwich<AntiScalar> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      209      235        0
-    //    simd3        0        1        0
-    //    simd4        0        3        0
+    //      f32       77       96        0
+    //    simd3        0        2        0
+    //    simd4       33       37        0
     // Totals...
-    // yes simd      209      239        0
+    // yes simd      110      135        0
     //  no simd      209      250        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -2296,10 +2338,11 @@ impl AntiSandwich<Circle> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      298      340        0
-    //    simd4       15       15        0
+    //      f32      162      197        0
+    //    simd3        0        1        0
+    //    simd4       49       50        0
     // Totals...
-    // yes simd      313      355        0
+    // yes simd      211      248        0
     //  no simd      358      400        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -2406,10 +2449,11 @@ impl AntiSandwich<CircleRotor> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      289      331        0
-    //    simd4       21       21        0
+    //      f32      153      188        0
+    //    simd3        0        1        0
+    //    simd4       55       56        0
     // Totals...
-    // yes simd      310      352        0
+    // yes simd      208      245        0
     //  no simd      373      415        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -2528,10 +2572,11 @@ impl AntiSandwich<Dipole> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      286      328        0
-    //    simd4       18       18        0
+    //      f32      118      153        0
+    //    simd3        0        1        0
+    //    simd4       60       61        0
     // Totals...
-    // yes simd      304      346        0
+    // yes simd      178      215        0
     //  no simd      358      400        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -2630,10 +2675,11 @@ impl AntiSandwich<DipoleInversion> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      277      319        0
-    //    simd4       39       39        0
+    //      f32      109      144        0
+    //    simd3        0        1        0
+    //    simd4       81       82        0
     // Totals...
-    // yes simd      316      358        0
+    // yes simd      190      227        0
     //  no simd      433      475        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -2738,10 +2784,11 @@ impl AntiSandwich<DualNum> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      230      265        0
-    //    simd4        2        4        0
+    //      f32       94      122        0
+    //    simd3        0        1        0
+    //    simd4       36       39        0
     // Totals...
-    // yes simd      232      269        0
+    // yes simd      130      162        0
     //  no simd      238      281        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -2772,10 +2819,11 @@ impl AntiSandwich<FlatPoint> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      252      299        0
-    //    simd4        4        4        0
+    //      f32       84      124        0
+    //    simd3        0        1        0
+    //    simd4       46       47        0
     // Totals...
-    // yes simd      256      303        0
+    // yes simd      130      172        0
     //  no simd      268      315        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -2837,10 +2885,11 @@ impl AntiSandwich<Flector> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      269      310        0
-    //    simd4       15       15        0
+    //      f32      101      135        0
+    //    simd3        0        1        0
+    //    simd4       57       58        0
     // Totals...
-    // yes simd      284      325        0
+    // yes simd      158      194        0
     //  no simd      329      370        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -2910,10 +2959,11 @@ impl AntiSandwich<Line> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      286      328        0
-    //    simd4        3        3        0
+    //      f32      150      185        0
+    //    simd3        0        1        0
+    //    simd4       37       38        0
     // Totals...
-    // yes simd      289      331        0
+    // yes simd      187      224        0
     //  no simd      298      340        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -2994,10 +3044,11 @@ impl AntiSandwich<Motor> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      268      310        0
-    //    simd4       15       15        0
+    //      f32      132      167        0
+    //    simd3        0        1        0
+    //    simd4       49       50        0
     // Totals...
-    // yes simd      283      325        0
+    // yes simd      181      218        0
     //  no simd      328      370        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -3081,13 +3132,13 @@ impl AntiSandwich<MultiVector> for AntiDipoleInversion {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      584      652        0
-    //    simd2       11       11        0
-    //    simd3       54       56        0
-    //    simd4       32       32        0
+    //      f32      258      317        0
+    //    simd2       22       22        0
+    //    simd3      106      111        0
+    //    simd4       69       70        0
     // Totals...
-    // yes simd      681      751        0
-    //  no simd      896      970        0
+    // yes simd      455      520        0
+    //  no simd      896      974        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = MultiVector::from_groups(
@@ -3349,10 +3400,11 @@ impl AntiSandwich<Plane> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      233      275        0
-    //    simd4        9        9        0
+    //      f32       65      100        0
+    //    simd3        0        1        0
+    //    simd4       51       52        0
     // Totals...
-    // yes simd      242      284        0
+    // yes simd      116      153        0
     //  no simd      269      311        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -3397,10 +3449,11 @@ impl AntiSandwich<RoundPoint> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      247      290        0
-    //    simd4        9        9        0
+    //      f32      111      147        0
+    //    simd3        0        1        0
+    //    simd4       43       44        0
     // Totals...
-    // yes simd      256      299        0
+    // yes simd      154      192        0
     //  no simd      283      326        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -3446,12 +3499,12 @@ impl AntiSandwich<Scalar> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      209      235        0
-    //    simd3        0        1        0
-    //    simd4        0        5        0
+    //      f32       49       69        0
+    //    simd3        0        2        0
+    //    simd4       40       46        0
     // Totals...
-    // yes simd      209      241        0
-    //  no simd      209      258        0
+    // yes simd       89      117        0
+    //  no simd      209      259        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -3471,10 +3524,11 @@ impl AntiSandwich<Sphere> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      239      283        0
-    //    simd4       11       11        0
+    //      f32       71      108        0
+    //    simd3        0        1        0
+    //    simd4       53       54        0
     // Totals...
-    // yes simd      250      294        0
+    // yes simd      124      163        0
     //  no simd      283      327        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -3522,10 +3576,11 @@ impl AntiSandwich<VersorEven> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      300      342        0
-    //    simd4       37       37        0
+    //      f32      164      199        0
+    //    simd3        0        1        0
+    //    simd4       71       72        0
     // Totals...
-    // yes simd      337      379        0
+    // yes simd      235      272        0
     //  no simd      448      490        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -3660,10 +3715,11 @@ impl AntiSandwich<VersorOdd> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      272      314        0
-    //    simd4       44       44        0
+    //      f32      104      139        0
+    //    simd3        0        1        0
+    //    simd4       86       87        0
     // Totals...
-    // yes simd      316      358        0
+    // yes simd      190      227        0
     //  no simd      448      490        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -3754,8 +3810,12 @@ impl InfixAntiSandwich for AntiDualNum {}
 impl AntiSandwich<AntiCircleRotor> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       23       58        0
+    //           add/sub      mul      div
+    //      f32       16       53        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       18       55        0
+    //  no simd       24       61        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -3794,11 +3854,11 @@ impl AntiSandwich<AntiDipoleInversion> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       26       63        0
-    //    simd4        1        1        0
+    //      f32       11       45        0
+    //    simd4        5        7        0
     // Totals...
-    // yes simd       27       64        0
-    //  no simd       30       67        0
+    // yes simd       16       52        0
+    //  no simd       31       73        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -3850,11 +3910,11 @@ impl AntiSandwich<AntiFlatPoint> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       38        0
-    //    simd4        0        3        0
+    //      f32        6       26        0
+    //    simd4        2        7        0
     // Totals...
-    // yes simd       14       41        0
-    //  no simd       14       50        0
+    // yes simd        8       33        0
+    //  no simd       14       54        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -3878,11 +3938,11 @@ impl AntiSandwich<AntiFlector> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       48        0
-    //    simd4        0        2        0
+    //      f32        5       30        0
+    //    simd4        4        8        0
     // Totals...
-    // yes simd       20       50        0
-    //  no simd       20       56        0
+    // yes simd        9       38        0
+    //  no simd       21       62        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -3949,11 +4009,11 @@ impl AntiSandwich<AntiMotor> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       47        0
-    //    simd4        0        4        0
+    //      f32       13       42        0
+    //    simd4        2        6        0
     // Totals...
-    // yes simd       20       51        0
-    //  no simd       20       63        0
+    // yes simd       15       48        0
+    //  no simd       21       66        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -3984,11 +4044,11 @@ impl AntiSandwich<AntiPlane> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       37        0
-    //    simd4        0        3        0
+    //      f32        1       19        0
+    //    simd4        4        9        0
     // Totals...
-    // yes simd       16       40        0
-    //  no simd       16       49        0
+    // yes simd        5       28        0
+    //  no simd       17       55        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4022,11 +4082,12 @@ impl AntiSandwich<Circle> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       50        0
+    //      f32        9       38        0
     //    simd3        1        2        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       18       52        0
-    //  no simd       20       56        0
+    // yes simd       12       44        0
+    //  no simd       20       60        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -4059,8 +4120,12 @@ impl AntiSandwich<Circle> for AntiDualNum {
 impl AntiSandwich<CircleRotor> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       23       59        0
+    //           add/sub      mul      div
+    //      f32        8       41        0
+    //    simd4        4        6        0
+    // Totals...
+    // yes simd       12       47        0
+    //  no simd       24       65        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4138,11 +4203,11 @@ impl AntiSandwich<DipoleInversion> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       26       56        0
-    //    simd4        1        3        0
+    //      f32       19       51        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd       27       59        0
-    //  no simd       30       68        0
+    // yes simd       22       56        0
+    //  no simd       31       71        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4217,11 +4282,11 @@ impl AntiSandwich<Flector> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       47        0
-    //    simd4        0        4        0
+    //      f32       13       42        0
+    //    simd4        2        6        0
     // Totals...
-    // yes simd       20       51        0
-    //  no simd       20       63        0
+    // yes simd       15       48        0
+    //  no simd       21       66        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4250,11 +4315,12 @@ impl AntiSandwich<Line> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       47        0
+    //      f32        9       35        0
     //    simd3        0        1        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       17       48        0
-    //  no simd       17       50        0
+    // yes simd       11       40        0
+    //  no simd       17       54        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -4288,11 +4354,11 @@ impl AntiSandwich<Motor> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       52        0
-    //    simd4        0        1        0
+    //      f32        5       34        0
+    //    simd4        4        7        0
     // Totals...
-    // yes simd       20       53        0
-    //  no simd       20       56        0
+    // yes simd        9       41        0
+    //  no simd       21       62        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4326,12 +4392,12 @@ impl AntiSandwich<MultiVector> for AntiDualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       45      102        0
-    //    simd3        5       10        0
-    //    simd4        1        1        0
+    //      f32       22       67        0
+    //    simd3       10       20        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd       51      113        0
-    //  no simd       64      136        0
+    // yes simd       35       90        0
+    //  no simd       64      139        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = MultiVector::from_groups(
@@ -4392,11 +4458,11 @@ impl AntiSandwich<Plane> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       38        0
-    //    simd4        0        2        0
+    //      f32        9       33        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       16       40        0
-    //  no simd       16       46        0
+    // yes simd       11       37        0
+    //  no simd       17       49        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4420,11 +4486,11 @@ impl AntiSandwich<RoundPoint> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       38        0
-    //    simd4        0        3        0
+    //      f32        1       20        0
+    //    simd4        4        9        0
     // Totals...
-    // yes simd       16       41        0
-    //  no simd       16       50        0
+    // yes simd        5       29        0
+    //  no simd       17       56        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -4459,11 +4525,11 @@ impl AntiSandwich<Sphere> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       35        0
-    //    simd4        0        4        0
+    //      f32        9       30        0
+    //    simd4        2        6        0
     // Totals...
-    // yes simd       16       39        0
-    //  no simd       16       51        0
+    // yes simd       11       36        0
+    //  no simd       17       54        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorEven::from_groups(
@@ -4483,11 +4549,11 @@ impl AntiSandwich<VersorEven> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       57        0
-    //    simd4        3        3        0
+    //      f32        6       39        0
+    //    simd4        7        9        0
     // Totals...
-    // yes simd       24       60        0
-    //  no simd       33       69        0
+    // yes simd       13       48        0
+    //  no simd       34       75        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4527,11 +4593,11 @@ impl AntiSandwich<VersorOdd> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       48        0
-    //    simd4        3        5        0
+    //      f32       14       43        0
+    //    simd4        5        7        0
     // Totals...
-    // yes simd       24       53        0
-    //  no simd       33       68        0
+    // yes simd       19       50        0
+    //  no simd       34       71        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4567,11 +4633,11 @@ impl AntiSandwich<AntiCircleRotor> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64      100        0
-    //    simd4        4        4        0
+    //      f32       43       72        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       68      104        0
-    //  no simd       80      116        0
+    // yes simd       53       83        0
+    //  no simd       83      116        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4622,11 +4688,11 @@ impl AntiSandwich<AntiDipoleInversion> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       67      104        0
-    //    simd4        7        7        0
+    //      f32       43       79        0
+    //    simd4       13       14        0
     // Totals...
-    // yes simd       74      111        0
-    //  no simd       95      132        0
+    // yes simd       56       93        0
+    //  no simd       95      135        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4673,11 +4739,11 @@ impl AntiSandwich<AntiDualNum> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       70        0
-    //    simd4        0        4        0
+    //      f32       23       43        0
+    //    simd4        6       11        0
     // Totals...
-    // yes simd       44       74        0
-    //  no simd       44       86        0
+    // yes simd       29       54        0
+    //  no simd       47       87        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -4700,8 +4766,12 @@ impl AntiSandwich<AntiDualNum> for AntiFlatPoint {
 impl AntiSandwich<AntiFlatPoint> for AntiFlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       31        0
+    //           add/sub      mul      div
+    //      f32       15       27        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       15       28        0
+    //  no simd       15       31        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -4721,10 +4791,10 @@ impl AntiSandwich<AntiFlector> for AntiFlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       32        0
-    //    simd4        2        3        0
+    //      f32       16       28        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       18       35        0
+    // yes simd       18       32        0
     //  no simd       24       44        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
@@ -4745,8 +4815,12 @@ impl AntiSandwich<AntiFlector> for AntiFlatPoint {
 impl AntiSandwich<AntiLine> for AntiFlatPoint {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       46        0
+    //           add/sub      mul      div
+    //      f32       12       26        0
+    //    simd4        2        5        0
+    // Totals...
+    // yes simd       14       31        0
+    //  no simd       20       46        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -4770,8 +4844,12 @@ impl AntiSandwich<AntiLine> for AntiFlatPoint {
 impl AntiSandwich<AntiMotor> for AntiFlatPoint {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       52        0
+    //           add/sub      mul      div
+    //      f32       16       32        0
+    //    simd4        2        5        0
+    // Totals...
+    // yes simd       18       37        0
+    //  no simd       24       52        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -4800,10 +4878,10 @@ impl AntiSandwich<AntiPlane> for AntiFlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       36        0
-    //    simd4        1        1        0
+    //      f32       14       32        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       15       37        0
+    // yes simd       15       34        0
     //  no simd       18       40        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
@@ -4829,10 +4907,10 @@ impl AntiSandwich<AntiScalar> for AntiFlatPoint {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       11        0
-    //    simd4        0        1        0
+    //      f32        3        7        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        3       12        0
+    // yes simd        3        9        0
     //  no simd        3       15        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -4844,11 +4922,11 @@ impl AntiSandwich<Circle> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       61      100        0
-    //    simd4        3        3        0
+    //      f32       37       75        0
+    //    simd4        9       10        0
     // Totals...
-    // yes simd       64      103        0
-    //  no simd       73      112        0
+    // yes simd       46       85        0
+    //  no simd       73      115        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4889,11 +4967,11 @@ impl AntiSandwich<CircleRotor> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64      100        0
-    //    simd4        4        4        0
+    //      f32       40       75        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       68      104        0
-    //  no simd       80      116        0
+    // yes simd       50       86        0
+    //  no simd       80      119        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4931,11 +5009,11 @@ impl AntiSandwich<Dipole> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       61      103        0
-    //    simd4        3        3        0
+    //      f32       40       75        0
+    //    simd4        9       10        0
     // Totals...
-    // yes simd       64      106        0
-    //  no simd       73      115        0
+    // yes simd       49       85        0
+    //  no simd       76      115        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4978,11 +5056,11 @@ impl AntiSandwich<DipoleInversion> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       71      108        0
-    //    simd4        6        6        0
+    //      f32       50       80        0
+    //    simd4       12       13        0
     // Totals...
-    // yes simd       77      114        0
-    //  no simd       95      132        0
+    // yes simd       62       93        0
+    //  no simd       98      132        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -5037,11 +5115,11 @@ impl AntiSandwich<DualNum> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       67        0
-    //    simd4        0        3        0
+    //      f32       21       42        0
+    //    simd4        6       10        0
     // Totals...
-    // yes simd       44       70        0
-    //  no simd       44       79        0
+    // yes simd       27       52        0
+    //  no simd       45       82        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -5064,8 +5142,12 @@ impl AntiSandwich<DualNum> for AntiFlatPoint {
 impl AntiSandwich<FlatPoint> for AntiFlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       36        0
+    //           add/sub      mul      div
+    //      f32       15       32        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       15       33        0
+    //  no simd       15       36        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -5085,10 +5167,10 @@ impl AntiSandwich<Flector> for AntiFlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       36        0
-    //    simd4        2        4        0
+    //      f32       16       32        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       18       40        0
+    // yes simd       18       37        0
     //  no simd       24       52        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
@@ -5109,8 +5191,12 @@ impl AntiSandwich<Flector> for AntiFlatPoint {
 impl AntiSandwich<Line> for AntiFlatPoint {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       39        0
+    //           add/sub      mul      div
+    //      f32       12       23        0
+    //    simd4        2        4        0
+    // Totals...
+    // yes simd       14       27        0
+    //  no simd       20       39        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -5134,8 +5220,12 @@ impl AntiSandwich<Line> for AntiFlatPoint {
 impl AntiSandwich<Motor> for AntiFlatPoint {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       44        0
+    //           add/sub      mul      div
+    //      f32       16       28        0
+    //    simd4        2        4        0
+    // Totals...
+    // yes simd       18       32        0
+    //  no simd       24       44        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -5164,13 +5254,13 @@ impl AntiSandwich<MultiVector> for AntiFlatPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      126      184        0
-    //    simd2        3        3        0
-    //    simd3        8       13        0
-    //    simd4       10       10        0
+    //      f32       62      107        0
+    //    simd2        6        6        0
+    //    simd3       14       22        0
+    //    simd4       21       22        0
     // Totals...
-    // yes simd      147      210        0
-    //  no simd      196      269        0
+    // yes simd      103      157        0
+    //  no simd      200      273        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = MultiVector::from_groups(
@@ -5254,10 +5344,10 @@ impl AntiSandwich<Plane> for AntiFlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       36        0
-    //    simd4        2        2        0
+    //      f32       13       32        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       15       38        0
+    // yes simd       15       35        0
     //  no simd       21       44        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
@@ -5279,8 +5369,12 @@ impl AntiSandwich<Plane> for AntiFlatPoint {
 impl AntiSandwich<RoundPoint> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       53       85        0
+    //           add/sub      mul      div
+    //      f32       30       60        0
+    //    simd4        6        7        0
+    // Totals...
+    // yes simd       36       67        0
+    //  no simd       54       88        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -5315,10 +5409,10 @@ impl AntiSandwich<Scalar> for AntiFlatPoint {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       12        0
-    //    simd4        0        2        0
+    //      f32        3        8        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        3       14        0
+    // yes simd        3       11        0
     //  no simd        3       20        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -5329,8 +5423,12 @@ impl AntiSandwich<Scalar> for AntiFlatPoint {
 impl AntiSandwich<Sphere> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       53       88        0
+    //           add/sub      mul      div
+    //      f32       32       61        0
+    //    simd4        6        7        0
+    // Totals...
+    // yes simd       38       68        0
+    //  no simd       56       89        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -5366,11 +5464,11 @@ impl AntiSandwich<VersorEven> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64      100        0
-    //    simd4        8        9        0
+    //      f32       40       75        0
+    //    simd4       14       16        0
     // Totals...
-    // yes simd       72      109        0
-    //  no simd       96      136        0
+    // yes simd       54       91        0
+    //  no simd       96      139        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -5415,11 +5513,11 @@ impl AntiSandwich<VersorOdd> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       71      111        0
-    //    simd4        7        7        0
+    //      f32       50       83        0
+    //    simd4       13       14        0
     // Totals...
-    // yes simd       78      118        0
-    //  no simd       99      139        0
+    // yes simd       63       97        0
+    //  no simd      102      139        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -5478,11 +5576,11 @@ impl AntiSandwich<AntiCircleRotor> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      136      175        0
-    //    simd4       12       12        0
+    //      f32       61       98        0
+    //    simd4       31       32        0
     // Totals...
-    // yes simd      148      187        0
-    //  no simd      184      223        0
+    // yes simd       92      130        0
+    //  no simd      185      226        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -5539,11 +5637,11 @@ impl AntiSandwich<AntiDipoleInversion> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      143      176        0
-    //    simd4       19       19        0
+    //      f32       60       88        0
+    //    simd4       40       41        0
     // Totals...
-    // yes simd      162      195        0
-    //  no simd      219      252        0
+    // yes simd      100      129        0
+    //  no simd      220      252        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -5613,11 +5711,11 @@ impl AntiSandwich<AntiDualNum> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      144        0
-    //    simd4        0        4        0
+    //      f32       41       67        0
+    //    simd4       19       24        0
     // Totals...
-    // yes simd      116      148        0
-    //  no simd      116      160        0
+    // yes simd       60       91        0
+    //  no simd      117      163        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -5646,11 +5744,11 @@ impl AntiSandwich<AntiFlatPoint> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       60        0
-    //    simd4        2        3        0
+    //      f32       16       24        0
+    //    simd4       10       12        0
     // Totals...
-    // yes simd       46       63        0
-    //  no simd       52       72        0
+    // yes simd       26       36        0
+    //  no simd       56       72        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -5671,11 +5769,11 @@ impl AntiSandwich<AntiFlector> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       68        0
-    //    simd4        8        8        0
+    //      f32       20       32        0
+    //    simd4       16       17        0
     // Totals...
-    // yes simd       56       76        0
-    //  no simd       80      100        0
+    // yes simd       36       49        0
+    //  no simd       84      100        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -5706,10 +5804,10 @@ impl AntiSandwich<AntiLine> for AntiFlector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       72        0
-    //    simd4        4        4        0
+    //      f32       28       44        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       56       76        0
+    // yes simd       38       55        0
     //  no simd       68       88        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
@@ -5742,10 +5840,10 @@ impl AntiSandwich<AntiMotor> for AntiFlector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       68        0
-    //    simd4        8        8        0
+    //      f32       28       40        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd       60       76        0
+    // yes simd       42       55        0
     //  no simd       84      100        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
@@ -5777,11 +5875,11 @@ impl AntiSandwich<AntiPlane> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       68        0
-    //    simd4        3        3        0
+    //      f32       20       32        0
+    //    simd4       11       12        0
     // Totals...
-    // yes simd       51       71        0
-    //  no simd       60       80        0
+    // yes simd       31       44        0
+    //  no simd       64       80        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -5807,10 +5905,10 @@ impl AntiSandwich<AntiScalar> for AntiFlector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       52        0
-    //    simd4        0        2        0
+    //      f32        8       16        0
+    //    simd4        8       11        0
     // Totals...
-    // yes simd       40       54        0
+    // yes simd       16       27        0
     //  no simd       40       60        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -5827,11 +5925,11 @@ impl AntiSandwich<Circle> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      184        0
-    //    simd4        7        7        0
+    //      f32       65       96        0
+    //    simd4       28       29        0
     // Totals...
-    // yes simd      155      191        0
-    //  no simd      176      212        0
+    // yes simd       93      125        0
+    //  no simd      177      212        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -5882,11 +5980,11 @@ impl AntiSandwich<CircleRotor> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      145      180        0
-    //    simd4       10       10        0
+    //      f32       62       92        0
+    //    simd4       31       32        0
     // Totals...
-    // yes simd      155      190        0
-    //  no simd      185      220        0
+    // yes simd       93      124        0
+    //  no simd      186      220        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -5940,11 +6038,11 @@ impl AntiSandwich<Dipole> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      136      172        0
-    //    simd4       10       10        0
+    //      f32       61       95        0
+    //    simd4       29       30        0
     // Totals...
-    // yes simd      146      182        0
-    //  no simd      176      212        0
+    // yes simd       90      125        0
+    //  no simd      177      215        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -5994,11 +6092,11 @@ impl AntiSandwich<DipoleInversion> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      180        0
-    //    simd4       18       18        0
+    //      f32       73      103        0
+    //    simd4       37       38        0
     // Totals...
-    // yes simd      166      198        0
-    //  no simd      220      252        0
+    // yes simd      110      141        0
+    //  no simd      221      255        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -6070,11 +6168,11 @@ impl AntiSandwich<DualNum> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      145        0
-    //    simd4        0        3        0
+    //      f32       33       57        0
+    //    simd4       21       25        0
     // Totals...
-    // yes simd      116      148        0
-    //  no simd      116      157        0
+    // yes simd       54       82        0
+    //  no simd      117      157        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -6103,11 +6201,11 @@ impl AntiSandwich<FlatPoint> for AntiFlector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       60        0
-    //    simd4        2        4        0
+    //      f32       16       24        0
+    //    simd4       10       13        0
     // Totals...
-    // yes simd       46       64        0
-    //  no simd       52       76        0
+    // yes simd       26       37        0
+    //  no simd       56       76        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -6128,11 +6226,11 @@ impl AntiSandwich<Flector> for AntiFlector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       76        0
-    //    simd4        6        6        0
+    //      f32       28       40        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd       62       82        0
-    //  no simd       80      100        0
+    // yes simd       42       55        0
+    //  no simd       84      100        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -6164,10 +6262,10 @@ impl AntiSandwich<Line> for AntiFlector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       60       80        0
-    //    simd4        2        2        0
+    //      f32       28       44        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       62       82        0
+    // yes simd       38       55        0
     //  no simd       68       88        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
@@ -6206,10 +6304,10 @@ impl AntiSandwich<Motor> for AntiFlector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       77        0
-    //    simd4        6        6        0
+    //      f32       24       41        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd       62       83        0
+    // yes simd       38       56        0
     //  no simd       80      101        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
@@ -6255,13 +6353,13 @@ impl AntiSandwich<MultiVector> for AntiFlector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      283      340        0
-    //    simd2        4        4        0
-    //    simd3       22       24        0
-    //    simd4       24       24        0
+    //      f32      135      186        0
+    //    simd2        8        8        0
+    //    simd3       42       46        0
+    //    simd4       44       45        0
     // Totals...
-    // yes simd      333      392        0
-    //  no simd      453      516        0
+    // yes simd      229      285        0
+    //  no simd      453      520        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = MultiVector::from_groups(
@@ -6390,11 +6488,11 @@ impl AntiSandwich<Plane> for AntiFlector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       68        0
-    //    simd4        3        3        0
+    //      f32       20       32        0
+    //    simd4       11       12        0
     // Totals...
-    // yes simd       51       71        0
-    //  no simd       60       80        0
+    // yes simd       31       44        0
+    //  no simd       64       80        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -6420,11 +6518,11 @@ impl AntiSandwich<RoundPoint> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      128      163        0
-    //    simd4        2        4        0
+    //      f32       45       75        0
+    //    simd4       23       26        0
     // Totals...
-    // yes simd      130      167        0
-    //  no simd      136      179        0
+    // yes simd       68      101        0
+    //  no simd      137      179        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorEven::from_groups(
@@ -6461,10 +6559,10 @@ impl AntiSandwich<Scalar> for AntiFlector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       52        0
-    //    simd4        0        4        0
+    //      f32       16       24        0
+    //    simd4        6       11        0
     // Totals...
-    // yes simd       40       56        0
+    // yes simd       22       35        0
     //  no simd       40       68        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -6480,8 +6578,12 @@ impl AntiSandwich<Scalar> for AntiFlector {
 impl AntiSandwich<Sphere> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      136      180        0
+    //           add/sub      mul      div
+    //      f32       61      103        0
+    //    simd4       19       20        0
+    // Totals...
+    // yes simd       80      123        0
+    //  no simd      137      183        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -6525,11 +6627,11 @@ impl AntiSandwich<VersorEven> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      140      172        0
-    //    simd4       22       22        0
+    //      f32       57       84        0
+    //    simd4       43       44        0
     // Totals...
-    // yes simd      162      194        0
-    //  no simd      228      260        0
+    // yes simd      100      128        0
+    //  no simd      229      260        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -6590,11 +6692,11 @@ impl AntiSandwich<VersorOdd> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      144      179        0
-    //    simd4       21       21        0
+    //      f32       69      102        0
+    //    simd4       40       41        0
     // Totals...
-    // yes simd      165      200        0
-    //  no simd      228      263        0
+    // yes simd      109      143        0
+    //  no simd      229      266        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -6671,10 +6773,11 @@ impl AntiSandwich<AntiCircleRotor> for AntiLine {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      122      160        0
-    //    simd4        2        2        0
+    //      f32      102      134        0
+    //    simd3        0        2        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd      124      162        0
+    // yes simd      109      143        0
     //  no simd      130      168        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -6733,10 +6836,11 @@ impl AntiSandwich<AntiDipoleInversion> for AntiLine {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      142      180        0
-    //    simd4        3        3        0
+    //      f32       98      130        0
+    //    simd3        0        2        0
+    //    simd4       14       14        0
     // Totals...
-    // yes simd      145      183        0
+    // yes simd      112      146        0
     //  no simd      154      192        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -6810,10 +6914,11 @@ impl AntiSandwich<AntiDualNum> for AntiLine {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       77      114        0
-    //    simd3        0        2        0
+    //      f32       69      100        0
+    //    simd3        0        4        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       77      116        0
+    // yes simd       71      106        0
     //  no simd       77      120        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -6847,8 +6952,13 @@ impl AntiSandwich<AntiDualNum> for AntiLine {
 impl AntiSandwich<AntiFlatPoint> for AntiLine {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       60        0
+    //           add/sub      mul      div
+    //      f32       20       39        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       24       45        0
+    //  no simd       36       61        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -6873,11 +6983,12 @@ impl AntiSandwich<AntiFlector> for AntiLine {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       65        0
-    //    simd4        4        4        0
+    //      f32       24       44        0
+    //    simd3        0        2        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       44       69        0
-    //  no simd       56       81        0
+    // yes simd       32       54        0
+    //  no simd       56       82        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -6907,8 +7018,13 @@ impl AntiSandwich<AntiFlector> for AntiLine {
 impl AntiSandwich<AntiLine> for AntiLine {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       47       69        0
+    //           add/sub      mul      div
+    //      f32       35       51        0
+    //    simd3        0        2        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       38       56        0
+    //  no simd       47       69        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -6939,10 +7055,11 @@ impl AntiSandwich<AntiMotor> for AntiLine {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       66        0
-    //    simd4        3        3        0
+    //      f32       32       48        0
+    //    simd3        0        2        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       47       69        0
+    // yes simd       38       56        0
     //  no simd       56       78        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
@@ -6978,11 +7095,12 @@ impl AntiSandwich<AntiPlane> for AntiLine {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       29       57        0
-    //    simd4        3        3        0
+    //      f32       13       36        0
+    //    simd3        0        2        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       32       60        0
-    //  no simd       41       69        0
+    // yes simd       20       45        0
+    //  no simd       41       70        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -7008,10 +7126,10 @@ impl AntiSandwich<AntiScalar> for AntiLine {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       33        0
-    //    simd3        0        2        0
+    //      f32       19       27        0
+    //    simd3        0        4        0
     // Totals...
-    // yes simd       19       35        0
+    // yes simd       19       31        0
     //  no simd       19       39        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -7028,10 +7146,11 @@ impl AntiSandwich<Circle> for AntiLine {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      120      158        0
-    //    simd4        1        1        0
+    //      f32       76      108        0
+    //    simd3        0        2        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd      121      159        0
+    // yes simd       88      122        0
     //  no simd      124      162        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -7087,10 +7206,11 @@ impl AntiSandwich<CircleRotor> for AntiLine {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      126      164        0
-    //    simd4        1        1        0
+    //      f32       82      114        0
+    //    simd3        0        2        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd      127      165        0
+    // yes simd       94      128        0
     //  no simd      130      168        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -7153,10 +7273,11 @@ impl AntiSandwich<Dipole> for AntiLine {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      120      158        0
-    //    simd4        1        1        0
+    //      f32      100      132        0
+    //    simd3        0        2        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd      121      159        0
+    // yes simd      106      140        0
     //  no simd      124      162        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -7211,10 +7332,11 @@ impl AntiSandwich<DipoleInversion> for AntiLine {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      142      180        0
-    //    simd4        3        3        0
+    //      f32      122      154        0
+    //    simd3        0        2        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd      145      183        0
+    // yes simd      130      164        0
     //  no simd      154      192        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -7299,10 +7421,11 @@ impl AntiSandwich<DualNum> for AntiLine {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       77      111        0
-    //    simd3        0        1        0
+    //      f32       53       81        0
+    //    simd3        0        3        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       77      112        0
+    // yes simd       59       90        0
     //  no simd       77      114        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -7336,8 +7459,13 @@ impl AntiSandwich<DualNum> for AntiLine {
 impl AntiSandwich<FlatPoint> for AntiLine {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       57        0
+    //           add/sub      mul      div
+    //      f32       20       35        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       24       41        0
+    //  no simd       36       57        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -7362,10 +7490,11 @@ impl AntiSandwich<Flector> for AntiLine {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       66        0
-    //    simd4        4        4        0
+    //      f32       24       44        0
+    //    simd3        0        2        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       44       70        0
+    // yes simd       32       54        0
     //  no simd       56       82        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
@@ -7394,8 +7523,13 @@ impl AntiSandwich<Flector> for AntiLine {
 impl AntiSandwich<Line> for AntiLine {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       47       69        0
+    //           add/sub      mul      div
+    //      f32       35       51        0
+    //    simd3        0        2        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       38       56        0
+    //  no simd       47       69        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -7426,10 +7560,11 @@ impl AntiSandwich<Motor> for AntiLine {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       66        0
-    //    simd4        3        3        0
+    //      f32       32       48        0
+    //    simd3        0        2        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       47       69        0
+    // yes simd       38       56        0
     //  no simd       56       78        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
@@ -7459,11 +7594,11 @@ impl AntiSandwich<MultiVector> for AntiLine {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      249      307        0
-    //    simd3       17       21        0
-    //    simd4        5        5        0
+    //      f32      186      226        0
+    //    simd3       34       44        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd      271      333        0
+    // yes simd      228      278        0
     //  no simd      320      390        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -7599,10 +7734,11 @@ impl AntiSandwich<Plane> for AntiLine {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       29       55        0
-    //    simd4        3        3        0
+    //      f32       13       33        0
+    //    simd3        0        2        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       32       58        0
+    // yes simd       20       42        0
     //  no simd       41       67        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
@@ -7629,11 +7765,11 @@ impl AntiSandwich<RoundPoint> for AntiLine {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       86      119        0
-    //    simd3        0        1        0
-    //    simd4        1        1        0
+    //      f32       62       89        0
+    //    simd3        0        3        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       87      121        0
+    // yes simd       69       99        0
     //  no simd       90      126        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -7669,10 +7805,10 @@ impl AntiSandwich<Scalar> for AntiLine {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       33        0
-    //    simd3        0        4        0
+    //      f32       19       27        0
+    //    simd3        0        6        0
     // Totals...
-    // yes simd       19       37        0
+    // yes simd       19       33        0
     //  no simd       19       45        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -7689,11 +7825,11 @@ impl AntiSandwich<Sphere> for AntiLine {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       86      122        0
-    //    simd3        0        2        0
-    //    simd4        1        1        0
+    //      f32       78      108        0
+    //    simd3        0        4        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd       87      125        0
+    // yes simd       81      115        0
     //  no simd       90      132        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -7729,10 +7865,11 @@ impl AntiSandwich<VersorEven> for AntiLine {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      136      174        0
-    //    simd4        6        6        0
+    //      f32       92      124        0
+    //    simd3        0        2        0
+    //    simd4       17       17        0
     // Totals...
-    // yes simd      142      180        0
+    // yes simd      109      143        0
     //  no simd      160      198        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -7805,10 +7942,11 @@ impl AntiSandwich<VersorOdd> for AntiLine {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      136      174        0
-    //    simd4        6        6        0
+    //      f32      116      148        0
+    //    simd3        0        2        0
+    //    simd4       11       11        0
     // Totals...
-    // yes simd      142      180        0
+    // yes simd      127      161        0
     //  no simd      160      198        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -7893,10 +8031,10 @@ impl AntiSandwich<AntiCircleRotor> for AntiMotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      189        0
-    //    simd4        9        9        0
+    //      f32       80      121        0
+    //    simd4       26       26        0
     // Totals...
-    // yes simd      157      198        0
+    // yes simd      106      147        0
     //  no simd      184      225        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -7966,11 +8104,11 @@ impl AntiSandwich<AntiDipoleInversion> for AntiMotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      146      178        0
-    //    simd4       19       19        0
+    //      f32       55       82        0
+    //    simd4       42       43        0
     // Totals...
-    // yes simd      165      197        0
-    //  no simd      222      254        0
+    // yes simd       97      125        0
+    //  no simd      223      254        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -8040,10 +8178,10 @@ impl AntiSandwich<AntiDualNum> for AntiMotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      150        0
-    //    simd4        0        4        0
+    //      f32       48       82        0
+    //    simd4       17       21        0
     // Totals...
-    // yes simd      116      154        0
+    // yes simd       65      103        0
     //  no simd      116      166        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -8072,8 +8210,12 @@ impl AntiSandwich<AntiDualNum> for AntiMotor {
 impl AntiSandwich<AntiFlatPoint> for AntiMotor {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       52       78        0
+    //           add/sub      mul      div
+    //      f32       24       46        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       32       54        0
+    //  no simd       56       78        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -8102,11 +8244,11 @@ impl AntiSandwich<AntiFlector> for AntiMotor {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       70        0
-    //    simd4        8        8        0
+    //      f32       24       38        0
+    //    simd4       16       16        0
     // Totals...
-    // yes simd       60       78        0
-    //  no simd       84      102        0
+    // yes simd       40       54        0
+    //  no simd       88      102        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -8143,10 +8285,10 @@ impl AntiSandwich<AntiLine> for AntiMotor {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        3        3        0
+    //      f32       32       54        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       59       81        0
+    // yes simd       41       63        0
     //  no simd       68       90        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
@@ -8182,10 +8324,10 @@ impl AntiSandwich<AntiMotor> for AntiMotor {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        6        6        0
+    //      f32       32       54        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd       62       84        0
+    // yes simd       44       66        0
     //  no simd       80      102        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
@@ -8224,11 +8366,11 @@ impl AntiSandwich<AntiPlane> for AntiMotor {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       70        0
-    //    simd4        3        3        0
+    //      f32       20       38        0
+    //    simd4       11       11        0
     // Totals...
-    // yes simd       51       73        0
-    //  no simd       60       82        0
+    // yes simd       31       49        0
+    //  no simd       64       82        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -8254,10 +8396,10 @@ impl AntiSandwich<AntiScalar> for AntiMotor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       54        0
-    //    simd4        0        2        0
+    //      f32       16       30        0
+    //    simd4        6        8        0
     // Totals...
-    // yes simd       40       56        0
+    // yes simd       22       38        0
     //  no simd       40       62        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -8274,11 +8416,11 @@ impl AntiSandwich<Circle> for AntiMotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      144      182        0
-    //    simd4        8        8        0
+    //      f32       53       86        0
+    //    simd4       31       32        0
     // Totals...
-    // yes simd      152      190        0
-    //  no simd      176      214        0
+    // yes simd       84      118        0
+    //  no simd      177      214        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -8335,11 +8477,11 @@ impl AntiSandwich<CircleRotor> for AntiMotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      147      182        0
-    //    simd4       10       10        0
+    //      f32       56       86        0
+    //    simd4       33       34        0
     // Totals...
-    // yes simd      157      192        0
-    //  no simd      187      222        0
+    // yes simd       89      120        0
+    //  no simd      188      222        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -8411,10 +8553,10 @@ impl AntiSandwich<Dipole> for AntiMotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      186        0
-    //    simd4        7        7        0
+    //      f32       80      118        0
+    //    simd4       24       24        0
     // Totals...
-    // yes simd      155      193        0
+    // yes simd      104      142        0
     //  no simd      176      214        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -8479,10 +8621,10 @@ impl AntiSandwich<DipoleInversion> for AntiMotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      153      190        0
-    //    simd4       16       16        0
+    //      f32       85      122        0
+    //    simd4       33       33        0
     // Totals...
-    // yes simd      169      206        0
+    // yes simd      118      155        0
     //  no simd      217      254        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -8561,11 +8703,11 @@ impl AntiSandwich<DualNum> for AntiMotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      151        0
-    //    simd4        0        2        0
+    //      f32       25       55        0
+    //    simd4       23       26        0
     // Totals...
-    // yes simd      116      153        0
-    //  no simd      116      159        0
+    // yes simd       48       81        0
+    //  no simd      117      159        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -8598,8 +8740,12 @@ impl AntiSandwich<DualNum> for AntiMotor {
 impl AntiSandwich<FlatPoint> for AntiMotor {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       52       74        0
+    //           add/sub      mul      div
+    //      f32       24       42        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       32       50        0
+    //  no simd       56       74        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -8628,11 +8774,11 @@ impl AntiSandwich<Flector> for AntiMotor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       70        0
-    //    simd4        8        8        0
+    //      f32       24       38        0
+    //    simd4       16       16        0
     // Totals...
-    // yes simd       60       78        0
-    //  no simd       84      102        0
+    // yes simd       40       54        0
+    //  no simd       88      102        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -8666,10 +8812,10 @@ impl AntiSandwich<Line> for AntiMotor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        3        3        0
+    //      f32       32       54        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       59       81        0
+    // yes simd       41       63        0
     //  no simd       68       90        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
@@ -8699,10 +8845,10 @@ impl AntiSandwich<Motor> for AntiMotor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        6        6        0
+    //      f32       32       54        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd       62       84        0
+    // yes simd       44       66        0
     //  no simd       80      102        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
@@ -8735,12 +8881,12 @@ impl AntiSandwich<MultiVector> for AntiMotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      289      348        0
-    //    simd3       20       22        0
-    //    simd4       26       26        0
+    //      f32      130      179        0
+    //    simd3       40       44        0
+    //    simd4       51       52        0
     // Totals...
-    // yes simd      335      396        0
-    //  no simd      453      518        0
+    // yes simd      221      275        0
+    //  no simd      454      519        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = MultiVector::from_groups(
@@ -8875,11 +9021,11 @@ impl AntiSandwich<Plane> for AntiMotor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       58        0
-    //    simd4        6        6        0
+    //      f32       12       26        0
+    //    simd4       14       14        0
     // Totals...
-    // yes simd       46       64        0
-    //  no simd       64       82        0
+    // yes simd       26       40        0
+    //  no simd       68       82        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -8904,11 +9050,11 @@ impl AntiSandwich<RoundPoint> for AntiMotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      132      166        0
-    //    simd4        1        2        0
+    //      f32       41       70        0
+    //    simd4       24       26        0
     // Totals...
-    // yes simd      133      168        0
-    //  no simd      136      174        0
+    // yes simd       65       96        0
+    //  no simd      137      174        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -8943,10 +9089,10 @@ impl AntiSandwich<Scalar> for AntiMotor {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       54        0
-    //    simd4        0        4        0
+    //      f32       16       30        0
+    //    simd4        6       10        0
     // Totals...
-    // yes simd       40       58        0
+    // yes simd       22       40        0
     //  no simd       40       70        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -8963,10 +9109,10 @@ impl AntiSandwich<Sphere> for AntiMotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      128      166        0
-    //    simd4        2        4        0
+    //      f32       60       98        0
+    //    simd4       19       21        0
     // Totals...
-    // yes simd      130      170        0
+    // yes simd       79      119        0
     //  no simd      136      182        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -9003,11 +9149,11 @@ impl AntiSandwich<VersorEven> for AntiMotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      151      182        0
-    //    simd4       19       20        0
+    //      f32       60       86        0
+    //    simd4       42       44        0
     // Totals...
-    // yes simd      170      202        0
-    //  no simd      227      262        0
+    // yes simd      102      130        0
+    //  no simd      228      262        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -9082,10 +9228,10 @@ impl AntiSandwich<VersorOdd> for AntiMotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      153      190        0
-    //    simd4       18       18        0
+    //      f32       85      122        0
+    //    simd4       35       35        0
     // Totals...
-    // yes simd      171      208        0
+    // yes simd      120      157        0
     //  no simd      225      262        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -9168,12 +9314,12 @@ impl AntiSandwich<AntiCircleRotor> for AntiPlane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       45       76        0
+    //      f32        9       39        0
     //    simd3        1        2        0
-    //    simd4        7        7        0
+    //    simd4       17       17        0
     // Totals...
-    // yes simd       53       85        0
-    //  no simd       76      110        0
+    // yes simd       27       58        0
+    //  no simd       80      113        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -9208,11 +9354,11 @@ impl AntiSandwich<AntiDipoleInversion> for AntiPlane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       59       92        0
-    //    simd4        9        9        0
+    //      f32       27       61        0
+    //    simd4       17       17        0
     // Totals...
-    // yes simd       68      101        0
-    //  no simd       95      128        0
+    // yes simd       44       78        0
+    //  no simd       95      129        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -9252,11 +9398,11 @@ impl AntiSandwich<AntiDualNum> for AntiPlane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       66        0
-    //    simd4        0        4        0
+    //      f32        9       32        0
+    //    simd4       10       14        0
     // Totals...
-    // yes simd       48       70        0
-    //  no simd       48       82        0
+    // yes simd       19       46        0
+    //  no simd       49       88        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -9275,11 +9421,11 @@ impl AntiSandwich<AntiFlatPoint> for AntiPlane {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       37        0
-    //    simd4        1        1        0
+    //      f32        6       25        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       23       38        0
-    //  no simd       26       41        0
+    // yes simd       11       30        0
+    //  no simd       26       45        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -9304,11 +9450,11 @@ impl AntiSandwich<AntiFlector> for AntiPlane {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        3        3        0
+    //      f32       12       32        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       31       47        0
-    //  no simd       40       56        0
+    // yes simd       19       39        0
+    //  no simd       40       60        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -9334,10 +9480,10 @@ impl AntiSandwich<AntiLine> for AntiPlane {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       40        0
-    //    simd4        3        3        0
+    //      f32        9       28        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       24       43        0
+    // yes simd       15       34        0
     //  no simd       33       52        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
@@ -9364,10 +9510,10 @@ impl AntiSandwich<AntiMotor> for AntiPlane {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       36        0
-    //    simd4        6        6        0
+    //      f32        8       24        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       26       42        0
+    // yes simd       17       33        0
     //  no simd       44       60        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
@@ -9393,11 +9539,11 @@ impl AntiSandwich<AntiPlane> for AntiPlane {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       39        0
-    //    simd4        1        1        0
+    //      f32        8       27        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       25       40        0
-    //  no simd       28       43        0
+    // yes simd       13       32        0
+    //  no simd       28       47        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -9422,10 +9568,10 @@ impl AntiSandwich<AntiScalar> for AntiPlane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       15        0
-    //    simd4        0        1        0
+    //      f32        4       11        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        8       16        0
+    // yes simd        5       13        0
     //  no simd        8       19        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -9437,12 +9583,12 @@ impl AntiSandwich<Circle> for AntiPlane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       54       85        0
+    //      f32       22       54        0
     //    simd3        1        2        0
-    //    simd4        3        3        0
+    //    simd4       11       11        0
     // Totals...
-    // yes simd       58       90        0
-    //  no simd       69      103        0
+    // yes simd       34       67        0
+    //  no simd       69      104        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -9478,12 +9624,12 @@ impl AntiSandwich<CircleRotor> for AntiPlane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       54       85        0
+    //      f32       22       54        0
     //    simd3        1        2        0
-    //    simd4        4        4        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd       59       91        0
-    //  no simd       73      107        0
+    // yes simd       35       68        0
+    //  no simd       73      108        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -9520,12 +9666,12 @@ impl AntiSandwich<Dipole> for AntiPlane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       45       77        0
+    //      f32        9       40        0
     //    simd3        1        2        0
-    //    simd4        6        6        0
+    //    simd4       16       16        0
     // Totals...
-    // yes simd       52       85        0
-    //  no simd       72      107        0
+    // yes simd       26       58        0
+    //  no simd       76      110        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -9559,11 +9705,11 @@ impl AntiSandwich<DipoleInversion> for AntiPlane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       88        0
-    //    simd4       10       10        0
+    //      f32       17       54        0
+    //    simd4       20       20        0
     // Totals...
-    // yes simd       66       98        0
-    //  no simd       96      128        0
+    // yes simd       37       74        0
+    //  no simd       97      134        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -9604,11 +9750,11 @@ impl AntiSandwich<DualNum> for AntiPlane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       69        0
-    //    simd4        0        2        0
+    //      f32       16       38        0
+    //    simd4        8       10        0
     // Totals...
-    // yes simd       48       71        0
-    //  no simd       48       77        0
+    // yes simd       24       48        0
+    //  no simd       48       78        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -9632,10 +9778,10 @@ impl AntiSandwich<FlatPoint> for AntiPlane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       36        0
-    //    simd4        2        2        0
+    //      f32        9       24        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       23       38        0
+    // yes simd       14       29        0
     //  no simd       29       44        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
@@ -9658,10 +9804,10 @@ impl AntiSandwich<Flector> for AntiPlane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        3        3        0
+    //      f32       16       32        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       31       47        0
+    // yes simd       22       38        0
     //  no simd       40       56        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
@@ -9688,10 +9834,10 @@ impl AntiSandwich<Line> for AntiPlane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       41        0
-    //    simd4        2        2        0
+    //      f32       13       29        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       27       43        0
+    // yes simd       18       34        0
     //  no simd       33       49        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
@@ -9717,10 +9863,10 @@ impl AntiSandwich<Motor> for AntiPlane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        3        3        0
+    //      f32       16       32        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       31       47        0
+    // yes simd       22       38        0
     //  no simd       40       56        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
@@ -9747,13 +9893,13 @@ impl AntiSandwich<MultiVector> for AntiPlane {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      113      166        0
-    //    simd2        1        1        0
-    //    simd3       10       13        0
-    //    simd4       13       13        0
+    //      f32       49       97        0
+    //    simd2        2        2        0
+    //    simd3       20       26        0
+    //    simd4       21       21        0
     // Totals...
-    // yes simd      137      193        0
-    //  no simd      197      259        0
+    // yes simd       92      146        0
+    //  no simd      197      263        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = MultiVector::from_groups(
@@ -9832,10 +9978,10 @@ impl AntiSandwich<Plane> for AntiPlane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       42        0
-    //    simd4        1        1        0
+    //      f32       12       30        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       25       43        0
+    // yes simd       16       34        0
     //  no simd       28       46        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
@@ -9861,11 +10007,11 @@ impl AntiSandwich<RoundPoint> for AntiPlane {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       53        0
-    //    simd3        0        2        0
-    //    simd4        2        2        0
+    //      f32       18       35        0
+    //    simd3        1        4        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       35       57        0
+    // yes simd       24       44        0
     //  no simd       41       67        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -9891,11 +10037,11 @@ impl AntiSandwich<Scalar> for AntiPlane {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       15        0
-    //    simd4        0        2        0
+    //      f32        4       14        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        8       17        0
-    //  no simd        8       23        0
+    // yes simd        5       17        0
+    //  no simd        8       26        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = Plane::from_groups(
@@ -9909,12 +10055,12 @@ impl AntiSandwich<Sphere> for AntiPlane {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       54        0
-    //    simd3        0        2        0
-    //    simd4        2        2        0
+    //      f32       10       34        0
+    //    simd3        1        4        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       35       58        0
-    //  no simd       41       68        0
+    // yes simd       18       45        0
+    //  no simd       41       74        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiCircleRotor::from_groups(
@@ -9939,11 +10085,11 @@ impl AntiSandwich<VersorEven> for AntiPlane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       88        0
-    //    simd4       11       11        0
+    //      f32       24       57        0
+    //    simd4       19       19        0
     // Totals...
-    // yes simd       67       99        0
-    //  no simd      100      132        0
+    // yes simd       43       76        0
+    //  no simd      100      133        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -9985,11 +10131,11 @@ impl AntiSandwich<VersorOdd> for AntiPlane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       87        0
-    //    simd4       11       11        0
+    //      f32       17       53        0
+    //    simd4       21       21        0
     // Totals...
-    // yes simd       67       98        0
-    //  no simd      100      131        0
+    // yes simd       38       74        0
+    //  no simd      101      137        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -10032,11 +10178,10 @@ impl AntiSandwich<AntiCircleRotor> for AntiScalar {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       11        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0       14        0
+    // yes simd        0        6        0
     //  no simd        0       22        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
@@ -10055,11 +10200,10 @@ impl AntiSandwich<AntiDipoleInversion> for AntiScalar {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       15        0
-    //    simd3        0        1        0
-    //    simd4        0        3        0
+    //    simd3        0        2        0
+    //    simd4        0        6        0
     // Totals...
-    // yes simd        0       19        0
+    // yes simd        0        8        0
     //  no simd        0       30        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
@@ -10079,12 +10223,9 @@ impl AntiSandwich<AntiDipoleInversion> for AntiScalar {
 impl AntiSandwich<AntiDualNum> for AntiScalar {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        4        0
+    //          add/sub      mul      div
+    //   simd2        0        2        0
+    // no simd        0        4        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiDualNum::from_groups(/* e1234, scalar */ (Simd32x2::from(self[e12345]) * other.group0()));
@@ -10094,12 +10235,9 @@ impl AntiSandwich<AntiDualNum> for AntiScalar {
 impl AntiSandwich<AntiFlatPoint> for AntiScalar {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (Simd32x4::from(self[e12345]) * other.group0()));
@@ -10109,12 +10247,9 @@ impl AntiSandwich<AntiFlatPoint> for AntiScalar {
 impl AntiSandwich<AntiFlector> for AntiScalar {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiFlector::from_groups(
@@ -10129,12 +10264,9 @@ impl AntiSandwich<AntiFlector> for AntiScalar {
 impl AntiSandwich<AntiLine> for AntiScalar {
     type Output = AntiLine;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        6        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0        8        0
-    //  no simd        0       12        0
+    //          add/sub      mul      div
+    //   simd3        0        4        0
+    // no simd        0       12        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiLine::from_groups(
@@ -10149,12 +10281,9 @@ impl AntiSandwich<AntiLine> for AntiScalar {
 impl AntiSandwich<AntiMotor> for AntiScalar {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiMotor::from_groups(
@@ -10169,12 +10298,9 @@ impl AntiSandwich<AntiMotor> for AntiScalar {
 impl AntiSandwich<AntiPlane> for AntiScalar {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiPlane::from_groups(/* e1, e2, e3, e5 */ (Simd32x4::from(self[e12345]) * other.group0()));
@@ -10196,11 +10322,10 @@ impl AntiSandwich<Circle> for AntiScalar {
     type Output = Circle;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       10        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //    simd3        0        4        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0       13        0
+    // yes simd        0        6        0
     //  no simd        0       20        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         use crate::elements::*;
@@ -10219,11 +10344,10 @@ impl AntiSandwich<CircleRotor> for AntiScalar {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       11        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0       14        0
+    // yes simd        0        6        0
     //  no simd        0       22        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
@@ -10242,11 +10366,10 @@ impl AntiSandwich<Dipole> for AntiScalar {
     type Output = Dipole;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       10        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //    simd3        0        4        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0       13        0
+    // yes simd        0        6        0
     //  no simd        0       20        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
@@ -10265,11 +10388,10 @@ impl AntiSandwich<DipoleInversion> for AntiScalar {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       15        0
-    //    simd3        0        1        0
-    //    simd4        0        3        0
+    //    simd3        0        2        0
+    //    simd4        0        6        0
     // Totals...
-    // yes simd        0       19        0
+    // yes simd        0        8        0
     //  no simd        0       30        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
@@ -10289,12 +10411,9 @@ impl AntiSandwich<DipoleInversion> for AntiScalar {
 impl AntiSandwich<DualNum> for AntiScalar {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        4        0
+    //          add/sub      mul      div
+    //   simd2        0        2        0
+    // no simd        0        4        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = DualNum::from_groups(/* e4, e12345 */ (Simd32x2::from(self[e12345]) * other.group0()));
@@ -10304,12 +10423,9 @@ impl AntiSandwich<DualNum> for AntiScalar {
 impl AntiSandwich<FlatPoint> for AntiScalar {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = FlatPoint::from_groups(/* e15, e25, e35, e45 */ (Simd32x4::from(self[e12345]) * other.group0()));
@@ -10319,12 +10435,9 @@ impl AntiSandwich<FlatPoint> for AntiScalar {
 impl AntiSandwich<Flector> for AntiScalar {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = Flector::from_groups(
@@ -10339,12 +10452,9 @@ impl AntiSandwich<Flector> for AntiScalar {
 impl AntiSandwich<Line> for AntiScalar {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        6        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0        8        0
-    //  no simd        0       12        0
+    //          add/sub      mul      div
+    //   simd3        0        4        0
+    // no simd        0       12        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = Line::from_groups(
@@ -10359,12 +10469,9 @@ impl AntiSandwich<Line> for AntiScalar {
 impl AntiSandwich<Motor> for AntiScalar {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = Motor::from_groups(
@@ -10380,12 +10487,12 @@ impl AntiSandwich<MultiVector> for AntiScalar {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       34        0
-    //    simd2        0        1        0
-    //    simd3        0        4        0
-    //    simd4        0        4        0
+    //      f32        0        4        0
+    //    simd2        0        2        0
+    //    simd3        0        8        0
+    //    simd4        0        8        0
     // Totals...
-    // yes simd        0       43        0
+    // yes simd        0       22        0
     //  no simd        0       64        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -10419,12 +10526,9 @@ impl AntiSandwich<MultiVector> for AntiScalar {
 impl AntiSandwich<Plane> for AntiScalar {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ (Simd32x4::from(self[e12345]) * other.group0()));
@@ -10435,10 +10539,10 @@ impl AntiSandwich<RoundPoint> for AntiScalar {
     type Output = RoundPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        6        0
-    //    simd4        0        1        0
+    //      f32        0        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        7        0
+    // yes simd        0        4        0
     //  no simd        0       10        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -10461,10 +10565,10 @@ impl AntiSandwich<Sphere> for AntiScalar {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        6        0
-    //    simd4        0        1        0
+    //      f32        0        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        7        0
+    // yes simd        0        4        0
     //  no simd        0       10        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -10480,12 +10584,9 @@ impl AntiSandwich<Sphere> for AntiScalar {
 impl AntiSandwich<VersorEven> for AntiScalar {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       16        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0       20        0
-    //  no simd        0       32        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorEven::from_groups(
@@ -10504,12 +10605,9 @@ impl AntiSandwich<VersorEven> for AntiScalar {
 impl AntiSandwich<VersorOdd> for AntiScalar {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       16        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0       20        0
-    //  no simd        0       32        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -10530,10 +10628,11 @@ impl AntiSandwich<AntiCircleRotor> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      198      240        0
-    //    simd4       10       10        0
+    //      f32      126      158        0
+    //    simd3        0        2        0
+    //    simd4       28       29        0
     // Totals...
-    // yes simd      208      250        0
+    // yes simd      154      189        0
     //  no simd      238      280        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -10618,10 +10717,11 @@ impl AntiSandwich<AntiDipoleInversion> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      210      252        0
-    //    simd4       17       17        0
+    //      f32      146      178        0
+    //    simd3        0        2        0
+    //    simd4       33       34        0
     // Totals...
-    // yes simd      227      269        0
+    // yes simd      179      214        0
     //  no simd      278      320        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -10721,11 +10821,11 @@ impl AntiSandwich<AntiDualNum> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      137      178        0
-    //    simd3        1        2        0
-    //    simd4        0        1        0
+    //      f32       69      100        0
+    //    simd3        1        4        0
+    //    simd4       17       19        0
     // Totals...
-    // yes simd      138      181        0
+    // yes simd       87      123        0
     //  no simd      140      188        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -10760,10 +10860,11 @@ impl AntiSandwich<AntiFlatPoint> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      157      202        0
-    //    simd4        3        3        0
+    //      f32       93      128        0
+    //    simd3        0        2        0
+    //    simd4       19       20        0
     // Totals...
-    // yes simd      160      205        0
+    // yes simd      112      150        0
     //  no simd      169      214        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -10805,10 +10906,11 @@ impl AntiSandwich<AntiFlector> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      172      215        0
-    //    simd4        9        9        0
+    //      f32      108      141        0
+    //    simd3        0        2        0
+    //    simd4       25       26        0
     // Totals...
-    // yes simd      181      224        0
+    // yes simd      133      169        0
     //  no simd      208      251        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -10862,10 +10964,11 @@ impl AntiSandwich<AntiLine> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      184      226        0
-    //    simd4        1        1        0
+    //      f32      112      144        0
+    //    simd3        0        2        0
+    //    simd4       19       20        0
     // Totals...
-    // yes simd      185      227        0
+    // yes simd      131      166        0
     //  no simd      188      230        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -10921,10 +11024,11 @@ impl AntiSandwich<AntiMotor> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      180      222        0
-    //    simd4        7        7        0
+    //      f32      108      140        0
+    //    simd3        0        2        0
+    //    simd4       25       26        0
     // Totals...
-    // yes simd      187      229        0
+    // yes simd      133      168        0
     //  no simd      208      250        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -10981,11 +11085,11 @@ impl AntiSandwich<AntiPlane> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      186        0
-    //    simd3        1        2        0
-    //    simd4        2        2        0
+    //      f32       88      116        0
+    //    simd3        1        4        0
+    //    simd4       17       18        0
     // Totals...
-    // yes simd      151      190        0
+    // yes simd      106      138        0
     //  no simd      159      200        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -11021,11 +11125,11 @@ impl AntiSandwich<AntiScalar> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       84      110        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //      f32       56       72        0
+    //    simd3        0        4        0
+    //    simd4        7        9        0
     // Totals...
-    // yes simd       84      113        0
+    // yes simd       63       85        0
     //  no simd       84      120        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -11044,10 +11148,11 @@ impl AntiSandwich<Circle> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      200      242        0
-    //    simd4        7        7        0
+    //      f32      136      168        0
+    //    simd3        0        2        0
+    //    simd4       23       24        0
     // Totals...
-    // yes simd      207      249        0
+    // yes simd      159      194        0
     //  no simd      228      270        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -11122,10 +11227,11 @@ impl AntiSandwich<CircleRotor> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      202      244        0
-    //    simd4        9        9        0
+    //      f32      138      170        0
+    //    simd3        0        2        0
+    //    simd4       25       26        0
     // Totals...
-    // yes simd      211      253        0
+    // yes simd      163      198        0
     //  no simd      238      280        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -11200,10 +11306,11 @@ impl AntiSandwich<Dipole> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      200      242        0
-    //    simd4        7        7        0
+    //      f32      128      160        0
+    //    simd3        0        2        0
+    //    simd4       25       26        0
     // Totals...
-    // yes simd      207      249        0
+    // yes simd      153      188        0
     //  no simd      228      270        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -11275,10 +11382,11 @@ impl AntiSandwich<DipoleInversion> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      210      252        0
-    //    simd4       17       17        0
+    //      f32      138      170        0
+    //    simd3        0        2        0
+    //    simd4       35       36        0
     // Totals...
-    // yes simd      227      269        0
+    // yes simd      173      208        0
     //  no simd      278      320        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -11370,11 +11478,11 @@ impl AntiSandwich<DualNum> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      137      174        0
-    //    simd3        1        2        0
-    //    simd4        0        1        0
+    //      f32       77      104        0
+    //    simd3        1        4        0
+    //    simd4       15       17        0
     // Totals...
-    // yes simd      138      177        0
+    // yes simd       93      125        0
     //  no simd      140      184        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -11409,10 +11517,11 @@ impl AntiSandwich<FlatPoint> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      161      205        0
-    //    simd4        2        2        0
+    //      f32       89      123        0
+    //    simd3        0        2        0
+    //    simd4       20       21        0
     // Totals...
-    // yes simd      163      207        0
+    // yes simd      109      146        0
     //  no simd      169      213        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -11455,10 +11564,11 @@ impl AntiSandwich<Flector> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      176      218        0
-    //    simd4        8        8        0
+    //      f32      104      136        0
+    //    simd3        0        2        0
+    //    simd4       26       27        0
     // Totals...
-    // yes simd      184      226        0
+    // yes simd      130      165        0
     //  no simd      208      250        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -11513,10 +11623,11 @@ impl AntiSandwich<Line> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      184      226        0
-    //    simd4        1        1        0
+    //      f32      120      152        0
+    //    simd3        0        2        0
+    //    simd4       17       18        0
     // Totals...
-    // yes simd      185      227        0
+    // yes simd      137      172        0
     //  no simd      188      230        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -11569,10 +11680,11 @@ impl AntiSandwich<Motor> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      180      222        0
-    //    simd4        7        7        0
+    //      f32      116      148        0
+    //    simd3        0        2        0
+    //    simd4       23       24        0
     // Totals...
-    // yes simd      187      229        0
+    // yes simd      139      174        0
     //  no simd      208      250        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -11626,13 +11738,13 @@ impl AntiSandwich<MultiVector> for Circle {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      414      477        0
-    //    simd2        9        9        0
-    //    simd3       36       40        0
-    //    simd4        9        9        0
+    //      f32      228      270        0
+    //    simd2       18       18        0
+    //    simd3       72       82        0
+    //    simd4       24       25        0
     // Totals...
-    // yes simd      468      535        0
-    //  no simd      576      651        0
+    // yes simd      342      395        0
+    //  no simd      576      652        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = MultiVector::from_groups(
@@ -11822,11 +11934,11 @@ impl AntiSandwich<Plane> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      136      177        0
-    //    simd3        1        2        0
-    //    simd4        5        5        0
+    //      f32       68       99        0
+    //    simd3        1        4        0
+    //    simd4       22       23        0
     // Totals...
-    // yes simd      142      184        0
+    // yes simd       91      126        0
     //  no simd      159      203        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -11864,11 +11976,11 @@ impl AntiSandwich<RoundPoint> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      151      189        0
-    //    simd3        2        3        0
-    //    simd4        3        3        0
+    //      f32       91      119        0
+    //    simd3        2        5        0
+    //    simd4       18       19        0
     // Totals...
-    // yes simd      156      195        0
+    // yes simd      111      143        0
     //  no simd      169      210        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -11907,11 +12019,11 @@ impl AntiSandwich<Scalar> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       84      110        0
-    //    simd3        0        2        0
-    //    simd4        0        2        0
+    //      f32       56       72        0
+    //    simd3        0        4        0
+    //    simd4        7       10        0
     // Totals...
-    // yes simd       84      114        0
+    // yes simd       63       86        0
     //  no simd       84      124        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -11930,11 +12042,11 @@ impl AntiSandwich<Sphere> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      143      184        0
-    //    simd3        2        3        0
-    //    simd4        5        5        0
+    //      f32       75      106        0
+    //    simd3        2        5        0
+    //    simd4       22       23        0
     // Totals...
-    // yes simd      150      192        0
+    // yes simd       99      134        0
     //  no simd      169      213        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -11974,10 +12086,11 @@ impl AntiSandwich<VersorEven> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      212      254        0
-    //    simd4       19       19        0
+    //      f32      148      180        0
+    //    simd3        0        2        0
+    //    simd4       35       36        0
     // Totals...
-    // yes simd      231      273        0
+    // yes simd      183      218        0
     //  no simd      288      330        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -12087,10 +12200,11 @@ impl AntiSandwich<VersorOdd> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      208      250        0
-    //    simd4       20       20        0
+    //      f32      136      168        0
+    //    simd3        0        2        0
+    //    simd4       38       39        0
     // Totals...
-    // yes simd      228      270        0
+    // yes simd      174      209        0
     //  no simd      288      330        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -12190,10 +12304,11 @@ impl AntiSandwich<AntiCircleRotor> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      209      251        0
-    //    simd4       14       14        0
+    //      f32      109      144        0
+    //    simd3        0        1        0
+    //    simd4       39       40        0
     // Totals...
-    // yes simd      223      265        0
+    // yes simd      148      185        0
     //  no simd      265      307        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -12275,10 +12390,11 @@ impl AntiSandwich<AntiDipoleInversion> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      221      263        0
-    //    simd4       22       22        0
+    //      f32      129      164        0
+    //    simd3        0        1        0
+    //    simd4       45       46        0
     // Totals...
-    // yes simd      243      285        0
+    // yes simd      174      211        0
     //  no simd      309      351        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -12385,8 +12501,13 @@ impl AntiSandwich<AntiDipoleInversion> for CircleRotor {
 impl AntiSandwich<AntiDualNum> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      167      212        0
+    //           add/sub      mul      div
+    //      f32       67      105        0
+    //    simd3        0        1        0
+    //    simd4       25       26        0
+    // Totals...
+    // yes simd       92      132        0
+    //  no simd      167      212        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -12425,10 +12546,11 @@ impl AntiSandwich<AntiFlatPoint> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      177      222        0
-    //    simd4        3        3        0
+    //      f32       85      123        0
+    //    simd3        0        1        0
+    //    simd4       26       27        0
     // Totals...
-    // yes simd      180      225        0
+    // yes simd      111      151        0
     //  no simd      189      234        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -12470,10 +12592,11 @@ impl AntiSandwich<AntiFlector> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      192      235        0
-    //    simd4       10       10        0
+    //      f32      100      136        0
+    //    simd3        0        1        0
+    //    simd4       33       34        0
     // Totals...
-    // yes simd      202      245        0
+    // yes simd      133      171        0
     //  no simd      232      275        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -12533,10 +12656,11 @@ impl AntiSandwich<AntiLine> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      206      248        0
-    //    simd4        1        1        0
+    //      f32      106      141        0
+    //    simd3        0        1        0
+    //    simd4       26       27        0
     // Totals...
-    // yes simd      207      249        0
+    // yes simd      132      169        0
     //  no simd      210      252        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -12601,10 +12725,11 @@ impl AntiSandwich<AntiMotor> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      199      238        0
-    //    simd4        9        9        0
+    //      f32       99      131        0
+    //    simd3        0        1        0
+    //    simd4       34       35        0
     // Totals...
-    // yes simd      208      247        0
+    // yes simd      133      167        0
     //  no simd      235      274        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -12681,11 +12806,11 @@ impl AntiSandwich<AntiPlane> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      163      201        0
-    //    simd3        1        2        0
-    //    simd4        3        3        0
+    //      f32       79      110        0
+    //    simd3        1        3        0
+    //    simd4       24       25        0
     // Totals...
-    // yes simd      167      206        0
+    // yes simd      104      138        0
     //  no simd      178      219        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -12722,11 +12847,11 @@ impl AntiSandwich<AntiScalar> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      105      131        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //      f32       53       72        0
+    //    simd3        0        2        0
+    //    simd4       13       16        0
     // Totals...
-    // yes simd      105      134        0
+    // yes simd       66       90        0
     //  no simd      105      142        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -12745,10 +12870,11 @@ impl AntiSandwich<Circle> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      218      260        0
-    //    simd4        9        9        0
+    //      f32      126      161        0
+    //    simd3        0        1        0
+    //    simd4       32       33        0
     // Totals...
-    // yes simd      227      269        0
+    // yes simd      158      195        0
     //  no simd      254      296        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -12821,10 +12947,11 @@ impl AntiSandwich<CircleRotor> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      213      255        0
-    //    simd4       13       13        0
+    //      f32      121      156        0
+    //    simd3        0        1        0
+    //    simd4       36       37        0
     // Totals...
-    // yes simd      226      268        0
+    // yes simd      157      194        0
     //  no simd      265      307        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -12904,10 +13031,11 @@ impl AntiSandwich<Dipole> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      210      252        0
-    //    simd4       11       11        0
+    //      f32      110      145        0
+    //    simd3        0        1        0
+    //    simd4       36       37        0
     // Totals...
-    // yes simd      221      263        0
+    // yes simd      146      183        0
     //  no simd      254      296        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -12983,10 +13111,11 @@ impl AntiSandwich<DipoleInversion> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      213      255        0
-    //    simd4       24       24        0
+    //      f32      113      148        0
+    //    simd3        0        1        0
+    //    simd4       49       50        0
     // Totals...
-    // yes simd      237      279        0
+    // yes simd      162      199        0
     //  no simd      309      351        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -13073,8 +13202,13 @@ impl AntiSandwich<DipoleInversion> for CircleRotor {
 impl AntiSandwich<DualNum> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      167      208        0
+    //           add/sub      mul      div
+    //      f32       75      109        0
+    //    simd3        0        1        0
+    //    simd4       23       24        0
+    // Totals...
+    // yes simd       98      134        0
+    //  no simd      167      208        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -13113,10 +13247,11 @@ impl AntiSandwich<FlatPoint> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      180      221        0
-    //    simd4        3        3        0
+    //      f32       80      114        0
+    //    simd3        0        1        0
+    //    simd4       28       29        0
     // Totals...
-    // yes simd      183      224        0
+    // yes simd      108      144        0
     //  no simd      192      233        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -13166,10 +13301,11 @@ impl AntiSandwich<Flector> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      192      234        0
-    //    simd4       10       10        0
+    //      f32       92      127        0
+    //    simd3        0        1        0
+    //    simd4       35       36        0
     // Totals...
-    // yes simd      202      244        0
+    // yes simd      127      164        0
     //  no simd      232      274        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -13228,10 +13364,11 @@ impl AntiSandwich<Line> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      202      244        0
-    //    simd4        2        2        0
+    //      f32      110      145        0
+    //    simd3        0        1        0
+    //    simd4       25       26        0
     // Totals...
-    // yes simd      204      246        0
+    // yes simd      135      172        0
     //  no simd      210      252        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -13287,10 +13424,11 @@ impl AntiSandwich<Motor> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      196      238        0
-    //    simd4        9        9        0
+    //      f32      104      139        0
+    //    simd3        0        1        0
+    //    simd4       32       33        0
     // Totals...
-    // yes simd      205      247        0
+    // yes simd      136      173        0
     //  no simd      232      274        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -13351,13 +13489,13 @@ impl AntiSandwich<MultiVector> for CircleRotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      427      493        0
-    //    simd2       10       10        0
-    //    simd3       39       42        0
-    //    simd4       19       19        0
+    //      f32      188      239        0
+    //    simd2       20       20        0
+    //    simd3       76       83        0
+    //    simd4       46       47        0
     // Totals...
-    // yes simd      495      564        0
-    //  no simd      640      715        0
+    // yes simd      330      389        0
+    //  no simd      640      716        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = MultiVector::from_groups(
@@ -13554,11 +13692,11 @@ impl AntiSandwich<Plane> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      151      192        0
-    //    simd3        1        2        0
-    //    simd4        6        6        0
+    //      f32       55       89        0
+    //    simd3        1        3        0
+    //    simd4       30       31        0
     // Totals...
-    // yes simd      158      200        0
+    // yes simd       86      123        0
     //  no simd      178      222        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -13597,11 +13735,11 @@ impl AntiSandwich<RoundPoint> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      163      201        0
-    //    simd3        2        3        0
-    //    simd4        5        5        0
+    //      f32       79      110        0
+    //    simd3        2        4        0
+    //    simd4       26       27        0
     // Totals...
-    // yes simd      170      209        0
+    // yes simd      107      141        0
     //  no simd      189      230        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -13642,11 +13780,11 @@ impl AntiSandwich<Scalar> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      105      131        0
-    //    simd3        0        1        0
-    //    simd4        0        3        0
+    //      f32       45       64        0
+    //    simd3        0        2        0
+    //    simd4       15       19        0
     // Totals...
-    // yes simd      105      135        0
+    // yes simd       60       85        0
     //  no simd      105      146        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -13665,11 +13803,11 @@ impl AntiSandwich<Sphere> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      155      197        0
-    //    simd3        2        3        0
-    //    simd4        7        7        0
+    //      f32       59       94        0
+    //    simd3        2        4        0
+    //    simd4       31       32        0
     // Totals...
-    // yes simd      164      207        0
+    // yes simd       92      130        0
     //  no simd      189      234        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -13711,10 +13849,11 @@ impl AntiSandwich<VersorEven> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      228      270        0
-    //    simd4       23       23        0
+    //      f32      136      171        0
+    //    simd3        0        1        0
+    //    simd4       46       47        0
     // Totals...
-    // yes simd      251      293        0
+    // yes simd      182      219        0
     //  no simd      320      362        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -13829,10 +13968,11 @@ impl AntiSandwich<VersorOdd> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      216      258        0
-    //    simd4       26       26        0
+    //      f32      116      151        0
+    //    simd3        0        1        0
+    //    simd4       51       52        0
     // Totals...
-    // yes simd      242      284        0
+    // yes simd      167      204        0
     //  no simd      320      362        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -13926,10 +14066,11 @@ impl AntiSandwich<AntiCircleRotor> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      190      232        0
-    //    simd4       12       12        0
+    //      f32      110      142        0
+    //    simd3        0        2        0
+    //    simd4       32       33        0
     // Totals...
-    // yes simd      202      244        0
+    // yes simd      142      177        0
     //  no simd      238      280        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -13993,10 +14134,11 @@ impl AntiSandwich<AntiDipoleInversion> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      210      252        0
-    //    simd4       17       17        0
+    //      f32      118      150        0
+    //    simd3        0        2        0
+    //    simd4       40       41        0
     // Totals...
-    // yes simd      227      269        0
+    // yes simd      158      193        0
     //  no simd      278      320        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -14091,11 +14233,11 @@ impl AntiSandwich<AntiDualNum> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      137      177        0
-    //    simd3        1        2        0
-    //    simd4        0        1        0
+    //      f32       65       95        0
+    //    simd3        1        4        0
+    //    simd4       18       20        0
     // Totals...
-    // yes simd      138      180        0
+    // yes simd       84      119        0
     //  no simd      140      187        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -14130,10 +14272,11 @@ impl AntiSandwich<AntiFlatPoint> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      157      199        0
-    //    simd4        3        3        0
+    //      f32       65       97        0
+    //    simd3        0        2        0
+    //    simd4       26       27        0
     // Totals...
-    // yes simd      160      202        0
+    // yes simd       91      126        0
     //  no simd      169      211        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -14181,10 +14324,11 @@ impl AntiSandwich<AntiFlector> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      176      218        0
-    //    simd4        8        8        0
+    //      f32       84      116        0
+    //    simd3        0        2        0
+    //    simd4       31       32        0
     // Totals...
-    // yes simd      184      226        0
+    // yes simd      115      150        0
     //  no simd      208      250        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -14243,10 +14387,11 @@ impl AntiSandwich<AntiLine> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      180      222        0
-    //    simd4        2        2        0
+    //      f32      100      132        0
+    //    simd3        0        2        0
+    //    simd4       22       23        0
     // Totals...
-    // yes simd      182      224        0
+    // yes simd      122      157        0
     //  no simd      188      230        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -14293,10 +14438,11 @@ impl AntiSandwich<AntiMotor> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      176      219        0
-    //    simd4        8        8        0
+    //      f32       96      129        0
+    //    simd3        0        2        0
+    //    simd4       28       29        0
     // Totals...
-    // yes simd      184      227        0
+    // yes simd      124      160        0
     //  no simd      208      251        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -14353,11 +14499,11 @@ impl AntiSandwich<AntiPlane> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      139      177        0
-    //    simd3        1        2        0
-    //    simd4        5        5        0
+    //      f32       67       95        0
+    //    simd3        1        4        0
+    //    simd4       23       24        0
     // Totals...
-    // yes simd      145      184        0
+    // yes simd       91      123        0
     //  no simd      162      203        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -14391,11 +14537,11 @@ impl AntiSandwich<AntiScalar> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       84      110        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //      f32       48       64        0
+    //    simd3        0        4        0
+    //    simd4        9       11        0
     // Totals...
-    // yes simd       84      113        0
+    // yes simd       57       79        0
     //  no simd       84      120        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -14414,10 +14560,11 @@ impl AntiSandwich<Circle> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      200      242        0
-    //    simd4        7        7        0
+    //      f32      108      140        0
+    //    simd3        0        2        0
+    //    simd4       30       31        0
     // Totals...
-    // yes simd      207      249        0
+    // yes simd      138      173        0
     //  no simd      228      270        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -14489,10 +14636,11 @@ impl AntiSandwich<CircleRotor> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      198      240        0
-    //    simd4       10       10        0
+    //      f32      106      138        0
+    //    simd3        0        2        0
+    //    simd4       33       34        0
     // Totals...
-    // yes simd      208      250        0
+    // yes simd      139      174        0
     //  no simd      238      280        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -14570,10 +14718,11 @@ impl AntiSandwich<Dipole> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      192      234        0
-    //    simd4        9        9        0
+    //      f32      112      144        0
+    //    simd3        0        2        0
+    //    simd4       29       30        0
     // Totals...
-    // yes simd      201      243        0
+    // yes simd      141      176        0
     //  no simd      228      270        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -14635,10 +14784,11 @@ impl AntiSandwich<DipoleInversion> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      202      244        0
-    //    simd4       19       19        0
+    //      f32      122      154        0
+    //    simd3        0        2        0
+    //    simd4       39       40        0
     // Totals...
-    // yes simd      221      263        0
+    // yes simd      161      196        0
     //  no simd      278      320        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -14731,10 +14881,11 @@ impl AntiSandwich<DualNum> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      137      177        0
-    //    simd3        1        2        0
+    //      f32       65       95        0
+    //    simd3        1        4        0
+    //    simd4       18       19        0
     // Totals...
-    // yes simd      138      179        0
+    // yes simd       84      118        0
     //  no simd      140      183        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -14769,10 +14920,11 @@ impl AntiSandwich<FlatPoint> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      157      198        0
-    //    simd4        3        3        0
+    //      f32       77      108        0
+    //    simd3        0        2        0
+    //    simd4       23       24        0
     // Totals...
-    // yes simd      160      201        0
+    // yes simd      100      134        0
     //  no simd      169      210        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -14813,10 +14965,11 @@ impl AntiSandwich<Flector> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      176      218        0
-    //    simd4        8        8        0
+    //      f32       96      128        0
+    //    simd3        0        2        0
+    //    simd4       28       29        0
     // Totals...
-    // yes simd      184      226        0
+    // yes simd      124      159        0
     //  no simd      208      250        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -14877,8 +15030,13 @@ impl AntiSandwich<Flector> for Dipole {
 impl AntiSandwich<Line> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      188      230        0
+    //           add/sub      mul      div
+    //      f32       96      128        0
+    //    simd3        0        2        0
+    //    simd4       23       24        0
+    // Totals...
+    // yes simd      119      154        0
+    //  no simd      188      230        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -14932,10 +15090,11 @@ impl AntiSandwich<Motor> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      188      230        0
-    //    simd4        5        5        0
+    //      f32       96      128        0
+    //    simd3        0        2        0
+    //    simd4       28       29        0
     // Totals...
-    // yes simd      193      235        0
+    // yes simd      124      159        0
     //  no simd      208      250        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -14992,12 +15151,12 @@ impl AntiSandwich<MultiVector> for Dipole {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      404      472        0
-    //    simd2        1        1        0
-    //    simd3       34       36        0
-    //    simd4       17       17        0
+    //      f32      236      288        0
+    //    simd2        2        2        0
+    //    simd3       68       74        0
+    //    simd4       33       34        0
     // Totals...
-    // yes simd      456      526        0
+    // yes simd      339      398        0
     //  no simd      576      650        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -15186,11 +15345,11 @@ impl AntiSandwich<Plane> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      135      175        0
-    //    simd3        1        2        0
-    //    simd4        6        6        0
+    //      f32       63       93        0
+    //    simd3        1        4        0
+    //    simd4       24       25        0
     // Totals...
-    // yes simd      142      183        0
+    // yes simd       88      122        0
     //  no simd      162      205        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -15225,11 +15384,11 @@ impl AntiSandwich<RoundPoint> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      143      181        0
-    //    simd3        2        3        0
-    //    simd4        5        5        0
+    //      f32       71       99        0
+    //    simd3        2        5        0
+    //    simd4       23       24        0
     // Totals...
-    // yes simd      150      189        0
+    // yes simd       96      128        0
     //  no simd      169      210        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -15269,11 +15428,11 @@ impl AntiSandwich<Scalar> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       84      110        0
-    //    simd3        0        4        0
-    //    simd4        0        2        0
+    //      f32       56       72        0
+    //    simd3        0        6        0
+    //    simd4        7       10        0
     // Totals...
-    // yes simd       84      116        0
+    // yes simd       63       88        0
     //  no simd       84      130        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -15292,11 +15451,11 @@ impl AntiSandwich<Sphere> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      139      181        0
-    //    simd3        2        3        0
-    //    simd4        6        6        0
+    //      f32       67       99        0
+    //    simd3        2        5        0
+    //    simd4       24       25        0
     // Totals...
-    // yes simd      147      190        0
+    // yes simd       93      129        0
     //  no simd      169      214        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -15337,10 +15496,11 @@ impl AntiSandwich<VersorEven> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      220      262        0
-    //    simd4       17       17        0
+    //      f32      128      160        0
+    //    simd3        0        2        0
+    //    simd4       40       41        0
     // Totals...
-    // yes simd      237      279        0
+    // yes simd      168      203        0
     //  no simd      288      330        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -15441,10 +15601,11 @@ impl AntiSandwich<VersorOdd> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      200      242        0
-    //    simd4       22       22        0
+    //      f32      120      152        0
+    //    simd3        0        2        0
+    //    simd4       42       43        0
     // Totals...
-    // yes simd      222      264        0
+    // yes simd      162      197        0
     //  no simd      288      330        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -15539,10 +15700,11 @@ impl AntiSandwich<AntiCircleRotor> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      269      311        0
-    //    simd4       26       26        0
+    //      f32      101      136        0
+    //    simd3        0        1        0
+    //    simd4       68       69        0
     // Totals...
-    // yes simd      295      337        0
+    // yes simd      169      206        0
     //  no simd      373      415        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -15634,10 +15796,11 @@ impl AntiSandwich<AntiDipoleInversion> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      273      316        0
-    //    simd4       40       40        0
+    //      f32      105      141        0
+    //    simd3        0        1        0
+    //    simd4       82       83        0
     // Totals...
-    // yes simd      313      356        0
+    // yes simd      187      225        0
     //  no simd      433      476        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -15739,10 +15902,11 @@ impl AntiSandwich<AntiDualNum> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      230      273        0
-    //    simd4        2        4        0
+    //      f32       62       98        0
+    //    simd3        0        1        0
+    //    simd4       44       47        0
     // Totals...
-    // yes simd      232      277        0
+    // yes simd      106      146        0
     //  no simd      238      289        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -15777,10 +15941,11 @@ impl AntiSandwich<AntiFlatPoint> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      247      287        0
-    //    simd4        6        6        0
+    //      f32       79      112        0
+    //    simd3        0        1        0
+    //    simd4       48       49        0
     // Totals...
-    // yes simd      253      293        0
+    // yes simd      127      162        0
     //  no simd      271      311        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -15836,10 +16001,11 @@ impl AntiSandwich<AntiFlector> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      260      298        0
-    //    simd4       18       18        0
+    //      f32       92      123        0
+    //    simd3        0        1        0
+    //    simd4       60       61        0
     // Totals...
-    // yes simd      278      316        0
+    // yes simd      152      185        0
     //  no simd      332      370        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -15911,10 +16077,11 @@ impl AntiSandwich<AntiLine> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      274      316        0
-    //    simd4        6        6        0
+    //      f32      106      141        0
+    //    simd3        0        1        0
+    //    simd4       48       49        0
     // Totals...
-    // yes simd      280      322        0
+    // yes simd      154      191        0
     //  no simd      298      340        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -15983,10 +16150,11 @@ impl AntiSandwich<AntiMotor> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      244      283        0
-    //    simd4       22       22        0
+    //      f32       76      108        0
+    //    simd3        0        1        0
+    //    simd4       64       65        0
     // Totals...
-    // yes simd      266      305        0
+    // yes simd      140      174        0
     //  no simd      332      371        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -16047,10 +16215,11 @@ impl AntiSandwich<AntiPlane> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      232      273        0
-    //    simd4       10       10        0
+    //      f32       64       98        0
+    //    simd3        0        1        0
+    //    simd4       52       53        0
     // Totals...
-    // yes simd      242      283        0
+    // yes simd      116      152        0
     //  no simd      272      313        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -16092,11 +16261,11 @@ impl AntiSandwich<AntiScalar> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      209      235        0
-    //    simd3        0        1        0
-    //    simd4        0        3        0
+    //      f32       61       80        0
+    //    simd3        0        2        0
+    //    simd4       37       41        0
     // Totals...
-    // yes simd      209      239        0
+    // yes simd       98      123        0
     //  no simd      209      250        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -16117,10 +16286,11 @@ impl AntiSandwich<Circle> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      290      332        0
-    //    simd4       17       17        0
+    //      f32      122      157        0
+    //    simd3        0        1        0
+    //    simd4       59       60        0
     // Totals...
-    // yes simd      307      349        0
+    // yes simd      181      218        0
     //  no simd      358      400        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -16214,10 +16384,11 @@ impl AntiSandwich<CircleRotor> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      277      319        0
-    //    simd4       24       24        0
+    //      f32      109      144        0
+    //    simd3        0        1        0
+    //    simd4       66       67        0
     // Totals...
-    // yes simd      301      343        0
+    // yes simd      175      212        0
     //  no simd      373      415        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -16307,10 +16478,11 @@ impl AntiSandwich<Dipole> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      286      328        0
-    //    simd4       18       18        0
+    //      f32      118      153        0
+    //    simd3        0        1        0
+    //    simd4       60       61        0
     // Totals...
-    // yes simd      304      346        0
+    // yes simd      178      215        0
     //  no simd      358      400        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -16406,10 +16578,11 @@ impl AntiSandwich<DipoleInversion> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      285      327        0
-    //    simd4       37       37        0
+    //      f32      117      152        0
+    //    simd3        0        1        0
+    //    simd4       79       80        0
     // Totals...
-    // yes simd      322      364        0
+    // yes simd      196      233        0
     //  no simd      433      475        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -16526,10 +16699,11 @@ impl AntiSandwich<DualNum> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      234      277        0
-    //    simd4        1        1        0
+    //      f32       66      102        0
+    //    simd3        0        1        0
+    //    simd4       43       44        0
     // Totals...
-    // yes simd      235      278        0
+    // yes simd      109      147        0
     //  no simd      238      281        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -16569,10 +16743,11 @@ impl AntiSandwich<FlatPoint> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      236      275        0
-    //    simd4        9        9        0
+    //      f32       68      100        0
+    //    simd3        0        1        0
+    //    simd4       51       52        0
     // Totals...
-    // yes simd      245      284        0
+    // yes simd      119      153        0
     //  no simd      272      311        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -16618,10 +16793,11 @@ impl AntiSandwich<Flector> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      244      282        0
-    //    simd4       22       22        0
+    //      f32       76      107        0
+    //    simd3        0        1        0
+    //    simd4       64       65        0
     // Totals...
-    // yes simd      266      304        0
+    // yes simd      140      173        0
     //  no simd      332      370        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -16690,10 +16866,11 @@ impl AntiSandwich<Line> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      294      336        0
-    //    simd4        1        1        0
+    //      f32      126      161        0
+    //    simd3        0        1        0
+    //    simd4       43       44        0
     // Totals...
-    // yes simd      295      337        0
+    // yes simd      169      206        0
     //  no simd      298      340        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -16775,10 +16952,11 @@ impl AntiSandwich<Motor> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      272      314        0
-    //    simd4       14       14        0
+    //      f32      104      139        0
+    //    simd3        0        1        0
+    //    simd4       56       57        0
     // Totals...
-    // yes simd      286      328        0
+    // yes simd      160      197        0
     //  no simd      328      370        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -16855,12 +17033,12 @@ impl AntiSandwich<MultiVector> for DipoleInversion {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      562      630        0
-    //    simd2        4        4        0
-    //    simd3       50       52        0
-    //    simd4       44       44        0
+    //      f32      266      321        0
+    //    simd2        8        8        0
+    //    simd3       98      103        0
+    //    simd4       80       81        0
     // Totals...
-    // yes simd      660      730        0
+    // yes simd      452      513        0
     //  no simd      896      970        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -17080,10 +17258,11 @@ impl AntiSandwich<Plane> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      235      270        0
-    //    simd4        9       10        0
+    //      f32       67       95        0
+    //    simd3        0        1        0
+    //    simd4       51       53        0
     // Totals...
-    // yes simd      244      280        0
+    // yes simd      118      149        0
     //  no simd      271      310        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -17120,10 +17299,11 @@ impl AntiSandwich<RoundPoint> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      231      280        0
-    //    simd4       13       13        0
+    //      f32       63      105        0
+    //    simd3        0        1        0
+    //    simd4       55       56        0
     // Totals...
-    // yes simd      244      293        0
+    // yes simd      118      162        0
     //  no simd      283      332        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -17173,11 +17353,11 @@ impl AntiSandwich<Scalar> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      209      235        0
-    //    simd3        0        2        0
-    //    simd4        0        6        0
+    //      f32       53       72        0
+    //    simd3        0        3        0
+    //    simd4       39       46        0
     // Totals...
-    // yes simd      209      243        0
+    // yes simd       92      121        0
     //  no simd      209      265        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -17198,10 +17378,11 @@ impl AntiSandwich<Sphere> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      235      276        0
-    //    simd4       12       13        0
+    //      f32       67      101        0
+    //    simd3        0        1        0
+    //    simd4       54       56        0
     // Totals...
-    // yes simd      247      289        0
+    // yes simd      121      158        0
     //  no simd      283      328        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -17246,10 +17427,11 @@ impl AntiSandwich<VersorEven> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      264      307        0
-    //    simd4       46       46        0
+    //      f32       96      132        0
+    //    simd3        0        1        0
+    //    simd4       88       89        0
     // Totals...
-    // yes simd      310      353        0
+    // yes simd      184      222        0
     //  no simd      448      491        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -17354,10 +17536,11 @@ impl AntiSandwich<VersorOdd> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      280      322        0
-    //    simd4       42       42        0
+    //      f32      112      147        0
+    //    simd3        0        1        0
+    //    simd4       84       85        0
     // Totals...
-    // yes simd      322      364        0
+    // yes simd      196      233        0
     //  no simd      448      490        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -17474,8 +17657,12 @@ impl InfixAntiSandwich for DualNum {}
 impl AntiSandwich<AntiCircleRotor> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       23       54        0
+    //           add/sub      mul      div
+    //      f32       12       43        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       15       46        0
+    //  no simd       24       55        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -17514,11 +17701,11 @@ impl AntiSandwich<AntiDipoleInversion> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       54        0
-    //    simd4        2        3        0
+    //      f32        6       30        0
+    //    simd4        7       10        0
     // Totals...
-    // yes simd       24       57        0
-    //  no simd       30       66        0
+    // yes simd       13       40        0
+    //  no simd       34       70        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -17565,11 +17752,11 @@ impl AntiSandwich<AntiFlatPoint> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       36        0
-    //    simd4        0        2        0
+    //      f32        6       21        0
+    //    simd4        2        6        0
     // Totals...
-    // yes simd       14       38        0
-    //  no simd       14       44        0
+    // yes simd        8       27        0
+    //  no simd       14       45        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -17593,11 +17780,11 @@ impl AntiSandwich<AntiFlector> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       44        0
-    //    simd4        0        2        0
+    //      f32        4       20        0
+    //    simd4        5        9        0
     // Totals...
-    // yes simd       20       46        0
-    //  no simd       20       52        0
+    // yes simd        9       29        0
+    //  no simd       24       56        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -17626,11 +17813,12 @@ impl AntiSandwich<AntiLine> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       42        0
+    //      f32       13       39        0
     //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       17       43        0
-    //  no simd       17       45        0
+    // yes simd       14       41        0
+    //  no simd       17       46        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -17664,11 +17852,11 @@ impl AntiSandwich<AntiMotor> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       48        0
-    //    simd4        0        1        0
+    //      f32        9       37        0
+    //    simd4        3        4        0
     // Totals...
-    // yes simd       20       49        0
-    //  no simd       20       52        0
+    // yes simd       12       41        0
+    //  no simd       21       53        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -17702,11 +17890,11 @@ impl AntiSandwich<AntiPlane> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       38        0
-    //    simd4        0        1        0
+    //      f32        0       14        0
+    //    simd4        5        8        0
     // Totals...
-    // yes simd       16       39        0
-    //  no simd       16       42        0
+    // yes simd        5       22        0
+    //  no simd       20       46        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -17745,11 +17933,12 @@ impl AntiSandwich<Circle> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       47        0
+    //      f32        9       32        0
     //    simd3        1        2        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       18       49        0
-    //  no simd       20       53        0
+    // yes simd       12       38        0
+    //  no simd       20       54        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -17782,8 +17971,12 @@ impl AntiSandwich<Circle> for DualNum {
 impl AntiSandwich<CircleRotor> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       23       57        0
+    //           add/sub      mul      div
+    //      f32        7       33        0
+    //    simd4        5        7        0
+    // Totals...
+    // yes simd       12       40        0
+    //  no simd       27       61        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -17822,12 +18015,12 @@ impl AntiSandwich<Dipole> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       44        0
+    //      f32       13       41        0
     //    simd3        1        2        0
-    //    simd4        0        1        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       18       47        0
-    //  no simd       20       54        0
+    // yes simd       15       45        0
+    //  no simd       20       55        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -17861,11 +18054,11 @@ impl AntiSandwich<DipoleInversion> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       26       54        0
-    //    simd4        1        2        0
+    //      f32       15       43        0
+    //    simd4        4        5        0
     // Totals...
-    // yes simd       27       56        0
-    //  no simd       30       62        0
+    // yes simd       19       48        0
+    //  no simd       31       63        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -17913,11 +18106,11 @@ impl AntiSandwich<FlatPoint> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       33        0
-    //    simd4        0        3        0
+    //      f32       10       30        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       14       36        0
-    //  no simd       14       45        0
+    // yes simd       11       34        0
+    //  no simd       14       46        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -17941,11 +18134,11 @@ impl AntiSandwich<Flector> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       44        0
-    //    simd4        0        4        0
+    //      f32        9       33        0
+    //    simd4        3        7        0
     // Totals...
-    // yes simd       20       48        0
-    //  no simd       20       60        0
+    // yes simd       12       40        0
+    //  no simd       21       61        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -17974,11 +18167,12 @@ impl AntiSandwich<Line> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       45        0
+    //      f32        9       30        0
     //    simd3        0        1        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       17       46        0
-    //  no simd       17       48        0
+    // yes simd       11       35        0
+    //  no simd       17       49        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -18012,11 +18206,11 @@ impl AntiSandwich<Motor> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       45        0
-    //    simd4        0        3        0
+    //      f32        4       21        0
+    //    simd4        5       10        0
     // Totals...
-    // yes simd       20       48        0
-    //  no simd       20       57        0
+    // yes simd        9       31        0
+    //  no simd       24       61        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -18047,13 +18241,13 @@ impl AntiSandwich<MultiVector> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       39       93        0
-    //    simd2        1        2        0
-    //    simd3        5        9        0
-    //    simd4        2        2        0
+    //      f32       13       47        0
+    //    simd2        2        4        0
+    //    simd3       10       18        0
+    //    simd4        5        6        0
     // Totals...
-    // yes simd       47      106        0
-    //  no simd       64      132        0
+    // yes simd       30       75        0
+    //  no simd       67      133        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = MultiVector::from_groups(
@@ -18111,11 +18305,11 @@ impl AntiSandwich<Plane> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       33        0
-    //    simd4        0        3        0
+    //      f32        5       22        0
+    //    simd4        3        6        0
     // Totals...
-    // yes simd       16       36        0
-    //  no simd       16       45        0
+    // yes simd        8       28        0
+    //  no simd       17       46        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -18134,11 +18328,11 @@ impl AntiSandwich<RoundPoint> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       35        0
-    //    simd4        0        2        0
+    //      f32        0       11        0
+    //    simd4        5        9        0
     // Totals...
-    // yes simd       16       37        0
-    //  no simd       16       43        0
+    // yes simd        5       20        0
+    //  no simd       20       47        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorEven::from_groups(
@@ -18173,11 +18367,11 @@ impl AntiSandwich<Sphere> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       34        0
-    //    simd4        0        3        0
+    //      f32        5       23        0
+    //    simd4        3        6        0
     // Totals...
-    // yes simd       16       37        0
-    //  no simd       16       46        0
+    // yes simd        8       29        0
+    //  no simd       17       47        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -18197,11 +18391,11 @@ impl AntiSandwich<VersorEven> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       48        0
-    //    simd4        4        5        0
+    //      f32        1       24        0
+    //    simd4        9       12        0
     // Totals...
-    // yes simd       21       53        0
-    //  no simd       33       68        0
+    // yes simd       10       36        0
+    //  no simd       37       72        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -18236,11 +18430,11 @@ impl AntiSandwich<VersorOdd> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       51        0
-    //    simd4        3        4        0
+    //      f32       10       40        0
+    //    simd4        6        7        0
     // Totals...
-    // yes simd       24       55        0
-    //  no simd       33       67        0
+    // yes simd       16       47        0
+    //  no simd       34       68        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -18277,11 +18471,11 @@ impl AntiSandwich<AntiCircleRotor> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       65      110        0
-    //    simd4        3        3        0
+    //      f32       45       87        0
+    //    simd4        8        9        0
     // Totals...
-    // yes simd       68      113        0
-    //  no simd       77      122        0
+    // yes simd       53       96        0
+    //  no simd       77      123        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -18321,10 +18515,10 @@ impl AntiSandwich<AntiDipoleInversion> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       71      104        0
-    //    simd4        6        6        0
+    //      f32       35       56        0
+    //    simd4       15       18        0
     // Totals...
-    // yes simd       77      110        0
+    // yes simd       50       74        0
     //  no simd       95      128        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -18384,11 +18578,11 @@ impl AntiSandwich<AntiDualNum> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       74        0
-    //    simd4        0        4        0
+    //      f32       28       55        0
+    //    simd4        4        9        0
     // Totals...
-    // yes simd       44       78        0
-    //  no simd       44       90        0
+    // yes simd       32       64        0
+    //  no simd       44       91        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -18411,8 +18605,12 @@ impl AntiSandwich<AntiDualNum> for FlatPoint {
 impl AntiSandwich<AntiFlatPoint> for FlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       32        0
+    //           add/sub      mul      div
+    //      f32       15       28        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       15       29        0
+    //  no simd       15       32        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -18432,10 +18630,10 @@ impl AntiSandwich<AntiFlector> for FlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       32        0
-    //    simd4        2        4        0
+    //      f32       16       28        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       18       36        0
+    // yes simd       18       33        0
     //  no simd       24       48        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
@@ -18456,8 +18654,12 @@ impl AntiSandwich<AntiFlector> for FlatPoint {
 impl AntiSandwich<AntiLine> for FlatPoint {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       43        0
+    //           add/sub      mul      div
+    //      f32       12       23        0
+    //    simd4        2        5        0
+    // Totals...
+    // yes simd       14       28        0
+    //  no simd       20       43        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -18481,8 +18683,12 @@ impl AntiSandwich<AntiLine> for FlatPoint {
 impl AntiSandwich<AntiMotor> for FlatPoint {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       48        0
+    //           add/sub      mul      div
+    //      f32       16       28        0
+    //    simd4        2        5        0
+    // Totals...
+    // yes simd       18       33        0
+    //  no simd       24       48        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -18508,10 +18714,10 @@ impl AntiSandwich<AntiPlane> for FlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       32        0
-    //    simd4        2        2        0
+    //      f32       13       28        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       15       34        0
+    // yes simd       15       31        0
     //  no simd       21       40        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
@@ -18534,10 +18740,10 @@ impl AntiSandwich<AntiScalar> for FlatPoint {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       12        0
-    //    simd4        0        1        0
+    //      f32        3        8        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        3       13        0
+    // yes simd        3       10        0
     //  no simd        3       16        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -18549,10 +18755,10 @@ impl AntiSandwich<Circle> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       65      103        0
-    //    simd4        2        2        0
+    //      f32       29       55        0
+    //    simd4       11       14        0
     // Totals...
-    // yes simd       67      105        0
+    // yes simd       40       69        0
     //  no simd       73      111        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -18599,10 +18805,10 @@ impl AntiSandwich<CircleRotor> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       69      107        0
-    //    simd4        2        2        0
+    //      f32       33       59        0
+    //    simd4       11       14        0
     // Totals...
-    // yes simd       71      109        0
+    // yes simd       44       73        0
     //  no simd       77      115        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -18652,11 +18858,11 @@ impl AntiSandwich<Dipole> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       61      106        0
-    //    simd4        3        3        0
+    //      f32       41       83        0
+    //    simd4        8        9        0
     // Totals...
-    // yes simd       64      109        0
-    //  no simd       73      118        0
+    // yes simd       49       92        0
+    //  no simd       73      119        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -18696,11 +18902,11 @@ impl AntiSandwich<DipoleInversion> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       76      120        0
-    //    simd4        4        4        0
+    //      f32       56       97        0
+    //    simd4        9       10        0
     // Totals...
-    // yes simd       80      124        0
-    //  no simd       92      136        0
+    // yes simd       65      107        0
+    //  no simd       92      137        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -18742,11 +18948,11 @@ impl AntiSandwich<DualNum> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       70        0
-    //    simd4        0        2        0
+    //      f32       12       31        0
+    //    simd4        9       12        0
     // Totals...
-    // yes simd       44       72        0
-    //  no simd       44       78        0
+    // yes simd       21       43        0
+    //  no simd       48       79        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -18769,8 +18975,12 @@ impl AntiSandwich<DualNum> for FlatPoint {
 impl AntiSandwich<FlatPoint> for FlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       32        0
+    //           add/sub      mul      div
+    //      f32       15       28        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       15       29        0
+    //  no simd       15       32        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -18790,10 +19000,10 @@ impl AntiSandwich<Flector> for FlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       32        0
-    //    simd4        2        4        0
+    //      f32       16       28        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       18       36        0
+    // yes simd       18       33        0
     //  no simd       24       48        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
@@ -18814,8 +19024,12 @@ impl AntiSandwich<Flector> for FlatPoint {
 impl AntiSandwich<Line> for FlatPoint {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       43        0
+    //           add/sub      mul      div
+    //      f32       12       23        0
+    //    simd4        2        5        0
+    // Totals...
+    // yes simd       14       28        0
+    //  no simd       20       43        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -18839,8 +19053,12 @@ impl AntiSandwich<Line> for FlatPoint {
 impl AntiSandwich<Motor> for FlatPoint {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       48        0
+    //           add/sub      mul      div
+    //      f32       16       28        0
+    //    simd4        2        5        0
+    // Totals...
+    // yes simd       18       33        0
+    //  no simd       24       48        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -18869,13 +19087,13 @@ impl AntiSandwich<MultiVector> for FlatPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      137      198        0
-    //    simd2        1        1        0
-    //    simd3        8       12        0
-    //    simd4        8        8        0
+    //      f32       79      121        0
+    //    simd2        2        2        0
+    //    simd3       16       24        0
+    //    simd4       16       18        0
     // Totals...
-    // yes simd      154      219        0
-    //  no simd      195      268        0
+    // yes simd      113      165        0
+    //  no simd      195      269        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = MultiVector::from_groups(
@@ -18963,10 +19181,10 @@ impl AntiSandwich<Plane> for FlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       39        0
-    //    simd4        1        1        0
+    //      f32       14       35        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       15       40        0
+    // yes simd       15       37        0
     //  no simd       18       43        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
@@ -18991,8 +19209,12 @@ impl AntiSandwich<Plane> for FlatPoint {
 impl AntiSandwich<RoundPoint> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       53       87        0
+    //           add/sub      mul      div
+    //      f32       21       48        0
+    //    simd4        9       10        0
+    // Totals...
+    // yes simd       30       58        0
+    //  no simd       57       88        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -19027,10 +19249,10 @@ impl AntiSandwich<Scalar> for FlatPoint {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       12        0
-    //    simd4        0        2        0
+    //      f32        3        8        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        3       14        0
+    // yes simd        3       11        0
     //  no simd        3       20        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -19044,8 +19266,12 @@ impl AntiSandwich<Scalar> for FlatPoint {
 impl AntiSandwich<Sphere> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       53       92        0
+    //           add/sub      mul      div
+    //      f32       37       73        0
+    //    simd4        4        5        0
+    // Totals...
+    // yes simd       41       78        0
+    //  no simd       53       93        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -19080,10 +19306,10 @@ impl AntiSandwich<VersorEven> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       75      108        0
-    //    simd4        6        6        0
+    //      f32       39       60        0
+    //    simd4       15       18        0
     // Totals...
-    // yes simd       81      114        0
+    // yes simd       54       78        0
     //  no simd       99      132        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -19142,11 +19368,11 @@ impl AntiSandwich<VersorOdd> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       80      124        0
-    //    simd4        4        4        0
+    //      f32       60      101        0
+    //    simd4        9       10        0
     // Totals...
-    // yes simd       84      128        0
-    //  no simd       96      140        0
+    // yes simd       69      111        0
+    //  no simd       96      141        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -19200,11 +19426,11 @@ impl AntiSandwich<AntiCircleRotor> for Flector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      140      179        0
-    //    simd4       11       11        0
+    //      f32       69      106        0
+    //    simd4       29       30        0
     // Totals...
-    // yes simd      151      190        0
-    //  no simd      184      223        0
+    // yes simd       98      136        0
+    //  no simd      185      226        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -19256,11 +19482,11 @@ impl AntiSandwich<AntiDipoleInversion> for Flector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      152      184        0
-    //    simd4       17       17        0
+    //      f32       59       81        0
+    //    simd4       41       43        0
     // Totals...
-    // yes simd      169      201        0
-    //  no simd      220      252        0
+    // yes simd      100      124        0
+    //  no simd      223      253        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -19328,11 +19554,11 @@ impl AntiSandwich<AntiDualNum> for Flector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      148        0
-    //    simd4        0        4        0
+    //      f32       45       75        0
+    //    simd4       18       23        0
     // Totals...
-    // yes simd      116      152        0
-    //  no simd      116      164        0
+    // yes simd       63       98        0
+    //  no simd      117      167        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -19361,11 +19587,11 @@ impl AntiSandwich<AntiFlatPoint> for Flector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       60        0
-    //    simd4        2        4        0
+    //      f32       16       24        0
+    //    simd4       10       13        0
     // Totals...
-    // yes simd       46       64        0
-    //  no simd       52       76        0
+    // yes simd       26       37        0
+    //  no simd       56       76        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -19386,11 +19612,11 @@ impl AntiSandwich<AntiFlector> for Flector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       76        0
-    //    simd4        6        6        0
+    //      f32       28       40        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd       62       82        0
-    //  no simd       80      100        0
+    // yes simd       42       55        0
+    //  no simd       84      100        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -19428,10 +19654,10 @@ impl AntiSandwich<AntiLine> for Flector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       73        0
-    //    simd4        4        4        0
+    //      f32       28       45        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       56       77        0
+    // yes simd       38       56        0
     //  no simd       68       89        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
@@ -19462,10 +19688,10 @@ impl AntiSandwich<AntiMotor> for Flector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       68        0
-    //    simd4        8        8        0
+    //      f32       28       40        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd       60       76        0
+    // yes simd       42       55        0
     //  no simd       84      100        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
@@ -19501,11 +19727,11 @@ impl AntiSandwich<AntiPlane> for Flector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       68        0
-    //    simd4        3        3        0
+    //      f32       20       32        0
+    //    simd4       11       12        0
     // Totals...
-    // yes simd       51       71        0
-    //  no simd       60       80        0
+    // yes simd       31       44        0
+    //  no simd       64       80        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -19531,10 +19757,10 @@ impl AntiSandwich<AntiScalar> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       52        0
-    //    simd4        0        2        0
+    //      f32        8       16        0
+    //    simd4        8       11        0
     // Totals...
-    // yes simd       40       54        0
+    // yes simd       16       27        0
     //  no simd       40       60        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -19551,11 +19777,11 @@ impl AntiSandwich<Circle> for Flector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      184        0
-    //    simd4        7        7        0
+    //      f32       55       81        0
+    //    simd4       31       33        0
     // Totals...
-    // yes simd      155      191        0
-    //  no simd      176      212        0
+    // yes simd       86      114        0
+    //  no simd      179      213        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -19612,11 +19838,11 @@ impl AntiSandwich<CircleRotor> for Flector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      152      188        0
-    //    simd4        8        8        0
+    //      f32       59       85        0
+    //    simd4       32       34        0
     // Totals...
-    // yes simd      160      196        0
-    //  no simd      184      220        0
+    // yes simd       91      119        0
+    //  no simd      187      221        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -19677,11 +19903,11 @@ impl AntiSandwich<Dipole> for Flector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      140      179        0
-    //    simd4        9        9        0
+    //      f32       69      106        0
+    //    simd4       27       28        0
     // Totals...
-    // yes simd      149      188        0
-    //  no simd      176      215        0
+    // yes simd       96      134        0
+    //  no simd      177      218        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -19731,11 +19957,11 @@ impl AntiSandwich<DipoleInversion> for Flector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      187        0
-    //    simd4       17       17        0
+    //      f32       77      114        0
+    //    simd4       35       36        0
     // Totals...
-    // yes simd      165      204        0
-    //  no simd      216      255        0
+    // yes simd      112      150        0
+    //  no simd      217      258        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -19804,11 +20030,11 @@ impl AntiSandwich<DualNum> for Flector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      144        0
-    //    simd4        0        2        0
+    //      f32       23       41        0
+    //    simd4       24       28        0
     // Totals...
-    // yes simd      116      146        0
-    //  no simd      116      152        0
+    // yes simd       47       69        0
+    //  no simd      119      153        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -19837,11 +20063,11 @@ impl AntiSandwich<FlatPoint> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       60        0
-    //    simd4        2        4        0
+    //      f32       20       33        0
+    //    simd4        8       11        0
     // Totals...
-    // yes simd       46       64        0
-    //  no simd       52       76        0
+    // yes simd       28       44        0
+    //  no simd       52       77        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -19862,11 +20088,11 @@ impl AntiSandwich<Flector> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       68        0
-    //    simd4        8        8        0
+    //      f32       24       41        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd       56       76        0
-    //  no simd       80      100        0
+    // yes simd       38       56        0
+    //  no simd       80      101        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -19897,10 +20123,10 @@ impl AntiSandwich<Line> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       60       80        0
-    //    simd4        2        2        0
+    //      f32       28       44        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       62       82        0
+    // yes simd       38       55        0
     //  no simd       68       88        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
@@ -19934,10 +20160,10 @@ impl AntiSandwich<Motor> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       68        0
-    //    simd4        8        8        0
+    //      f32       20       32        0
+    //    simd4       16       17        0
     // Totals...
-    // yes simd       60       76        0
+    // yes simd       36       49        0
     //  no simd       84      100        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
@@ -19970,12 +20196,12 @@ impl AntiSandwich<MultiVector> for Flector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      291      350        0
-    //    simd2        4        4        0
-    //    simd3       20       22        0
-    //    simd4       23       23        0
+    //      f32      147      192        0
+    //    simd2        8        8        0
+    //    simd3       40       44        0
+    //    simd4       42       44        0
     // Totals...
-    // yes simd      338      399        0
+    // yes simd      237      288        0
     //  no simd      451      516        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -20103,11 +20329,11 @@ impl AntiSandwich<Plane> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       68        0
-    //    simd4        3        3        0
+    //      f32       24       41        0
+    //    simd4        9       10        0
     // Totals...
-    // yes simd       51       71        0
-    //  no simd       60       80        0
+    // yes simd       33       51        0
+    //  no simd       60       81        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -20132,8 +20358,12 @@ impl AntiSandwich<Plane> for Flector {
 impl AntiSandwich<RoundPoint> for Flector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      136      176        0
+    //           add/sub      mul      div
+    //      f32       43       73        0
+    //    simd4       24       26        0
+    // Totals...
+    // yes simd       67       99        0
+    //  no simd      139      177        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -20173,10 +20403,10 @@ impl AntiSandwich<Scalar> for Flector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       52        0
-    //    simd4        0        4        0
+    //      f32       16       24        0
+    //    simd4        6       11        0
     // Totals...
-    // yes simd       40       56        0
+    // yes simd       22       35        0
     //  no simd       40       68        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -20193,11 +20423,11 @@ impl AntiSandwich<Sphere> for Flector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      128      164        0
-    //    simd4        2        4        0
+    //      f32       57       91        0
+    //    simd4       20       23        0
     // Totals...
-    // yes simd      130      168        0
-    //  no simd      136      180        0
+    // yes simd       77      114        0
+    //  no simd      137      183        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorEven::from_groups(
@@ -20233,11 +20463,11 @@ impl AntiSandwich<VersorEven> for Flector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      144      176        0
-    //    simd4       21       21        0
+    //      f32       51       73        0
+    //    simd4       45       47        0
     // Totals...
-    // yes simd      165      197        0
-    //  no simd      228      260        0
+    // yes simd       96      120        0
+    //  no simd      231      261        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -20312,11 +20542,11 @@ impl AntiSandwich<VersorOdd> for Flector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      141      179        0
-    //    simd4       21       21        0
+    //      f32       70      106        0
+    //    simd4       39       40        0
     // Totals...
-    // yes simd      162      200        0
-    //  no simd      225      263        0
+    // yes simd      109      146        0
+    //  no simd      226      266        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -20382,8 +20612,13 @@ impl InfixAntiSandwich for Line {}
 impl AntiSandwich<AntiCircleRotor> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      130      168        0
+    //           add/sub      mul      div
+    //      f32      118      150        0
+    //    simd3        0        2        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd      121      155        0
+    //  no simd      130      168        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -20449,10 +20684,11 @@ impl AntiSandwich<AntiDipoleInversion> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      130      168        0
-    //    simd4        6        6        0
+    //      f32      102      134        0
+    //    simd3        0        2        0
+    //    simd4       13       13        0
     // Totals...
-    // yes simd      136      174        0
+    // yes simd      115      149        0
     //  no simd      154      192        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -20524,10 +20760,11 @@ impl AntiSandwich<AntiDualNum> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       77      111        0
-    //    simd3        0        1        0
+    //      f32       73      101        0
+    //    simd3        0        3        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       77      112        0
+    // yes simd       74      105        0
     //  no simd       77      114        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -20561,8 +20798,13 @@ impl AntiSandwich<AntiDualNum> for Line {
 impl AntiSandwich<AntiFlatPoint> for Line {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       57        0
+    //           add/sub      mul      div
+    //      f32       28       43        0
+    //    simd3        0        2        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       30       47        0
+    //  no simd       36       57        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -20587,10 +20829,11 @@ impl AntiSandwich<AntiFlector> for Line {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       70        0
-    //    simd4        2        2        0
+    //      f32       40       56        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       50       72        0
+    // yes simd       44       62        0
     //  no simd       56       78        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
@@ -20623,8 +20866,13 @@ impl AntiSandwich<AntiFlector> for Line {
 impl AntiSandwich<AntiLine> for Line {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       47       69        0
+    //           add/sub      mul      div
+    //      f32       35       51        0
+    //    simd3        0        2        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       38       56        0
+    //  no simd       47       69        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -20656,10 +20904,11 @@ impl AntiSandwich<AntiMotor> for Line {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       66        0
-    //    simd4        3        3        0
+    //      f32       32       48        0
+    //    simd3        0        2        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       47       69        0
+    // yes simd       38       56        0
     //  no simd       56       78        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
@@ -20689,10 +20938,11 @@ impl AntiSandwich<AntiPlane> for Line {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       58        0
-    //    simd4        2        2        0
+    //      f32       25       44        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       35       60        0
+    // yes simd       29       50        0
     //  no simd       41       66        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
@@ -20718,10 +20968,10 @@ impl AntiSandwich<AntiScalar> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       33        0
-    //    simd3        0        2        0
+    //      f32       19       27        0
+    //    simd3        0        4        0
     // Totals...
-    // yes simd       19       35        0
+    // yes simd       19       31        0
     //  no simd       19       39        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -20738,10 +20988,11 @@ impl AntiSandwich<Circle> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      154        0
-    //    simd4        2        2        0
+    //      f32       88      120        0
+    //    simd3        0        2        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd      118      156        0
+    // yes simd       97      131        0
     //  no simd      124      162        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -20792,10 +21043,11 @@ impl AntiSandwich<CircleRotor> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      118      156        0
-    //    simd4        3        3        0
+    //      f32       90      122        0
+    //    simd3        0        2        0
+    //    simd4       10       10        0
     // Totals...
-    // yes simd      121      159        0
+    // yes simd      100      134        0
     //  no simd      130      168        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -20849,8 +21101,13 @@ impl AntiSandwich<CircleRotor> for Line {
 impl AntiSandwich<Dipole> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      124      162        0
+    //           add/sub      mul      div
+    //      f32      112      144        0
+    //    simd3        0        2        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd      115      149        0
+    //  no simd      124      162        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -20909,10 +21166,11 @@ impl AntiSandwich<DipoleInversion> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      146      184        0
-    //    simd4        2        2        0
+    //      f32      134      166        0
+    //    simd3        0        2        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd      148      186        0
+    // yes simd      139      173        0
     //  no simd      154      192        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -20992,10 +21250,11 @@ impl AntiSandwich<DualNum> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       77      108        0
-    //    simd3        0        1        0
+    //      f32       65       90        0
+    //    simd3        0        3        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd       77      109        0
+    // yes simd       68       96        0
     //  no simd       77      111        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -21029,8 +21288,13 @@ impl AntiSandwich<DualNum> for Line {
 impl AntiSandwich<FlatPoint> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       57        0
+    //           add/sub      mul      div
+    //      f32       28       43        0
+    //    simd3        0        2        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       30       47        0
+    //  no simd       36       57        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -21055,10 +21319,11 @@ impl AntiSandwich<Flector> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       70        0
-    //    simd4        2        2        0
+    //      f32       40       56        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       50       72        0
+    // yes simd       44       62        0
     //  no simd       56       78        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
@@ -21096,8 +21361,13 @@ impl AntiSandwich<Flector> for Line {
 impl AntiSandwich<Line> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       47       69        0
+    //           add/sub      mul      div
+    //      f32       35       51        0
+    //    simd3        0        2        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       38       56        0
+    //  no simd       47       69        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -21129,10 +21399,11 @@ impl AntiSandwich<Motor> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       66        0
-    //    simd4        3        3        0
+    //      f32       32       48        0
+    //    simd3        0        2        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       47       69        0
+    // yes simd       38       56        0
     //  no simd       56       78        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
@@ -21162,12 +21433,12 @@ impl AntiSandwich<MultiVector> for Line {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      251      307        0
-    //    simd2        5        6        0
-    //    simd3       17       21        0
-    //    simd4        2        2        0
+    //      f32      174      210        0
+    //    simd2       10       12        0
+    //    simd3       34       44        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd      275      336        0
+    // yes simd      224      272        0
     //  no simd      320      390        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -21296,10 +21567,11 @@ impl AntiSandwich<Plane> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       55        0
-    //    simd4        2        2        0
+    //      f32       25       41        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       35       57        0
+    // yes simd       29       47        0
     //  no simd       41       63        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
@@ -21325,11 +21597,11 @@ impl AntiSandwich<RoundPoint> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       82      118        0
-    //    simd3        0        1        0
-    //    simd4        2        2        0
+    //      f32       70      100        0
+    //    simd3        0        3        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       84      121        0
+    // yes simd       75      108        0
     //  no simd       90      129        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -21366,10 +21638,10 @@ impl AntiSandwich<Scalar> for Line {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       33        0
-    //    simd3        0        2        0
+    //      f32       19       27        0
+    //    simd3        0        4        0
     // Totals...
-    // yes simd       19       35        0
+    // yes simd       19       31        0
     //  no simd       19       39        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -21386,11 +21658,11 @@ impl AntiSandwich<Sphere> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       86      119        0
-    //    simd3        0        1        0
-    //    simd4        1        1        0
+    //      f32       82      109        0
+    //    simd3        0        3        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       87      121        0
+    // yes simd       84      114        0
     //  no simd       90      126        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -21426,10 +21698,11 @@ impl AntiSandwich<VersorEven> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      120      158        0
-    //    simd4       10       10        0
+    //      f32       92      124        0
+    //    simd3        0        2        0
+    //    simd4       17       17        0
     // Totals...
-    // yes simd      130      168        0
+    // yes simd      109      143        0
     //  no simd      160      198        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -21501,10 +21774,11 @@ impl AntiSandwich<VersorOdd> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      140      178        0
-    //    simd4        5        5        0
+    //      f32      128      160        0
+    //    simd3        0        2        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd      145      183        0
+    // yes simd      136      170        0
     //  no simd      160      198        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -21578,10 +21852,10 @@ impl AntiSandwich<AntiCircleRotor> for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      186        0
-    //    simd4        9        9        0
+    //      f32       88      126        0
+    //    simd4       24       24        0
     // Totals...
-    // yes simd      157      195        0
+    // yes simd      112      150        0
     //  no simd      184      222        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -21654,11 +21928,11 @@ impl AntiSandwich<AntiDipoleInversion> for Motor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      186        0
-    //    simd4       17       17        0
+    //      f32       77      114        0
+    //    simd4       35       35        0
     // Totals...
-    // yes simd      165      203        0
-    //  no simd      216      254        0
+    // yes simd      112      149        0
+    //  no simd      217      254        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -21729,10 +22003,10 @@ impl AntiSandwich<AntiDualNum> for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      151        0
-    //    simd4        0        2        0
+    //      f32       56       91        0
+    //    simd4       15       17        0
     // Totals...
-    // yes simd      116      153        0
+    // yes simd       71      108        0
     //  no simd      116      159        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -21766,8 +22040,12 @@ impl AntiSandwich<AntiDualNum> for Motor {
 impl AntiSandwich<AntiFlatPoint> for Motor {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       52       74        0
+    //           add/sub      mul      div
+    //      f32       28       51        0
+    //    simd4        6        6        0
+    // Totals...
+    // yes simd       34       57        0
+    //  no simd       52       75        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -21796,11 +22074,11 @@ impl AntiSandwich<AntiFlector> for Motor {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       70        0
-    //    simd4        8        8        0
+    //      f32       28       47        0
+    //    simd4       14       14        0
     // Totals...
-    // yes simd       60       78        0
-    //  no simd       84      102        0
+    // yes simd       42       61        0
+    //  no simd       84      103        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -21832,10 +22110,10 @@ impl AntiSandwich<AntiLine> for Motor {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        3        3        0
+    //      f32       32       54        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       59       81        0
+    // yes simd       41       63        0
     //  no simd       68       90        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
@@ -21865,10 +22143,10 @@ impl AntiSandwich<AntiMotor> for Motor {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        6        6        0
+    //      f32       32       54        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd       62       84        0
+    // yes simd       44       66        0
     //  no simd       80      102        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
@@ -21901,11 +22179,11 @@ impl AntiSandwich<AntiPlane> for Motor {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       70        0
-    //    simd4        4        4        0
+    //      f32       20       47        0
+    //    simd4       10       10        0
     // Totals...
-    // yes simd       48       74        0
-    //  no simd       60       86        0
+    // yes simd       30       57        0
+    //  no simd       60       87        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -21932,10 +22210,10 @@ impl AntiSandwich<AntiScalar> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       54        0
-    //    simd4        0        2        0
+    //      f32       16       30        0
+    //    simd4        6        8        0
     // Totals...
-    // yes simd       40       56        0
+    // yes simd       22       38        0
     //  no simd       40       62        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -21952,11 +22230,11 @@ impl AntiSandwich<Circle> for Motor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      152      190        0
-    //    simd4        6        6        0
+    //      f32       81      118        0
+    //    simd4       24       24        0
     // Totals...
-    // yes simd      158      196        0
-    //  no simd      176      214        0
+    // yes simd      105      142        0
+    //  no simd      177      214        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -22008,11 +22286,11 @@ impl AntiSandwich<CircleRotor> for Motor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      152      190        0
-    //    simd4        8        8        0
+    //      f32       81      118        0
+    //    simd4       26       26        0
     // Totals...
-    // yes simd      160      198        0
-    //  no simd      184      222        0
+    // yes simd      107      144        0
+    //  no simd      185      222        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -22071,10 +22349,10 @@ impl AntiSandwich<Dipole> for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      144      182        0
-    //    simd4        8        8        0
+    //      f32       84      122        0
+    //    simd4       23       23        0
     // Totals...
-    // yes simd      152      190        0
+    // yes simd      107      145        0
     //  no simd      176      214        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -22132,10 +22410,10 @@ impl AntiSandwich<DipoleInversion> for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      152      190        0
-    //    simd4       16       16        0
+    //      f32       92      130        0
+    //    simd4       31       31        0
     // Totals...
-    // yes simd      168      206        0
+    // yes simd      123      161        0
     //  no simd      216      254        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -22216,11 +22494,11 @@ impl AntiSandwich<DualNum> for Motor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      146        0
-    //    simd4        0        2        0
+    //      f32       45       74        0
+    //    simd4       18       20        0
     // Totals...
-    // yes simd      116      148        0
-    //  no simd      116      154        0
+    // yes simd       63       94        0
+    //  no simd      117      154        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -22248,8 +22526,12 @@ impl AntiSandwich<DualNum> for Motor {
 impl AntiSandwich<FlatPoint> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       52       74        0
+    //           add/sub      mul      div
+    //      f32       24       42        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       32       50        0
+    //  no simd       56       74        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -22278,11 +22560,11 @@ impl AntiSandwich<Flector> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       79        0
-    //    simd4        6        6        0
+    //      f32       28       47        0
+    //    simd4       14       14        0
     // Totals...
-    // yes simd       62       85        0
-    //  no simd       80      103        0
+    // yes simd       42       61        0
+    //  no simd       84      103        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -22327,10 +22609,10 @@ impl AntiSandwich<Line> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        3        3        0
+    //      f32       32       54        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       59       81        0
+    // yes simd       41       63        0
     //  no simd       68       90        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
@@ -22360,10 +22642,10 @@ impl AntiSandwich<Motor> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        6        6        0
+    //      f32       32       54        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd       62       84        0
+    // yes simd       44       66        0
     //  no simd       80      102        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
@@ -22396,13 +22678,13 @@ impl AntiSandwich<MultiVector> for Motor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      289      349        0
-    //    simd2        7        8        0
-    //    simd3       23       26        0
-    //    simd4       19       19        0
+    //      f32      124      174        0
+    //    simd2       14       16        0
+    //    simd3       44       50        0
+    //    simd4       41       41        0
     // Totals...
-    // yes simd      338      402        0
-    //  no simd      448      519        0
+    // yes simd      223      281        0
+    //  no simd      448      520        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = MultiVector::from_groups(
@@ -22544,11 +22826,11 @@ impl AntiSandwich<Plane> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       70        0
-    //    simd4        3        3        0
+    //      f32       20       38        0
+    //    simd4       11       11        0
     // Totals...
-    // yes simd       51       73        0
-    //  no simd       60       82        0
+    // yes simd       31       49        0
+    //  no simd       64       82        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -22574,11 +22856,11 @@ impl AntiSandwich<RoundPoint> for Motor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      128      162        0
-    //    simd4        2        3        0
+    //      f32       57       90        0
+    //    simd4       20       21        0
     // Totals...
-    // yes simd      130      165        0
-    //  no simd      136      174        0
+    // yes simd       77      111        0
+    //  no simd      137      174        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorEven::from_groups(
@@ -22618,10 +22900,10 @@ impl AntiSandwich<Scalar> for Motor {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       54        0
-    //    simd4        0        2        0
+    //      f32       16       30        0
+    //    simd4        6        8        0
     // Totals...
-    // yes simd       40       56        0
+    // yes simd       22       38        0
     //  no simd       40       62        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -22638,10 +22920,10 @@ impl AntiSandwich<Sphere> for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      124      159        0
-    //    simd4        3        4        0
+    //      f32       64       99        0
+    //    simd4       18       19        0
     // Totals...
-    // yes simd      127      163        0
+    // yes simd       82      118        0
     //  no simd      136      175        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -22679,11 +22961,11 @@ impl AntiSandwich<VersorEven> for Motor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      187        0
-    //    simd4       19       19        0
+    //      f32       77      115        0
+    //    simd4       37       37        0
     // Totals...
-    // yes simd      167      206        0
-    //  no simd      224      263        0
+    // yes simd      114      152        0
+    //  no simd      225      263        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -22757,10 +23039,10 @@ impl AntiSandwich<VersorOdd> for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      160      198        0
-    //    simd4       16       16        0
+    //      f32      100      138        0
+    //    simd4       31       31        0
     // Totals...
-    // yes simd      176      214        0
+    // yes simd      131      169        0
     //  no simd      224      262        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -22844,12 +23126,12 @@ impl AntiSandwich<AntiCircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1094     1172        0
-    //    simd2        1        1        0
-    //    simd3       36       38        0
-    //    simd4       27       27        0
+    //      f32      456      508        0
+    //    simd2       17       17        0
+    //    simd3      154      162        0
+    //    simd4       90       92        0
     // Totals...
-    // yes simd     1158     1238        0
+    // yes simd      717      779        0
     //  no simd     1312     1396        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
@@ -23042,12 +23324,12 @@ impl AntiSandwich<AntiDipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1114     1196        0
-    //    simd2       11       11        0
-    //    simd3       52       54        0
-    //    simd4       37       37        0
+    //      f32      476      532        0
+    //    simd2       27       27        0
+    //    simd3      170      178        0
+    //    simd4      100      102        0
     // Totals...
-    // yes simd     1214     1298        0
+    // yes simd      773      839        0
     //  no simd     1440     1528        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
@@ -23290,11 +23572,12 @@ impl AntiSandwich<AntiDualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1001     1077        0
-    //    simd3        5       10        0
-    //    simd4        2        2        0
+    //      f32      363      413        0
+    //    simd2       16       16        0
+    //    simd3      123      134        0
+    //    simd4       65       67        0
     // Totals...
-    // yes simd     1008     1089        0
+    // yes simd      567      630        0
     //  no simd     1024     1115        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
@@ -23356,12 +23639,12 @@ impl AntiSandwich<AntiFlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1024     1099        0
-    //    simd2        3        3        0
-    //    simd3        6        9        0
-    //    simd4       11       11        0
+    //      f32      386      435        0
+    //    simd2       19       19        0
+    //    simd3      124      133        0
+    //    simd4       74       76        0
     // Totals...
-    // yes simd     1044     1122        0
+    // yes simd      603      663        0
     //  no simd     1092     1176        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
@@ -23448,12 +23731,12 @@ impl AntiSandwich<AntiFlector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1068     1150        0
-    //    simd2        4        4        0
-    //    simd3       20       22        0
-    //    simd4       20       20        0
+    //      f32      430      486        0
+    //    simd2       20       20        0
+    //    simd3      138      146        0
+    //    simd4       83       85        0
     // Totals...
-    // yes simd     1112     1196        0
+    // yes simd      671      737        0
     //  no simd     1216     1304        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
@@ -23594,11 +23877,12 @@ impl AntiSandwich<AntiLine> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1089     1161        0
-    //    simd3       17       21        0
-    //    simd4        3        3        0
+    //      f32      451      497        0
+    //    simd2       16       16        0
+    //    simd3      135      145        0
+    //    simd4       66       68        0
     // Totals...
-    // yes simd     1109     1185        0
+    // yes simd      668      726        0
     //  no simd     1152     1236        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
@@ -23732,11 +24016,12 @@ impl AntiSandwich<AntiMotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1057     1131        0
-    //    simd3       20       22        0
-    //    simd4       25       26        0
+    //      f32      419      467        0
+    //    simd2       16       16        0
+    //    simd3      138      146        0
+    //    simd4       88       91        0
     // Totals...
-    // yes simd     1102     1179        0
+    // yes simd      661      720        0
     //  no simd     1217     1301        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
@@ -23879,12 +24164,12 @@ impl AntiSandwich<AntiPlane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1024     1103        0
-    //    simd2        1        1        0
-    //    simd3       10       13        0
-    //    simd4        8        8        0
+    //      f32      386      439        0
+    //    simd2       17       17        0
+    //    simd3      128      137        0
+    //    simd4       71       73        0
     // Totals...
-    // yes simd     1043     1125        0
+    // yes simd      602      666        0
     //  no simd     1088     1176        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
@@ -23963,12 +24248,12 @@ impl AntiSandwich<AntiScalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      992     1046        0
-    //    simd2        0        1        0
-    //    simd3        0        4        0
-    //    simd4        0        4        0
+    //      f32      354      382        0
+    //    simd2       16       17        0
+    //    simd3      118      128        0
+    //    simd4       63       69        0
     // Totals...
-    // yes simd      992     1055        0
+    // yes simd      551      596        0
     //  no simd      992     1076        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -24003,12 +24288,12 @@ impl AntiSandwich<Circle> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1094     1167        0
-    //    simd2        9        9        0
-    //    simd3       36       40        0
-    //    simd4       15       15        0
+    //      f32      456      503        0
+    //    simd2       25       25        0
+    //    simd3      154      164        0
+    //    simd4       78       80        0
     // Totals...
-    // yes simd     1154     1231        0
+    // yes simd      713      772        0
     //  no simd     1280     1365        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         use crate::elements::*;
@@ -24180,12 +24465,12 @@ impl AntiSandwich<CircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1073     1149        0
-    //    simd2       10       10        0
-    //    simd3       37       40        0
-    //    simd4       27       27        0
+    //      f32      435      485        0
+    //    simd2       26       26        0
+    //    simd3      155      164        0
+    //    simd4       90       92        0
     // Totals...
-    // yes simd     1147     1226        0
+    // yes simd      706      767        0
     //  no simd     1312     1397        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
@@ -24357,12 +24642,12 @@ impl AntiSandwich<Dipole> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1112     1190        0
-    //    simd2        1        1        0
-    //    simd3       34       36        0
-    //    simd4       16       16        0
+    //      f32      474      526        0
+    //    simd2       17       17        0
+    //    simd3      152      160        0
+    //    simd4       79       81        0
     // Totals...
-    // yes simd     1163     1243        0
+    // yes simd      722      784        0
     //  no simd     1280     1364        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
@@ -24554,12 +24839,12 @@ impl AntiSandwich<DipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1144     1222        0
-    //    simd2        4        4        0
-    //    simd3       48       50        0
-    //    simd4       36       36        0
+    //      f32      506      558        0
+    //    simd2       20       20        0
+    //    simd3      166      174        0
+    //    simd4       99      101        0
     // Totals...
-    // yes simd     1232     1312        0
+    // yes simd      791      853        0
     //  no simd     1440     1524        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
@@ -24827,12 +25112,12 @@ impl AntiSandwich<DualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      998     1062        0
-    //    simd2        1        2        0
-    //    simd3        5        9        0
-    //    simd4        3        4        0
+    //      f32      360      398        0
+    //    simd2       17       18        0
+    //    simd3      123      133        0
+    //    simd4       66       69        0
     // Totals...
-    // yes simd     1007     1077        0
+    // yes simd      566      618        0
     //  no simd     1027     1109        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
@@ -24884,12 +25169,12 @@ impl AntiSandwich<FlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1030     1103        0
-    //    simd2        1        1        0
-    //    simd3        8       12        0
-    //    simd4        8        9        0
+    //      f32      392      439        0
+    //    simd2       17       17        0
+    //    simd3      126      136        0
+    //    simd4       71       74        0
     // Totals...
-    // yes simd     1047     1125        0
+    // yes simd      606      666        0
     //  no simd     1088     1177        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
@@ -24967,12 +25252,12 @@ impl AntiSandwich<Flector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1072     1146        0
-    //    simd2        4        4        0
-    //    simd3       20       22        0
-    //    simd4       19       20        0
+    //      f32      434      482        0
+    //    simd2       20       20        0
+    //    simd3      138      146        0
+    //    simd4       82       85        0
     // Totals...
-    // yes simd     1115     1192        0
+    // yes simd      674      733        0
     //  no simd     1216     1300        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
@@ -25116,12 +25401,12 @@ impl AntiSandwich<Line> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1075     1145        0
-    //    simd2        5        6        0
-    //    simd3       17       21        0
-    //    simd4        4        4        0
+    //      f32      437      481        0
+    //    simd2       21       22        0
+    //    simd3      135      145        0
+    //    simd4       67       69        0
     // Totals...
-    // yes simd     1101     1176        0
+    // yes simd      660      717        0
     //  no simd     1152     1236        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
@@ -25249,12 +25534,12 @@ impl AntiSandwich<Motor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1051     1125        0
-    //    simd2        7        8        0
-    //    simd3       21       24        0
-    //    simd4       22       22        0
+    //      f32      413      461        0
+    //    simd2       23       24        0
+    //    simd3      139      148        0
+    //    simd4       85       87        0
     // Totals...
-    // yes simd     1101     1179        0
+    // yes simd      660      720        0
     //  no simd     1216     1301        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
@@ -25396,12 +25681,12 @@ impl AntiSandwich<MultiVector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1346     1424        0
-    //    simd2       16       16        0
-    //    simd3      118      120        0
-    //    simd4       63       63        0
+    //      f32      708      760        0
+    //    simd2       32       32        0
+    //    simd3      236      244        0
+    //    simd4      126      128        0
     // Totals...
-    // yes simd     1543     1623        0
+    // yes simd     1102     1164        0
     //  no simd     1984     2068        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -25961,12 +26246,12 @@ impl AntiSandwich<Plane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1019     1094        0
-    //    simd2        3        3        0
-    //    simd3        9       11        0
-    //    simd4        9       10        0
+    //      f32      381      430        0
+    //    simd2       19       19        0
+    //    simd3      127      135        0
+    //    simd4       72       75        0
     // Totals...
-    // yes simd     1040     1118        0
+    // yes simd      599      659        0
     //  no simd     1088     1173        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
@@ -26044,12 +26329,12 @@ impl AntiSandwich<RoundPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1031     1106        0
-    //    simd2        2        2        0
-    //    simd3       15       18        0
-    //    simd4       10       10        0
+    //      f32      393      442        0
+    //    simd2       18       18        0
+    //    simd3      133      142        0
+    //    simd4       73       75        0
     // Totals...
-    // yes simd     1058     1136        0
+    // yes simd      617      677        0
     //  no simd     1120     1204        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -26137,12 +26422,12 @@ impl AntiSandwich<Scalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      992     1047        0
-    //    simd2        0        2        0
-    //    simd3        0        6        0
-    //    simd4        0        8        0
+    //      f32      354      383        0
+    //    simd2       16       18        0
+    //    simd3      118      130        0
+    //    simd4       63       73        0
     // Totals...
-    // yes simd      992     1063        0
+    // yes simd      551      604        0
     //  no simd      992     1101        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -26177,12 +26462,12 @@ impl AntiSandwich<Sphere> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1028     1102        0
-    //    simd2        3        3        0
-    //    simd3       14       16        0
-    //    simd4       11       12        0
+    //      f32      390      438        0
+    //    simd2       19       19        0
+    //    simd3      132      140        0
+    //    simd4       74       77        0
     // Totals...
-    // yes simd     1056     1133        0
+    // yes simd      615      674        0
     //  no simd     1120     1204        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -26270,12 +26555,12 @@ impl AntiSandwich<VersorEven> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1120     1204        0
-    //    simd2       12       12        0
-    //    simd3       52       52        0
-    //    simd4       43       43        0
+    //      f32      482      540        0
+    //    simd2       28       28        0
+    //    simd3      170      176        0
+    //    simd4      106      108        0
     // Totals...
-    // yes simd     1227     1311        0
+    // yes simd      786      852        0
     //  no simd     1472     1556        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
@@ -26519,12 +26804,12 @@ impl AntiSandwich<VersorOdd> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1154     1238        0
-    //    simd2        4        4        0
-    //    simd3       50       50        0
-    //    simd4       40       40        0
+    //      f32      516      574        0
+    //    simd2       20       20        0
+    //    simd3      168      174        0
+    //    simd4      103      105        0
     // Totals...
-    // yes simd     1248     1332        0
+    // yes simd      807      873        0
     //  no simd     1472     1556        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
@@ -26801,12 +27086,12 @@ impl AntiSandwich<AntiCircleRotor> for Plane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       53       79        0
+    //      f32       18       44        0
     //    simd3        1        2        0
-    //    simd4        5        5        0
+    //    simd4       14       14        0
     // Totals...
-    // yes simd       59       86        0
-    //  no simd       76      105        0
+    // yes simd       33       60        0
+    //  no simd       77      106        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -26839,11 +27124,11 @@ impl AntiSandwich<AntiDipoleInversion> for Plane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       57       94        0
-    //    simd4        9        9        0
+    //      f32       20       50        0
+    //    simd4       19       20        0
     // Totals...
-    // yes simd       66      103        0
-    //  no simd       93      130        0
+    // yes simd       39       70        0
+    //  no simd       96      130        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -26887,11 +27172,11 @@ impl AntiSandwich<AntiDualNum> for Plane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       71        0
-    //    simd4        0        2        0
+    //      f32        9       32        0
+    //    simd4       10       12        0
     // Totals...
-    // yes simd       48       73        0
-    //  no simd       48       79        0
+    // yes simd       19       44        0
+    //  no simd       49       80        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -26915,11 +27200,11 @@ impl AntiSandwich<AntiFlatPoint> for Plane {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       36        0
-    //    simd4        2        2        0
+    //      f32        1       12        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       23       38        0
-    //  no simd       29       44        0
+    // yes simd        9       20        0
+    //  no simd       33       44        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -26941,11 +27226,11 @@ impl AntiSandwich<AntiFlector> for Plane {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        3        3        0
+    //      f32        8       20        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       31       47        0
-    //  no simd       40       56        0
+    // yes simd       17       29        0
+    //  no simd       44       56        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -26971,10 +27256,10 @@ impl AntiSandwich<AntiLine> for Plane {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       38        0
-    //    simd4        3        3        0
+    //      f32        9       26        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       24       41        0
+    // yes simd       15       32        0
     //  no simd       33       50        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
@@ -27001,10 +27286,10 @@ impl AntiSandwich<AntiMotor> for Plane {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       45        0
-    //    simd4        3        3        0
+    //      f32       16       33        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       31       48        0
+    // yes simd       22       39        0
     //  no simd       40       57        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = AntiFlector::from_groups(
@@ -27031,11 +27316,11 @@ impl AntiSandwich<AntiPlane> for Plane {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       42        0
-    //    simd4        1        1        0
+    //      f32        4       18        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       25       43        0
-    //  no simd       28       46        0
+    // yes simd       11       25        0
+    //  no simd       32       46        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -27060,11 +27345,11 @@ impl AntiSandwich<AntiScalar> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       15        0
-    //    simd4        0        1        0
+    //      f32        4       14        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        8       16        0
-    //  no simd        8       19        0
+    // yes simd        5       16        0
+    //  no simd        8       22        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ (Simd32x4::from(other[e12345]) * self.group0()));
@@ -27075,12 +27360,12 @@ impl AntiSandwich<Circle> for Plane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       50       81        0
+    //      f32       17       41        0
     //    simd3        1        2        0
-    //    simd4        4        4        0
+    //    simd4       13       14        0
     // Totals...
-    // yes simd       55       87        0
-    //  no simd       69      103        0
+    // yes simd       31       57        0
+    //  no simd       72      103        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -27116,12 +27401,12 @@ impl AntiSandwich<CircleRotor> for Plane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       50       81        0
+    //      f32       17       41        0
     //    simd3        1        2        0
-    //    simd4        5        5        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd       56       88        0
-    //  no simd       73      107        0
+    // yes simd       32       58        0
+    //  no simd       76      107        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -27158,12 +27443,12 @@ impl AntiSandwich<Dipole> for Plane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       49       75        0
+    //      f32       14       40        0
     //    simd3        1        2        0
-    //    simd4        5        5        0
+    //    simd4       14       14        0
     // Totals...
-    // yes simd       55       82        0
-    //  no simd       72      101        0
+    // yes simd       29       56        0
+    //  no simd       73      102        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -27196,11 +27481,11 @@ impl AntiSandwich<DipoleInversion> for Plane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       93        0
-    //    simd4        9        9        0
+    //      f32       17       54        0
+    //    simd4       19       19        0
     // Totals...
-    // yes simd       65      102        0
-    //  no simd       92      129        0
+    // yes simd       36       73        0
+    //  no simd       93      130        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -27244,11 +27529,11 @@ impl AntiSandwich<DualNum> for Plane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       66        0
-    //    simd4        0        2        0
+    //      f32       11       22        0
+    //    simd4       10       13        0
     // Totals...
-    // yes simd       48       68        0
-    //  no simd       48       74        0
+    // yes simd       21       35        0
+    //  no simd       51       74        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -27267,10 +27552,10 @@ impl AntiSandwich<FlatPoint> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       40        0
-    //    simd4        1        1        0
+    //      f32       10       28        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       23       41        0
+    // yes simd       14       32        0
     //  no simd       26       44        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
@@ -27296,10 +27581,10 @@ impl AntiSandwich<Flector> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        3        3        0
+    //      f32       16       32        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       31       47        0
+    // yes simd       22       38        0
     //  no simd       40       56        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
@@ -27326,10 +27611,10 @@ impl AntiSandwich<Line> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       44        0
-    //    simd4        2        2        0
+    //      f32       13       32        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       27       46        0
+    // yes simd       18       37        0
     //  no simd       33       52        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
@@ -27355,10 +27640,10 @@ impl AntiSandwich<Motor> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       44        0
-    //    simd4        4        4        0
+    //      f32       12       32        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       28       48        0
+    // yes simd       19       39        0
     //  no simd       40       60        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = Flector::from_groups(
@@ -27386,13 +27671,13 @@ impl AntiSandwich<MultiVector> for Plane {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      115      179        0
-    //    simd2        3        3        0
-    //    simd3        9       11        0
-    //    simd4       11       11        0
+    //      f32       46      101        0
+    //    simd2        6        6        0
+    //    simd3       18       22        0
+    //    simd4       20       21        0
     // Totals...
-    // yes simd      138      204        0
-    //  no simd      192      262        0
+    // yes simd       90      150        0
+    //  no simd      192      263        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = MultiVector::from_groups(
@@ -27475,10 +27760,10 @@ impl AntiSandwich<Plane> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       42        0
-    //    simd4        1        1        0
+    //      f32       12       30        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       25       43        0
+    // yes simd       16       34        0
     //  no simd       28       46        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = Motor::from_groups(
@@ -27504,11 +27789,12 @@ impl AntiSandwich<RoundPoint> for Plane {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       38       62        0
-    //    simd3        0        1        0
+    //      f32        9       26        0
+    //    simd3        1        3        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       38       63        0
-    //  no simd       38       65        0
+    // yes simd       18       37        0
+    //  no simd       44       67        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiCircleRotor::from_groups(
@@ -27536,11 +27822,11 @@ impl AntiSandwich<Scalar> for Plane {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       15        0
-    //    simd4        0        2        0
+    //      f32        4       14        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        8       17        0
-    //  no simd        8       23        0
+    // yes simd        5       17        0
+    //  no simd        8       26        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiPlane::from_groups(/* e1, e2, e3, e5 */ (Simd32x4::from(other[scalar]) * self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0])));
@@ -27551,12 +27837,12 @@ impl AntiSandwich<Sphere> for Plane {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       54        0
-    //    simd3        0        2        0
-    //    simd4        2        2        0
+    //      f32        6       27        0
+    //    simd3        1        4        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       35       58        0
-    //  no simd       41       68        0
+    // yes simd       15       39        0
+    //  no simd       41       71        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = CircleRotor::from_groups(
@@ -27581,11 +27867,11 @@ impl AntiSandwich<VersorEven> for Plane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       57       94        0
-    //    simd4       10       10        0
+    //      f32       20       50        0
+    //    simd4       20       21        0
     // Totals...
-    // yes simd       67      104        0
-    //  no simd       97      134        0
+    // yes simd       40       71        0
+    //  no simd      100      134        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -27630,11 +27916,11 @@ impl AntiSandwich<VersorOdd> for Plane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       92        0
-    //    simd4       10       10        0
+    //      f32       17       53        0
+    //    simd4       20       20        0
     // Totals...
-    // yes simd       66      102        0
-    //  no simd       96      132        0
+    // yes simd       37       73        0
+    //  no simd       97      133        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -27680,12 +27966,12 @@ impl AntiSandwich<AntiCircleRotor> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       65       97        0
+    //      f32       13       52        0
     //    simd3        2        3        0
-    //    simd4        7        7        0
+    //    simd4       20       20        0
     // Totals...
-    // yes simd       74      107        0
-    //  no simd       99      134        0
+    // yes simd       35       75        0
+    //  no simd       99      141        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -27726,10 +28012,10 @@ impl AntiSandwich<AntiDipoleInversion> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       91      123        0
-    //    simd4        8        8        0
+    //      f32       47       79        0
+    //    simd4       19       19        0
     // Totals...
-    // yes simd       99      131        0
+    // yes simd       66       98        0
     //  no simd      123      155        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
@@ -27774,11 +28060,11 @@ impl AntiSandwich<AntiDualNum> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       83        0
-    //    simd4        0        4        0
+    //      f32        4       33        0
+    //    simd4       15       19        0
     // Totals...
-    // yes simd       64       87        0
-    //  no simd       64       99        0
+    // yes simd       19       52        0
+    //  no simd       64      109        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -27797,8 +28083,12 @@ impl AntiSandwich<AntiDualNum> for RoundPoint {
 impl AntiSandwich<AntiFlatPoint> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       68       98        0
+    //           add/sub      mul      div
+    //      f32       32       63        0
+    //    simd4        9        9        0
+    // Totals...
+    // yes simd       41       72        0
+    //  no simd       68       99        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -27833,10 +28123,10 @@ impl AntiSandwich<AntiFlector> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       80      109        0
-    //    simd4        2        4        0
+    //      f32       36       65        0
+    //    simd4       13       15        0
     // Totals...
-    // yes simd       82      113        0
+    // yes simd       49       80        0
     //  no simd       88      125        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
@@ -27874,12 +28164,12 @@ impl AntiSandwich<AntiLine> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       71       98        0
+    //      f32       19       53        0
     //    simd3        0        1        0
-    //    simd4        1        1        0
+    //    simd4       14       14        0
     // Totals...
-    // yes simd       72      100        0
-    //  no simd       75      105        0
+    // yes simd       33       68        0
+    //  no simd       75      112        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -27914,11 +28204,11 @@ impl AntiSandwich<AntiMotor> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       76      105        0
-    //    simd4        3        4        0
+    //      f32       16       55        0
+    //    simd4       18       19        0
     // Totals...
-    // yes simd       79      109        0
-    //  no simd       88      121        0
+    // yes simd       34       74        0
+    //  no simd       88      131        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -27955,11 +28245,11 @@ impl AntiSandwich<AntiPlane> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       65        0
-    //    simd3        0        1        0
-    //    simd4        2        2        0
+    //      f32       18       36        0
+    //    simd3        2        4        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       46       68        0
+    // yes simd       27       47        0
     //  no simd       52       76        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
@@ -27985,11 +28275,12 @@ impl AntiSandwich<AntiScalar> for RoundPoint {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       26        0
-    //    simd4        0        1        0
+    //      f32        2        4        0
+    //    simd3        1        2        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd       14       27        0
-    //  no simd       14       30        0
+    // yes simd        6       11        0
+    //  no simd       17       30        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(other[e12345]) * self.group0()), /* e5 */ (other[e12345] * self[e2]));
@@ -28000,12 +28291,12 @@ impl AntiSandwich<Circle> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       72      103        0
+    //      f32       36       68        0
     //    simd3        2        3        0
-    //    simd4        4        4        0
+    //    simd4       13       13        0
     // Totals...
-    // yes simd       78      110        0
-    //  no simd       94      128        0
+    // yes simd       51       84        0
+    //  no simd       94      129        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -28044,12 +28335,12 @@ impl AntiSandwich<CircleRotor> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       73      104        0
+    //      f32       37       69        0
     //    simd3        2        3        0
-    //    simd4        5        5        0
+    //    simd4       14       14        0
     // Totals...
-    // yes simd       80      112        0
-    //  no simd       99      133        0
+    // yes simd       53       86        0
+    //  no simd       99      134        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -28089,12 +28380,12 @@ impl AntiSandwich<Dipole> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       68       96        0
+    //      f32       16       51        0
     //    simd3        2        3        0
-    //    simd4        5        5        0
+    //    simd4       18       18        0
     // Totals...
-    // yes simd       75      104        0
-    //  no simd       94      125        0
+    // yes simd       36       72        0
+    //  no simd       94      132        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -28133,11 +28424,11 @@ impl AntiSandwich<DipoleInversion> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       87      119        0
-    //    simd4        9        9        0
+    //      f32       27       69        0
+    //    simd4       24       24        0
     // Totals...
-    // yes simd       96      128        0
-    //  no simd      123      155        0
+    // yes simd       51       93        0
+    //  no simd      123      165        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -28182,10 +28473,10 @@ impl AntiSandwich<DualNum> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       82        0
-    //    simd4        0        3        0
+    //      f32       20       38        0
+    //    simd4       11       14        0
     // Totals...
-    // yes simd       64       85        0
+    // yes simd       31       52        0
     //  no simd       64       94        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
@@ -28205,8 +28496,12 @@ impl AntiSandwich<DualNum> for RoundPoint {
 impl AntiSandwich<FlatPoint> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       68       96        0
+    //           add/sub      mul      div
+    //      f32       16       51        0
+    //    simd4       13       13        0
+    // Totals...
+    // yes simd       29       64        0
+    //  no simd       68      103        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -28240,8 +28535,12 @@ impl AntiSandwich<FlatPoint> for RoundPoint {
 impl AntiSandwich<Flector> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       88      124        0
+    //           add/sub      mul      div
+    //      f32       28       74        0
+    //    simd4       15       15        0
+    // Totals...
+    // yes simd       43       89        0
+    //  no simd       88      134        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -28281,12 +28580,12 @@ impl AntiSandwich<Line> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       67       95        0
+    //      f32       31       60        0
     //    simd3        0        1        0
-    //    simd4        2        2        0
+    //    simd4       11       11        0
     // Totals...
-    // yes simd       69       98        0
-    //  no simd       75      106        0
+    // yes simd       42       72        0
+    //  no simd       75      107        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -28322,10 +28621,10 @@ impl AntiSandwich<Motor> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       80      108        0
-    //    simd4        2        3        0
+    //      f32       36       64        0
+    //    simd4       13       14        0
     // Totals...
-    // yes simd       82      111        0
+    // yes simd       49       78        0
     //  no simd       88      120        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
@@ -28367,12 +28666,12 @@ impl AntiSandwich<MultiVector> for RoundPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      167      222        0
-    //    simd2        2        2        0
-    //    simd3       15       18        0
-    //    simd4       10       10        0
+    //      f32       78      124        0
+    //    simd2        4        4        0
+    //    simd3       30       36        0
+    //    simd4       20       20        0
     // Totals...
-    // yes simd      194      252        0
+    // yes simd      132      184        0
     //  no simd      256      320        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -28459,12 +28758,12 @@ impl AntiSandwich<Plane> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       64        0
-    //    simd3        0        2        0
-    //    simd4        2        2        0
+    //      f32       13       27        0
+    //    simd3        2        5        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       46       68        0
-    //  no simd       52       78        0
+    // yes simd       24       41        0
+    //  no simd       55       78        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiCircleRotor::from_groups(
@@ -28489,11 +28788,11 @@ impl AntiSandwich<RoundPoint> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       42       58        0
-    //    simd3        1        2        0
-    //    simd4        3        4        0
+    //      f32       16       29        0
+    //    simd3        3        5        0
+    //    simd4        8        9        0
     // Totals...
-    // yes simd       46       64        0
+    // yes simd       27       43        0
     //  no simd       57       80        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -28520,10 +28819,11 @@ impl AntiSandwich<Scalar> for RoundPoint {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       26        0
-    //    simd4        0        2        0
+    //      f32        7       16        0
+    //    simd3        1        2        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       14       28        0
+    // yes simd        9       21        0
     //  no simd       14       34        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -28540,12 +28840,12 @@ impl AntiSandwich<Sphere> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       42       66        0
-    //    simd3        1        2        0
-    //    simd4        3        3        0
+    //      f32       11       29        0
+    //    simd3        3        5        0
+    //    simd4       10       10        0
     // Totals...
-    // yes simd       46       71        0
-    //  no simd       57       84        0
+    // yes simd       24       44        0
+    //  no simd       60       84        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiCircleRotor::from_groups(
@@ -28575,10 +28875,10 @@ impl AntiSandwich<VersorEven> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       80      113        0
-    //    simd4       12       12        0
+    //      f32       36       69        0
+    //    simd4       23       23        0
     // Totals...
-    // yes simd       92      125        0
+    // yes simd       59       92        0
     //  no simd      128      161        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
@@ -28627,11 +28927,11 @@ impl AntiSandwich<VersorOdd> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       88      120        0
-    //    simd4       10       10        0
+    //      f32       28       70        0
+    //    simd4       25       25        0
     // Totals...
-    // yes simd       98      130        0
-    //  no simd      128      160        0
+    // yes simd       53       95        0
+    //  no simd      128      170        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -28678,12 +28978,11 @@ impl AntiSandwich<AntiCircleRotor> for Scalar {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       12        0
-    //    simd3        0        2        0
-    //    simd4        0        4        0
+    //    simd3        0        3        0
+    //    simd4        0        7        0
     // Totals...
-    // yes simd        0       18        0
-    //  no simd        0       34        0
+    // yes simd        0       10        0
+    //  no simd        0       37        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = CircleRotor::from_groups(
@@ -28701,12 +29000,11 @@ impl AntiSandwich<AntiDipoleInversion> for Scalar {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       26        0
-    //    simd3        0        1        0
-    //    simd4        0        5        0
+    //    simd3        0        3        0
+    //    simd4        0       11        0
     // Totals...
-    // yes simd        0       32        0
-    //  no simd        0       49        0
+    // yes simd        0       14        0
+    //  no simd        0       53        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -28725,12 +29023,9 @@ impl AntiSandwich<AntiDipoleInversion> for Scalar {
 impl AntiSandwich<AntiDualNum> for Scalar {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        0        2        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        6        0
+    //          add/sub      mul      div
+    //   simd2        0        3        0
+    // no simd        0        6        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = DualNum::from_groups(/* e4, e12345 */ (Simd32x2::from(self[scalar]) * other.group0() * Simd32x2::from(-1.0)));
@@ -28740,12 +29035,9 @@ impl AntiSandwich<AntiDualNum> for Scalar {
 impl AntiSandwich<AntiFlatPoint> for Scalar {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        7        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        9        0
-    //  no simd        0       15        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = FlatPoint::from_groups(/* e15, e25, e35, e45 */ (Simd32x4::from(self[scalar]) * other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0])));
@@ -28755,12 +29047,9 @@ impl AntiSandwich<AntiFlatPoint> for Scalar {
 impl AntiSandwich<AntiFlector> for Scalar {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       12        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0       16        0
-    //  no simd        0       28        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = Flector::from_groups(
@@ -28775,12 +29064,9 @@ impl AntiSandwich<AntiFlector> for Scalar {
 impl AntiSandwich<AntiLine> for Scalar {
     type Output = AntiLine;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        6        0
-    //    simd3        0        4        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       18        0
+    //          add/sub      mul      div
+    //   simd3        0        6        0
+    // no simd        0       18        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = Line::from_groups(
@@ -28795,12 +29081,9 @@ impl AntiSandwich<AntiLine> for Scalar {
 impl AntiSandwich<AntiMotor> for Scalar {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0       12        0
-    //  no simd        0       24        0
+    //          add/sub      mul      div
+    //   simd4        0        6        0
+    // no simd        0       24        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = Motor::from_groups(
@@ -28815,12 +29098,9 @@ impl AntiSandwich<AntiMotor> for Scalar {
 impl AntiSandwich<AntiPlane> for Scalar {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        5        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        7        0
-    //  no simd        0       13        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = Plane::from_groups(
@@ -28845,12 +29125,11 @@ impl AntiSandwich<Circle> for Scalar {
     type Output = Circle;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       19        0
-    //    simd3        0        2        0
-    //    simd4        0        2        0
+    //    simd3        0        6        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0       23        0
-    //  no simd        0       33        0
+    // yes simd        0       10        0
+    //  no simd        0       34        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = Dipole::from_groups(
@@ -28868,12 +29147,11 @@ impl AntiSandwich<CircleRotor> for Scalar {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       21        0
-    //    simd3        0        1        0
-    //    simd4        0        3        0
+    //    simd3        0        3        0
+    //    simd4        0        7        0
     // Totals...
-    // yes simd        0       25        0
-    //  no simd        0       36        0
+    // yes simd        0       10        0
+    //  no simd        0       37        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiCircleRotor::from_groups(
@@ -28891,12 +29169,11 @@ impl AntiSandwich<Dipole> for Scalar {
     type Output = Dipole;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       11        0
-    //    simd3        0        4        0
-    //    simd4        0        2        0
+    //    simd3        0        6        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0       17        0
-    //  no simd        0       31        0
+    // yes simd        0       10        0
+    //  no simd        0       34        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = Circle::from_groups(
@@ -28914,12 +29191,11 @@ impl AntiSandwich<DipoleInversion> for Scalar {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       19        0
-    //    simd3        0        2        0
-    //    simd4        0        6        0
+    //    simd3        0        3        0
+    //    simd4        0       11        0
     // Totals...
-    // yes simd        0       27        0
-    //  no simd        0       49        0
+    // yes simd        0       14        0
+    //  no simd        0       53        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -28938,12 +29214,9 @@ impl AntiSandwich<DipoleInversion> for Scalar {
 impl AntiSandwich<DualNum> for Scalar {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        6        0
+    //          add/sub      mul      div
+    //   simd2        0        3        0
+    // no simd        0        6        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiDualNum::from_groups(/* e1234, scalar */ (Simd32x2::from(self[scalar]) * other.group0()));
@@ -28953,12 +29226,9 @@ impl AntiSandwich<DualNum> for Scalar {
 impl AntiSandwich<FlatPoint> for Scalar {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        5        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        7        0
-    //  no simd        0       13        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiFlatPoint::from_groups(
@@ -28971,12 +29241,9 @@ impl AntiSandwich<FlatPoint> for Scalar {
 impl AntiSandwich<Flector> for Scalar {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       12        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0       16        0
-    //  no simd        0       28        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiFlector::from_groups(
@@ -28991,12 +29258,9 @@ impl AntiSandwich<Flector> for Scalar {
 impl AntiSandwich<Line> for Scalar {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       12        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0       14        0
-    //  no simd        0       18        0
+    //          add/sub      mul      div
+    //   simd3        0        6        0
+    // no simd        0       18        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiLine::from_groups(
@@ -29011,12 +29275,9 @@ impl AntiSandwich<Line> for Scalar {
 impl AntiSandwich<Motor> for Scalar {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       16        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0       18        0
-    //  no simd        0       24        0
+    //          add/sub      mul      div
+    //   simd4        0        6        0
+    // no simd        0       24        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiMotor::from_groups(
@@ -29032,13 +29293,13 @@ impl AntiSandwich<MultiVector> for Scalar {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       51        0
-    //    simd2        0        2        0
-    //    simd3        0        6        0
-    //    simd4        0        8        0
+    //      f32        0        6        0
+    //    simd2        0        4        0
+    //    simd3        0       12        0
+    //    simd4        0       16        0
     // Totals...
-    // yes simd        0       67        0
-    //  no simd        0      105        0
+    // yes simd        0       38        0
+    //  no simd        0      114        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = MultiVector::from_groups(
@@ -29071,12 +29332,9 @@ impl AntiSandwich<MultiVector> for Scalar {
 impl AntiSandwich<Plane> for Scalar {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        7        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        9        0
-    //  no simd        0       15        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiPlane::from_groups(/* e1, e2, e3, e5 */ (Simd32x4::from(self[scalar]) * other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0])));
@@ -29087,11 +29345,11 @@ impl AntiSandwich<RoundPoint> for Scalar {
     type Output = RoundPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       16        0
+    // yes simd        0        7        0
+    //  no simd        0       19        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = Sphere::from_groups(
@@ -29118,11 +29376,11 @@ impl AntiSandwich<Sphere> for Scalar {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       10        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0       12        0
-    //  no simd        0       18        0
+    // yes simd        0        7        0
+    //  no simd        0       19        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = RoundPoint::from_groups(
@@ -29137,12 +29395,9 @@ impl AntiSandwich<Sphere> for Scalar {
 impl AntiSandwich<VersorEven> for Scalar {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       28        0
-    //    simd4        0        6        0
-    // Totals...
-    // yes simd        0       34        0
-    //  no simd        0       52        0
+    //          add/sub      mul      div
+    //   simd4        0       14        0
+    // no simd        0       56        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -29161,12 +29416,9 @@ impl AntiSandwich<VersorEven> for Scalar {
 impl AntiSandwich<VersorOdd> for Scalar {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       20        0
-    //    simd4        0        8        0
-    // Totals...
-    // yes simd        0       28        0
-    //  no simd        0       52        0
+    //          add/sub      mul      div
+    //   simd4        0       14        0
+    // no simd        0       56        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorEven::from_groups(
@@ -29187,12 +29439,12 @@ impl AntiSandwich<AntiCircleRotor> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       69      104        0
+    //      f32       25       62        0
     //    simd3        2        3        0
-    //    simd4        6        6        0
+    //    simd4       17       17        0
     // Totals...
-    // yes simd       77      113        0
-    //  no simd       99      137        0
+    // yes simd       44       82        0
+    //  no simd       99      139        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -29232,11 +29484,11 @@ impl AntiSandwich<AntiDipoleInversion> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       68      105        0
-    //    simd4       14       14        0
+    //      f32       16       52        0
+    //    simd4       27       28        0
     // Totals...
-    // yes simd       82      119        0
-    //  no simd      124      161        0
+    // yes simd       43       80        0
+    //  no simd      124      164        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -29286,11 +29538,11 @@ impl AntiSandwich<AntiDualNum> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       84        0
-    //    simd4        0        4        0
+    //      f32       16       37        0
+    //    simd4       12       16        0
     // Totals...
-    // yes simd       64       88        0
-    //  no simd       64      100        0
+    // yes simd       28       53        0
+    //  no simd       64      101        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorEven::from_groups(
@@ -29309,8 +29561,12 @@ impl AntiSandwich<AntiDualNum> for Sphere {
 impl AntiSandwich<AntiFlatPoint> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       68       95        0
+    //           add/sub      mul      div
+    //      f32       20       46        0
+    //    simd4       12       13        0
+    // Totals...
+    // yes simd       32       59        0
+    //  no simd       68       98        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -29344,8 +29600,12 @@ impl AntiSandwich<AntiFlatPoint> for Sphere {
 impl AntiSandwich<AntiFlector> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       88      120        0
+    //           add/sub      mul      div
+    //      f32       36       67        0
+    //    simd4       13       14        0
+    // Totals...
+    // yes simd       49       81        0
+    //  no simd       88      123        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -29387,12 +29647,12 @@ impl AntiSandwich<AntiLine> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       71      101        0
+    //      f32       27       59        0
     //    simd3        0        2        0
-    //    simd4        1        1        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd       72      104        0
-    //  no simd       75      111        0
+    // yes simd       39       73        0
+    //  no simd       75      113        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -29427,11 +29687,11 @@ impl AntiSandwich<AntiMotor> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       80      112        0
-    //    simd4        2        4        0
+    //      f32       32       65        0
+    //    simd4       14       16        0
     // Totals...
-    // yes simd       82      116        0
-    //  no simd       88      128        0
+    // yes simd       46       81        0
+    //  no simd       88      129        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorEven::from_groups(
@@ -29467,11 +29727,12 @@ impl AntiSandwich<AntiPlane> for Sphere {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       49       72        0
-    //    simd3        0        1        0
+    //      f32       11       38        0
+    //    simd3        2        4        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       49       73        0
-    //  no simd       49       75        0
+    // yes simd       21       50        0
+    //  no simd       49       82        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiCircleRotor::from_groups(
@@ -29499,11 +29760,12 @@ impl AntiSandwich<AntiScalar> for Sphere {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       26        0
-    //    simd4        0        1        0
+    //      f32        2        4        0
+    //    simd3        1        2        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd       14       27        0
-    //  no simd       14       30        0
+    // yes simd        6       11        0
+    //  no simd       17       30        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = Sphere::from_groups(
@@ -29519,12 +29781,12 @@ impl AntiSandwich<Circle> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       68       96        0
+    //      f32       20       47        0
     //    simd3        2        3        0
-    //    simd4        5        5        0
+    //    simd4       17       18        0
     // Totals...
-    // yes simd       75      104        0
-    //  no simd       94      125        0
+    // yes simd       39       68        0
+    //  no simd       94      128        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -29563,12 +29825,12 @@ impl AntiSandwich<CircleRotor> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       92        0
+    //      f32       16       43        0
     //    simd3        2        3        0
-    //    simd4        8        8        0
+    //    simd4       20       21        0
     // Totals...
-    // yes simd       74      103        0
-    //  no simd      102      133        0
+    // yes simd       38       67        0
+    //  no simd      102      136        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -29606,12 +29868,12 @@ impl AntiSandwich<Dipole> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       68      100        0
+    //      f32       24       58        0
     //    simd3        2        3        0
-    //    simd4        5        5        0
+    //    simd4       16       16        0
     // Totals...
-    // yes simd       75      108        0
-    //  no simd       94      129        0
+    // yes simd       42       77        0
+    //  no simd       94      131        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -29650,11 +29912,11 @@ impl AntiSandwich<DipoleInversion> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       71      103        0
-    //    simd4       13       14        0
+    //      f32       23       56        0
+    //    simd4       25       26        0
     // Totals...
-    // yes simd       84      117        0
-    //  no simd      123      159        0
+    // yes simd       48       82        0
+    //  no simd      123      160        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorEven::from_groups(
@@ -29699,11 +29961,11 @@ impl AntiSandwich<DualNum> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       83        0
-    //    simd4        0        2        0
+    //      f32       12       30        0
+    //    simd4       13       16        0
     // Totals...
-    // yes simd       64       85        0
-    //  no simd       64       91        0
+    // yes simd       25       46        0
+    //  no simd       64       94        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -29722,8 +29984,12 @@ impl AntiSandwich<DualNum> for Sphere {
 impl AntiSandwich<FlatPoint> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       68       95        0
+    //           add/sub      mul      div
+    //      f32       24       53        0
+    //    simd4       11       11        0
+    // Totals...
+    // yes simd       35       64        0
+    //  no simd       68       97        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiDipoleInversion::from_groups(
@@ -29761,11 +30027,11 @@ impl AntiSandwich<Flector> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       80      108        0
-    //    simd4        2        3        0
+    //      f32       32       61        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd       82      111        0
-    //  no simd       88      120        0
+    // yes simd       46       76        0
+    //  no simd       88      121        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorEven::from_groups(
@@ -29801,12 +30067,12 @@ impl AntiSandwich<Line> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       71       98        0
+    //      f32       23       49        0
     //    simd3        0        1        0
-    //    simd4        1        1        0
+    //    simd4       13       14        0
     // Totals...
-    // yes simd       72      100        0
-    //  no simd       75      105        0
+    // yes simd       36       64        0
+    //  no simd       75      108        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = DipoleInversion::from_groups(
@@ -29841,11 +30107,11 @@ impl AntiSandwich<Motor> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       76      107        0
-    //    simd4        3        4        0
+    //      f32       24       54        0
+    //    simd4       16       18        0
     // Totals...
-    // yes simd       79      111        0
-    //  no simd       88      123        0
+    // yes simd       40       72        0
+    //  no simd       88      126        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -29882,12 +30148,12 @@ impl AntiSandwich<MultiVector> for Sphere {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      156      218        0
-    //    simd2        3        3        0
-    //    simd3       14       16        0
-    //    simd4       13       13        0
+    //      f32       64      116        0
+    //    simd2        6        6        0
+    //    simd3       28       32        0
+    //    simd4       24       25        0
     // Totals...
-    // yes simd      186      250        0
+    // yes simd      122      179        0
     //  no simd      256      324        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -29981,12 +30247,12 @@ impl AntiSandwich<Plane> for Sphere {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       64        0
-    //    simd3        0        1        0
-    //    simd4        2        2        0
+    //      f32       10       31        0
+    //    simd3        2        4        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       46       67        0
-    //  no simd       52       75        0
+    // yes simd       21       44        0
+    //  no simd       52       79        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = CircleRotor::from_groups(
@@ -30011,12 +30277,12 @@ impl AntiSandwich<RoundPoint> for Sphere {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       47       70        0
-    //    simd3        1        2        0
-    //    simd4        1        1        0
+    //      f32        9       36        0
+    //    simd3        3        5        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       49       73        0
-    //  no simd       54       80        0
+    // yes simd       21       50        0
+    //  no simd       54       87        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = AntiCircleRotor::from_groups(
@@ -30049,11 +30315,12 @@ impl AntiSandwich<Scalar> for Sphere {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       27        0
-    //    simd4        0        2        0
+    //      f32        2       13        0
+    //    simd3        1        2        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd       14       29        0
-    //  no simd       14       35        0
+    // yes simd        6       20        0
+    //  no simd       17       39        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = RoundPoint::from_groups(
@@ -30069,12 +30336,12 @@ impl AntiSandwich<Sphere> for Sphere {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       42       58        0
-    //    simd3        1        2        0
-    //    simd4        3        4        0
+    //      f32        8       25        0
+    //    simd3        3        5        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       46       64        0
-    //  no simd       57       80        0
+    // yes simd       21       41        0
+    //  no simd       57       84        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = CircleRotor::from_groups(
@@ -30100,11 +30367,11 @@ impl AntiSandwich<VersorEven> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       68      106        0
-    //    simd4       15       15        0
+    //      f32       16       53        0
+    //    simd4       28       29        0
     // Totals...
-    // yes simd       83      121        0
-    //  no simd      128      166        0
+    // yes simd       44       82        0
+    //  no simd      128      169        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorOdd::from_groups(
@@ -30155,11 +30422,11 @@ impl AntiSandwich<VersorOdd> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       68      102        0
-    //    simd4       15       16        0
+    //      f32       20       55        0
+    //    simd4       27       28        0
     // Totals...
-    // yes simd       83      118        0
-    //  no simd      128      166        0
+    // yes simd       47       83        0
+    //  no simd      128      167        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = VersorEven::from_groups(
@@ -30207,10 +30474,10 @@ impl AntiSandwich<AntiCircleRotor> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      296      338        0
-    //    simd4       26       26        0
+    //      f32      116      154        0
+    //    simd4       71       72        0
     // Totals...
-    // yes simd      322      364        0
+    // yes simd      187      226        0
     //  no simd      400      442        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -30312,10 +30579,10 @@ impl AntiSandwich<AntiDipoleInversion> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      328      370        0
-    //    simd4       34       34        0
+    //      f32      160      198        0
+    //    simd4       76       77        0
     // Totals...
-    // yes simd      362      404        0
+    // yes simd      236      275        0
     //  no simd      464      506        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -30451,10 +30718,10 @@ impl AntiSandwich<AntiDualNum> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      249      293        0
-    //    simd4        2        2        0
+    //      f32       69      109        0
+    //    simd4       47       48        0
     // Totals...
-    // yes simd      251      295        0
+    // yes simd      116      157        0
     //  no simd      257      301        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -30495,10 +30762,10 @@ impl AntiSandwich<AntiFlatPoint> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      264      309        0
-    //    simd4        6        6        0
+    //      f32       96      137        0
+    //    simd4       48       49        0
     // Totals...
-    // yes simd      270      315        0
+    // yes simd      144      186        0
     //  no simd      288      333        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -30549,10 +30816,10 @@ impl AntiSandwich<AntiFlector> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      269      310        0
-    //    simd4       21       21        0
+    //      f32      101      138        0
+    //    simd4       63       64        0
     // Totals...
-    // yes simd      290      331        0
+    // yes simd      164      202        0
     //  no simd      353      394        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -30622,10 +30889,10 @@ impl AntiSandwich<AntiLine> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      300      342        0
-    //    simd4        5        5        0
+    //      f32      120      158        0
+    //    simd4       50       51        0
     // Totals...
-    // yes simd      305      347        0
+    // yes simd      170      209        0
     //  no simd      320      362        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -30699,10 +30966,10 @@ impl AntiSandwich<AntiMotor> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      284      326        0
-    //    simd4       17       17        0
+    //      f32      104      142        0
+    //    simd4       62       63        0
     // Totals...
-    // yes simd      301      343        0
+    // yes simd      166      205        0
     //  no simd      352      394        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -30785,10 +31052,10 @@ impl AntiSandwich<AntiPlane> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      256      299        0
-    //    simd4        8        8        0
+    //      f32       88      127        0
+    //    simd4       50       51        0
     // Totals...
-    // yes simd      264      307        0
+    // yes simd      138      178        0
     //  no simd      288      331        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -30832,10 +31099,10 @@ impl AntiSandwich<AntiScalar> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      240      266        0
-    //    simd4        0        4        0
+    //      f32       72       94        0
+    //    simd4       42       47        0
     // Totals...
-    // yes simd      240      270        0
+    // yes simd      114      141        0
     //  no simd      240      282        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -30856,10 +31123,10 @@ impl AntiSandwich<Circle> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      320      362        0
-    //    simd4       16       16        0
+    //      f32      152      190        0
+    //    simd4       58       59        0
     // Totals...
-    // yes simd      336      378        0
+    // yes simd      210      249        0
     //  no simd      384      426        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -30974,10 +31241,10 @@ impl AntiSandwich<CircleRotor> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      308      350        0
-    //    simd4       23       23        0
+    //      f32      140      178        0
+    //    simd4       65       66        0
     // Totals...
-    // yes simd      331      373        0
+    // yes simd      205      244        0
     //  no simd      400      442        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -31088,10 +31355,10 @@ impl AntiSandwich<Dipole> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      304      346        0
-    //    simd4       20       20        0
+    //      f32      124      162        0
+    //    simd4       65       66        0
     // Totals...
-    // yes simd      324      366        0
+    // yes simd      189      228        0
     //  no simd      384      426        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -31195,10 +31462,10 @@ impl AntiSandwich<DipoleInversion> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      296      338        0
-    //    simd4       42       42        0
+    //      f32      116      154        0
+    //    simd4       87       88        0
     // Totals...
-    // yes simd      338      380        0
+    // yes simd      203      242        0
     //  no simd      464      506        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -31309,10 +31576,10 @@ impl AntiSandwich<DualNum> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      240      274        0
-    //    simd4        5        7        0
+    //      f32       72      102        0
+    //    simd4       47       50        0
     // Totals...
-    // yes simd      245      281        0
+    // yes simd      119      152        0
     //  no simd      260      302        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -31340,10 +31607,10 @@ impl AntiSandwich<FlatPoint> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      268      315        0
-    //    simd4        5        5        0
+    //      f32       88      131        0
+    //    simd4       50       51        0
     // Totals...
-    // yes simd      273      320        0
+    // yes simd      138      182        0
     //  no simd      288      335        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -31404,10 +31671,10 @@ impl AntiSandwich<Flector> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      281      325        0
-    //    simd4       18       18        0
+    //      f32      101      141        0
+    //    simd4       63       64        0
     // Totals...
-    // yes simd      299      343        0
+    // yes simd      164      205        0
     //  no simd      353      397        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -31487,10 +31754,10 @@ impl AntiSandwich<Line> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      292      334        0
-    //    simd4        7        7        0
+    //      f32      124      162        0
+    //    simd4       49       50        0
     // Totals...
-    // yes simd      299      341        0
+    // yes simd      173      212        0
     //  no simd      320      362        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -31566,10 +31833,10 @@ impl AntiSandwich<Motor> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      281      322        0
-    //    simd4       18       18        0
+    //      f32      113      150        0
+    //    simd4       60       61        0
     // Totals...
-    // yes simd      299      340        0
+    // yes simd      173      211        0
     //  no simd      353      394        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -31648,12 +31915,12 @@ impl AntiSandwich<MultiVector> for VersorEven {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      628      702        0
-    //    simd2       12       12        0
-    //    simd3       52       52        0
-    //    simd4       38       38        0
+    //      f32      276      346        0
+    //    simd2       24       24        0
+    //    simd3      104      104        0
+    //    simd4       81       82        0
     // Totals...
-    // yes simd      730      804        0
+    // yes simd      485      556        0
     //  no simd      960     1034        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -31916,10 +32183,10 @@ impl AntiSandwich<Plane> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      249      291        0
-    //    simd4       10       10        0
+    //      f32       69      107        0
+    //    simd4       55       56        0
     // Totals...
-    // yes simd      259      301        0
+    // yes simd      124      163        0
     //  no simd      289      331        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -31965,10 +32232,10 @@ impl AntiSandwich<RoundPoint> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      260      302        0
-    //    simd4       11       11        0
+    //      f32       92      130        0
+    //    simd4       53       54        0
     // Totals...
-    // yes simd      271      313        0
+    // yes simd      145      184        0
     //  no simd      304      346        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -32016,10 +32283,10 @@ impl AntiSandwich<Scalar> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      240      266        0
-    //    simd4        0        6        0
+    //      f32       60       82        0
+    //    simd4       45       52        0
     // Totals...
-    // yes simd      240      272        0
+    // yes simd      105      134        0
     //  no simd      240      290        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -32040,10 +32307,10 @@ impl AntiSandwich<Sphere> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      256      299        0
-    //    simd4       12       12        0
+    //      f32       76      115        0
+    //    simd4       57       58        0
     // Totals...
-    // yes simd      268      311        0
+    // yes simd      133      173        0
     //  no simd      304      347        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -32092,10 +32359,10 @@ impl AntiSandwich<VersorEven> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      312      354        0
-    //    simd4       42       42        0
+    //      f32      144      182        0
+    //    simd4       84       85        0
     // Totals...
-    // yes simd      354      396        0
+    // yes simd      228      267        0
     //  no simd      480      522        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -32229,10 +32496,10 @@ impl AntiSandwich<VersorOdd> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      300      342        0
-    //    simd4       45       45        0
+    //      f32      120      158        0
+    //    simd4       90       91        0
     // Totals...
-    // yes simd      345      387        0
+    // yes simd      210      249        0
     //  no simd      480      522        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -32342,10 +32609,10 @@ impl AntiSandwich<AntiCircleRotor> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      280      322        0
-    //    simd4       30       30        0
+    //      f32      100      138        0
+    //    simd4       75       76        0
     // Totals...
-    // yes simd      310      352        0
+    // yes simd      175      214        0
     //  no simd      400      442        0
     fn anti_sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -32432,10 +32699,10 @@ impl AntiSandwich<AntiDipoleInversion> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      296      338        0
-    //    simd4       42       42        0
+    //      f32      104      142        0
+    //    simd4       90       91        0
     // Totals...
-    // yes simd      338      380        0
+    // yes simd      194      233        0
     //  no simd      464      506        0
     fn anti_sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -32545,10 +32812,10 @@ impl AntiSandwich<AntiDualNum> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      241      284        0
-    //    simd4        4        6        0
+    //      f32       61      100        0
+    //    simd4       49       52        0
     // Totals...
-    // yes simd      245      290        0
+    // yes simd      110      152        0
     //  no simd      257      308        0
     fn anti_sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -32584,10 +32851,10 @@ impl AntiSandwich<AntiFlatPoint> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      267      306        0
-    //    simd4        6        6        0
+    //      f32       75      110        0
+    //    simd4       54       55        0
     // Totals...
-    // yes simd      273      312        0
+    // yes simd      129      165        0
     //  no simd      291      330        0
     fn anti_sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -32646,10 +32913,10 @@ impl AntiSandwich<AntiFlector> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      277      321        0
-    //    simd4       19       19        0
+    //      f32       85      125        0
+    //    simd4       67       68        0
     // Totals...
-    // yes simd      296      340        0
+    // yes simd      152      193        0
     //  no simd      353      397        0
     fn anti_sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -32725,10 +32992,10 @@ impl AntiSandwich<AntiLine> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      276      318        0
-    //    simd4       11       11        0
+    //      f32       96      134        0
+    //    simd4       56       57        0
     // Totals...
-    // yes simd      287      329        0
+    // yes simd      152      191        0
     //  no simd      320      362        0
     fn anti_sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -32787,10 +33054,10 @@ impl AntiSandwich<AntiMotor> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      261      298        0
-    //    simd4       23       24        0
+    //      f32       81      114        0
+    //    simd4       68       70        0
     // Totals...
-    // yes simd      284      322        0
+    // yes simd      149      184        0
     //  no simd      353      394        0
     fn anti_sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -32853,10 +33120,10 @@ impl AntiSandwich<AntiPlane> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      249      296        0
-    //    simd4       10       10        0
+    //      f32       57      100        0
+    //    simd4       58       59        0
     // Totals...
-    // yes simd      259      306        0
+    // yes simd      115      159        0
     //  no simd      289      336        0
     fn anti_sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -32902,10 +33169,10 @@ impl AntiSandwich<AntiScalar> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      240      266        0
-    //    simd4        0        4        0
+    //      f32       48       70        0
+    //    simd4       48       53        0
     // Totals...
-    // yes simd      240      270        0
+    // yes simd       96      123        0
     //  no simd      240      282        0
     fn anti_sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -32926,10 +33193,10 @@ impl AntiSandwich<Circle> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      312      354        0
-    //    simd4       18       18        0
+    //      f32      120      158        0
+    //    simd4       66       67        0
     // Totals...
-    // yes simd      330      372        0
+    // yes simd      186      225        0
     //  no simd      384      426        0
     fn anti_sandwich(self, other: Circle) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -33031,10 +33298,10 @@ impl AntiSandwich<CircleRotor> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      300      342        0
-    //    simd4       25       25        0
+    //      f32      108      146        0
+    //    simd4       73       74        0
     // Totals...
-    // yes simd      325      367        0
+    // yes simd      181      220        0
     //  no simd      400      442        0
     fn anti_sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -33136,10 +33403,10 @@ impl AntiSandwich<Dipole> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      292      334        0
-    //    simd4       23       23        0
+    //      f32      112      150        0
+    //    simd4       68       69        0
     // Totals...
-    // yes simd      315      357        0
+    // yes simd      180      219        0
     //  no simd      384      426        0
     fn anti_sandwich(self, other: Dipole) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -33228,10 +33495,10 @@ impl AntiSandwich<DipoleInversion> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      296      338        0
-    //    simd4       42       42        0
+    //      f32      116      154        0
+    //    simd4       87       88        0
     // Totals...
-    // yes simd      338      380        0
+    // yes simd      203      242        0
     //  no simd      464      506        0
     fn anti_sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -33349,10 +33616,10 @@ impl AntiSandwich<DualNum> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      245      287        0
-    //    simd4        3        3        0
+    //      f32       53       91        0
+    //    simd4       51       52        0
     // Totals...
-    // yes simd      248      290        0
+    // yes simd      104      143        0
     //  no simd      257      299        0
     fn anti_sandwich(self, other: DualNum) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -33393,10 +33660,10 @@ impl AntiSandwich<FlatPoint> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      252      286        0
-    //    simd4        9       11        0
+    //      f32       72      102        0
+    //    simd4       54       57        0
     // Totals...
-    // yes simd      261      297        0
+    // yes simd      126      159        0
     //  no simd      288      330        0
     fn anti_sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -33438,10 +33705,10 @@ impl AntiSandwich<Flector> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      259      295        0
-    //    simd4       24       25        0
+    //      f32       79      111        0
+    //    simd4       69       71        0
     // Totals...
-    // yes simd      283      320        0
+    // yes simd      148      182        0
     //  no simd      355      395        0
     fn anti_sandwich(self, other: Flector) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -33509,10 +33776,10 @@ impl AntiSandwich<Line> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      308      350        0
-    //    simd4        3        3        0
+    //      f32      116      154        0
+    //    simd4       51       52        0
     // Totals...
-    // yes simd      311      353        0
+    // yes simd      167      206        0
     //  no simd      320      362        0
     fn anti_sandwich(self, other: Line) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -33596,10 +33863,10 @@ impl AntiSandwich<Motor> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      292      334        0
-    //    simd4       15       15        0
+    //      f32      100      138        0
+    //    simd4       63       64        0
     // Totals...
-    // yes simd      307      349        0
+    // yes simd      163      202        0
     //  no simd      352      394        0
     fn anti_sandwich(self, other: Motor) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -33682,12 +33949,12 @@ impl AntiSandwich<MultiVector> for VersorOdd {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      596      670        0
-    //    simd2        4        4        0
-    //    simd3       52       52        0
-    //    simd4       50       50        0
+    //      f32      278      348        0
+    //    simd2        8        8        0
+    //    simd3      102      102        0
+    //    simd4       90       91        0
     // Totals...
-    // yes simd      702      776        0
+    // yes simd      478      549        0
     //  no simd      960     1034        0
     fn anti_sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -33913,10 +34180,10 @@ impl AntiSandwich<Plane> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      251      286        0
-    //    simd4       10       11        0
+    //      f32       71      102        0
+    //    simd4       55       57        0
     // Totals...
-    // yes simd      261      297        0
+    // yes simd      126      159        0
     //  no simd      291      330        0
     fn anti_sandwich(self, other: Plane) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(
@@ -33954,10 +34221,10 @@ impl AntiSandwich<RoundPoint> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      244      296        0
-    //    simd4       15       15        0
+    //      f32       52      100        0
+    //    simd4       63       64        0
     // Totals...
-    // yes simd      259      311        0
+    // yes simd      115      164        0
     //  no simd      304      356        0
     fn anti_sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -34009,10 +34276,10 @@ impl AntiSandwich<Scalar> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      240      266        0
-    //    simd4        0        8        0
+    //      f32       60       82        0
+    //    simd4       45       54        0
     // Totals...
-    // yes simd      240      274        0
+    // yes simd      105      136        0
     //  no simd      240      298        0
     fn anti_sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -34033,10 +34300,10 @@ impl AntiSandwich<Sphere> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      252      293        0
-    //    simd4       13       14        0
+    //      f32       72      109        0
+    //    simd4       58       60        0
     // Totals...
-    // yes simd      265      307        0
+    // yes simd      130      169        0
     //  no simd      304      349        0
     fn anti_sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -34082,10 +34349,10 @@ impl AntiSandwich<VersorEven> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      300      342        0
-    //    simd4       45       45        0
+    //      f32      108      146        0
+    //    simd4       93       94        0
     // Totals...
-    // yes simd      345      387        0
+    // yes simd      201      240        0
     //  no simd      480      522        0
     fn anti_sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_anti_product = VersorOdd::from_groups(
@@ -34207,10 +34474,10 @@ impl AntiSandwich<VersorOdd> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      288      330        0
-    //    simd4       48       48        0
+    //      f32      108      146        0
+    //    simd4       93       94        0
     // Totals...
-    // yes simd      336      378        0
+    // yes simd      201      240        0
     //  no simd      480      522        0
     fn anti_sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_anti_product = VersorEven::from_groups(

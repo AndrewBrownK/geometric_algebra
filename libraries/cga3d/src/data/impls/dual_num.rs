@@ -12,19 +12,19 @@ use crate::traits::Wedge;
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         0       4       0
-//  Average:         1       7       0
-//  Maximum:        32      68       0
+//   Median:         0       3       0
+//  Average:         1       5       0
+//  Maximum:        16      48       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       4       0
-//  Average:         1       7       0
-//  Maximum:        32      68       0
+//  Average:         1       8       0
+//  Maximum:        32      72       0
 impl std::ops::Add<AntiCircleRotor> for DualNum {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotor) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group2()[3], self.group0()[1]]),
             // e1, e2, e3, e4
@@ -48,7 +48,6 @@ impl std::ops::Add<AntiCircleRotor> for DualNum {
             // e1234
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDipoleInversion> for DualNum {
@@ -57,7 +56,7 @@ impl std::ops::Add<AntiDipoleInversion> for DualNum {
     //      add/sub      mul      div
     // f32        1        0        0
     fn add(self, other: AntiDipoleInversion) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[1]]),
             // e415, e425, e435, e321
@@ -67,13 +66,12 @@ impl std::ops::Add<AntiDipoleInversion> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], (self.group0()[0] + other.group2()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiDualNum> for DualNum {
     type Output = MultiVector;
     fn add(self, other: AntiDualNum) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[1], self.group0()[1]]),
             // e1, e2, e3, e4
@@ -97,13 +95,12 @@ impl std::ops::Add<AntiDualNum> for DualNum {
             // e1234
             other.group0()[0],
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiFlatPoint> for DualNum {
     type Output = VersorEven;
     fn add(self, other: AntiFlatPoint) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
@@ -113,13 +110,12 @@ impl std::ops::Add<AntiFlatPoint> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiFlector> for DualNum {
     type Output = VersorEven;
     fn add(self, other: AntiFlector) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
@@ -129,13 +125,12 @@ impl std::ops::Add<AntiFlector> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self.group0()[0]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiLine> for DualNum {
     type Output = MultiVector;
     fn add(self, other: AntiLine) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -159,13 +154,12 @@ impl std::ops::Add<AntiLine> for DualNum {
             // e1234
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiMotor> for DualNum {
     type Output = MultiVector;
     fn add(self, other: AntiMotor) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], self.group0()[1]]),
             // e1, e2, e3, e4
@@ -189,13 +183,12 @@ impl std::ops::Add<AntiMotor> for DualNum {
             // e1234
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiPlane> for DualNum {
     type Output = VersorEven;
     fn add(self, other: AntiPlane) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
@@ -205,7 +198,6 @@ impl std::ops::Add<AntiPlane> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[0]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<AntiScalar> for DualNum {
@@ -215,21 +207,19 @@ impl std::ops::Add<AntiScalar> for DualNum {
     // f32        1        0        0
     fn add(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let addition = DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[0], (self.group0()[1] + other[e12345])]));
-        return addition;
+        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[0], (self.group0()[1] + other[e12345])]));
     }
 }
 impl std::ops::AddAssign<AntiScalar> for DualNum {
     fn add_assign(&mut self, other: AntiScalar) {
         use crate::elements::*;
-        let addition = DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[0], (self.group0()[1] + other[e12345])]));
-        *self = addition;
+        *self = DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[0], (self.group0()[1] + other[e12345])]));
     }
 }
 impl std::ops::Add<Circle> for DualNum {
     type Output = VersorEven;
     fn add(self, other: Circle) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self.group0()[1]]),
             // e415, e425, e435, e321
@@ -239,7 +229,6 @@ impl std::ops::Add<Circle> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<CircleRotor> for DualNum {
@@ -248,7 +237,7 @@ impl std::ops::Add<CircleRotor> for DualNum {
     //      add/sub      mul      div
     // f32        1        0        0
     fn add(self, other: CircleRotor) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[1] + other.group2()[3])]),
             // e415, e425, e435, e321
@@ -258,13 +247,12 @@ impl std::ops::Add<CircleRotor> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Dipole> for DualNum {
     type Output = MultiVector;
     fn add(self, other: Dipole) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -288,13 +276,12 @@ impl std::ops::Add<Dipole> for DualNum {
             // e1234
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<DipoleInversion> for DualNum {
     type Output = MultiVector;
     fn add(self, other: DipoleInversion) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -318,7 +305,6 @@ impl std::ops::Add<DipoleInversion> for DualNum {
             // e1234
             other.group2()[3],
         );
-        return addition;
     }
 }
 impl std::ops::Add<DualNum> for DualNum {
@@ -328,20 +314,18 @@ impl std::ops::Add<DualNum> for DualNum {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn add(self, other: DualNum) -> Self::Output {
-        let addition = DualNum::from_groups(/* e4, e12345 */ (other.group0() + self.group0()));
-        return addition;
+        return DualNum::from_groups(/* e4, e12345 */ (other.group0() + self.group0()));
     }
 }
 impl std::ops::AddAssign<DualNum> for DualNum {
     fn add_assign(&mut self, other: DualNum) {
-        let addition = DualNum::from_groups(/* e4, e12345 */ (other.group0() + self.group0()));
-        *self = addition;
+        *self = DualNum::from_groups(/* e4, e12345 */ (other.group0() + self.group0()));
     }
 }
 impl std::ops::Add<FlatPoint> for DualNum {
     type Output = MultiVector;
     fn add(self, other: FlatPoint) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -365,13 +349,12 @@ impl std::ops::Add<FlatPoint> for DualNum {
             // e1234
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Flector> for DualNum {
     type Output = MultiVector;
     fn add(self, other: Flector) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -395,13 +378,12 @@ impl std::ops::Add<Flector> for DualNum {
             // e1234
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Line> for DualNum {
     type Output = VersorEven;
     fn add(self, other: Line) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
@@ -411,7 +393,6 @@ impl std::ops::Add<Line> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Motor> for DualNum {
@@ -420,7 +401,7 @@ impl std::ops::Add<Motor> for DualNum {
     //      add/sub      mul      div
     // f32        1        0        0
     fn add(self, other: Motor) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] + other.group0()[3])]),
             // e415, e425, e435, e321
@@ -430,7 +411,6 @@ impl std::ops::Add<Motor> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<MultiVector> for DualNum {
@@ -440,7 +420,7 @@ impl std::ops::Add<MultiVector> for DualNum {
     // f32        2        0        0
     fn add(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[0], (self.group0()[1] + other.group0()[1])]),
             // e1, e2, e3, e4
@@ -464,13 +444,12 @@ impl std::ops::Add<MultiVector> for DualNum {
             // e1234
             other[e45],
         );
-        return addition;
     }
 }
 impl std::ops::Add<Plane> for DualNum {
     type Output = MultiVector;
     fn add(self, other: Plane) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -494,7 +473,6 @@ impl std::ops::Add<Plane> for DualNum {
             // e1234
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<RoundPoint> for DualNum {
@@ -504,7 +482,7 @@ impl std::ops::Add<RoundPoint> for DualNum {
     // f32        1        0        0
     fn add(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
@@ -514,14 +492,13 @@ impl std::ops::Add<RoundPoint> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[0] + other.group0()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<Scalar> for DualNum {
     type Output = MultiVector;
     fn add(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other[scalar], self.group0()[1]]),
             // e1, e2, e3, e4
@@ -545,14 +522,13 @@ impl std::ops::Add<Scalar> for DualNum {
             // e1234
             0.0,
         );
-        return addition;
     }
 }
 impl std::ops::Add<Sphere> for DualNum {
     type Output = MultiVector;
     fn add(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -576,7 +552,6 @@ impl std::ops::Add<Sphere> for DualNum {
             // e1234
             other[e4315],
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorEven> for DualNum {
@@ -585,7 +560,7 @@ impl std::ops::Add<VersorEven> for DualNum {
     //      add/sub      mul      div
     // f32        2        0        0
     fn add(self, other: VersorEven) -> Self::Output {
-        let addition = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (self.group0()[1] + other.group0()[3])]),
             // e415, e425, e435, e321
@@ -595,13 +570,12 @@ impl std::ops::Add<VersorEven> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], (self.group0()[0] + other.group3()[3])]),
         );
-        return addition;
     }
 }
 impl std::ops::Add<VersorOdd> for DualNum {
     type Output = MultiVector;
     fn add(self, other: VersorOdd) -> Self::Output {
-        let addition = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([other.group0()[3], self.group0()[1]]),
             // e1, e2, e3, e4
@@ -625,7 +599,6 @@ impl std::ops::Add<VersorOdd> for DualNum {
             // e1234
             other.group2()[3],
         );
-        return addition;
     }
 }
 impl std::ops::BitXor<AntiCircleRotor> for DualNum {
@@ -640,8 +613,12 @@ impl std::ops::BitXor<AntiCircleRotor> for DualNum {
 impl std::ops::BitXor<AntiDipoleInversion> for DualNum {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        5        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        6        0
+    //  no simd        0        8        0
     fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -649,8 +626,9 @@ impl std::ops::BitXor<AntiDipoleInversion> for DualNum {
 impl std::ops::BitXor<AntiDualNum> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn bitxor(self, other: AntiDualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -672,8 +650,12 @@ impl std::ops::BitXor<AntiFlatPoint> for DualNum {
 impl std::ops::BitXor<AntiFlector> for DualNum {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        5        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        6        0
+    //  no simd        0        8        0
     fn bitxor(self, other: AntiFlector) -> Self::Output {
         return self.wedge(other);
     }
@@ -681,8 +663,12 @@ impl std::ops::BitXor<AntiFlector> for DualNum {
 impl std::ops::BitXor<AntiLine> for DualNum {
     type Output = Circle;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        6        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        6        0
     fn bitxor(self, other: AntiLine) -> Self::Output {
         return self.wedge(other);
     }
@@ -699,8 +685,12 @@ impl std::ops::BitXor<AntiMotor> for DualNum {
 impl std::ops::BitXor<AntiPlane> for DualNum {
     type Output = Dipole;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        4        0
     fn bitxor(self, other: AntiPlane) -> Self::Output {
         return self.wedge(other);
     }
@@ -726,8 +716,12 @@ impl std::ops::BitXor<CircleRotor> for DualNum {
 impl std::ops::BitXor<Dipole> for DualNum {
     type Output = Circle;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        6        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        6        0
     fn bitxor(self, other: Dipole) -> Self::Output {
         return self.wedge(other);
     }
@@ -735,8 +729,12 @@ impl std::ops::BitXor<Dipole> for DualNum {
 impl std::ops::BitXor<DipoleInversion> for DualNum {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        7        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        7        0
     fn bitxor(self, other: DipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -744,8 +742,9 @@ impl std::ops::BitXor<DipoleInversion> for DualNum {
 impl std::ops::BitXor<FlatPoint> for DualNum {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd3        0        1        0
+    // no simd        0        3        0
     fn bitxor(self, other: FlatPoint) -> Self::Output {
         return self.wedge(other);
     }
@@ -753,8 +752,9 @@ impl std::ops::BitXor<FlatPoint> for DualNum {
 impl std::ops::BitXor<Flector> for DualNum {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn bitxor(self, other: Flector) -> Self::Output {
         return self.wedge(other);
     }
@@ -780,8 +780,12 @@ impl std::ops::BitXor<Motor> for DualNum {
 impl std::ops::BitXor<MultiVector> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1       17        0
+    //           add/sub      mul      div
+    //      f32        1       11        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        1       13        0
+    //  no simd        1       17        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -799,8 +803,12 @@ impl std::ops::BitXor<Plane> for DualNum {
 impl std::ops::BitXor<RoundPoint> for DualNum {
     type Output = Dipole;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        4        0
     fn bitxor(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -809,8 +817,9 @@ impl std::ops::BitXor<RoundPoint> for DualNum {
 impl std::ops::BitXor<Scalar> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn bitxor(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.wedge(other);
@@ -834,8 +843,12 @@ impl std::ops::BitXor<Sphere> for DualNum {
 impl std::ops::BitXor<VersorEven> for DualNum {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        5        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        6        0
+    //  no simd        0        8        0
     fn bitxor(self, other: VersorEven) -> Self::Output {
         return self.wedge(other);
     }
@@ -891,8 +904,12 @@ impl std::ops::MulAssign<AntiDualNum> for DualNum {
 impl std::ops::Mul<AntiFlatPoint> for DualNum {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       17        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        0        7        0
+    //  no simd        0       19        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -900,8 +917,12 @@ impl std::ops::Mul<AntiFlatPoint> for DualNum {
 impl std::ops::Mul<AntiFlector> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       28        0
+    //           add/sub      mul      div
+    //      f32        4       16        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        4       20        0
+    //  no simd        4       32        0
     fn mul(self, other: AntiFlector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -909,8 +930,12 @@ impl std::ops::Mul<AntiFlector> for DualNum {
 impl std::ops::Mul<AntiLine> for DualNum {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3       15        0
+    //           add/sub      mul      div
+    //      f32        3       12        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        3       13        0
+    //  no simd        3       15        0
     fn mul(self, other: AntiLine) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -918,8 +943,12 @@ impl std::ops::Mul<AntiLine> for DualNum {
 impl std::ops::Mul<AntiMotor> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       20        0
+    //           add/sub      mul      div
+    //      f32        4       12        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        4       14        0
+    //  no simd        4       20        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -927,8 +956,12 @@ impl std::ops::Mul<AntiMotor> for DualNum {
 impl std::ops::Mul<AntiPlane> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       11        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0       17        0
     fn mul(self, other: AntiPlane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -936,8 +969,9 @@ impl std::ops::Mul<AntiPlane> for DualNum {
 impl std::ops::Mul<AntiScalar> for DualNum {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd2        0        2        0
+    // no simd        0        4        0
     fn mul(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -946,8 +980,13 @@ impl std::ops::Mul<AntiScalar> for DualNum {
 impl std::ops::Mul<Circle> for DualNum {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       23        0
+    //           add/sub      mul      div
+    //      f32        3       14        0
+    //    simd3        1        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        4       17        0
+    //  no simd        6       24        0
     fn mul(self, other: Circle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -964,8 +1003,12 @@ impl std::ops::Mul<CircleRotor> for DualNum {
 impl std::ops::Mul<Dipole> for DualNum {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       21        0
+    //           add/sub      mul      div
+    //      f32        3       15        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        4       17        0
+    //  no simd        6       21        0
     fn mul(self, other: Dipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -973,8 +1016,12 @@ impl std::ops::Mul<Dipole> for DualNum {
 impl std::ops::Mul<DipoleInversion> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       30        0
+    //           add/sub      mul      div
+    //      f32        6       22        0
+    //    simd4        2        3        0
+    // Totals...
+    // yes simd        8       25        0
+    //  no simd       14       34        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -991,8 +1038,12 @@ impl std::ops::Mul<DualNum> for DualNum {
 impl std::ops::Mul<FlatPoint> for DualNum {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       12        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        0        6        0
+    //  no simd        0       15        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1000,8 +1051,12 @@ impl std::ops::Mul<FlatPoint> for DualNum {
 impl std::ops::Mul<Flector> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       20        0
+    //           add/sub      mul      div
+    //      f32        4       12        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        4       14        0
+    //  no simd        4       20        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1009,8 +1064,12 @@ impl std::ops::Mul<Flector> for DualNum {
 impl std::ops::Mul<Line> for DualNum {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3       21        0
+    //           add/sub      mul      div
+    //      f32        3       15        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        3       17        0
+    //  no simd        3       21        0
     fn mul(self, other: Line) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1018,8 +1077,12 @@ impl std::ops::Mul<Line> for DualNum {
 impl std::ops::Mul<Motor> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       28        0
+    //           add/sub      mul      div
+    //      f32        4       19        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        4       22        0
+    //  no simd        4       31        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1027,8 +1090,13 @@ impl std::ops::Mul<Motor> for DualNum {
 impl std::ops::Mul<MultiVector> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       32       68        0
+    //           add/sub      mul      div
+    //      f32        9       37        0
+    //    simd3        5        9        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       16       48        0
+    //  no simd       32       72        0
     fn mul(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -1037,8 +1105,12 @@ impl std::ops::Mul<MultiVector> for DualNum {
 impl std::ops::Mul<Plane> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       12        0
+    //           add/sub      mul      div
+    //      f32        0        8        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        9        0
+    //  no simd        0       12        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1046,8 +1118,12 @@ impl std::ops::Mul<Plane> for DualNum {
 impl std::ops::Mul<RoundPoint> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       13        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        0        7        0
+    //  no simd        0       19        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -1056,8 +1132,9 @@ impl std::ops::Mul<RoundPoint> for DualNum {
 impl std::ops::Mul<Scalar> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn mul(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -1072,8 +1149,12 @@ impl std::ops::MulAssign<Scalar> for DualNum {
 impl std::ops::Mul<Sphere> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       13        0
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        3        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0       14        0
     fn mul(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return self.geometric_product(other);
@@ -1082,8 +1163,12 @@ impl std::ops::Mul<Sphere> for DualNum {
 impl std::ops::Mul<VersorEven> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       36        0
+    //           add/sub      mul      div
+    //      f32        9       28        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       11       30        0
+    //  no simd       17       36        0
     fn mul(self, other: VersorEven) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1091,8 +1176,12 @@ impl std::ops::Mul<VersorEven> for DualNum {
 impl std::ops::Mul<VersorOdd> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16       32        0
+    //           add/sub      mul      div
+    //      f32        1       16        0
+    //    simd4        4        5        0
+    // Totals...
+    // yes simd        5       21        0
+    //  no simd       17       36        0
     fn mul(self, other: VersorOdd) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1103,15 +1192,15 @@ impl std::ops::Neg for DualNum {
     //   simd2        0        1        0
     // no simd        0        2        0
     fn neg(self) -> Self {
-        let negation = DualNum::from_groups(/* e4, e12345 */ (self.group0() * Simd32x2::from(-1.0)));
-        return negation;
+        return DualNum::from_groups(/* e4, e12345 */ (self.group0() * Simd32x2::from(-1.0)));
     }
 }
 impl std::ops::Not for DualNum {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn not(self) -> Self::Output {
         return self.right_dual();
     }
@@ -1127,7 +1216,7 @@ impl std::ops::Sub<AntiCircleRotor> for DualNum {
     // yes simd        0        4        0
     //  no simd        0       11        0
     fn sub(self, other: AntiCircleRotor) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group2()[3] * -1.0), self.group0()[1]]),
             // e1, e2, e3, e4
@@ -1151,7 +1240,6 @@ impl std::ops::Sub<AntiCircleRotor> for DualNum {
             // e1234
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDipoleInversion> for DualNum {
@@ -1164,7 +1252,7 @@ impl std::ops::Sub<AntiDipoleInversion> for DualNum {
     // yes simd        1        8        0
     //  no simd        1       14        0
     fn sub(self, other: AntiDipoleInversion) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[1]]),
             // e415, e425, e435, e321
@@ -1179,7 +1267,6 @@ impl std::ops::Sub<AntiDipoleInversion> for DualNum {
                 (self.group0()[0] - other.group2()[3]),
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiDualNum> for DualNum {
@@ -1188,7 +1275,7 @@ impl std::ops::Sub<AntiDualNum> for DualNum {
     //      add/sub      mul      div
     // f32        0        2        0
     fn sub(self, other: AntiDualNum) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[1] * -1.0), self.group0()[1]]),
             // e1, e2, e3, e4
@@ -1212,7 +1299,6 @@ impl std::ops::Sub<AntiDualNum> for DualNum {
             // e1234
             (other.group0()[0] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiFlatPoint> for DualNum {
@@ -1221,7 +1307,7 @@ impl std::ops::Sub<AntiFlatPoint> for DualNum {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: AntiFlatPoint) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
@@ -1231,7 +1317,6 @@ impl std::ops::Sub<AntiFlatPoint> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiFlector> for DualNum {
@@ -1244,7 +1329,7 @@ impl std::ops::Sub<AntiFlector> for DualNum {
     // yes simd        0        5        0
     //  no simd        0        8        0
     fn sub(self, other: AntiFlector) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
@@ -1254,7 +1339,6 @@ impl std::ops::Sub<AntiFlector> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self.group0()[0]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiLine> for DualNum {
@@ -1267,7 +1351,7 @@ impl std::ops::Sub<AntiLine> for DualNum {
     // yes simd        0        4        0
     //  no simd        0        6        0
     fn sub(self, other: AntiLine) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -1291,7 +1375,6 @@ impl std::ops::Sub<AntiLine> for DualNum {
             // e1234
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiMotor> for DualNum {
@@ -1304,7 +1387,7 @@ impl std::ops::Sub<AntiMotor> for DualNum {
     // yes simd        0        6        0
     //  no simd        0        8        0
     fn sub(self, other: AntiMotor) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), self.group0()[1]]),
             // e1, e2, e3, e4
@@ -1328,7 +1411,6 @@ impl std::ops::Sub<AntiMotor> for DualNum {
             // e1234
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiPlane> for DualNum {
@@ -1337,7 +1419,7 @@ impl std::ops::Sub<AntiPlane> for DualNum {
     //      add/sub      mul      div
     // f32        0        4        0
     fn sub(self, other: AntiPlane) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
@@ -1347,7 +1429,6 @@ impl std::ops::Sub<AntiPlane> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[0]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<AntiScalar> for DualNum {
@@ -1357,15 +1438,13 @@ impl std::ops::Sub<AntiScalar> for DualNum {
     // f32        1        0        0
     fn sub(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        let subtraction = DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[0], (self.group0()[1] - other[e12345])]));
-        return subtraction;
+        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[0], (self.group0()[1] - other[e12345])]));
     }
 }
 impl std::ops::SubAssign<AntiScalar> for DualNum {
     fn sub_assign(&mut self, other: AntiScalar) {
         use crate::elements::*;
-        let subtraction = DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[0], (self.group0()[1] - other[e12345])]));
-        *self = subtraction;
+        *self = DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[0], (self.group0()[1] - other[e12345])]));
     }
 }
 impl std::ops::Sub<Circle> for DualNum {
@@ -1378,7 +1457,7 @@ impl std::ops::Sub<Circle> for DualNum {
     // yes simd        0        7        0
     //  no simd        0       10        0
     fn sub(self, other: Circle) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), self.group0()[1]]),
             // e415, e425, e435, e321
@@ -1388,7 +1467,6 @@ impl std::ops::Sub<Circle> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<CircleRotor> for DualNum {
@@ -1401,7 +1479,7 @@ impl std::ops::Sub<CircleRotor> for DualNum {
     // yes simd        1        7        0
     //  no simd        1       10        0
     fn sub(self, other: CircleRotor) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -1416,7 +1494,6 @@ impl std::ops::Sub<CircleRotor> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Dipole> for DualNum {
@@ -1429,7 +1506,7 @@ impl std::ops::Sub<Dipole> for DualNum {
     // yes simd        0        3        0
     //  no simd        0       10        0
     fn sub(self, other: Dipole) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -1453,7 +1530,6 @@ impl std::ops::Sub<Dipole> for DualNum {
             // e1234
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DipoleInversion> for DualNum {
@@ -1467,7 +1543,7 @@ impl std::ops::Sub<DipoleInversion> for DualNum {
     // yes simd        0        5        0
     //  no simd        0       15        0
     fn sub(self, other: DipoleInversion) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -1491,7 +1567,6 @@ impl std::ops::Sub<DipoleInversion> for DualNum {
             // e1234
             (other.group2()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<DualNum> for DualNum {
@@ -1501,14 +1576,12 @@ impl std::ops::Sub<DualNum> for DualNum {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn sub(self, other: DualNum) -> Self::Output {
-        let subtraction = DualNum::from_groups(/* e4, e12345 */ (-other.group0() + self.group0()));
-        return subtraction;
+        return DualNum::from_groups(/* e4, e12345 */ (-other.group0() + self.group0()));
     }
 }
 impl std::ops::SubAssign<DualNum> for DualNum {
     fn sub_assign(&mut self, other: DualNum) {
-        let subtraction = DualNum::from_groups(/* e4, e12345 */ (-other.group0() + self.group0()));
-        *self = subtraction;
+        *self = DualNum::from_groups(/* e4, e12345 */ (-other.group0() + self.group0()));
     }
 }
 impl std::ops::Sub<FlatPoint> for DualNum {
@@ -1518,7 +1591,7 @@ impl std::ops::Sub<FlatPoint> for DualNum {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn sub(self, other: FlatPoint) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -1542,7 +1615,6 @@ impl std::ops::Sub<FlatPoint> for DualNum {
             // e1234
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Flector> for DualNum {
@@ -1552,7 +1624,7 @@ impl std::ops::Sub<Flector> for DualNum {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn sub(self, other: Flector) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -1576,7 +1648,6 @@ impl std::ops::Sub<Flector> for DualNum {
             // e1234
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Line> for DualNum {
@@ -1585,7 +1656,7 @@ impl std::ops::Sub<Line> for DualNum {
     //      add/sub      mul      div
     // f32        0        6        0
     fn sub(self, other: Line) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
@@ -1595,7 +1666,6 @@ impl std::ops::Sub<Line> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Motor> for DualNum {
@@ -1608,7 +1678,7 @@ impl std::ops::Sub<Motor> for DualNum {
     // yes simd        1        4        0
     //  no simd        1        7        0
     fn sub(self, other: Motor) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] - other.group0()[3])]),
             // e415, e425, e435, e321
@@ -1618,7 +1688,6 @@ impl std::ops::Sub<Motor> for DualNum {
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<MultiVector> for DualNum {
@@ -1633,7 +1702,7 @@ impl std::ops::Sub<MultiVector> for DualNum {
     //  no simd        2       30        0
     fn sub(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[0] * -1.0), (self.group0()[1] - other.group0()[1])]),
             // e1, e2, e3, e4
@@ -1662,7 +1731,6 @@ impl std::ops::Sub<MultiVector> for DualNum {
             // e1234
             (other[e45] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Plane> for DualNum {
@@ -1672,7 +1740,7 @@ impl std::ops::Sub<Plane> for DualNum {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn sub(self, other: Plane) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -1696,7 +1764,6 @@ impl std::ops::Sub<Plane> for DualNum {
             // e1234
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<RoundPoint> for DualNum {
@@ -1706,7 +1773,7 @@ impl std::ops::Sub<RoundPoint> for DualNum {
     // f32        1        4        0
     fn sub(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]),
             // e415, e425, e435, e321
@@ -1721,7 +1788,6 @@ impl std::ops::Sub<RoundPoint> for DualNum {
                 (self.group0()[0] - other.group0()[3]),
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Scalar> for DualNum {
@@ -1731,7 +1797,7 @@ impl std::ops::Sub<Scalar> for DualNum {
     // f32        0        1        0
     fn sub(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other[scalar] * -1.0), self.group0()[1]]),
             // e1, e2, e3, e4
@@ -1755,7 +1821,6 @@ impl std::ops::Sub<Scalar> for DualNum {
             // e1234
             0.0,
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<Sphere> for DualNum {
@@ -1769,7 +1834,7 @@ impl std::ops::Sub<Sphere> for DualNum {
     //  no simd        0        5        0
     fn sub(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([0.0, self.group0()[1]]),
             // e1, e2, e3, e4
@@ -1793,7 +1858,6 @@ impl std::ops::Sub<Sphere> for DualNum {
             // e1234
             (other[e4315] * -1.0),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorEven> for DualNum {
@@ -1806,7 +1870,7 @@ impl std::ops::Sub<VersorEven> for DualNum {
     // yes simd        2        8        0
     //  no simd        2       14        0
     fn sub(self, other: VersorEven) -> Self::Output {
-        let subtraction = VersorEven::from_groups(
+        return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from([
                 (other.group0()[0] * -1.0),
@@ -1826,7 +1890,6 @@ impl std::ops::Sub<VersorEven> for DualNum {
                 (self.group0()[0] - other.group3()[3]),
             ]),
         );
-        return subtraction;
     }
 }
 impl std::ops::Sub<VersorOdd> for DualNum {
@@ -1840,7 +1903,7 @@ impl std::ops::Sub<VersorOdd> for DualNum {
     // yes simd        0        6        0
     //  no simd        0       16        0
     fn sub(self, other: VersorOdd) -> Self::Output {
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(other.group0()[3] * -1.0), self.group0()[1]]),
             // e1, e2, e3, e4
@@ -1864,7 +1927,6 @@ impl std::ops::Sub<VersorOdd> for DualNum {
             // e1234
             (other.group2()[3] * -1.0),
         );
-        return subtraction;
     }
 }
 

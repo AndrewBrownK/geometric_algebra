@@ -11,24 +11,25 @@ use crate::traits::Reverse;
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       2       0
-//   Median:        84     119       0
-//  Average:       162     196       0
-//  Maximum:      1518    1598       0
+//   Median:        56      90       0
+//  Average:        99     128       0
+//  Maximum:      1052    1114       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       2       0
-//   Median:        96     133       0
-//  Average:       187     224       0
+//   Median:        99     136       0
+//  Average:       188     225       0
 //  Maximum:      1984    2068       0
 impl InfixSandwich for AntiCircleRotor {}
 impl Sandwich<AntiCircleRotor> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      205      247        0
-    //    simd4       15       15        0
+    //      f32      109      144        0
+    //    simd3        0        1        0
+    //    simd4       39       40        0
     // Totals...
-    // yes simd      220      262        0
+    // yes simd      148      185        0
     //  no simd      265      307        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -99,10 +100,11 @@ impl Sandwich<AntiDipoleInversion> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      213      255        0
-    //    simd4       24       24        0
+    //      f32      121      156        0
+    //    simd3        0        1        0
+    //    simd4       47       48        0
     // Totals...
-    // yes simd      237      279        0
+    // yes simd      168      205        0
     //  no simd      309      351        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -199,8 +201,13 @@ impl Sandwich<AntiDipoleInversion> for AntiCircleRotor {
 impl Sandwich<AntiDualNum> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      167      208        0
+    //           add/sub      mul      div
+    //      f32       71      105        0
+    //    simd3        0        1        0
+    //    simd4       24       25        0
+    // Totals...
+    // yes simd       95      131        0
+    //  no simd      167      208        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -239,10 +246,11 @@ impl Sandwich<AntiFlatPoint> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      180      221        0
-    //    simd4        3        3        0
+    //      f32       88      122        0
+    //    simd3        0        1        0
+    //    simd4       26       27        0
     // Totals...
-    // yes simd      183      224        0
+    // yes simd      114      150        0
     //  no simd      192      233        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -282,10 +290,11 @@ impl Sandwich<AntiFlector> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      189      230        0
-    //    simd4       11       11        0
+    //      f32       97      131        0
+    //    simd3        0        1        0
+    //    simd4       34       35        0
     // Totals...
-    // yes simd      200      241        0
+    // yes simd      131      167        0
     //  no simd      233      274        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -339,8 +348,13 @@ impl Sandwich<AntiFlector> for AntiCircleRotor {
 impl Sandwich<AntiLine> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      210      252        0
+    //           add/sub      mul      div
+    //      f32      114      149        0
+    //    simd3        0        1        0
+    //    simd4       24       25        0
+    // Totals...
+    // yes simd      138      175        0
+    //  no simd      210      252        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -406,10 +420,11 @@ impl Sandwich<AntiMotor> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      196      238        0
-    //    simd4        9        9        0
+    //      f32      100      135        0
+    //    simd3        0        1        0
+    //    simd4       33       34        0
     // Totals...
-    // yes simd      205      247        0
+    // yes simd      133      170        0
     //  no simd      232      274        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -482,11 +497,11 @@ impl Sandwich<AntiPlane> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      151      192        0
-    //    simd3        1        2        0
-    //    simd4        6        6        0
+    //      f32       63       97        0
+    //    simd3        1        3        0
+    //    simd4       28       29        0
     // Totals...
-    // yes simd      158      200        0
+    // yes simd       92      129        0
     //  no simd      178      222        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -525,11 +540,11 @@ impl Sandwich<AntiScalar> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      105      131        0
-    //    simd3        0        1        0
-    //    simd4        0        3        0
+    //      f32       53       72        0
+    //    simd3        0        2        0
+    //    simd4       13       17        0
     // Totals...
-    // yes simd      105      135        0
+    // yes simd       66       91        0
     //  no simd      105      146        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -548,10 +563,11 @@ impl Sandwich<Circle> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      214      256        0
-    //    simd4       10       10        0
+    //      f32      122      157        0
+    //    simd3        0        1        0
+    //    simd4       33       34        0
     // Totals...
-    // yes simd      224      266        0
+    // yes simd      155      192        0
     //  no simd      254      296        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -631,10 +647,11 @@ impl Sandwich<CircleRotor> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      213      255        0
-    //    simd4       13       13        0
+    //      f32      121      156        0
+    //    simd3        0        1        0
+    //    simd4       36       37        0
     // Totals...
-    // yes simd      226      268        0
+    // yes simd      157      194        0
     //  no simd      265      307        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -715,10 +732,11 @@ impl Sandwich<Dipole> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      214      256        0
-    //    simd4       10       10        0
+    //      f32      118      153        0
+    //    simd3        0        1        0
+    //    simd4       34       35        0
     // Totals...
-    // yes simd      224      266        0
+    // yes simd      152      189        0
     //  no simd      254      296        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -790,10 +808,11 @@ impl Sandwich<DipoleInversion> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      225      267        0
-    //    simd4       21       21        0
+    //      f32      129      164        0
+    //    simd3        0        1        0
+    //    simd4       45       46        0
     // Totals...
-    // yes simd      246      288        0
+    // yes simd      174      211        0
     //  no simd      309      351        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -905,8 +924,13 @@ impl Sandwich<DipoleInversion> for AntiCircleRotor {
 impl Sandwich<DualNum> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      167      212        0
+    //           add/sub      mul      div
+    //      f32       75      113        0
+    //    simd3        0        1        0
+    //    simd4       23       24        0
+    // Totals...
+    // yes simd       98      138        0
+    //  no simd      167      212        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -945,10 +969,11 @@ impl Sandwich<FlatPoint> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      181      225        0
-    //    simd4        2        2        0
+    //      f32       85      122        0
+    //    simd3        0        1        0
+    //    simd4       26       27        0
     // Totals...
-    // yes simd      183      227        0
+    // yes simd      111      150        0
     //  no simd      189      233        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -994,10 +1019,11 @@ impl Sandwich<Flector> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      204      246        0
-    //    simd4        7        7        0
+    //      f32      108      143        0
+    //    simd3        0        1        0
+    //    simd4       31       32        0
     // Totals...
-    // yes simd      211      253        0
+    // yes simd      139      176        0
     //  no simd      232      274        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -1059,10 +1085,11 @@ impl Sandwich<Line> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      202      244        0
-    //    simd4        2        2        0
+    //      f32      110      145        0
+    //    simd3        0        1        0
+    //    simd4       25       26        0
     // Totals...
-    // yes simd      204      246        0
+    // yes simd      135      172        0
     //  no simd      210      252        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -1119,10 +1146,11 @@ impl Sandwich<Motor> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      196      238        0
-    //    simd4        9        9        0
+    //      f32      104      139        0
+    //    simd3        0        1        0
+    //    simd4       32       33        0
     // Totals...
-    // yes simd      205      247        0
+    // yes simd      136      173        0
     //  no simd      232      274        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -1186,13 +1214,13 @@ impl Sandwich<MultiVector> for AntiCircleRotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      393      459        0
-    //    simd2       10       10        0
-    //    simd3       37       40        0
-    //    simd4       29       29        0
+    //      f32      172      223        0
+    //    simd2       20       20        0
+    //    simd3       76       83        0
+    //    simd4       50       51        0
     // Totals...
-    // yes simd      469      538        0
-    //  no simd      640      715        0
+    // yes simd      318      377        0
+    //  no simd      640      716        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -1356,11 +1384,11 @@ impl Sandwich<Plane> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      163      201        0
-    //    simd3        1        2        0
-    //    simd4        3        3        0
+    //      f32       75      106        0
+    //    simd3        1        3        0
+    //    simd4       25       26        0
     // Totals...
-    // yes simd      167      206        0
+    // yes simd      101      135        0
     //  no simd      178      219        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
@@ -1397,11 +1425,11 @@ impl Sandwich<RoundPoint> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      155      194        0
-    //    simd3        2        3        0
-    //    simd4        7        7        0
+    //      f32       67       99        0
+    //    simd3        2        4        0
+    //    simd4       29       30        0
     // Totals...
-    // yes simd      164      204        0
+    // yes simd       98      133        0
     //  no simd      189      231        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -1443,11 +1471,11 @@ impl Sandwich<Scalar> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      105      131        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //      f32       45       64        0
+    //    simd3        0        2        0
+    //    simd4       15       18        0
     // Totals...
-    // yes simd      105      134        0
+    // yes simd       60       84        0
     //  no simd      105      142        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -1466,11 +1494,11 @@ impl Sandwich<Sphere> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      163      201        0
-    //    simd3        2        3        0
-    //    simd4        5        5        0
+    //      f32       75      106        0
+    //    simd3        2        4        0
+    //    simd4       27       28        0
     // Totals...
-    // yes simd      170      209        0
+    // yes simd      104      138        0
     //  no simd      189      230        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -1511,10 +1539,11 @@ impl Sandwich<VersorEven> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      216      258        0
-    //    simd4       26       26        0
+    //      f32      124      159        0
+    //    simd3        0        1        0
+    //    simd4       49       50        0
     // Totals...
-    // yes simd      242      284        0
+    // yes simd      173      210        0
     //  no simd      320      362        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -1616,10 +1645,11 @@ impl Sandwich<VersorOdd> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      228      270        0
-    //    simd4       23       23        0
+    //      f32      132      167        0
+    //    simd3        0        1        0
+    //    simd4       47       48        0
     // Totals...
-    // yes simd      251      293        0
+    // yes simd      179      216        0
     //  no simd      320      362        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -1738,11 +1768,12 @@ impl Sandwich<AntiCircleRotor> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      285      327        0
-    //    simd4       22       22        0
+    //      f32      101      139        0
+    //    simd3        0        1        0
+    //    simd4       68       69        0
     // Totals...
-    // yes simd      307      349        0
-    //  no simd      373      415        0
+    // yes simd      169      209        0
+    //  no simd      373      418        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -1845,10 +1876,11 @@ impl Sandwich<AntiDipoleInversion> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      265      307        0
-    //    simd4       42       42        0
+    //      f32      101      136        0
+    //    simd3        0        1        0
+    //    simd4       83       84        0
     // Totals...
-    // yes simd      307      349        0
+    // yes simd      184      221        0
     //  no simd      433      475        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -1952,11 +1984,12 @@ impl Sandwich<AntiDualNum> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      230      272        0
-    //    simd4        2        3        0
+    //      f32       46       84        0
+    //    simd3        0        1        0
+    //    simd4       48       50        0
     // Totals...
-    // yes simd      232      275        0
-    //  no simd      238      284        0
+    // yes simd       94      135        0
+    //  no simd      238      287        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -1990,10 +2023,11 @@ impl Sandwich<AntiFlatPoint> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      244      282        0
-    //    simd4        7        7        0
+    //      f32       80      111        0
+    //    simd3        0        1        0
+    //    simd4       48       49        0
     // Totals...
-    // yes simd      251      289        0
+    // yes simd      128      161        0
     //  no simd      272      310        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -2047,10 +2081,11 @@ impl Sandwich<AntiFlector> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      249      289        0
-    //    simd4       21       21        0
+    //      f32       85      118        0
+    //    simd3        0        1        0
+    //    simd4       62       63        0
     // Totals...
-    // yes simd      270      310        0
+    // yes simd      147      182        0
     //  no simd      333      373        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -2122,11 +2157,12 @@ impl Sandwich<AntiLine> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      274      316        0
-    //    simd4        6        6        0
+    //      f32       90      128        0
+    //    simd3        0        1        0
+    //    simd4       52       53        0
     // Totals...
-    // yes simd      280      322        0
-    //  no simd      298      340        0
+    // yes simd      142      182        0
+    //  no simd      298      343        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2197,11 +2233,12 @@ impl Sandwich<AntiMotor> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      260      302        0
-    //    simd4       17       17        0
+    //      f32       76      114        0
+    //    simd3        0        1        0
+    //    simd4       63       64        0
     // Totals...
-    // yes simd      277      319        0
-    //  no simd      328      370        0
+    // yes simd      139      179        0
+    //  no simd      328      373        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2272,10 +2309,11 @@ impl Sandwich<AntiPlane> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      228      265        0
-    //    simd4       11       12        0
+    //      f32       64       94        0
+    //    simd3        0        1        0
+    //    simd4       52       54        0
     // Totals...
-    // yes simd      239      277        0
+    // yes simd      116      149        0
     //  no simd      272      313        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -2314,11 +2352,11 @@ impl Sandwich<AntiScalar> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      209      235        0
-    //    simd3        0        2        0
-    //    simd4        0        6        0
+    //      f32       69       88        0
+    //    simd3        0        3        0
+    //    simd4       35       42        0
     // Totals...
-    // yes simd      209      243        0
+    // yes simd      104      133        0
     //  no simd      209      265        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -2339,10 +2377,11 @@ impl Sandwich<Circle> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      282      324        0
-    //    simd4       19       19        0
+    //      f32      118      153        0
+    //    simd3        0        1        0
+    //    simd4       60       61        0
     // Totals...
-    // yes simd      301      343        0
+    // yes simd      178      215        0
     //  no simd      358      400        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -2434,10 +2473,11 @@ impl Sandwich<CircleRotor> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      269      311        0
-    //    simd4       26       26        0
+    //      f32      105      140        0
+    //    simd3        0        1        0
+    //    simd4       67       68        0
     // Totals...
-    // yes simd      295      337        0
+    // yes simd      172      209        0
     //  no simd      373      415        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -2533,11 +2573,12 @@ impl Sandwich<Dipole> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      290      332        0
-    //    simd4       17       17        0
+    //      f32      106      144        0
+    //    simd3        0        1        0
+    //    simd4       63       64        0
     // Totals...
-    // yes simd      307      349        0
-    //  no simd      358      400        0
+    // yes simd      169      209        0
+    //  no simd      358      403        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2631,11 +2672,12 @@ impl Sandwich<DipoleInversion> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      289      335        0
-    //    simd4       36       36        0
+    //      f32      105      147        0
+    //    simd3        0        1        0
+    //    simd4       82       83        0
     // Totals...
-    // yes simd      325      371        0
-    //  no simd      433      479        0
+    // yes simd      187      231        0
+    //  no simd      433      482        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2750,10 +2792,11 @@ impl Sandwich<DualNum> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      234      284        0
-    //    simd4        1        1        0
+    //      f32       70      113        0
+    //    simd3        0        1        0
+    //    simd4       42       43        0
     // Totals...
-    // yes simd      235      285        0
+    // yes simd      112      157        0
     //  no simd      238      288        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -2793,11 +2836,12 @@ impl Sandwich<FlatPoint> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      239      279        0
-    //    simd4        8        8        0
+    //      f32       55       91        0
+    //    simd3        0        1        0
+    //    simd4       54       55        0
     // Totals...
-    // yes simd      247      287        0
-    //  no simd      271      311        0
+    // yes simd      109      147        0
+    //  no simd      271      314        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2843,11 +2887,12 @@ impl Sandwich<Flector> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      256      298        0
-    //    simd4       18       18        0
+    //      f32       72      110        0
+    //    simd3        0        1        0
+    //    simd4       64       65        0
     // Totals...
-    // yes simd      274      316        0
-    //  no simd      328      370        0
+    // yes simd      136      176        0
+    //  no simd      328      373        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2911,10 +2956,11 @@ impl Sandwich<Line> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      286      328        0
-    //    simd4        3        3        0
+    //      f32      122      157        0
+    //    simd3        0        1        0
+    //    simd4       44       45        0
     // Totals...
-    // yes simd      289      331        0
+    // yes simd      166      203        0
     //  no simd      298      340        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -2988,10 +3034,11 @@ impl Sandwich<Motor> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      258      295        0
-    //    simd4       19       19        0
+    //      f32       94      124        0
+    //    simd3        0        1        0
+    //    simd4       60       61        0
     // Totals...
-    // yes simd      277      314        0
+    // yes simd      154      186        0
     //  no simd      334      371        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -3064,12 +3111,12 @@ impl Sandwich<MultiVector> for AntiDipoleInversion {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      590      658        0
-    //    simd2        4        4        0
-    //    simd3       50       52        0
-    //    simd4       37       37        0
+    //      f32      270      325        0
+    //    simd2        8        8        0
+    //    simd3       98      103        0
+    //    simd4       79       80        0
     // Totals...
-    // yes simd      681      751        0
+    // yes simd      455      516        0
     //  no simd      896      970        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -3313,11 +3360,12 @@ impl Sandwich<Plane> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      236      281        0
-    //    simd4        8        8        0
+    //      f32       52       93        0
+    //    simd3        0        1        0
+    //    simd4       54       55        0
     // Totals...
-    // yes simd      244      289        0
-    //  no simd      268      313        0
+    // yes simd      106      149        0
+    //  no simd      268      316        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -3360,10 +3408,11 @@ impl Sandwich<RoundPoint> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      239      282        0
-    //    simd4       11       11        0
+    //      f32       75      111        0
+    //    simd3        0        1        0
+    //    simd4       52       53        0
     // Totals...
-    // yes simd      250      293        0
+    // yes simd      127      165        0
     //  no simd      283      326        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -3411,11 +3460,11 @@ impl Sandwich<Scalar> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      209      235        0
-    //    simd3        0        1        0
-    //    simd4        0        3        0
+    //      f32       41       60        0
+    //    simd3        0        2        0
+    //    simd4       42       46        0
     // Totals...
-    // yes simd      209      239        0
+    // yes simd       83      108        0
     //  no simd      209      250        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -3436,11 +3485,12 @@ impl Sandwich<Sphere> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      231      279        0
-    //    simd4       13       13        0
+    //      f32       47       91        0
+    //    simd3        0        1        0
+    //    simd4       59       60        0
     // Totals...
-    // yes simd      244      292        0
-    //  no simd      283      331        0
+    // yes simd      106      152        0
+    //  no simd      283      334        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -3489,10 +3539,11 @@ impl Sandwich<VersorEven> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      272      314        0
-    //    simd4       44       44        0
+    //      f32      108      143        0
+    //    simd3        0        1        0
+    //    simd4       85       86        0
     // Totals...
-    // yes simd      316      358        0
+    // yes simd      193      230        0
     //  no simd      448      490        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -3606,11 +3657,12 @@ impl Sandwich<VersorOdd> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      284      326        0
-    //    simd4       41       41        0
+    //      f32      100      138        0
+    //    simd3        0        1        0
+    //    simd4       87       88        0
     // Totals...
-    // yes simd      325      367        0
-    //  no simd      448      490        0
+    // yes simd      187      227        0
+    //  no simd      448      493        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -3721,8 +3773,12 @@ impl InfixSandwich for AntiDualNum {}
 impl Sandwich<AntiCircleRotor> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       23       57        0
+    //           add/sub      mul      div
+    //      f32       12       44        0
+    //    simd4        3        4        0
+    // Totals...
+    // yes simd       15       48        0
+    //  no simd       24       60        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -3761,11 +3817,11 @@ impl Sandwich<AntiDipoleInversion> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       47        0
-    //    simd4        2        4        0
+    //      f32        7       31        0
+    //    simd4        6        9        0
     // Totals...
-    // yes simd       24       51        0
-    //  no simd       30       63        0
+    // yes simd       13       40        0
+    //  no simd       31       67        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -3808,11 +3864,11 @@ impl Sandwich<AntiFlatPoint> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       33        0
-    //    simd4        0        3        0
+    //      f32        6       25        0
+    //    simd4        2        6        0
     // Totals...
-    // yes simd       14       36        0
-    //  no simd       14       45        0
+    // yes simd        8       31        0
+    //  no simd       14       49        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -3836,11 +3892,11 @@ impl Sandwich<AntiFlector> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       45        0
-    //    simd4        0        3        0
+    //      f32        5       29        0
+    //    simd4        4        8        0
     // Totals...
-    // yes simd       20       48        0
-    //  no simd       20       57        0
+    // yes simd        9       37        0
+    //  no simd       21       61        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -3869,10 +3925,11 @@ impl Sandwich<AntiLine> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       45        0
+    //      f32       13       37        0
     //    simd3        0        1        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       17       46        0
+    // yes simd       14       40        0
     //  no simd       17       48        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
@@ -3907,11 +3964,11 @@ impl Sandwich<AntiMotor> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       49        0
-    //    simd4        0        2        0
+    //      f32        9       36        0
+    //    simd4        3        6        0
     // Totals...
-    // yes simd       20       51        0
-    //  no simd       20       57        0
+    // yes simd       12       42        0
+    //  no simd       21       60        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -3945,11 +4002,11 @@ impl Sandwich<AntiPlane> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       37        0
-    //    simd4        0        2        0
+    //      f32        1       21        0
+    //    simd4        4        7        0
     // Totals...
-    // yes simd       16       39        0
-    //  no simd       16       45        0
+    // yes simd        5       28        0
+    //  no simd       17       49        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -3988,12 +4045,12 @@ impl Sandwich<Circle> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       44        0
+    //      f32        9       36        0
     //    simd3        1        2        0
-    //    simd4        0        1        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       18       47        0
-    //  no simd       20       54        0
+    // yes simd       12       42        0
+    //  no simd       20       58        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -4026,8 +4083,12 @@ impl Sandwich<Circle> for AntiDualNum {
 impl Sandwich<CircleRotor> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       23       54        0
+    //           add/sub      mul      div
+    //      f32        8       38        0
+    //    simd4        4        5        0
+    // Totals...
+    // yes simd       12       43        0
+    //  no simd       24       58        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4066,10 +4127,11 @@ impl Sandwich<Dipole> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       47        0
+    //      f32       13       39        0
     //    simd3        1        2        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       18       49        0
+    // yes simd       15       43        0
     //  no simd       20       53        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
@@ -4104,11 +4166,11 @@ impl Sandwich<DipoleInversion> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       26       59        0
-    //    simd4        1        1        0
+    //      f32       15       46        0
+    //    simd4        4        5        0
     // Totals...
-    // yes simd       27       60        0
-    //  no simd       30       63        0
+    // yes simd       19       51        0
+    //  no simd       31       66        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4160,10 +4222,10 @@ impl Sandwich<FlatPoint> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       36        0
-    //    simd4        0        2        0
+    //      f32       10       28        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       14       38        0
+    // yes simd       11       32        0
     //  no simd       14       44        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
@@ -4188,11 +4250,11 @@ impl Sandwich<Flector> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       44        0
-    //    simd4        0        2        0
+    //      f32        9       31        0
+    //    simd4        3        6        0
     // Totals...
-    // yes simd       20       46        0
-    //  no simd       20       52        0
+    // yes simd       12       37        0
+    //  no simd       21       55        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4221,11 +4283,12 @@ impl Sandwich<Line> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       42        0
+    //      f32        9       34        0
     //    simd3        0        1        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       17       43        0
-    //  no simd       17       45        0
+    // yes simd       11       38        0
+    //  no simd       17       49        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -4259,11 +4322,11 @@ impl Sandwich<Motor> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       44        0
-    //    simd4        0        2        0
+    //      f32        5       28        0
+    //    simd4        4        7        0
     // Totals...
-    // yes simd       20       46        0
-    //  no simd       20       52        0
+    // yes simd        9       35        0
+    //  no simd       21       56        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4292,13 +4355,13 @@ impl Sandwich<MultiVector> for AntiDualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       38       82        0
-    //    simd2        1        2        0
-    //    simd3        5        9        0
-    //    simd4        3        4        0
+    //      f32       13       47        0
+    //    simd2        2        4        0
+    //    simd3       10       18        0
+    //    simd4        5        6        0
     // Totals...
-    // yes simd       47       97        0
-    //  no simd       67      129        0
+    // yes simd       30       75        0
+    //  no simd       67      133        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -4349,11 +4412,11 @@ impl Sandwich<Plane> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       34        0
-    //    simd4        0        2        0
+    //      f32        5       21        0
+    //    simd4        3        6        0
     // Totals...
-    // yes simd       16       36        0
-    //  no simd       16       42        0
+    // yes simd        8       27        0
+    //  no simd       17       45        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4372,11 +4435,11 @@ impl Sandwich<RoundPoint> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       34        0
-    //    simd4        0        3        0
+    //      f32        1       18        0
+    //    simd4        4        8        0
     // Totals...
-    // yes simd       16       37        0
-    //  no simd       16       46        0
+    // yes simd        5       26        0
+    //  no simd       17       50        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -4411,11 +4474,11 @@ impl Sandwich<Sphere> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       35        0
-    //    simd4        0        2        0
+    //      f32        5       22        0
+    //    simd4        3        6        0
     // Totals...
-    // yes simd       16       37        0
-    //  no simd       16       43        0
+    // yes simd        8       28        0
+    //  no simd       17       46        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -4435,11 +4498,11 @@ impl Sandwich<VersorEven> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       40        0
-    //    simd4        5        7        0
+    //      f32        1       24        0
+    //    simd4        9       12        0
     // Totals...
-    // yes simd       21       47        0
-    //  no simd       36       68        0
+    // yes simd       10       36        0
+    //  no simd       37       72        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4466,11 +4529,11 @@ impl Sandwich<VersorOdd> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       53        0
-    //    simd4        3        3        0
+    //      f32       10       40        0
+    //    simd4        6        7        0
     // Totals...
-    // yes simd       24       56        0
-    //  no simd       33       65        0
+    // yes simd       16       47        0
+    //  no simd       34       68        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4511,11 +4574,11 @@ impl Sandwich<AntiCircleRotor> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       62       99        0
-    //    simd4        4        4        0
+    //      f32       37       63        0
+    //    simd4       11       13        0
     // Totals...
-    // yes simd       66      103        0
-    //  no simd       78      115        0
+    // yes simd       48       76        0
+    //  no simd       81      115        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4559,11 +4622,11 @@ impl Sandwich<AntiDipoleInversion> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       80      124        0
-    //    simd4        3        3        0
+    //      f32       56       97        0
+    //    simd4        9       10        0
     // Totals...
-    // yes simd       83      127        0
-    //  no simd       92      136        0
+    // yes simd       65      107        0
+    //  no simd       92      137        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4616,11 +4679,11 @@ impl Sandwich<AntiDualNum> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       70        0
-    //    simd4        0        2        0
+    //      f32       20       38        0
+    //    simd4        7       10        0
     // Totals...
-    // yes simd       44       72        0
-    //  no simd       44       78        0
+    // yes simd       27       48        0
+    //  no simd       48       78        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -4643,8 +4706,12 @@ impl Sandwich<AntiDualNum> for AntiFlatPoint {
 impl Sandwich<AntiFlatPoint> for AntiFlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       32        0
+    //           add/sub      mul      div
+    //      f32       15       28        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       15       29        0
+    //  no simd       15       32        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -4664,10 +4731,10 @@ impl Sandwich<AntiFlector> for AntiFlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       32        0
-    //    simd4        2        4        0
+    //      f32       16       28        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       18       36        0
+    // yes simd       18       33        0
     //  no simd       24       48        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
@@ -4688,8 +4755,12 @@ impl Sandwich<AntiFlector> for AntiFlatPoint {
 impl Sandwich<AntiLine> for AntiFlatPoint {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       43        0
+    //           add/sub      mul      div
+    //      f32       12       23        0
+    //    simd4        2        5        0
+    // Totals...
+    // yes simd       14       28        0
+    //  no simd       20       43        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -4713,8 +4784,12 @@ impl Sandwich<AntiLine> for AntiFlatPoint {
 impl Sandwich<AntiMotor> for AntiFlatPoint {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       48        0
+    //           add/sub      mul      div
+    //      f32       16       28        0
+    //    simd4        2        5        0
+    // Totals...
+    // yes simd       18       33        0
+    //  no simd       24       48        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -4743,10 +4818,10 @@ impl Sandwich<AntiPlane> for AntiFlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       39        0
-    //    simd4        1        1        0
+    //      f32       14       35        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       15       40        0
+    // yes simd       15       37        0
     //  no simd       18       43        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
@@ -4772,10 +4847,10 @@ impl Sandwich<AntiScalar> for AntiFlatPoint {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       12        0
-    //    simd4        0        2        0
+    //      f32        3        8        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        3       14        0
+    // yes simd        3       11        0
     //  no simd        3       20        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -4787,11 +4862,11 @@ impl Sandwich<Circle> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       61      109        0
-    //    simd4        3        3        0
+    //      f32       37       82        0
+    //    simd4        9       10        0
     // Totals...
-    // yes simd       64      112        0
-    //  no simd       73      121        0
+    // yes simd       46       92        0
+    //  no simd       73      122        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4831,11 +4906,11 @@ impl Sandwich<CircleRotor> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       65      113        0
-    //    simd4        3        3        0
+    //      f32       41       86        0
+    //    simd4        9       10        0
     // Totals...
-    // yes simd       68      116        0
-    //  no simd       77      125        0
+    // yes simd       50       96        0
+    //  no simd       77      126        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -4880,11 +4955,11 @@ impl Sandwich<Dipole> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       58       95        0
-    //    simd4        4        4        0
+    //      f32       33       59        0
+    //    simd4       11       13        0
     // Totals...
-    // yes simd       62       99        0
-    //  no simd       74      111        0
+    // yes simd       44       72        0
+    //  no simd       77      111        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4928,11 +5003,11 @@ impl Sandwich<DipoleInversion> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       63       96        0
-    //    simd4        8        8        0
+    //      f32       38       60        0
+    //    simd4       15       17        0
     // Totals...
-    // yes simd       71      104        0
-    //  no simd       95      128        0
+    // yes simd       53       77        0
+    //  no simd       98      128        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4978,11 +5053,11 @@ impl Sandwich<DualNum> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       74        0
-    //    simd4        0        4        0
+    //      f32       24       51        0
+    //    simd4        5       10        0
     // Totals...
-    // yes simd       44       78        0
-    //  no simd       44       90        0
+    // yes simd       29       61        0
+    //  no simd       44       91        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -5005,8 +5080,12 @@ impl Sandwich<DualNum> for AntiFlatPoint {
 impl Sandwich<FlatPoint> for AntiFlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       32        0
+    //           add/sub      mul      div
+    //      f32       15       28        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       15       29        0
+    //  no simd       15       32        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -5026,10 +5105,10 @@ impl Sandwich<Flector> for AntiFlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       32        0
-    //    simd4        2        4        0
+    //      f32       16       28        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       18       36        0
+    // yes simd       18       33        0
     //  no simd       24       48        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -5050,8 +5129,12 @@ impl Sandwich<Flector> for AntiFlatPoint {
 impl Sandwich<Line> for AntiFlatPoint {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       43        0
+    //           add/sub      mul      div
+    //      f32       12       23        0
+    //    simd4        2        5        0
+    // Totals...
+    // yes simd       14       28        0
+    //  no simd       20       43        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -5075,8 +5158,12 @@ impl Sandwich<Line> for AntiFlatPoint {
 impl Sandwich<Motor> for AntiFlatPoint {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       48        0
+    //           add/sub      mul      div
+    //      f32       16       28        0
+    //    simd4        2        5        0
+    // Totals...
+    // yes simd       18       33        0
+    //  no simd       24       48        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -5104,13 +5191,13 @@ impl Sandwich<MultiVector> for AntiFlatPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      138      202        0
-    //    simd2        1        1        0
-    //    simd3        8       12        0
-    //    simd4        7        7        0
+    //      f32       72      117        0
+    //    simd2        2        2        0
+    //    simd3       16       24        0
+    //    simd4       18       19        0
     // Totals...
-    // yes simd      154      222        0
-    //  no simd      192      268        0
+    // yes simd      108      162        0
+    //  no simd      196      269        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -5199,10 +5286,10 @@ impl Sandwich<Plane> for AntiFlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       32        0
-    //    simd4        2        2        0
+    //      f32       13       28        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       15       34        0
+    // yes simd       15       31        0
     //  no simd       21       40        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -5224,8 +5311,12 @@ impl Sandwich<Plane> for AntiFlatPoint {
 impl Sandwich<RoundPoint> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       53       92        0
+    //           add/sub      mul      div
+    //      f32       33       69        0
+    //    simd4        5        6        0
+    // Totals...
+    // yes simd       38       75        0
+    //  no simd       53       93        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = DipoleInversion::from_groups(
@@ -5260,10 +5351,10 @@ impl Sandwich<Scalar> for AntiFlatPoint {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       12        0
-    //    simd4        0        1        0
+    //      f32        3        8        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        3       13        0
+    // yes simd        3       10        0
     //  no simd        3       16        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -5274,8 +5365,12 @@ impl Sandwich<Scalar> for AntiFlatPoint {
 impl Sandwich<Sphere> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       53       87        0
+    //           add/sub      mul      div
+    //      f32       29       55        0
+    //    simd4        7        8        0
+    // Totals...
+    // yes simd       36       63        0
+    //  no simd       57       87        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -5310,11 +5405,11 @@ impl Sandwich<VersorEven> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       84      128        0
-    //    simd4        3        3        0
+    //      f32       60      101        0
+    //    simd4        9       10        0
     // Totals...
-    // yes simd       87      131        0
-    //  no simd       96      140        0
+    // yes simd       69      111        0
+    //  no simd       96      141        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -5374,11 +5469,11 @@ impl Sandwich<VersorOdd> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       96        0
-    //    simd4        8        9        0
+    //      f32       39       60        0
+    //    simd4       15       18        0
     // Totals...
-    // yes simd       72      105        0
-    //  no simd       96      132        0
+    // yes simd       54       78        0
+    //  no simd       99      132        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -5426,11 +5521,11 @@ impl Sandwich<AntiCircleRotor> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      140      177        0
-    //    simd4       11       11        0
+    //      f32       55       77        0
+    //    simd4       34       36        0
     // Totals...
-    // yes simd      151      188        0
-    //  no simd      184      221        0
+    // yes simd       89      113        0
+    //  no simd      191      221        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -5492,11 +5587,11 @@ impl Sandwich<AntiDipoleInversion> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      190        0
-    //    simd4       17       17        0
+    //      f32       73      113        0
+    //    simd4       36       37        0
     // Totals...
-    // yes simd      165      207        0
-    //  no simd      216      258        0
+    // yes simd      109      150        0
+    //  no simd      217      261        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -5569,11 +5664,11 @@ impl Sandwich<AntiDualNum> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      144        0
-    //    simd4        0        2        0
+    //      f32       31       44        0
+    //    simd4       23       27        0
     // Totals...
-    // yes simd      116      146        0
-    //  no simd      116      152        0
+    // yes simd       54       71        0
+    //  no simd      123      152        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -5602,11 +5697,11 @@ impl Sandwich<AntiFlatPoint> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       60        0
-    //    simd4        2        4        0
+    //      f32       20       33        0
+    //    simd4        8       11        0
     // Totals...
-    // yes simd       46       64        0
-    //  no simd       52       76        0
+    // yes simd       28       44        0
+    //  no simd       52       77        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -5627,11 +5722,11 @@ impl Sandwich<AntiFlector> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       68        0
-    //    simd4        8        8        0
+    //      f32       24       41        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd       56       76        0
-    //  no simd       80      100        0
+    // yes simd       38       56        0
+    //  no simd       80      101        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -5662,10 +5757,10 @@ impl Sandwich<AntiLine> for AntiFlector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       60       80        0
-    //    simd4        2        2        0
+    //      f32       28       44        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       62       82        0
+    // yes simd       38       55        0
     //  no simd       68       88        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
@@ -5699,10 +5794,10 @@ impl Sandwich<AntiMotor> for AntiFlector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       68        0
-    //    simd4        8        8        0
+    //      f32       20       32        0
+    //    simd4       16       17        0
     // Totals...
-    // yes simd       60       76        0
+    // yes simd       36       49        0
     //  no simd       84      100        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
@@ -5735,11 +5830,11 @@ impl Sandwich<AntiPlane> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       68        0
-    //    simd4        3        3        0
+    //      f32       24       41        0
+    //    simd4        9       10        0
     // Totals...
-    // yes simd       51       71        0
-    //  no simd       60       80        0
+    // yes simd       33       51        0
+    //  no simd       60       81        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -5765,10 +5860,10 @@ impl Sandwich<AntiScalar> for AntiFlector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       52        0
-    //    simd4        0        4        0
+    //      f32       16       24        0
+    //    simd4        6       11        0
     // Totals...
-    // yes simd       40       56        0
+    // yes simd       22       35        0
     //  no simd       40       68        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -5785,11 +5880,11 @@ impl Sandwich<Circle> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      136      178        0
-    //    simd4       10       10        0
+    //      f32       61      101        0
+    //    simd4       29       30        0
     // Totals...
-    // yes simd      146      188        0
-    //  no simd      176      218        0
+    // yes simd       90      131        0
+    //  no simd      177      221        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -5843,11 +5938,11 @@ impl Sandwich<CircleRotor> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      144      183        0
-    //    simd4       10       10        0
+    //      f32       69      106        0
+    //    simd4       29       30        0
     // Totals...
-    // yes simd      154      193        0
-    //  no simd      184      223        0
+    // yes simd       98      136        0
+    //  no simd      185      226        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -5903,11 +5998,11 @@ impl Sandwich<Dipole> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      136      173        0
-    //    simd4       10       10        0
+    //      f32       51       73        0
+    //    simd4       33       35        0
     // Totals...
-    // yes simd      146      183        0
-    //  no simd      176      213        0
+    // yes simd       84      108        0
+    //  no simd      183      213        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -5962,11 +6057,11 @@ impl Sandwich<DipoleInversion> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      144      181        0
-    //    simd4       18       18        0
+    //      f32       59       81        0
+    //    simd4       41       43        0
     // Totals...
-    // yes simd      162      199        0
-    //  no simd      216      253        0
+    // yes simd      100      124        0
+    //  no simd      223      253        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -6032,11 +6127,11 @@ impl Sandwich<DualNum> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      148        0
-    //    simd4        0        4        0
+    //      f32       41       71        0
+    //    simd4       19       24        0
     // Totals...
-    // yes simd      116      152        0
-    //  no simd      116      164        0
+    // yes simd       60       95        0
+    //  no simd      117      167        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -6065,11 +6160,11 @@ impl Sandwich<FlatPoint> for AntiFlector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       60        0
-    //    simd4        2        4        0
+    //      f32       16       24        0
+    //    simd4       10       13        0
     // Totals...
-    // yes simd       46       64        0
-    //  no simd       52       76        0
+    // yes simd       26       37        0
+    //  no simd       56       76        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -6090,11 +6185,11 @@ impl Sandwich<Flector> for AntiFlector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       76        0
-    //    simd4        6        6        0
+    //      f32       28       40        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd       62       82        0
-    //  no simd       80      100        0
+    // yes simd       42       55        0
+    //  no simd       84      100        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -6132,10 +6227,10 @@ impl Sandwich<Line> for AntiFlector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       73        0
-    //    simd4        4        4        0
+    //      f32       28       45        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       56       77        0
+    // yes simd       38       56        0
     //  no simd       68       89        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -6169,10 +6264,10 @@ impl Sandwich<Motor> for AntiFlector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       68        0
-    //    simd4        8        8        0
+    //      f32       28       40        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd       60       76        0
+    // yes simd       42       55        0
     //  no simd       84      100        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -6204,13 +6299,13 @@ impl Sandwich<MultiVector> for AntiFlector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      304      367        0
-    //    simd2        4        4        0
-    //    simd3       20       22        0
-    //    simd4       19       19        0
+    //      f32      137      185        0
+    //    simd2        8        8        0
+    //    simd3       40       44        0
+    //    simd4       45       46        0
     // Totals...
-    // yes simd      347      412        0
-    //  no simd      448      517        0
+    // yes simd      230      283        0
+    //  no simd      453      517        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -6336,11 +6431,11 @@ impl Sandwich<Plane> for AntiFlector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       68        0
-    //    simd4        3        3        0
+    //      f32       20       32        0
+    //    simd4       11       12        0
     // Totals...
-    // yes simd       51       71        0
-    //  no simd       60       80        0
+    // yes simd       31       44        0
+    //  no simd       64       80        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -6365,8 +6460,12 @@ impl Sandwich<Plane> for AntiFlector {
 impl Sandwich<RoundPoint> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      136      180        0
+    //           add/sub      mul      div
+    //      f32       61      103        0
+    //    simd4       19       20        0
+    // Totals...
+    // yes simd       80      123        0
+    //  no simd      137      183        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -6409,10 +6508,10 @@ impl Sandwich<Scalar> for AntiFlector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       52        0
-    //    simd4        0        2        0
+    //      f32        8       16        0
+    //    simd4        8       11        0
     // Totals...
-    // yes simd       40       54        0
+    // yes simd       16       27        0
     //  no simd       40       60        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -6429,11 +6528,11 @@ impl Sandwich<Sphere> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      128      161        0
-    //    simd4        2        4        0
+    //      f32       43       61        0
+    //    simd4       25       29        0
     // Totals...
-    // yes simd      130      165        0
-    //  no simd      136      177        0
+    // yes simd       68       90        0
+    //  no simd      143      177        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -6469,11 +6568,11 @@ impl Sandwich<VersorEven> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      156      195        0
-    //    simd4       17       17        0
+    //      f32       81      118        0
+    //    simd4       36       37        0
     // Totals...
-    // yes simd      173      212        0
-    //  no simd      224      263        0
+    // yes simd      117      155        0
+    //  no simd      225      266        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -6550,11 +6649,11 @@ impl Sandwich<VersorOdd> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      137      172        0
-    //    simd4       22       22        0
+    //      f32       52       72        0
+    //    simd4       45       47        0
     // Totals...
-    // yes simd      159      194        0
-    //  no simd      225      260        0
+    // yes simd       97      119        0
+    //  no simd      232      260        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -6622,8 +6721,13 @@ impl InfixSandwich for AntiLine {}
 impl Sandwich<AntiCircleRotor> for AntiLine {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      130      168        0
+    //           add/sub      mul      div
+    //      f32      110      142        0
+    //    simd3        0        2        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd      115      149        0
+    //  no simd      130      168        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -6687,10 +6791,11 @@ impl Sandwich<AntiDipoleInversion> for AntiLine {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      142      180        0
-    //    simd4        3        3        0
+    //      f32      102      134        0
+    //    simd3        0        2        0
+    //    simd4       13       13        0
     // Totals...
-    // yes simd      145      183        0
+    // yes simd      115      149        0
     //  no simd      154      192        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -6771,10 +6876,11 @@ impl Sandwich<AntiDualNum> for AntiLine {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       77      108        0
-    //    simd3        0        1        0
+    //      f32       69       94        0
+    //    simd3        0        3        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       77      109        0
+    // yes simd       71       99        0
     //  no simd       77      111        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
@@ -6808,8 +6914,13 @@ impl Sandwich<AntiDualNum> for AntiLine {
 impl Sandwich<AntiFlatPoint> for AntiLine {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       57        0
+    //           add/sub      mul      div
+    //      f32       28       43        0
+    //    simd3        0        2        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       30       47        0
+    //  no simd       36       57        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -6834,10 +6945,11 @@ impl Sandwich<AntiFlector> for AntiLine {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       70        0
-    //    simd4        2        2        0
+    //      f32       40       56        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       50       72        0
+    // yes simd       44       62        0
     //  no simd       56       78        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
@@ -6875,8 +6987,13 @@ impl Sandwich<AntiFlector> for AntiLine {
 impl Sandwich<AntiLine> for AntiLine {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       47       69        0
+    //           add/sub      mul      div
+    //      f32       35       51        0
+    //    simd3        0        2        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       38       56        0
+    //  no simd       47       69        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -6907,10 +7024,11 @@ impl Sandwich<AntiMotor> for AntiLine {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       66        0
-    //    simd4        3        3        0
+    //      f32       32       48        0
+    //    simd3        0        2        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       47       69        0
+    // yes simd       38       56        0
     //  no simd       56       78        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
@@ -6940,10 +7058,11 @@ impl Sandwich<AntiPlane> for AntiLine {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       55        0
-    //    simd4        2        2        0
+    //      f32       25       41        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       35       57        0
+    // yes simd       29       47        0
     //  no simd       41       63        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
@@ -6969,10 +7088,10 @@ impl Sandwich<AntiScalar> for AntiLine {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       33        0
-    //    simd3        0        2        0
+    //      f32       19       27        0
+    //    simd3        0        4        0
     // Totals...
-    // yes simd       19       35        0
+    // yes simd       19       31        0
     //  no simd       19       39        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -6989,10 +7108,11 @@ impl Sandwich<Circle> for AntiLine {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      120      158        0
-    //    simd4        1        1        0
+    //      f32       80      112        0
+    //    simd3        0        2        0
+    //    simd4       11       11        0
     // Totals...
-    // yes simd      121      159        0
+    // yes simd       91      125        0
     //  no simd      124      162        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -7049,10 +7169,11 @@ impl Sandwich<CircleRotor> for AntiLine {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      122      160        0
-    //    simd4        2        2        0
+    //      f32       82      114        0
+    //    simd3        0        2        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd      124      162        0
+    // yes simd       94      128        0
     //  no simd      130      168        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -7104,8 +7225,13 @@ impl Sandwich<CircleRotor> for AntiLine {
 impl Sandwich<Dipole> for AntiLine {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      124      162        0
+    //           add/sub      mul      div
+    //      f32      104      136        0
+    //    simd3        0        2        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd      109      143        0
+    //  no simd      124      162        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -7163,10 +7289,11 @@ impl Sandwich<DipoleInversion> for AntiLine {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      150      188        0
-    //    simd4        1        1        0
+    //      f32      130      162        0
+    //    simd3        0        2        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd      151      189        0
+    // yes simd      136      170        0
     //  no simd      154      192        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -7246,10 +7373,11 @@ impl Sandwich<DualNum> for AntiLine {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       77      111        0
-    //    simd3        0        1        0
+    //      f32       53       81        0
+    //    simd3        0        3        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       77      112        0
+    // yes simd       59       90        0
     //  no simd       77      114        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -7283,8 +7411,13 @@ impl Sandwich<DualNum> for AntiLine {
 impl Sandwich<FlatPoint> for AntiLine {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       57        0
+    //           add/sub      mul      div
+    //      f32       28       43        0
+    //    simd3        0        2        0
+    //    simd4        2        2        0
+    // Totals...
+    // yes simd       30       47        0
+    //  no simd       36       57        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -7309,10 +7442,11 @@ impl Sandwich<Flector> for AntiLine {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       70        0
-    //    simd4        2        2        0
+    //      f32       40       56        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       50       72        0
+    // yes simd       44       62        0
     //  no simd       56       78        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -7345,8 +7479,13 @@ impl Sandwich<Flector> for AntiLine {
 impl Sandwich<Line> for AntiLine {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       47       69        0
+    //           add/sub      mul      div
+    //      f32       35       51        0
+    //    simd3        0        2        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       38       56        0
+    //  no simd       47       69        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -7378,10 +7517,11 @@ impl Sandwich<Motor> for AntiLine {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       66        0
-    //    simd4        3        3        0
+    //      f32       32       48        0
+    //    simd3        0        2        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       47       69        0
+    // yes simd       38       56        0
     //  no simd       56       78        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -7411,12 +7551,12 @@ impl Sandwich<MultiVector> for AntiLine {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      243      299        0
-    //    simd2        5        6        0
-    //    simd3       17       21        0
-    //    simd4        4        4        0
+    //      f32      174      210        0
+    //    simd2       10       12        0
+    //    simd3       34       44        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd      269      330        0
+    // yes simd      224      272        0
     //  no simd      320      390        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -7544,10 +7684,11 @@ impl Sandwich<Plane> for AntiLine {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       58        0
-    //    simd4        2        2        0
+    //      f32       25       44        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       35       60        0
+    // yes simd       29       50        0
     //  no simd       41       66        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -7573,11 +7714,11 @@ impl Sandwich<RoundPoint> for AntiLine {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       82      116        0
-    //    simd3        0        1        0
-    //    simd4        2        2        0
+    //      f32       58       86        0
+    //    simd3        0        3        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       84      119        0
+    // yes simd       66       97        0
     //  no simd       90      127        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -7614,10 +7755,10 @@ impl Sandwich<Scalar> for AntiLine {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       33        0
-    //    simd3        0        2        0
+    //      f32       19       27        0
+    //    simd3        0        4        0
     // Totals...
-    // yes simd       19       35        0
+    // yes simd       19       31        0
     //  no simd       19       39        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -7634,11 +7775,11 @@ impl Sandwich<Sphere> for AntiLine {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       86      119        0
-    //    simd3        0        1        0
-    //    simd4        1        1        0
+    //      f32       78      105        0
+    //    simd3        0        3        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd       87      121        0
+    // yes simd       81      111        0
     //  no simd       90      126        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -7674,10 +7815,11 @@ impl Sandwich<VersorEven> for AntiLine {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      132      170        0
-    //    simd4        7        7        0
+    //      f32       92      124        0
+    //    simd3        0        2        0
+    //    simd4       17       17        0
     // Totals...
-    // yes simd      139      177        0
+    // yes simd      109      143        0
     //  no simd      160      198        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -7753,10 +7895,11 @@ impl Sandwich<VersorOdd> for AntiLine {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      186        0
-    //    simd4        3        3        0
+    //      f32      128      160        0
+    //    simd3        0        2        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd      151      189        0
+    // yes simd      136      170        0
     //  no simd      160      198        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -7841,10 +7984,10 @@ impl Sandwich<AntiCircleRotor> for AntiMotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      156      194        0
-    //    simd4        7        7        0
+    //      f32       92      130        0
+    //    simd4       23       23        0
     // Totals...
-    // yes simd      163      201        0
+    // yes simd      115      153        0
     //  no simd      184      222        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -7911,11 +8054,11 @@ impl Sandwich<AntiDipoleInversion> for AntiMotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      156      194        0
-    //    simd4       15       15        0
+    //      f32       80      119        0
+    //    simd4       34       34        0
     // Totals...
-    // yes simd      171      209        0
-    //  no simd      216      254        0
+    // yes simd      114      153        0
+    //  no simd      216      255        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -7998,10 +8141,10 @@ impl Sandwich<AntiDualNum> for AntiMotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      150        0
-    //    simd4        0        1        0
+    //      f32       52       86        0
+    //    simd4       16       17        0
     // Totals...
-    // yes simd      116      151        0
+    // yes simd       68      103        0
     //  no simd      116      154        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -8035,8 +8178,12 @@ impl Sandwich<AntiDualNum> for AntiMotor {
 impl Sandwich<AntiFlatPoint> for AntiMotor {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       52       74        0
+    //           add/sub      mul      div
+    //      f32       24       42        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       32       50        0
+    //  no simd       56       74        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -8065,11 +8212,11 @@ impl Sandwich<AntiFlector> for AntiMotor {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       79        0
-    //    simd4        6        6        0
+    //      f32       28       47        0
+    //    simd4       14       14        0
     // Totals...
-    // yes simd       62       85        0
-    //  no simd       80      103        0
+    // yes simd       42       61        0
+    //  no simd       84      103        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -8114,10 +8261,10 @@ impl Sandwich<AntiLine> for AntiMotor {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        3        3        0
+    //      f32       32       54        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       59       81        0
+    // yes simd       41       63        0
     //  no simd       68       90        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
@@ -8147,10 +8294,10 @@ impl Sandwich<AntiMotor> for AntiMotor {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        6        6        0
+    //      f32       32       54        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd       62       84        0
+    // yes simd       44       66        0
     //  no simd       80      102        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
@@ -8183,11 +8330,11 @@ impl Sandwich<AntiPlane> for AntiMotor {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       70        0
-    //    simd4        3        3        0
+    //      f32       20       38        0
+    //    simd4       11       11        0
     // Totals...
-    // yes simd       51       73        0
-    //  no simd       60       82        0
+    // yes simd       31       49        0
+    //  no simd       64       82        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -8213,10 +8360,10 @@ impl Sandwich<AntiScalar> for AntiMotor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       54        0
-    //    simd4        0        2        0
+    //      f32       16       30        0
+    //    simd4        6        8        0
     // Totals...
-    // yes simd       40       56        0
+    // yes simd       22       38        0
     //  no simd       40       62        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -8233,11 +8380,11 @@ impl Sandwich<Circle> for AntiMotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      186        0
-    //    simd4        7        7        0
+    //      f32       72      111        0
+    //    simd4       26       26        0
     // Totals...
-    // yes simd      155      193        0
-    //  no simd      176      214        0
+    // yes simd       98      137        0
+    //  no simd      176      215        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -8290,11 +8437,11 @@ impl Sandwich<CircleRotor> for AntiMotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      186        0
-    //    simd4        9        9        0
+    //      f32       72      111        0
+    //    simd4       28       28        0
     // Totals...
-    // yes simd      157      195        0
-    //  no simd      184      222        0
+    // yes simd      100      139        0
+    //  no simd      184      223        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -8354,10 +8501,10 @@ impl Sandwich<Dipole> for AntiMotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      156      194        0
-    //    simd4        5        5        0
+    //      f32       92      130        0
+    //    simd4       21       21        0
     // Totals...
-    // yes simd      161      199        0
+    // yes simd      113      151        0
     //  no simd      176      214        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -8414,10 +8561,10 @@ impl Sandwich<DipoleInversion> for AntiMotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      160      198        0
-    //    simd4       14       14        0
+    //      f32       96      134        0
+    //    simd4       30       30        0
     // Totals...
-    // yes simd      174      212        0
+    // yes simd      126      164        0
     //  no simd      216      254        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -8495,11 +8642,11 @@ impl Sandwich<DualNum> for AntiMotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      147        0
-    //    simd4        0        3        0
+    //      f32       40       72        0
+    //    simd4       19       22        0
     // Totals...
-    // yes simd      116      150        0
-    //  no simd      116      159        0
+    // yes simd       59       94        0
+    //  no simd      116      160        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -8529,8 +8676,12 @@ impl Sandwich<DualNum> for AntiMotor {
 impl Sandwich<FlatPoint> for AntiMotor {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       52       74        0
+    //           add/sub      mul      div
+    //      f32       32       55        0
+    //    simd4        5        5        0
+    // Totals...
+    // yes simd       37       60        0
+    //  no simd       52       75        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -8560,11 +8711,11 @@ impl Sandwich<Flector> for AntiMotor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       53       74        0
-    //    simd4        7        7        0
+    //      f32       33       55        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd       60       81        0
-    //  no simd       81      102        0
+    // yes simd       45       67        0
+    //  no simd       81      103        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -8597,10 +8748,10 @@ impl Sandwich<Line> for AntiMotor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        3        3        0
+    //      f32       32       54        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       59       81        0
+    // yes simd       41       63        0
     //  no simd       68       90        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -8630,10 +8781,10 @@ impl Sandwich<Motor> for AntiMotor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        6        6        0
+    //      f32       32       54        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd       62       84        0
+    // yes simd       44       66        0
     //  no simd       80      102        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -8666,13 +8817,13 @@ impl Sandwich<MultiVector> for AntiMotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      283      343        0
-    //    simd2        7        8        0
-    //    simd3       21       24        0
-    //    simd4       22       22        0
+    //      f32      124      174        0
+    //    simd2       14       16        0
+    //    simd3       44       50        0
+    //    simd4       41       41        0
     // Totals...
-    // yes simd      333      397        0
-    //  no simd      448      519        0
+    // yes simd      223      281        0
+    //  no simd      448      520        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -8813,11 +8964,11 @@ impl Sandwich<Plane> for AntiMotor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       70        0
-    //    simd4        4        4        0
+    //      f32       24       51        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       48       74        0
-    //  no simd       60       86        0
+    // yes simd       33       60        0
+    //  no simd       60       87        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -8844,11 +8995,11 @@ impl Sandwich<RoundPoint> for AntiMotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      128      162        0
-    //    simd4        2        3        0
+    //      f32       52       87        0
+    //    simd4       21       22        0
     // Totals...
-    // yes simd      130      165        0
-    //  no simd      136      174        0
+    // yes simd       73      109        0
+    //  no simd      136      175        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -8889,10 +9040,10 @@ impl Sandwich<Scalar> for AntiMotor {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       54        0
-    //    simd4        0        2        0
+    //      f32       16       30        0
+    //    simd4        6        8        0
     // Totals...
-    // yes simd       40       56        0
+    // yes simd       22       38        0
     //  no simd       40       62        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -8909,10 +9060,10 @@ impl Sandwich<Sphere> for AntiMotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      124      161        0
-    //    simd4        3        4        0
+    //      f32       60       97        0
+    //    simd4       19       20        0
     // Totals...
-    // yes simd      127      165        0
+    // yes simd       79      117        0
     //  no simd      136      177        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -8950,11 +9101,11 @@ impl Sandwich<VersorEven> for AntiMotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      153      190        0
-    //    simd4       18       18        0
+    //      f32       77      115        0
+    //    simd4       37       37        0
     // Totals...
-    // yes simd      171      208        0
-    //  no simd      225      262        0
+    // yes simd      114      152        0
+    //  no simd      225      263        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -9032,10 +9183,10 @@ impl Sandwich<VersorOdd> for AntiMotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      164      202        0
-    //    simd4       15       15        0
+    //      f32      100      138        0
+    //    simd4       31       31        0
     // Totals...
-    // yes simd      179      217        0
+    // yes simd      131      169        0
     //  no simd      224      262        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -9119,12 +9270,12 @@ impl Sandwich<AntiCircleRotor> for AntiPlane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       50       81        0
+    //      f32       10       36        0
     //    simd3        1        2        0
-    //    simd4        5        5        0
+    //    simd4       16       17        0
     // Totals...
-    // yes simd       56       88        0
-    //  no simd       73      107        0
+    // yes simd       27       55        0
+    //  no simd       77      110        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -9161,11 +9312,11 @@ impl Sandwich<AntiDipoleInversion> for AntiPlane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       92        0
-    //    simd4        9        9        0
+    //      f32       17       56        0
+    //    simd4       19       19        0
     // Totals...
-    // yes simd       65      101        0
-    //  no simd       92      128        0
+    // yes simd       36       75        0
+    //  no simd       93      132        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -9209,11 +9360,11 @@ impl Sandwich<AntiDualNum> for AntiPlane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       70        0
-    //    simd4        0        1        0
+    //      f32        3       14        0
+    //    simd4       13       15        0
     // Totals...
-    // yes simd       48       71        0
-    //  no simd       48       74        0
+    // yes simd       16       29        0
+    //  no simd       55       74        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -9237,10 +9388,10 @@ impl Sandwich<AntiFlatPoint> for AntiPlane {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       40        0
-    //    simd4        1        1        0
+    //      f32       10       28        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       23       41        0
+    // yes simd       14       32        0
     //  no simd       26       44        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
@@ -9266,10 +9417,10 @@ impl Sandwich<AntiFlector> for AntiPlane {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        3        3        0
+    //      f32       16       32        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       31       47        0
+    // yes simd       22       38        0
     //  no simd       40       56        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
@@ -9296,10 +9447,10 @@ impl Sandwich<AntiLine> for AntiPlane {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       44        0
-    //    simd4        2        2        0
+    //      f32       13       32        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       27       46        0
+    // yes simd       18       37        0
     //  no simd       33       52        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
@@ -9325,10 +9476,10 @@ impl Sandwich<AntiMotor> for AntiPlane {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       44        0
-    //    simd4        4        4        0
+    //      f32       12       32        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       28       48        0
+    // yes simd       19       39        0
     //  no simd       40       60        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
@@ -9356,10 +9507,10 @@ impl Sandwich<AntiPlane> for AntiPlane {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       42        0
-    //    simd4        1        1        0
+    //      f32       12       30        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       25       43        0
+    // yes simd       16       34        0
     //  no simd       28       46        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
@@ -9385,11 +9536,11 @@ impl Sandwich<AntiScalar> for AntiPlane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       15        0
-    //    simd4        0        2        0
+    //      f32        4       14        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        8       17        0
-    //  no simd        8       23        0
+    // yes simd        5       17        0
+    //  no simd        8       26        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Plane::from_groups(
@@ -9403,12 +9554,12 @@ impl Sandwich<Circle> for AntiPlane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       49       75        0
+    //      f32       17       47        0
     //    simd3        1        2        0
-    //    simd4        5        5        0
+    //    simd4       13       13        0
     // Totals...
-    // yes simd       55       82        0
-    //  no simd       72      101        0
+    // yes simd       31       62        0
+    //  no simd       72      105        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -9441,12 +9592,12 @@ impl Sandwich<CircleRotor> for AntiPlane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       53       79        0
+    //      f32       21       51        0
     //    simd3        1        2        0
-    //    simd4        5        5        0
+    //    simd4       13       13        0
     // Totals...
-    // yes simd       59       86        0
-    //  no simd       76      105        0
+    // yes simd       35       66        0
+    //  no simd       76      109        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -9479,12 +9630,12 @@ impl Sandwich<Dipole> for AntiPlane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       50       81        0
+    //      f32       10       36        0
     //    simd3        1        2        0
-    //    simd4        4        4        0
+    //    simd4       15       16        0
     // Totals...
-    // yes simd       55       87        0
-    //  no simd       69      103        0
+    // yes simd       26       54        0
+    //  no simd       73      106        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -9520,11 +9671,11 @@ impl Sandwich<DipoleInversion> for AntiPlane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       92        0
-    //    simd4        9        9        0
+    //      f32       11       36        0
+    //    simd4       22       23        0
     // Totals...
-    // yes simd       65      101        0
-    //  no simd       92      128        0
+    // yes simd       33       59        0
+    //  no simd       99      128        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -9568,11 +9719,11 @@ impl Sandwich<DualNum> for AntiPlane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       66        0
-    //    simd4        0        4        0
+    //      f32        9       30        0
+    //    simd4       10       14        0
     // Totals...
-    // yes simd       48       70        0
-    //  no simd       48       82        0
+    // yes simd       19       44        0
+    //  no simd       49       86        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -9591,11 +9742,11 @@ impl Sandwich<FlatPoint> for AntiPlane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       36        0
-    //    simd4        2        2        0
+    //      f32        1       12        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       23       38        0
-    //  no simd       29       44        0
+    // yes simd        9       20        0
+    //  no simd       33       44        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -9617,11 +9768,11 @@ impl Sandwich<Flector> for AntiPlane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        3        3        0
+    //      f32        8       20        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       31       47        0
-    //  no simd       40       56        0
+    // yes simd       17       29        0
+    //  no simd       44       56        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -9647,10 +9798,10 @@ impl Sandwich<Line> for AntiPlane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       38        0
-    //    simd4        3        3        0
+    //      f32        9       26        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       24       41        0
+    // yes simd       15       32        0
     //  no simd       33       50        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -9677,10 +9828,10 @@ impl Sandwich<Motor> for AntiPlane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       45        0
-    //    simd4        3        3        0
+    //      f32       16       33        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       31       48        0
+    // yes simd       22       39        0
     //  no simd       40       57        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -9707,13 +9858,13 @@ impl Sandwich<MultiVector> for AntiPlane {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      123      184        0
-    //    simd2        3        3        0
-    //    simd3        9       11        0
-    //    simd4        9        9        0
+    //      f32       39       94        0
+    //    simd2        6        6        0
+    //    simd3       18       22        0
+    //    simd4       23       23        0
     // Totals...
-    // yes simd      144      207        0
-    //  no simd      192      259        0
+    // yes simd       86      145        0
+    //  no simd      197      264        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -9791,11 +9942,11 @@ impl Sandwich<Plane> for AntiPlane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       42        0
-    //    simd4        1        1        0
+    //      f32        4       18        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       25       43        0
-    //  no simd       28       46        0
+    // yes simd       11       25        0
+    //  no simd       32       46        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -9820,12 +9971,12 @@ impl Sandwich<RoundPoint> for AntiPlane {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       54        0
-    //    simd3        0        2        0
-    //    simd4        2        2        0
+    //      f32        6       27        0
+    //    simd3        1        4        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       35       58        0
-    //  no simd       41       68        0
+    // yes simd       15       39        0
+    //  no simd       41       71        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiCircleRotor::from_groups(
@@ -9850,11 +10001,11 @@ impl Sandwich<Scalar> for AntiPlane {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       15        0
-    //    simd4        0        1        0
+    //      f32        4       14        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        8       16        0
-    //  no simd        8       19        0
+    // yes simd        5       16        0
+    //  no simd        8       22        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiPlane::from_groups(/* e1, e2, e3, e5 */ (Simd32x4::from(other[scalar]) * self.group0()));
@@ -9865,11 +10016,12 @@ impl Sandwich<Sphere> for AntiPlane {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       38       62        0
-    //    simd3        0        1        0
+    //      f32        9       26        0
+    //    simd3        1        3        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       38       63        0
-    //  no simd       38       65        0
+    // yes simd       18       37        0
+    //  no simd       44       67        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_product = CircleRotor::from_groups(
@@ -9897,11 +10049,11 @@ impl Sandwich<VersorEven> for AntiPlane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       60       96        0
-    //    simd4        9        9        0
+    //      f32       21       60        0
+    //    simd4       19       19        0
     // Totals...
-    // yes simd       69      105        0
-    //  no simd       96      132        0
+    // yes simd       40       79        0
+    //  no simd       97      136        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -9945,11 +10097,11 @@ impl Sandwich<VersorOdd> for AntiPlane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       60       96        0
-    //    simd4        9        9        0
+    //      f32       15       40        0
+    //    simd4       22       23        0
     // Totals...
-    // yes simd       69      105        0
-    //  no simd       96      132        0
+    // yes simd       37       63        0
+    //  no simd      103      132        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -9994,12 +10146,11 @@ impl Sandwich<AntiCircleRotor> for AntiScalar {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       21        0
-    //    simd3        0        1        0
-    //    simd4        0        3        0
+    //    simd3        0        3        0
+    //    simd4        0        7        0
     // Totals...
-    // yes simd        0       25        0
-    //  no simd        0       36        0
+    // yes simd        0       10        0
+    //  no simd        0       37        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = CircleRotor::from_groups(
@@ -10017,12 +10168,11 @@ impl Sandwich<AntiDipoleInversion> for AntiScalar {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       19        0
-    //    simd3        0        2        0
-    //    simd4        0        6        0
+    //    simd3        0        3        0
+    //    simd4        0       11        0
     // Totals...
-    // yes simd        0       27        0
-    //  no simd        0       49        0
+    // yes simd        0       14        0
+    //  no simd        0       53        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         let geometric_product = DipoleInversion::from_groups(
@@ -10041,12 +10191,9 @@ impl Sandwich<AntiDipoleInversion> for AntiScalar {
 impl Sandwich<AntiDualNum> for AntiScalar {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        6        0
+    //          add/sub      mul      div
+    //   simd2        0        3        0
+    // no simd        0        6        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_product = DualNum::from_groups(/* e4, e12345 */ (Simd32x2::from(self[e12345]) * other.group0()));
@@ -10056,12 +10203,9 @@ impl Sandwich<AntiDualNum> for AntiScalar {
 impl Sandwich<AntiFlatPoint> for AntiScalar {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        5        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        7        0
-    //  no simd        0       13        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = FlatPoint::from_groups(/* e15, e25, e35, e45 */ (Simd32x4::from(self[e12345]) * other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])));
@@ -10071,12 +10215,9 @@ impl Sandwich<AntiFlatPoint> for AntiScalar {
 impl Sandwich<AntiFlector> for AntiScalar {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       12        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0       16        0
-    //  no simd        0       28        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Flector::from_groups(
@@ -10091,12 +10232,9 @@ impl Sandwich<AntiFlector> for AntiScalar {
 impl Sandwich<AntiLine> for AntiScalar {
     type Output = AntiLine;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       12        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0       14        0
-    //  no simd        0       18        0
+    //          add/sub      mul      div
+    //   simd3        0        6        0
+    // no simd        0       18        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Line::from_groups(
@@ -10111,12 +10249,9 @@ impl Sandwich<AntiLine> for AntiScalar {
 impl Sandwich<AntiMotor> for AntiScalar {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       16        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0       18        0
-    //  no simd        0       24        0
+    //          add/sub      mul      div
+    //   simd4        0        6        0
+    // no simd        0       24        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Motor::from_groups(
@@ -10131,12 +10266,9 @@ impl Sandwich<AntiMotor> for AntiScalar {
 impl Sandwich<AntiPlane> for AntiScalar {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        7        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        9        0
-    //  no simd        0       15        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Plane::from_groups(
@@ -10161,12 +10293,11 @@ impl Sandwich<Circle> for AntiScalar {
     type Output = Circle;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       11        0
-    //    simd3        0        4        0
-    //    simd4        0        2        0
+    //    simd3        0        6        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0       17        0
-    //  no simd        0       31        0
+    // yes simd        0       10        0
+    //  no simd        0       34        0
     fn sandwich(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Dipole::from_groups(
@@ -10184,12 +10315,11 @@ impl Sandwich<CircleRotor> for AntiScalar {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       12        0
-    //    simd3        0        2        0
-    //    simd4        0        4        0
+    //    simd3        0        3        0
+    //    simd4        0        7        0
     // Totals...
-    // yes simd        0       18        0
-    //  no simd        0       34        0
+    // yes simd        0       10        0
+    //  no simd        0       37        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiCircleRotor::from_groups(
@@ -10207,12 +10337,11 @@ impl Sandwich<Dipole> for AntiScalar {
     type Output = Dipole;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       19        0
-    //    simd3        0        2        0
-    //    simd4        0        2        0
+    //    simd3        0        6        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0       23        0
-    //  no simd        0       33        0
+    // yes simd        0       10        0
+    //  no simd        0       34        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Circle::from_groups(
@@ -10230,12 +10359,11 @@ impl Sandwich<DipoleInversion> for AntiScalar {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       26        0
-    //    simd3        0        1        0
-    //    simd4        0        5        0
+    //    simd3        0        3        0
+    //    simd4        0       11        0
     // Totals...
-    // yes simd        0       32        0
-    //  no simd        0       49        0
+    // yes simd        0       14        0
+    //  no simd        0       53        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -10254,12 +10382,9 @@ impl Sandwich<DipoleInversion> for AntiScalar {
 impl Sandwich<DualNum> for AntiScalar {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        0        2        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        6        0
+    //          add/sub      mul      div
+    //   simd2        0        3        0
+    // no simd        0        6        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiDualNum::from_groups(/* e1234, scalar */ (Simd32x2::from(self[e12345]) * other.group0() * Simd32x2::from(-1.0)));
@@ -10269,12 +10394,9 @@ impl Sandwich<DualNum> for AntiScalar {
 impl Sandwich<FlatPoint> for AntiScalar {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        7        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        9        0
-    //  no simd        0       15        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiFlatPoint::from_groups(
@@ -10287,12 +10409,9 @@ impl Sandwich<FlatPoint> for AntiScalar {
 impl Sandwich<Flector> for AntiScalar {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       12        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0       16        0
-    //  no simd        0       28        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiFlector::from_groups(
@@ -10307,12 +10426,9 @@ impl Sandwich<Flector> for AntiScalar {
 impl Sandwich<Line> for AntiScalar {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        6        0
-    //    simd3        0        4        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       18        0
+    //          add/sub      mul      div
+    //   simd3        0        6        0
+    // no simd        0       18        0
     fn sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiLine::from_groups(
@@ -10327,12 +10443,9 @@ impl Sandwich<Line> for AntiScalar {
 impl Sandwich<Motor> for AntiScalar {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0       12        0
-    //  no simd        0       24        0
+    //          add/sub      mul      div
+    //   simd4        0        6        0
+    // no simd        0       24        0
     fn sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiMotor::from_groups(
@@ -10348,13 +10461,13 @@ impl Sandwich<MultiVector> for AntiScalar {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       51        0
-    //    simd2        0        2        0
-    //    simd3        0        6        0
-    //    simd4        0        8        0
+    //      f32        0        6        0
+    //    simd2        0        4        0
+    //    simd3        0       12        0
+    //    simd4        0       16        0
     // Totals...
-    // yes simd        0       67        0
-    //  no simd        0      105        0
+    // yes simd        0       38        0
+    //  no simd        0      114        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -10387,12 +10500,9 @@ impl Sandwich<MultiVector> for AntiScalar {
 impl Sandwich<Plane> for AntiScalar {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        5        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        7        0
-    //  no simd        0       13        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiPlane::from_groups(/* e1, e2, e3, e5 */ (Simd32x4::from(self[e12345]) * other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])));
@@ -10403,11 +10513,11 @@ impl Sandwich<RoundPoint> for AntiScalar {
     type Output = RoundPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       10        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0       12        0
-    //  no simd        0       18        0
+    // yes simd        0        7        0
+    //  no simd        0       19        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Sphere::from_groups(
@@ -10434,11 +10544,11 @@ impl Sandwich<Sphere> for AntiScalar {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       16        0
+    // yes simd        0        7        0
+    //  no simd        0       19        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_product = RoundPoint::from_groups(
@@ -10453,12 +10563,9 @@ impl Sandwich<Sphere> for AntiScalar {
 impl Sandwich<VersorEven> for AntiScalar {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       20        0
-    //    simd4        0        8        0
-    // Totals...
-    // yes simd        0       28        0
-    //  no simd        0       52        0
+    //          add/sub      mul      div
+    //   simd4        0       14        0
+    // no simd        0       56        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -10477,12 +10584,9 @@ impl Sandwich<VersorEven> for AntiScalar {
 impl Sandwich<VersorOdd> for AntiScalar {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       28        0
-    //    simd4        0        6        0
-    // Totals...
-    // yes simd        0       34        0
-    //  no simd        0       52        0
+    //          add/sub      mul      div
+    //   simd4        0       14        0
+    // no simd        0       56        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -10503,10 +10607,11 @@ impl Sandwich<AntiCircleRotor> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      202      244        0
-    //    simd4        9        9        0
+    //      f32      122      154        0
+    //    simd3        0        2        0
+    //    simd4       29       30        0
     // Totals...
-    // yes simd      211      253        0
+    // yes simd      151      186        0
     //  no simd      238      280        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -10585,10 +10690,11 @@ impl Sandwich<AntiDipoleInversion> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      194      236        0
-    //    simd4       21       21        0
+    //      f32      110      142        0
+    //    simd3        0        2        0
+    //    simd4       42       43        0
     // Totals...
-    // yes simd      215      257        0
+    // yes simd      152      187        0
     //  no simd      278      320        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -10678,10 +10784,11 @@ impl Sandwich<AntiDualNum> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      137      177        0
-    //    simd3        1        2        0
+    //      f32       61       91        0
+    //    simd3        1        4        0
+    //    simd4       19       20        0
     // Totals...
-    // yes simd      138      179        0
+    // yes simd       81      115        0
     //  no simd      140      183        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -10716,10 +10823,11 @@ impl Sandwich<AntiFlatPoint> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      157      201        0
-    //    simd4        3        3        0
+    //      f32       73      107        0
+    //    simd3        0        2        0
+    //    simd4       24       25        0
     // Totals...
-    // yes simd      160      204        0
+    // yes simd       97      134        0
     //  no simd      169      213        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -10764,10 +10872,11 @@ impl Sandwich<AntiFlector> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      168      211        0
-    //    simd4       10       10        0
+    //      f32       84      117        0
+    //    simd3        0        2        0
+    //    simd4       31       32        0
     // Totals...
-    // yes simd      178      221        0
+    // yes simd      115      151        0
     //  no simd      208      251        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -10821,10 +10930,11 @@ impl Sandwich<AntiLine> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      180      222        0
-    //    simd4        2        2        0
+    //      f32      100      132        0
+    //    simd3        0        2        0
+    //    simd4       22       23        0
     // Totals...
-    // yes simd      182      224        0
+    // yes simd      122      157        0
     //  no simd      188      230        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -10874,10 +10984,11 @@ impl Sandwich<AntiMotor> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      184      226        0
-    //    simd4        6        6        0
+    //      f32      104      136        0
+    //    simd3        0        2        0
+    //    simd4       26       27        0
     // Totals...
-    // yes simd      190      232        0
+    // yes simd      130      165        0
     //  no simd      208      250        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -10930,11 +11041,11 @@ impl Sandwich<AntiPlane> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      135      175        0
-    //    simd3        1        2        0
-    //    simd4        6        6        0
+    //      f32       67       97        0
+    //    simd3        1        4        0
+    //    simd4       23       24        0
     // Totals...
-    // yes simd      142      183        0
+    // yes simd       91      125        0
     //  no simd      162      205        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
@@ -10969,11 +11080,11 @@ impl Sandwich<AntiScalar> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       84      110        0
-    //    simd3        0        4        0
-    //    simd4        0        2        0
+    //      f32       56       72        0
+    //    simd3        0        6        0
+    //    simd4        7       10        0
     // Totals...
-    // yes simd       84      116        0
+    // yes simd       63       88        0
     //  no simd       84      130        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -10992,10 +11103,11 @@ impl Sandwich<Circle> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      192      234        0
-    //    simd4        9        9        0
+    //      f32      108      140        0
+    //    simd3        0        2        0
+    //    simd4       30       31        0
     // Totals...
-    // yes simd      201      243        0
+    // yes simd      138      173        0
     //  no simd      228      270        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -11059,10 +11171,11 @@ impl Sandwich<CircleRotor> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      186      228        0
-    //    simd4       13       13        0
+    //      f32      102      134        0
+    //    simd3        0        2        0
+    //    simd4       34       35        0
     // Totals...
-    // yes simd      199      241        0
+    // yes simd      136      171        0
     //  no simd      238      280        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -11129,10 +11242,11 @@ impl Sandwich<Dipole> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      200      242        0
-    //    simd4        7        7        0
+    //      f32      120      152        0
+    //    simd3        0        2        0
+    //    simd4       27       28        0
     // Totals...
-    // yes simd      207      249        0
+    // yes simd      147      182        0
     //  no simd      228      270        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -11204,10 +11318,11 @@ impl Sandwich<DipoleInversion> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      218      260        0
-    //    simd4       15       15        0
+    //      f32      138      170        0
+    //    simd3        0        2        0
+    //    simd4       35       36        0
     // Totals...
-    // yes simd      233      275        0
+    // yes simd      173      208        0
     //  no simd      278      320        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -11306,11 +11421,11 @@ impl Sandwich<DualNum> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      137      177        0
-    //    simd3        1        2        0
-    //    simd4        0        1        0
+    //      f32       69       99        0
+    //    simd3        1        4        0
+    //    simd4       17       19        0
     // Totals...
-    // yes simd      138      180        0
+    // yes simd       87      122        0
     //  no simd      140      187        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
@@ -11345,10 +11460,11 @@ impl Sandwich<FlatPoint> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      154      194        0
-    //    simd4        4        4        0
+    //      f32       74      104        0
+    //    simd3        0        2        0
+    //    simd4       24       25        0
     // Totals...
-    // yes simd      158      198        0
+    // yes simd       98      131        0
     //  no simd      170      210        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -11393,10 +11509,11 @@ impl Sandwich<Flector> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      172      214        0
-    //    simd4        9        9        0
+    //      f32       92      124        0
+    //    simd3        0        2        0
+    //    simd4       29       30        0
     // Totals...
-    // yes simd      181      223        0
+    // yes simd      121      156        0
     //  no simd      208      250        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -11453,10 +11570,11 @@ impl Sandwich<Line> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      184      226        0
-    //    simd4        1        1        0
+    //      f32      100      132        0
+    //    simd3        0        2        0
+    //    simd4       22       23        0
     // Totals...
-    // yes simd      185      227        0
+    // yes simd      122      157        0
     //  no simd      188      230        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -11513,10 +11631,11 @@ impl Sandwich<Motor> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      176      222        0
-    //    simd4        8        8        0
+    //      f32       92      128        0
+    //    simd3        0        2        0
+    //    simd4       29       30        0
     // Totals...
-    // yes simd      184      230        0
+    // yes simd      121      160        0
     //  no simd      208      254        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -11575,12 +11694,12 @@ impl Sandwich<MultiVector> for Circle {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      412      480        0
-    //    simd2        1        1        0
-    //    simd3       34       36        0
-    //    simd4       15       15        0
+    //      f32      232      284        0
+    //    simd2        2        2        0
+    //    simd3       68       74        0
+    //    simd4       34       35        0
     // Totals...
-    // yes simd      462      532        0
+    // yes simd      336      395        0
     //  no simd      576      650        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -11774,11 +11893,11 @@ impl Sandwich<Plane> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      139      177        0
-    //    simd3        1        2        0
-    //    simd4        5        5        0
+    //      f32       63       91        0
+    //    simd3        1        4        0
+    //    simd4       24       25        0
     // Totals...
-    // yes simd      145      184        0
+    // yes simd       88      120        0
     //  no simd      162      203        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -11812,11 +11931,11 @@ impl Sandwich<RoundPoint> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      139      181        0
-    //    simd3        2        3        0
-    //    simd4        6        6        0
+    //      f32       71      103        0
+    //    simd3        2        5        0
+    //    simd4       23       24        0
     // Totals...
-    // yes simd      147      190        0
+    // yes simd       96      132        0
     //  no simd      169      214        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -11857,11 +11976,11 @@ impl Sandwich<Scalar> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       84      110        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //      f32       48       64        0
+    //    simd3        0        4        0
+    //    simd4        9       11        0
     // Totals...
-    // yes simd       84      113        0
+    // yes simd       57       79        0
     //  no simd       84      120        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -11880,11 +11999,11 @@ impl Sandwich<Sphere> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      139      180        0
-    //    simd3        2        3        0
-    //    simd4        6        6        0
+    //      f32       63       94        0
+    //    simd3        2        5        0
+    //    simd4       25       26        0
     // Totals...
-    // yes simd      147      189        0
+    // yes simd       90      125        0
     //  no simd      169      213        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -11925,10 +12044,11 @@ impl Sandwich<VersorEven> for Circle {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      200      242        0
-    //    simd4       22       22        0
+    //      f32      116      148        0
+    //    simd3        0        2        0
+    //    simd4       43       44        0
     // Totals...
-    // yes simd      222      264        0
+    // yes simd      159      194        0
     //  no simd      288      330        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -12022,10 +12142,11 @@ impl Sandwich<VersorOdd> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      212      254        0
-    //    simd4       19       19        0
+    //      f32      132      164        0
+    //    simd3        0        2        0
+    //    simd4       39       40        0
     // Totals...
-    // yes simd      231      273        0
+    // yes simd      171      206        0
     //  no simd      288      330        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -12129,11 +12250,12 @@ impl Sandwich<AntiCircleRotor> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      213      255        0
-    //    simd4       13       13        0
+    //      f32       97      133        0
+    //    simd3        0        1        0
+    //    simd4       42       43        0
     // Totals...
-    // yes simd      226      268        0
-    //  no simd      265      307        0
+    // yes simd      139      177        0
+    //  no simd      265      308        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -12209,10 +12331,11 @@ impl Sandwich<AntiDipoleInversion> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      201      243        0
-    //    simd4       27       27        0
+    //      f32      101      136        0
+    //    simd3        0        1        0
+    //    simd4       52       53        0
     // Totals...
-    // yes simd      228      270        0
+    // yes simd      153      190        0
     //  no simd      309      351        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -12290,8 +12413,13 @@ impl Sandwich<AntiDipoleInversion> for CircleRotor {
 impl Sandwich<AntiDualNum> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      167      211        0
+    //           add/sub      mul      div
+    //      f32       51       89        0
+    //    simd3        0        1        0
+    //    simd4       29       30        0
+    // Totals...
+    // yes simd       80      120        0
+    //  no simd      167      212        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -12330,10 +12458,11 @@ impl Sandwich<AntiFlatPoint> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      176      217        0
-    //    simd4        4        4        0
+    //      f32       76      110        0
+    //    simd3        0        1        0
+    //    simd4       29       30        0
     // Totals...
-    // yes simd      180      221        0
+    // yes simd      105      141        0
     //  no simd      192      233        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -12377,10 +12506,11 @@ impl Sandwich<AntiFlector> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      183      226        0
-    //    simd4       13       13        0
+    //      f32       83      119        0
+    //    simd3        0        1        0
+    //    simd4       38       39        0
     // Totals...
-    // yes simd      196      239        0
+    // yes simd      121      159        0
     //  no simd      235      278        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -12438,11 +12568,12 @@ impl Sandwich<AntiLine> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      198      240        0
-    //    simd4        3        3        0
+    //      f32       82      118        0
+    //    simd3        0        1        0
+    //    simd4       32       33        0
     // Totals...
-    // yes simd      201      243        0
-    //  no simd      210      252        0
+    // yes simd      114      152        0
+    //  no simd      210      253        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -12492,11 +12623,12 @@ impl Sandwich<AntiMotor> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      200      242        0
-    //    simd4        8        8        0
+    //      f32       84      120        0
+    //    simd3        0        1        0
+    //    simd4       37       38        0
     // Totals...
-    // yes simd      208      250        0
-    //  no simd      232      274        0
+    // yes simd      121      159        0
+    //  no simd      232      275        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -12555,11 +12687,11 @@ impl Sandwich<AntiPlane> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      149      183        0
-    //    simd3        1        2        0
-    //    simd4        8        8        0
+    //      f32       65       92        0
+    //    simd3        1        3        0
+    //    simd4       29       30        0
     // Totals...
-    // yes simd      158      193        0
+    // yes simd       95      125        0
     //  no simd      184      221        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
@@ -12592,11 +12724,11 @@ impl Sandwich<AntiScalar> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      105      131        0
-    //    simd3        0        2        0
-    //    simd4        0        4        0
+    //      f32       53       72        0
+    //    simd3        0        3        0
+    //    simd4       13       18        0
     // Totals...
-    // yes simd      105      137        0
+    // yes simd       66       93        0
     //  no simd      105      153        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -12615,10 +12747,11 @@ impl Sandwich<Circle> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      206      248        0
-    //    simd4       12       12        0
+    //      f32      106      141        0
+    //    simd3        0        1        0
+    //    simd4       37       38        0
     // Totals...
-    // yes simd      218      260        0
+    // yes simd      143      180        0
     //  no simd      254      296        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -12690,10 +12823,11 @@ impl Sandwich<CircleRotor> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      197      239        0
-    //    simd4       17       17        0
+    //      f32       97      132        0
+    //    simd3        0        1        0
+    //    simd4       42       43        0
     // Totals...
-    // yes simd      214      256        0
+    // yes simd      139      176        0
     //  no simd      265      307        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -12763,11 +12897,12 @@ impl Sandwich<Dipole> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      214      256        0
-    //    simd4       10       10        0
+    //      f32       98      134        0
+    //    simd3        0        1        0
+    //    simd4       39       40        0
     // Totals...
-    // yes simd      224      266        0
-    //  no simd      254      296        0
+    // yes simd      137      175        0
+    //  no simd      254      297        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -12843,11 +12978,12 @@ impl Sandwich<DipoleInversion> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      217      259        0
-    //    simd4       23       23        0
+    //      f32      101      137        0
+    //    simd3        0        1        0
+    //    simd4       52       53        0
     // Totals...
-    // yes simd      240      282        0
-    //  no simd      309      351        0
+    // yes simd      153      191        0
+    //  no simd      309      352        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -12942,8 +13078,13 @@ impl Sandwich<DipoleInversion> for CircleRotor {
 impl Sandwich<DualNum> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      167      215        0
+    //           add/sub      mul      div
+    //      f32       67      108        0
+    //    simd3        0        1        0
+    //    simd4       25       26        0
+    // Totals...
+    // yes simd       92      135        0
+    //  no simd      167      215        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -12982,11 +13123,12 @@ impl Sandwich<FlatPoint> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      174      214        0
-    //    simd4        4        4        0
+    //      f32       58       92        0
+    //    simd3        0        1        0
+    //    simd4       33       34        0
     // Totals...
-    // yes simd      178      218        0
-    //  no simd      190      230        0
+    // yes simd       91      127        0
+    //  no simd      190      231        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -13030,11 +13172,12 @@ impl Sandwich<Flector> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      188      231        0
-    //    simd4       11       11        0
+    //      f32       72      109        0
+    //    simd3        0        1        0
+    //    simd4       40       41        0
     // Totals...
-    // yes simd      199      242        0
-    //  no simd      232      275        0
+    // yes simd      112      151        0
+    //  no simd      232      276        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -13093,10 +13236,11 @@ impl Sandwich<Line> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      206      248        0
-    //    simd4        1        1        0
+    //      f32      106      141        0
+    //    simd3        0        1        0
+    //    simd4       26       27        0
     // Totals...
-    // yes simd      207      249        0
+    // yes simd      132      169        0
     //  no simd      210      252        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -13157,10 +13301,11 @@ impl Sandwich<Motor> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      195      238        0
-    //    simd4       10       10        0
+    //      f32       95      131        0
+    //    simd3        0        1        0
+    //    simd4       35       36        0
     // Totals...
-    // yes simd      205      248        0
+    // yes simd      130      168        0
     //  no simd      235      278        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -13222,12 +13367,12 @@ impl Sandwich<MultiVector> for CircleRotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      426      494        0
-    //    simd2        1        1        0
-    //    simd3       36       38        0
-    //    simd4       26       26        0
+    //      f32      208      263        0
+    //    simd2        2        2        0
+    //    simd3       72       77        0
+    //    simd4       53       54        0
     // Totals...
-    // yes simd      489      559        0
+    // yes simd      335      396        0
     //  no simd      640      714        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -13412,11 +13557,11 @@ impl Sandwich<Plane> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      155      199        0
-    //    simd3        1        2        0
-    //    simd4        5        5        0
+    //      f32       51       88        0
+    //    simd3        1        3        0
+    //    simd4       31       32        0
     // Totals...
-    // yes simd      161      206        0
+    // yes simd       83      123        0
     //  no simd      178      225        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -13454,11 +13599,11 @@ impl Sandwich<RoundPoint> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      151      196        0
-    //    simd3        2        3        0
-    //    simd4        8        8        0
+    //      f32       67      105        0
+    //    simd3        2        4        0
+    //    simd4       29       30        0
     // Totals...
-    // yes simd      161      207        0
+    // yes simd       98      139        0
     //  no simd      189      237        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -13501,11 +13646,11 @@ impl Sandwich<Scalar> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      105      131        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //      f32       37       56        0
+    //    simd3        0        2        0
+    //    simd4       17       20        0
     // Totals...
-    // yes simd      105      134        0
+    // yes simd       54       78        0
     //  no simd      105      142        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -13524,11 +13669,11 @@ impl Sandwich<Sphere> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      158      193        0
-    //    simd3        2        3        0
-    //    simd4        7        7        0
+    //      f32       54       82        0
+    //    simd3        2        4        0
+    //    simd4       33       34        0
     // Totals...
-    // yes simd      167      203        0
+    // yes simd       89      120        0
     //  no simd      192      230        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -13566,10 +13711,11 @@ impl Sandwich<VersorEven> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      212      254        0
-    //    simd4       27       27        0
+    //      f32      112      147        0
+    //    simd3        0        1        0
+    //    simd4       52       53        0
     // Totals...
-    // yes simd      239      281        0
+    // yes simd      164      201        0
     //  no simd      320      362        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -13659,11 +13805,12 @@ impl Sandwich<VersorOdd> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      216      258        0
-    //    simd4       26       26        0
+    //      f32      100      136        0
+    //    simd3        0        1        0
+    //    simd4       55       56        0
     // Totals...
-    // yes simd      242      284        0
-    //  no simd      320      362        0
+    // yes simd      155      193        0
+    //  no simd      320      363        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -13759,10 +13906,11 @@ impl Sandwich<AntiCircleRotor> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      194      236        0
-    //    simd4       11       11        0
+    //      f32      126      158        0
+    //    simd3        0        2        0
+    //    simd4       28       29        0
     // Totals...
-    // yes simd      205      247        0
+    // yes simd      154      189        0
     //  no simd      238      280        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -13831,10 +13979,11 @@ impl Sandwich<AntiDipoleInversion> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      210      252        0
-    //    simd4       17       17        0
+    //      f32      134      166        0
+    //    simd3        0        2        0
+    //    simd4       36       37        0
     // Totals...
-    // yes simd      227      269        0
+    // yes simd      170      205        0
     //  no simd      278      320        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -13933,11 +14082,11 @@ impl Sandwich<AntiDualNum> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      137      174        0
-    //    simd3        1        2        0
-    //    simd4        0        1        0
+    //      f32       77      104        0
+    //    simd3        1        4        0
+    //    simd4       15       17        0
     // Totals...
-    // yes simd      138      177        0
+    // yes simd       93      125        0
     //  no simd      140      184        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
@@ -13972,10 +14121,11 @@ impl Sandwich<AntiFlatPoint> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      161      205        0
-    //    simd4        2        2        0
+    //      f32       85      119        0
+    //    simd3        0        2        0
+    //    simd4       21       22        0
     // Totals...
-    // yes simd      163      207        0
+    // yes simd      106      143        0
     //  no simd      169      213        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -14018,10 +14168,11 @@ impl Sandwich<AntiFlector> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      176      218        0
-    //    simd4        8        8        0
+    //      f32      100      132        0
+    //    simd3        0        2        0
+    //    simd4       27       28        0
     // Totals...
-    // yes simd      184      226        0
+    // yes simd      127      162        0
     //  no simd      208      250        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -14072,8 +14223,13 @@ impl Sandwich<AntiFlector> for Dipole {
 impl Sandwich<AntiLine> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      188      230        0
+    //           add/sub      mul      div
+    //      f32      120      152        0
+    //    simd3        0        2        0
+    //    simd4       17       18        0
+    // Totals...
+    // yes simd      137      172        0
+    //  no simd      188      230        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -14127,10 +14283,11 @@ impl Sandwich<AntiMotor> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      176      218        0
-    //    simd4        8        8        0
+    //      f32      108      140        0
+    //    simd3        0        2        0
+    //    simd4       25       26        0
     // Totals...
-    // yes simd      184      226        0
+    // yes simd      133      168        0
     //  no simd      208      250        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -14188,11 +14345,11 @@ impl Sandwich<AntiPlane> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      136      177        0
-    //    simd3        1        2        0
-    //    simd4        5        5        0
+    //      f32       68       99        0
+    //    simd3        1        4        0
+    //    simd4       22       23        0
     // Totals...
-    // yes simd      142      184        0
+    // yes simd       91      126        0
     //  no simd      159      203        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -14230,11 +14387,11 @@ impl Sandwich<AntiScalar> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       84      110        0
-    //    simd3        0        2        0
-    //    simd4        0        2        0
+    //      f32       56       72        0
+    //    simd3        0        4        0
+    //    simd4        7       10        0
     // Totals...
-    // yes simd       84      114        0
+    // yes simd       63       86        0
     //  no simd       84      124        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -14253,10 +14410,11 @@ impl Sandwich<Circle> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      200      242        0
-    //    simd4        7        7        0
+    //      f32      124      156        0
+    //    simd3        0        2        0
+    //    simd4       26       27        0
     // Totals...
-    // yes simd      207      249        0
+    // yes simd      150      185        0
     //  no simd      228      270        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -14328,10 +14486,11 @@ impl Sandwich<CircleRotor> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      202      244        0
-    //    simd4        9        9        0
+    //      f32      126      158        0
+    //    simd3        0        2        0
+    //    simd4       28       29        0
     // Totals...
-    // yes simd      211      253        0
+    // yes simd      154      189        0
     //  no simd      238      280        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -14417,10 +14576,11 @@ impl Sandwich<Dipole> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      200      242        0
-    //    simd4        7        7        0
+    //      f32      132      164        0
+    //    simd3        0        2        0
+    //    simd4       24       25        0
     // Totals...
-    // yes simd      207      249        0
+    // yes simd      156      191        0
     //  no simd      228      270        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -14494,10 +14654,11 @@ impl Sandwich<DipoleInversion> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      222      264        0
-    //    simd4       14       14        0
+    //      f32      154      186        0
+    //    simd3        0        2        0
+    //    simd4       31       32        0
     // Totals...
-    // yes simd      236      278        0
+    // yes simd      185      220        0
     //  no simd      278      320        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -14610,11 +14771,11 @@ impl Sandwich<DualNum> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      137      178        0
-    //    simd3        1        2        0
-    //    simd4        0        1        0
+    //      f32       69      100        0
+    //    simd3        1        4        0
+    //    simd4       17       19        0
     // Totals...
-    // yes simd      138      181        0
+    // yes simd       87      123        0
     //  no simd      140      188        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -14649,10 +14810,11 @@ impl Sandwich<FlatPoint> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      161      205        0
-    //    simd4        2        2        0
+    //      f32       93      127        0
+    //    simd3        0        2        0
+    //    simd4       19       20        0
     // Totals...
-    // yes simd      163      207        0
+    // yes simd      112      149        0
     //  no simd      169      213        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -14698,10 +14860,11 @@ impl Sandwich<Flector> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      184      226        0
-    //    simd4        6        6        0
+    //      f32      116      148        0
+    //    simd3        0        2        0
+    //    simd4       23       24        0
     // Totals...
-    // yes simd      190      232        0
+    // yes simd      139      174        0
     //  no simd      208      250        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -14757,10 +14920,11 @@ impl Sandwich<Line> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      184      226        0
-    //    simd4        1        1        0
+    //      f32      108      140        0
+    //    simd3        0        2        0
+    //    simd4       20       21        0
     // Totals...
-    // yes simd      185      227        0
+    // yes simd      128      163        0
     //  no simd      188      230        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -14817,10 +14981,11 @@ impl Sandwich<Motor> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      180      222        0
-    //    simd4        7        7        0
+    //      f32      104      136        0
+    //    simd3        0        2        0
+    //    simd4       26       27        0
     // Totals...
-    // yes simd      187      229        0
+    // yes simd      130      165        0
     //  no simd      208      250        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -14870,13 +15035,13 @@ impl Sandwich<MultiVector> for Dipole {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      382      445        0
-    //    simd2        9        9        0
-    //    simd3       36       40        0
-    //    simd4       17       17        0
+    //      f32      212      254        0
+    //    simd2       18       18        0
+    //    simd3       72       82        0
+    //    simd4       28       29        0
     // Totals...
-    // yes simd      444      511        0
-    //  no simd      576      651        0
+    // yes simd      330      383        0
+    //  no simd      576      652        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -15042,11 +15207,11 @@ impl Sandwich<Plane> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      186        0
-    //    simd3        1        2        0
-    //    simd4        2        2        0
+    //      f32       88      116        0
+    //    simd3        1        4        0
+    //    simd4       17       18        0
     // Totals...
-    // yes simd      151      190        0
+    // yes simd      106      138        0
     //  no simd      159      200        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
@@ -15082,11 +15247,11 @@ impl Sandwich<RoundPoint> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      139      178        0
-    //    simd3        2        3        0
-    //    simd4        6        6        0
+    //      f32       71      100        0
+    //    simd3        2        5        0
+    //    simd4       23       24        0
     // Totals...
-    // yes simd      147      187        0
+    // yes simd       96      129        0
     //  no simd      169      211        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -15127,11 +15292,11 @@ impl Sandwich<Scalar> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       84      110        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //      f32       56       72        0
+    //    simd3        0        4        0
+    //    simd4        7        9        0
     // Totals...
-    // yes simd       84      113        0
+    // yes simd       63       85        0
     //  no simd       84      120        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -15150,11 +15315,11 @@ impl Sandwich<Sphere> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      155      193        0
-    //    simd3        2        3        0
-    //    simd4        2        2        0
+    //      f32       95      123        0
+    //    simd3        2        5        0
+    //    simd4       17       18        0
     // Totals...
-    // yes simd      159      198        0
+    // yes simd      114      146        0
     //  no simd      169      210        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -15192,10 +15357,11 @@ impl Sandwich<VersorEven> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      208      250        0
-    //    simd4       20       20        0
+    //      f32      132      164        0
+    //    simd3        0        2        0
+    //    simd4       39       40        0
     // Totals...
-    // yes simd      228      270        0
+    // yes simd      171      206        0
     //  no simd      288      330        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -15299,10 +15465,11 @@ impl Sandwich<VersorOdd> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      224      266        0
-    //    simd4       16       16        0
+    //      f32      156      188        0
+    //    simd3        0        2        0
+    //    simd4       33       34        0
     // Totals...
-    // yes simd      240      282        0
+    // yes simd      189      224        0
     //  no simd      288      330        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -15423,10 +15590,11 @@ impl Sandwich<AntiCircleRotor> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      285      327        0
-    //    simd4       22       22        0
+    //      f32      137      172        0
+    //    simd3        0        1        0
+    //    simd4       59       60        0
     // Totals...
-    // yes simd      307      349        0
+    // yes simd      196      233        0
     //  no simd      373      415        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -15528,10 +15696,11 @@ impl Sandwich<AntiDipoleInversion> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      293      335        0
-    //    simd4       35       35        0
+    //      f32      125      156        0
+    //    simd3        0        1        0
+    //    simd4       77       79        0
     // Totals...
-    // yes simd      328      370        0
+    // yes simd      202      236        0
     //  no simd      433      475        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -15657,10 +15826,11 @@ impl Sandwich<AntiDualNum> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      234      272        0
-    //    simd4        1        2        0
+    //      f32       86      117        0
+    //    simd3        0        1        0
+    //    simd4       38       40        0
     // Totals...
-    // yes simd      235      274        0
+    // yes simd      124      158        0
     //  no simd      238      280        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -15696,10 +15866,11 @@ impl Sandwich<AntiFlatPoint> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      248      295        0
-    //    simd4        5        5        0
+    //      f32       80      116        0
+    //    simd3        0        1        0
+    //    simd4       47       49        0
     // Totals...
-    // yes simd      253      300        0
+    // yes simd      127      166        0
     //  no simd      268      315        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -15754,10 +15925,11 @@ impl Sandwich<AntiFlector> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      268      310        0
-    //    simd4       15       15        0
+    //      f32      100      131        0
+    //    simd3        0        1        0
+    //    simd4       57       59        0
     // Totals...
-    // yes simd      283      325        0
+    // yes simd      157      191        0
     //  no simd      328      370        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -15831,10 +16003,11 @@ impl Sandwich<AntiLine> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      290      332        0
-    //    simd4        2        2        0
+    //      f32      142      177        0
+    //    simd3        0        1        0
+    //    simd4       39       40        0
     // Totals...
-    // yes simd      292      334        0
+    // yes simd      181      218        0
     //  no simd      298      340        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -15909,10 +16082,11 @@ impl Sandwich<AntiMotor> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      264      306        0
-    //    simd4       16       16        0
+    //      f32      116      151        0
+    //    simd3        0        1        0
+    //    simd4       53       54        0
     // Totals...
-    // yes simd      280      322        0
+    // yes simd      169      206        0
     //  no simd      328      370        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -15990,10 +16164,11 @@ impl Sandwich<AntiPlane> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      236      282        0
-    //    simd4        8        8        0
+    //      f32       68      103        0
+    //    simd3        0        1        0
+    //    simd4       50       52        0
     // Totals...
-    // yes simd      244      290        0
+    // yes simd      118      156        0
     //  no simd      268      314        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -16037,12 +16212,12 @@ impl Sandwich<AntiScalar> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      209      235        0
-    //    simd3        0        1        0
-    //    simd4        0        5        0
+    //      f32       65       88        0
+    //    simd3        0        2        0
+    //    simd4       36       42        0
     // Totals...
-    // yes simd      209      241        0
-    //  no simd      209      258        0
+    // yes simd      101      132        0
+    //  no simd      209      262        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -16062,10 +16237,11 @@ impl Sandwich<Circle> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      290      332        0
-    //    simd4       17       17        0
+    //      f32      122      153        0
+    //    simd3        0        1        0
+    //    simd4       59       61        0
     // Totals...
-    // yes simd      307      349        0
+    // yes simd      181      215        0
     //  no simd      358      400        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -16161,10 +16337,11 @@ impl Sandwich<CircleRotor> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      289      331        0
-    //    simd4       21       21        0
+    //      f32      121      152        0
+    //    simd3        0        1        0
+    //    simd4       63       65        0
     // Totals...
-    // yes simd      310      352        0
+    // yes simd      184      218        0
     //  no simd      373      415        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -16271,10 +16448,11 @@ impl Sandwich<Dipole> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      298      340        0
-    //    simd4       15       15        0
+    //      f32      150      185        0
+    //    simd3        0        1        0
+    //    simd4       52       53        0
     // Totals...
-    // yes simd      313      355        0
+    // yes simd      202      239        0
     //  no simd      358      400        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -16366,10 +16544,11 @@ impl Sandwich<DipoleInversion> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      297      339        0
-    //    simd4       34       34        0
+    //      f32      149      184        0
+    //    simd3        0        1        0
+    //    simd4       71       72        0
     // Totals...
-    // yes simd      331      373        0
+    // yes simd      220      257        0
     //  no simd      433      475        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -16501,10 +16680,11 @@ impl Sandwich<DualNum> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      234      275        0
-    //    simd4        1        2        0
+    //      f32       66       96        0
+    //    simd3        0        1        0
+    //    simd4       43       46        0
     // Totals...
-    // yes simd      235      277        0
+    // yes simd      109      143        0
     //  no simd      238      283        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -16539,10 +16719,11 @@ impl Sandwich<FlatPoint> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      249      293        0
-    //    simd4        5        5        0
+    //      f32      101      138        0
+    //    simd3        0        1        0
+    //    simd4       42       43        0
     // Totals...
-    // yes simd      254      298        0
+    // yes simd      143      182        0
     //  no simd      269      313        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -16598,10 +16779,11 @@ impl Sandwich<Flector> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      272      315        0
-    //    simd4       14       14        0
+    //      f32      124      160        0
+    //    simd3        0        1        0
+    //    simd4       51       52        0
     // Totals...
-    // yes simd      286      329        0
+    // yes simd      175      213        0
     //  no simd      328      371        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -16677,10 +16859,11 @@ impl Sandwich<Line> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      286      328        0
-    //    simd4        3        3        0
+    //      f32      118      149        0
+    //    simd3        0        1        0
+    //    simd4       45       47        0
     // Totals...
-    // yes simd      289      331        0
+    // yes simd      163      197        0
     //  no simd      298      340        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -16763,10 +16946,11 @@ impl Sandwich<Motor> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      265      306        0
-    //    simd4       16       16        0
+    //      f32       97      127        0
+    //    simd3        0        1        0
+    //    simd4       58       60        0
     // Totals...
-    // yes simd      281      322        0
+    // yes simd      155      188        0
     //  no simd      329      370        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -16845,12 +17029,12 @@ impl Sandwich<MultiVector> for DipoleInversion {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      562      630        0
-    //    simd2       11       11        0
-    //    simd3       52       54        0
-    //    simd4       39       39        0
+    //      f32      242      297        0
+    //    simd2       22       22        0
+    //    simd3      106      111        0
+    //    simd4       73       74        0
     // Totals...
-    // yes simd      664      734        0
+    // yes simd      443      504        0
     //  no simd      896      970        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -17088,10 +17272,11 @@ impl Sandwich<Plane> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      244      287        0
-    //    simd4        6        6        0
+    //      f32       96      132        0
+    //    simd3        0        1        0
+    //    simd4       43       44        0
     // Totals...
-    // yes simd      250      293        0
+    // yes simd      139      177        0
     //  no simd      268      311        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -17133,10 +17318,11 @@ impl Sandwich<RoundPoint> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      247      289        0
-    //    simd4        9        9        0
+    //      f32       79      110        0
+    //    simd3        0        1        0
+    //    simd4       51       53        0
     // Totals...
-    // yes simd      256      298        0
+    // yes simd      130      164        0
     //  no simd      283      325        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -17182,11 +17368,11 @@ impl Sandwich<Scalar> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      209      235        0
-    //    simd3        0        1        0
-    //    simd4        0        3        0
+    //      f32       73       92        0
+    //    simd3        0        2        0
+    //    simd4       34       38        0
     // Totals...
-    // yes simd      209      239        0
+    // yes simd      107      132        0
     //  no simd      209      250        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -17207,10 +17393,11 @@ impl Sandwich<Sphere> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      243      286        0
-    //    simd4       10       10        0
+    //      f32       95      131        0
+    //    simd3        0        1        0
+    //    simd4       47       48        0
     // Totals...
-    // yes simd      253      296        0
+    // yes simd      142      180        0
     //  no simd      283      326        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -17257,10 +17444,11 @@ impl Sandwich<VersorEven> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      292      334        0
-    //    simd4       39       39        0
+    //      f32      124      155        0
+    //    simd3        0        1        0
+    //    simd4       81       83        0
     // Totals...
-    // yes simd      331      373        0
+    // yes simd      205      239        0
     //  no simd      448      490        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -17377,10 +17565,11 @@ impl Sandwich<VersorOdd> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      300      342        0
-    //    simd4       37       37        0
+    //      f32      152      187        0
+    //    simd3        0        1        0
+    //    simd4       74       75        0
     // Totals...
-    // yes simd      337      379        0
+    // yes simd      226      263        0
     //  no simd      448      490        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -17516,8 +17705,12 @@ impl InfixSandwich for DualNum {}
 impl Sandwich<AntiCircleRotor> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       23       59        0
+    //           add/sub      mul      div
+    //      f32       12       53        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       15       56        0
+    //  no simd       24       65        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -17555,8 +17748,12 @@ impl Sandwich<AntiCircleRotor> for DualNum {
 impl Sandwich<AntiDipoleInversion> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       30       67        0
+    //           add/sub      mul      div
+    //      f32       19       57        0
+    //    simd4        3        4        0
+    // Totals...
+    // yes simd       22       61        0
+    //  no simd       31       73        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -17608,11 +17805,11 @@ impl Sandwich<AntiFlatPoint> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       33        0
-    //    simd4        0        4        0
+    //      f32       10       28        0
+    //    simd4        1        6        0
     // Totals...
-    // yes simd       14       37        0
-    //  no simd       14       49        0
+    // yes simd       11       34        0
+    //  no simd       14       52        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -17636,11 +17833,11 @@ impl Sandwich<AntiFlector> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       48        0
-    //    simd4        0        4        0
+    //      f32        9       38        0
+    //    simd4        3        8        0
     // Totals...
-    // yes simd       20       52        0
-    //  no simd       20       64        0
+    // yes simd       12       46        0
+    //  no simd       21       70        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -17669,11 +17866,12 @@ impl Sandwich<AntiLine> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       47        0
+    //      f32       13       46        0
     //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       17       48        0
-    //  no simd       17       50        0
+    // yes simd       14       48        0
+    //  no simd       17       53        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -17707,11 +17905,11 @@ impl Sandwich<AntiMotor> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       48        0
-    //    simd4        0        2        0
+    //      f32        9       42        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd       20       50        0
-    //  no simd       20       56        0
+    // yes simd       12       47        0
+    //  no simd       21       62        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -17740,11 +17938,11 @@ impl Sandwich<AntiPlane> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       33        0
-    //    simd4        0        4        0
+    //      f32        5       23        0
+    //    simd4        3        8        0
     // Totals...
-    // yes simd       16       37        0
-    //  no simd       16       49        0
+    // yes simd        8       31        0
+    //  no simd       17       55        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -17778,12 +17976,12 @@ impl Sandwich<Circle> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       44        0
+    //      f32       13       39        0
     //    simd3        1        2        0
-    //    simd4        0        1        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       18       47        0
-    //  no simd       20       54        0
+    // yes simd       15       44        0
+    //  no simd       20       57        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -17816,8 +18014,12 @@ impl Sandwich<Circle> for DualNum {
 impl Sandwich<CircleRotor> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       23       58        0
+    //           add/sub      mul      div
+    //      f32       12       48        0
+    //    simd4        3        4        0
+    // Totals...
+    // yes simd       15       52        0
+    //  no simd       24       64        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -17856,11 +18058,12 @@ impl Sandwich<Dipole> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       50        0
+    //      f32       13       49        0
     //    simd3        1        2        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       18       52        0
-    //  no simd       20       56        0
+    // yes simd       15       52        0
+    //  no simd       20       59        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -17894,11 +18097,11 @@ impl Sandwich<DipoleInversion> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       58        0
-    //    simd4        2        3        0
+    //      f32       11       52        0
+    //    simd4        5        6        0
     // Totals...
-    // yes simd       24       61        0
-    //  no simd       30       70        0
+    // yes simd       16       58        0
+    //  no simd       31       76        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -17945,11 +18148,11 @@ impl Sandwich<FlatPoint> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       38        0
-    //    simd4        0        3        0
+    //      f32       10       37        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       14       41        0
-    //  no simd       14       50        0
+    // yes simd       11       41        0
+    //  no simd       14       53        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -17973,11 +18176,11 @@ impl Sandwich<Flector> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       48        0
-    //    simd4        0        2        0
+    //      f32        9       42        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd       20       50        0
-    //  no simd       20       56        0
+    // yes simd       12       47        0
+    //  no simd       21       62        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -18006,11 +18209,12 @@ impl Sandwich<Line> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       45        0
+    //      f32       13       40        0
     //    simd3        0        2        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       17       47        0
-    //  no simd       17       51        0
+    // yes simd       14       44        0
+    //  no simd       17       54        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -18044,11 +18248,11 @@ impl Sandwich<Motor> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       51        0
-    //    simd4        0        3        0
+    //      f32        9       41        0
+    //    simd4        3        7        0
     // Totals...
-    // yes simd       20       54        0
-    //  no simd       20       63        0
+    // yes simd       12       48        0
+    //  no simd       21       69        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -18082,12 +18286,12 @@ impl Sandwich<MultiVector> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       41      105        0
-    //    simd3        5        9        0
-    //    simd4        2        2        0
+    //      f32       22       77        0
+    //    simd3       10       18        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd       48      116        0
-    //  no simd       64      140        0
+    // yes simd       35       98        0
+    //  no simd       64      143        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -18148,11 +18352,11 @@ impl Sandwich<Plane> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       44        0
-    //    simd4        0        1        0
+    //      f32        5       38        0
+    //    simd4        3        4        0
     // Totals...
-    // yes simd       16       45        0
-    //  no simd       16       48        0
+    // yes simd        8       42        0
+    //  no simd       17       54        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -18176,11 +18380,11 @@ impl Sandwich<RoundPoint> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       35        0
-    //    simd4        0        4        0
+    //      f32        5       25        0
+    //    simd4        3        8        0
     // Totals...
-    // yes simd       16       39        0
-    //  no simd       16       51        0
+    // yes simd        8       33        0
+    //  no simd       17       57        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -18215,11 +18419,11 @@ impl Sandwich<Sphere> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       38        0
-    //    simd4        0        3        0
+    //      f32        5       32        0
+    //    simd4        3        6        0
     // Totals...
-    // yes simd       16       41        0
-    //  no simd       16       50        0
+    // yes simd        8       38        0
+    //  no simd       17       56        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -18239,11 +18443,11 @@ impl Sandwich<VersorEven> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       60        0
-    //    simd4        2        2        0
+    //      f32       14       50        0
+    //    simd4        5        6        0
     // Totals...
-    // yes simd       27       62        0
-    //  no simd       33       68        0
+    // yes simd       19       56        0
+    //  no simd       34       74        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -18283,11 +18487,11 @@ impl Sandwich<VersorOdd> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       52        0
-    //    simd4        4        5        0
+    //      f32        6       46        0
+    //    simd4        7        8        0
     // Totals...
-    // yes simd       21       57        0
-    //  no simd       33       72        0
+    // yes simd       13       54        0
+    //  no simd       34       78        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -18323,11 +18527,11 @@ impl Sandwich<AntiCircleRotor> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       68      103        0
-    //    simd4        3        3        0
+    //      f32       48       82        0
+    //    simd4        8        9        0
     // Totals...
-    // yes simd       71      106        0
-    //  no simd       80      115        0
+    // yes simd       56       91        0
+    //  no simd       80      118        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -18370,10 +18574,10 @@ impl Sandwich<AntiDipoleInversion> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       72      112        0
-    //    simd4        5        5        0
+    //      f32       40       72        0
+    //    simd4       13       15        0
     // Totals...
-    // yes simd       77      117        0
+    // yes simd       53       87        0
     //  no simd       92      132        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -18426,11 +18630,11 @@ impl Sandwich<AntiDualNum> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       67        0
-    //    simd4        0        3        0
+    //      f32       25       46        0
+    //    simd4        5        9        0
     // Totals...
-    // yes simd       44       70        0
-    //  no simd       44       79        0
+    // yes simd       30       55        0
+    //  no simd       45       82        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -18453,8 +18657,12 @@ impl Sandwich<AntiDualNum> for FlatPoint {
 impl Sandwich<AntiFlatPoint> for FlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       36        0
+    //           add/sub      mul      div
+    //      f32       15       32        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       15       33        0
+    //  no simd       15       36        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -18474,10 +18682,10 @@ impl Sandwich<AntiFlector> for FlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       36        0
-    //    simd4        2        4        0
+    //      f32       16       32        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       18       40        0
+    // yes simd       18       37        0
     //  no simd       24       52        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -18498,8 +18706,12 @@ impl Sandwich<AntiFlector> for FlatPoint {
 impl Sandwich<AntiLine> for FlatPoint {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       39        0
+    //           add/sub      mul      div
+    //      f32       12       23        0
+    //    simd4        2        4        0
+    // Totals...
+    // yes simd       14       27        0
+    //  no simd       20       39        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -18523,8 +18735,12 @@ impl Sandwich<AntiLine> for FlatPoint {
 impl Sandwich<AntiMotor> for FlatPoint {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       44        0
+    //           add/sub      mul      div
+    //      f32       16       28        0
+    //    simd4        2        4        0
+    // Totals...
+    // yes simd       18       32        0
+    //  no simd       24       44        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -18553,10 +18769,10 @@ impl Sandwich<AntiPlane> for FlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       36        0
-    //    simd4        2        2        0
+    //      f32       13       32        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       15       38        0
+    // yes simd       15       35        0
     //  no simd       21       44        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -18579,10 +18795,10 @@ impl Sandwich<AntiScalar> for FlatPoint {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       12        0
-    //    simd4        0        2        0
+    //      f32        3        8        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        3       14        0
+    // yes simd        3       11        0
     //  no simd        3       20        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -18597,10 +18813,10 @@ impl Sandwich<Circle> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       65      106        0
-    //    simd4        2        2        0
+    //      f32       33       66        0
+    //    simd4       10       12        0
     // Totals...
-    // yes simd       67      108        0
+    // yes simd       43       78        0
     //  no simd       73      114        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -18643,10 +18859,10 @@ impl Sandwich<CircleRotor> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       68      103        0
-    //    simd4        3        3        0
+    //      f32       36       63        0
+    //    simd4       11       13        0
     // Totals...
-    // yes simd       71      106        0
+    // yes simd       47       76        0
     //  no simd       80      115        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -18686,11 +18902,11 @@ impl Sandwich<Dipole> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       65      103        0
-    //    simd4        2        2        0
+    //      f32       45       82        0
+    //    simd4        7        8        0
     // Totals...
-    // yes simd       67      105        0
-    //  no simd       73      111        0
+    // yes simd       52       90        0
+    //  no simd       73      114        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -18730,11 +18946,11 @@ impl Sandwich<DipoleInversion> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       75      112        0
-    //    simd4        5        5        0
+    //      f32       55       91        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       80      117        0
-    //  no simd       95      132        0
+    // yes simd       65      102        0
+    //  no simd       95      135        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -18784,11 +19000,11 @@ impl Sandwich<DualNum> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       70        0
-    //    simd4        0        4        0
+    //      f32       15       35        0
+    //    simd4        8       13        0
     // Totals...
-    // yes simd       44       74        0
-    //  no simd       44       86        0
+    // yes simd       23       48        0
+    //  no simd       47       87        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -18811,8 +19027,12 @@ impl Sandwich<DualNum> for FlatPoint {
 impl Sandwich<FlatPoint> for FlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15       31        0
+    //           add/sub      mul      div
+    //      f32       15       27        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       15       28        0
+    //  no simd       15       31        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -18832,10 +19052,10 @@ impl Sandwich<Flector> for FlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       32        0
-    //    simd4        2        3        0
+    //      f32       16       28        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       18       35        0
+    // yes simd       18       32        0
     //  no simd       24       44        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
@@ -18856,8 +19076,12 @@ impl Sandwich<Flector> for FlatPoint {
 impl Sandwich<Line> for FlatPoint {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       46        0
+    //           add/sub      mul      div
+    //      f32       12       26        0
+    //    simd4        2        5        0
+    // Totals...
+    // yes simd       14       31        0
+    //  no simd       20       46        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -18881,8 +19105,12 @@ impl Sandwich<Line> for FlatPoint {
 impl Sandwich<Motor> for FlatPoint {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       52        0
+    //           add/sub      mul      div
+    //      f32       16       32        0
+    //    simd4        2        5        0
+    // Totals...
+    // yes simd       18       37        0
+    //  no simd       24       52        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -18911,13 +19139,13 @@ impl Sandwich<MultiVector> for FlatPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      128      189        0
-    //    simd2        3        3        0
-    //    simd3        6       11        0
-    //    simd4       11       11        0
+    //      f32       67      115        0
+    //    simd2        6        6        0
+    //    simd3       14       22        0
+    //    simd4       19       20        0
     // Totals...
-    // yes simd      148      214        0
-    //  no simd      196      272        0
+    // yes simd      106      163        0
+    //  no simd      197      273        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -19005,10 +19233,10 @@ impl Sandwich<Plane> for FlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       36        0
-    //    simd4        1        1        0
+    //      f32       14       32        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       15       37        0
+    // yes simd       15       34        0
     //  no simd       18       40        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
@@ -19033,8 +19261,12 @@ impl Sandwich<Plane> for FlatPoint {
 impl Sandwich<RoundPoint> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       53       88        0
+    //           add/sub      mul      div
+    //      f32       24       53        0
+    //    simd4        8        9        0
+    // Totals...
+    // yes simd       32       62        0
+    //  no simd       56       89        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -19069,10 +19301,10 @@ impl Sandwich<Scalar> for FlatPoint {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       11        0
-    //    simd4        0        1        0
+    //      f32        3        7        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        3       12        0
+    // yes simd        3        9        0
     //  no simd        3       15        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -19083,8 +19315,12 @@ impl Sandwich<Scalar> for FlatPoint {
 impl Sandwich<Sphere> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       53       85        0
+    //           add/sub      mul      div
+    //      f32       34       64        0
+    //    simd4        5        6        0
+    // Totals...
+    // yes simd       39       70        0
+    //  no simd       54       88        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_product = DipoleInversion::from_groups(
@@ -19119,10 +19355,10 @@ impl Sandwich<VersorEven> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       72      115        0
-    //    simd4        6        6        0
+    //      f32       40       75        0
+    //    simd4       14       16        0
     // Totals...
-    // yes simd       78      121        0
+    // yes simd       54       91        0
     //  no simd       96      139        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -19175,11 +19411,11 @@ impl Sandwich<VersorOdd> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       75      112        0
-    //    simd4        6        6        0
+    //      f32       55       91        0
+    //    simd4       11       12        0
     // Totals...
-    // yes simd       81      118        0
-    //  no simd       99      136        0
+    // yes simd       66      103        0
+    //  no simd       99      139        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -19236,11 +19472,11 @@ impl Sandwich<AntiCircleRotor> for Flector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      152      188        0
-    //    simd4        8        8        0
+    //      f32       80      116        0
+    //    simd4       26       27        0
     // Totals...
-    // yes simd      160      196        0
-    //  no simd      184      220        0
+    // yes simd      106      143        0
+    //  no simd      184      224        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -19299,11 +19535,11 @@ impl Sandwich<AntiDipoleInversion> for Flector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      160      196        0
-    //    simd4       14       14        0
+    //      f32       73      104        0
+    //    simd4       36       37        0
     // Totals...
-    // yes simd      174      210        0
-    //  no simd      216      252        0
+    // yes simd      109      141        0
+    //  no simd      217      252        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -19386,11 +19622,11 @@ impl Sandwich<AntiDualNum> for Flector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      144        0
-    //    simd4        0        4        0
+    //      f32       44       72        0
+    //    simd4       18       23        0
     // Totals...
-    // yes simd      116      148        0
-    //  no simd      116      160        0
+    // yes simd       62       95        0
+    //  no simd      116      164        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -19419,11 +19655,11 @@ impl Sandwich<AntiFlatPoint> for Flector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       60        0
-    //    simd4        2        4        0
+    //      f32       16       24        0
+    //    simd4       10       13        0
     // Totals...
-    // yes simd       46       64        0
-    //  no simd       52       76        0
+    // yes simd       26       37        0
+    //  no simd       56       76        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -19444,11 +19680,11 @@ impl Sandwich<AntiFlector> for Flector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       76        0
-    //    simd4        6        6        0
+    //      f32       28       40        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd       62       82        0
-    //  no simd       80      100        0
+    // yes simd       42       55        0
+    //  no simd       84      100        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -19480,10 +19716,10 @@ impl Sandwich<AntiLine> for Flector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       60       80        0
-    //    simd4        2        2        0
+    //      f32       28       44        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       62       82        0
+    // yes simd       38       55        0
     //  no simd       68       88        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -19522,10 +19758,10 @@ impl Sandwich<AntiMotor> for Flector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       60       81        0
-    //    simd4        5        5        0
+    //      f32       28       45        0
+    //    simd4       13       14        0
     // Totals...
-    // yes simd       65       86        0
+    // yes simd       41       59        0
     //  no simd       80      101        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -19571,11 +19807,11 @@ impl Sandwich<AntiPlane> for Flector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       68        0
-    //    simd4        3        3        0
+    //      f32       20       32        0
+    //    simd4       11       12        0
     // Totals...
-    // yes simd       51       71        0
-    //  no simd       60       80        0
+    // yes simd       31       44        0
+    //  no simd       64       80        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -19601,10 +19837,10 @@ impl Sandwich<AntiScalar> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       52        0
-    //    simd4        0        4        0
+    //      f32       16       24        0
+    //    simd4        6       11        0
     // Totals...
-    // yes simd       40       56        0
+    // yes simd       22       35        0
     //  no simd       40       68        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -19621,11 +19857,11 @@ impl Sandwich<Circle> for Flector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      184        0
-    //    simd4        7        7        0
+    //      f32       61       92        0
+    //    simd4       29       30        0
     // Totals...
-    // yes simd      155      191        0
-    //  no simd      176      212        0
+    // yes simd       90      122        0
+    //  no simd      177      212        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -19679,11 +19915,11 @@ impl Sandwich<CircleRotor> for Flector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      187        0
-    //    simd4        9        9        0
+    //      f32       61       95        0
+    //    simd4       31       32        0
     // Totals...
-    // yes simd      157      196        0
-    //  no simd      184      223        0
+    // yes simd       92      127        0
+    //  no simd      185      223        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -19742,11 +19978,11 @@ impl Sandwich<Dipole> for Flector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      152      188        0
-    //    simd4        6        6        0
+    //      f32       80      116        0
+    //    simd4       24       25        0
     // Totals...
-    // yes simd      158      194        0
-    //  no simd      176      212        0
+    // yes simd      104      141        0
+    //  no simd      176      216        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -19801,11 +20037,11 @@ impl Sandwich<DipoleInversion> for Flector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      156      188        0
-    //    simd4       16       16        0
+    //      f32       84      116        0
+    //    simd4       34       35        0
     // Totals...
-    // yes simd      172      204        0
-    //  no simd      220      252        0
+    // yes simd      118      151        0
+    //  no simd      220      256        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -19888,11 +20124,11 @@ impl Sandwich<DualNum> for Flector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      145        0
-    //    simd4        0        3        0
+    //      f32       29       53        0
+    //    simd4       22       26        0
     // Totals...
-    // yes simd      116      148        0
-    //  no simd      116      157        0
+    // yes simd       51       79        0
+    //  no simd      117      157        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -19921,11 +20157,11 @@ impl Sandwich<FlatPoint> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       60        0
-    //    simd4        2        3        0
+    //      f32       17       28        0
+    //    simd4        9       11        0
     // Totals...
-    // yes simd       46       63        0
-    //  no simd       52       72        0
+    // yes simd       26       39        0
+    //  no simd       53       72        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -19946,11 +20182,11 @@ impl Sandwich<Flector> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       68        0
-    //    simd4        8        8        0
+    //      f32       21       36        0
+    //    simd4       15       16        0
     // Totals...
-    // yes simd       56       76        0
-    //  no simd       80      100        0
+    // yes simd       36       52        0
+    //  no simd       81      100        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -19981,10 +20217,10 @@ impl Sandwich<Line> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       72        0
-    //    simd4        4        4        0
+    //      f32       28       44        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       56       76        0
+    // yes simd       38       55        0
     //  no simd       68       88        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
@@ -20016,10 +20252,10 @@ impl Sandwich<Motor> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       68        0
-    //    simd4        8        8        0
+    //      f32       28       40        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd       60       76        0
+    // yes simd       42       55        0
     //  no simd       84      100        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
@@ -20051,13 +20287,13 @@ impl Sandwich<MultiVector> for Flector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      296      359        0
-    //    simd2        4        4        0
-    //    simd3       20       22        0
-    //    simd4       21       21        0
+    //      f32      150      204        0
+    //    simd2        8        8        0
+    //    simd3       42       46        0
+    //    simd4       39       40        0
     // Totals...
-    // yes simd      341      406        0
-    //  no simd      448      517        0
+    // yes simd      239      298        0
+    //  no simd      448      518        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -20204,11 +20440,11 @@ impl Sandwich<Plane> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       68        0
-    //    simd4        3        3        0
+    //      f32       21       36        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       51       71        0
-    //  no simd       60       80        0
+    // yes simd       31       47        0
+    //  no simd       61       80        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -20234,11 +20470,11 @@ impl Sandwich<RoundPoint> for Flector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      128      164        0
-    //    simd4        2        4        0
+    //      f32       41       72        0
+    //    simd4       24       27        0
     // Totals...
-    // yes simd      130      168        0
-    //  no simd      136      180        0
+    // yes simd       65       99        0
+    //  no simd      137      180        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -20274,10 +20510,10 @@ impl Sandwich<Scalar> for Flector {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       52        0
-    //    simd4        0        2        0
+    //      f32        8       16        0
+    //    simd4        8       11        0
     // Totals...
-    // yes simd       40       54        0
+    // yes simd       16       27        0
     //  no simd       40       60        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -20293,8 +20529,12 @@ impl Sandwich<Scalar> for Flector {
 impl Sandwich<Sphere> for Flector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32      136      176        0
+    //           add/sub      mul      div
+    //      f32       64      104        0
+    //    simd4       18       19        0
+    // Totals...
+    // yes simd       82      123        0
+    //  no simd      136      180        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -20335,11 +20575,11 @@ impl Sandwich<VersorEven> for Flector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      152      191        0
-    //    simd4       18       18        0
+    //      f32       65       99        0
+    //    simd4       40       41        0
     // Totals...
-    // yes simd      170      209        0
-    //  no simd      224      263        0
+    // yes simd      105      140        0
+    //  no simd      225      263        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -20427,11 +20667,11 @@ impl Sandwich<VersorOdd> for Flector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      156      188        0
-    //    simd4       18       18        0
+    //      f32       84      116        0
+    //    simd4       36       37        0
     // Totals...
-    // yes simd      174      206        0
-    //  no simd      228      260        0
+    // yes simd      120      153        0
+    //  no simd      228      264        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -20507,10 +20747,11 @@ impl Sandwich<AntiCircleRotor> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      118      156        0
-    //    simd4        3        3        0
+    //      f32       94      126        0
+    //    simd3        0        2        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd      121      159        0
+    // yes simd      103      137        0
     //  no simd      130      168        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -20564,10 +20805,11 @@ impl Sandwich<AntiDipoleInversion> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      146      184        0
-    //    simd4        2        2        0
+    //      f32      122      154        0
+    //    simd3        0        2        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd      148      186        0
+    // yes simd      130      164        0
     //  no simd      154      192        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -20647,10 +20889,11 @@ impl Sandwich<AntiDualNum> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       77      111        0
-    //    simd3        0        1        0
+    //      f32       65       93        0
+    //    simd3        0        3        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd       77      112        0
+    // yes simd       68       99        0
     //  no simd       77      114        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -20684,8 +20927,13 @@ impl Sandwich<AntiDualNum> for Line {
 impl Sandwich<AntiFlatPoint> for Line {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       57        0
+    //           add/sub      mul      div
+    //      f32       20       35        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       24       41        0
+    //  no simd       36       57        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -20710,10 +20958,11 @@ impl Sandwich<AntiFlector> for Line {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       66        0
-    //    simd4        4        4        0
+    //      f32       24       44        0
+    //    simd3        0        2        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       44       70        0
+    // yes simd       32       54        0
     //  no simd       56       82        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -20741,8 +20990,13 @@ impl Sandwich<AntiFlector> for Line {
 impl Sandwich<AntiLine> for Line {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       47       69        0
+    //           add/sub      mul      div
+    //      f32       35       51        0
+    //    simd3        0        2        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       38       56        0
+    //  no simd       47       69        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -20773,10 +21027,11 @@ impl Sandwich<AntiMotor> for Line {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       66        0
-    //    simd4        3        3        0
+    //      f32       32       48        0
+    //    simd3        0        2        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       47       69        0
+    // yes simd       38       56        0
     //  no simd       56       78        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -20806,10 +21061,11 @@ impl Sandwich<AntiPlane> for Line {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       29       55        0
-    //    simd4        3        3        0
+    //      f32       13       33        0
+    //    simd3        0        2        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       32       58        0
+    // yes simd       20       42        0
     //  no simd       41       67        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -20836,10 +21092,10 @@ impl Sandwich<AntiScalar> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       33        0
-    //    simd3        0        4        0
+    //      f32       19       27        0
+    //    simd3        0        6        0
     // Totals...
-    // yes simd       19       37        0
+    // yes simd       19       33        0
     //  no simd       19       45        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -20856,10 +21112,11 @@ impl Sandwich<Circle> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      120      158        0
-    //    simd4        1        1        0
+    //      f32       96      128        0
+    //    simd3        0        2        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd      121      159        0
+    // yes simd      103      137        0
     //  no simd      124      162        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -20915,10 +21172,11 @@ impl Sandwich<CircleRotor> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      126      164        0
-    //    simd4        1        1        0
+    //      f32      102      134        0
+    //    simd3        0        2        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd      127      165        0
+    // yes simd      109      143        0
     //  no simd      130      168        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -20981,10 +21239,11 @@ impl Sandwich<Dipole> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      154        0
-    //    simd4        2        2        0
+    //      f32       92      124        0
+    //    simd3        0        2        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd      118      156        0
+    // yes simd      100      134        0
     //  no simd      124      162        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -21034,10 +21293,11 @@ impl Sandwich<DipoleInversion> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      130      168        0
-    //    simd4        6        6        0
+    //      f32      106      138        0
+    //    simd3        0        2        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd      136      174        0
+    // yes simd      118      152        0
     //  no simd      154      192        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -21106,10 +21366,11 @@ impl Sandwich<DualNum> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       77      114        0
-    //    simd3        0        2        0
+    //      f32       65       96        0
+    //    simd3        0        4        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd       77      116        0
+    // yes simd       68      103        0
     //  no simd       77      120        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
@@ -21143,8 +21404,13 @@ impl Sandwich<DualNum> for Line {
 impl Sandwich<FlatPoint> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       36       60        0
+    //           add/sub      mul      div
+    //      f32       20       39        0
+    //    simd3        0        2        0
+    //    simd4        4        4        0
+    // Totals...
+    // yes simd       24       45        0
+    //  no simd       36       61        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -21169,11 +21435,12 @@ impl Sandwich<Flector> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       65        0
-    //    simd4        4        4        0
+    //      f32       24       44        0
+    //    simd3        0        2        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       44       69        0
-    //  no simd       56       81        0
+    // yes simd       32       54        0
+    //  no simd       56       82        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -21205,8 +21472,13 @@ impl Sandwich<Flector> for Line {
 impl Sandwich<Line> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       47       69        0
+    //           add/sub      mul      div
+    //      f32       35       51        0
+    //    simd3        0        2        0
+    //    simd4        3        3        0
+    // Totals...
+    // yes simd       38       56        0
+    //  no simd       47       69        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -21238,10 +21510,11 @@ impl Sandwich<Motor> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       66        0
-    //    simd4        3        3        0
+    //      f32       32       48        0
+    //    simd3        0        2        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       47       69        0
+    // yes simd       38       56        0
     //  no simd       56       78        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
@@ -21277,11 +21550,11 @@ impl Sandwich<MultiVector> for Line {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      257      315        0
-    //    simd3       17       21        0
-    //    simd4        3        3        0
+    //      f32      186      226        0
+    //    simd3       34       44        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd      277      339        0
+    // yes simd      228      278        0
     //  no simd      320      390        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -21417,11 +21690,12 @@ impl Sandwich<Plane> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       29       57        0
-    //    simd4        3        3        0
+    //      f32       13       36        0
+    //    simd3        0        2        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       32       60        0
-    //  no simd       41       69        0
+    // yes simd       20       45        0
+    //  no simd       41       70        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -21447,11 +21721,11 @@ impl Sandwich<RoundPoint> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       86      122        0
-    //    simd3        0        2        0
-    //    simd4        1        1        0
+    //      f32       74      104        0
+    //    simd3        0        4        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       87      125        0
+    // yes simd       78      112        0
     //  no simd       90      132        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -21487,10 +21761,10 @@ impl Sandwich<Scalar> for Line {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       33        0
-    //    simd3        0        2        0
+    //      f32       19       27        0
+    //    simd3        0        4        0
     // Totals...
-    // yes simd       19       35        0
+    // yes simd       19       31        0
     //  no simd       19       39        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -21507,11 +21781,11 @@ impl Sandwich<Sphere> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       86      119        0
-    //    simd3        0        1        0
-    //    simd4        1        1        0
+    //      f32       74      101        0
+    //    simd3        0        3        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       87      121        0
+    // yes simd       78      108        0
     //  no simd       90      126        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -21547,10 +21821,11 @@ impl Sandwich<VersorEven> for Line {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      140      178        0
-    //    simd4        5        5        0
+    //      f32      116      148        0
+    //    simd3        0        2        0
+    //    simd4       11       11        0
     // Totals...
-    // yes simd      145      183        0
+    // yes simd      127      161        0
     //  no simd      160      198        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -21630,10 +21905,11 @@ impl Sandwich<VersorOdd> for Line {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      154        0
-    //    simd4       11       11        0
+    //      f32       92      124        0
+    //    simd3        0        2        0
+    //    simd4       17       17        0
     // Totals...
-    // yes simd      127      165        0
+    // yes simd      109      143        0
     //  no simd      160      198        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -21693,11 +21969,11 @@ impl Sandwich<AntiCircleRotor> for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      144      182        0
-    //    simd4       10       10        0
+    //      f32       71      102        0
+    //    simd4       29       30        0
     // Totals...
-    // yes simd      154      192        0
-    //  no simd      184      222        0
+    // yes simd      100      132        0
+    //  no simd      187      222        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -21758,11 +22034,11 @@ impl Sandwich<AntiDipoleInversion> for Motor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      156      194        0
-    //    simd4       15       15        0
+    //      f32       85      122        0
+    //    simd4       33       33        0
     // Totals...
-    // yes simd      171      209        0
-    //  no simd      216      254        0
+    // yes simd      118      155        0
+    //  no simd      217      254        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -21841,11 +22117,11 @@ impl Sandwich<AntiDualNum> for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      147        0
-    //    simd4        0        3        0
+    //      f32       43       67        0
+    //    simd4       19       23        0
     // Totals...
-    // yes simd      116      150        0
-    //  no simd      116      159        0
+    // yes simd       62       90        0
+    //  no simd      119      159        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -21875,8 +22151,12 @@ impl Sandwich<AntiDualNum> for Motor {
 impl Sandwich<AntiFlatPoint> for Motor {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       52       74        0
+    //           add/sub      mul      div
+    //      f32       24       42        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       32       50        0
+    //  no simd       56       74        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -21904,11 +22184,11 @@ impl Sandwich<AntiFlector> for Motor {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       70        0
-    //    simd4        8        8        0
+    //      f32       24       38        0
+    //    simd4       16       16        0
     // Totals...
-    // yes simd       60       78        0
-    //  no simd       84      102        0
+    // yes simd       40       54        0
+    //  no simd       88      102        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -21947,10 +22227,10 @@ impl Sandwich<AntiLine> for Motor {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        3        3        0
+    //      f32       32       54        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       59       81        0
+    // yes simd       41       63        0
     //  no simd       68       90        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -21980,10 +22260,10 @@ impl Sandwich<AntiMotor> for Motor {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        6        6        0
+    //      f32       32       54        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd       62       84        0
+    // yes simd       44       66        0
     //  no simd       80      102        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -22016,11 +22296,11 @@ impl Sandwich<AntiPlane> for Motor {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       58        0
-    //    simd4        6        6        0
+    //      f32       12       26        0
+    //    simd4       14       14        0
     // Totals...
-    // yes simd       46       64        0
-    //  no simd       64       82        0
+    // yes simd       26       40        0
+    //  no simd       68       82        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = Flector::from_groups(
             // e15, e25, e35, e45
@@ -22045,10 +22325,10 @@ impl Sandwich<AntiScalar> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       54        0
-    //    simd4        0        4        0
+    //      f32       16       30        0
+    //    simd4        6       10        0
     // Totals...
-    // yes simd       40       58        0
+    // yes simd       22       40        0
     //  no simd       40       70        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -22065,11 +22345,11 @@ impl Sandwich<Circle> for Motor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      148      189        0
-    //    simd4        7        7        0
+    //      f32       77      117        0
+    //    simd4       25       25        0
     // Totals...
-    // yes simd      155      196        0
-    //  no simd      176      217        0
+    // yes simd      102      142        0
+    //  no simd      177      217        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -22135,11 +22415,11 @@ impl Sandwich<CircleRotor> for Motor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      151      189        0
-    //    simd4        9        9        0
+    //      f32       80      117        0
+    //    simd4       27       27        0
     // Totals...
-    // yes simd      160      198        0
-    //  no simd      187      225        0
+    // yes simd      107      144        0
+    //  no simd      188      225        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -22214,11 +22494,11 @@ impl Sandwich<Dipole> for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      144      182        0
-    //    simd4        8        8        0
+    //      f32       71      102        0
+    //    simd4       27       28        0
     // Totals...
-    // yes simd      152      190        0
-    //  no simd      176      214        0
+    // yes simd       98      130        0
+    //  no simd      179      214        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -22268,11 +22548,11 @@ impl Sandwich<DipoleInversion> for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      132      166        0
-    //    simd4       22       22        0
+    //      f32       59       86        0
+    //    simd4       41       42        0
     // Totals...
-    // yes simd      154      188        0
-    //  no simd      220      254        0
+    // yes simd      100      128        0
+    //  no simd      223      254        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -22332,11 +22612,11 @@ impl Sandwich<DualNum> for Motor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      154        0
-    //    simd4        0        3        0
+    //      f32       45       82        0
+    //    simd4       18       21        0
     // Totals...
-    // yes simd      116      157        0
-    //  no simd      116      166        0
+    // yes simd       63      103        0
+    //  no simd      117      166        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -22369,8 +22649,12 @@ impl Sandwich<DualNum> for Motor {
 impl Sandwich<FlatPoint> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       52       78        0
+    //           add/sub      mul      div
+    //      f32       24       46        0
+    //    simd4        8        8        0
+    // Totals...
+    // yes simd       32       54        0
+    //  no simd       56       78        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -22399,11 +22683,11 @@ impl Sandwich<Flector> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       70        0
-    //    simd4        8        8        0
+    //      f32       24       38        0
+    //    simd4       16       16        0
     // Totals...
-    // yes simd       60       78        0
-    //  no simd       84      102        0
+    // yes simd       40       54        0
+    //  no simd       88      102        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -22440,10 +22724,10 @@ impl Sandwich<Line> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        3        3        0
+    //      f32       32       54        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       59       81        0
+    // yes simd       41       63        0
     //  no simd       68       90        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
@@ -22479,10 +22763,10 @@ impl Sandwich<Motor> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       78        0
-    //    simd4        6        6        0
+    //      f32       32       54        0
+    //    simd4       12       12        0
     // Totals...
-    // yes simd       62       84        0
+    // yes simd       44       66        0
     //  no simd       80      102        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
@@ -22521,12 +22805,12 @@ impl Sandwich<MultiVector> for Motor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      289      351        0
-    //    simd3       20       22        0
-    //    simd4       25       26        0
+    //      f32      130      181        0
+    //    simd3       40       44        0
+    //    simd4       51       52        0
     // Totals...
-    // yes simd      334      399        0
-    //  no simd      449      521        0
+    // yes simd      221      277        0
+    //  no simd      454      521        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -22669,11 +22953,11 @@ impl Sandwich<Plane> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       70        0
-    //    simd4        3        3        0
+    //      f32       20       38        0
+    //    simd4       11       11        0
     // Totals...
-    // yes simd       51       73        0
-    //  no simd       60       82        0
+    // yes simd       31       49        0
+    //  no simd       64       82        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -22699,11 +22983,11 @@ impl Sandwich<RoundPoint> for Motor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      124      165        0
-    //    simd4        3        5        0
+    //      f32       53       93        0
+    //    simd4       21       23        0
     // Totals...
-    // yes simd      127      170        0
-    //  no simd      136      185        0
+    // yes simd       74      116        0
+    //  no simd      137      185        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -22743,10 +23027,10 @@ impl Sandwich<Scalar> for Motor {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       54        0
-    //    simd4        0        2        0
+    //      f32       16       30        0
+    //    simd4        6        8        0
     // Totals...
-    // yes simd       40       56        0
+    // yes simd       22       38        0
     //  no simd       40       62        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -22763,11 +23047,11 @@ impl Sandwich<Sphere> for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      128      162        0
-    //    simd4        2        3        0
+    //      f32       55       82        0
+    //    simd4       21       23        0
     // Totals...
-    // yes simd      130      165        0
-    //  no simd      136      174        0
+    // yes simd       76      105        0
+    //  no simd      139      174        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -22803,11 +23087,11 @@ impl Sandwich<VersorEven> for Motor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      156      197        0
-    //    simd4       17       17        0
+    //      f32       85      125        0
+    //    simd4       35       35        0
     // Totals...
-    // yes simd      173      214        0
-    //  no simd      224      265        0
+    // yes simd      120      160        0
+    //  no simd      225      265        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -22894,11 +23178,11 @@ impl Sandwich<VersorOdd> for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      133      166        0
-    //    simd4       23       24        0
+    //      f32       60       86        0
+    //    simd4       42       44        0
     // Totals...
-    // yes simd      156      190        0
-    //  no simd      225      262        0
+    // yes simd      102      130        0
+    //  no simd      228      262        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -22961,12 +23245,12 @@ impl Sandwich<AntiCircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1091     1167        0
-    //    simd2       10       10        0
-    //    simd3       39       42        0
-    //    simd4       21       21        0
+    //      f32      421      471        0
+    //    simd2       26       26        0
+    //    simd3      153      162        0
+    //    simd4       95       97        0
     // Totals...
-    // yes simd     1161     1240        0
+    // yes simd      695      756        0
     //  no simd     1312     1397        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
@@ -23155,12 +23439,12 @@ impl Sandwich<AntiDipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1120     1198        0
-    //    simd2        4        4        0
-    //    simd3       48       50        0
-    //    simd4       42       42        0
+    //      f32      450      502        0
+    //    simd2       20       20        0
+    //    simd3      162      170        0
+    //    simd4      116      118        0
     // Totals...
-    // yes simd     1214     1294        0
+    // yes simd      748      810        0
     //  no simd     1440     1524        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
@@ -23388,12 +23672,12 @@ impl Sandwich<AntiDualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      999     1073        0
-    //    simd2        1        2        0
-    //    simd3        5        9        0
-    //    simd4        2        2        0
+    //      f32      329      377        0
+    //    simd2       17       18        0
+    //    simd3      119      129        0
+    //    simd4       76       78        0
     // Totals...
-    // yes simd     1007     1086        0
+    // yes simd      541      602        0
     //  no simd     1024     1112        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
@@ -23452,12 +23736,12 @@ impl Sandwich<AntiFlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1022     1095        0
-    //    simd2        1        1        0
-    //    simd3        8       12        0
-    //    simd4       11       11        0
+    //      f32      352      399        0
+    //    simd2       17       17        0
+    //    simd3      122      132        0
+    //    simd4       85       87        0
     // Totals...
-    // yes simd     1042     1119        0
+    // yes simd      576      635        0
     //  no simd     1092     1177        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
@@ -23540,12 +23824,12 @@ impl Sandwich<AntiFlector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1049     1122        0
-    //    simd2        4        4        0
-    //    simd3       20       22        0
-    //    simd4       26       26        0
+    //      f32      379      426        0
+    //    simd2       20       20        0
+    //    simd3      134      142        0
+    //    simd4      100      102        0
     // Totals...
-    // yes simd     1099     1174        0
+    // yes simd      633      690        0
     //  no simd     1221     1300        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
@@ -23669,12 +23953,12 @@ impl Sandwich<AntiLine> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1083     1153        0
-    //    simd2        5        6        0
-    //    simd3       17       21        0
-    //    simd4        2        2        0
+    //      f32      413      457        0
+    //    simd2       21       22        0
+    //    simd3      131      141        0
+    //    simd4       76       78        0
     // Totals...
-    // yes simd     1107     1182        0
+    // yes simd      641      698        0
     //  no simd     1152     1236        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
@@ -23803,12 +24087,12 @@ impl Sandwich<AntiMotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1057     1131        0
-    //    simd2        7        8        0
-    //    simd3       23       26        0
-    //    simd4       19       19        0
+    //      f32      387      435        0
+    //    simd2       23       24        0
+    //    simd3      137      146        0
+    //    simd4       93       95        0
     // Totals...
-    // yes simd     1106     1184        0
+    // yes simd      640      700        0
     //  no simd     1216     1301        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
@@ -23951,12 +24235,12 @@ impl Sandwich<AntiPlane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1004     1082        0
-    //    simd2        3        3        0
-    //    simd3        9       11        0
-    //    simd4       14       14        0
+    //      f32      334      386        0
+    //    simd2       19       19        0
+    //    simd3      123      131        0
+    //    simd4       88       90        0
     // Totals...
-    // yes simd     1030     1110        0
+    // yes simd      564      626        0
     //  no simd     1093     1177        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
@@ -24036,12 +24320,12 @@ impl Sandwich<AntiScalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      992     1047        0
-    //    simd2        0        2        0
-    //    simd3        0        6        0
-    //    simd4        0        8        0
+    //      f32      322      351        0
+    //    simd2       16       18        0
+    //    simd3      114      126        0
+    //    simd4       74       84        0
     // Totals...
-    // yes simd      992     1063        0
+    // yes simd      526      579        0
     //  no simd      992     1101        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -24076,12 +24360,12 @@ impl Sandwich<Circle> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1100     1178        0
-    //    simd2        1        1        0
-    //    simd3       34       36        0
-    //    simd4       19       19        0
+    //      f32      430      482        0
+    //    simd2       17       17        0
+    //    simd3      148      156        0
+    //    simd4       93       95        0
     // Totals...
-    // yes simd     1154     1234        0
+    // yes simd      688      750        0
     //  no simd     1280     1364        0
     fn sandwich(self, other: Circle) -> Self::Output {
         use crate::elements::*;
@@ -24265,12 +24549,12 @@ impl Sandwich<CircleRotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1094     1172        0
-    //    simd2        1        1        0
-    //    simd3       36       38        0
-    //    simd4       27       27        0
+    //      f32      424      476        0
+    //    simd2       17       17        0
+    //    simd3      150      158        0
+    //    simd4      101      103        0
     // Totals...
-    // yes simd     1158     1238        0
+    // yes simd      692      754        0
     //  no simd     1312     1396        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
@@ -24452,12 +24736,12 @@ impl Sandwich<Dipole> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1110     1183        0
-    //    simd2        9        9        0
-    //    simd3       36       40        0
-    //    simd4       11       11        0
+    //      f32      440      487        0
+    //    simd2       25       25        0
+    //    simd3      150      160        0
+    //    simd4       85       87        0
     // Totals...
-    // yes simd     1166     1243        0
+    // yes simd      700      759        0
     //  no simd     1280     1365        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
@@ -24644,12 +24928,12 @@ impl Sandwich<DipoleInversion> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1120     1198        0
-    //    simd2       11       11        0
-    //    simd3       54       56        0
-    //    simd4       34       34        0
+    //      f32      450      502        0
+    //    simd2       27       27        0
+    //    simd3      168      176        0
+    //    simd4      108      110        0
     // Totals...
-    // yes simd     1219     1299        0
+    // yes simd      753      815        0
     //  no simd     1440     1524        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
@@ -24892,11 +25176,12 @@ impl Sandwich<DualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1005     1084        0
-    //    simd3        5        9        0
-    //    simd4        1        1        0
+    //      f32      335      388        0
+    //    simd2       16       16        0
+    //    simd3      119      129        0
+    //    simd4       75       77        0
     // Totals...
-    // yes simd     1011     1094        0
+    // yes simd      545      610        0
     //  no simd     1024     1115        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
@@ -24958,12 +25243,12 @@ impl Sandwich<FlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1027     1102        0
-    //    simd2        3        3        0
-    //    simd3        8       11        0
-    //    simd4        8        8        0
+    //      f32      357      406        0
+    //    simd2       19       19        0
+    //    simd3      122      131        0
+    //    simd4       82       84        0
     // Totals...
-    // yes simd     1046     1124        0
+    // yes simd      580      640        0
     //  no simd     1089     1173        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
@@ -25046,12 +25331,12 @@ impl Sandwich<Flector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1070     1149        0
-    //    simd2        4        4        0
-    //    simd3       22       24        0
-    //    simd4       18       18        0
+    //      f32      400      453        0
+    //    simd2       20       20        0
+    //    simd3      136      144        0
+    //    simd4       92       94        0
     // Totals...
-    // yes simd     1114     1195        0
+    // yes simd      648      711        0
     //  no simd     1216     1301        0
     fn sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
@@ -25189,11 +25474,12 @@ impl Sandwich<Line> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1081     1153        0
-    //    simd3       17       21        0
-    //    simd4        5        5        0
+    //      f32      411      457        0
+    //    simd2       16       16        0
+    //    simd3      131      141        0
+    //    simd4       79       81        0
     // Totals...
-    // yes simd     1103     1179        0
+    // yes simd      637      695        0
     //  no simd     1152     1236        0
     fn sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
@@ -25320,11 +25606,12 @@ impl Sandwich<Motor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1057     1130        0
-    //    simd3       20       22        0
-    //    simd4       26       26        0
+    //      f32      387      434        0
+    //    simd2       16       16        0
+    //    simd3      134      142        0
+    //    simd4      100      102        0
     // Totals...
-    // yes simd     1103     1178        0
+    // yes simd      637      694        0
     //  no simd     1221     1300        0
     fn sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
@@ -25457,12 +25744,12 @@ impl Sandwich<MultiVector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1314     1392        0
-    //    simd2       16       16        0
-    //    simd3      114      116        0
-    //    simd4       74       74        0
+    //      f32      644      696        0
+    //    simd2       32       32        0
+    //    simd3      228      236        0
+    //    simd4      148      150        0
     // Totals...
-    // yes simd     1518     1598        0
+    // yes simd     1052     1114        0
     //  no simd     1984     2068        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -25999,12 +26286,12 @@ impl Sandwich<Plane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1024     1100        0
-    //    simd2        1        1        0
-    //    simd3       10       13        0
-    //    simd4        8        8        0
+    //      f32      354      404        0
+    //    simd2       17       17        0
+    //    simd3      124      133        0
+    //    simd4       82       84        0
     // Totals...
-    // yes simd     1043     1122        0
+    // yes simd      577      638        0
     //  no simd     1088     1173        0
     fn sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
@@ -26080,12 +26367,12 @@ impl Sandwich<RoundPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1020     1099        0
-    //    simd2        3        3        0
-    //    simd3       14       16        0
-    //    simd4       13       13        0
+    //      f32      350      403        0
+    //    simd2       19       19        0
+    //    simd3      128      136        0
+    //    simd4       87       89        0
     // Totals...
-    // yes simd     1050     1131        0
+    // yes simd      584      647        0
     //  no simd     1120     1205        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -26178,12 +26465,12 @@ impl Sandwich<Scalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      992     1046        0
-    //    simd2        0        1        0
-    //    simd3        0        4        0
-    //    simd4        0        4        0
+    //      f32      322      350        0
+    //    simd2       16       17        0
+    //    simd3      114      124        0
+    //    simd4       74       80        0
     // Totals...
-    // yes simd      992     1055        0
+    // yes simd      526      571        0
     //  no simd      992     1076        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -26218,12 +26505,12 @@ impl Sandwich<Sphere> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1027     1102        0
-    //    simd2        2        2        0
-    //    simd3       15       18        0
-    //    simd4       11       11        0
+    //      f32      357      406        0
+    //    simd2       18       18        0
+    //    simd3      129      138        0
+    //    simd4       85       87        0
     // Totals...
-    // yes simd     1055     1133        0
+    // yes simd      589      649        0
     //  no simd     1120     1204        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -26312,12 +26599,12 @@ impl Sandwich<VersorEven> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1136     1220        0
-    //    simd2        4        4        0
-    //    simd3       48       48        0
-    //    simd4       46       46        0
+    //      f32      466      524        0
+    //    simd2       20       20        0
+    //    simd3      162      168        0
+    //    simd4      120      122        0
     // Totals...
-    // yes simd     1234     1318        0
+    // yes simd      768      834        0
     //  no simd     1472     1556        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
@@ -26564,12 +26851,12 @@ impl Sandwich<VersorOdd> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32     1132     1216        0
-    //    simd2       12       12        0
-    //    simd3       52       52        0
-    //    simd4       40       40        0
+    //      f32      462      520        0
+    //    simd2       28       28        0
+    //    simd3      166      172        0
+    //    simd4      114      116        0
     // Totals...
-    // yes simd     1236     1320        0
+    // yes simd      770      836        0
     //  no simd     1472     1556        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
@@ -26826,12 +27113,12 @@ impl Sandwich<AntiCircleRotor> for Plane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       54       85        0
+    //      f32       30       62        0
     //    simd3        1        2        0
-    //    simd4        4        4        0
+    //    simd4       10       10        0
     // Totals...
-    // yes simd       59       91        0
-    //  no simd       73      107        0
+    // yes simd       41       74        0
+    //  no simd       73      108        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -26868,11 +27155,11 @@ impl Sandwich<AntiDipoleInversion> for Plane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       99        0
-    //    simd4        7        7        0
+    //      f32       28       67        0
+    //    simd4       16       16        0
     // Totals...
-    // yes simd       71      106        0
-    //  no simd       92      127        0
+    // yes simd       44       83        0
+    //  no simd       92      131        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -26914,11 +27201,11 @@ impl Sandwich<AntiDualNum> for Plane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       65        0
-    //    simd4        0        3        0
+    //      f32       20       38        0
+    //    simd4        7       10        0
     // Totals...
-    // yes simd       48       68        0
-    //  no simd       48       77        0
+    // yes simd       27       48        0
+    //  no simd       48       78        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -26937,10 +27224,10 @@ impl Sandwich<AntiFlatPoint> for Plane {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       36        0
-    //    simd4        2        2        0
+    //      f32        9       24        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       23       38        0
+    // yes simd       14       29        0
     //  no simd       29       44        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -26963,10 +27250,10 @@ impl Sandwich<AntiFlector> for Plane {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        3        3        0
+    //      f32       16       32        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       31       47        0
+    // yes simd       22       38        0
     //  no simd       40       56        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -26993,10 +27280,10 @@ impl Sandwich<AntiLine> for Plane {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       41        0
-    //    simd4        2        2        0
+    //      f32       13       29        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       27       43        0
+    // yes simd       18       34        0
     //  no simd       33       49        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -27022,10 +27309,10 @@ impl Sandwich<AntiMotor> for Plane {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        3        3        0
+    //      f32       16       32        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       31       47        0
+    // yes simd       22       38        0
     //  no simd       40       56        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = Flector::from_groups(
@@ -27052,10 +27339,10 @@ impl Sandwich<AntiPlane> for Plane {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       42        0
-    //    simd4        1        1        0
+    //      f32       12       30        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       25       43        0
+    // yes simd       16       34        0
     //  no simd       28       46        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = Motor::from_groups(
@@ -27081,11 +27368,11 @@ impl Sandwich<AntiScalar> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       15        0
-    //    simd4        0        2        0
+    //      f32        4       14        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        8       17        0
-    //  no simd        8       23        0
+    // yes simd        5       17        0
+    //  no simd        8       26        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiPlane::from_groups(/* e1, e2, e3, e5 */ (Simd32x4::from(other[e12345]) * self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0])));
@@ -27096,12 +27383,12 @@ impl Sandwich<Circle> for Plane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       45       77        0
+    //      f32       13       48        0
     //    simd3        1        2        0
-    //    simd4        6        6        0
+    //    simd4       14       14        0
     // Totals...
-    // yes simd       52       85        0
-    //  no simd       72      107        0
+    // yes simd       28       64        0
+    //  no simd       72      110        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -27135,12 +27422,12 @@ impl Sandwich<CircleRotor> for Plane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       45       76        0
+    //      f32       13       47        0
     //    simd3        1        2        0
-    //    simd4        7        7        0
+    //    simd4       15       15        0
     // Totals...
-    // yes simd       53       85        0
-    //  no simd       76      110        0
+    // yes simd       29       64        0
+    //  no simd       76      113        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = AntiDipoleInversion::from_groups(
             // e423, e431, e412
@@ -27175,12 +27462,12 @@ impl Sandwich<Dipole> for Plane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       54       85        0
+    //      f32       30       62        0
     //    simd3        1        2        0
-    //    simd4        3        3        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       58       90        0
-    //  no simd       69      103        0
+    // yes simd       40       73        0
+    //  no simd       69      104        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = DipoleInversion::from_groups(
             // e41, e42, e43
@@ -27216,11 +27503,11 @@ impl Sandwich<DipoleInversion> for Plane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       60       89        0
-    //    simd4        9        9        0
+    //      f32       32       62        0
+    //    simd4       16       16        0
     // Totals...
-    // yes simd       69       98        0
-    //  no simd       96      125        0
+    // yes simd       48       78        0
+    //  no simd       96      126        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -27260,11 +27547,11 @@ impl Sandwich<DualNum> for Plane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       73        0
-    //    simd4        0        2        0
+    //      f32       12       41        0
+    //    simd4        9       11        0
     // Totals...
-    // yes simd       48       75        0
-    //  no simd       48       81        0
+    // yes simd       21       52        0
+    //  no simd       48       85        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -27288,11 +27575,11 @@ impl Sandwich<FlatPoint> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       37        0
-    //    simd4        1        1        0
+    //      f32        6       25        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       23       38        0
-    //  no simd       26       41        0
+    // yes simd       11       30        0
+    //  no simd       26       45        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -27317,11 +27604,11 @@ impl Sandwich<Flector> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        3        3        0
+    //      f32       12       32        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       31       47        0
-    //  no simd       40       56        0
+    // yes simd       19       39        0
+    //  no simd       40       60        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -27347,10 +27634,10 @@ impl Sandwich<Line> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       40        0
-    //    simd4        3        3        0
+    //      f32        9       28        0
+    //    simd4        6        6        0
     // Totals...
-    // yes simd       24       43        0
+    // yes simd       15       34        0
     //  no simd       33       52        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
@@ -27377,10 +27664,10 @@ impl Sandwich<Motor> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       36        0
-    //    simd4        6        6        0
+    //      f32        8       24        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       26       42        0
+    // yes simd       17       33        0
     //  no simd       44       60        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = AntiFlector::from_groups(
@@ -27406,13 +27693,13 @@ impl Sandwich<MultiVector> for Plane {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      124      183        0
-    //    simd2        1        1        0
-    //    simd3       10       13        0
-    //    simd4        9        9        0
+    //      f32       60      111        0
+    //    simd2        2        2        0
+    //    simd3       20       26        0
+    //    simd4       17       17        0
     // Totals...
-    // yes simd      144      206        0
-    //  no simd      192      260        0
+    // yes simd       99      156        0
+    //  no simd      192      261        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -27488,11 +27775,11 @@ impl Sandwich<Plane> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       39        0
-    //    simd4        1        1        0
+    //      f32        8       27        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       25       40        0
-    //  no simd       28       43        0
+    // yes simd       13       32        0
+    //  no simd       28       47        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -27517,12 +27804,12 @@ impl Sandwich<RoundPoint> for Plane {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       54        0
-    //    simd3        0        2        0
-    //    simd4        2        2        0
+    //      f32       10       34        0
+    //    simd3        1        4        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       35       58        0
-    //  no simd       41       68        0
+    // yes simd       18       45        0
+    //  no simd       41       74        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = CircleRotor::from_groups(
@@ -27547,10 +27834,10 @@ impl Sandwich<Scalar> for Plane {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       15        0
-    //    simd4        0        1        0
+    //      f32        4       11        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        8       16        0
+    // yes simd        5       13        0
     //  no simd        8       19        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -27562,11 +27849,11 @@ impl Sandwich<Sphere> for Plane {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       53        0
-    //    simd3        0        2        0
-    //    simd4        2        2        0
+    //      f32       18       35        0
+    //    simd3        1        4        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       35       57        0
+    // yes simd       24       44        0
     //  no simd       41       67        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -27592,11 +27879,11 @@ impl Sandwich<VersorEven> for Plane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       99        0
-    //    simd4        8        8        0
+    //      f32       28       67        0
+    //    simd4       17       17        0
     // Totals...
-    // yes simd       72      107        0
-    //  no simd       96      131        0
+    // yes simd       45       84        0
+    //  no simd       96      135        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -27639,11 +27926,11 @@ impl Sandwich<VersorOdd> for Plane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       60       89        0
-    //    simd4       10       10        0
+    //      f32       32       62        0
+    //    simd4       17       17        0
     // Totals...
-    // yes simd       70       99        0
-    //  no simd      100      129        0
+    // yes simd       49       79        0
+    //  no simd      100      130        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -27685,12 +27972,12 @@ impl Sandwich<AntiCircleRotor> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       92        0
+    //      f32       20       49        0
     //    simd3        2        3        0
-    //    simd4        8        8        0
+    //    simd4       19       19        0
     // Totals...
-    // yes simd       74      103        0
-    //  no simd      102      133        0
+    // yes simd       41       71        0
+    //  no simd      102      134        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -27728,11 +28015,11 @@ impl Sandwich<AntiDipoleInversion> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       75      106        0
-    //    simd4       12       13        0
+    //      f32       27       61        0
+    //    simd4       24       25        0
     // Totals...
-    // yes simd       87      119        0
-    //  no simd      123      158        0
+    // yes simd       51       86        0
+    //  no simd      123      161        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -27776,11 +28063,11 @@ impl Sandwich<AntiDualNum> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       83        0
-    //    simd4        0        2        0
+    //      f32        8       34        0
+    //    simd4       14       16        0
     // Totals...
-    // yes simd       64       85        0
-    //  no simd       64       91        0
+    // yes simd       22       50        0
+    //  no simd       64       98        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -27799,8 +28086,12 @@ impl Sandwich<AntiDualNum> for RoundPoint {
 impl Sandwich<AntiFlatPoint> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       68       95        0
+    //           add/sub      mul      div
+    //      f32       32       59        0
+    //    simd4        9        9        0
+    // Totals...
+    // yes simd       41       68        0
+    //  no simd       68       95        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = DipoleInversion::from_groups(
@@ -27834,8 +28125,12 @@ impl Sandwich<AntiFlatPoint> for RoundPoint {
 impl Sandwich<AntiFlector> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       88      120        0
+    //           add/sub      mul      div
+    //      f32       40       75        0
+    //    simd4       12       12        0
+    // Totals...
+    // yes simd       52       87        0
+    //  no simd       88      123        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -27878,12 +28173,12 @@ impl Sandwich<AntiLine> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       67       97        0
+    //      f32       23       54        0
     //    simd3        0        1        0
-    //    simd4        2        2        0
+    //    simd4       13       13        0
     // Totals...
-    // yes simd       69      100        0
-    //  no simd       75      108        0
+    // yes simd       36       68        0
+    //  no simd       75      109        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -27919,11 +28214,11 @@ impl Sandwich<AntiMotor> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       80      108        0
-    //    simd4        2        3        0
+    //      f32       24       59        0
+    //    simd4       16       17        0
     // Totals...
-    // yes simd       82      111        0
-    //  no simd       88      120        0
+    // yes simd       40       76        0
+    //  no simd       88      127        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -27963,12 +28258,12 @@ impl Sandwich<AntiPlane> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       64        0
-    //    simd3        0        1        0
-    //    simd4        2        2        0
+    //      f32       10       28        0
+    //    simd3        2        4        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       46       67        0
-    //  no simd       52       75        0
+    // yes simd       21       41        0
+    //  no simd       52       76        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiCircleRotor::from_groups(
@@ -27993,11 +28288,12 @@ impl Sandwich<AntiScalar> for RoundPoint {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       27        0
-    //    simd4        0        2        0
+    //      f32        2        9        0
+    //    simd3        1        2        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd       14       29        0
-    //  no simd       14       35        0
+    // yes simd        6       16        0
+    //  no simd       17       35        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Sphere::from_groups(
@@ -28013,11 +28309,11 @@ impl Sandwich<Circle> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       68      100        0
+    //      f32       32       64        0
     //    simd3        2        3        0
-    //    simd4        5        5        0
+    //    simd4       14       14        0
     // Totals...
-    // yes simd       75      108        0
+    // yes simd       48       81        0
     //  no simd       94      129        0
     fn sandwich(self, other: Circle) -> Self::Output {
         use crate::elements::*;
@@ -28057,11 +28353,11 @@ impl Sandwich<CircleRotor> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       69      104        0
+    //      f32       33       68        0
     //    simd3        2        3        0
-    //    simd4        6        6        0
+    //    simd4       15       15        0
     // Totals...
-    // yes simd       77      113        0
+    // yes simd       50       86        0
     //  no simd       99      137        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
@@ -28102,12 +28398,12 @@ impl Sandwich<Dipole> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       95        0
+    //      f32       20       52        0
     //    simd3        2        3        0
-    //    simd4        6        6        0
+    //    simd4       17       17        0
     // Totals...
-    // yes simd       72      104        0
-    //  no simd       94      128        0
+    // yes simd       39       72        0
+    //  no simd       94      129        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -28147,11 +28443,11 @@ impl Sandwich<DipoleInversion> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       79      114        0
-    //    simd4       11       11        0
+    //      f32       23       65        0
+    //    simd4       25       25        0
     // Totals...
-    // yes simd       90      125        0
-    //  no simd      123      158        0
+    // yes simd       48       90        0
+    //  no simd      123      165        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -28198,11 +28494,11 @@ impl Sandwich<DualNum> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       84        0
-    //    simd4        0        4        0
+    //      f32       16       39        0
+    //    simd4       12       16        0
     // Totals...
-    // yes simd       64       88        0
-    //  no simd       64      100        0
+    // yes simd       28       55        0
+    //  no simd       64      103        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -28221,8 +28517,12 @@ impl Sandwich<DualNum> for RoundPoint {
 impl Sandwich<FlatPoint> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       68       95        0
+    //           add/sub      mul      div
+    //      f32       24       52        0
+    //    simd4       11       11        0
+    // Totals...
+    // yes simd       35       63        0
+    //  no simd       68       96        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -28257,11 +28557,11 @@ impl Sandwich<Flector> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       80      108        0
-    //    simd4        2        3        0
+    //      f32       24       59        0
+    //    simd4       16       17        0
     // Totals...
-    // yes simd       82      111        0
-    //  no simd       88      120        0
+    // yes simd       40       76        0
+    //  no simd       88      127        0
     fn sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -28297,11 +28597,11 @@ impl Sandwich<Line> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       71      101        0
+    //      f32       35       65        0
     //    simd3        0        2        0
-    //    simd4        1        1        0
+    //    simd4       10       10        0
     // Totals...
-    // yes simd       72      104        0
+    // yes simd       45       77        0
     //  no simd       75      111        0
     fn sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
@@ -28337,11 +28637,11 @@ impl Sandwich<Motor> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       84      116        0
-    //    simd4        1        3        0
+    //      f32       36       71        0
+    //    simd4       13       15        0
     // Totals...
-    // yes simd       85      119        0
-    //  no simd       88      128        0
+    // yes simd       49       86        0
+    //  no simd       88      131        0
     fn sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -28377,13 +28677,13 @@ impl Sandwich<MultiVector> for RoundPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      160      219        0
-    //    simd2        3        3        0
-    //    simd3       14       16        0
-    //    simd4       12       12        0
+    //      f32       60      114        0
+    //    simd2        6        6        0
+    //    simd3       28       32        0
+    //    simd4       25       25        0
     // Totals...
-    // yes simd      189      250        0
-    //  no simd      256      321        0
+    // yes simd      119      177        0
+    //  no simd      256      322        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = MultiVector::from_groups(
@@ -28475,11 +28775,12 @@ impl Sandwich<Plane> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       49       72        0
-    //    simd3        0        1        0
+    //      f32       11       38        0
+    //    simd3        2        4        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       49       73        0
-    //  no simd       49       75        0
+    // yes simd       21       50        0
+    //  no simd       49       82        0
     fn sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let geometric_product = CircleRotor::from_groups(
@@ -28507,12 +28808,12 @@ impl Sandwich<RoundPoint> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       42       58        0
-    //    simd3        1        2        0
-    //    simd4        3        4        0
+    //      f32        8       22        0
+    //    simd3        3        5        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       46       64        0
-    //  no simd       57       80        0
+    // yes simd       21       38        0
+    //  no simd       57       81        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiCircleRotor::from_groups(
@@ -28538,11 +28839,12 @@ impl Sandwich<Scalar> for RoundPoint {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       26        0
-    //    simd4        0        1        0
+    //      f32        2        4        0
+    //    simd3        1        2        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd       14       27        0
-    //  no simd       14       30        0
+    // yes simd        6       11        0
+    //  no simd       17       30        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let geometric_product = RoundPoint::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(other[scalar]) * self.group0()), /* e5 */ (self[e2] * other[scalar]));
@@ -28553,12 +28855,12 @@ impl Sandwich<Sphere> for RoundPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       47       74        0
-    //    simd3        1        2        0
-    //    simd4        1        1        0
+    //      f32        9       40        0
+    //    simd3        3        5        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       49       77        0
-    //  no simd       54       84        0
+    // yes simd       21       54        0
+    //  no simd       54       91        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         let geometric_product = CircleRotor::from_groups(
@@ -28591,11 +28893,11 @@ impl Sandwich<VersorEven> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       80      108        0
-    //    simd4       12       13        0
+    //      f32       32       63        0
+    //    simd4       24       25        0
     // Totals...
-    // yes simd       92      121        0
-    //  no simd      128      160        0
+    // yes simd       56       88        0
+    //  no simd      128      163        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -28639,11 +28941,11 @@ impl Sandwich<VersorOdd> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       72      108        0
-    //    simd4       14       14        0
+    //      f32       16       59        0
+    //    simd4       28       28        0
     // Totals...
-    // yes simd       86      122        0
-    //  no simd      128      164        0
+    // yes simd       44       87        0
+    //  no simd      128      171        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -28694,11 +28996,10 @@ impl Sandwich<AntiCircleRotor> for Scalar {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       11        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0       14        0
+    // yes simd        0        6        0
     //  no simd        0       22        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
@@ -28717,11 +29018,10 @@ impl Sandwich<AntiDipoleInversion> for Scalar {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       15        0
-    //    simd3        0        1        0
-    //    simd4        0        3        0
+    //    simd3        0        2        0
+    //    simd4        0        6        0
     // Totals...
-    // yes simd        0       19        0
+    // yes simd        0        8        0
     //  no simd        0       30        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
@@ -28741,12 +29041,9 @@ impl Sandwich<AntiDipoleInversion> for Scalar {
 impl Sandwich<AntiDualNum> for Scalar {
     type Output = AntiDualNum;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        4        0
+    //          add/sub      mul      div
+    //   simd2        0        2        0
+    // no simd        0        4        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiDualNum::from_groups(/* e1234, scalar */ (Simd32x2::from(self[scalar]) * other.group0()));
@@ -28756,12 +29053,9 @@ impl Sandwich<AntiDualNum> for Scalar {
 impl Sandwich<AntiFlatPoint> for Scalar {
     type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (Simd32x4::from(self[scalar]) * other.group0()));
@@ -28771,12 +29065,9 @@ impl Sandwich<AntiFlatPoint> for Scalar {
 impl Sandwich<AntiFlector> for Scalar {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiFlector::from_groups(
@@ -28791,12 +29082,9 @@ impl Sandwich<AntiFlector> for Scalar {
 impl Sandwich<AntiLine> for Scalar {
     type Output = AntiLine;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        6        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0        8        0
-    //  no simd        0       12        0
+    //          add/sub      mul      div
+    //   simd3        0        4        0
+    // no simd        0       12        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiLine::from_groups(
@@ -28811,12 +29099,9 @@ impl Sandwich<AntiLine> for Scalar {
 impl Sandwich<AntiMotor> for Scalar {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiMotor::from_groups(
@@ -28831,12 +29116,9 @@ impl Sandwich<AntiMotor> for Scalar {
 impl Sandwich<AntiPlane> for Scalar {
     type Output = AntiPlane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiPlane::from_groups(/* e1, e2, e3, e5 */ (Simd32x4::from(self[scalar]) * other.group0()));
@@ -28858,11 +29140,10 @@ impl Sandwich<Circle> for Scalar {
     type Output = Circle;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       10        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //    simd3        0        4        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0       13        0
+    // yes simd        0        6        0
     //  no simd        0       20        0
     fn sandwich(self, other: Circle) -> Self::Output {
         use crate::elements::*;
@@ -28881,11 +29162,10 @@ impl Sandwich<CircleRotor> for Scalar {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       11        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0       14        0
+    // yes simd        0        6        0
     //  no simd        0       22        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
@@ -28904,11 +29184,10 @@ impl Sandwich<Dipole> for Scalar {
     type Output = Dipole;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       10        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //    simd3        0        4        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0       13        0
+    // yes simd        0        6        0
     //  no simd        0       20        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
@@ -28927,11 +29206,10 @@ impl Sandwich<DipoleInversion> for Scalar {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       15        0
-    //    simd3        0        1        0
-    //    simd4        0        3        0
+    //    simd3        0        2        0
+    //    simd4        0        6        0
     // Totals...
-    // yes simd        0       19        0
+    // yes simd        0        8        0
     //  no simd        0       30        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
@@ -28951,12 +29229,9 @@ impl Sandwich<DipoleInversion> for Scalar {
 impl Sandwich<DualNum> for Scalar {
     type Output = DualNum;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd2        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        4        0
+    //          add/sub      mul      div
+    //   simd2        0        2        0
+    // no simd        0        4        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_product = DualNum::from_groups(/* e4, e12345 */ (Simd32x2::from(self[scalar]) * other.group0()));
@@ -28966,12 +29241,9 @@ impl Sandwich<DualNum> for Scalar {
 impl Sandwich<FlatPoint> for Scalar {
     type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = FlatPoint::from_groups(/* e15, e25, e35, e45 */ (Simd32x4::from(self[scalar]) * other.group0()));
@@ -28981,12 +29253,9 @@ impl Sandwich<FlatPoint> for Scalar {
 impl Sandwich<Flector> for Scalar {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Flector::from_groups(
@@ -29001,12 +29270,9 @@ impl Sandwich<Flector> for Scalar {
 impl Sandwich<Line> for Scalar {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        6        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0        8        0
-    //  no simd        0       12        0
+    //          add/sub      mul      div
+    //   simd3        0        4        0
+    // no simd        0       12        0
     fn sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Line::from_groups(
@@ -29021,12 +29287,9 @@ impl Sandwich<Line> for Scalar {
 impl Sandwich<Motor> for Scalar {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        8        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Motor::from_groups(
@@ -29042,12 +29305,12 @@ impl Sandwich<MultiVector> for Scalar {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       34        0
-    //    simd2        0        1        0
-    //    simd3        0        4        0
-    //    simd4        0        4        0
+    //      f32        0        4        0
+    //    simd2        0        2        0
+    //    simd3        0        8        0
+    //    simd4        0        8        0
     // Totals...
-    // yes simd        0       43        0
+    // yes simd        0       22        0
     //  no simd        0       64        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -29081,12 +29344,9 @@ impl Sandwich<MultiVector> for Scalar {
 impl Sandwich<Plane> for Scalar {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Plane::from_groups(/* e4235, e4315, e4125, e3215 */ (Simd32x4::from(self[scalar]) * other.group0()));
@@ -29097,10 +29357,10 @@ impl Sandwich<RoundPoint> for Scalar {
     type Output = RoundPoint;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        6        0
-    //    simd4        0        1        0
+    //      f32        0        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        7        0
+    // yes simd        0        4        0
     //  no simd        0       10        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -29123,10 +29383,10 @@ impl Sandwich<Sphere> for Scalar {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        6        0
-    //    simd4        0        1        0
+    //      f32        0        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        7        0
+    // yes simd        0        4        0
     //  no simd        0       10        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -29142,12 +29402,9 @@ impl Sandwich<Sphere> for Scalar {
 impl Sandwich<VersorEven> for Scalar {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       16        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0       20        0
-    //  no simd        0       32        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -29166,12 +29423,9 @@ impl Sandwich<VersorEven> for Scalar {
 impl Sandwich<VersorOdd> for Scalar {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       16        0
-    //    simd4        0        4        0
-    // Totals...
-    // yes simd        0       20        0
-    //  no simd        0       32        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -29192,12 +29446,12 @@ impl Sandwich<AntiCircleRotor> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       73      104        0
+    //      f32       33       65        0
     //    simd3        2        3        0
-    //    simd4        5        5        0
+    //    simd4       15       15        0
     // Totals...
-    // yes simd       80      112        0
-    //  no simd       99      133        0
+    // yes simd       50       83        0
+    //  no simd       99      134        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = DipoleInversion::from_groups(
@@ -29237,11 +29491,11 @@ impl Sandwich<AntiDipoleInversion> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       83      118        0
-    //    simd4       10       10        0
+    //      f32       31       73        0
+    //    simd4       23       23        0
     // Totals...
-    // yes simd       93      128        0
-    //  no simd      123      158        0
+    // yes simd       54       96        0
+    //  no simd      123      165        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -29287,11 +29541,11 @@ impl Sandwich<AntiDualNum> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       82        0
-    //    simd4        0        3        0
+    //      f32       20       39        0
+    //    simd4       11       14        0
     // Totals...
-    // yes simd       64       85        0
-    //  no simd       64       94        0
+    // yes simd       31       53        0
+    //  no simd       64       95        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -29310,8 +29564,12 @@ impl Sandwich<AntiDualNum> for Sphere {
 impl Sandwich<AntiFlatPoint> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       68       96        0
+    //           add/sub      mul      div
+    //      f32       16       50        0
+    //    simd4       13       13        0
+    // Totals...
+    // yes simd       29       63        0
+    //  no simd       68      102        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -29347,11 +29605,11 @@ impl Sandwich<AntiFlector> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       80      111        0
-    //    simd4        2        4        0
+    //      f32       28       66        0
+    //    simd4       15       17        0
     // Totals...
-    // yes simd       82      115        0
-    //  no simd       88      127        0
+    // yes simd       43       83        0
+    //  no simd       88      134        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -29387,12 +29645,12 @@ impl Sandwich<AntiLine> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       71       98        0
+    //      f32       31       59        0
     //    simd3        0        1        0
-    //    simd4        1        1        0
+    //    simd4       11       11        0
     // Totals...
-    // yes simd       72      100        0
-    //  no simd       75      105        0
+    // yes simd       42       71        0
+    //  no simd       75      106        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         let geometric_product = DipoleInversion::from_groups(
@@ -29427,11 +29685,11 @@ impl Sandwich<AntiMotor> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       76      105        0
-    //    simd4        3        4        0
+    //      f32       32       62        0
+    //    simd4       14       15        0
     // Totals...
-    // yes simd       79      109        0
-    //  no simd       88      121        0
+    // yes simd       46       77        0
+    //  no simd       88      122        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -29468,12 +29726,12 @@ impl Sandwich<AntiPlane> for Sphere {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       64        0
-    //    simd3        0        2        0
-    //    simd4        2        2        0
+    //      f32       13       27        0
+    //    simd3        2        5        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       46       68        0
-    //  no simd       52       78        0
+    // yes simd       24       41        0
+    //  no simd       55       78        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         let geometric_product = CircleRotor::from_groups(
@@ -29498,11 +29756,12 @@ impl Sandwich<AntiScalar> for Sphere {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       26        0
-    //    simd4        0        2        0
+    //      f32        7       20        0
+    //    simd3        1        2        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       14       28        0
-    //  no simd       14       34        0
+    // yes simd        9       25        0
+    //  no simd       14       38        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         let geometric_product = RoundPoint::from_groups(
@@ -29518,12 +29777,12 @@ impl Sandwich<Circle> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       96        0
+    //      f32       12       50        0
     //    simd3        2        3        0
-    //    simd4        6        6        0
+    //    simd4       19       19        0
     // Totals...
-    // yes simd       72      105        0
-    //  no simd       94      129        0
+    // yes simd       33       72        0
+    //  no simd       94      135        0
     fn sandwich(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -29563,12 +29822,12 @@ impl Sandwich<CircleRotor> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       65       92        0
+    //      f32       13       46        0
     //    simd3        2        3        0
-    //    simd4        7        8        0
+    //    simd4       20       21        0
     // Totals...
-    // yes simd       74      103        0
-    //  no simd       99      133        0
+    // yes simd       35       70        0
+    //  no simd       99      139        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -29605,12 +29864,12 @@ impl Sandwich<Dipole> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       76      107        0
+    //      f32       36       68        0
     //    simd3        2        3        0
-    //    simd4        3        3        0
+    //    simd4       13       13        0
     // Totals...
-    // yes simd       81      113        0
-    //  no simd       94      128        0
+    // yes simd       51       84        0
+    //  no simd       94      129        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         let geometric_product = DipoleInversion::from_groups(
@@ -29648,11 +29907,11 @@ impl Sandwich<DipoleInversion> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       79      112        0
-    //    simd4       11       11        0
+    //      f32       35       69        0
+    //    simd4       22       22        0
     // Totals...
-    // yes simd       90      123        0
-    //  no simd      123      156        0
+    // yes simd       57       91        0
+    //  no simd      123      157        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -29699,11 +29958,11 @@ impl Sandwich<DualNum> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       83        0
-    //    simd4        0        4        0
+    //      f32       12       38        0
+    //    simd4       13       17        0
     // Totals...
-    // yes simd       64       87        0
-    //  no simd       64       99        0
+    // yes simd       25       55        0
+    //  no simd       64      106        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -29722,8 +29981,12 @@ impl Sandwich<DualNum> for Sphere {
 impl Sandwich<FlatPoint> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       68       98        0
+    //           add/sub      mul      div
+    //      f32       28       59        0
+    //    simd4       10       10        0
+    // Totals...
+    // yes simd       38       69        0
+    //  no simd       68       99        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = DipoleInversion::from_groups(
@@ -29760,8 +30023,12 @@ impl Sandwich<FlatPoint> for Sphere {
 impl Sandwich<Flector> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       88      124        0
+    //           add/sub      mul      div
+    //      f32       44       81        0
+    //    simd4       11       11        0
+    // Totals...
+    // yes simd       55       92        0
+    //  no simd       88      125        0
     fn sandwich(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -29805,12 +30072,12 @@ impl Sandwich<Line> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       71       98        0
+    //      f32       19       52        0
     //    simd3        0        1        0
-    //    simd4        1        1        0
+    //    simd4       14       14        0
     // Totals...
-    // yes simd       72      100        0
-    //  no simd       75      105        0
+    // yes simd       33       67        0
+    //  no simd       75      111        0
     fn sandwich(self, other: Line) -> Self::Output {
         use crate::elements::*;
         let geometric_product = AntiDipoleInversion::from_groups(
@@ -29845,11 +30112,11 @@ impl Sandwich<Motor> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       80      108        0
-    //    simd4        2        3        0
+    //      f32       28       63        0
+    //    simd4       15       16        0
     // Totals...
-    // yes simd       82      111        0
-    //  no simd       88      120        0
+    // yes simd       43       79        0
+    //  no simd       88      127        0
     fn sandwich(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -29885,12 +30152,12 @@ impl Sandwich<MultiVector> for Sphere {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      155      213        0
-    //    simd2        2        2        0
-    //    simd3       15       18        0
-    //    simd4       13       13        0
+    //      f32       62      111        0
+    //    simd2        4        4        0
+    //    simd3       30       36        0
+    //    simd4       24       24        0
     // Totals...
-    // yes simd      185      246        0
+    // yes simd      120      175        0
     //  no simd      256      323        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -29981,11 +30248,11 @@ impl Sandwich<Plane> for Sphere {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       65        0
-    //    simd3        0        1        0
-    //    simd4        2        2        0
+    //      f32       18       36        0
+    //    simd3        2        4        0
+    //    simd4        7        7        0
     // Totals...
-    // yes simd       46       68        0
+    // yes simd       27       47        0
     //  no simd       52       76        0
     fn sandwich(self, other: Plane) -> Self::Output {
         use crate::elements::*;
@@ -30011,12 +30278,12 @@ impl Sandwich<RoundPoint> for Sphere {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       42       62        0
-    //    simd3        1        2        0
-    //    simd4        3        3        0
+    //      f32       11       25        0
+    //    simd3        3        5        0
+    //    simd4       10       10        0
     // Totals...
-    // yes simd       46       67        0
-    //  no simd       57       80        0
+    // yes simd       24       40        0
+    //  no simd       60       80        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         let geometric_product = CircleRotor::from_groups(
@@ -30046,11 +30313,12 @@ impl Sandwich<Scalar> for Sphere {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       26        0
-    //    simd4        0        1        0
+    //      f32        2        4        0
+    //    simd3        1        2        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd       14       27        0
-    //  no simd       14       30        0
+    // yes simd        6       11        0
+    //  no simd       17       30        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         let geometric_product = Sphere::from_groups(
@@ -30066,11 +30334,11 @@ impl Sandwich<Sphere> for Sphere {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       42       58        0
-    //    simd3        1        2        0
-    //    simd4        3        4        0
+    //      f32       16       29        0
+    //    simd3        3        5        0
+    //    simd4        8        9        0
     // Totals...
-    // yes simd       46       64        0
+    // yes simd       27       43        0
     //  no simd       57       80        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -30097,11 +30365,11 @@ impl Sandwich<VersorEven> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       80      115        0
-    //    simd4       12       12        0
+    //      f32       28       70        0
+    //    simd4       25       25        0
     // Totals...
-    // yes simd       92      127        0
-    //  no simd      128      163        0
+    // yes simd       53       95        0
+    //  no simd      128      170        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorEven::from_groups(
@@ -30149,11 +30417,11 @@ impl Sandwich<VersorOdd> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       80      113        0
-    //    simd4       12       12        0
+    //      f32       36       70        0
+    //    simd4       23       23        0
     // Totals...
-    // yes simd       92      125        0
-    //  no simd      128      161        0
+    // yes simd       59       93        0
+    //  no simd      128      162        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         let geometric_product = VersorOdd::from_groups(
@@ -30202,10 +30470,10 @@ impl Sandwich<AntiCircleRotor> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      308      350        0
-    //    simd4       23       23        0
+    //      f32      120      158        0
+    //    simd4       70       71        0
     // Totals...
-    // yes simd      331      373        0
+    // yes simd      190      229        0
     //  no simd      400      442        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -30318,10 +30586,10 @@ impl Sandwich<AntiDipoleInversion> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      280      325        0
-    //    simd4       46       46        0
+    //      f32       92      133        0
+    //    simd4       93       94        0
     // Totals...
-    // yes simd      326      371        0
+    // yes simd      185      227        0
     //  no simd      464      509        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -30439,10 +30707,10 @@ impl Sandwich<AntiDualNum> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      241      282        0
-    //    simd4        4        5        0
+    //      f32       53       90        0
+    //    simd4       51       53        0
     // Totals...
-    // yes simd      245      287        0
+    // yes simd      104      143        0
     //  no simd      257      302        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -30478,10 +30746,10 @@ impl Sandwich<AntiFlatPoint> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      263      298        0
-    //    simd4        7        8        0
+    //      f32       75      106        0
+    //    simd4       54       56        0
     // Totals...
-    // yes simd      270      306        0
+    // yes simd      129      162        0
     //  no simd      291      330        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -30533,10 +30801,10 @@ impl Sandwich<AntiFlector> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      267      298        0
-    //    simd4       23       24        0
+    //      f32       79      106        0
+    //    simd4       70       72        0
     // Totals...
-    // yes simd      290      322        0
+    // yes simd      149      178        0
     //  no simd      359      394        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -30607,10 +30875,10 @@ impl Sandwich<AntiLine> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      280      322        0
-    //    simd4       10       10        0
+    //      f32       92      130        0
+    //    simd4       57       58        0
     // Totals...
-    // yes simd      290      332        0
+    // yes simd      149      188        0
     //  no simd      320      362        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -30682,10 +30950,10 @@ impl Sandwich<AntiMotor> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      276      319        0
-    //    simd4       19       19        0
+    //      f32       88      127        0
+    //    simd4       66       67        0
     // Totals...
-    // yes simd      295      338        0
+    // yes simd      154      194        0
     //  no simd      352      395        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -30760,10 +31028,10 @@ impl Sandwich<AntiPlane> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      243      274        0
-    //    simd4       13       14        0
+    //      f32       55       82        0
+    //    simd4       60       62        0
     // Totals...
-    // yes simd      256      288        0
+    // yes simd      115      144        0
     //  no simd      295      330        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -30800,10 +31068,10 @@ impl Sandwich<AntiScalar> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      240      266        0
-    //    simd4        0        8        0
+    //      f32       52       74        0
+    //    simd4       47       56        0
     // Totals...
-    // yes simd      240      274        0
+    // yes simd       99      130        0
     //  no simd      240      298        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -30824,10 +31092,10 @@ impl Sandwich<Circle> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      304      346        0
-    //    simd4       20       20        0
+    //      f32      116      154        0
+    //    simd4       67       68        0
     // Totals...
-    // yes simd      324      366        0
+    // yes simd      183      222        0
     //  no simd      384      426        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -30927,10 +31195,10 @@ impl Sandwich<CircleRotor> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      284      327        0
-    //    simd4       29       29        0
+    //      f32       96      135        0
+    //    simd4       76       77        0
     // Totals...
-    // yes simd      313      356        0
+    // yes simd      172      212        0
     //  no simd      400      443        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -31032,10 +31300,10 @@ impl Sandwich<Dipole> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      308      350        0
-    //    simd4       19       19        0
+    //      f32      120      158        0
+    //    simd4       66       67        0
     // Totals...
-    // yes simd      327      369        0
+    // yes simd      186      225        0
     //  no simd      384      426        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -31144,10 +31412,10 @@ impl Sandwich<DipoleInversion> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      296      334        0
-    //    simd4       42       43        0
+    //      f32      108      142        0
+    //    simd4       89       91        0
     // Totals...
-    // yes simd      338      377        0
+    // yes simd      197      233        0
     //  no simd      464      506        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -31259,10 +31527,10 @@ impl Sandwich<DualNum> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      245      296        0
-    //    simd4        3        3        0
+    //      f32       57      104        0
+    //    simd4       50       51        0
     // Totals...
-    // yes simd      248      299        0
+    // yes simd      107      155        0
     //  no simd      257      308        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -31303,10 +31571,10 @@ impl Sandwich<FlatPoint> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      256      294        0
-    //    simd4        8        9        0
+    //      f32       68      102        0
+    //    simd4       55       57        0
     // Totals...
-    // yes simd      264      303        0
+    // yes simd      123      159        0
     //  no simd      288      330        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -31352,10 +31620,10 @@ impl Sandwich<Flector> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      265      306        0
-    //    simd4       22       22        0
+    //      f32       77      114        0
+    //    simd4       69       70        0
     // Totals...
-    // yes simd      287      328        0
+    // yes simd      146      184        0
     //  no simd      353      394        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -31415,10 +31683,10 @@ impl Sandwich<Line> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      296      338        0
-    //    simd4        6        6        0
+    //      f32      108      146        0
+    //    simd4       53       54        0
     // Totals...
-    // yes simd      302      344        0
+    // yes simd      161      200        0
     //  no simd      320      362        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -31486,10 +31754,10 @@ impl Sandwich<Motor> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      279      314        0
-    //    simd4       19       20        0
+    //      f32       91      122        0
+    //    simd4       66       68        0
     // Totals...
-    // yes simd      298      334        0
+    // yes simd      157      190        0
     //  no simd      355      394        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -31567,12 +31835,12 @@ impl Sandwich<MultiVector> for VersorEven {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      606      680        0
-    //    simd2        4        4        0
-    //    simd3       54       54        0
-    //    simd4       46       46        0
+    //      f32      270      340        0
+    //    simd2        8        8        0
+    //    simd3      102      102        0
+    //    simd4       92       93        0
     // Totals...
-    // yes simd      710      784        0
+    // yes simd      472      543        0
     //  no simd      960     1034        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -31826,10 +32094,10 @@ impl Sandwich<Plane> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      252      298        0
-    //    simd4        9        9        0
+    //      f32       64      106        0
+    //    simd4       56       57        0
     // Totals...
-    // yes simd      261      307        0
+    // yes simd      120      163        0
     //  no simd      288      334        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -31874,10 +32142,10 @@ impl Sandwich<RoundPoint> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      248      297        0
-    //    simd4       14       14        0
+    //      f32       60      105        0
+    //    simd4       61       62        0
     // Totals...
-    // yes simd      262      311        0
+    // yes simd      121      167        0
     //  no simd      304      353        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -31928,10 +32196,10 @@ impl Sandwich<Scalar> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      240      266        0
-    //    simd4        0        4        0
+    //      f32       52       74        0
+    //    simd4       47       52        0
     // Totals...
-    // yes simd      240      270        0
+    // yes simd       99      126        0
     //  no simd      240      282        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -31952,10 +32220,10 @@ impl Sandwich<Sphere> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      252      301        0
-    //    simd4       13       13        0
+    //      f32       64      109        0
+    //    simd4       60       61        0
     // Totals...
-    // yes simd      265      314        0
+    // yes simd      124      170        0
     //  no simd      304      353        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -32005,10 +32273,10 @@ impl Sandwich<VersorEven> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      292      334        0
-    //    simd4       47       47        0
+    //      f32      104      142        0
+    //    simd4       94       95        0
     // Totals...
-    // yes simd      339      381        0
+    // yes simd      198      237        0
     //  no simd      480      522        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -32131,10 +32399,10 @@ impl Sandwich<VersorOdd> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      292      334        0
-    //    simd4       47       47        0
+    //      f32      104      142        0
+    //    simd4       94       95        0
     // Totals...
-    // yes simd      339      381        0
+    // yes simd      198      237        0
     //  no simd      480      522        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -32250,10 +32518,10 @@ impl Sandwich<AntiCircleRotor> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      304      346        0
-    //    simd4       24       24        0
+    //      f32      140      178        0
+    //    simd4       65       66        0
     // Totals...
-    // yes simd      328      370        0
+    // yes simd      205      244        0
     //  no simd      400      442        0
     fn sandwich(self, other: AntiCircleRotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -32361,10 +32629,10 @@ impl Sandwich<AntiDipoleInversion> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      300      342        0
-    //    simd4       41       41        0
+    //      f32      112      150        0
+    //    simd4       88       89        0
     // Totals...
-    // yes simd      341      383        0
+    // yes simd      200      239        0
     //  no simd      464      506        0
     fn sandwich(self, other: AntiDipoleInversion) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -32478,10 +32746,10 @@ impl Sandwich<AntiDualNum> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      245      285        0
-    //    simd4        3        4        0
+    //      f32       81      117        0
+    //    simd4       44       46        0
     // Totals...
-    // yes simd      248      289        0
+    // yes simd      125      163        0
     //  no simd      257      301        0
     fn sandwich(self, other: AntiDualNum) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -32518,10 +32786,10 @@ impl Sandwich<AntiFlatPoint> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      264      311        0
-    //    simd4        6        6        0
+    //      f32       76      119        0
+    //    simd4       53       54        0
     // Totals...
-    // yes simd      270      317        0
+    // yes simd      129      173        0
     //  no simd      288      335        0
     fn sandwich(self, other: AntiFlatPoint) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -32574,10 +32842,10 @@ impl Sandwich<AntiFlector> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      277      321        0
-    //    simd4       19       19        0
+    //      f32       89      129        0
+    //    simd4       66       67        0
     // Totals...
-    // yes simd      296      340        0
+    // yes simd      155      196        0
     //  no simd      353      397        0
     fn sandwich(self, other: AntiFlector) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -32655,10 +32923,10 @@ impl Sandwich<AntiLine> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      300      342        0
-    //    simd4        5        5        0
+    //      f32      136      174        0
+    //    simd4       46       47        0
     // Totals...
-    // yes simd      305      347        0
+    // yes simd      182      221        0
     //  no simd      320      362        0
     fn sandwich(self, other: AntiLine) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -32731,10 +32999,10 @@ impl Sandwich<AntiMotor> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      288      330        0
-    //    simd4       16       16        0
+    //      f32      124      162        0
+    //    simd4       57       58        0
     // Totals...
-    // yes simd      304      346        0
+    // yes simd      181      220        0
     //  no simd      352      394        0
     fn sandwich(self, other: AntiMotor) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -32817,10 +33085,10 @@ impl Sandwich<AntiPlane> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      249      294        0
-    //    simd4       10       10        0
+    //      f32       61      102        0
+    //    simd4       57       58        0
     // Totals...
-    // yes simd      259      304        0
+    // yes simd      118      160        0
     //  no simd      289      334        0
     fn sandwich(self, other: AntiPlane) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -32866,10 +33134,10 @@ impl Sandwich<AntiScalar> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      240      266        0
-    //    simd4        0        6        0
+    //      f32       52       74        0
+    //    simd4       47       54        0
     // Totals...
-    // yes simd      240      272        0
+    // yes simd       99      128        0
     //  no simd      240      290        0
     fn sandwich(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
@@ -32890,10 +33158,10 @@ impl Sandwich<Circle> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      300      342        0
-    //    simd4       21       21        0
+    //      f32      112      150        0
+    //    simd4       68       69        0
     // Totals...
-    // yes simd      321      363        0
+    // yes simd      180      219        0
     //  no simd      384      426        0
     fn sandwich(self, other: Circle) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -32998,10 +33266,10 @@ impl Sandwich<CircleRotor> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      300      342        0
-    //    simd4       25       25        0
+    //      f32      112      150        0
+    //    simd4       72       73        0
     // Totals...
-    // yes simd      325      367        0
+    // yes simd      184      223        0
     //  no simd      400      442        0
     fn sandwich(self, other: CircleRotor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -33112,10 +33380,10 @@ impl Sandwich<Dipole> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      316      358        0
-    //    simd4       17       17        0
+    //      f32      152      190        0
+    //    simd4       58       59        0
     // Totals...
-    // yes simd      333      375        0
+    // yes simd      210      249        0
     //  no simd      384      426        0
     fn sandwich(self, other: Dipole) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -33223,10 +33491,10 @@ impl Sandwich<DipoleInversion> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      316      358        0
-    //    simd4       37       37        0
+    //      f32      152      190        0
+    //    simd4       78       79        0
     // Totals...
-    // yes simd      353      395        0
+    // yes simd      230      269        0
     //  no simd      464      506        0
     fn sandwich(self, other: DipoleInversion) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -33356,10 +33624,10 @@ impl Sandwich<DualNum> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      245      288        0
-    //    simd4        3        4        0
+    //      f32       57       96        0
+    //    simd4       50       52        0
     // Totals...
-    // yes simd      248      292        0
+    // yes simd      107      148        0
     //  no simd      257      304        0
     fn sandwich(self, other: DualNum) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -33395,10 +33663,10 @@ impl Sandwich<FlatPoint> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      268      313        0
-    //    simd4        5        5        0
+    //      f32      104      145        0
+    //    simd4       46       47        0
     // Totals...
-    // yes simd      273      318        0
+    // yes simd      150      192        0
     //  no simd      288      333        0
     fn sandwich(self, other: FlatPoint) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -33457,10 +33725,10 @@ impl Sandwich<Flector> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      280      326        0
-    //    simd4       18       18        0
+    //      f32      116      158        0
+    //    simd4       59       60        0
     // Totals...
-    // yes simd      298      344        0
+    // yes simd      175      218        0
     //  no simd      352      398        0
     fn sandwich(self, other: Flector) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -33541,10 +33809,10 @@ impl Sandwich<Line> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      296      338        0
-    //    simd4        6        6        0
+    //      f32      108      146        0
+    //    simd4       53       54        0
     // Totals...
-    // yes simd      302      344        0
+    // yes simd      161      200        0
     //  no simd      320      362        0
     fn sandwich(self, other: Line) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -33628,10 +33896,10 @@ impl Sandwich<Motor> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      281      322        0
-    //    simd4       18       18        0
+    //      f32       93      130        0
+    //    simd4       65       66        0
     // Totals...
-    // yes simd      299      340        0
+    // yes simd      158      196        0
     //  no simd      353      394        0
     fn sandwich(self, other: Motor) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -33713,12 +33981,12 @@ impl Sandwich<MultiVector> for VersorOdd {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      588      662        0
-    //    simd2       12       12        0
-    //    simd3       52       52        0
-    //    simd4       48       48        0
+    //      f32      248      318        0
+    //    simd2       24       24        0
+    //    simd3      104      104        0
+    //    simd4       88       89        0
     // Totals...
-    // yes simd      700      774        0
+    // yes simd      464      535        0
     //  no simd      960     1034        0
     fn sandwich(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -33941,10 +34209,10 @@ impl Sandwich<Plane> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      260      303        0
-    //    simd4        7        7        0
+    //      f32       96      135        0
+    //    simd4       48       49        0
     // Totals...
-    // yes simd      267      310        0
+    // yes simd      144      184        0
     //  no simd      288      331        0
     fn sandwich(self, other: Plane) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(
@@ -33987,10 +34255,10 @@ impl Sandwich<RoundPoint> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      256      301        0
-    //    simd4       12       12        0
+    //      f32       68      109        0
+    //    simd4       59       60        0
     // Totals...
-    // yes simd      268      313        0
+    // yes simd      127      169        0
     //  no simd      304      349        0
     fn sandwich(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
@@ -34039,10 +34307,10 @@ impl Sandwich<Scalar> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      240      266        0
-    //    simd4        0        4        0
+    //      f32       76       98        0
+    //    simd4       41       46        0
     // Totals...
-    // yes simd      240      270        0
+    // yes simd      117      144        0
     //  no simd      240      282        0
     fn sandwich(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
@@ -34063,10 +34331,10 @@ impl Sandwich<Sphere> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      260      303        0
-    //    simd4       11       11        0
+    //      f32       96      135        0
+    //    simd4       52       53        0
     // Totals...
-    // yes simd      271      314        0
+    // yes simd      148      188        0
     //  no simd      304      347        0
     fn sandwich(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
@@ -34114,10 +34382,10 @@ impl Sandwich<VersorEven> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      292      334        0
-    //    simd4       47       47        0
+    //      f32      104      142        0
+    //    simd4       94       95        0
     // Totals...
-    // yes simd      339      381        0
+    // yes simd      198      237        0
     //  no simd      480      522        0
     fn sandwich(self, other: VersorEven) -> Self::Output {
         let geometric_product = VersorEven::from_groups(
@@ -34239,10 +34507,10 @@ impl Sandwich<VersorOdd> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      316      358        0
-    //    simd4       41       41        0
+    //      f32      152      190        0
+    //    simd4       82       83        0
     // Totals...
-    // yes simd      357      399        0
+    // yes simd      234      273        0
     //  no simd      480      522        0
     fn sandwich(self, other: VersorOdd) -> Self::Output {
         let geometric_product = VersorOdd::from_groups(

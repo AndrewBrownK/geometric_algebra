@@ -98,7 +98,7 @@ impl ConstraintViolation for AntiCircleRotor {
                 - 2.0 * (self.group0()[1] * self.group2()[1])
                 - 2.0 * (self.group0()[2] * self.group2()[2])),
         );
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
             // e23, e31, e12, e45
@@ -108,7 +108,6 @@ impl ConstraintViolation for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for AntiDipoleInversion {
@@ -207,7 +206,7 @@ impl ConstraintViolation for AntiDipoleInversion {
                 + 2.0 * (self.group0()[2] * self.group2()[2])
                 - 2.0 * (self.group2()[3] * self.group3()[3])),
         );
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
             // e23, e31, e12, e45
@@ -217,7 +216,6 @@ impl ConstraintViolation for AntiDipoleInversion {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for AntiDualNum {
@@ -234,8 +232,7 @@ impl ConstraintViolation for AntiDualNum {
             // e1234, scalar
             (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([2.0, 1.0])),
         );
-        let subtraction = AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([geometric_product.group0()[0], 0.0]));
-        return subtraction;
+        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([geometric_product.group0()[0], 0.0]));
     }
 }
 impl ConstraintViolation for AntiFlatPoint {
@@ -252,8 +249,7 @@ impl ConstraintViolation for AntiFlatPoint {
         let reverse = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (self.group0() * Simd32x4::from(-1.0)));
         let geometric_product = Scalar::from_groups(/* scalar */ (reverse.group0()[3] * self.group0()[3] * -1.0));
         let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(self.group0()[3], 2) * -1.0));
-        let subtraction = Scalar::from_groups(/* scalar */ (geometric_product[scalar] - scalar_product[scalar]));
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ (geometric_product[scalar] - scalar_product[scalar]));
     }
 }
 impl ConstraintViolation for AntiFlector {
@@ -298,13 +294,12 @@ impl ConstraintViolation for AntiFlector {
             // scalar
             (-f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2)),
         );
-        let subtraction = AntiMotor::from_groups(
+        return AntiMotor::from_groups(
             // e23, e31, e12, scalar
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
             // e15, e25, e35, e3215
             Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for AntiLine {
@@ -346,13 +341,12 @@ impl ConstraintViolation for AntiLine {
             ]),
         );
         let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2)));
-        let subtraction = AntiMotor::from_groups(
+        return AntiMotor::from_groups(
             // e23, e31, e12, scalar
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
             // e15, e25, e35, e3215
             Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for AntiMotor {
@@ -394,27 +388,24 @@ impl ConstraintViolation for AntiMotor {
             // scalar
             (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = AntiMotor::from_groups(
+        return AntiMotor::from_groups(
             // e23, e31, e12, scalar
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
             // e15, e25, e35, e3215
             Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for AntiPlane {
     type Output = Scalar;
     fn constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl ConstraintViolation for AntiScalar {
     type Output = Scalar;
     fn constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl ConstraintViolation for Circle {
@@ -490,7 +481,7 @@ impl ConstraintViolation for Circle {
                 + 2.0 * (self.group0()[1] * self.group2()[1])
                 + 2.0 * (self.group0()[2] * self.group2()[2])),
         );
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
             // e23, e31, e12, e45
@@ -500,7 +491,6 @@ impl ConstraintViolation for Circle {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for CircleRotor {
@@ -573,7 +563,7 @@ impl ConstraintViolation for CircleRotor {
                 + 2.0 * (self.group0()[1] * self.group2()[1])
                 + 2.0 * (self.group0()[2] * self.group2()[2])),
         );
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
             // e23, e31, e12, e45
@@ -583,7 +573,6 @@ impl ConstraintViolation for CircleRotor {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for Dipole {
@@ -666,7 +655,7 @@ impl ConstraintViolation for Dipole {
                 - 2.0 * (self.group0()[1] * self.group2()[1])
                 - 2.0 * (self.group0()[2] * self.group2()[2])),
         );
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
             // e23, e31, e12, e45
@@ -676,7 +665,6 @@ impl ConstraintViolation for Dipole {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for DipoleInversion {
@@ -782,7 +770,7 @@ impl ConstraintViolation for DipoleInversion {
                 - 2.0 * (self.group0()[2] * self.group2()[2])
                 + 2.0 * (self.group2()[3] * self.group3()[3])),
         );
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
             // e23, e31, e12, e45
@@ -792,7 +780,6 @@ impl ConstraintViolation for DipoleInversion {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for DualNum {
@@ -809,8 +796,7 @@ impl ConstraintViolation for DualNum {
             // e1234, scalar
             (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([-2.0, -1.0])),
         );
-        let subtraction = AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([geometric_product.group0()[0], 0.0]));
-        return subtraction;
+        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([geometric_product.group0()[0], 0.0]));
     }
 }
 impl ConstraintViolation for FlatPoint {
@@ -827,8 +813,7 @@ impl ConstraintViolation for FlatPoint {
         let reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ (self.group0() * Simd32x4::from(-1.0)));
         let geometric_product = Scalar::from_groups(/* scalar */ (reverse.group0()[3] * self.group0()[3]));
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self.group0()[3], 2));
-        let subtraction = Scalar::from_groups(/* scalar */ (geometric_product[scalar] - scalar_product[scalar]));
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ (geometric_product[scalar] - scalar_product[scalar]));
     }
 }
 impl ConstraintViolation for Flector {
@@ -878,13 +863,12 @@ impl ConstraintViolation for Flector {
             // scalar
             (f32::powi(self.group0()[3], 2) - f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2)),
         );
-        let subtraction = AntiMotor::from_groups(
+        return AntiMotor::from_groups(
             // e23, e31, e12, scalar
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
             // e15, e25, e35, e3215
             Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for Line {
@@ -926,13 +910,12 @@ impl ConstraintViolation for Line {
             ]),
         );
         let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2)));
-        let subtraction = AntiMotor::from_groups(
+        return AntiMotor::from_groups(
             // e23, e31, e12, scalar
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
             // e15, e25, e35, e3215
             Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for Motor {
@@ -974,13 +957,12 @@ impl ConstraintViolation for Motor {
             // scalar
             (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2)),
         );
-        let subtraction = AntiMotor::from_groups(
+        return AntiMotor::from_groups(
             // e23, e31, e12, scalar
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
             // e15, e25, e35, e3215
             Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group1()[3]]),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for MultiVector {
@@ -1323,7 +1305,7 @@ impl ConstraintViolation for MultiVector {
                 - 2.0 * (self.group1()[3] * self[e1])
                 + 2.0 * (self.group9()[3] * self[e45])),
         );
-        let subtraction = MultiVector::from_groups(
+        return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([(geometric_product.group0()[0] - scalar_product[scalar]), geometric_product.group0()[1]]),
             // e1, e2, e3, e4
@@ -1347,35 +1329,30 @@ impl ConstraintViolation for MultiVector {
             // e1234
             geometric_product[e45],
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for Plane {
     type Output = Scalar;
     fn constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl ConstraintViolation for RoundPoint {
     type Output = Scalar;
     fn constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl ConstraintViolation for Scalar {
     type Output = Scalar;
     fn constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl ConstraintViolation for Sphere {
     type Output = Scalar;
     fn constraint_violation(self) -> Self::Output {
-        let subtraction = Scalar::from_groups(/* scalar */ 0.0);
-        return subtraction;
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl ConstraintViolation for VersorEven {
@@ -1475,7 +1452,7 @@ impl ConstraintViolation for VersorEven {
                 + 2.0 * (self.group0()[2] * self.group2()[2])
                 - 2.0 * (self.group2()[3] * self.group3()[3])),
         );
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
             // e23, e31, e12, e45
@@ -1485,7 +1462,6 @@ impl ConstraintViolation for VersorEven {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
-        return subtraction;
     }
 }
 impl ConstraintViolation for VersorOdd {
@@ -1597,7 +1573,7 @@ impl ConstraintViolation for VersorOdd {
                 - 2.0 * (self.group0()[2] * self.group2()[2])
                 + 2.0 * (self.group2()[3] * self.group3()[3])),
         );
-        let subtraction = VersorOdd::from_groups(
+        return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
             // e23, e31, e12, e45
@@ -1607,6 +1583,5 @@ impl ConstraintViolation for VersorOdd {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
-        return subtraction;
     }
 }
