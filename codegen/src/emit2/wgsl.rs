@@ -1,4 +1,4 @@
-use std::collections::BTreeSet;
+use std::collections::{BTreeSet, HashSet};
 use std::fs;
 use std::io::Write;
 use std::ops::Deref;
@@ -11,6 +11,7 @@ use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
 use crate::ast2::datatype::{ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, Expression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
 use crate::ast2::traits::{CommentOrVariableDeclaration, progress_style, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus};
+use crate::emit2::sort_trait_impls;
 
 // Generate WGSL shader source code
 #[derive(Copy, Clone)]
@@ -109,7 +110,7 @@ impl Wgsl {
         mvs.sort_by(|a, b| a.name.cmp(&b.name));
         let mvs = mvs;
         let mut rt = tokio::runtime::Runtime::new().expect("Tokio must work");
-        let impls = rt.block_on(async {
+        let mut impls = rt.block_on(async {
             impls.get_impls().await
         });
 
@@ -140,8 +141,7 @@ impl Wgsl {
 // {description}
 // authors = ["Andrew Brown <Andrew.Brown.UNL@gmail.com>"{additional_authors}]
 // License: MIWT
-//
-"#)?;
+//"#)?;
 
             let multi_progress = Arc::new(indicatif::MultiProgress::new());
             let qty_mvs = mvs.len() as u64;
@@ -150,7 +150,7 @@ impl Wgsl {
             data_pb.set_message("WGSL - Data Definitions");
 
             let qty_impls = impls.len() as u64;
-            let impls_pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_impls)));
+            let impls_pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_impls).with_finish(ProgressFinish::AndLeave)));
             impls_pb.set_style(progress_style());
             impls_pb.set_message("WGSL - Trait Implementations");
 
@@ -159,6 +159,7 @@ impl Wgsl {
                 data_pb.inc(1);
             }
 
+            sort_trait_impls(&mut impls, HashSet::new())?;
             for i in impls {
                 self.declare_trait_impl(&mut file, i)?;
                 impls_pb.inc(1);
@@ -233,11 +234,11 @@ impl Wgsl {
         match (def.arity, var_param) {
             (TraitArity::Zero, _) => {}
             (TraitArity::One, _) => {
-                write!(w, "self: ")?;
+                write!(w, "self_: ")?;
                 self.write_type(w, *owner_ty, true)?
             },
             (TraitArity::Two, Some(other_ty)) => {
-                write!(w, "self: ")?;
+                write!(w, "self_: ")?;
                 self.write_type(w, *owner_ty, true)?;
                 write!(w, ", other: ")?;
                 self.write_type(w, *other_ty, true)?
