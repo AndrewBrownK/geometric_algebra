@@ -63,7 +63,7 @@ impl std::ops::Add<Flector> for Point {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: Flector) -> Self::Output {
-        return Flector::from_groups(/* e1, e2, e3, e4 */ (other.group0() + self.group0()), /* e423, e431, e412, e321 */ other.group1());
+        return Flector::from_groups(/* e1, e2, e3, e4 */ other.group0() + self.group0(), /* e423, e431, e412, e321 */ other.group1());
     }
 }
 impl std::ops::Add<Horizon> for Point {
@@ -118,7 +118,7 @@ impl std::ops::Add<MultiVector> for Point {
             // scalar, e1234
             other.group0(),
             // e1, e2, e3, e4
-            (other.group1() + self.group0()),
+            other.group1() + self.group0(),
             // e41, e42, e43
             other.group2(),
             // e23, e31, e12
@@ -137,7 +137,7 @@ impl std::ops::Add<Origin> for Point {
         use crate::elements::*;
         return Point::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other[e4])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] + other[e4]]),
         );
     }
 }
@@ -146,7 +146,7 @@ impl std::ops::AddAssign<Origin> for Point {
         use crate::elements::*;
         *self = Point::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other[e4])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] + other[e4]]),
         );
     }
 }
@@ -163,12 +163,12 @@ impl std::ops::Add<Point> for Point {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: Point) -> Self::Output {
-        return Point::from_groups(/* e1, e2, e3, e4 */ (other.group0() + self.group0()));
+        return Point::from_groups(/* e1, e2, e3, e4 */ other.group0() + self.group0());
     }
 }
 impl std::ops::AddAssign<Point> for Point {
     fn add_assign(&mut self, other: Point) {
-        *self = Point::from_groups(/* e1, e2, e3, e4 */ (other.group0() + self.group0()));
+        *self = Point::from_groups(/* e1, e2, e3, e4 */ other.group0() + self.group0());
     }
 }
 impl std::ops::Add<Scalar> for Point {
@@ -223,7 +223,6 @@ impl std::ops::BitXor<Horizon> for Point {
     //      add/sub      mul      div
     // f32        0        1        0
     fn bitxor(self, other: Horizon) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -274,7 +273,6 @@ impl std::ops::BitXor<Origin> for Point {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn bitxor(self, other: Origin) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -307,21 +305,19 @@ impl std::ops::BitXor<Scalar> for Point {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn bitxor(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
 impl std::ops::BitXorAssign<Scalar> for Point {
     fn bitxor_assign(&mut self, other: Scalar) {
-        use crate::elements::*;
         *self = self.wedge(other);
     }
 }
 
 impl From<Origin> for Point {
-    fn from(origin: Origin) -> Self {
+    fn from(from_origin: Origin) -> Self {
         use crate::elements::*;
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, origin[e4]]));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, from_origin[e4]]));
     }
 }
 impl std::ops::Mul<AntiScalar> for Point {
@@ -330,7 +326,6 @@ impl std::ops::Mul<AntiScalar> for Point {
     //      add/sub      mul      div
     // f32        0        3        0
     fn mul(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -366,7 +361,6 @@ impl std::ops::Mul<Horizon> for Point {
     //      add/sub      mul      div
     // f32        0        7        0
     fn mul(self, other: Horizon) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -418,7 +412,6 @@ impl std::ops::Mul<Origin> for Point {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn mul(self, other: Origin) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -455,23 +448,22 @@ impl std::ops::Mul<Scalar> for Point {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn mul(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
 impl std::ops::MulAssign<Scalar> for Point {
     fn mul_assign(&mut self, other: Scalar) {
-        use crate::elements::*;
         *self = self.geometric_product(other);
     }
 }
 impl std::ops::Neg for Point {
+    type Output = Point;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd4        0        1        0
     // no simd        0        4        0
-    fn neg(self) -> Self {
-        return Point::from_groups(/* e1, e2, e3, e4 */ (self.group0() * Simd32x4::from(-1.0)));
+    fn neg(self) -> Self::Output {
+        return Point::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Not for Point {
@@ -489,7 +481,7 @@ impl std::ops::Sub<AntiScalar> for Point {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([0.0, (other[e1234] * -1.0)]),
+            Simd32x2::from([0.0, other[e1234] * -1.0]),
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
@@ -510,7 +502,7 @@ impl std::ops::Sub<DualNum> for Point {
     fn sub(self, other: DualNum) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e1234
-            (other.group0() * Simd32x2::from(-1.0)),
+            other.group0() * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
@@ -531,9 +523,9 @@ impl std::ops::Sub<Flector> for Point {
     fn sub(self, other: Flector) -> Self::Output {
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (-other.group0() + self.group0()),
+            -other.group0() + self.group0(),
             // e423, e431, e412, e321
-            (other.group1() * Simd32x4::from(-1.0)),
+            other.group1() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -548,7 +540,7 @@ impl std::ops::Sub<Horizon> for Point {
             // e1, e2, e3, e4
             self.group0(),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (other[e321] * -1.0)]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e321] * -1.0]),
         );
     }
 }
@@ -565,9 +557,9 @@ impl std::ops::Sub<Line> for Point {
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
-            (other.group0() * Simd32x3::from(-1.0)),
+            other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (other.group1() * Simd32x3::from(-1.0)),
+            other.group1() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -585,13 +577,13 @@ impl std::ops::Sub<Motor> for Point {
     fn sub(self, other: Motor) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e1234
-            (Simd32x2::from([other.group1()[3], other.group0()[3]]) * Simd32x2::from(-1.0)),
+            Simd32x2::from([other.group1()[3], other.group0()[3]]) * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
-            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -610,15 +602,15 @@ impl std::ops::Sub<MultiVector> for Point {
     fn sub(self, other: MultiVector) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e1234
-            (other.group0() * Simd32x2::from(-1.0)),
+            other.group0() * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
-            (-other.group1() + self.group0()),
+            -other.group1() + self.group0(),
             // e41, e42, e43
-            (other.group2() * Simd32x3::from(-1.0)),
+            other.group2() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (other.group3() * Simd32x3::from(-1.0)),
+            other.group3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
-            (other.group4() * Simd32x4::from(-1.0)),
+            other.group4() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -631,7 +623,7 @@ impl std::ops::Sub<Origin> for Point {
         use crate::elements::*;
         return Point::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other[e4])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] - other[e4]]),
         );
     }
 }
@@ -640,7 +632,7 @@ impl std::ops::SubAssign<Origin> for Point {
         use crate::elements::*;
         *self = Point::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other[e4])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] - other[e4]]),
         );
     }
 }
@@ -651,7 +643,7 @@ impl std::ops::Sub<Plane> for Point {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn sub(self, other: Plane) -> Self::Output {
-        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ (other.group0() * Simd32x4::from(-1.0)));
+        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ other.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Sub<Point> for Point {
@@ -661,12 +653,12 @@ impl std::ops::Sub<Point> for Point {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: Point) -> Self::Output {
-        return Point::from_groups(/* e1, e2, e3, e4 */ (-other.group0() + self.group0()));
+        return Point::from_groups(/* e1, e2, e3, e4 */ -other.group0() + self.group0());
     }
 }
 impl std::ops::SubAssign<Point> for Point {
     fn sub_assign(&mut self, other: Point) {
-        *self = Point::from_groups(/* e1, e2, e3, e4 */ (-other.group0() + self.group0()));
+        *self = Point::from_groups(/* e1, e2, e3, e4 */ -other.group0() + self.group0());
     }
 }
 impl std::ops::Sub<Scalar> for Point {
@@ -678,7 +670,7 @@ impl std::ops::Sub<Scalar> for Point {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([(other[scalar] * -1.0), 0.0]),
+            Simd32x2::from([other[scalar] * -1.0, 0.0]),
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43

@@ -349,6 +349,7 @@ postgres-types = "0.2.7""#
                 tx2.send(file_path.clone())?;
                 let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
                 writeln!(&mut file, "use crate::data::*;")?;
+                writeln!(&mut file, "#[allow(unused_imports)]")?;
                 writeln!(&mut file, "use crate::simd::*;")?;
                 self.declare_multi_vector(&mut file, multi_vec, doc)?;
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
@@ -869,10 +870,10 @@ postgres-types = "0.2.7""#
     fn write_expression<W: Write>(&self, w: &mut W, expr: &AnyExpression) -> anyhow::Result<()> {
         match expr {
             AnyExpression::Int(e) => self.write_int(w, e)?,
-            AnyExpression::Float(e) => self.write_float(w, e)?,
-            AnyExpression::Vec2(e) => self.write_vec2(w, e)?,
-            AnyExpression::Vec3(e) => self.write_vec3(w, e)?,
-            AnyExpression::Vec4(e) => self.write_vec4(w, e)?,
+            AnyExpression::Float(e) => self.write_float(w, e, false)?,
+            AnyExpression::Vec2(e) => self.write_vec2(w, e, false)?,
+            AnyExpression::Vec3(e) => self.write_vec3(w, e, false)?,
+            AnyExpression::Vec4(e) => self.write_vec4(w, e, false)?,
             AnyExpression::Class(e) => self.write_multi_vec(w, e)?,
         }
         Ok(())
@@ -911,7 +912,7 @@ postgres-types = "0.2.7""#
         Ok(())
     }
 
-    fn write_float<W: Write>(&self, w: &mut W, expr: &FloatExpr) -> anyhow::Result<()> {
+    fn write_float<W: Write>(&self, w: &mut W, expr: &FloatExpr, grouping_provided: bool) -> anyhow::Result<()> {
         match expr {
             FloatExpr::Variable(v) => {
                 let name = &v.decl.name.0;
@@ -930,15 +931,15 @@ postgres-types = "0.2.7""#
                 write!(w, " as f32)")?;
             }
             FloatExpr::AccessVec2(v, i) => {
-                self.write_vec2(w, v.as_ref())?;
+                self.write_vec2(w, v.as_ref(), false)?;
                 write!(w, "[{i}]")?;
             }
             FloatExpr::AccessVec3(v, i) => {
-                self.write_vec3(w, v.as_ref())?;
+                self.write_vec3(w, v.as_ref(), false)?;
                 write!(w, "[{i}]")?;
             }
             FloatExpr::AccessVec4(v, i) => {
-                self.write_vec4(w, v.as_ref())?;
+                self.write_vec4(w, v.as_ref(), false)?;
                 write!(w, "[{i}]")?;
             }
             FloatExpr::AccessMultiVecGroup(mv, i) => {
@@ -977,7 +978,7 @@ postgres-types = "0.2.7""#
                 if has_last_factor {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (factor, exponent)) in v.iter().enumerate() {
@@ -986,43 +987,43 @@ postgres-types = "0.2.7""#
                     match (*exponent, i > 0) {
                         (f, _) if f == 0.0 => continue,
 
-                        (1.0, false) => self.write_float(w, factor)?,
+                        (1.0, false) => self.write_float(w, factor, false)?,
                         (-1.0, false) => {
                             write!(w, "(1.0/")?;
-                            self.write_float(w, factor)?;
+                            self.write_float(w, factor, false)?;
                             write!(w, ")")?;
                         }
                         (e, false) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, "f32::powi(")?;
-                                self.write_float(w, factor)?;
+                                self.write_float(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
                                 write!(w, "f32::powf(")?;
-                                self.write_float(w, factor)?;
+                                self.write_float(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
                         }
 
                         (1.0, true) => {
                             write!(w, " * ")?;
-                            self.write_float(w, factor)?;
+                            self.write_float(w, factor, false)?;
                         }
                         (-1.0, true) => {
                             write!(w, " / (")?;
-                            self.write_float(w, factor)?;
+                            self.write_float(w, factor, true)?;
                             write!(w, ")")?;
                         }
                         (e, true) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, " * f32::powi(")?;
-                                self.write_float(w, factor)?;
+                                self.write_float(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
                                 write!(w, " * f32::powf(")?;
-                                self.write_float(w, factor)?;
+                                self.write_float(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
                         }
@@ -1039,7 +1040,7 @@ postgres-types = "0.2.7""#
                     }
                     _ => {}
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
@@ -1052,7 +1053,7 @@ postgres-types = "0.2.7""#
                 if has_last_addend {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (addend, factor)) in v.iter().enumerate() {
@@ -1083,7 +1084,7 @@ postgres-types = "0.2.7""#
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_float(w, addend)?;
+                    self.write_float(w, addend, false)?;
                 }
                 match (*last_addend, len > 1) {
                     (fl, _) if fl == 0.0 => {}
@@ -1099,7 +1100,7 @@ postgres-types = "0.2.7""#
                     }
                     _ => {}
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
@@ -1110,10 +1111,10 @@ postgres-types = "0.2.7""#
                 } else {
                     write!(w, "f32::powf(")?;
                 }
-                self.write_float(w, factor)?;
+                self.write_float(w, factor, true)?;
                 write!(w, ", ")?;
                 if let Some(exponent) = exponent {
-                    self.write_float(w, exponent)?;
+                    self.write_float(w, exponent, *last_exponent == 1.0)?;
                     if *last_exponent != 1.0 {
                         write!(w, " * ")?;
                     }
@@ -1127,7 +1128,7 @@ postgres-types = "0.2.7""#
         Ok(())
     }
 
-    fn write_vec2<W: Write>(&self, w: &mut W, expr: &Vec2Expr) -> anyhow::Result<()> {
+    fn write_vec2<W: Write>(&self, w: &mut W, expr: &Vec2Expr, grouping_provided: bool) -> anyhow::Result<()> {
         match expr {
             Vec2Expr::Variable(v) => {
                 let name = &v.decl.name.0;
@@ -1141,14 +1142,14 @@ postgres-types = "0.2.7""#
             }
             Vec2Expr::Gather1(f) => {
                 write!(w, "Simd32x2::from(")?;
-                self.write_float(w, f)?;
+                self.write_float(w, f, true)?;
                 write!(w, ")")?;
             }
             Vec2Expr::Gather2(f0, f1) => {
                 write!(w, "Simd32x2::from([")?;
-                self.write_float(w, f0)?;
+                self.write_float(w, f0, true)?;
                 write!(w, ", ")?;
-                self.write_float(w, f1)?;
+                self.write_float(w, f1, true)?;
                 write!(w, "])")?;
             }
             Vec2Expr::AccessMultiVecGroup(mv, i) => {
@@ -1164,7 +1165,7 @@ postgres-types = "0.2.7""#
                 if has_last_factor {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (factor, exponent)) in v.iter().enumerate() {
@@ -1173,43 +1174,43 @@ postgres-types = "0.2.7""#
                     match (*exponent, i > 0) {
                         (f, _) if f == 0.0 => continue,
 
-                        (1.0, false) => self.write_vec2(w, factor)?,
+                        (1.0, false) => self.write_vec2(w, factor, false)?,
                         (-1.0, false) => {
                             write!(w, "(Simd32x2::from(1.0) / ")?;
-                            self.write_vec2(w, factor)?;
+                            self.write_vec2(w, factor, false)?;
                             write!(w, ")")?;
                         }
                         (e, false) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, "Simd32x2::powi(")?;
-                                self.write_vec2(w, factor)?;
+                                self.write_vec2(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
                                 write!(w, "Simd32x2::powf(")?;
-                                self.write_vec2(w, factor)?;
+                                self.write_vec2(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
                         }
 
                         (1.0, true) => {
                             write!(w, " * ")?;
-                            self.write_vec2(w, factor)?
+                            self.write_vec2(w, factor, false)?
                         }
                         (-1.0, true) => {
                             write!(w, " / (")?;
-                            self.write_vec2(w, factor)?;
+                            self.write_vec2(w, factor, true)?;
                             write!(w, ")")?;
                         }
                         (e, true) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, " * Simd32x2::powi(")?;
-                                self.write_vec2(w, factor)?;
+                                self.write_vec2(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
                                 write!(w, " * Simd32x2::powf(")?;
-                                self.write_vec2(w, factor)?;
+                                self.write_vec2(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
                         }
@@ -1235,7 +1236,7 @@ postgres-types = "0.2.7""#
                         write!(w, "])")?;
                     }
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
@@ -1248,7 +1249,7 @@ postgres-types = "0.2.7""#
                 if has_last_addend {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (addend, factor)) in v.iter().enumerate() {
@@ -1280,7 +1281,7 @@ postgres-types = "0.2.7""#
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_vec2(w, addend)?;
+                    self.write_vec2(w, addend, false)?;
                 }
                 let a0 = last_addend[0];
                 let a1 = last_addend[1];
@@ -1300,20 +1301,20 @@ postgres-types = "0.2.7""#
                         write!(w, "])")?;
                     }
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
             Vec2Expr::SwizzleVec2(box v, i0, i1) => {
-                write!(w, "swizzle!(")?;
-                self.write_vec2(w, v)?;
+                write!(w, "crate::swizzle!(")?;
+                self.write_vec2(w, v, true)?;
                 write!(w, ", {i0}, {i1})")?;
             }
         }
         Ok(())
     }
 
-    fn write_vec3<W: Write>(&self, w: &mut W, expr: &Vec3Expr) -> anyhow::Result<()> {
+    fn write_vec3<W: Write>(&self, w: &mut W, expr: &Vec3Expr, grouping_provided: bool) -> anyhow::Result<()> {
         match expr {
             Vec3Expr::Variable(v) => {
                 let name = &v.decl.name.0;
@@ -1327,16 +1328,16 @@ postgres-types = "0.2.7""#
             }
             Vec3Expr::Gather1(f) => {
                 write!(w, "Simd32x3::from(")?;
-                self.write_float(w, f)?;
+                self.write_float(w, f, true)?;
                 write!(w, ")")?;
             }
             Vec3Expr::Gather3(f0, f1, f2) => {
                 write!(w, "Simd32x3::from([")?;
-                self.write_float(w, f0)?;
+                self.write_float(w, f0, true)?;
                 write!(w, ", ")?;
-                self.write_float(w, f1)?;
+                self.write_float(w, f1, true)?;
                 write!(w, ", ")?;
-                self.write_float(w, f2)?;
+                self.write_float(w, f2, true)?;
                 write!(w, "])")?;
             }
             Vec3Expr::AccessMultiVecGroup(mv, i) => {
@@ -1352,7 +1353,7 @@ postgres-types = "0.2.7""#
                 if has_last_factor {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (factor, exponent)) in v.iter().enumerate() {
@@ -1361,43 +1362,43 @@ postgres-types = "0.2.7""#
                     match (*exponent, i > 0) {
                         (f, _) if f == 0.0 => continue,
 
-                        (1.0, false) => self.write_vec3(w, factor)?,
+                        (1.0, false) => self.write_vec3(w, factor, false)?,
                         (-1.0, false) => {
                             write!(w, "(Simd32x3::from(1.0) / ")?;
-                            self.write_vec3(w, factor)?;
+                            self.write_vec3(w, factor, false)?;
                             write!(w, ")")?;
                         }
                         (e, false) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, "Simd32x3::powi(")?;
-                                self.write_vec3(w, factor)?;
+                                self.write_vec3(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
                                 write!(w, "Simd32x3::powf(")?;
-                                self.write_vec3(w, factor)?;
+                                self.write_vec3(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
                         }
 
                         (1.0, true) => {
                             write!(w, " * ")?;
-                            self.write_vec3(w, factor)?
+                            self.write_vec3(w, factor, false)?
                         }
                         (-1.0, true) => {
                             write!(w, " / (")?;
-                            self.write_vec3(w, factor)?;
+                            self.write_vec3(w, factor, true)?;
                             write!(w, ")")?;
                         }
                         (e, true) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, " * Simd32x3::powi(")?;
-                                self.write_vec3(w, factor)?;
+                                self.write_vec3(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
                                 write!(w, " * Simd32x3::powf(")?;
-                                self.write_vec3(w, factor)?;
+                                self.write_vec3(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
                         }
@@ -1426,7 +1427,7 @@ postgres-types = "0.2.7""#
                         write!(w, "])")?;
                     }
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
@@ -1439,7 +1440,7 @@ postgres-types = "0.2.7""#
                 if has_last_addend {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (addend, factor)) in v.iter().enumerate() {
@@ -1471,7 +1472,7 @@ postgres-types = "0.2.7""#
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_vec3(w, addend)?;
+                    self.write_vec3(w, addend, false)?;
                 }
                 if *last_addend != [0.0; 3] {
                     if len > 1 {
@@ -1494,20 +1495,20 @@ postgres-types = "0.2.7""#
                         write!(w, "])")?;
                     }
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
             Vec3Expr::SwizzleVec3(box v, i0, i1, i2) => {
-                write!(w, "swizzle!(")?;
-                self.write_vec3(w, v)?;
+                write!(w, "crate::swizzle!(")?;
+                self.write_vec3(w, v, true)?;
                 write!(w, ", {i0}, {i1}, {i2})")?;
             }
         }
         Ok(())
     }
 
-    fn write_vec4<W: Write>(&self, w: &mut W, expr: &Vec4Expr) -> anyhow::Result<()> {
+    fn write_vec4<W: Write>(&self, w: &mut W, expr: &Vec4Expr, grouping_provided: bool) -> anyhow::Result<()> {
         match expr {
             Vec4Expr::Variable(v) => {
                 let name = &v.decl.name.0;
@@ -1521,18 +1522,18 @@ postgres-types = "0.2.7""#
             }
             Vec4Expr::Gather1(f) => {
                 write!(w, "Simd32x4::from(")?;
-                self.write_float(w, f)?;
+                self.write_float(w, f, true)?;
                 write!(w, ")")?;
             }
             Vec4Expr::Gather4(f0, f1, f2, f3) => {
                 write!(w, "Simd32x4::from([")?;
-                self.write_float(w, f0)?;
+                self.write_float(w, f0, true)?;
                 write!(w, ", ")?;
-                self.write_float(w, f1)?;
+                self.write_float(w, f1, true)?;
                 write!(w, ", ")?;
-                self.write_float(w, f2)?;
+                self.write_float(w, f2, true)?;
                 write!(w, ", ")?;
-                self.write_float(w, f3)?;
+                self.write_float(w, f3, true)?;
                 write!(w, "])")?;
             }
             Vec4Expr::AccessMultiVecGroup(mv, i) => {
@@ -1548,7 +1549,7 @@ postgres-types = "0.2.7""#
                 if has_last_factor {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (factor, exponent)) in v.iter().enumerate() {
@@ -1557,43 +1558,43 @@ postgres-types = "0.2.7""#
                     match (*exponent, i > 0) {
                         (f, _) if f == 0.0 => continue,
 
-                        (1.0, false) => self.write_vec4(w, factor)?,
+                        (1.0, false) => self.write_vec4(w, factor, false)?,
                         (-1.0, false) => {
                             write!(w, "(Simd32x4::from(1.0) / ")?;
-                            self.write_vec4(w, factor)?;
+                            self.write_vec4(w, factor, false)?;
                             write!(w, ")")?;
                         }
                         (e, false) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, "Simd32x4::powi(")?;
-                                self.write_vec4(w, factor)?;
+                                self.write_vec4(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
                                 write!(w, "Simd32x4::powf(")?;
-                                self.write_vec4(w, factor)?;
+                                self.write_vec4(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
                         }
 
                         (1.0, true) => {
                             write!(w, " * ")?;
-                            self.write_vec4(w, factor)?
+                            self.write_vec4(w, factor, false)?
                         }
                         (-1.0, true) => {
                             write!(w, " / (")?;
-                            self.write_vec4(w, factor)?;
+                            self.write_vec4(w, factor, true)?;
                             write!(w, ")")?;
                         }
                         (e, true) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, " * Simd32x4::powi(")?;
-                                self.write_vec4(w, factor)?;
+                                self.write_vec4(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
                                 write!(w, " * Simd32x4::powf(")?;
-                                self.write_vec4(w, factor)?;
+                                self.write_vec4(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
                         }
@@ -1625,7 +1626,7 @@ postgres-types = "0.2.7""#
                         write!(w, "])")?;
                     }
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
@@ -1638,7 +1639,7 @@ postgres-types = "0.2.7""#
                 if has_last_addend {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (addend, factor)) in v.iter().enumerate() {
@@ -1670,7 +1671,7 @@ postgres-types = "0.2.7""#
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_vec4(w, addend)?;
+                    self.write_vec4(w, addend, false)?;
                 }
                 if *last_addend != [0.0; 4] {
                     if len > 1 {
@@ -1696,13 +1697,13 @@ postgres-types = "0.2.7""#
                         write!(w, "])")?;
                     }
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
             Vec4Expr::SwizzleVec4(box v, i0, i1, i2, i3) => {
-                write!(w, "swizzle!(")?;
-                self.write_vec4(w, v)?;
+                write!(w, "crate::swizzle!(")?;
+                self.write_vec4(w, v, false)?;
                 write!(w, ", {i0}, {i1}, {i2}, {i3})")?;
             }
         }
@@ -1739,10 +1740,10 @@ postgres-types = "0.2.7""#
                     }
                     write!(w, " */")?;
                     match g {
-                        MultiVectorGroupExpr::JustFloat(f) => self.write_float(w, f)?,
-                        MultiVectorGroupExpr::Vec2(g) => self.write_vec2(w, g)?,
-                        MultiVectorGroupExpr::Vec3(g) => self.write_vec3(w, g)?,
-                        MultiVectorGroupExpr::Vec4(g) => self.write_vec4(w, g)?,
+                        MultiVectorGroupExpr::JustFloat(f) => self.write_float(w, f, true)?,
+                        MultiVectorGroupExpr::Vec2(g) => self.write_vec2(w, g, true)?,
+                        MultiVectorGroupExpr::Vec3(g) => self.write_vec3(w, g, true)?,
+                        MultiVectorGroupExpr::Vec4(g) => self.write_vec4(w, g, true)?,
                     }
                 }
                 write!(w, ")")?;
@@ -1825,13 +1826,13 @@ postgres-types = "0.2.7""#
                         write!(w, " {op}")?;
                         write!(w, "{method}")?;
                         write!(w, "{op} ")?;
-                        self.write_float(w, b)?;
+                        self.write_float(w, b, false)?;
                         write!(w, ")")?;
                     }
                     _ => {
                         self.write_multi_vec(w, a)?;
                         write!(w, ".{method}(")?;
-                        self.write_float(w, b)?;
+                        self.write_float(w, b, true)?;
                         write!(w, ")")?;
                     }
                 }
@@ -1850,6 +1851,7 @@ postgres-types = "0.2.7""#
         let other = other.name();
         let owner = owner.name();
         let lsc = TraitKey::new(other).as_lower_snake();
+        let lsc = format!("from_{lsc}");
         writeln!(
             w,
             r#"
@@ -2553,6 +2555,10 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
             write!(w, "    type Output = ")?;
             self.write_type(w, output_ty)?;
             writeln!(w, ";")?;
+        } else if is_op {
+            write!(w, "    type Output = ")?;
+            self.write_type(w, output_ty)?;
+            writeln!(w, ";")?;
         }
 
         {
@@ -2645,13 +2651,17 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
             _ => panic!("Arity 2 should always have other type"),
         }
         write!(w, ") -> ")?;
-        match output_kind.deref() {
-            TraitTypeConsensus::AlwaysSelf => write!(w, "Self")?,
-            TraitTypeConsensus::Disagreement => write!(w, "Self::Output")?,
-            TraitTypeConsensus::AllAgree(mv, _) => self.write_type(w, *mv)?,
-            TraitTypeConsensus::NoVotes => {
-                // Currently, we have no use for traits that do not return values
-                bail!("Unsupported or invalid trait def implementation: {ucc} for {owner_ty:?}");
+        if is_op {
+            write!(w, "Self::Output")?
+        } else {
+            match output_kind.deref() {
+                TraitTypeConsensus::AlwaysSelf => write!(w, "Self")?,
+                TraitTypeConsensus::Disagreement => write!(w, "Self::Output")?,
+                TraitTypeConsensus::AllAgree(mv, _) => self.write_type(w, *mv)?,
+                TraitTypeConsensus::NoVotes => {
+                    // Currently, we have no use for traits that do not return values
+                    bail!("Unsupported or invalid trait def implementation: {ucc} for {owner_ty:?}");
+                }
             }
         }
         writeln!(w, " {{")?;

@@ -65,9 +65,9 @@ impl std::ops::Add<Flector> for Flector {
     fn add(self, other: Flector) -> Self::Output {
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (other.group0() + self.group0()),
+            other.group0() + self.group0(),
             // e423, e431, e412, e321
-            (other.group1() + self.group1()),
+            other.group1() + self.group1(),
         );
     }
 }
@@ -75,9 +75,9 @@ impl std::ops::AddAssign<Flector> for Flector {
     fn add_assign(&mut self, other: Flector) {
         *self = Flector::from_groups(
             // e1, e2, e3, e4
-            (other.group0() + self.group0()),
+            other.group0() + self.group0(),
             // e423, e431, e412, e321
-            (other.group1() + self.group1()),
+            other.group1() + self.group1(),
         );
     }
 }
@@ -92,7 +92,7 @@ impl std::ops::Add<Horizon> for Flector {
             // e1, e2, e3, e4
             self.group0(),
             // e423, e431, e412, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other[e321])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] + other[e321]]),
         );
     }
 }
@@ -103,7 +103,7 @@ impl std::ops::AddAssign<Horizon> for Flector {
             // e1, e2, e3, e4
             self.group0(),
             // e423, e431, e412, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other[e321])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] + other[e321]]),
         );
     }
 }
@@ -152,13 +152,13 @@ impl std::ops::Add<MultiVector> for Flector {
             // scalar, e1234
             other.group0(),
             // e1, e2, e3, e4
-            (self.group0() + other.group1()),
+            self.group0() + other.group1(),
             // e41, e42, e43
             other.group2(),
             // e23, e31, e12
             other.group3(),
             // e423, e431, e412, e321
-            (self.group1() + other.group4()),
+            self.group1() + other.group4(),
         );
     }
 }
@@ -171,7 +171,7 @@ impl std::ops::Add<Origin> for Flector {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other[e4])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] + other[e4]]),
             // e423, e431, e412, e321
             self.group1(),
         );
@@ -182,7 +182,7 @@ impl std::ops::AddAssign<Origin> for Flector {
         use crate::elements::*;
         *self = Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other[e4])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] + other[e4]]),
             // e423, e431, e412, e321
             self.group1(),
         );
@@ -195,12 +195,12 @@ impl std::ops::Add<Plane> for Flector {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: Plane) -> Self::Output {
-        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ (self.group1() + other.group0()));
+        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ self.group1() + other.group0());
     }
 }
 impl std::ops::AddAssign<Plane> for Flector {
     fn add_assign(&mut self, other: Plane) {
-        *self = Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ (self.group1() + other.group0()));
+        *self = Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ self.group1() + other.group0());
     }
 }
 impl std::ops::Add<Point> for Flector {
@@ -210,12 +210,12 @@ impl std::ops::Add<Point> for Flector {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: Point) -> Self::Output {
-        return Flector::from_groups(/* e1, e2, e3, e4 */ (self.group0() + other.group0()), /* e423, e431, e412, e321 */ self.group1());
+        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0() + other.group0(), /* e423, e431, e412, e321 */ self.group1());
     }
 }
 impl std::ops::AddAssign<Point> for Flector {
     fn add_assign(&mut self, other: Point) {
-        *self = Flector::from_groups(/* e1, e2, e3, e4 */ (self.group0() + other.group0()), /* e423, e431, e412, e321 */ self.group1());
+        *self = Flector::from_groups(/* e1, e2, e3, e4 */ self.group0() + other.group0(), /* e423, e431, e412, e321 */ self.group1());
     }
 }
 impl std::ops::Add<Scalar> for Flector {
@@ -270,7 +270,6 @@ impl std::ops::BitXor<Horizon> for Flector {
     //      add/sub      mul      div
     // f32        0        1        0
     fn bitxor(self, other: Horizon) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -326,7 +325,6 @@ impl std::ops::BitXor<Origin> for Flector {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn bitxor(self, other: Origin) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -359,35 +357,33 @@ impl std::ops::BitXor<Scalar> for Flector {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn bitxor(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
 impl std::ops::BitXorAssign<Scalar> for Flector {
     fn bitxor_assign(&mut self, other: Scalar) {
-        use crate::elements::*;
         *self = self.wedge(other);
     }
 }
 
 impl From<Horizon> for Flector {
-    fn from(horizon: Horizon) -> Self {
+    fn from(from_horizon: Horizon) -> Self {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, horizon[e321]]),
+            Simd32x4::from([0.0, 0.0, 0.0, from_horizon[e321]]),
         );
     }
 }
 
 impl From<Origin> for Flector {
-    fn from(origin: Origin) -> Self {
+    fn from(from_origin: Origin) -> Self {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, origin[e4]]),
+            Simd32x4::from([0.0, 0.0, 0.0, from_origin[e4]]),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -395,23 +391,23 @@ impl From<Origin> for Flector {
 }
 
 impl From<Plane> for Flector {
-    fn from(plane: Plane) -> Self {
+    fn from(from_plane: Plane) -> Self {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([plane[e423], plane[e431], plane[e412], plane[e321]]),
+            Simd32x4::from([from_plane[e423], from_plane[e431], from_plane[e412], from_plane[e321]]),
         );
     }
 }
 
 impl From<Point> for Flector {
-    fn from(point: Point) -> Self {
+    fn from(from_point: Point) -> Self {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([point[e1], point[e2], point[e3], point[e4]]),
+            Simd32x4::from([from_point[e1], from_point[e2], from_point[e3], from_point[e4]]),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -423,13 +419,11 @@ impl std::ops::Mul<AntiScalar> for Flector {
     //      add/sub      mul      div
     // f32        0        4        0
     fn mul(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
 impl std::ops::MulAssign<AntiScalar> for Flector {
     fn mul_assign(&mut self, other: AntiScalar) {
-        use crate::elements::*;
         *self = self.geometric_product(other);
     }
 }
@@ -467,7 +461,6 @@ impl std::ops::Mul<Horizon> for Flector {
     //   simd4        0        3        0
     // no simd        0       12        0
     fn mul(self, other: Horizon) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -529,7 +522,6 @@ impl std::ops::Mul<Origin> for Flector {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn mul(self, other: Origin) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -566,27 +558,26 @@ impl std::ops::Mul<Scalar> for Flector {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn mul(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
 impl std::ops::MulAssign<Scalar> for Flector {
     fn mul_assign(&mut self, other: Scalar) {
-        use crate::elements::*;
         *self = self.geometric_product(other);
     }
 }
 impl std::ops::Neg for Flector {
+    type Output = Flector;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd4        0        2        0
     // no simd        0        8        0
-    fn neg(self) -> Self {
+    fn neg(self) -> Self::Output {
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (self.group0() * Simd32x4::from(-1.0)),
+            self.group0() * Simd32x4::from(-1.0),
             // e423, e431, e412, e321
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -608,7 +599,7 @@ impl std::ops::Sub<AntiScalar> for Flector {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([0.0, (other[e1234] * -1.0)]),
+            Simd32x2::from([0.0, other[e1234] * -1.0]),
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
@@ -629,7 +620,7 @@ impl std::ops::Sub<DualNum> for Flector {
     fn sub(self, other: DualNum) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e1234
-            (other.group0() * Simd32x2::from(-1.0)),
+            other.group0() * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
@@ -650,9 +641,9 @@ impl std::ops::Sub<Flector> for Flector {
     fn sub(self, other: Flector) -> Self::Output {
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (-other.group0() + self.group0()),
+            -other.group0() + self.group0(),
             // e423, e431, e412, e321
-            (-other.group1() + self.group1()),
+            -other.group1() + self.group1(),
         );
     }
 }
@@ -660,9 +651,9 @@ impl std::ops::SubAssign<Flector> for Flector {
     fn sub_assign(&mut self, other: Flector) {
         *self = Flector::from_groups(
             // e1, e2, e3, e4
-            (-other.group0() + self.group0()),
+            -other.group0() + self.group0(),
             // e423, e431, e412, e321
-            (-other.group1() + self.group1()),
+            -other.group1() + self.group1(),
         );
     }
 }
@@ -677,7 +668,7 @@ impl std::ops::Sub<Horizon> for Flector {
             // e1, e2, e3, e4
             self.group0(),
             // e423, e431, e412, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other[e321])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] - other[e321]]),
         );
     }
 }
@@ -688,7 +679,7 @@ impl std::ops::SubAssign<Horizon> for Flector {
             // e1, e2, e3, e4
             self.group0(),
             // e423, e431, e412, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other[e321])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] - other[e321]]),
         );
     }
 }
@@ -705,9 +696,9 @@ impl std::ops::Sub<Line> for Flector {
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
-            (other.group0() * Simd32x3::from(-1.0)),
+            other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (other.group1() * Simd32x3::from(-1.0)),
+            other.group1() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             self.group1(),
         );
@@ -725,13 +716,13 @@ impl std::ops::Sub<Motor> for Flector {
     fn sub(self, other: Motor) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e1234
-            (Simd32x2::from([other.group1()[3], other.group0()[3]]) * Simd32x2::from(-1.0)),
+            Simd32x2::from([other.group1()[3], other.group0()[3]]) * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
-            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             self.group1(),
         );
@@ -750,15 +741,15 @@ impl std::ops::Sub<MultiVector> for Flector {
     fn sub(self, other: MultiVector) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e1234
-            (other.group0() * Simd32x2::from(-1.0)),
+            other.group0() * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
-            (self.group0() - other.group1()),
+            self.group0() - other.group1(),
             // e41, e42, e43
-            (other.group2() * Simd32x3::from(-1.0)),
+            other.group2() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (other.group3() * Simd32x3::from(-1.0)),
+            other.group3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
-            (self.group1() - other.group4()),
+            self.group1() - other.group4(),
         );
     }
 }
@@ -771,7 +762,7 @@ impl std::ops::Sub<Origin> for Flector {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other[e4])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] - other[e4]]),
             // e423, e431, e412, e321
             self.group1(),
         );
@@ -782,7 +773,7 @@ impl std::ops::SubAssign<Origin> for Flector {
         use crate::elements::*;
         *self = Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other[e4])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] - other[e4]]),
             // e423, e431, e412, e321
             self.group1(),
         );
@@ -795,12 +786,12 @@ impl std::ops::Sub<Plane> for Flector {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: Plane) -> Self::Output {
-        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ (self.group1() - other.group0()));
+        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ self.group1() - other.group0());
     }
 }
 impl std::ops::SubAssign<Plane> for Flector {
     fn sub_assign(&mut self, other: Plane) {
-        *self = Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ (self.group1() - other.group0()));
+        *self = Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ self.group1() - other.group0());
     }
 }
 impl std::ops::Sub<Point> for Flector {
@@ -810,12 +801,12 @@ impl std::ops::Sub<Point> for Flector {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: Point) -> Self::Output {
-        return Flector::from_groups(/* e1, e2, e3, e4 */ (self.group0() - other.group0()), /* e423, e431, e412, e321 */ self.group1());
+        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0() - other.group0(), /* e423, e431, e412, e321 */ self.group1());
     }
 }
 impl std::ops::SubAssign<Point> for Flector {
     fn sub_assign(&mut self, other: Point) {
-        *self = Flector::from_groups(/* e1, e2, e3, e4 */ (self.group0() - other.group0()), /* e423, e431, e412, e321 */ self.group1());
+        *self = Flector::from_groups(/* e1, e2, e3, e4 */ self.group0() - other.group0(), /* e423, e431, e412, e321 */ self.group1());
     }
 }
 impl std::ops::Sub<Scalar> for Flector {
@@ -827,7 +818,7 @@ impl std::ops::Sub<Scalar> for Flector {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([(other[scalar] * -1.0), 0.0]),
+            Simd32x2::from([other[scalar] * -1.0, 0.0]),
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43

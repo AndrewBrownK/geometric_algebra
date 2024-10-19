@@ -35,7 +35,7 @@ impl std::ops::Add<DualNum> for Scalar {
     // f32        1        0        0
     fn add(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([(other.group0()[0] + self[scalar]), other.group0()[1]]));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([other.group0()[0] + self[scalar], other.group0()[1]]));
     }
 }
 impl std::ops::Add<Flector> for Scalar {
@@ -97,7 +97,7 @@ impl std::ops::Add<Motor> for Scalar {
             // e41, e42, e43, e1234
             other.group0(),
             // e23, e31, e12, scalar
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self[scalar])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group1()[3] + self[scalar]]),
         );
     }
 }
@@ -110,7 +110,7 @@ impl std::ops::Add<MultiVector> for Scalar {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([(other.group0()[0] + self[scalar]), other.group0()[1]]),
+            Simd32x2::from([other.group0()[0] + self[scalar], other.group0()[1]]),
             // e1, e2, e3, e4
             other.group1(),
             // e41, e42, e43
@@ -183,13 +183,13 @@ impl std::ops::Add<Scalar> for Scalar {
     // f32        1        0        0
     fn add(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (other[scalar] + self[scalar]));
+        return Scalar::from_groups(/* scalar */ other[scalar] + self[scalar]);
     }
 }
 impl std::ops::AddAssign<Scalar> for Scalar {
     fn add_assign(&mut self, other: Scalar) {
         use crate::elements::*;
-        *self = Scalar::from_groups(/* scalar */ (other[scalar] + self[scalar]));
+        *self = Scalar::from_groups(/* scalar */ other[scalar] + self[scalar]);
     }
 }
 impl std::ops::BitXor<AntiScalar> for Scalar {
@@ -198,7 +198,6 @@ impl std::ops::BitXor<AntiScalar> for Scalar {
     //      add/sub      mul      div
     // f32        0        1        0
     fn bitxor(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -209,7 +208,6 @@ impl std::ops::BitXor<DualNum> for Scalar {
     //   simd2        0        1        0
     // no simd        0        2        0
     fn bitxor(self, other: DualNum) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -220,7 +218,6 @@ impl std::ops::BitXor<Flector> for Scalar {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn bitxor(self, other: Flector) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -230,7 +227,6 @@ impl std::ops::BitXor<Horizon> for Scalar {
     //      add/sub      mul      div
     // f32        0        1        0
     fn bitxor(self, other: Horizon) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -241,7 +237,6 @@ impl std::ops::BitXor<Line> for Scalar {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn bitxor(self, other: Line) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -252,7 +247,6 @@ impl std::ops::BitXor<Motor> for Scalar {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn bitxor(self, other: Motor) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -267,7 +261,6 @@ impl std::ops::BitXor<MultiVector> for Scalar {
     // yes simd        0        5        0
     //  no simd        0       16        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -277,7 +270,6 @@ impl std::ops::BitXor<Origin> for Scalar {
     //      add/sub      mul      div
     // f32        0        1        0
     fn bitxor(self, other: Origin) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -288,7 +280,6 @@ impl std::ops::BitXor<Plane> for Scalar {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn bitxor(self, other: Plane) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -299,7 +290,6 @@ impl std::ops::BitXor<Point> for Scalar {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn bitxor(self, other: Point) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -309,13 +299,11 @@ impl std::ops::BitXor<Scalar> for Scalar {
     //      add/sub      mul      div
     // f32        0        1        0
     fn bitxor(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
 impl std::ops::BitXorAssign<Scalar> for Scalar {
     fn bitxor_assign(&mut self, other: Scalar) {
-        use crate::elements::*;
         *self = self.wedge(other);
     }
 }
@@ -325,7 +313,6 @@ impl std::ops::Mul<AntiScalar> for Scalar {
     //      add/sub      mul      div
     // f32        0        1        0
     fn mul(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -336,7 +323,6 @@ impl std::ops::Mul<DualNum> for Scalar {
     //   simd2        0        1        0
     // no simd        0        2        0
     fn mul(self, other: DualNum) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -347,7 +333,6 @@ impl std::ops::Mul<Flector> for Scalar {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn mul(self, other: Flector) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -357,7 +342,6 @@ impl std::ops::Mul<Horizon> for Scalar {
     //      add/sub      mul      div
     // f32        0        1        0
     fn mul(self, other: Horizon) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -368,7 +352,6 @@ impl std::ops::Mul<Line> for Scalar {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn mul(self, other: Line) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -379,7 +362,6 @@ impl std::ops::Mul<Motor> for Scalar {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn mul(self, other: Motor) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -394,7 +376,6 @@ impl std::ops::Mul<MultiVector> for Scalar {
     // yes simd        0        5        0
     //  no simd        0       16        0
     fn mul(self, other: MultiVector) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -404,7 +385,6 @@ impl std::ops::Mul<Origin> for Scalar {
     //      add/sub      mul      div
     // f32        0        1        0
     fn mul(self, other: Origin) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -415,7 +395,6 @@ impl std::ops::Mul<Plane> for Scalar {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn mul(self, other: Plane) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -426,7 +405,6 @@ impl std::ops::Mul<Point> for Scalar {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn mul(self, other: Point) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -436,23 +414,22 @@ impl std::ops::Mul<Scalar> for Scalar {
     //      add/sub      mul      div
     // f32        0        1        0
     fn mul(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
 impl std::ops::MulAssign<Scalar> for Scalar {
     fn mul_assign(&mut self, other: Scalar) {
-        use crate::elements::*;
         *self = self.geometric_product(other);
     }
 }
 impl std::ops::Neg for Scalar {
+    type Output = Scalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
-    fn neg(self) -> Self {
+    fn neg(self) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[scalar] * -1.0));
+        return Scalar::from_groups(/* scalar */ self[scalar] * -1.0);
     }
 }
 impl std::ops::Not for Scalar {
@@ -468,7 +445,7 @@ impl std::ops::Sub<AntiScalar> for Scalar {
     // f32        0        1        0
     fn sub(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self[scalar], (other[e1234] * -1.0)]));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self[scalar], other[e1234] * -1.0]));
     }
 }
 impl std::ops::Sub<DualNum> for Scalar {
@@ -478,7 +455,7 @@ impl std::ops::Sub<DualNum> for Scalar {
     // f32        1        1        0
     fn sub(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([(-other.group0()[0] + self[scalar]), (other.group0()[1] * -1.0)]));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([-other.group0()[0] + self[scalar], other.group0()[1] * -1.0]));
     }
 }
 impl std::ops::Sub<Flector> for Scalar {
@@ -493,13 +470,13 @@ impl std::ops::Sub<Flector> for Scalar {
             // scalar, e1234
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            (other.group1() * Simd32x4::from(-1.0)),
+            other.group1() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -520,7 +497,7 @@ impl std::ops::Sub<Horizon> for Scalar {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (other[e321] * -1.0)]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e321] * -1.0]),
         );
     }
 }
@@ -533,9 +510,9 @@ impl std::ops::Sub<Line> for Scalar {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
+            Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, 0.0]),
             // e23, e31, e12, scalar
-            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), self[scalar]]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, self[scalar]]),
         );
     }
 }
@@ -552,9 +529,9 @@ impl std::ops::Sub<Motor> for Scalar {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
             // e23, e31, e12, scalar
-            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (-other.group1()[3] + self[scalar])]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, -other.group1()[3] + self[scalar]]),
         );
     }
 }
@@ -572,15 +549,15 @@ impl std::ops::Sub<MultiVector> for Scalar {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([(-other.group0()[0] + self[scalar]), (other.group0()[1] * -1.0)]),
+            Simd32x2::from([-other.group0()[0] + self[scalar], other.group0()[1] * -1.0]),
             // e1, e2, e3, e4
-            (other.group1() * Simd32x4::from(-1.0)),
+            other.group1() * Simd32x4::from(-1.0),
             // e41, e42, e43
-            (other.group2() * Simd32x3::from(-1.0)),
+            other.group2() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (other.group3() * Simd32x3::from(-1.0)),
+            other.group3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
-            (other.group4() * Simd32x4::from(-1.0)),
+            other.group4() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -595,7 +572,7 @@ impl std::ops::Sub<Origin> for Scalar {
             // scalar, e1234
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, (other[e4] * -1.0)]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e4] * -1.0]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -623,7 +600,7 @@ impl std::ops::Sub<Plane> for Scalar {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -639,7 +616,7 @@ impl std::ops::Sub<Point> for Scalar {
             // scalar, e1234
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -656,13 +633,13 @@ impl std::ops::Sub<Scalar> for Scalar {
     // f32        1        0        0
     fn sub(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (-other[scalar] + self[scalar]));
+        return Scalar::from_groups(/* scalar */ -other[scalar] + self[scalar]);
     }
 }
 impl std::ops::SubAssign<Scalar> for Scalar {
     fn sub_assign(&mut self, other: Scalar) {
         use crate::elements::*;
-        *self = Scalar::from_groups(/* scalar */ (-other[scalar] + self[scalar]));
+        *self = Scalar::from_groups(/* scalar */ -other[scalar] + self[scalar]);
     }
 }
 

@@ -4943,7 +4943,11 @@ impl TrackOperations for IntExpr {
         match self {
             IntExpr::Variable(_) => VectoredOperationsTracker::zero(),
             IntExpr::Literal(_) => VectoredOperationsTracker::zero(),
-            IntExpr::TraitInvoke10ToInt(t, m) => lookup.trait_10_ops(t, m),
+            IntExpr::TraitInvoke10ToInt(t, m) => {
+                let mut result = lookup.trait_10_ops(t, m);
+                result.basis_element_struct_access = false;
+                result
+            },
         }
     }
 }
@@ -4965,7 +4969,12 @@ impl TrackOperations for FloatExpr {
                 result.basis_element_struct_access = true;
                 result
             }
-            FloatExpr::TraitInvoke11ToFloat(t, m) => m.count_operations(lookup) + lookup.trait_11_ops(t, &m.mv_class),
+            FloatExpr::TraitInvoke11ToFloat(t, m) => {
+                let mut result = lookup.trait_11_ops(t, &m.mv_class);
+                result.basis_element_struct_access = false;
+                result += m.count_operations(lookup);
+                result
+            },
             FloatExpr::Product(v, last_factor) => {
                 let mut result = VectoredOperationsTracker::zero();
                 for (i, (f, exp)) in v.iter().enumerate() {
@@ -5193,11 +5202,39 @@ impl TrackOperations for MultiVectorExpr {
                 }
                 result
             }
-            MultiVectorVia::TraitInvoke11ToClass(t, m) => m.count_operations(lookup) + lookup.trait_11_ops(t, &m.mv_class),
-            MultiVectorVia::TraitInvoke21ToClass(t, a, b) => a.count_operations(lookup) + lookup.trait_21_ops(t, &a.mv_class, b),
-            MultiVectorVia::TraitInvoke22ToClass(t, a, b) => a.count_operations(lookup) + b.count_operations(lookup) + lookup.trait_22_ops(t, &a.mv_class, &b.mv_class),
-            MultiVectorVia::TraitInvoke12iToClass(t, a, b) => a.count_operations(lookup) + b.count_operations(lookup) + lookup.trait_12i_ops(t, &a.mv_class),
-            MultiVectorVia::TraitInvoke12fToClass(t, a, b) => a.count_operations(lookup) + b.count_operations(lookup) + lookup.trait_12f_ops(t, &a.mv_class),
+            MultiVectorVia::TraitInvoke11ToClass(t, m) => {
+                let mut result = lookup.trait_11_ops(t, &m.mv_class);
+                result.basis_element_struct_access = false;
+                result += m.count_operations(lookup);
+                result
+            },
+            MultiVectorVia::TraitInvoke21ToClass(t, a, b) => {
+                let mut result = lookup.trait_21_ops(t, &a.mv_class, &b);
+                result.basis_element_struct_access = false;
+                result += a.count_operations(lookup);
+                result
+            },
+            MultiVectorVia::TraitInvoke22ToClass(t, a, b) => {
+                let mut result = lookup.trait_22_ops(t, &a.mv_class, &b.mv_class);
+                result.basis_element_struct_access = false;
+                result += a.count_operations(lookup);
+                result += b.count_operations(lookup);
+                result
+            },
+            MultiVectorVia::TraitInvoke12iToClass(t, a, b) => {
+                let mut result = lookup.trait_12i_ops(t, &a.mv_class);
+                result.basis_element_struct_access = false;
+                result += a.count_operations(lookup);
+                result += b.count_operations(lookup);
+                result
+            },
+            MultiVectorVia::TraitInvoke12fToClass(t, a, b) => {
+                let mut result = lookup.trait_12f_ops(t, &a.mv_class);
+                result.basis_element_struct_access = false;
+                result += a.count_operations(lookup);
+                result += b.count_operations(lookup);
+                result
+            },
         }
     }
 }

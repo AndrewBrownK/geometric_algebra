@@ -34,7 +34,7 @@ impl Reverse for Flector {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn reverse(self) -> Self {
-        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ (self.group1() * Simd32x4::from(-1.0)));
+        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ self.group1() * Simd32x4::from(-1.0));
     }
 }
 impl Reverse for Horizon {
@@ -43,7 +43,7 @@ impl Reverse for Horizon {
     // f32        0        1        0
     fn reverse(self) -> Self {
         use crate::elements::*;
-        return Horizon::from_groups(/* e321 */ (self[e321] * -1.0));
+        return Horizon::from_groups(/* e321 */ self[e321] * -1.0);
     }
 }
 impl Reverse for Line {
@@ -54,9 +54,9 @@ impl Reverse for Line {
     fn reverse(self) -> Self {
         return Line::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (self.group1() * Simd32x3::from(-1.0)),
+            self.group1() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -67,9 +67,9 @@ impl Reverse for Motor {
     fn reverse(self) -> Self {
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
             // e23, e31, e12, scalar
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self.group1()[0] * -1.0, self.group1()[1] * -1.0, self.group1()[2] * -1.0, self.group1()[3]]),
         );
     }
 }
@@ -88,11 +88,11 @@ impl Reverse for MultiVector {
             // e1, e2, e3, e4
             self.group1(),
             // e41, e42, e43
-            (self.group2() * Simd32x3::from(-1.0)),
+            self.group2() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (self.group3() * Simd32x3::from(-1.0)),
+            self.group3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
-            (self.group4() * Simd32x4::from(-1.0)),
+            self.group4() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -107,7 +107,7 @@ impl Reverse for Plane {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn reverse(self) -> Self {
-        return Plane::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(-1.0)));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl Reverse for Point {

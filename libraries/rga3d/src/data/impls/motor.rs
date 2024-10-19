@@ -30,7 +30,7 @@ impl std::ops::Add<AntiScalar> for Motor {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other[e1234])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] + other[e1234]]),
             // e23, e31, e12, scalar
             self.group1(),
         );
@@ -41,7 +41,7 @@ impl std::ops::AddAssign<AntiScalar> for Motor {
         use crate::elements::*;
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other[e1234])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] + other[e1234]]),
             // e23, e31, e12, scalar
             self.group1(),
         );
@@ -55,9 +55,9 @@ impl std::ops::Add<DualNum> for Motor {
     fn add(self, other: DualNum) -> Self::Output {
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] + self.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[1] + self.group0()[3]]),
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] + self.group1()[3])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[0] + self.group1()[3]]),
         );
     }
 }
@@ -65,9 +65,9 @@ impl std::ops::AddAssign<DualNum> for Motor {
     fn add_assign(&mut self, other: DualNum) {
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] + self.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[1] + self.group0()[3]]),
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[0] + self.group1()[3])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[0] + self.group1()[3]]),
         );
     }
 }
@@ -115,16 +115,16 @@ impl std::ops::Add<Line> for Motor {
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                (other.group0()[0] + self.group0()[0]),
-                (other.group0()[1] + self.group0()[1]),
-                (other.group0()[2] + self.group0()[2]),
+                other.group0()[0] + self.group0()[0],
+                other.group0()[1] + self.group0()[1],
+                other.group0()[2] + self.group0()[2],
                 self.group0()[3],
             ]),
             // e23, e31, e12, scalar
             Simd32x4::from([
-                (other.group1()[0] + self.group1()[0]),
-                (other.group1()[1] + self.group1()[1]),
-                (other.group1()[2] + self.group1()[2]),
+                other.group1()[0] + self.group1()[0],
+                other.group1()[1] + self.group1()[1],
+                other.group1()[2] + self.group1()[2],
                 self.group1()[3],
             ]),
         );
@@ -135,16 +135,16 @@ impl std::ops::AddAssign<Line> for Motor {
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                (other.group0()[0] + self.group0()[0]),
-                (other.group0()[1] + self.group0()[1]),
-                (other.group0()[2] + self.group0()[2]),
+                other.group0()[0] + self.group0()[0],
+                other.group0()[1] + self.group0()[1],
+                other.group0()[2] + self.group0()[2],
                 self.group0()[3],
             ]),
             // e23, e31, e12, scalar
             Simd32x4::from([
-                (other.group1()[0] + self.group1()[0]),
-                (other.group1()[1] + self.group1()[1]),
-                (other.group1()[2] + self.group1()[2]),
+                other.group1()[0] + self.group1()[0],
+                other.group1()[1] + self.group1()[1],
+                other.group1()[2] + self.group1()[2],
                 self.group1()[3],
             ]),
         );
@@ -159,9 +159,9 @@ impl std::ops::Add<Motor> for Motor {
     fn add(self, other: Motor) -> Self::Output {
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (other.group0() + self.group0()),
+            other.group0() + self.group0(),
             // e23, e31, e12, scalar
-            (other.group1() + self.group1()),
+            other.group1() + self.group1(),
         );
     }
 }
@@ -169,9 +169,9 @@ impl std::ops::AddAssign<Motor> for Motor {
     fn add_assign(&mut self, other: Motor) {
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
-            (other.group0() + self.group0()),
+            other.group0() + self.group0(),
             // e23, e31, e12, scalar
-            (other.group1() + self.group1()),
+            other.group1() + self.group1(),
         );
     }
 }
@@ -187,13 +187,13 @@ impl std::ops::Add<MultiVector> for Motor {
     fn add(self, other: MultiVector) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e1234
-            (Simd32x2::from([self.group1()[3], self.group0()[3]]) + other.group0()),
+            Simd32x2::from([self.group1()[3], self.group0()[3]]) + other.group0(),
             // e1, e2, e3, e4
             other.group1(),
             // e41, e42, e43
-            (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group2()),
+            Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group2(),
             // e23, e31, e12
-            (Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) + other.group3()),
+            Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) + other.group3(),
             // e423, e431, e412, e321
             other.group4(),
         );
@@ -262,7 +262,7 @@ impl std::ops::Add<Scalar> for Motor {
             // e41, e42, e43, e1234
             self.group0(),
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other[scalar])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] + other[scalar]]),
         );
     }
 }
@@ -273,7 +273,7 @@ impl std::ops::AddAssign<Scalar> for Motor {
             // e41, e42, e43, e1234
             self.group0(),
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] + other[scalar])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] + other[scalar]]),
         );
     }
 }
@@ -283,7 +283,6 @@ impl std::ops::BitXor<AntiScalar> for Motor {
     //      add/sub      mul      div
     // f32        0        1        0
     fn bitxor(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -324,7 +323,6 @@ impl std::ops::BitXor<Horizon> for Motor {
     //      add/sub      mul      div
     // f32        0        1        0
     fn bitxor(self, other: Horizon) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -380,7 +378,6 @@ impl std::ops::BitXor<Origin> for Motor {
     //      add/sub      mul      div
     // f32        0        4        0
     fn bitxor(self, other: Origin) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -414,23 +411,21 @@ impl std::ops::BitXor<Scalar> for Motor {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn bitxor(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
 impl std::ops::BitXorAssign<Scalar> for Motor {
     fn bitxor_assign(&mut self, other: Scalar) {
-        use crate::elements::*;
         *self = self.wedge(other);
     }
 }
 
 impl From<AntiScalar> for Motor {
-    fn from(anti_scalar: AntiScalar) -> Self {
+    fn from(from_anti_scalar: AntiScalar) -> Self {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, anti_scalar[e1234]]),
+            Simd32x4::from([0.0, 0.0, 0.0, from_anti_scalar[e1234]]),
             // e23, e31, e12, scalar
             Simd32x4::from(0.0),
         );
@@ -438,37 +433,37 @@ impl From<AntiScalar> for Motor {
 }
 
 impl From<DualNum> for Motor {
-    fn from(dual_num: DualNum) -> Self {
+    fn from(from_dual_num: DualNum) -> Self {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, dual_num[e1234]]),
+            Simd32x4::from([0.0, 0.0, 0.0, from_dual_num[e1234]]),
             // e23, e31, e12, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, dual_num[scalar]]),
+            Simd32x4::from([0.0, 0.0, 0.0, from_dual_num[scalar]]),
         );
     }
 }
 
 impl From<Line> for Motor {
-    fn from(line: Line) -> Self {
+    fn from(from_line: Line) -> Self {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([line[e41], line[e42], line[e43], 0.0]),
+            Simd32x4::from([from_line[e41], from_line[e42], from_line[e43], 0.0]),
             // e23, e31, e12, scalar
-            Simd32x4::from([line[e23], line[e31], line[e12], 0.0]),
+            Simd32x4::from([from_line[e23], from_line[e31], from_line[e12], 0.0]),
         );
     }
 }
 
 impl From<Scalar> for Motor {
-    fn from(scalar: Scalar) -> Self {
+    fn from(from_scalar: Scalar) -> Self {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from(0.0),
             // e23, e31, e12, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, scalar[scalar]]),
+            Simd32x4::from([0.0, 0.0, 0.0, from_scalar[scalar]]),
         );
     }
 }
@@ -479,13 +474,11 @@ impl std::ops::Mul<AntiScalar> for Motor {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn mul(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
 impl std::ops::MulAssign<AntiScalar> for Motor {
     fn mul_assign(&mut self, other: AntiScalar) {
-        use crate::elements::*;
         *self = self.geometric_product(other);
     }
 }
@@ -524,7 +517,6 @@ impl std::ops::Mul<Horizon> for Motor {
     //   simd4        0        4        0
     // no simd        0       16        0
     fn mul(self, other: Horizon) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -585,7 +577,6 @@ impl std::ops::Mul<Origin> for Motor {
     //      add/sub      mul      div
     // f32        0        4        0
     fn mul(self, other: Origin) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -618,27 +609,26 @@ impl std::ops::Mul<Scalar> for Motor {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn mul(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
 impl std::ops::MulAssign<Scalar> for Motor {
     fn mul_assign(&mut self, other: Scalar) {
-        use crate::elements::*;
         *self = self.geometric_product(other);
     }
 }
 impl std::ops::Neg for Motor {
+    type Output = Motor;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd4        0        2        0
     // no simd        0        8        0
-    fn neg(self) -> Self {
+    fn neg(self) -> Self::Output {
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (self.group0() * Simd32x4::from(-1.0)),
+            self.group0() * Simd32x4::from(-1.0),
             // e23, e31, e12, scalar
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -660,7 +650,7 @@ impl std::ops::Sub<AntiScalar> for Motor {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other[e1234])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] - other[e1234]]),
             // e23, e31, e12, scalar
             self.group1(),
         );
@@ -671,7 +661,7 @@ impl std::ops::SubAssign<AntiScalar> for Motor {
         use crate::elements::*;
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other[e1234])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] - other[e1234]]),
             // e23, e31, e12, scalar
             self.group1(),
         );
@@ -685,9 +675,9 @@ impl std::ops::Sub<DualNum> for Motor {
     fn sub(self, other: DualNum) -> Self::Output {
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[1] + self.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], -other.group0()[1] + self.group0()[3]]),
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[0] + self.group1()[3])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], -other.group0()[0] + self.group1()[3]]),
         );
     }
 }
@@ -695,9 +685,9 @@ impl std::ops::SubAssign<DualNum> for Motor {
     fn sub_assign(&mut self, other: DualNum) {
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[1] + self.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], -other.group0()[1] + self.group0()[3]]),
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[0] + self.group1()[3])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], -other.group0()[0] + self.group1()[3]]),
         );
     }
 }
@@ -712,13 +702,13 @@ impl std::ops::Sub<Flector> for Motor {
             // scalar, e1234
             Simd32x2::from([self.group1()[3], self.group0()[3]]),
             // e1, e2, e3, e4
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
             // e41, e42, e43
             Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
             // e23, e31, e12
             Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e423, e431, e412, e321
-            (other.group1() * Simd32x4::from(-1.0)),
+            other.group1() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -739,7 +729,7 @@ impl std::ops::Sub<Horizon> for Motor {
             // e23, e31, e12
             Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (other[e321] * -1.0)]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e321] * -1.0]),
         );
     }
 }
@@ -752,16 +742,16 @@ impl std::ops::Sub<Line> for Motor {
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                (-other.group0()[0] + self.group0()[0]),
-                (-other.group0()[1] + self.group0()[1]),
-                (-other.group0()[2] + self.group0()[2]),
+                -other.group0()[0] + self.group0()[0],
+                -other.group0()[1] + self.group0()[1],
+                -other.group0()[2] + self.group0()[2],
                 self.group0()[3],
             ]),
             // e23, e31, e12, scalar
             Simd32x4::from([
-                (-other.group1()[0] + self.group1()[0]),
-                (-other.group1()[1] + self.group1()[1]),
-                (-other.group1()[2] + self.group1()[2]),
+                -other.group1()[0] + self.group1()[0],
+                -other.group1()[1] + self.group1()[1],
+                -other.group1()[2] + self.group1()[2],
                 self.group1()[3],
             ]),
         );
@@ -772,16 +762,16 @@ impl std::ops::SubAssign<Line> for Motor {
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                (-other.group0()[0] + self.group0()[0]),
-                (-other.group0()[1] + self.group0()[1]),
-                (-other.group0()[2] + self.group0()[2]),
+                -other.group0()[0] + self.group0()[0],
+                -other.group0()[1] + self.group0()[1],
+                -other.group0()[2] + self.group0()[2],
                 self.group0()[3],
             ]),
             // e23, e31, e12, scalar
             Simd32x4::from([
-                (-other.group1()[0] + self.group1()[0]),
-                (-other.group1()[1] + self.group1()[1]),
-                (-other.group1()[2] + self.group1()[2]),
+                -other.group1()[0] + self.group1()[0],
+                -other.group1()[1] + self.group1()[1],
+                -other.group1()[2] + self.group1()[2],
                 self.group1()[3],
             ]),
         );
@@ -796,9 +786,9 @@ impl std::ops::Sub<Motor> for Motor {
     fn sub(self, other: Motor) -> Self::Output {
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (-other.group0() + self.group0()),
+            -other.group0() + self.group0(),
             // e23, e31, e12, scalar
-            (-other.group1() + self.group1()),
+            -other.group1() + self.group1(),
         );
     }
 }
@@ -806,9 +796,9 @@ impl std::ops::SubAssign<Motor> for Motor {
     fn sub_assign(&mut self, other: Motor) {
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
-            (-other.group0() + self.group0()),
+            -other.group0() + self.group0(),
             // e23, e31, e12, scalar
-            (-other.group1() + self.group1()),
+            -other.group1() + self.group1(),
         );
     }
 }
@@ -825,15 +815,15 @@ impl std::ops::Sub<MultiVector> for Motor {
     fn sub(self, other: MultiVector) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e1234
-            (Simd32x2::from([self.group1()[3], self.group0()[3]]) - other.group0()),
+            Simd32x2::from([self.group1()[3], self.group0()[3]]) - other.group0(),
             // e1, e2, e3, e4
-            (other.group1() * Simd32x4::from(-1.0)),
+            other.group1() * Simd32x4::from(-1.0),
             // e41, e42, e43
-            (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group2()),
+            Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group2(),
             // e23, e31, e12
-            (Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) - other.group3()),
+            Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) - other.group3(),
             // e423, e431, e412, e321
-            (other.group4() * Simd32x4::from(-1.0)),
+            other.group4() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -848,7 +838,7 @@ impl std::ops::Sub<Origin> for Motor {
             // scalar, e1234
             Simd32x2::from([self.group1()[3], self.group0()[3]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, (other[e4] * -1.0)]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e4] * -1.0]),
             // e41, e42, e43
             Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
             // e23, e31, e12
@@ -875,7 +865,7 @@ impl std::ops::Sub<Plane> for Motor {
             // e23, e31, e12
             Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e423, e431, e412, e321
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -890,7 +880,7 @@ impl std::ops::Sub<Point> for Motor {
             // scalar, e1234
             Simd32x2::from([self.group1()[3], self.group0()[3]]),
             // e1, e2, e3, e4
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
             // e41, e42, e43
             Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
             // e23, e31, e12
@@ -911,7 +901,7 @@ impl std::ops::Sub<Scalar> for Motor {
             // e41, e42, e43, e1234
             self.group0(),
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other[scalar])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] - other[scalar]]),
         );
     }
 }
@@ -922,7 +912,7 @@ impl std::ops::SubAssign<Scalar> for Motor {
             // e41, e42, e43, e1234
             self.group0(),
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (self.group1()[3] - other[scalar])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] - other[scalar]]),
         );
     }
 }

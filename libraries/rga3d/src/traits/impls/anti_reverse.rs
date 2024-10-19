@@ -34,7 +34,7 @@ impl AntiReverse for Flector {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn anti_reverse(self) -> Self {
-        return Flector::from_groups(/* e1, e2, e3, e4 */ (self.group0() * Simd32x4::from(-1.0)), /* e423, e431, e412, e321 */ self.group1());
+        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0), /* e423, e431, e412, e321 */ self.group1());
     }
 }
 impl AntiReverse for Horizon {
@@ -50,9 +50,9 @@ impl AntiReverse for Line {
     fn anti_reverse(self) -> Self {
         return Line::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (self.group1() * Simd32x3::from(-1.0)),
+            self.group1() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -63,9 +63,9 @@ impl AntiReverse for Motor {
     fn anti_reverse(self) -> Self {
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
             // e23, e31, e12, scalar
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self.group1()[0] * -1.0, self.group1()[1] * -1.0, self.group1()[2] * -1.0, self.group1()[3]]),
         );
     }
 }
@@ -82,11 +82,11 @@ impl AntiReverse for MultiVector {
             // scalar, e1234
             self.group0(),
             // e1, e2, e3, e4
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e41, e42, e43
-            (self.group2() * Simd32x3::from(-1.0)),
+            self.group2() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (self.group3() * Simd32x3::from(-1.0)),
+            self.group3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             self.group4(),
         );
@@ -98,7 +98,7 @@ impl AntiReverse for Origin {
     // f32        0        1        0
     fn anti_reverse(self) -> Self {
         use crate::elements::*;
-        return Origin::from_groups(/* e4 */ (self[e4] * -1.0));
+        return Origin::from_groups(/* e4 */ self[e4] * -1.0);
     }
 }
 impl AntiReverse for Plane {
@@ -112,7 +112,7 @@ impl AntiReverse for Point {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn anti_reverse(self) -> Self {
-        return Point::from_groups(/* e1, e2, e3, e4 */ (self.group0() * Simd32x4::from(-1.0)));
+        return Point::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl AntiReverse for Scalar {

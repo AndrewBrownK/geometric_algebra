@@ -27,7 +27,7 @@ impl GeometricQuotient<DualNum> for AntiScalar {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return AntiScalar::from_groups(/* e1234 */ (self[e1234] * inverse[scalar]));
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Flector> for AntiScalar {
@@ -38,10 +38,10 @@ impl GeometricQuotient<Flector> for AntiScalar {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2)),
+            f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return AntiScalar::from_groups(/* e1234 */ (self[e1234] * inverse[scalar]));
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Horizon> for AntiScalar {
@@ -50,9 +50,9 @@ impl GeometricQuotient<Horizon> for AntiScalar {
     // f32        0        2        1
     fn geometric_quotient(self, other: Horizon) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other[e321], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return AntiScalar::from_groups(/* e1234 */ (self[e1234] * inverse[scalar]));
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Line> for AntiScalar {
@@ -61,9 +61,9 @@ impl GeometricQuotient<Line> for AntiScalar {
     // f32        2        1        1
     fn geometric_quotient(self, other: Line) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return AntiScalar::from_groups(/* e1234 */ (self[e1234] * inverse[scalar]));
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Motor> for AntiScalar {
@@ -74,10 +74,10 @@ impl GeometricQuotient<Motor> for AntiScalar {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2)),
+            -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return AntiScalar::from_groups(/* e1234 */ (self[e1234] * inverse[scalar]));
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<MultiVector> for AntiScalar {
@@ -88,14 +88,14 @@ impl GeometricQuotient<MultiVector> for AntiScalar {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
+            f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
                 + f32::powi(other.group1()[0], 2)
                 + f32::powi(other.group1()[1], 2)
                 + f32::powi(other.group1()[2], 2)
-                - f32::powi(other.group4()[3], 2)),
+                - f32::powi(other.group4()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return AntiScalar::from_groups(/* e1234 */ (self[e1234] * inverse[scalar]));
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Plane> for AntiScalar {
@@ -104,9 +104,9 @@ impl GeometricQuotient<Plane> for AntiScalar {
     // f32        0        2        1
     fn geometric_quotient(self, other: Plane) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[3], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[3], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return AntiScalar::from_groups(/* e1234 */ (self[e1234] * inverse[scalar]));
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Point> for AntiScalar {
@@ -115,9 +115,9 @@ impl GeometricQuotient<Point> for AntiScalar {
     // f32        2        1        1
     fn geometric_quotient(self, other: Point) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return AntiScalar::from_groups(/* e1234 */ (self[e1234] * inverse[scalar]));
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Scalar> for AntiScalar {
@@ -128,7 +128,7 @@ impl GeometricQuotient<Scalar> for AntiScalar {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return AntiScalar::from_groups(/* e1234 */ (self[e1234] * inverse[scalar]));
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] * inverse[scalar]);
     }
 }
 impl InfixGeometricQuotient for DualNum {}
@@ -144,7 +144,7 @@ impl GeometricQuotient<DualNum> for DualNum {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(inverse[scalar]) * self.group0()));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Flector> for DualNum {
@@ -159,10 +159,10 @@ impl GeometricQuotient<Flector> for DualNum {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2)),
+            f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(inverse[scalar]) * self.group0()));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Horizon> for DualNum {
@@ -175,9 +175,9 @@ impl GeometricQuotient<Horizon> for DualNum {
     //  no simd        0        3        1
     fn geometric_quotient(self, other: Horizon) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other[e321], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(inverse[scalar]) * self.group0()));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Line> for DualNum {
@@ -190,9 +190,9 @@ impl GeometricQuotient<Line> for DualNum {
     //  no simd        2        2        1
     fn geometric_quotient(self, other: Line) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(inverse[scalar]) * self.group0()));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Motor> for DualNum {
@@ -207,10 +207,10 @@ impl GeometricQuotient<Motor> for DualNum {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2)),
+            -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(inverse[scalar]) * self.group0()));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<MultiVector> for DualNum {
@@ -225,14 +225,14 @@ impl GeometricQuotient<MultiVector> for DualNum {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
+            f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
                 + f32::powi(other.group1()[0], 2)
                 + f32::powi(other.group1()[1], 2)
                 + f32::powi(other.group1()[2], 2)
-                - f32::powi(other.group4()[3], 2)),
+                - f32::powi(other.group4()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(inverse[scalar]) * self.group0()));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Plane> for DualNum {
@@ -245,9 +245,9 @@ impl GeometricQuotient<Plane> for DualNum {
     //  no simd        0        3        1
     fn geometric_quotient(self, other: Plane) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[3], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[3], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(inverse[scalar]) * self.group0()));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Point> for DualNum {
@@ -260,9 +260,9 @@ impl GeometricQuotient<Point> for DualNum {
     //  no simd        2        2        1
     fn geometric_quotient(self, other: Point) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(inverse[scalar]) * self.group0()));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Scalar> for DualNum {
@@ -277,7 +277,7 @@ impl GeometricQuotient<Scalar> for DualNum {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return DualNum::from_groups(/* scalar, e1234 */ (Simd32x2::from(inverse[scalar]) * self.group0()));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(inverse[scalar]) * self.group0());
     }
 }
 impl InfixGeometricQuotient for Flector {}
@@ -295,9 +295,9 @@ impl GeometricQuotient<DualNum> for Flector {
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -313,14 +313,14 @@ impl GeometricQuotient<Flector> for Flector {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2)),
+            f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -334,13 +334,13 @@ impl GeometricQuotient<Horizon> for Flector {
     //  no simd        0        9        1
     fn geometric_quotient(self, other: Horizon) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other[e321], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -354,13 +354,13 @@ impl GeometricQuotient<Line> for Flector {
     //  no simd        2        8        1
     fn geometric_quotient(self, other: Line) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -376,14 +376,14 @@ impl GeometricQuotient<Motor> for Flector {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2)),
+            -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -399,18 +399,18 @@ impl GeometricQuotient<MultiVector> for Flector {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
+            f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
                 + f32::powi(other.group1()[0], 2)
                 + f32::powi(other.group1()[1], 2)
                 + f32::powi(other.group1()[2], 2)
-                - f32::powi(other.group4()[3], 2)),
+                - f32::powi(other.group4()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -424,13 +424,13 @@ impl GeometricQuotient<Plane> for Flector {
     //  no simd        0        9        1
     fn geometric_quotient(self, other: Plane) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[3], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[3], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -444,13 +444,13 @@ impl GeometricQuotient<Point> for Flector {
     //  no simd        2        8        1
     fn geometric_quotient(self, other: Point) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -468,9 +468,9 @@ impl GeometricQuotient<Scalar> for Flector {
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -483,7 +483,7 @@ impl GeometricQuotient<DualNum> for Horizon {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Horizon::from_groups(/* e321 */ (self[e321] * inverse[scalar]));
+        return Horizon::from_groups(/* e321 */ self[e321] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Flector> for Horizon {
@@ -494,10 +494,10 @@ impl GeometricQuotient<Flector> for Horizon {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2)),
+            f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Horizon::from_groups(/* e321 */ (self[e321] * inverse[scalar]));
+        return Horizon::from_groups(/* e321 */ self[e321] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Horizon> for Horizon {
@@ -506,9 +506,9 @@ impl GeometricQuotient<Horizon> for Horizon {
     // f32        0        2        1
     fn geometric_quotient(self, other: Horizon) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other[e321], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Horizon::from_groups(/* e321 */ (self[e321] * inverse[scalar]));
+        return Horizon::from_groups(/* e321 */ self[e321] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Line> for Horizon {
@@ -517,9 +517,9 @@ impl GeometricQuotient<Line> for Horizon {
     // f32        2        1        1
     fn geometric_quotient(self, other: Line) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Horizon::from_groups(/* e321 */ (self[e321] * inverse[scalar]));
+        return Horizon::from_groups(/* e321 */ self[e321] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Motor> for Horizon {
@@ -530,10 +530,10 @@ impl GeometricQuotient<Motor> for Horizon {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2)),
+            -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Horizon::from_groups(/* e321 */ (self[e321] * inverse[scalar]));
+        return Horizon::from_groups(/* e321 */ self[e321] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<MultiVector> for Horizon {
@@ -544,14 +544,14 @@ impl GeometricQuotient<MultiVector> for Horizon {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
+            f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
                 + f32::powi(other.group1()[0], 2)
                 + f32::powi(other.group1()[1], 2)
                 + f32::powi(other.group1()[2], 2)
-                - f32::powi(other.group4()[3], 2)),
+                - f32::powi(other.group4()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Horizon::from_groups(/* e321 */ (self[e321] * inverse[scalar]));
+        return Horizon::from_groups(/* e321 */ self[e321] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Plane> for Horizon {
@@ -560,9 +560,9 @@ impl GeometricQuotient<Plane> for Horizon {
     // f32        0        2        1
     fn geometric_quotient(self, other: Plane) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[3], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[3], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Horizon::from_groups(/* e321 */ (self[e321] * inverse[scalar]));
+        return Horizon::from_groups(/* e321 */ self[e321] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Point> for Horizon {
@@ -571,9 +571,9 @@ impl GeometricQuotient<Point> for Horizon {
     // f32        2        1        1
     fn geometric_quotient(self, other: Point) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Horizon::from_groups(/* e321 */ (self[e321] * inverse[scalar]));
+        return Horizon::from_groups(/* e321 */ self[e321] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Scalar> for Horizon {
@@ -584,7 +584,7 @@ impl GeometricQuotient<Scalar> for Horizon {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Horizon::from_groups(/* e321 */ (self[e321] * inverse[scalar]));
+        return Horizon::from_groups(/* e321 */ self[e321] * inverse[scalar]);
     }
 }
 impl InfixGeometricQuotient for Line {}
@@ -602,9 +602,9 @@ impl GeometricQuotient<DualNum> for Line {
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Line::from_groups(
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group0()),
+            Simd32x3::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group1()),
+            Simd32x3::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -620,14 +620,14 @@ impl GeometricQuotient<Flector> for Line {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2)),
+            f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Line::from_groups(
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group0()),
+            Simd32x3::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group1()),
+            Simd32x3::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -641,13 +641,13 @@ impl GeometricQuotient<Horizon> for Line {
     //  no simd        0        7        1
     fn geometric_quotient(self, other: Horizon) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other[e321], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Line::from_groups(
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group0()),
+            Simd32x3::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group1()),
+            Simd32x3::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -661,13 +661,13 @@ impl GeometricQuotient<Line> for Line {
     //  no simd        2        6        1
     fn geometric_quotient(self, other: Line) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Line::from_groups(
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group0()),
+            Simd32x3::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group1()),
+            Simd32x3::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -683,14 +683,14 @@ impl GeometricQuotient<Motor> for Line {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2)),
+            -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Line::from_groups(
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group0()),
+            Simd32x3::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group1()),
+            Simd32x3::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -706,18 +706,18 @@ impl GeometricQuotient<MultiVector> for Line {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
+            f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
                 + f32::powi(other.group1()[0], 2)
                 + f32::powi(other.group1()[1], 2)
                 + f32::powi(other.group1()[2], 2)
-                - f32::powi(other.group4()[3], 2)),
+                - f32::powi(other.group4()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Line::from_groups(
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group0()),
+            Simd32x3::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group1()),
+            Simd32x3::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -731,13 +731,13 @@ impl GeometricQuotient<Plane> for Line {
     //  no simd        0        7        1
     fn geometric_quotient(self, other: Plane) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[3], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[3], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Line::from_groups(
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group0()),
+            Simd32x3::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group1()),
+            Simd32x3::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -751,13 +751,13 @@ impl GeometricQuotient<Point> for Line {
     //  no simd        2        6        1
     fn geometric_quotient(self, other: Point) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Line::from_groups(
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group0()),
+            Simd32x3::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group1()),
+            Simd32x3::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -775,9 +775,9 @@ impl GeometricQuotient<Scalar> for Line {
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Line::from_groups(
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group0()),
+            Simd32x3::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group1()),
+            Simd32x3::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -796,9 +796,9 @@ impl GeometricQuotient<DualNum> for Motor {
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12, scalar
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -814,14 +814,14 @@ impl GeometricQuotient<Flector> for Motor {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2)),
+            f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12, scalar
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -835,13 +835,13 @@ impl GeometricQuotient<Horizon> for Motor {
     //  no simd        0        9        1
     fn geometric_quotient(self, other: Horizon) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other[e321], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12, scalar
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -855,13 +855,13 @@ impl GeometricQuotient<Line> for Motor {
     //  no simd        2        8        1
     fn geometric_quotient(self, other: Line) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12, scalar
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -877,14 +877,14 @@ impl GeometricQuotient<Motor> for Motor {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2)),
+            -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12, scalar
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -900,18 +900,18 @@ impl GeometricQuotient<MultiVector> for Motor {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
+            f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
                 + f32::powi(other.group1()[0], 2)
                 + f32::powi(other.group1()[1], 2)
                 + f32::powi(other.group1()[2], 2)
-                - f32::powi(other.group4()[3], 2)),
+                - f32::powi(other.group4()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12, scalar
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -925,13 +925,13 @@ impl GeometricQuotient<Plane> for Motor {
     //  no simd        0        9        1
     fn geometric_quotient(self, other: Plane) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[3], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[3], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12, scalar
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -945,13 +945,13 @@ impl GeometricQuotient<Point> for Motor {
     //  no simd        2        8        1
     fn geometric_quotient(self, other: Point) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12, scalar
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -969,9 +969,9 @@ impl GeometricQuotient<Scalar> for Motor {
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (Simd32x4::from(inverse[scalar]) * self.group0()),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e23, e31, e12, scalar
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
         );
     }
 }
@@ -992,15 +992,15 @@ impl GeometricQuotient<DualNum> for MultiVector {
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return MultiVector::from_groups(
             // scalar, e1234
-            (Simd32x2::from(inverse[scalar]) * self.group0()),
+            Simd32x2::from(inverse[scalar]) * self.group0(),
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group2()),
+            Simd32x3::from(inverse[scalar]) * self.group2(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group3()),
+            Simd32x3::from(inverse[scalar]) * self.group3(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group4()),
+            Simd32x4::from(inverse[scalar]) * self.group4(),
         );
     }
 }
@@ -1018,20 +1018,20 @@ impl GeometricQuotient<Flector> for MultiVector {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2)),
+            f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return MultiVector::from_groups(
             // scalar, e1234
-            (Simd32x2::from(inverse[scalar]) * self.group0()),
+            Simd32x2::from(inverse[scalar]) * self.group0(),
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group2()),
+            Simd32x3::from(inverse[scalar]) * self.group2(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group3()),
+            Simd32x3::from(inverse[scalar]) * self.group3(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group4()),
+            Simd32x4::from(inverse[scalar]) * self.group4(),
         );
     }
 }
@@ -1047,19 +1047,19 @@ impl GeometricQuotient<Horizon> for MultiVector {
     //  no simd        0       17        1
     fn geometric_quotient(self, other: Horizon) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other[e321], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return MultiVector::from_groups(
             // scalar, e1234
-            (Simd32x2::from(inverse[scalar]) * self.group0()),
+            Simd32x2::from(inverse[scalar]) * self.group0(),
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group2()),
+            Simd32x3::from(inverse[scalar]) * self.group2(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group3()),
+            Simd32x3::from(inverse[scalar]) * self.group3(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group4()),
+            Simd32x4::from(inverse[scalar]) * self.group4(),
         );
     }
 }
@@ -1075,19 +1075,19 @@ impl GeometricQuotient<Line> for MultiVector {
     //  no simd        2       16        1
     fn geometric_quotient(self, other: Line) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return MultiVector::from_groups(
             // scalar, e1234
-            (Simd32x2::from(inverse[scalar]) * self.group0()),
+            Simd32x2::from(inverse[scalar]) * self.group0(),
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group2()),
+            Simd32x3::from(inverse[scalar]) * self.group2(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group3()),
+            Simd32x3::from(inverse[scalar]) * self.group3(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group4()),
+            Simd32x4::from(inverse[scalar]) * self.group4(),
         );
     }
 }
@@ -1105,20 +1105,20 @@ impl GeometricQuotient<Motor> for MultiVector {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2)),
+            -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return MultiVector::from_groups(
             // scalar, e1234
-            (Simd32x2::from(inverse[scalar]) * self.group0()),
+            Simd32x2::from(inverse[scalar]) * self.group0(),
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group2()),
+            Simd32x3::from(inverse[scalar]) * self.group2(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group3()),
+            Simd32x3::from(inverse[scalar]) * self.group3(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group4()),
+            Simd32x4::from(inverse[scalar]) * self.group4(),
         );
     }
 }
@@ -1136,24 +1136,24 @@ impl GeometricQuotient<MultiVector> for MultiVector {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
+            f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
                 + f32::powi(other.group1()[0], 2)
                 + f32::powi(other.group1()[1], 2)
                 + f32::powi(other.group1()[2], 2)
-                - f32::powi(other.group4()[3], 2)),
+                - f32::powi(other.group4()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return MultiVector::from_groups(
             // scalar, e1234
-            (Simd32x2::from(inverse[scalar]) * self.group0()),
+            Simd32x2::from(inverse[scalar]) * self.group0(),
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group2()),
+            Simd32x3::from(inverse[scalar]) * self.group2(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group3()),
+            Simd32x3::from(inverse[scalar]) * self.group3(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group4()),
+            Simd32x4::from(inverse[scalar]) * self.group4(),
         );
     }
 }
@@ -1169,19 +1169,19 @@ impl GeometricQuotient<Plane> for MultiVector {
     //  no simd        0       17        1
     fn geometric_quotient(self, other: Plane) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[3], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[3], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return MultiVector::from_groups(
             // scalar, e1234
-            (Simd32x2::from(inverse[scalar]) * self.group0()),
+            Simd32x2::from(inverse[scalar]) * self.group0(),
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group2()),
+            Simd32x3::from(inverse[scalar]) * self.group2(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group3()),
+            Simd32x3::from(inverse[scalar]) * self.group3(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group4()),
+            Simd32x4::from(inverse[scalar]) * self.group4(),
         );
     }
 }
@@ -1197,19 +1197,19 @@ impl GeometricQuotient<Point> for MultiVector {
     //  no simd        2       16        1
     fn geometric_quotient(self, other: Point) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return MultiVector::from_groups(
             // scalar, e1234
-            (Simd32x2::from(inverse[scalar]) * self.group0()),
+            Simd32x2::from(inverse[scalar]) * self.group0(),
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group2()),
+            Simd32x3::from(inverse[scalar]) * self.group2(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group3()),
+            Simd32x3::from(inverse[scalar]) * self.group3(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group4()),
+            Simd32x4::from(inverse[scalar]) * self.group4(),
         );
     }
 }
@@ -1229,15 +1229,15 @@ impl GeometricQuotient<Scalar> for MultiVector {
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
         return MultiVector::from_groups(
             // scalar, e1234
-            (Simd32x2::from(inverse[scalar]) * self.group0()),
+            Simd32x2::from(inverse[scalar]) * self.group0(),
             // e1, e2, e3, e4
-            (Simd32x4::from(inverse[scalar]) * self.group1()),
+            Simd32x4::from(inverse[scalar]) * self.group1(),
             // e41, e42, e43
-            (Simd32x3::from(inverse[scalar]) * self.group2()),
+            Simd32x3::from(inverse[scalar]) * self.group2(),
             // e23, e31, e12
-            (Simd32x3::from(inverse[scalar]) * self.group3()),
+            Simd32x3::from(inverse[scalar]) * self.group3(),
             // e423, e431, e412, e321
-            (Simd32x4::from(inverse[scalar]) * self.group4()),
+            Simd32x4::from(inverse[scalar]) * self.group4(),
         );
     }
 }
@@ -1250,7 +1250,7 @@ impl GeometricQuotient<DualNum> for Origin {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Origin::from_groups(/* e4 */ (self[e4] * inverse[scalar]));
+        return Origin::from_groups(/* e4 */ self[e4] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Flector> for Origin {
@@ -1261,10 +1261,10 @@ impl GeometricQuotient<Flector> for Origin {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2)),
+            f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Origin::from_groups(/* e4 */ (self[e4] * inverse[scalar]));
+        return Origin::from_groups(/* e4 */ self[e4] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Horizon> for Origin {
@@ -1273,9 +1273,9 @@ impl GeometricQuotient<Horizon> for Origin {
     // f32        0        2        1
     fn geometric_quotient(self, other: Horizon) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other[e321], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Origin::from_groups(/* e4 */ (self[e4] * inverse[scalar]));
+        return Origin::from_groups(/* e4 */ self[e4] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Line> for Origin {
@@ -1284,9 +1284,9 @@ impl GeometricQuotient<Line> for Origin {
     // f32        2        1        1
     fn geometric_quotient(self, other: Line) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Origin::from_groups(/* e4 */ (self[e4] * inverse[scalar]));
+        return Origin::from_groups(/* e4 */ self[e4] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Motor> for Origin {
@@ -1297,10 +1297,10 @@ impl GeometricQuotient<Motor> for Origin {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2)),
+            -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Origin::from_groups(/* e4 */ (self[e4] * inverse[scalar]));
+        return Origin::from_groups(/* e4 */ self[e4] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<MultiVector> for Origin {
@@ -1311,14 +1311,14 @@ impl GeometricQuotient<MultiVector> for Origin {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
+            f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
                 + f32::powi(other.group1()[0], 2)
                 + f32::powi(other.group1()[1], 2)
                 + f32::powi(other.group1()[2], 2)
-                - f32::powi(other.group4()[3], 2)),
+                - f32::powi(other.group4()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Origin::from_groups(/* e4 */ (self[e4] * inverse[scalar]));
+        return Origin::from_groups(/* e4 */ self[e4] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Plane> for Origin {
@@ -1327,9 +1327,9 @@ impl GeometricQuotient<Plane> for Origin {
     // f32        0        2        1
     fn geometric_quotient(self, other: Plane) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[3], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[3], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Origin::from_groups(/* e4 */ (self[e4] * inverse[scalar]));
+        return Origin::from_groups(/* e4 */ self[e4] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Point> for Origin {
@@ -1338,9 +1338,9 @@ impl GeometricQuotient<Point> for Origin {
     // f32        2        1        1
     fn geometric_quotient(self, other: Point) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Origin::from_groups(/* e4 */ (self[e4] * inverse[scalar]));
+        return Origin::from_groups(/* e4 */ self[e4] * inverse[scalar]);
     }
 }
 impl GeometricQuotient<Scalar> for Origin {
@@ -1351,7 +1351,7 @@ impl GeometricQuotient<Scalar> for Origin {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Origin::from_groups(/* e4 */ (self[e4] * inverse[scalar]));
+        return Origin::from_groups(/* e4 */ self[e4] * inverse[scalar]);
     }
 }
 impl InfixGeometricQuotient for Plane {}
@@ -1367,7 +1367,7 @@ impl GeometricQuotient<DualNum> for Plane {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Flector> for Plane {
@@ -1382,10 +1382,10 @@ impl GeometricQuotient<Flector> for Plane {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2)),
+            f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Horizon> for Plane {
@@ -1398,9 +1398,9 @@ impl GeometricQuotient<Horizon> for Plane {
     //  no simd        0        5        1
     fn geometric_quotient(self, other: Horizon) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other[e321], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Line> for Plane {
@@ -1413,9 +1413,9 @@ impl GeometricQuotient<Line> for Plane {
     //  no simd        2        4        1
     fn geometric_quotient(self, other: Line) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Motor> for Plane {
@@ -1430,10 +1430,10 @@ impl GeometricQuotient<Motor> for Plane {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2)),
+            -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<MultiVector> for Plane {
@@ -1448,14 +1448,14 @@ impl GeometricQuotient<MultiVector> for Plane {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
+            f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
                 + f32::powi(other.group1()[0], 2)
                 + f32::powi(other.group1()[1], 2)
                 + f32::powi(other.group1()[2], 2)
-                - f32::powi(other.group4()[3], 2)),
+                - f32::powi(other.group4()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Plane> for Plane {
@@ -1468,9 +1468,9 @@ impl GeometricQuotient<Plane> for Plane {
     //  no simd        0        5        1
     fn geometric_quotient(self, other: Plane) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[3], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[3], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Point> for Plane {
@@ -1483,9 +1483,9 @@ impl GeometricQuotient<Point> for Plane {
     //  no simd        2        4        1
     fn geometric_quotient(self, other: Point) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Scalar> for Plane {
@@ -1500,7 +1500,7 @@ impl GeometricQuotient<Scalar> for Plane {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl InfixGeometricQuotient for Point {}
@@ -1516,7 +1516,7 @@ impl GeometricQuotient<DualNum> for Point {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Flector> for Point {
@@ -1531,10 +1531,10 @@ impl GeometricQuotient<Flector> for Point {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2)),
+            f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Horizon> for Point {
@@ -1547,9 +1547,9 @@ impl GeometricQuotient<Horizon> for Point {
     //  no simd        0        5        1
     fn geometric_quotient(self, other: Horizon) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other[e321], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Line> for Point {
@@ -1562,9 +1562,9 @@ impl GeometricQuotient<Line> for Point {
     //  no simd        2        4        1
     fn geometric_quotient(self, other: Line) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Motor> for Point {
@@ -1579,10 +1579,10 @@ impl GeometricQuotient<Motor> for Point {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2)),
+            -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<MultiVector> for Point {
@@ -1597,14 +1597,14 @@ impl GeometricQuotient<MultiVector> for Point {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
+            f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
                 + f32::powi(other.group1()[0], 2)
                 + f32::powi(other.group1()[1], 2)
                 + f32::powi(other.group1()[2], 2)
-                - f32::powi(other.group4()[3], 2)),
+                - f32::powi(other.group4()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Plane> for Point {
@@ -1617,9 +1617,9 @@ impl GeometricQuotient<Plane> for Point {
     //  no simd        0        5        1
     fn geometric_quotient(self, other: Plane) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[3], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[3], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Point> for Point {
@@ -1632,9 +1632,9 @@ impl GeometricQuotient<Point> for Point {
     //  no simd        2        4        1
     fn geometric_quotient(self, other: Point) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl GeometricQuotient<Scalar> for Point {
@@ -1649,7 +1649,7 @@ impl GeometricQuotient<Scalar> for Point {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Point::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(inverse[scalar]) * self.group0()));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl InfixGeometricQuotient for Scalar {}
@@ -1661,7 +1661,7 @@ impl GeometricQuotient<DualNum> for Scalar {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Scalar::from_groups(/* scalar */ (inverse[scalar] * self[scalar]));
+        return Scalar::from_groups(/* scalar */ inverse[scalar] * self[scalar]);
     }
 }
 impl GeometricQuotient<Flector> for Scalar {
@@ -1672,10 +1672,10 @@ impl GeometricQuotient<Flector> for Scalar {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2)),
+            f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2) - f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Scalar::from_groups(/* scalar */ (inverse[scalar] * self[scalar]));
+        return Scalar::from_groups(/* scalar */ inverse[scalar] * self[scalar]);
     }
 }
 impl GeometricQuotient<Horizon> for Scalar {
@@ -1684,9 +1684,9 @@ impl GeometricQuotient<Horizon> for Scalar {
     // f32        0        2        1
     fn geometric_quotient(self, other: Horizon) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other[e321], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[e321], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Scalar::from_groups(/* scalar */ (inverse[scalar] * self[scalar]));
+        return Scalar::from_groups(/* scalar */ inverse[scalar] * self[scalar]);
     }
 }
 impl GeometricQuotient<Line> for Scalar {
@@ -1695,9 +1695,9 @@ impl GeometricQuotient<Line> for Scalar {
     // f32        2        1        1
     fn geometric_quotient(self, other: Line) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Scalar::from_groups(/* scalar */ (inverse[scalar] * self[scalar]));
+        return Scalar::from_groups(/* scalar */ inverse[scalar] * self[scalar]);
     }
 }
 impl GeometricQuotient<Motor> for Scalar {
@@ -1708,10 +1708,10 @@ impl GeometricQuotient<Motor> for Scalar {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2)),
+            -f32::powi(other.group1()[0], 2) - f32::powi(other.group1()[1], 2) - f32::powi(other.group1()[2], 2) + f32::powi(other.group1()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Scalar::from_groups(/* scalar */ (inverse[scalar] * self[scalar]));
+        return Scalar::from_groups(/* scalar */ inverse[scalar] * self[scalar]);
     }
 }
 impl GeometricQuotient<MultiVector> for Scalar {
@@ -1722,14 +1722,14 @@ impl GeometricQuotient<MultiVector> for Scalar {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
+            f32::powi(other.group0()[0], 2) - f32::powi(other.group3()[0], 2) - f32::powi(other.group3()[1], 2) - f32::powi(other.group3()[2], 2)
                 + f32::powi(other.group1()[0], 2)
                 + f32::powi(other.group1()[1], 2)
                 + f32::powi(other.group1()[2], 2)
-                - f32::powi(other.group4()[3], 2)),
+                - f32::powi(other.group4()[3], 2),
         );
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Scalar::from_groups(/* scalar */ (inverse[scalar] * self[scalar]));
+        return Scalar::from_groups(/* scalar */ inverse[scalar] * self[scalar]);
     }
 }
 impl GeometricQuotient<Plane> for Scalar {
@@ -1738,9 +1738,9 @@ impl GeometricQuotient<Plane> for Scalar {
     // f32        0        2        1
     fn geometric_quotient(self, other: Plane) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[3], 2) * -1.0));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[3], 2) * -1.0);
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Scalar::from_groups(/* scalar */ (inverse[scalar] * self[scalar]));
+        return Scalar::from_groups(/* scalar */ inverse[scalar] * self[scalar]);
     }
 }
 impl GeometricQuotient<Point> for Scalar {
@@ -1749,9 +1749,9 @@ impl GeometricQuotient<Point> for Scalar {
     // f32        2        1        1
     fn geometric_quotient(self, other: Point) -> Self {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other.group0()[0], 2) + f32::powi(other.group0()[1], 2) + f32::powi(other.group0()[2], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Scalar::from_groups(/* scalar */ (inverse[scalar] * self[scalar]));
+        return Scalar::from_groups(/* scalar */ inverse[scalar] * self[scalar]);
     }
 }
 impl GeometricQuotient<Scalar> for Scalar {
@@ -1762,6 +1762,6 @@ impl GeometricQuotient<Scalar> for Scalar {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(other[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ (1.0 / scalar_product[scalar]));
-        return Scalar::from_groups(/* scalar */ (inverse[scalar] * self[scalar]));
+        return Scalar::from_groups(/* scalar */ inverse[scalar] * self[scalar]);
     }
 }

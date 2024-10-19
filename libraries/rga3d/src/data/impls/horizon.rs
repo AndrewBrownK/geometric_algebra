@@ -68,7 +68,7 @@ impl std::ops::Add<Flector> for Horizon {
             // e1, e2, e3, e4
             other.group0(),
             // e423, e431, e412, e321
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], (other.group1()[3] + self[e321])]),
+            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group1()[3] + self[e321]]),
         );
     }
 }
@@ -79,13 +79,13 @@ impl std::ops::Add<Horizon> for Horizon {
     // f32        1        0        0
     fn add(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        return Horizon::from_groups(/* e321 */ (other[e321] + self[e321]));
+        return Horizon::from_groups(/* e321 */ other[e321] + self[e321]);
     }
 }
 impl std::ops::AddAssign<Horizon> for Horizon {
     fn add_assign(&mut self, other: Horizon) {
         use crate::elements::*;
-        *self = Horizon::from_groups(/* e321 */ (other[e321] + self[e321]));
+        *self = Horizon::from_groups(/* e321 */ other[e321] + self[e321]);
     }
 }
 impl std::ops::Add<Line> for Horizon {
@@ -141,7 +141,7 @@ impl std::ops::Add<MultiVector> for Horizon {
             // e23, e31, e12
             other.group3(),
             // e423, e431, e412, e321
-            Simd32x4::from([other.group4()[0], other.group4()[1], other.group4()[2], (other.group4()[3] + self[e321])]),
+            Simd32x4::from([other.group4()[0], other.group4()[1], other.group4()[2], other.group4()[3] + self[e321]]),
         );
     }
 }
@@ -166,7 +166,7 @@ impl std::ops::Add<Plane> for Horizon {
         use crate::elements::*;
         return Plane::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], (other.group0()[3] + self[e321])]),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3] + self[e321]]),
         );
     }
 }
@@ -201,13 +201,11 @@ impl std::ops::BitXor<DualNum> for Horizon {
     //      add/sub      mul      div
     // f32        0        1        0
     fn bitxor(self, other: DualNum) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
 impl std::ops::BitXorAssign<DualNum> for Horizon {
     fn bitxor_assign(&mut self, other: DualNum) {
-        use crate::elements::*;
         *self = self.wedge(other);
     }
 }
@@ -217,7 +215,6 @@ impl std::ops::BitXor<Flector> for Horizon {
     //      add/sub      mul      div
     // f32        0        2        0
     fn bitxor(self, other: Flector) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -227,13 +224,11 @@ impl std::ops::BitXor<Motor> for Horizon {
     //      add/sub      mul      div
     // f32        0        1        0
     fn bitxor(self, other: Motor) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
 impl std::ops::BitXorAssign<Motor> for Horizon {
     fn bitxor_assign(&mut self, other: Motor) {
-        use crate::elements::*;
         *self = self.wedge(other);
     }
 }
@@ -243,7 +238,6 @@ impl std::ops::BitXor<MultiVector> for Horizon {
     //      add/sub      mul      div
     // f32        0        3        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -253,7 +247,6 @@ impl std::ops::BitXor<Origin> for Horizon {
     //      add/sub      mul      div
     // f32        0        2        0
     fn bitxor(self, other: Origin) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -263,7 +256,6 @@ impl std::ops::BitXor<Point> for Horizon {
     //      add/sub      mul      div
     // f32        0        2        0
     fn bitxor(self, other: Point) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -273,13 +265,11 @@ impl std::ops::BitXor<Scalar> for Horizon {
     //      add/sub      mul      div
     // f32        0        1        0
     fn bitxor(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
 impl std::ops::BitXorAssign<Scalar> for Horizon {
     fn bitxor_assign(&mut self, other: Scalar) {
-        use crate::elements::*;
         *self = self.wedge(other);
     }
 }
@@ -289,7 +279,6 @@ impl std::ops::Mul<AntiScalar> for Horizon {
     //      add/sub      mul      div
     // f32        0        1        0
     fn mul(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -299,7 +288,6 @@ impl std::ops::Mul<DualNum> for Horizon {
     //      add/sub      mul      div
     // f32        0        2        0
     fn mul(self, other: DualNum) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -310,7 +298,6 @@ impl std::ops::Mul<Flector> for Horizon {
     //   simd4        0        4        0
     // no simd        0       16        0
     fn mul(self, other: Flector) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -320,7 +307,6 @@ impl std::ops::Mul<Horizon> for Horizon {
     //      add/sub      mul      div
     // f32        0        2        0
     fn mul(self, other: Horizon) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -330,7 +316,6 @@ impl std::ops::Mul<Line> for Horizon {
     //      add/sub      mul      div
     // f32        0        6        0
     fn mul(self, other: Line) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -341,7 +326,6 @@ impl std::ops::Mul<Motor> for Horizon {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn mul(self, other: Motor) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -356,7 +340,6 @@ impl std::ops::Mul<MultiVector> for Horizon {
     // yes simd        0        8        0
     //  no simd        0       24        0
     fn mul(self, other: MultiVector) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -366,7 +349,6 @@ impl std::ops::Mul<Origin> for Horizon {
     //      add/sub      mul      div
     // f32        0        2        0
     fn mul(self, other: Origin) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -376,7 +358,6 @@ impl std::ops::Mul<Plane> for Horizon {
     //      add/sub      mul      div
     // f32        0        8        0
     fn mul(self, other: Plane) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -386,7 +367,6 @@ impl std::ops::Mul<Point> for Horizon {
     //      add/sub      mul      div
     // f32        0        8        0
     fn mul(self, other: Point) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -396,23 +376,22 @@ impl std::ops::Mul<Scalar> for Horizon {
     //      add/sub      mul      div
     // f32        0        1        0
     fn mul(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
 impl std::ops::MulAssign<Scalar> for Horizon {
     fn mul_assign(&mut self, other: Scalar) {
-        use crate::elements::*;
         *self = self.geometric_product(other);
     }
 }
 impl std::ops::Neg for Horizon {
+    type Output = Horizon;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
-    fn neg(self) -> Self {
+    fn neg(self) -> Self::Output {
         use crate::elements::*;
-        return Horizon::from_groups(/* e321 */ (self[e321] * -1.0));
+        return Horizon::from_groups(/* e321 */ self[e321] * -1.0);
     }
 }
 impl std::ops::Not for Horizon {
@@ -421,7 +400,6 @@ impl std::ops::Not for Horizon {
     //      add/sub      mul      div
     // f32        0        1        0
     fn not(self) -> Self::Output {
-        use crate::elements::*;
         return self.right_dual();
     }
 }
@@ -434,7 +412,7 @@ impl std::ops::Sub<AntiScalar> for Horizon {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([0.0, (other[e1234] * -1.0)]),
+            Simd32x2::from([0.0, other[e1234] * -1.0]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -456,7 +434,7 @@ impl std::ops::Sub<DualNum> for Horizon {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            (other.group0() * Simd32x2::from(-1.0)),
+            other.group0() * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -481,9 +459,9 @@ impl std::ops::Sub<Flector> for Horizon {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), (-other.group1()[3] + self[e321])]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, -other.group1()[3] + self[e321]]),
         );
     }
 }
@@ -494,13 +472,13 @@ impl std::ops::Sub<Horizon> for Horizon {
     // f32        1        0        0
     fn sub(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        return Horizon::from_groups(/* e321 */ (-other[e321] + self[e321]));
+        return Horizon::from_groups(/* e321 */ -other[e321] + self[e321]);
     }
 }
 impl std::ops::SubAssign<Horizon> for Horizon {
     fn sub_assign(&mut self, other: Horizon) {
         use crate::elements::*;
-        *self = Horizon::from_groups(/* e321 */ (-other[e321] + self[e321]));
+        *self = Horizon::from_groups(/* e321 */ -other[e321] + self[e321]);
     }
 }
 impl std::ops::Sub<Line> for Horizon {
@@ -517,9 +495,9 @@ impl std::ops::Sub<Line> for Horizon {
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
-            (other.group0() * Simd32x3::from(-1.0)),
+            other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (other.group1() * Simd32x3::from(-1.0)),
+            other.group1() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
         );
@@ -538,13 +516,13 @@ impl std::ops::Sub<Motor> for Horizon {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            (Simd32x2::from([other.group1()[3], other.group0()[3]]) * Simd32x2::from(-1.0)),
+            Simd32x2::from([other.group1()[3], other.group0()[3]]) * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
-            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
         );
@@ -565,15 +543,15 @@ impl std::ops::Sub<MultiVector> for Horizon {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            (other.group0() * Simd32x2::from(-1.0)),
+            other.group0() * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
-            (other.group1() * Simd32x4::from(-1.0)),
+            other.group1() * Simd32x4::from(-1.0),
             // e41, e42, e43
-            (other.group2() * Simd32x3::from(-1.0)),
+            other.group2() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (other.group3() * Simd32x3::from(-1.0)),
+            other.group3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([(other.group4()[0] * -1.0), (other.group4()[1] * -1.0), (other.group4()[2] * -1.0), (-other.group4()[3] + self[e321])]),
+            Simd32x4::from([other.group4()[0] * -1.0, other.group4()[1] * -1.0, other.group4()[2] * -1.0, -other.group4()[3] + self[e321]]),
         );
     }
 }
@@ -586,7 +564,7 @@ impl std::ops::Sub<Origin> for Horizon {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, (other[e4] * -1.0)]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e4] * -1.0]),
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
         );
@@ -600,10 +578,10 @@ impl std::ops::Sub<Plane> for Horizon {
     fn sub(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([
-            (other.group0()[0] * -1.0),
-            (other.group0()[1] * -1.0),
-            (other.group0()[2] * -1.0),
-            (-other.group0()[3] + self[e321]),
+            other.group0()[0] * -1.0,
+            other.group0()[1] * -1.0,
+            other.group0()[2] * -1.0,
+            -other.group0()[3] + self[e321],
         ]));
     }
 }
@@ -617,7 +595,7 @@ impl std::ops::Sub<Point> for Horizon {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
             // e423, e431, e412, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
         );
@@ -632,7 +610,7 @@ impl std::ops::Sub<Scalar> for Horizon {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([(other[scalar] * -1.0), 0.0]),
+            Simd32x2::from([other[scalar] * -1.0, 0.0]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
