@@ -18,11 +18,11 @@
 //   Median:         0       4       1
 //  Average:         0       4       1
 //  Maximum:         2      10       1
-impl AntiFixImpl for AntiScalar {
+impl AntiFix for AntiScalar {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        1
-    fn anti_fix_impl(self) -> Self {
+    fn anti_fix(self) -> Self {
         use crate::elements::*;
         let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e1234], 2));
         let anti_square_root = AntiScalar::from_groups(/* e1234 */ f32::powf(geometric_anti_product[e1234], 0.5));
@@ -31,11 +31,11 @@ impl AntiFixImpl for AntiScalar {
         return AntiScalar::from_groups(/* e1234 */ (anti_inverse[e1234] * self[e1234]));
     }
 }
-impl AntiFixImpl for Origin {
+impl AntiFix for Origin {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        4        1
-    fn anti_fix_impl(self) -> Self {
+    fn anti_fix(self) -> Self {
         use crate::elements::*;
         let anti_reverse = Origin::from_groups(/* e4 */ (self[e4] * -1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ (anti_reverse[e4] * self[e4] * -1.0));
@@ -45,7 +45,7 @@ impl AntiFixImpl for Origin {
         return Origin::from_groups(/* e4 */ (anti_inverse[e1234] * self[e4]));
     }
 }
-impl AntiFixImpl for Plane {
+impl AntiFix for Plane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        2        0        1
@@ -53,7 +53,7 @@ impl AntiFixImpl for Plane {
     // Totals...
     // yes simd        2        1        1
     //  no simd        2        4        1
-    fn anti_fix_impl(self) -> Self {
+    fn anti_fix(self) -> Self {
         use crate::elements::*;
         let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2)));
         let anti_square_root = AntiScalar::from_groups(/* e1234 */ f32::powf(geometric_anti_product[e1234], 0.5));
@@ -62,7 +62,7 @@ impl AntiFixImpl for Plane {
         return Plane::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(anti_inverse[e1234]) * self.group0()));
     }
 }
-impl AntiFixImpl for Point {
+impl AntiFix for Point {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        1
@@ -70,7 +70,7 @@ impl AntiFixImpl for Point {
     // Totals...
     // yes simd        0        4        1
     //  no simd        0       10        1
-    fn anti_fix_impl(self) -> Self {
+    fn anti_fix(self) -> Self {
         use crate::elements::*;
         let anti_reverse = Point::from_groups(/* e1, e2, e3, e4 */ (self.group0() * Simd32x4::from(-1.0)));
         let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ (anti_reverse.group0()[3] * self.group0()[3] * -1.0));

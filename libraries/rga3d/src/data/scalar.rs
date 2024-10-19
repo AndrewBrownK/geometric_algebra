@@ -2,12 +2,14 @@ use crate::data::*;
 use crate::simd::*;
 
 /// Scalar
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, bytemuck::Zeroable)]
 pub union Scalar {
     groups: ScalarGroups,
     /// scalar, 0, 0, 0
     elements: [f32; 4],
 }
+#[repr(C)]
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct ScalarGroups {
     /// scalar
@@ -65,6 +67,59 @@ impl std::fmt::Debug for Scalar {
 impl Scalar {
     pub const LEN: usize = 1;
 }
+
+impl nearly::EpsTolerance<Scalar> for Scalar {
+    type T = f32;
+    const DEFAULT: Self::T = <f32 as nearly::EpsTolerance>::DEFAULT;
+}
+impl nearly::UlpsTolerance<Scalar> for Scalar {
+    type T = i32;
+    const DEFAULT: Self::T = <f32 as nearly::UlpsTolerance>::DEFAULT;
+}
+impl nearly::NearlyEqEps<Scalar, Scalar, Scalar> for Scalar {
+    fn nearly_eq_eps(&self, other: &Scalar, eps: &nearly::EpsToleranceType<Scalar, Scalar>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_eps(other, eps);
+    }
+}
+impl nearly::NearlyEqUlps<Scalar, Scalar, Scalar> for Scalar {
+    fn nearly_eq_ulps(&self, other: &Scalar, ulps: &nearly::UlpsToleranceType<Scalar, Scalar>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyEqTol for Scalar {}
+impl nearly::NearlyEq for Scalar {}
+impl nearly::NearlyOrdUlps<Scalar, Scalar, Scalar> for Scalar {
+    fn nearly_lt_ulps(&self, other: &Scalar, ulps: &nearly::UlpsToleranceType<Scalar, Scalar>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_ulps(other, ulps);
+    }
+
+    fn nearly_gt_ulps(&self, other: &Scalar, ulps: &nearly::UlpsToleranceType<Scalar, Scalar>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyOrdEps<Scalar, Scalar, Scalar> for Scalar {
+    fn nearly_lt_eps(&self, other: &Scalar, eps: &nearly::EpsToleranceType<Scalar, Scalar>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_eps(other, eps);
+    }
+
+    fn nearly_gt_eps(&self, other: &Scalar, eps: &nearly::EpsToleranceType<Scalar, Scalar>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_eps(other, eps);
+    }
+}
+impl nearly::NearlyOrdTol<Scalar, Scalar, Scalar> for Scalar {}
+impl nearly::NearlyOrd for Scalar {}
 
 impl Scalar {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
@@ -125,6 +180,34 @@ impl std::hash::Hash for Scalar {
     }
 }
 
+unsafe impl bytemuck::Pod for Scalar {}
+impl encase::ShaderType for Scalar {
+    type ExtraMetadata = <ScalarGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <ScalarGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <ScalarGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <ScalarGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <ScalarGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for Scalar {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        let g = unsafe { &self.groups };
+        return g.serialize(serializer);
+    }
+}
+impl<'de> serde::Deserialize<'de> for Scalar {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let groups = ScalarGroups::deserialize(deserializer)?;
+        return Ok(Scalar { groups });
+    }
+}
 impl std::ops::Index<crate::elements::scalar> for Scalar {
     type Output = f32;
     fn index(&self, _: crate::elements::scalar) -> &Self::Output {
@@ -132,7 +215,7 @@ impl std::ops::Index<crate::elements::scalar> for Scalar {
     }
 }
 impl std::ops::IndexMut<crate::elements::scalar> for Scalar {
-    fn index_mut(&self, _: crate::elements::scalar) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::scalar) -> &mut Self::Output {
         &mut self[0]
     }
 }

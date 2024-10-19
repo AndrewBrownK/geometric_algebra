@@ -10,10 +10,8 @@ use naga::ShaderStage;
 /// runtime. (Hint: Enable this feature in [build-dependencies], but not [dependencies].)
 /// Despite this recommendation, you can still include this in your app binary if you really want
 /// or need to recompile shaders at app runtime for some reason.
-#[cfg(feature = "glsl")]
 pub const RGA3D_GLSL_SRC: &str = include_str!("integrations/rga3d.glsl");
 
-#[cfg(feature = "glsl")]
 pub fn glsl_composable_module_descriptor() -> naga_oil::compose::ComposableModuleDescriptor<'static> {
     naga_oil::compose::ComposableModuleDescriptor {
         source: RGA3D_GLSL_SRC,
@@ -23,7 +21,6 @@ pub fn glsl_composable_module_descriptor() -> naga_oil::compose::ComposableModul
     }
 }
 
-#[cfg(feature = "glsl")]
 pub fn glsl_compose_with_entrypoints(naga_module_descriptor: naga_oil::compose::NagaModuleDescriptor) -> Result<naga::Module, naga_oil::compose::error::ComposerError> {
     let mut composer = naga_oil::compose::Composer::default();
     composer.add_composable_module(glsl_composable_module_descriptor()).unwrap();
@@ -43,7 +40,6 @@ pub fn glsl_compose_with_entrypoints(naga_module_descriptor: naga_oil::compose::
 //  succinctness can be nice. So it's probably best to atomize this function into
 //  smaller itty-bitty parts that only add in assumptions layer by layer. Maybe the factory/builder
 //  pattern can help keep things succinct.
-#[cfg(feature = "glsl")]
 pub fn glsl_compose_validate_and_spirv<P: AsRef<Path>, S: Into<String>>(glsl_file_path: &str, spirv_outputs: Vec<(P, S, ShaderStage)>) -> anyhow::Result<()> {
     let shader_src = fs::read_to_string(glsl_file_path)?;
     let naga_module_descriptor = naga_oil::compose::NagaModuleDescriptor {

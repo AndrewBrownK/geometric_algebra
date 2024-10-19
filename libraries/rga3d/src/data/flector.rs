@@ -2,12 +2,14 @@ use crate::data::*;
 use crate::simd::*;
 
 /// Flector
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, bytemuck::Zeroable)]
 pub union Flector {
     groups: FlectorGroups,
     /// e1, e2, e3, e4, e423, e431, e412, e321
     elements: [f32; 8],
 }
+#[repr(C)]
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct FlectorGroups {
     /// e1, e2, e3, e4
@@ -90,6 +92,59 @@ impl Flector {
     pub const LEN: usize = 8;
 }
 
+impl nearly::EpsTolerance<Flector> for Flector {
+    type T = f32;
+    const DEFAULT: Self::T = <f32 as nearly::EpsTolerance>::DEFAULT;
+}
+impl nearly::UlpsTolerance<Flector> for Flector {
+    type T = i32;
+    const DEFAULT: Self::T = <f32 as nearly::UlpsTolerance>::DEFAULT;
+}
+impl nearly::NearlyEqEps<Flector, Flector, Flector> for Flector {
+    fn nearly_eq_eps(&self, other: &Flector, eps: &nearly::EpsToleranceType<Flector, Flector>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_eps(other, eps);
+    }
+}
+impl nearly::NearlyEqUlps<Flector, Flector, Flector> for Flector {
+    fn nearly_eq_ulps(&self, other: &Flector, ulps: &nearly::UlpsToleranceType<Flector, Flector>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyEqTol for Flector {}
+impl nearly::NearlyEq for Flector {}
+impl nearly::NearlyOrdUlps<Flector, Flector, Flector> for Flector {
+    fn nearly_lt_ulps(&self, other: &Flector, ulps: &nearly::UlpsToleranceType<Flector, Flector>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_ulps(other, ulps);
+    }
+
+    fn nearly_gt_ulps(&self, other: &Flector, ulps: &nearly::UlpsToleranceType<Flector, Flector>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyOrdEps<Flector, Flector, Flector> for Flector {
+    fn nearly_lt_eps(&self, other: &Flector, eps: &nearly::EpsToleranceType<Flector, Flector>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_eps(other, eps);
+    }
+
+    fn nearly_gt_eps(&self, other: &Flector, eps: &nearly::EpsToleranceType<Flector, Flector>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_eps(other, eps);
+    }
+}
+impl nearly::NearlyOrdTol<Flector, Flector, Flector> for Flector {}
+impl nearly::NearlyOrd for Flector {}
+
 impl Flector {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
@@ -149,6 +204,34 @@ impl std::hash::Hash for Flector {
     }
 }
 
+unsafe impl bytemuck::Pod for Flector {}
+impl encase::ShaderType for Flector {
+    type ExtraMetadata = <FlectorGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <FlectorGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <FlectorGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <FlectorGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <FlectorGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for Flector {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        let g = unsafe { &self.groups };
+        return g.serialize(serializer);
+    }
+}
+impl<'de> serde::Deserialize<'de> for Flector {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let groups = FlectorGroups::deserialize(deserializer)?;
+        return Ok(Flector { groups });
+    }
+}
 impl std::ops::Index<crate::elements::e1> for Flector {
     type Output = f32;
     fn index(&self, _: crate::elements::e1) -> &Self::Output {
@@ -198,42 +281,42 @@ impl std::ops::Index<crate::elements::e321> for Flector {
     }
 }
 impl std::ops::IndexMut<crate::elements::e1> for Flector {
-    fn index_mut(&self, _: crate::elements::e1) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e1) -> &mut Self::Output {
         &mut self[0]
     }
 }
 impl std::ops::IndexMut<crate::elements::e2> for Flector {
-    fn index_mut(&self, _: crate::elements::e2) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e2) -> &mut Self::Output {
         &mut self[1]
     }
 }
 impl std::ops::IndexMut<crate::elements::e3> for Flector {
-    fn index_mut(&self, _: crate::elements::e3) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e3) -> &mut Self::Output {
         &mut self[2]
     }
 }
 impl std::ops::IndexMut<crate::elements::e4> for Flector {
-    fn index_mut(&self, _: crate::elements::e4) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e4) -> &mut Self::Output {
         &mut self[3]
     }
 }
 impl std::ops::IndexMut<crate::elements::e423> for Flector {
-    fn index_mut(&self, _: crate::elements::e423) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e423) -> &mut Self::Output {
         &mut self[4]
     }
 }
 impl std::ops::IndexMut<crate::elements::e431> for Flector {
-    fn index_mut(&self, _: crate::elements::e431) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e431) -> &mut Self::Output {
         &mut self[5]
     }
 }
 impl std::ops::IndexMut<crate::elements::e412> for Flector {
-    fn index_mut(&self, _: crate::elements::e412) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e412) -> &mut Self::Output {
         &mut self[6]
     }
 }
 impl std::ops::IndexMut<crate::elements::e321> for Flector {
-    fn index_mut(&self, _: crate::elements::e321) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e321) -> &mut Self::Output {
         &mut self[7]
     }
 }

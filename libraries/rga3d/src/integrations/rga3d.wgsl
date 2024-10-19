@@ -483,14 +483,14 @@ fn point_antiConstraintViolation(self_: Point) -> AntiScalar {
     let anti_scalar_product: AntiScalar = AntiScalar(/* e1234 */ (pow(self_.g0_.w, 2) * -1.0));
     return AntiScalar(/* e1234 */ (-anti_scalar_product.g0_ + geometric_anti_product.g0_));
 }
-fn antiScalar_antiFixImpl(self_: AntiScalar) -> AntiScalar {
+fn antiScalar_antiFix(self_: AntiScalar) -> AntiScalar {
     let geometric_anti_product: AntiScalar = AntiScalar(/* e1234 */ pow(self_.g0_, 2));
     let anti_square_root: AntiScalar = AntiScalar(/* e1234 */ pow(geometric_anti_product.g0_.x, 0.5));
     let anti_scalar_product: AntiScalar = AntiScalar(/* e1234 */ pow(anti_square_root.g0_, 2));
     let anti_inverse: AntiScalar = AntiScalar(/* e1234 */ (1.0/anti_scalar_product.g0_.x));
     return AntiScalar(/* e1234 */ (anti_inverse.g0_ * self_.g0_));
 }
-fn origin_antiFixImpl(self_: Origin) -> Origin {
+fn origin_antiFix(self_: Origin) -> Origin {
     let anti_reverse: Origin = Origin(/* e4 */ (self_.g0_ * -1.0));
     let geometric_anti_product: AntiScalar = AntiScalar(/* e1234 */ (anti_reverse.g0_ * self_.g0_ * -1.0));
     let anti_square_root: AntiScalar = AntiScalar(/* e1234 */ pow(geometric_anti_product.g0_.x, 0.5));
@@ -498,14 +498,14 @@ fn origin_antiFixImpl(self_: Origin) -> Origin {
     let anti_inverse: AntiScalar = AntiScalar(/* e1234 */ (1.0/anti_scalar_product.g0_.x));
     return Origin(/* e4 */ (anti_inverse.g0_ * self_.g0_));
 }
-fn plane_antiFixImpl(self_: Plane) -> Plane {
+fn plane_antiFix(self_: Plane) -> Plane {
     let geometric_anti_product: AntiScalar = AntiScalar(/* e1234 */ (pow(self_.g0_.x, 2) + pow(self_.g0_.y, 2) + pow(self_.g0_.z, 2)));
     let anti_square_root: AntiScalar = AntiScalar(/* e1234 */ pow(geometric_anti_product.g0_.x, 0.5));
     let anti_scalar_product: AntiScalar = AntiScalar(/* e1234 */ pow(anti_square_root.g0_, 2));
     let anti_inverse: AntiScalar = AntiScalar(/* e1234 */ (1.0/anti_scalar_product.g0_.x));
     return Plane(/* e423, e431, e412, e321 */ (vec4<f32>(anti_inverse.g0_) * self_.g0_));
 }
-fn point_antiFixImpl(self_: Point) -> Point {
+fn point_antiFix(self_: Point) -> Point {
     let anti_reverse: Point = Point(/* e1, e2, e3, e4 */ (self_.g0_ * vec4<f32>(-1.0)));
     let geometric_anti_product: AntiScalar = AntiScalar(/* e1234 */ (anti_reverse.g0_.w * self_.g0_.w * -1.0));
     let anti_square_root: AntiScalar = AntiScalar(/* e1234 */ pow(geometric_anti_product.g0_.x, 0.5));

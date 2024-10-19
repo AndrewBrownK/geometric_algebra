@@ -2,12 +2,14 @@ use crate::data::*;
 use crate::simd::*;
 
 /// Motor
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, bytemuck::Zeroable)]
 pub union Motor {
     groups: MotorGroups,
     /// e41, e42, e43, e1234, e23, e31, e12, scalar
     elements: [f32; 8],
 }
+#[repr(C)]
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct MotorGroups {
     /// e41, e42, e43, e1234
@@ -90,6 +92,59 @@ impl Motor {
     pub const LEN: usize = 8;
 }
 
+impl nearly::EpsTolerance<Motor> for Motor {
+    type T = f32;
+    const DEFAULT: Self::T = <f32 as nearly::EpsTolerance>::DEFAULT;
+}
+impl nearly::UlpsTolerance<Motor> for Motor {
+    type T = i32;
+    const DEFAULT: Self::T = <f32 as nearly::UlpsTolerance>::DEFAULT;
+}
+impl nearly::NearlyEqEps<Motor, Motor, Motor> for Motor {
+    fn nearly_eq_eps(&self, other: &Motor, eps: &nearly::EpsToleranceType<Motor, Motor>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_eps(other, eps);
+    }
+}
+impl nearly::NearlyEqUlps<Motor, Motor, Motor> for Motor {
+    fn nearly_eq_ulps(&self, other: &Motor, ulps: &nearly::UlpsToleranceType<Motor, Motor>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyEqTol for Motor {}
+impl nearly::NearlyEq for Motor {}
+impl nearly::NearlyOrdUlps<Motor, Motor, Motor> for Motor {
+    fn nearly_lt_ulps(&self, other: &Motor, ulps: &nearly::UlpsToleranceType<Motor, Motor>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_ulps(other, ulps);
+    }
+
+    fn nearly_gt_ulps(&self, other: &Motor, ulps: &nearly::UlpsToleranceType<Motor, Motor>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyOrdEps<Motor, Motor, Motor> for Motor {
+    fn nearly_lt_eps(&self, other: &Motor, eps: &nearly::EpsToleranceType<Motor, Motor>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_eps(other, eps);
+    }
+
+    fn nearly_gt_eps(&self, other: &Motor, eps: &nearly::EpsToleranceType<Motor, Motor>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_eps(other, eps);
+    }
+}
+impl nearly::NearlyOrdTol<Motor, Motor, Motor> for Motor {}
+impl nearly::NearlyOrd for Motor {}
+
 impl Motor {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
@@ -149,6 +204,34 @@ impl std::hash::Hash for Motor {
     }
 }
 
+unsafe impl bytemuck::Pod for Motor {}
+impl encase::ShaderType for Motor {
+    type ExtraMetadata = <MotorGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <MotorGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <MotorGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <MotorGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <MotorGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for Motor {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        let g = unsafe { &self.groups };
+        return g.serialize(serializer);
+    }
+}
+impl<'de> serde::Deserialize<'de> for Motor {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let groups = MotorGroups::deserialize(deserializer)?;
+        return Ok(Motor { groups });
+    }
+}
 impl std::ops::Index<crate::elements::e41> for Motor {
     type Output = f32;
     fn index(&self, _: crate::elements::e41) -> &Self::Output {
@@ -198,42 +281,42 @@ impl std::ops::Index<crate::elements::scalar> for Motor {
     }
 }
 impl std::ops::IndexMut<crate::elements::e41> for Motor {
-    fn index_mut(&self, _: crate::elements::e41) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e41) -> &mut Self::Output {
         &mut self[0]
     }
 }
 impl std::ops::IndexMut<crate::elements::e42> for Motor {
-    fn index_mut(&self, _: crate::elements::e42) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e42) -> &mut Self::Output {
         &mut self[1]
     }
 }
 impl std::ops::IndexMut<crate::elements::e43> for Motor {
-    fn index_mut(&self, _: crate::elements::e43) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e43) -> &mut Self::Output {
         &mut self[2]
     }
 }
 impl std::ops::IndexMut<crate::elements::e1234> for Motor {
-    fn index_mut(&self, _: crate::elements::e1234) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e1234) -> &mut Self::Output {
         &mut self[3]
     }
 }
 impl std::ops::IndexMut<crate::elements::e23> for Motor {
-    fn index_mut(&self, _: crate::elements::e23) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e23) -> &mut Self::Output {
         &mut self[4]
     }
 }
 impl std::ops::IndexMut<crate::elements::e31> for Motor {
-    fn index_mut(&self, _: crate::elements::e31) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e31) -> &mut Self::Output {
         &mut self[5]
     }
 }
 impl std::ops::IndexMut<crate::elements::e12> for Motor {
-    fn index_mut(&self, _: crate::elements::e12) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e12) -> &mut Self::Output {
         &mut self[6]
     }
 }
 impl std::ops::IndexMut<crate::elements::scalar> for Motor {
-    fn index_mut(&self, _: crate::elements::scalar) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::scalar) -> &mut Self::Output {
         &mut self[7]
     }
 }

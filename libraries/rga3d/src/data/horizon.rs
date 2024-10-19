@@ -2,12 +2,14 @@ use crate::data::*;
 use crate::simd::*;
 
 /// Horizon
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, bytemuck::Zeroable)]
 pub union Horizon {
     groups: HorizonGroups,
     /// e321, 0, 0, 0
     elements: [f32; 4],
 }
+#[repr(C)]
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct HorizonGroups {
     /// e321
@@ -63,6 +65,59 @@ impl std::fmt::Debug for Horizon {
 impl Horizon {
     pub const LEN: usize = 1;
 }
+
+impl nearly::EpsTolerance<Horizon> for Horizon {
+    type T = f32;
+    const DEFAULT: Self::T = <f32 as nearly::EpsTolerance>::DEFAULT;
+}
+impl nearly::UlpsTolerance<Horizon> for Horizon {
+    type T = i32;
+    const DEFAULT: Self::T = <f32 as nearly::UlpsTolerance>::DEFAULT;
+}
+impl nearly::NearlyEqEps<Horizon, Horizon, Horizon> for Horizon {
+    fn nearly_eq_eps(&self, other: &Horizon, eps: &nearly::EpsToleranceType<Horizon, Horizon>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_eps(other, eps);
+    }
+}
+impl nearly::NearlyEqUlps<Horizon, Horizon, Horizon> for Horizon {
+    fn nearly_eq_ulps(&self, other: &Horizon, ulps: &nearly::UlpsToleranceType<Horizon, Horizon>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyEqTol for Horizon {}
+impl nearly::NearlyEq for Horizon {}
+impl nearly::NearlyOrdUlps<Horizon, Horizon, Horizon> for Horizon {
+    fn nearly_lt_ulps(&self, other: &Horizon, ulps: &nearly::UlpsToleranceType<Horizon, Horizon>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_ulps(other, ulps);
+    }
+
+    fn nearly_gt_ulps(&self, other: &Horizon, ulps: &nearly::UlpsToleranceType<Horizon, Horizon>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyOrdEps<Horizon, Horizon, Horizon> for Horizon {
+    fn nearly_lt_eps(&self, other: &Horizon, eps: &nearly::EpsToleranceType<Horizon, Horizon>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_eps(other, eps);
+    }
+
+    fn nearly_gt_eps(&self, other: &Horizon, eps: &nearly::EpsToleranceType<Horizon, Horizon>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_eps(other, eps);
+    }
+}
+impl nearly::NearlyOrdTol<Horizon, Horizon, Horizon> for Horizon {}
+impl nearly::NearlyOrd for Horizon {}
 
 impl Horizon {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
@@ -123,6 +178,34 @@ impl std::hash::Hash for Horizon {
     }
 }
 
+unsafe impl bytemuck::Pod for Horizon {}
+impl encase::ShaderType for Horizon {
+    type ExtraMetadata = <HorizonGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <HorizonGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <HorizonGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <HorizonGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <HorizonGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for Horizon {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        let g = unsafe { &self.groups };
+        return g.serialize(serializer);
+    }
+}
+impl<'de> serde::Deserialize<'de> for Horizon {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let groups = HorizonGroups::deserialize(deserializer)?;
+        return Ok(Horizon { groups });
+    }
+}
 impl std::ops::Index<crate::elements::e321> for Horizon {
     type Output = f32;
     fn index(&self, _: crate::elements::e321) -> &Self::Output {
@@ -130,7 +213,7 @@ impl std::ops::Index<crate::elements::e321> for Horizon {
     }
 }
 impl std::ops::IndexMut<crate::elements::e321> for Horizon {
-    fn index_mut(&self, _: crate::elements::e321) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e321) -> &mut Self::Output {
         &mut self[0]
     }
 }

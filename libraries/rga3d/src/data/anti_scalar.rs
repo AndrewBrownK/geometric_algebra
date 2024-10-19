@@ -2,12 +2,14 @@ use crate::data::*;
 use crate::simd::*;
 
 /// AntiScalar
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, bytemuck::Zeroable)]
 pub union AntiScalar {
     groups: AntiScalarGroups,
     /// e1234, 0, 0, 0
     elements: [f32; 4],
 }
+#[repr(C)]
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct AntiScalarGroups {
     /// e1234
@@ -63,6 +65,59 @@ impl std::fmt::Debug for AntiScalar {
 impl AntiScalar {
     pub const LEN: usize = 1;
 }
+
+impl nearly::EpsTolerance<AntiScalar> for AntiScalar {
+    type T = f32;
+    const DEFAULT: Self::T = <f32 as nearly::EpsTolerance>::DEFAULT;
+}
+impl nearly::UlpsTolerance<AntiScalar> for AntiScalar {
+    type T = i32;
+    const DEFAULT: Self::T = <f32 as nearly::UlpsTolerance>::DEFAULT;
+}
+impl nearly::NearlyEqEps<AntiScalar, AntiScalar, AntiScalar> for AntiScalar {
+    fn nearly_eq_eps(&self, other: &AntiScalar, eps: &nearly::EpsToleranceType<AntiScalar, AntiScalar>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_eps(other, eps);
+    }
+}
+impl nearly::NearlyEqUlps<AntiScalar, AntiScalar, AntiScalar> for AntiScalar {
+    fn nearly_eq_ulps(&self, other: &AntiScalar, ulps: &nearly::UlpsToleranceType<AntiScalar, AntiScalar>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyEqTol for AntiScalar {}
+impl nearly::NearlyEq for AntiScalar {}
+impl nearly::NearlyOrdUlps<AntiScalar, AntiScalar, AntiScalar> for AntiScalar {
+    fn nearly_lt_ulps(&self, other: &AntiScalar, ulps: &nearly::UlpsToleranceType<AntiScalar, AntiScalar>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_ulps(other, ulps);
+    }
+
+    fn nearly_gt_ulps(&self, other: &AntiScalar, ulps: &nearly::UlpsToleranceType<AntiScalar, AntiScalar>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyOrdEps<AntiScalar, AntiScalar, AntiScalar> for AntiScalar {
+    fn nearly_lt_eps(&self, other: &AntiScalar, eps: &nearly::EpsToleranceType<AntiScalar, AntiScalar>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_eps(other, eps);
+    }
+
+    fn nearly_gt_eps(&self, other: &AntiScalar, eps: &nearly::EpsToleranceType<AntiScalar, AntiScalar>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_eps(other, eps);
+    }
+}
+impl nearly::NearlyOrdTol<AntiScalar, AntiScalar, AntiScalar> for AntiScalar {}
+impl nearly::NearlyOrd for AntiScalar {}
 
 impl AntiScalar {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
@@ -123,6 +178,34 @@ impl std::hash::Hash for AntiScalar {
     }
 }
 
+unsafe impl bytemuck::Pod for AntiScalar {}
+impl encase::ShaderType for AntiScalar {
+    type ExtraMetadata = <AntiScalarGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <AntiScalarGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <AntiScalarGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <AntiScalarGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <AntiScalarGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for AntiScalar {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        let g = unsafe { &self.groups };
+        return g.serialize(serializer);
+    }
+}
+impl<'de> serde::Deserialize<'de> for AntiScalar {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let groups = AntiScalarGroups::deserialize(deserializer)?;
+        return Ok(AntiScalar { groups });
+    }
+}
 impl std::ops::Index<crate::elements::e1234> for AntiScalar {
     type Output = f32;
     fn index(&self, _: crate::elements::e1234) -> &Self::Output {
@@ -130,7 +213,7 @@ impl std::ops::Index<crate::elements::e1234> for AntiScalar {
     }
 }
 impl std::ops::IndexMut<crate::elements::e1234> for AntiScalar {
-    fn index_mut(&self, _: crate::elements::e1234) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e1234) -> &mut Self::Output {
         &mut self[0]
     }
 }

@@ -2,12 +2,14 @@ use crate::data::*;
 use crate::simd::*;
 
 /// Line
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, bytemuck::Zeroable)]
 pub union Line {
     groups: LineGroups,
     /// e41, e42, e43, 0, e23, e31, e12, 0
     elements: [f32; 8],
 }
+#[repr(C)]
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct LineGroups {
     /// e41, e42, e43
@@ -84,6 +86,59 @@ impl Line {
     pub const LEN: usize = 6;
 }
 
+impl nearly::EpsTolerance<Line> for Line {
+    type T = f32;
+    const DEFAULT: Self::T = <f32 as nearly::EpsTolerance>::DEFAULT;
+}
+impl nearly::UlpsTolerance<Line> for Line {
+    type T = i32;
+    const DEFAULT: Self::T = <f32 as nearly::UlpsTolerance>::DEFAULT;
+}
+impl nearly::NearlyEqEps<Line, Line, Line> for Line {
+    fn nearly_eq_eps(&self, other: &Line, eps: &nearly::EpsToleranceType<Line, Line>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_eps(other, eps);
+    }
+}
+impl nearly::NearlyEqUlps<Line, Line, Line> for Line {
+    fn nearly_eq_ulps(&self, other: &Line, ulps: &nearly::UlpsToleranceType<Line, Line>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyEqTol for Line {}
+impl nearly::NearlyEq for Line {}
+impl nearly::NearlyOrdUlps<Line, Line, Line> for Line {
+    fn nearly_lt_ulps(&self, other: &Line, ulps: &nearly::UlpsToleranceType<Line, Line>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_ulps(other, ulps);
+    }
+
+    fn nearly_gt_ulps(&self, other: &Line, ulps: &nearly::UlpsToleranceType<Line, Line>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyOrdEps<Line, Line, Line> for Line {
+    fn nearly_lt_eps(&self, other: &Line, eps: &nearly::EpsToleranceType<Line, Line>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_eps(other, eps);
+    }
+
+    fn nearly_gt_eps(&self, other: &Line, eps: &nearly::EpsToleranceType<Line, Line>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_eps(other, eps);
+    }
+}
+impl nearly::NearlyOrdTol<Line, Line, Line> for Line {}
+impl nearly::NearlyOrd for Line {}
+
 impl Line {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
@@ -143,6 +198,34 @@ impl std::hash::Hash for Line {
     }
 }
 
+unsafe impl bytemuck::Pod for Line {}
+impl encase::ShaderType for Line {
+    type ExtraMetadata = <LineGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <LineGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <LineGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <LineGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <LineGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for Line {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        let g = unsafe { &self.groups };
+        return g.serialize(serializer);
+    }
+}
+impl<'de> serde::Deserialize<'de> for Line {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let groups = LineGroups::deserialize(deserializer)?;
+        return Ok(Line { groups });
+    }
+}
 impl std::ops::Index<crate::elements::e41> for Line {
     type Output = f32;
     fn index(&self, _: crate::elements::e41) -> &Self::Output {
@@ -180,32 +263,32 @@ impl std::ops::Index<crate::elements::e12> for Line {
     }
 }
 impl std::ops::IndexMut<crate::elements::e41> for Line {
-    fn index_mut(&self, _: crate::elements::e41) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e41) -> &mut Self::Output {
         &mut self[0]
     }
 }
 impl std::ops::IndexMut<crate::elements::e42> for Line {
-    fn index_mut(&self, _: crate::elements::e42) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e42) -> &mut Self::Output {
         &mut self[1]
     }
 }
 impl std::ops::IndexMut<crate::elements::e43> for Line {
-    fn index_mut(&self, _: crate::elements::e43) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e43) -> &mut Self::Output {
         &mut self[2]
     }
 }
 impl std::ops::IndexMut<crate::elements::e23> for Line {
-    fn index_mut(&self, _: crate::elements::e23) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e23) -> &mut Self::Output {
         &mut self[3]
     }
 }
 impl std::ops::IndexMut<crate::elements::e31> for Line {
-    fn index_mut(&self, _: crate::elements::e31) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e31) -> &mut Self::Output {
         &mut self[4]
     }
 }
 impl std::ops::IndexMut<crate::elements::e12> for Line {
-    fn index_mut(&self, _: crate::elements::e12) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e12) -> &mut Self::Output {
         &mut self[5]
     }
 }

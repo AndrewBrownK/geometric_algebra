@@ -1958,15 +1958,10 @@ impl TryFrom<{other}> for {owner} {{
         let docs = docs.unwrap_or(ucc.clone());
         self.emit_comment(w, true, docs)?;
 
+        write!(w, "#[repr(C)]")?;
         write!(w, "#[derive(Clone, Copy")?;
-        if self.nearly_eq_ord {
-            write!(w, ", nearly::NearlyEq, nearly::NearlyOrd")?;
-        }
         if self.wgsl || self.glsl {
-            write!(w, ", bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType")?;
-        }
-        if self.serde {
-            write!(w, ", serde::Serialize, serde::Deserialize")?;
+            write!(w, ", bytemuck::Zeroable")?;
         }
         writeln!(w, ")]")?;
         writeln!(w, "pub union {ucc} {{")?;
@@ -1992,6 +1987,7 @@ impl TryFrom<{other}> for {owner} {{
         writeln!(w, "\n    elements: [f32; {total_len}],")?;
         writeln!(w, "}}")?;
 
+        write!(w, "#[repr(C)]")?;
         write!(w, "#[derive(Clone, Copy")?;
         if self.nearly_eq_ord {
             write!(w, ", nearly::NearlyEq, nearly::NearlyOrd")?;
@@ -2187,6 +2183,59 @@ impl {ucc} {{
             writeln!(
                 w,
                 r#"
+impl nearly::EpsTolerance<{ucc}> for {ucc} {{
+    type T = f32;
+    const DEFAULT: Self::T = <f32 as nearly::EpsTolerance>::DEFAULT;
+}}
+impl nearly::UlpsTolerance<{ucc}> for {ucc} {{
+    type T = i32;
+    const DEFAULT: Self::T = <f32 as nearly::UlpsTolerance>::DEFAULT;
+}}
+impl nearly::NearlyEqEps<{ucc}, {ucc}, {ucc}> for {ucc} {{
+    fn nearly_eq_eps(&self, other: &{ucc}, eps: &nearly::EpsToleranceType<{ucc}, {ucc}>) -> bool {{
+        let g = unsafe {{ &self.groups }};
+        let other = unsafe {{ &other.groups }};
+        return g.nearly_eq_eps(other, eps);
+    }}
+}}
+impl nearly::NearlyEqUlps<{ucc}, {ucc}, {ucc}> for {ucc} {{
+    fn nearly_eq_ulps(&self, other: &{ucc}, ulps: &nearly::UlpsToleranceType<{ucc}, {ucc}>) -> bool {{
+        let g = unsafe {{ &self.groups }};
+        let other = unsafe {{ &other.groups }};
+        return g.nearly_eq_ulps(other, ulps);
+    }}
+}}
+impl nearly::NearlyEqTol for {ucc} {{}}
+impl nearly::NearlyEq for {ucc} {{}}
+impl nearly::NearlyOrdUlps<{ucc}, {ucc}, {ucc}> for {ucc} {{
+    fn nearly_lt_ulps(&self, other: &{ucc}, ulps: &nearly::UlpsToleranceType<{ucc}, {ucc}>) -> bool {{
+        let g = unsafe {{ &self.groups }};
+        let other = unsafe {{ &other.groups }};
+        return g.nearly_lt_ulps(other, ulps);
+    }}
+
+    fn nearly_gt_ulps(&self, other: &{ucc}, ulps: &nearly::UlpsToleranceType<{ucc}, {ucc}>) -> bool {{
+        let g = unsafe {{ &self.groups }};
+        let other = unsafe {{ &other.groups }};
+        return g.nearly_gt_ulps(other, ulps);
+    }}
+}}
+impl nearly::NearlyOrdEps<{ucc}, {ucc}, {ucc}> for {ucc} {{
+    fn nearly_lt_eps(&self, other: &{ucc}, eps: &nearly::EpsToleranceType<{ucc}, {ucc}>) -> bool {{
+        let g = unsafe {{ &self.groups }};
+        let other = unsafe {{ &other.groups }};
+        return g.nearly_lt_eps(other, eps);
+    }}
+
+    fn nearly_gt_eps(&self, other: &{ucc}, eps: &nearly::EpsToleranceType<{ucc}, {ucc}>) -> bool {{
+        let g = unsafe {{ &self.groups }};
+        let other = unsafe {{ &other.groups }};
+        return g.nearly_gt_eps(other, eps);
+    }}
+}}
+impl nearly::NearlyOrdTol<{ucc}, {ucc}, {ucc}> for {ucc} {{}}
+impl nearly::NearlyOrd for {ucc} {{}}
+
 impl {ucc} {{
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {{
         for i in 0..Self::LEN {{
@@ -2197,8 +2246,7 @@ impl {ucc} {{
         }}
         self
     }}
-}}"#
-            )?;
+}}"#)?;
         }
         if self.eq_ord_hash {
             writeln!(
@@ -2254,6 +2302,36 @@ impl std::hash::Hash for {ucc} {{
             )?;
         }
 
+        if self.wgsl || self.glsl {
+            writeln!(w,
+            r#"
+unsafe impl bytemuck::Pod for {ucc} {{}}
+impl encase::ShaderType for {ucc} {{
+    type ExtraMetadata = <{ucc}Groups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <{ucc}Groups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {{ return <{ucc}Groups as encase::ShaderType>::min_size(); }}
+    fn size(&self) -> std::num::NonZeroU64 {{ return encase::ShaderType::size(unsafe {{ &self.groups }}); }}
+    const UNIFORM_COMPAT_ASSERT: fn() = <{ucc}Groups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {{ return <{ucc}Groups as encase::ShaderType>::assert_uniform_compat(); }}
+}}"#)?;
+        }
+        if self.serde {
+            writeln!(w,
+                     r#"
+impl serde::Serialize for {ucc} {{
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {{
+        let g = unsafe {{ &self.groups }};
+        return g.serialize(serializer);
+    }}
+}}
+impl<'de> serde::Deserialize<'de> for {ucc} {{
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {{
+        let groups = {ucc}Groups::deserialize(deserializer)?;
+        return Ok({ucc} {{ groups }});
+    }}
+}}"#)?;
+        }
+
         for (i, el) in els.clone().into_iter().enumerate() {
             writeln!(w, "impl std::ops::Index<crate::elements::{el}> for {ucc} {{")?;
             writeln!(w, "    type Output = f32;")?;
@@ -2263,7 +2341,7 @@ impl std::hash::Hash for {ucc} {{
         }
         for (i, el) in els.into_iter().enumerate() {
             writeln!(w, "impl std::ops::IndexMut<crate::elements::{el}> for {ucc} {{")?;
-            writeln!(w, "    fn index_mut(&self, _: crate::elements::{el}) -> &mut Self::Output {{")?;
+            writeln!(w, "    fn index_mut(&mut self, _: crate::elements::{el}) -> &mut Self::Output {{")?;
             writeln!(w, "       &mut self[{i}]")?;
             writeln!(w, "    }}\n}}")?;
         }

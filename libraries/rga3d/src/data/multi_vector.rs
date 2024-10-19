@@ -2,12 +2,14 @@ use crate::data::*;
 use crate::simd::*;
 
 /// MultiVector
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, bytemuck::Zeroable)]
 pub union MultiVector {
     groups: MultiVectorGroups,
     /// scalar, e1234, 0, 0, e1, e2, e3, e4, e41, e42, e43, 0, e23, e31, e12, 0, e423, e431, e412, e321
     elements: [f32; 20],
 }
+#[repr(C)]
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct MultiVectorGroups {
     /// scalar, e1234
@@ -152,6 +154,59 @@ impl MultiVector {
     pub const LEN: usize = 16;
 }
 
+impl nearly::EpsTolerance<MultiVector> for MultiVector {
+    type T = f32;
+    const DEFAULT: Self::T = <f32 as nearly::EpsTolerance>::DEFAULT;
+}
+impl nearly::UlpsTolerance<MultiVector> for MultiVector {
+    type T = i32;
+    const DEFAULT: Self::T = <f32 as nearly::UlpsTolerance>::DEFAULT;
+}
+impl nearly::NearlyEqEps<MultiVector, MultiVector, MultiVector> for MultiVector {
+    fn nearly_eq_eps(&self, other: &MultiVector, eps: &nearly::EpsToleranceType<MultiVector, MultiVector>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_eps(other, eps);
+    }
+}
+impl nearly::NearlyEqUlps<MultiVector, MultiVector, MultiVector> for MultiVector {
+    fn nearly_eq_ulps(&self, other: &MultiVector, ulps: &nearly::UlpsToleranceType<MultiVector, MultiVector>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyEqTol for MultiVector {}
+impl nearly::NearlyEq for MultiVector {}
+impl nearly::NearlyOrdUlps<MultiVector, MultiVector, MultiVector> for MultiVector {
+    fn nearly_lt_ulps(&self, other: &MultiVector, ulps: &nearly::UlpsToleranceType<MultiVector, MultiVector>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_ulps(other, ulps);
+    }
+
+    fn nearly_gt_ulps(&self, other: &MultiVector, ulps: &nearly::UlpsToleranceType<MultiVector, MultiVector>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyOrdEps<MultiVector, MultiVector, MultiVector> for MultiVector {
+    fn nearly_lt_eps(&self, other: &MultiVector, eps: &nearly::EpsToleranceType<MultiVector, MultiVector>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_eps(other, eps);
+    }
+
+    fn nearly_gt_eps(&self, other: &MultiVector, eps: &nearly::EpsToleranceType<MultiVector, MultiVector>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_eps(other, eps);
+    }
+}
+impl nearly::NearlyOrdTol<MultiVector, MultiVector, MultiVector> for MultiVector {}
+impl nearly::NearlyOrd for MultiVector {}
+
 impl MultiVector {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
@@ -211,6 +266,34 @@ impl std::hash::Hash for MultiVector {
     }
 }
 
+unsafe impl bytemuck::Pod for MultiVector {}
+impl encase::ShaderType for MultiVector {
+    type ExtraMetadata = <MultiVectorGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <MultiVectorGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <MultiVectorGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <MultiVectorGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <MultiVectorGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for MultiVector {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        let g = unsafe { &self.groups };
+        return g.serialize(serializer);
+    }
+}
+impl<'de> serde::Deserialize<'de> for MultiVector {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let groups = MultiVectorGroups::deserialize(deserializer)?;
+        return Ok(MultiVector { groups });
+    }
+}
 impl std::ops::Index<crate::elements::scalar> for MultiVector {
     type Output = f32;
     fn index(&self, _: crate::elements::scalar) -> &Self::Output {
@@ -308,82 +391,82 @@ impl std::ops::Index<crate::elements::e321> for MultiVector {
     }
 }
 impl std::ops::IndexMut<crate::elements::scalar> for MultiVector {
-    fn index_mut(&self, _: crate::elements::scalar) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::scalar) -> &mut Self::Output {
         &mut self[0]
     }
 }
 impl std::ops::IndexMut<crate::elements::e1234> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e1234) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e1234) -> &mut Self::Output {
         &mut self[1]
     }
 }
 impl std::ops::IndexMut<crate::elements::e1> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e1) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e1) -> &mut Self::Output {
         &mut self[2]
     }
 }
 impl std::ops::IndexMut<crate::elements::e2> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e2) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e2) -> &mut Self::Output {
         &mut self[3]
     }
 }
 impl std::ops::IndexMut<crate::elements::e3> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e3) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e3) -> &mut Self::Output {
         &mut self[4]
     }
 }
 impl std::ops::IndexMut<crate::elements::e4> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e4) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e4) -> &mut Self::Output {
         &mut self[5]
     }
 }
 impl std::ops::IndexMut<crate::elements::e41> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e41) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e41) -> &mut Self::Output {
         &mut self[6]
     }
 }
 impl std::ops::IndexMut<crate::elements::e42> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e42) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e42) -> &mut Self::Output {
         &mut self[7]
     }
 }
 impl std::ops::IndexMut<crate::elements::e43> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e43) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e43) -> &mut Self::Output {
         &mut self[8]
     }
 }
 impl std::ops::IndexMut<crate::elements::e23> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e23) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e23) -> &mut Self::Output {
         &mut self[9]
     }
 }
 impl std::ops::IndexMut<crate::elements::e31> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e31) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e31) -> &mut Self::Output {
         &mut self[10]
     }
 }
 impl std::ops::IndexMut<crate::elements::e12> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e12) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e12) -> &mut Self::Output {
         &mut self[11]
     }
 }
 impl std::ops::IndexMut<crate::elements::e423> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e423) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e423) -> &mut Self::Output {
         &mut self[12]
     }
 }
 impl std::ops::IndexMut<crate::elements::e431> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e431) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e431) -> &mut Self::Output {
         &mut self[13]
     }
 }
 impl std::ops::IndexMut<crate::elements::e412> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e412) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e412) -> &mut Self::Output {
         &mut self[14]
     }
 }
 impl std::ops::IndexMut<crate::elements::e321> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e321) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e321) -> &mut Self::Output {
         &mut self[15]
     }
 }

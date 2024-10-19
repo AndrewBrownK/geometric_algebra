@@ -2,12 +2,14 @@ use crate::data::*;
 use crate::simd::*;
 
 /// Plane
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, bytemuck::Zeroable)]
 pub union Plane {
     groups: PlaneGroups,
     /// e423, e431, e412, e321
     elements: [f32; 4],
 }
+#[repr(C)]
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct PlaneGroups {
     /// e423, e431, e412, e321
@@ -72,6 +74,59 @@ impl Plane {
     pub const LEN: usize = 4;
 }
 
+impl nearly::EpsTolerance<Plane> for Plane {
+    type T = f32;
+    const DEFAULT: Self::T = <f32 as nearly::EpsTolerance>::DEFAULT;
+}
+impl nearly::UlpsTolerance<Plane> for Plane {
+    type T = i32;
+    const DEFAULT: Self::T = <f32 as nearly::UlpsTolerance>::DEFAULT;
+}
+impl nearly::NearlyEqEps<Plane, Plane, Plane> for Plane {
+    fn nearly_eq_eps(&self, other: &Plane, eps: &nearly::EpsToleranceType<Plane, Plane>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_eps(other, eps);
+    }
+}
+impl nearly::NearlyEqUlps<Plane, Plane, Plane> for Plane {
+    fn nearly_eq_ulps(&self, other: &Plane, ulps: &nearly::UlpsToleranceType<Plane, Plane>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_eq_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyEqTol for Plane {}
+impl nearly::NearlyEq for Plane {}
+impl nearly::NearlyOrdUlps<Plane, Plane, Plane> for Plane {
+    fn nearly_lt_ulps(&self, other: &Plane, ulps: &nearly::UlpsToleranceType<Plane, Plane>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_ulps(other, ulps);
+    }
+
+    fn nearly_gt_ulps(&self, other: &Plane, ulps: &nearly::UlpsToleranceType<Plane, Plane>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_ulps(other, ulps);
+    }
+}
+impl nearly::NearlyOrdEps<Plane, Plane, Plane> for Plane {
+    fn nearly_lt_eps(&self, other: &Plane, eps: &nearly::EpsToleranceType<Plane, Plane>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_lt_eps(other, eps);
+    }
+
+    fn nearly_gt_eps(&self, other: &Plane, eps: &nearly::EpsToleranceType<Plane, Plane>) -> bool {
+        let g = unsafe { &self.groups };
+        let other = unsafe { &other.groups };
+        return g.nearly_gt_eps(other, eps);
+    }
+}
+impl nearly::NearlyOrdTol<Plane, Plane, Plane> for Plane {}
+impl nearly::NearlyOrd for Plane {}
+
 impl Plane {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
@@ -131,6 +186,34 @@ impl std::hash::Hash for Plane {
     }
 }
 
+unsafe impl bytemuck::Pod for Plane {}
+impl encase::ShaderType for Plane {
+    type ExtraMetadata = <PlaneGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <PlaneGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <PlaneGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <PlaneGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <PlaneGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for Plane {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        let g = unsafe { &self.groups };
+        return g.serialize(serializer);
+    }
+}
+impl<'de> serde::Deserialize<'de> for Plane {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let groups = PlaneGroups::deserialize(deserializer)?;
+        return Ok(Plane { groups });
+    }
+}
 impl std::ops::Index<crate::elements::e423> for Plane {
     type Output = f32;
     fn index(&self, _: crate::elements::e423) -> &Self::Output {
@@ -156,22 +239,22 @@ impl std::ops::Index<crate::elements::e321> for Plane {
     }
 }
 impl std::ops::IndexMut<crate::elements::e423> for Plane {
-    fn index_mut(&self, _: crate::elements::e423) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e423) -> &mut Self::Output {
         &mut self[0]
     }
 }
 impl std::ops::IndexMut<crate::elements::e431> for Plane {
-    fn index_mut(&self, _: crate::elements::e431) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e431) -> &mut Self::Output {
         &mut self[1]
     }
 }
 impl std::ops::IndexMut<crate::elements::e412> for Plane {
-    fn index_mut(&self, _: crate::elements::e412) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e412) -> &mut Self::Output {
         &mut self[2]
     }
 }
 impl std::ops::IndexMut<crate::elements::e321> for Plane {
-    fn index_mut(&self, _: crate::elements::e321) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e321) -> &mut Self::Output {
         &mut self[3]
     }
 }
