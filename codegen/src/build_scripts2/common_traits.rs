@@ -193,7 +193,7 @@ pub static Fix: Elaborated<FixImpl> = FixImpl
     .blurb("TODO");
 
 pub static AntiFix: Elaborated<AntiFixImpl> = AntiFixImpl
-    .new_trait_named("AntiFixImpl")
+    .new_trait_named("AntiFix")
     .blurb("TODO");
 
 pub static Inverse: Elaborated<InverseImpl> = InverseImpl

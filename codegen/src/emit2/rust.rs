@@ -20,6 +20,7 @@ use crate::ast2::traits::{
 };
 use crate::ast2::RawVariableDeclaration;
 use crate::emit2::sort_trait_impls;
+use crate::shader_support::emit_shader_support;
 use crate::utility::CollectResults;
 use crate::SIMD_SRC;
 
@@ -114,7 +115,7 @@ impl Rust {
         let e = rt.block_on(async move {
             self.write_cargo_toml(crate_folder, algebra_name, version_major, version_minor, version_patch, version_pre, description, repository, authors)
                 .await?;
-            self.write_src(file_path.join(Path::new("src")), multi_vecs, impls).await
+            self.write_src(file_path.join(Path::new("src")), algebra_name, multi_vecs, impls).await
         });
         if let Err(e) = e {
             panic!("Rust Errors: {e:?}");
@@ -169,7 +170,7 @@ edition = "2021"
 default = []
 wgsl = []
 glsl = []
-postgres = []
+sql = []
 
 [dependencies]
 "#
@@ -208,6 +209,7 @@ postgres-types = "0.2.7""#
     async fn write_src<P: AsRef<Path>, const AntiScalar: BasisElement>(
         mut self,
         src_folder: P,
+        algebra_name: &str,
         multi_vecs: Arc<MultiVecRepository<AntiScalar>>,
         impls: Arc<TraitImplRegistry>,
     ) -> anyhow::Result<()> {
@@ -745,6 +747,22 @@ postgres-types = "0.2.7""#
             writeln!(&mut file, "pub mod data;")?;
             writeln!(&mut file, "pub mod traits;")?;
             writeln!(&mut file, "pub mod simd;")?;
+            if self.wgsl || self.glsl || self.sql {
+                writeln!(&mut file, "pub mod integrations {{")?;
+                if self.wgsl {
+                    writeln!(&mut file, "    #[cfg(feature = \"wgsl\")]")?;
+                    writeln!(&mut file, "    pub mod wgsl;")?;
+                }
+                if self.glsl {
+                    writeln!(&mut file, "    #[cfg(feature = \"glsl\")]")?;
+                    writeln!(&mut file, "    pub mod glsl;")?;
+                }
+                if self.sql {
+                    writeln!(&mut file, "    #[cfg(feature = \"sql\")]")?;
+                    writeln!(&mut file, "    pub mod sql;")?;
+                }
+                writeln!(&mut file, "}}")?;
+            }
             writeln!(&mut file, "#[allow(non_camel_case_types)]")?;
             writeln!(&mut file, "pub mod elements {{")?;
             let mut els = multi_vecs.full_multi_vector().elements();
@@ -753,6 +771,8 @@ postgres-types = "0.2.7""#
                 writeln!(&mut file, "    pub struct {el};")?;
             }
             writeln!(&mut file, "}}")?;
+            writeln!(&mut file, "#[test]")?;
+            writeln!(&mut file, "fn double_check_this_crate_compiles() {{}}")?;
             tx3.send(file_path)?;
             Ok(())
         });
@@ -770,6 +790,51 @@ postgres-types = "0.2.7""#
             tx3.send(file_path)?;
             Ok(())
         });
+
+        // integrations....
+        if self.wgsl {
+            let src_folder2 = src_folder.clone();
+            let tx2 = started_file.clone();
+            let tx3 = finished_file.clone();
+            let algebra_name = algebra_name.to_string();
+            join_set.spawn(async move {
+                let file_path = src_folder2.join(Path::new("integrations/wgsl.rs"));
+                tx2.send(file_path.clone())?;
+                let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                emit_shader_support(&mut file, algebra_name.as_str(), "wgsl")?;
+                tx3.send(file_path)?;
+                Ok(())
+            });
+        }
+        if self.glsl {
+            let src_folder2 = src_folder.clone();
+            let tx2 = started_file.clone();
+            let tx3 = finished_file.clone();
+            let algebra_name = algebra_name.to_string();
+            join_set.spawn(async move {
+                let file_path = src_folder2.join(Path::new("integrations/glsl.rs"));
+                tx2.send(file_path.clone())?;
+                let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                emit_shader_support(&mut file, algebra_name.as_str(), "glsl")?;
+                tx3.send(file_path)?;
+                Ok(())
+            });
+        }
+        if self.sql {
+            let src_folder2 = src_folder.clone();
+            let tx2 = started_file.clone();
+            let tx3 = finished_file.clone();
+            let algebra_name = algebra_name.to_string();
+            join_set.spawn(async move {
+                let file_path = src_folder2.join(Path::new("integrations/sql.rs"));
+                tx2.send(file_path.clone())?;
+                let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+                // TODO
+                writeln!(&mut file, "// TODO")?;
+                tx3.send(file_path)?;
+                Ok(())
+            });
+        }
 
         drop(started_file);
         drop(finished_file);

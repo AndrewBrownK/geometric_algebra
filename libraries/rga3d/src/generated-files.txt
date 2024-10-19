@@ -21,6 +21,8 @@
 ./libraries/rga3d/src/data/plane.rs
 ./libraries/rga3d/src/data/point.rs
 ./libraries/rga3d/src/data/scalar.rs
+./libraries/rga3d/src/integrations/glsl.rs
+./libraries/rga3d/src/integrations/wgsl.rs
 ./libraries/rga3d/src/lib.rs
 ./libraries/rga3d/src/simd.rs
 ./libraries/rga3d/src/traits.rs

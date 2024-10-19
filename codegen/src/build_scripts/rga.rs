@@ -3,7 +3,6 @@ use crate::algebra::rigid::RigidGeometricAlgebra;
 use crate::algebra::{read_multi_vector_from_str, MultiVectorClassRegistry};
 use crate::compile::CodeGenerator;
 use crate::emit::Emitter;
-use crate::shader_support::emit_shader_support;
 use std::collections::BTreeMap;
 use std::path::Path;
 
@@ -226,7 +225,7 @@ use crate::products::geometric::*;",
     )?;
     code_gen.emit_metric_operations(&mut emitter)?;
 
-    emit_shader_support(&mut emitter, &file_path, &code_gen.algebra.name)?;
+    // emit_shader_support(&mut emitter, &file_path, &code_gen.algebra.name)?;
     emitter.end_with_rust_fmt();
 
     // GLSL validation can stack overflow when ran in a build script (requires fix in Naga).
