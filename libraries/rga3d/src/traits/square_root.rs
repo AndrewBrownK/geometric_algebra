@@ -1,6 +1,4 @@
-
 use crate::data::*;
-#[allow(unused_imports)]
 use crate::simd::*;
 
 /// SquareRoot

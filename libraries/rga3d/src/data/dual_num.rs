@@ -1,4 +1,5 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// DualNum
@@ -10,7 +11,7 @@ pub union DualNum {
     elements: [f32; 4],
 }
 #[repr(C)]
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct DualNumGroups {
     /// scalar, e1234
     g0: Simd32x2,
@@ -68,58 +69,128 @@ impl DualNum {
     pub const LEN: usize = 2;
 }
 
-impl nearly::EpsTolerance<DualNum> for DualNum {
-    type T = f32;
-    const DEFAULT: Self::T = <f32 as nearly::EpsTolerance>::DEFAULT;
-}
-impl nearly::UlpsTolerance<DualNum> for DualNum {
-    type T = i32;
-    const DEFAULT: Self::T = <f32 as nearly::UlpsTolerance>::DEFAULT;
-}
-impl nearly::NearlyEqEps<DualNum, DualNum, DualNum> for DualNum {
-    fn nearly_eq_eps(&self, other: &DualNum, eps: &nearly::EpsToleranceType<DualNum, DualNum>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_eq_eps(other, eps);
+impl nearly::NearlyEqEps<DualNum, f32, f32> for DualNum {
+    fn nearly_eq_eps(&self, other: &DualNum, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
     }
 }
-impl nearly::NearlyEqUlps<DualNum, DualNum, DualNum> for DualNum {
-    fn nearly_eq_ulps(&self, other: &DualNum, ulps: &nearly::UlpsToleranceType<DualNum, DualNum>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_eq_ulps(other, ulps);
+impl nearly::NearlyEqUlps<DualNum, f32, f32> for DualNum {
+    fn nearly_eq_ulps(&self, other: &DualNum, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
     }
 }
-impl nearly::NearlyEqTol for DualNum {}
-impl nearly::NearlyEq for DualNum {}
-impl nearly::NearlyOrdUlps<DualNum, DualNum, DualNum> for DualNum {
-    fn nearly_lt_ulps(&self, other: &DualNum, ulps: &nearly::UlpsToleranceType<DualNum, DualNum>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_lt_ulps(other, ulps);
+impl nearly::NearlyEqTol<DualNum, f32, f32> for DualNum {}
+impl nearly::NearlyEq<DualNum, f32, f32> for DualNum {}
+impl nearly::NearlyOrdUlps<DualNum, f32, f32> for DualNum {
+    fn nearly_lt_ulps(&self, other: &DualNum, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // Else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 
-    fn nearly_gt_ulps(&self, other: &DualNum, ulps: &nearly::UlpsToleranceType<DualNum, DualNum>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_gt_ulps(other, ulps);
+    fn nearly_gt_ulps(&self, other: &DualNum, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // Else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 }
-impl nearly::NearlyOrdEps<DualNum, DualNum, DualNum> for DualNum {
-    fn nearly_lt_eps(&self, other: &DualNum, eps: &nearly::EpsToleranceType<DualNum, DualNum>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_lt_eps(other, eps);
+impl nearly::NearlyOrdEps<DualNum, f32, f32> for DualNum {
+    fn nearly_lt_eps(&self, other: &DualNum, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // Else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 
-    fn nearly_gt_eps(&self, other: &DualNum, eps: &nearly::EpsToleranceType<DualNum, DualNum>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_gt_eps(other, eps);
+    fn nearly_gt_eps(&self, other: &DualNum, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // Else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 }
-impl nearly::NearlyOrdTol<DualNum, DualNum, DualNum> for DualNum {}
-impl nearly::NearlyOrd for DualNum {}
+impl nearly::NearlyOrdTol<DualNum, f32, f32> for DualNum {}
+impl nearly::NearlyOrd<DualNum, f32, f32> for DualNum {}
 
 impl DualNum {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {

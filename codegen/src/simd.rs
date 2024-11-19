@@ -8,10 +8,10 @@ pub use std::arch::wasm32::*;
 pub use std::arch::x86::*;
 #[cfg(all(target_arch = "x86_64", target_feature = "sse2"))]
 pub use std::arch::x86_64::*;
-
+use std::num::NonZeroU64;
 use encase::internal::{BufferMut, BufferRef, Reader, Writer};
 use encase::private::Metadata;
-
+use nearly::{EpsToleranceType, NearlyEqEps, NearlyEqTol, NearlyEqUlps, UlpsToleranceType};
 // TODO add cargo feature driven support for f64 (and maybe f16, if that is a thing?)
 
 #[derive(Clone, Copy)]
@@ -517,16 +517,25 @@ impl std::ops::Div<Simd32x2> for Simd32x2 {
 
 
 
+
+
+
+
+// encase implementations are based on this code
+//  https://github.com/teoxoy/encase/blob/main/src/types/vector.rs
+
+
+
 impl encase::private::AsRefVectorParts<f32, 4> for Simd32x4 {
     #[inline]
     fn as_ref_parts(&self) -> &[f32; 4] {
-        &self.f32x4
+        unsafe { &self.f32x4 }
     }
 }
 impl encase::private::AsMutVectorParts<f32, 4> for Simd32x4 {
     #[inline]
     fn as_mut_parts(&mut self) -> &mut [f32; 4] {
-        &mut self.f32x4
+        unsafe { &mut self.f32x4 }
     }
 }
 impl encase::private::FromVectorParts<f32, 4> for Simd32x4 {
@@ -538,7 +547,9 @@ impl encase::private::FromVectorParts<f32, 4> for Simd32x4 {
 impl encase::ShaderType for Simd32x4 {
     type ExtraMetadata = ();
     const METADATA: Metadata<Self::ExtraMetadata> = {
-        let size = encase::private::SizeValue::from(<f32 as encase::private::ShaderSize>::SHADER_SIZE.mul(4));
+        let ss = <f32 as encase::private::ShaderSize>::SHADER_SIZE;
+        let stuff = NonZeroU64::new(ss.get() * 4u64).expect("non-zero times non-zero is non-zero");
+        let size = encase::private::SizeValue::from(stuff);
         let alignment = encase::private::AlignmentValue::from_next_power_of_two_size(size);
         Metadata {
             alignment,
@@ -587,13 +598,13 @@ impl encase::private::CreateFrom for Simd32x4 {
 impl encase::private::AsRefVectorParts<f32, 3> for Simd32x3 {
     #[inline]
     fn as_ref_parts(&self) -> &[f32; 3] {
-        &self.f32x3
+        unsafe { &self.f32x3 }
     }
 }
 impl encase::private::AsMutVectorParts<f32, 3> for Simd32x3 {
     #[inline]
     fn as_mut_parts(&mut self) -> &mut [f32; 3] {
-        &mut self.f32x3
+        unsafe { &mut self.f32x3 }
     }
 }
 impl encase::private::FromVectorParts<f32, 3> for Simd32x3 {
@@ -605,7 +616,9 @@ impl encase::private::FromVectorParts<f32, 3> for Simd32x3 {
 impl encase::ShaderType for Simd32x3 {
     type ExtraMetadata = ();
     const METADATA: Metadata<Self::ExtraMetadata> = {
-        let size = encase::private::SizeValue::from(<f32 as encase::private::ShaderSize>::SHADER_SIZE.mul(3));
+        let ss = <f32 as encase::private::ShaderSize>::SHADER_SIZE;
+        let stuff = NonZeroU64::new(ss.get() * 3u64).expect("non-zero times non-zero is non-zero");
+        let size = encase::private::SizeValue::from(stuff);
         let alignment = encase::private::AlignmentValue::from_next_power_of_two_size(size);
         Metadata {
             alignment,
@@ -655,13 +668,13 @@ impl encase::private::CreateFrom for Simd32x3 {
 impl encase::private::AsRefVectorParts<f32, 2> for Simd32x2 {
     #[inline]
     fn as_ref_parts(&self) -> &[f32; 2] {
-        &self.f32x2
+        unsafe { &self.f32x2 }
     }
 }
 impl encase::private::AsMutVectorParts<f32, 2> for Simd32x2 {
     #[inline]
     fn as_mut_parts(&mut self) -> &mut [f32; 2] {
-        &mut self.f32x2
+        unsafe { &mut self.f32x2 }
     }
 }
 impl encase::private::FromVectorParts<f32, 2> for Simd32x2 {
@@ -673,7 +686,9 @@ impl encase::private::FromVectorParts<f32, 2> for Simd32x2 {
 impl encase::ShaderType for Simd32x2 {
     type ExtraMetadata = ();
     const METADATA: Metadata<Self::ExtraMetadata> = {
-        let size = encase::private::SizeValue::from(<f32 as encase::private::ShaderSize>::SHADER_SIZE.mul(2));
+        let ss = <f32 as encase::private::ShaderSize>::SHADER_SIZE;
+        let stuff = NonZeroU64::new(ss.get() * 2u64).expect("non-zero times non-zero is non-zero");
+        let size = encase::private::SizeValue::from(stuff);
         let alignment = encase::private::AlignmentValue::from_next_power_of_two_size(size);
         Metadata {
             alignment,
@@ -710,3 +725,103 @@ impl encase::private::CreateFrom for Simd32x2 {
     }
 }
 
+
+
+
+
+
+
+
+
+
+impl NearlyEqTol<Self, f32, f32> for Simd32x4 {}
+impl NearlyEqEps<Self, f32, f32> for Simd32x4 {
+    fn nearly_eq_eps(&self, other: &Self, eps: &EpsToleranceType<f32, f32>) -> bool {
+        let s = unsafe { &self.f32x4 };
+        let o = unsafe { &other.f32x4 };
+        s.nearly_eq_eps(o, eps)
+    }
+}
+impl NearlyEqUlps<Self, f32, f32> for Simd32x4 {
+    fn nearly_eq_ulps(&self, other: &Self, ulps: &UlpsToleranceType<f32, f32>) -> bool {
+        let s = unsafe { &self.f32x4 };
+        let o = unsafe { &other.f32x4 };
+        s.nearly_eq_ulps(o, ulps)
+    }
+}
+impl nearly::NearlyEq<Self, f32, f32> for Simd32x4 {}
+
+
+
+
+
+
+
+
+
+
+
+impl NearlyEqTol<Self, f32, f32> for Simd32x3 {}
+impl NearlyEqEps<Self, f32, f32> for Simd32x3 {
+    fn nearly_eq_eps(&self, other: &Self, eps: &EpsToleranceType<f32, f32>) -> bool {
+        let s = unsafe { &self.f32x3 };
+        let o = unsafe { &other.f32x3 };
+        s.nearly_eq_eps(o, eps)
+    }
+}
+impl NearlyEqUlps<Self, f32, f32> for Simd32x3 {
+    fn nearly_eq_ulps(&self, other: &Self, ulps: &UlpsToleranceType<f32, f32>) -> bool {
+        let s = unsafe { &self.f32x3 };
+        let o = unsafe { &other.f32x3 };
+        s.nearly_eq_ulps(o, ulps)
+    }
+}
+impl nearly::NearlyEq<Self, f32, f32> for Simd32x3 {}
+
+
+
+
+
+
+
+
+
+
+
+impl NearlyEqTol<Self, f32, f32> for Simd32x2 {}
+impl NearlyEqEps<Self, f32, f32> for Simd32x2 {
+    fn nearly_eq_eps(&self, other: &Self, eps: &EpsToleranceType<f32, f32>) -> bool {
+        let s = unsafe { &self.f32x2 };
+        let o = unsafe { &other.f32x2 };
+        s.nearly_eq_eps(o, eps)
+    }
+}
+impl NearlyEqUlps<Self, f32, f32> for Simd32x2 {
+    fn nearly_eq_ulps(&self, other: &Self, ulps: &UlpsToleranceType<f32, f32>) -> bool {
+        let s = unsafe { &self.f32x2 };
+        let o = unsafe { &other.f32x2 };
+        s.nearly_eq_ulps(o, ulps)
+    }
+}
+impl nearly::NearlyEq<Self, f32, f32> for Simd32x2 {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//

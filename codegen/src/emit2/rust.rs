@@ -1991,9 +1991,6 @@ impl TryFrom<{other}> for {owner} {{
 
         write!(w, "#[repr(C)]")?;
         write!(w, "#[derive(Clone, Copy")?;
-        if self.nearly_eq_ord {
-            write!(w, ", nearly::NearlyEq, nearly::NearlyOrd")?;
-        }
         if self.wgsl || self.glsl {
             write!(w, ", bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType")?;
         }
@@ -2185,58 +2182,128 @@ impl {ucc} {{
             writeln!(
                 w,
                 r#"
-impl nearly::EpsTolerance<{ucc}> for {ucc} {{
-    type T = f32;
-    const DEFAULT: Self::T = <f32 as nearly::EpsTolerance>::DEFAULT;
-}}
-impl nearly::UlpsTolerance<{ucc}> for {ucc} {{
-    type T = i32;
-    const DEFAULT: Self::T = <f32 as nearly::UlpsTolerance>::DEFAULT;
-}}
-impl nearly::NearlyEqEps<{ucc}, {ucc}, {ucc}> for {ucc} {{
-    fn nearly_eq_eps(&self, other: &{ucc}, eps: &nearly::EpsToleranceType<{ucc}, {ucc}>) -> bool {{
-        let g = unsafe {{ &self.groups }};
-        let other = unsafe {{ &other.groups }};
-        return g.nearly_eq_eps(other, eps);
+impl nearly::NearlyEqEps<{ucc}, f32, f32> for {ucc} {{
+    fn nearly_eq_eps(&self, other: &{ucc}, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {{
+        let mut i = 0;
+        while i < Self::LEN {{
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {{
+                return false
+            }}
+            i += 1;
+        }}
+        return true;
     }}
 }}
-impl nearly::NearlyEqUlps<{ucc}, {ucc}, {ucc}> for {ucc} {{
-    fn nearly_eq_ulps(&self, other: &{ucc}, ulps: &nearly::UlpsToleranceType<{ucc}, {ucc}>) -> bool {{
-        let g = unsafe {{ &self.groups }};
-        let other = unsafe {{ &other.groups }};
-        return g.nearly_eq_ulps(other, ulps);
+impl nearly::NearlyEqUlps<{ucc}, f32, f32> for {ucc} {{
+    fn nearly_eq_ulps(&self, other: &{ucc}, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {{
+        let mut i = 0;
+        while i < Self::LEN {{
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {{
+                return false;
+            }}
+            i += 1;
+        }}
+        return true;
     }}
 }}
-impl nearly::NearlyEqTol for {ucc} {{}}
-impl nearly::NearlyEq for {ucc} {{}}
-impl nearly::NearlyOrdUlps<{ucc}, {ucc}, {ucc}> for {ucc} {{
-    fn nearly_lt_ulps(&self, other: &{ucc}, ulps: &nearly::UlpsToleranceType<{ucc}, {ucc}>) -> bool {{
-        let g = unsafe {{ &self.groups }};
-        let other = unsafe {{ &other.groups }};
-        return g.nearly_lt_ulps(other, ulps);
+impl nearly::NearlyEqTol<{ucc}, f32, f32> for {ucc} {{}}
+impl nearly::NearlyEq<{ucc}, f32, f32> for {ucc} {{}}
+impl nearly::NearlyOrdUlps<{ucc}, f32, f32> for {ucc} {{
+    fn nearly_lt_ulps(&self, other: &{ucc}, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {{
+        let mut i = 0;
+        while i < Self::LEN {{
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {{
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }}
+            if a < b {{
+                // Nearly equal until less-than wins
+                return true;
+            }} else {{
+                // Else greater-than wins
+                return false;
+            }}
+        }}
+        // Nearly equal the whole way
+        return false;
     }}
 
-    fn nearly_gt_ulps(&self, other: &{ucc}, ulps: &nearly::UlpsToleranceType<{ucc}, {ucc}>) -> bool {{
-        let g = unsafe {{ &self.groups }};
-        let other = unsafe {{ &other.groups }};
-        return g.nearly_gt_ulps(other, ulps);
+    fn nearly_gt_ulps(&self, other: &{ucc}, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {{
+        let mut i = 0;
+        while i < Self::LEN {{
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {{
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }}
+            if a > b {{
+                // Nearly equal until greater-than wins
+                return true;
+            }} else {{
+                // Else less-than wins
+                return false;
+            }}
+        }}
+        // Nearly equal the whole way
+        return false;
     }}
 }}
-impl nearly::NearlyOrdEps<{ucc}, {ucc}, {ucc}> for {ucc} {{
-    fn nearly_lt_eps(&self, other: &{ucc}, eps: &nearly::EpsToleranceType<{ucc}, {ucc}>) -> bool {{
-        let g = unsafe {{ &self.groups }};
-        let other = unsafe {{ &other.groups }};
-        return g.nearly_lt_eps(other, eps);
+impl nearly::NearlyOrdEps<{ucc}, f32, f32> for {ucc} {{
+    fn nearly_lt_eps(&self, other: &{ucc}, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {{
+        let mut i = 0;
+        while i < Self::LEN {{
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {{
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }}
+            if a < b {{
+                // Nearly equal until less-than wins
+                return true;
+            }} else {{
+                // Else greater-than wins
+                return false;
+            }}
+        }}
+        // Nearly equal the whole way
+        return false;
     }}
 
-    fn nearly_gt_eps(&self, other: &{ucc}, eps: &nearly::EpsToleranceType<{ucc}, {ucc}>) -> bool {{
-        let g = unsafe {{ &self.groups }};
-        let other = unsafe {{ &other.groups }};
-        return g.nearly_gt_eps(other, eps);
+    fn nearly_gt_eps(&self, other: &{ucc}, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {{
+        let mut i = 0;
+        while i < Self::LEN {{
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {{
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }}
+            if a > b {{
+                // Nearly equal until greater-than wins
+                return true;
+            }} else {{
+                // Else less-than wins
+                return false;
+            }}
+        }}
+        // Nearly equal the whole way
+        return false;
     }}
 }}
-impl nearly::NearlyOrdTol<{ucc}, {ucc}, {ucc}> for {ucc} {{}}
-impl nearly::NearlyOrd for {ucc} {{}}
+impl nearly::NearlyOrdTol<{ucc}, f32, f32> for {ucc} {{}}
+impl nearly::NearlyOrd<{ucc}, f32, f32> for {ucc} {{}}
 
 impl {ucc} {{
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {{

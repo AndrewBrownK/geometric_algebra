@@ -1,4 +1,5 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// Horizon
@@ -10,7 +11,7 @@ pub union Horizon {
     elements: [f32; 4],
 }
 #[repr(C)]
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct HorizonGroups {
     /// e321
     g0: f32,
@@ -66,58 +67,128 @@ impl Horizon {
     pub const LEN: usize = 1;
 }
 
-impl nearly::EpsTolerance<Horizon> for Horizon {
-    type T = f32;
-    const DEFAULT: Self::T = <f32 as nearly::EpsTolerance>::DEFAULT;
-}
-impl nearly::UlpsTolerance<Horizon> for Horizon {
-    type T = i32;
-    const DEFAULT: Self::T = <f32 as nearly::UlpsTolerance>::DEFAULT;
-}
-impl nearly::NearlyEqEps<Horizon, Horizon, Horizon> for Horizon {
-    fn nearly_eq_eps(&self, other: &Horizon, eps: &nearly::EpsToleranceType<Horizon, Horizon>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_eq_eps(other, eps);
+impl nearly::NearlyEqEps<Horizon, f32, f32> for Horizon {
+    fn nearly_eq_eps(&self, other: &Horizon, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
     }
 }
-impl nearly::NearlyEqUlps<Horizon, Horizon, Horizon> for Horizon {
-    fn nearly_eq_ulps(&self, other: &Horizon, ulps: &nearly::UlpsToleranceType<Horizon, Horizon>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_eq_ulps(other, ulps);
+impl nearly::NearlyEqUlps<Horizon, f32, f32> for Horizon {
+    fn nearly_eq_ulps(&self, other: &Horizon, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
     }
 }
-impl nearly::NearlyEqTol for Horizon {}
-impl nearly::NearlyEq for Horizon {}
-impl nearly::NearlyOrdUlps<Horizon, Horizon, Horizon> for Horizon {
-    fn nearly_lt_ulps(&self, other: &Horizon, ulps: &nearly::UlpsToleranceType<Horizon, Horizon>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_lt_ulps(other, ulps);
+impl nearly::NearlyEqTol<Horizon, f32, f32> for Horizon {}
+impl nearly::NearlyEq<Horizon, f32, f32> for Horizon {}
+impl nearly::NearlyOrdUlps<Horizon, f32, f32> for Horizon {
+    fn nearly_lt_ulps(&self, other: &Horizon, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // Else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 
-    fn nearly_gt_ulps(&self, other: &Horizon, ulps: &nearly::UlpsToleranceType<Horizon, Horizon>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_gt_ulps(other, ulps);
+    fn nearly_gt_ulps(&self, other: &Horizon, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // Else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 }
-impl nearly::NearlyOrdEps<Horizon, Horizon, Horizon> for Horizon {
-    fn nearly_lt_eps(&self, other: &Horizon, eps: &nearly::EpsToleranceType<Horizon, Horizon>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_lt_eps(other, eps);
+impl nearly::NearlyOrdEps<Horizon, f32, f32> for Horizon {
+    fn nearly_lt_eps(&self, other: &Horizon, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // Else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 
-    fn nearly_gt_eps(&self, other: &Horizon, eps: &nearly::EpsToleranceType<Horizon, Horizon>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_gt_eps(other, eps);
+    fn nearly_gt_eps(&self, other: &Horizon, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // Else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 }
-impl nearly::NearlyOrdTol<Horizon, Horizon, Horizon> for Horizon {}
-impl nearly::NearlyOrd for Horizon {}
+impl nearly::NearlyOrdTol<Horizon, f32, f32> for Horizon {}
+impl nearly::NearlyOrd<Horizon, f32, f32> for Horizon {}
 
 impl Horizon {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {

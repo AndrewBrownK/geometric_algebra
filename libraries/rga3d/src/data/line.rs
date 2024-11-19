@@ -1,4 +1,5 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// Line
@@ -10,7 +11,7 @@ pub union Line {
     elements: [f32; 8],
 }
 #[repr(C)]
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct LineGroups {
     /// e41, e42, e43
     g0: Simd32x3,
@@ -86,58 +87,128 @@ impl Line {
     pub const LEN: usize = 6;
 }
 
-impl nearly::EpsTolerance<Line> for Line {
-    type T = f32;
-    const DEFAULT: Self::T = <f32 as nearly::EpsTolerance>::DEFAULT;
-}
-impl nearly::UlpsTolerance<Line> for Line {
-    type T = i32;
-    const DEFAULT: Self::T = <f32 as nearly::UlpsTolerance>::DEFAULT;
-}
-impl nearly::NearlyEqEps<Line, Line, Line> for Line {
-    fn nearly_eq_eps(&self, other: &Line, eps: &nearly::EpsToleranceType<Line, Line>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_eq_eps(other, eps);
+impl nearly::NearlyEqEps<Line, f32, f32> for Line {
+    fn nearly_eq_eps(&self, other: &Line, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
     }
 }
-impl nearly::NearlyEqUlps<Line, Line, Line> for Line {
-    fn nearly_eq_ulps(&self, other: &Line, ulps: &nearly::UlpsToleranceType<Line, Line>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_eq_ulps(other, ulps);
+impl nearly::NearlyEqUlps<Line, f32, f32> for Line {
+    fn nearly_eq_ulps(&self, other: &Line, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
     }
 }
-impl nearly::NearlyEqTol for Line {}
-impl nearly::NearlyEq for Line {}
-impl nearly::NearlyOrdUlps<Line, Line, Line> for Line {
-    fn nearly_lt_ulps(&self, other: &Line, ulps: &nearly::UlpsToleranceType<Line, Line>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_lt_ulps(other, ulps);
+impl nearly::NearlyEqTol<Line, f32, f32> for Line {}
+impl nearly::NearlyEq<Line, f32, f32> for Line {}
+impl nearly::NearlyOrdUlps<Line, f32, f32> for Line {
+    fn nearly_lt_ulps(&self, other: &Line, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // Else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 
-    fn nearly_gt_ulps(&self, other: &Line, ulps: &nearly::UlpsToleranceType<Line, Line>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_gt_ulps(other, ulps);
+    fn nearly_gt_ulps(&self, other: &Line, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // Else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 }
-impl nearly::NearlyOrdEps<Line, Line, Line> for Line {
-    fn nearly_lt_eps(&self, other: &Line, eps: &nearly::EpsToleranceType<Line, Line>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_lt_eps(other, eps);
+impl nearly::NearlyOrdEps<Line, f32, f32> for Line {
+    fn nearly_lt_eps(&self, other: &Line, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // Else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 
-    fn nearly_gt_eps(&self, other: &Line, eps: &nearly::EpsToleranceType<Line, Line>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_gt_eps(other, eps);
+    fn nearly_gt_eps(&self, other: &Line, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // Else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 }
-impl nearly::NearlyOrdTol<Line, Line, Line> for Line {}
-impl nearly::NearlyOrd for Line {}
+impl nearly::NearlyOrdTol<Line, f32, f32> for Line {}
+impl nearly::NearlyOrd<Line, f32, f32> for Line {}
 
 impl Line {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {

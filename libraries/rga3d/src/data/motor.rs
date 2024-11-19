@@ -1,4 +1,5 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// Motor
@@ -10,7 +11,7 @@ pub union Motor {
     elements: [f32; 8],
 }
 #[repr(C)]
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct MotorGroups {
     /// e41, e42, e43, e1234
     g0: Simd32x4,
@@ -92,58 +93,128 @@ impl Motor {
     pub const LEN: usize = 8;
 }
 
-impl nearly::EpsTolerance<Motor> for Motor {
-    type T = f32;
-    const DEFAULT: Self::T = <f32 as nearly::EpsTolerance>::DEFAULT;
-}
-impl nearly::UlpsTolerance<Motor> for Motor {
-    type T = i32;
-    const DEFAULT: Self::T = <f32 as nearly::UlpsTolerance>::DEFAULT;
-}
-impl nearly::NearlyEqEps<Motor, Motor, Motor> for Motor {
-    fn nearly_eq_eps(&self, other: &Motor, eps: &nearly::EpsToleranceType<Motor, Motor>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_eq_eps(other, eps);
+impl nearly::NearlyEqEps<Motor, f32, f32> for Motor {
+    fn nearly_eq_eps(&self, other: &Motor, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
     }
 }
-impl nearly::NearlyEqUlps<Motor, Motor, Motor> for Motor {
-    fn nearly_eq_ulps(&self, other: &Motor, ulps: &nearly::UlpsToleranceType<Motor, Motor>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_eq_ulps(other, ulps);
+impl nearly::NearlyEqUlps<Motor, f32, f32> for Motor {
+    fn nearly_eq_ulps(&self, other: &Motor, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
     }
 }
-impl nearly::NearlyEqTol for Motor {}
-impl nearly::NearlyEq for Motor {}
-impl nearly::NearlyOrdUlps<Motor, Motor, Motor> for Motor {
-    fn nearly_lt_ulps(&self, other: &Motor, ulps: &nearly::UlpsToleranceType<Motor, Motor>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_lt_ulps(other, ulps);
+impl nearly::NearlyEqTol<Motor, f32, f32> for Motor {}
+impl nearly::NearlyEq<Motor, f32, f32> for Motor {}
+impl nearly::NearlyOrdUlps<Motor, f32, f32> for Motor {
+    fn nearly_lt_ulps(&self, other: &Motor, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // Else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 
-    fn nearly_gt_ulps(&self, other: &Motor, ulps: &nearly::UlpsToleranceType<Motor, Motor>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_gt_ulps(other, ulps);
+    fn nearly_gt_ulps(&self, other: &Motor, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // Else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 }
-impl nearly::NearlyOrdEps<Motor, Motor, Motor> for Motor {
-    fn nearly_lt_eps(&self, other: &Motor, eps: &nearly::EpsToleranceType<Motor, Motor>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_lt_eps(other, eps);
+impl nearly::NearlyOrdEps<Motor, f32, f32> for Motor {
+    fn nearly_lt_eps(&self, other: &Motor, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // Else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 
-    fn nearly_gt_eps(&self, other: &Motor, eps: &nearly::EpsToleranceType<Motor, Motor>) -> bool {
-        let g = unsafe { &self.groups };
-        let other = unsafe { &other.groups };
-        return g.nearly_gt_eps(other, eps);
+    fn nearly_gt_eps(&self, other: &Motor, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // Else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
     }
 }
-impl nearly::NearlyOrdTol<Motor, Motor, Motor> for Motor {}
-impl nearly::NearlyOrd for Motor {}
+impl nearly::NearlyOrdTol<Motor, f32, f32> for Motor {}
+impl nearly::NearlyOrd<Motor, f32, f32> for Motor {}
 
 impl Motor {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
