@@ -4,14 +4,14 @@ use crate::simd::*;
 
 /// Plane
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Zeroable)]
+#[derive(Clone, Copy)]
 pub union Plane {
     groups: PlaneGroups,
     /// e423, e431, e412, e321
     elements: [f32; 4],
 }
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct PlaneGroups {
     /// e423, e431, e412, e321
     g0: Simd32x4,
@@ -120,7 +120,7 @@ impl nearly::NearlyOrdUlps<Plane, f32, f32> for Plane {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -142,7 +142,7 @@ impl nearly::NearlyOrdUlps<Plane, f32, f32> for Plane {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -165,7 +165,7 @@ impl nearly::NearlyOrdEps<Plane, f32, f32> for Plane {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -187,7 +187,7 @@ impl nearly::NearlyOrdEps<Plane, f32, f32> for Plane {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -257,6 +257,7 @@ impl std::hash::Hash for Plane {
     }
 }
 
+unsafe impl bytemuck::Zeroable for Plane {}
 unsafe impl bytemuck::Pod for Plane {}
 impl encase::ShaderType for Plane {
     type ExtraMetadata = <PlaneGroups as encase::ShaderType>::ExtraMetadata;
@@ -275,14 +276,84 @@ impl encase::ShaderType for Plane {
 
 impl serde::Serialize for Plane {
     fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        let g = unsafe { &self.groups };
-        return g.serialize(serializer);
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("Plane", 4)?;
+        state.serialize_field("e423", &self[crate::elements::e423])?;
+        state.serialize_field("e431", &self[crate::elements::e431])?;
+        state.serialize_field("e412", &self[crate::elements::e412])?;
+        state.serialize_field("e321", &self[crate::elements::e321])?;
+        state.end()
     }
 }
 impl<'de> serde::Deserialize<'de> for Plane {
     fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        let groups = PlaneGroups::deserialize(deserializer)?;
-        return Ok(Plane { groups });
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum PlaneField {
+            e423,
+            e431,
+            e412,
+            e321,
+        }
+        struct PlaneVisitor;
+        impl<'de> Visitor<'de> for PlaneVisitor {
+            type Value = Plane;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct Plane")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<Plane, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e423 = None;
+                let mut e431 = None;
+                let mut e412 = None;
+                let mut e321 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        PlaneField::e423 => {
+                            if e423.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e423"));
+                            }
+                            e423 = Some(map.next_value()?);
+                        }
+
+                        PlaneField::e431 => {
+                            if e431.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e431"));
+                            }
+                            e431 = Some(map.next_value()?);
+                        }
+
+                        PlaneField::e412 => {
+                            if e412.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e412"));
+                            }
+                            e412 = Some(map.next_value()?);
+                        }
+
+                        PlaneField::e321 => {
+                            if e321.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e321"));
+                            }
+                            e321 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = Plane::from([0.0; 4]);
+                result[crate::elements::e423] = e423.ok_or_else(|| serde::de::Error::missing_field("e423"))?;
+                result[crate::elements::e431] = e431.ok_or_else(|| serde::de::Error::missing_field("e431"))?;
+                result[crate::elements::e412] = e412.ok_or_else(|| serde::de::Error::missing_field("e412"))?;
+                result[crate::elements::e321] = e321.ok_or_else(|| serde::de::Error::missing_field("e321"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e423", "e431", "e412", "e321"];
+        deserializer.deserialize_struct("Plane", FIELDS, PlaneVisitor)
     }
 }
 impl std::ops::Index<crate::elements::e423> for Plane {

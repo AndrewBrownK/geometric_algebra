@@ -7,14 +7,14 @@ use crate::simd::*;
 /// It is the base element e4.
 /// Not to be confused with FlatOrigin, which is a Dipole connecting Origin and Infinity.
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Zeroable)]
+#[derive(Clone, Copy)]
 pub union Origin {
     groups: OriginGroups,
     /// e4, 0, 0, 0
     elements: [f32; 4],
 }
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct OriginGroups {
     /// e4
     g0: f32,
@@ -115,7 +115,7 @@ impl nearly::NearlyOrdUlps<Origin, f32, f32> for Origin {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -137,7 +137,7 @@ impl nearly::NearlyOrdUlps<Origin, f32, f32> for Origin {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -160,7 +160,7 @@ impl nearly::NearlyOrdEps<Origin, f32, f32> for Origin {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -182,7 +182,7 @@ impl nearly::NearlyOrdEps<Origin, f32, f32> for Origin {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -252,6 +252,7 @@ impl std::hash::Hash for Origin {
     }
 }
 
+unsafe impl bytemuck::Zeroable for Origin {}
 unsafe impl bytemuck::Pod for Origin {}
 impl encase::ShaderType for Origin {
     type ExtraMetadata = <OriginGroups as encase::ShaderType>::ExtraMetadata;
@@ -270,14 +271,51 @@ impl encase::ShaderType for Origin {
 
 impl serde::Serialize for Origin {
     fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        let g = unsafe { &self.groups };
-        return g.serialize(serializer);
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("Origin", 1)?;
+        state.serialize_field("e4", &self[crate::elements::e4])?;
+        state.end()
     }
 }
 impl<'de> serde::Deserialize<'de> for Origin {
     fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        let groups = OriginGroups::deserialize(deserializer)?;
-        return Ok(Origin { groups });
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum OriginField {
+            e4,
+        }
+        struct OriginVisitor;
+        impl<'de> Visitor<'de> for OriginVisitor {
+            type Value = Origin;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct Origin")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<Origin, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e4 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        OriginField::e4 => {
+                            if e4.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e4"));
+                            }
+                            e4 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = Origin::from([0.0; 1]);
+                result[crate::elements::e4] = e4.ok_or_else(|| serde::de::Error::missing_field("e4"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e4"];
+        deserializer.deserialize_struct("Origin", FIELDS, OriginVisitor)
     }
 }
 impl std::ops::Index<crate::elements::e4> for Origin {

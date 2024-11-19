@@ -4,14 +4,14 @@ use crate::simd::*;
 
 /// Motor
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Zeroable)]
+#[derive(Clone, Copy)]
 pub union Motor {
     groups: MotorGroups,
     /// e41, e42, e43, e1234, e23, e31, e12, scalar
     elements: [f32; 8],
 }
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct MotorGroups {
     /// e41, e42, e43, e1234
     g0: Simd32x4,
@@ -138,7 +138,7 @@ impl nearly::NearlyOrdUlps<Motor, f32, f32> for Motor {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -160,7 +160,7 @@ impl nearly::NearlyOrdUlps<Motor, f32, f32> for Motor {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -183,7 +183,7 @@ impl nearly::NearlyOrdEps<Motor, f32, f32> for Motor {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -205,7 +205,7 @@ impl nearly::NearlyOrdEps<Motor, f32, f32> for Motor {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -275,6 +275,7 @@ impl std::hash::Hash for Motor {
     }
 }
 
+unsafe impl bytemuck::Zeroable for Motor {}
 unsafe impl bytemuck::Pod for Motor {}
 impl encase::ShaderType for Motor {
     type ExtraMetadata = <MotorGroups as encase::ShaderType>::ExtraMetadata;
@@ -293,14 +294,128 @@ impl encase::ShaderType for Motor {
 
 impl serde::Serialize for Motor {
     fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        let g = unsafe { &self.groups };
-        return g.serialize(serializer);
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("Motor", 8)?;
+        state.serialize_field("e41", &self[crate::elements::e41])?;
+        state.serialize_field("e42", &self[crate::elements::e42])?;
+        state.serialize_field("e43", &self[crate::elements::e43])?;
+        state.serialize_field("e1234", &self[crate::elements::e1234])?;
+        state.serialize_field("e23", &self[crate::elements::e23])?;
+        state.serialize_field("e31", &self[crate::elements::e31])?;
+        state.serialize_field("e12", &self[crate::elements::e12])?;
+        state.serialize_field("scalar", &self[crate::elements::scalar])?;
+        state.end()
     }
 }
 impl<'de> serde::Deserialize<'de> for Motor {
     fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        let groups = MotorGroups::deserialize(deserializer)?;
-        return Ok(Motor { groups });
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum MotorField {
+            e41,
+            e42,
+            e43,
+            e1234,
+            e23,
+            e31,
+            e12,
+            scalar,
+        }
+        struct MotorVisitor;
+        impl<'de> Visitor<'de> for MotorVisitor {
+            type Value = Motor;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct Motor")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<Motor, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e41 = None;
+                let mut e42 = None;
+                let mut e43 = None;
+                let mut e1234 = None;
+                let mut e23 = None;
+                let mut e31 = None;
+                let mut e12 = None;
+                let mut scalar = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        MotorField::e41 => {
+                            if e41.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e41"));
+                            }
+                            e41 = Some(map.next_value()?);
+                        }
+
+                        MotorField::e42 => {
+                            if e42.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e42"));
+                            }
+                            e42 = Some(map.next_value()?);
+                        }
+
+                        MotorField::e43 => {
+                            if e43.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e43"));
+                            }
+                            e43 = Some(map.next_value()?);
+                        }
+
+                        MotorField::e1234 => {
+                            if e1234.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e1234"));
+                            }
+                            e1234 = Some(map.next_value()?);
+                        }
+
+                        MotorField::e23 => {
+                            if e23.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e23"));
+                            }
+                            e23 = Some(map.next_value()?);
+                        }
+
+                        MotorField::e31 => {
+                            if e31.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e31"));
+                            }
+                            e31 = Some(map.next_value()?);
+                        }
+
+                        MotorField::e12 => {
+                            if e12.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e12"));
+                            }
+                            e12 = Some(map.next_value()?);
+                        }
+
+                        MotorField::scalar => {
+                            if scalar.is_some() {
+                                return Err(serde::de::Error::duplicate_field("scalar"));
+                            }
+                            scalar = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = Motor::from([0.0; 8]);
+                result[crate::elements::e41] = e41.ok_or_else(|| serde::de::Error::missing_field("e41"))?;
+                result[crate::elements::e42] = e42.ok_or_else(|| serde::de::Error::missing_field("e42"))?;
+                result[crate::elements::e43] = e43.ok_or_else(|| serde::de::Error::missing_field("e43"))?;
+                result[crate::elements::e1234] = e1234.ok_or_else(|| serde::de::Error::missing_field("e1234"))?;
+                result[crate::elements::e23] = e23.ok_or_else(|| serde::de::Error::missing_field("e23"))?;
+                result[crate::elements::e31] = e31.ok_or_else(|| serde::de::Error::missing_field("e31"))?;
+                result[crate::elements::e12] = e12.ok_or_else(|| serde::de::Error::missing_field("e12"))?;
+                result[crate::elements::scalar] = scalar.ok_or_else(|| serde::de::Error::missing_field("scalar"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e41", "e42", "e43", "e1234", "e23", "e31", "e12", "scalar"];
+        deserializer.deserialize_struct("Motor", FIELDS, MotorVisitor)
     }
 }
 impl std::ops::Index<crate::elements::e41> for Motor {

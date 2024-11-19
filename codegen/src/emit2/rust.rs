@@ -1961,11 +1961,7 @@ impl TryFrom<{other}> for {owner} {{
         self.emit_comment(w, true, docs)?;
 
         write!(w, "#[repr(C)]")?;
-        write!(w, "#[derive(Clone, Copy")?;
-        if self.wgsl || self.glsl {
-            write!(w, ", bytemuck::Zeroable")?;
-        }
-        writeln!(w, ")]")?;
+        write!(w, "#[derive(Clone, Copy)]")?;
         writeln!(w, "pub union {ucc} {{")?;
         writeln!(w, "    groups: {ucc}Groups,")?;
         write!(w, "    /// ")?;
@@ -1992,10 +1988,7 @@ impl TryFrom<{other}> for {owner} {{
         write!(w, "#[repr(C)]")?;
         write!(w, "#[derive(Clone, Copy")?;
         if self.wgsl || self.glsl {
-            write!(w, ", bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType")?;
-        }
-        if self.serde {
-            write!(w, ", serde::Serialize, serde::Deserialize")?;
+            write!(w, ", encase::ShaderType")?;
         }
         writeln!(w, ")]")?;
         writeln!(w, "pub struct {ucc}Groups {{")?;
@@ -2227,7 +2220,7 @@ impl nearly::NearlyOrdUlps<{ucc}, f32, f32> for {ucc} {{
                 // Nearly equal until less-than wins
                 return true;
             }} else {{
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }}
         }}
@@ -2249,7 +2242,7 @@ impl nearly::NearlyOrdUlps<{ucc}, f32, f32> for {ucc} {{
                 // Nearly equal until greater-than wins
                 return true;
             }} else {{
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }}
         }}
@@ -2272,7 +2265,7 @@ impl nearly::NearlyOrdEps<{ucc}, f32, f32> for {ucc} {{
                 // Nearly equal until less-than wins
                 return true;
             }} else {{
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }}
         }}
@@ -2294,7 +2287,7 @@ impl nearly::NearlyOrdEps<{ucc}, f32, f32> for {ucc} {{
                 // Nearly equal until greater-than wins
                 return true;
             }} else {{
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }}
         }}
@@ -2374,6 +2367,7 @@ impl std::hash::Hash for {ucc} {{
         if self.wgsl || self.glsl {
             writeln!(w,
             r#"
+unsafe impl bytemuck::Zeroable for {ucc} {{}}
 unsafe impl bytemuck::Pod for {ucc} {{}}
 impl encase::ShaderType for {ucc} {{
     type ExtraMetadata = <{ucc}Groups as encase::ShaderType>::ExtraMetadata;
@@ -2389,14 +2383,70 @@ impl encase::ShaderType for {ucc} {{
                      r#"
 impl serde::Serialize for {ucc} {{
     fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {{
-        let g = unsafe {{ &self.groups }};
-        return g.serialize(serializer);
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("{ucc}", {els_len})?;"#)?;
+            for el in els.clone().into_iter() {
+                writeln!(w, r#"state.serialize_field("{el}", &self[crate::elements::{el}])?;"#)?;
+            }
+            writeln!(w, r#"state.end()
     }}
 }}
 impl<'de> serde::Deserialize<'de> for {ucc} {{
     fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {{
-        let groups = {ucc}Groups::deserialize(deserializer)?;
-        return Ok({ucc} {{ groups }});
+        use serde::de::{{Visitor, MapAccess}};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum {ucc}Field {{"#)?;
+            for el in els.clone().into_iter() {
+                writeln!(w, "{el}, ")?;
+            }
+
+            writeln!(w, r#"
+        }}
+        struct {ucc}Visitor;
+        impl<'de> Visitor<'de> for {ucc}Visitor {{
+            type Value = {ucc};
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {{
+                formatter.write_str("struct {ucc}")
+            }}
+            fn visit_map<V>(self, mut map: V) -> Result<{ucc}, V::Error> where V: MapAccess<'de> {{"#)?;
+
+            for el in els.clone().into_iter() {
+                writeln!(w, "let mut {el} = None;")?;
+            }
+
+
+            writeln!(w, r#"
+                while let Some(key) = map.next_key()? {{
+                    match key {{"#)?;
+            for el in els.clone().into_iter() {
+                writeln!(w, r#"{ucc}Field::{el} => {{
+                    if {el}.is_some() {{
+                        return Err(serde::de::Error::duplicate_field("{el}"));
+                    }}
+                    {el} = Some(map.next_value()?);
+                }}
+                "#)?;
+            }
+            writeln!(w, r#"
+                    }}
+                }}"#)?;
+            writeln!(w, r#"let mut result = {ucc}::from([0.0; {els_len}]);"#)?;
+            for el in els.clone().into_iter() {
+                writeln!(w, r#"result[crate::elements::{el}] = {el}.ok_or_else(|| serde::de::Error::missing_field("{el}"))?;"#)?;
+            }
+            writeln!(w, r#"Ok(result)
+            }}
+        }}"#)?;
+
+            writeln!(w, r#"
+        const FIELDS: &'static [&'static str] = &["#)?;
+            for el in els.clone().into_iter() {
+                write!(w, r#""{el}", "#)?;
+            }
+            writeln!(w, r#"];
+        deserializer.deserialize_struct("{ucc}", FIELDS, {ucc}Visitor)
     }}
 }}"#)?;
         }

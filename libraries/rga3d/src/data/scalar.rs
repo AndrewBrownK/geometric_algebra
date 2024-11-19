@@ -4,14 +4,14 @@ use crate::simd::*;
 
 /// Scalar
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Zeroable)]
+#[derive(Clone, Copy)]
 pub union Scalar {
     groups: ScalarGroups,
     /// scalar, 0, 0, 0
     elements: [f32; 4],
 }
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct ScalarGroups {
     /// scalar
     g0: f32,
@@ -114,7 +114,7 @@ impl nearly::NearlyOrdUlps<Scalar, f32, f32> for Scalar {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -136,7 +136,7 @@ impl nearly::NearlyOrdUlps<Scalar, f32, f32> for Scalar {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -159,7 +159,7 @@ impl nearly::NearlyOrdEps<Scalar, f32, f32> for Scalar {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -181,7 +181,7 @@ impl nearly::NearlyOrdEps<Scalar, f32, f32> for Scalar {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -251,6 +251,7 @@ impl std::hash::Hash for Scalar {
     }
 }
 
+unsafe impl bytemuck::Zeroable for Scalar {}
 unsafe impl bytemuck::Pod for Scalar {}
 impl encase::ShaderType for Scalar {
     type ExtraMetadata = <ScalarGroups as encase::ShaderType>::ExtraMetadata;
@@ -269,14 +270,51 @@ impl encase::ShaderType for Scalar {
 
 impl serde::Serialize for Scalar {
     fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        let g = unsafe { &self.groups };
-        return g.serialize(serializer);
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("Scalar", 1)?;
+        state.serialize_field("scalar", &self[crate::elements::scalar])?;
+        state.end()
     }
 }
 impl<'de> serde::Deserialize<'de> for Scalar {
     fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        let groups = ScalarGroups::deserialize(deserializer)?;
-        return Ok(Scalar { groups });
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum ScalarField {
+            scalar,
+        }
+        struct ScalarVisitor;
+        impl<'de> Visitor<'de> for ScalarVisitor {
+            type Value = Scalar;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct Scalar")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<Scalar, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut scalar = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        ScalarField::scalar => {
+                            if scalar.is_some() {
+                                return Err(serde::de::Error::duplicate_field("scalar"));
+                            }
+                            scalar = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = Scalar::from([0.0; 1]);
+                result[crate::elements::scalar] = scalar.ok_or_else(|| serde::de::Error::missing_field("scalar"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["scalar"];
+        deserializer.deserialize_struct("Scalar", FIELDS, ScalarVisitor)
     }
 }
 impl std::ops::Index<crate::elements::scalar> for Scalar {

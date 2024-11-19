@@ -4,14 +4,14 @@ use crate::simd::*;
 
 /// Horizon
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Zeroable)]
+#[derive(Clone, Copy)]
 pub union Horizon {
     groups: HorizonGroups,
     /// e321, 0, 0, 0
     elements: [f32; 4],
 }
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct HorizonGroups {
     /// e321
     g0: f32,
@@ -112,7 +112,7 @@ impl nearly::NearlyOrdUlps<Horizon, f32, f32> for Horizon {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -134,7 +134,7 @@ impl nearly::NearlyOrdUlps<Horizon, f32, f32> for Horizon {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -157,7 +157,7 @@ impl nearly::NearlyOrdEps<Horizon, f32, f32> for Horizon {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -179,7 +179,7 @@ impl nearly::NearlyOrdEps<Horizon, f32, f32> for Horizon {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -249,6 +249,7 @@ impl std::hash::Hash for Horizon {
     }
 }
 
+unsafe impl bytemuck::Zeroable for Horizon {}
 unsafe impl bytemuck::Pod for Horizon {}
 impl encase::ShaderType for Horizon {
     type ExtraMetadata = <HorizonGroups as encase::ShaderType>::ExtraMetadata;
@@ -267,14 +268,51 @@ impl encase::ShaderType for Horizon {
 
 impl serde::Serialize for Horizon {
     fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        let g = unsafe { &self.groups };
-        return g.serialize(serializer);
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("Horizon", 1)?;
+        state.serialize_field("e321", &self[crate::elements::e321])?;
+        state.end()
     }
 }
 impl<'de> serde::Deserialize<'de> for Horizon {
     fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        let groups = HorizonGroups::deserialize(deserializer)?;
-        return Ok(Horizon { groups });
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum HorizonField {
+            e321,
+        }
+        struct HorizonVisitor;
+        impl<'de> Visitor<'de> for HorizonVisitor {
+            type Value = Horizon;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct Horizon")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<Horizon, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e321 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        HorizonField::e321 => {
+                            if e321.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e321"));
+                            }
+                            e321 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = Horizon::from([0.0; 1]);
+                result[crate::elements::e321] = e321.ok_or_else(|| serde::de::Error::missing_field("e321"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e321"];
+        deserializer.deserialize_struct("Horizon", FIELDS, HorizonVisitor)
     }
 }
 impl std::ops::Index<crate::elements::e321> for Horizon {

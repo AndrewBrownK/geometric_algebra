@@ -4,14 +4,14 @@ use crate::simd::*;
 
 /// MultiVector
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Zeroable)]
+#[derive(Clone, Copy)]
 pub union MultiVector {
     groups: MultiVectorGroups,
     /// scalar, e1234, 0, 0, e1, e2, e3, e4, e41, e42, e43, 0, e23, e31, e12, 0, e423, e431, e412, e321
     elements: [f32; 20],
 }
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct MultiVectorGroups {
     /// scalar, e1234
     g0: Simd32x2,
@@ -200,7 +200,7 @@ impl nearly::NearlyOrdUlps<MultiVector, f32, f32> for MultiVector {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -222,7 +222,7 @@ impl nearly::NearlyOrdUlps<MultiVector, f32, f32> for MultiVector {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -245,7 +245,7 @@ impl nearly::NearlyOrdEps<MultiVector, f32, f32> for MultiVector {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -267,7 +267,7 @@ impl nearly::NearlyOrdEps<MultiVector, f32, f32> for MultiVector {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -337,6 +337,7 @@ impl std::hash::Hash for MultiVector {
     }
 }
 
+unsafe impl bytemuck::Zeroable for MultiVector {}
 unsafe impl bytemuck::Pod for MultiVector {}
 impl encase::ShaderType for MultiVector {
     type ExtraMetadata = <MultiVectorGroups as encase::ShaderType>::ExtraMetadata;
@@ -355,14 +356,216 @@ impl encase::ShaderType for MultiVector {
 
 impl serde::Serialize for MultiVector {
     fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        let g = unsafe { &self.groups };
-        return g.serialize(serializer);
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("MultiVector", 16)?;
+        state.serialize_field("scalar", &self[crate::elements::scalar])?;
+        state.serialize_field("e1234", &self[crate::elements::e1234])?;
+        state.serialize_field("e1", &self[crate::elements::e1])?;
+        state.serialize_field("e2", &self[crate::elements::e2])?;
+        state.serialize_field("e3", &self[crate::elements::e3])?;
+        state.serialize_field("e4", &self[crate::elements::e4])?;
+        state.serialize_field("e41", &self[crate::elements::e41])?;
+        state.serialize_field("e42", &self[crate::elements::e42])?;
+        state.serialize_field("e43", &self[crate::elements::e43])?;
+        state.serialize_field("e23", &self[crate::elements::e23])?;
+        state.serialize_field("e31", &self[crate::elements::e31])?;
+        state.serialize_field("e12", &self[crate::elements::e12])?;
+        state.serialize_field("e423", &self[crate::elements::e423])?;
+        state.serialize_field("e431", &self[crate::elements::e431])?;
+        state.serialize_field("e412", &self[crate::elements::e412])?;
+        state.serialize_field("e321", &self[crate::elements::e321])?;
+        state.end()
     }
 }
 impl<'de> serde::Deserialize<'de> for MultiVector {
     fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        let groups = MultiVectorGroups::deserialize(deserializer)?;
-        return Ok(MultiVector { groups });
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum MultiVectorField {
+            scalar,
+            e1234,
+            e1,
+            e2,
+            e3,
+            e4,
+            e41,
+            e42,
+            e43,
+            e23,
+            e31,
+            e12,
+            e423,
+            e431,
+            e412,
+            e321,
+        }
+        struct MultiVectorVisitor;
+        impl<'de> Visitor<'de> for MultiVectorVisitor {
+            type Value = MultiVector;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct MultiVector")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<MultiVector, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut scalar = None;
+                let mut e1234 = None;
+                let mut e1 = None;
+                let mut e2 = None;
+                let mut e3 = None;
+                let mut e4 = None;
+                let mut e41 = None;
+                let mut e42 = None;
+                let mut e43 = None;
+                let mut e23 = None;
+                let mut e31 = None;
+                let mut e12 = None;
+                let mut e423 = None;
+                let mut e431 = None;
+                let mut e412 = None;
+                let mut e321 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        MultiVectorField::scalar => {
+                            if scalar.is_some() {
+                                return Err(serde::de::Error::duplicate_field("scalar"));
+                            }
+                            scalar = Some(map.next_value()?);
+                        }
+
+                        MultiVectorField::e1234 => {
+                            if e1234.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e1234"));
+                            }
+                            e1234 = Some(map.next_value()?);
+                        }
+
+                        MultiVectorField::e1 => {
+                            if e1.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e1"));
+                            }
+                            e1 = Some(map.next_value()?);
+                        }
+
+                        MultiVectorField::e2 => {
+                            if e2.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e2"));
+                            }
+                            e2 = Some(map.next_value()?);
+                        }
+
+                        MultiVectorField::e3 => {
+                            if e3.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e3"));
+                            }
+                            e3 = Some(map.next_value()?);
+                        }
+
+                        MultiVectorField::e4 => {
+                            if e4.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e4"));
+                            }
+                            e4 = Some(map.next_value()?);
+                        }
+
+                        MultiVectorField::e41 => {
+                            if e41.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e41"));
+                            }
+                            e41 = Some(map.next_value()?);
+                        }
+
+                        MultiVectorField::e42 => {
+                            if e42.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e42"));
+                            }
+                            e42 = Some(map.next_value()?);
+                        }
+
+                        MultiVectorField::e43 => {
+                            if e43.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e43"));
+                            }
+                            e43 = Some(map.next_value()?);
+                        }
+
+                        MultiVectorField::e23 => {
+                            if e23.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e23"));
+                            }
+                            e23 = Some(map.next_value()?);
+                        }
+
+                        MultiVectorField::e31 => {
+                            if e31.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e31"));
+                            }
+                            e31 = Some(map.next_value()?);
+                        }
+
+                        MultiVectorField::e12 => {
+                            if e12.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e12"));
+                            }
+                            e12 = Some(map.next_value()?);
+                        }
+
+                        MultiVectorField::e423 => {
+                            if e423.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e423"));
+                            }
+                            e423 = Some(map.next_value()?);
+                        }
+
+                        MultiVectorField::e431 => {
+                            if e431.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e431"));
+                            }
+                            e431 = Some(map.next_value()?);
+                        }
+
+                        MultiVectorField::e412 => {
+                            if e412.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e412"));
+                            }
+                            e412 = Some(map.next_value()?);
+                        }
+
+                        MultiVectorField::e321 => {
+                            if e321.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e321"));
+                            }
+                            e321 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = MultiVector::from([0.0; 16]);
+                result[crate::elements::scalar] = scalar.ok_or_else(|| serde::de::Error::missing_field("scalar"))?;
+                result[crate::elements::e1234] = e1234.ok_or_else(|| serde::de::Error::missing_field("e1234"))?;
+                result[crate::elements::e1] = e1.ok_or_else(|| serde::de::Error::missing_field("e1"))?;
+                result[crate::elements::e2] = e2.ok_or_else(|| serde::de::Error::missing_field("e2"))?;
+                result[crate::elements::e3] = e3.ok_or_else(|| serde::de::Error::missing_field("e3"))?;
+                result[crate::elements::e4] = e4.ok_or_else(|| serde::de::Error::missing_field("e4"))?;
+                result[crate::elements::e41] = e41.ok_or_else(|| serde::de::Error::missing_field("e41"))?;
+                result[crate::elements::e42] = e42.ok_or_else(|| serde::de::Error::missing_field("e42"))?;
+                result[crate::elements::e43] = e43.ok_or_else(|| serde::de::Error::missing_field("e43"))?;
+                result[crate::elements::e23] = e23.ok_or_else(|| serde::de::Error::missing_field("e23"))?;
+                result[crate::elements::e31] = e31.ok_or_else(|| serde::de::Error::missing_field("e31"))?;
+                result[crate::elements::e12] = e12.ok_or_else(|| serde::de::Error::missing_field("e12"))?;
+                result[crate::elements::e423] = e423.ok_or_else(|| serde::de::Error::missing_field("e423"))?;
+                result[crate::elements::e431] = e431.ok_or_else(|| serde::de::Error::missing_field("e431"))?;
+                result[crate::elements::e412] = e412.ok_or_else(|| serde::de::Error::missing_field("e412"))?;
+                result[crate::elements::e321] = e321.ok_or_else(|| serde::de::Error::missing_field("e321"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["scalar", "e1234", "e1", "e2", "e3", "e4", "e41", "e42", "e43", "e23", "e31", "e12", "e423", "e431", "e412", "e321"];
+        deserializer.deserialize_struct("MultiVector", FIELDS, MultiVectorVisitor)
     }
 }
 impl std::ops::Index<crate::elements::scalar> for MultiVector {

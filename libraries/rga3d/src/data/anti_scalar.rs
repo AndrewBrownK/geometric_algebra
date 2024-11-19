@@ -4,14 +4,14 @@ use crate::simd::*;
 
 /// AntiScalar
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Zeroable)]
+#[derive(Clone, Copy)]
 pub union AntiScalar {
     groups: AntiScalarGroups,
     /// e1234, 0, 0, 0
     elements: [f32; 4],
 }
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct AntiScalarGroups {
     /// e1234
     g0: f32,
@@ -112,7 +112,7 @@ impl nearly::NearlyOrdUlps<AntiScalar, f32, f32> for AntiScalar {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -134,7 +134,7 @@ impl nearly::NearlyOrdUlps<AntiScalar, f32, f32> for AntiScalar {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -157,7 +157,7 @@ impl nearly::NearlyOrdEps<AntiScalar, f32, f32> for AntiScalar {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -179,7 +179,7 @@ impl nearly::NearlyOrdEps<AntiScalar, f32, f32> for AntiScalar {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -249,6 +249,7 @@ impl std::hash::Hash for AntiScalar {
     }
 }
 
+unsafe impl bytemuck::Zeroable for AntiScalar {}
 unsafe impl bytemuck::Pod for AntiScalar {}
 impl encase::ShaderType for AntiScalar {
     type ExtraMetadata = <AntiScalarGroups as encase::ShaderType>::ExtraMetadata;
@@ -267,14 +268,51 @@ impl encase::ShaderType for AntiScalar {
 
 impl serde::Serialize for AntiScalar {
     fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        let g = unsafe { &self.groups };
-        return g.serialize(serializer);
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("AntiScalar", 1)?;
+        state.serialize_field("e1234", &self[crate::elements::e1234])?;
+        state.end()
     }
 }
 impl<'de> serde::Deserialize<'de> for AntiScalar {
     fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        let groups = AntiScalarGroups::deserialize(deserializer)?;
-        return Ok(AntiScalar { groups });
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum AntiScalarField {
+            e1234,
+        }
+        struct AntiScalarVisitor;
+        impl<'de> Visitor<'de> for AntiScalarVisitor {
+            type Value = AntiScalar;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct AntiScalar")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<AntiScalar, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e1234 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        AntiScalarField::e1234 => {
+                            if e1234.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e1234"));
+                            }
+                            e1234 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = AntiScalar::from([0.0; 1]);
+                result[crate::elements::e1234] = e1234.ok_or_else(|| serde::de::Error::missing_field("e1234"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e1234"];
+        deserializer.deserialize_struct("AntiScalar", FIELDS, AntiScalarVisitor)
     }
 }
 impl std::ops::Index<crate::elements::e1234> for AntiScalar {

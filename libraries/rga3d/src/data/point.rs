@@ -4,14 +4,14 @@ use crate::simd::*;
 
 /// Point
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Zeroable)]
+#[derive(Clone, Copy)]
 pub union Point {
     groups: PointGroups,
     /// e1, e2, e3, e4
     elements: [f32; 4],
 }
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct PointGroups {
     /// e1, e2, e3, e4
     g0: Simd32x4,
@@ -118,7 +118,7 @@ impl nearly::NearlyOrdUlps<Point, f32, f32> for Point {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -140,7 +140,7 @@ impl nearly::NearlyOrdUlps<Point, f32, f32> for Point {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -163,7 +163,7 @@ impl nearly::NearlyOrdEps<Point, f32, f32> for Point {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -185,7 +185,7 @@ impl nearly::NearlyOrdEps<Point, f32, f32> for Point {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -255,6 +255,7 @@ impl std::hash::Hash for Point {
     }
 }
 
+unsafe impl bytemuck::Zeroable for Point {}
 unsafe impl bytemuck::Pod for Point {}
 impl encase::ShaderType for Point {
     type ExtraMetadata = <PointGroups as encase::ShaderType>::ExtraMetadata;
@@ -273,14 +274,84 @@ impl encase::ShaderType for Point {
 
 impl serde::Serialize for Point {
     fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        let g = unsafe { &self.groups };
-        return g.serialize(serializer);
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("Point", 4)?;
+        state.serialize_field("e1", &self[crate::elements::e1])?;
+        state.serialize_field("e2", &self[crate::elements::e2])?;
+        state.serialize_field("e3", &self[crate::elements::e3])?;
+        state.serialize_field("e4", &self[crate::elements::e4])?;
+        state.end()
     }
 }
 impl<'de> serde::Deserialize<'de> for Point {
     fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        let groups = PointGroups::deserialize(deserializer)?;
-        return Ok(Point { groups });
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum PointField {
+            e1,
+            e2,
+            e3,
+            e4,
+        }
+        struct PointVisitor;
+        impl<'de> Visitor<'de> for PointVisitor {
+            type Value = Point;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct Point")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<Point, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e1 = None;
+                let mut e2 = None;
+                let mut e3 = None;
+                let mut e4 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        PointField::e1 => {
+                            if e1.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e1"));
+                            }
+                            e1 = Some(map.next_value()?);
+                        }
+
+                        PointField::e2 => {
+                            if e2.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e2"));
+                            }
+                            e2 = Some(map.next_value()?);
+                        }
+
+                        PointField::e3 => {
+                            if e3.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e3"));
+                            }
+                            e3 = Some(map.next_value()?);
+                        }
+
+                        PointField::e4 => {
+                            if e4.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e4"));
+                            }
+                            e4 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = Point::from([0.0; 4]);
+                result[crate::elements::e1] = e1.ok_or_else(|| serde::de::Error::missing_field("e1"))?;
+                result[crate::elements::e2] = e2.ok_or_else(|| serde::de::Error::missing_field("e2"))?;
+                result[crate::elements::e3] = e3.ok_or_else(|| serde::de::Error::missing_field("e3"))?;
+                result[crate::elements::e4] = e4.ok_or_else(|| serde::de::Error::missing_field("e4"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e1", "e2", "e3", "e4"];
+        deserializer.deserialize_struct("Point", FIELDS, PointVisitor)
     }
 }
 impl std::ops::Index<crate::elements::e1> for Point {

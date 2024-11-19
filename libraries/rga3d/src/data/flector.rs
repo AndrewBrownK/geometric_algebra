@@ -4,14 +4,14 @@ use crate::simd::*;
 
 /// Flector
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Zeroable)]
+#[derive(Clone, Copy)]
 pub union Flector {
     groups: FlectorGroups,
     /// e1, e2, e3, e4, e423, e431, e412, e321
     elements: [f32; 8],
 }
 #[repr(C)]
-#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct FlectorGroups {
     /// e1, e2, e3, e4
     g0: Simd32x4,
@@ -138,7 +138,7 @@ impl nearly::NearlyOrdUlps<Flector, f32, f32> for Flector {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -160,7 +160,7 @@ impl nearly::NearlyOrdUlps<Flector, f32, f32> for Flector {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -183,7 +183,7 @@ impl nearly::NearlyOrdEps<Flector, f32, f32> for Flector {
                 // Nearly equal until less-than wins
                 return true;
             } else {
-                // Else greater-than wins
+                // else greater-than wins
                 return false;
             }
         }
@@ -205,7 +205,7 @@ impl nearly::NearlyOrdEps<Flector, f32, f32> for Flector {
                 // Nearly equal until greater-than wins
                 return true;
             } else {
-                // Else less-than wins
+                // else less-than wins
                 return false;
             }
         }
@@ -275,6 +275,7 @@ impl std::hash::Hash for Flector {
     }
 }
 
+unsafe impl bytemuck::Zeroable for Flector {}
 unsafe impl bytemuck::Pod for Flector {}
 impl encase::ShaderType for Flector {
     type ExtraMetadata = <FlectorGroups as encase::ShaderType>::ExtraMetadata;
@@ -293,14 +294,128 @@ impl encase::ShaderType for Flector {
 
 impl serde::Serialize for Flector {
     fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        let g = unsafe { &self.groups };
-        return g.serialize(serializer);
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("Flector", 8)?;
+        state.serialize_field("e1", &self[crate::elements::e1])?;
+        state.serialize_field("e2", &self[crate::elements::e2])?;
+        state.serialize_field("e3", &self[crate::elements::e3])?;
+        state.serialize_field("e4", &self[crate::elements::e4])?;
+        state.serialize_field("e423", &self[crate::elements::e423])?;
+        state.serialize_field("e431", &self[crate::elements::e431])?;
+        state.serialize_field("e412", &self[crate::elements::e412])?;
+        state.serialize_field("e321", &self[crate::elements::e321])?;
+        state.end()
     }
 }
 impl<'de> serde::Deserialize<'de> for Flector {
     fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        let groups = FlectorGroups::deserialize(deserializer)?;
-        return Ok(Flector { groups });
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum FlectorField {
+            e1,
+            e2,
+            e3,
+            e4,
+            e423,
+            e431,
+            e412,
+            e321,
+        }
+        struct FlectorVisitor;
+        impl<'de> Visitor<'de> for FlectorVisitor {
+            type Value = Flector;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct Flector")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<Flector, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e1 = None;
+                let mut e2 = None;
+                let mut e3 = None;
+                let mut e4 = None;
+                let mut e423 = None;
+                let mut e431 = None;
+                let mut e412 = None;
+                let mut e321 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        FlectorField::e1 => {
+                            if e1.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e1"));
+                            }
+                            e1 = Some(map.next_value()?);
+                        }
+
+                        FlectorField::e2 => {
+                            if e2.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e2"));
+                            }
+                            e2 = Some(map.next_value()?);
+                        }
+
+                        FlectorField::e3 => {
+                            if e3.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e3"));
+                            }
+                            e3 = Some(map.next_value()?);
+                        }
+
+                        FlectorField::e4 => {
+                            if e4.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e4"));
+                            }
+                            e4 = Some(map.next_value()?);
+                        }
+
+                        FlectorField::e423 => {
+                            if e423.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e423"));
+                            }
+                            e423 = Some(map.next_value()?);
+                        }
+
+                        FlectorField::e431 => {
+                            if e431.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e431"));
+                            }
+                            e431 = Some(map.next_value()?);
+                        }
+
+                        FlectorField::e412 => {
+                            if e412.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e412"));
+                            }
+                            e412 = Some(map.next_value()?);
+                        }
+
+                        FlectorField::e321 => {
+                            if e321.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e321"));
+                            }
+                            e321 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = Flector::from([0.0; 8]);
+                result[crate::elements::e1] = e1.ok_or_else(|| serde::de::Error::missing_field("e1"))?;
+                result[crate::elements::e2] = e2.ok_or_else(|| serde::de::Error::missing_field("e2"))?;
+                result[crate::elements::e3] = e3.ok_or_else(|| serde::de::Error::missing_field("e3"))?;
+                result[crate::elements::e4] = e4.ok_or_else(|| serde::de::Error::missing_field("e4"))?;
+                result[crate::elements::e423] = e423.ok_or_else(|| serde::de::Error::missing_field("e423"))?;
+                result[crate::elements::e431] = e431.ok_or_else(|| serde::de::Error::missing_field("e431"))?;
+                result[crate::elements::e412] = e412.ok_or_else(|| serde::de::Error::missing_field("e412"))?;
+                result[crate::elements::e321] = e321.ok_or_else(|| serde::de::Error::missing_field("e321"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e1", "e2", "e3", "e4", "e423", "e431", "e412", "e321"];
+        deserializer.deserialize_struct("Flector", FIELDS, FlectorVisitor)
     }
 }
 impl std::ops::Index<crate::elements::e1> for Flector {
