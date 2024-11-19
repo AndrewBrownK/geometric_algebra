@@ -20,7 +20,12 @@ use crate::traits::Reverse;
 //   Median:        19      39       0
 //  Average:        44      64       0
 //  Maximum:       354     394       0
-impl InfixSandwich for AntiScalar {}
+impl std::ops::Div<sandwich> for AntiScalar {
+    type Output = sandwich_partial<AntiScalar>;
+    fn div(self, _rhs: sandwich) -> Self::Output {
+        sandwich_partial(self)
+    }
+}
 impl Sandwich<Flector> for AntiScalar {
     type Output = Flector;
     // Operative Statistics for this implementation:
@@ -118,7 +123,12 @@ impl Sandwich<Point> for AntiScalar {
         return geometric_product.geometric_product(self.reverse());
     }
 }
-impl InfixSandwich for DualNum {}
+impl std::ops::Div<sandwich> for DualNum {
+    type Output = sandwich_partial<DualNum>;
+    fn div(self, _rhs: sandwich) -> Self::Output {
+        sandwich_partial(self)
+    }
+}
 impl Sandwich<AntiScalar> for DualNum {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
@@ -320,7 +330,12 @@ impl Sandwich<Scalar> for DualNum {
         return geometric_product.geometric_product(self.reverse());
     }
 }
-impl InfixSandwich for Flector {}
+impl std::ops::Div<sandwich> for Flector {
+    type Output = sandwich_partial<Flector>;
+    fn div(self, _rhs: sandwich) -> Self::Output {
+        sandwich_partial(self)
+    }
+}
 impl Sandwich<AntiScalar> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
@@ -677,7 +692,12 @@ impl Sandwich<Scalar> for Flector {
         return geometric_product.geometric_product(self.reverse());
     }
 }
-impl InfixSandwich for Horizon {}
+impl std::ops::Div<sandwich> for Horizon {
+    type Output = sandwich_partial<Horizon>;
+    fn div(self, _rhs: sandwich) -> Self::Output {
+        sandwich_partial(self)
+    }
+}
 impl Sandwich<AntiScalar> for Horizon {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
@@ -870,7 +890,12 @@ impl Sandwich<Scalar> for Horizon {
         return geometric_product.geometric_product(self.reverse());
     }
 }
-impl InfixSandwich for Line {}
+impl std::ops::Div<sandwich> for Line {
+    type Output = sandwich_partial<Line>;
+    fn div(self, _rhs: sandwich) -> Self::Output {
+        sandwich_partial(self)
+    }
+}
 impl Sandwich<AntiScalar> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
@@ -1181,7 +1206,12 @@ impl Sandwich<Scalar> for Line {
         return geometric_product.geometric_product(self.reverse());
     }
 }
-impl InfixSandwich for Motor {}
+impl std::ops::Div<sandwich> for Motor {
+    type Output = sandwich_partial<Motor>;
+    fn div(self, _rhs: sandwich) -> Self::Output {
+        sandwich_partial(self)
+    }
+}
 impl Sandwich<AntiScalar> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
@@ -1500,7 +1530,12 @@ impl Sandwich<Scalar> for Motor {
         return geometric_product.geometric_product(self.reverse());
     }
 }
-impl InfixSandwich for MultiVector {}
+impl std::ops::Div<sandwich> for MultiVector {
+    type Output = sandwich_partial<MultiVector>;
+    fn div(self, _rhs: sandwich) -> Self::Output {
+        sandwich_partial(self)
+    }
+}
 impl Sandwich<AntiScalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -2058,7 +2093,12 @@ impl Sandwich<Scalar> for MultiVector {
         return geometric_product.geometric_product(self.reverse());
     }
 }
-impl InfixSandwich for Origin {}
+impl std::ops::Div<sandwich> for Origin {
+    type Output = sandwich_partial<Origin>;
+    fn div(self, _rhs: sandwich) -> Self::Output {
+        sandwich_partial(self)
+    }
+}
 impl Sandwich<Flector> for Origin {
     type Output = Flector;
     // Operative Statistics for this implementation:
@@ -2159,7 +2199,12 @@ impl Sandwich<Point> for Origin {
         return geometric_product.geometric_product(self.reverse());
     }
 }
-impl InfixSandwich for Plane {}
+impl std::ops::Div<sandwich> for Plane {
+    type Output = sandwich_partial<Plane>;
+    fn div(self, _rhs: sandwich) -> Self::Output {
+        sandwich_partial(self)
+    }
+}
 impl Sandwich<AntiScalar> for Plane {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
@@ -2424,7 +2469,12 @@ impl Sandwich<Scalar> for Plane {
         return geometric_product.geometric_product(self.reverse());
     }
 }
-impl InfixSandwich for Point {}
+impl std::ops::Div<sandwich> for Point {
+    type Output = sandwich_partial<Point>;
+    fn div(self, _rhs: sandwich) -> Self::Output {
+        sandwich_partial(self)
+    }
+}
 impl Sandwich<AntiScalar> for Point {
     type Output = Motor;
     // Operative Statistics for this implementation:
@@ -2715,7 +2765,12 @@ impl Sandwich<Scalar> for Point {
         return geometric_product.geometric_product(self.reverse());
     }
 }
-impl InfixSandwich for Scalar {}
+impl std::ops::Div<sandwich> for Scalar {
+    type Output = sandwich_partial<Scalar>;
+    fn div(self, _rhs: sandwich) -> Self::Output {
+        sandwich_partial(self)
+    }
+}
 impl Sandwich<AntiScalar> for Scalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:

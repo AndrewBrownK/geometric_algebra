@@ -18,7 +18,12 @@
 //   Median:         0       8       0
 //  Average:        10      18       0
 //  Maximum:       177     192       0
-impl InfixGeometricAntiProduct for AntiScalar {}
+impl std::ops::Div<geometric_anti_product> for AntiScalar {
+    type Output = geometric_anti_product_partial<AntiScalar>;
+    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
+        geometric_anti_product_partial(self)
+    }
+}
 impl GeometricAntiProduct<AntiScalar> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
@@ -166,7 +171,12 @@ impl GeometricAntiProduct<Scalar> for AntiScalar {
         return Scalar::from_groups(/* scalar */ self[e1234] * other[scalar]);
     }
 }
-impl InfixGeometricAntiProduct for DualNum {}
+impl std::ops::Div<geometric_anti_product> for DualNum {
+    type Output = geometric_anti_product_partial<DualNum>;
+    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
+        geometric_anti_product_partial(self)
+    }
+}
 impl GeometricAntiProduct<AntiScalar> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
@@ -349,7 +359,12 @@ impl GeometricAntiProduct<Scalar> for DualNum {
         return Scalar::from_groups(/* scalar */ self.group0()[1] * other[scalar]);
     }
 }
-impl InfixGeometricAntiProduct for Flector {}
+impl std::ops::Div<geometric_anti_product> for Flector {
+    type Output = geometric_anti_product_partial<Flector>;
+    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
+        geometric_anti_product_partial(self)
+    }
+}
 impl GeometricAntiProduct<AntiScalar> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
@@ -658,7 +673,12 @@ impl GeometricAntiProduct<Scalar> for Flector {
         );
     }
 }
-impl InfixGeometricAntiProduct for Horizon {}
+impl std::ops::Div<geometric_anti_product> for Horizon {
+    type Output = geometric_anti_product_partial<Horizon>;
+    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
+        geometric_anti_product_partial(self)
+    }
+}
 impl GeometricAntiProduct<AntiScalar> for Horizon {
     type Output = Horizon;
     // Operative Statistics for this implementation:
@@ -784,7 +804,12 @@ impl GeometricAntiProduct<Point> for Horizon {
         return Scalar::from_groups(/* scalar */ other.group0()[3] * self[e321] * -1.0);
     }
 }
-impl InfixGeometricAntiProduct for Line {}
+impl std::ops::Div<geometric_anti_product> for Line {
+    type Output = geometric_anti_product_partial<Line>;
+    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
+        geometric_anti_product_partial(self)
+    }
+}
 impl GeometricAntiProduct<AntiScalar> for Line {
     type Output = Line;
     // Operative Statistics for this implementation:
@@ -1066,7 +1091,12 @@ impl GeometricAntiProduct<Scalar> for Line {
         return Line::from_groups(/* e41, e42, e43 */ Simd32x3::from(0.0), /* e23, e31, e12 */ Simd32x3::from(other[scalar]) * self.group0());
     }
 }
-impl InfixGeometricAntiProduct for Motor {}
+impl std::ops::Div<geometric_anti_product> for Motor {
+    type Output = geometric_anti_product_partial<Motor>;
+    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
+        geometric_anti_product_partial(self)
+    }
+}
 impl GeometricAntiProduct<AntiScalar> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
@@ -1379,7 +1409,12 @@ impl GeometricAntiProduct<Scalar> for Motor {
         );
     }
 }
-impl InfixGeometricAntiProduct for MultiVector {}
+impl std::ops::Div<geometric_anti_product> for MultiVector {
+    type Output = geometric_anti_product_partial<MultiVector>;
+    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
+        geometric_anti_product_partial(self)
+    }
+}
 impl GeometricAntiProduct<AntiScalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -1907,7 +1942,12 @@ impl GeometricAntiProduct<Scalar> for MultiVector {
         );
     }
 }
-impl InfixGeometricAntiProduct for Origin {}
+impl std::ops::Div<geometric_anti_product> for Origin {
+    type Output = geometric_anti_product_partial<Origin>;
+    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
+        geometric_anti_product_partial(self)
+    }
+}
 impl GeometricAntiProduct<AntiScalar> for Origin {
     type Output = Origin;
     // Operative Statistics for this implementation:
@@ -2066,7 +2106,12 @@ impl GeometricAntiProduct<Scalar> for Origin {
         return Horizon::from_groups(/* e321 */ self[e4] * other[scalar] * -1.0);
     }
 }
-impl InfixGeometricAntiProduct for Plane {}
+impl std::ops::Div<geometric_anti_product> for Plane {
+    type Output = geometric_anti_product_partial<Plane>;
+    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
+        geometric_anti_product_partial(self)
+    }
+}
 impl GeometricAntiProduct<AntiScalar> for Plane {
     type Output = Plane;
     // Operative Statistics for this implementation:
@@ -2339,7 +2384,12 @@ impl GeometricAntiProduct<Scalar> for Plane {
         ]));
     }
 }
-impl InfixGeometricAntiProduct for Point {}
+impl std::ops::Div<geometric_anti_product> for Point {
+    type Output = geometric_anti_product_partial<Point>;
+    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
+        geometric_anti_product_partial(self)
+    }
+}
 impl GeometricAntiProduct<AntiScalar> for Point {
     type Output = Point;
     // Operative Statistics for this implementation:
@@ -2565,7 +2615,12 @@ impl GeometricAntiProduct<Scalar> for Point {
         return Horizon::from_groups(/* e321 */ self.group0()[3] * other[scalar] * -1.0);
     }
 }
-impl InfixGeometricAntiProduct for Scalar {}
+impl std::ops::Div<geometric_anti_product> for Scalar {
+    type Output = geometric_anti_product_partial<Scalar>;
+    fn div(self, _rhs: geometric_anti_product) -> Self::Output {
+        geometric_anti_product_partial(self)
+    }
+}
 impl GeometricAntiProduct<AntiScalar> for Scalar {
     type Output = Scalar;
     // Operative Statistics for this implementation:

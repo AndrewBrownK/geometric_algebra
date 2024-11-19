@@ -547,9 +547,14 @@ impl encase::private::FromVectorParts<f32, 4> for Simd32x4 {
 impl encase::ShaderType for Simd32x4 {
     type ExtraMetadata = ();
     const METADATA: Metadata<Self::ExtraMetadata> = {
-        let ss = <f32 as encase::private::ShaderSize>::SHADER_SIZE;
-        let stuff = NonZeroU64::new(ss.get() * 4u64).expect("non-zero times non-zero is non-zero");
-        let size = encase::private::SizeValue::from(stuff);
+        let f32_size = <f32 as encase::private::ShaderSize>::SHADER_SIZE;
+        let four = NonZeroU64::new(4u64);
+        // const eval can be annoying
+        let four_f32s = match four {
+            Some(four) => f32_size.saturating_mul(four),
+            None => f32_size,
+        };
+        let size = encase::private::SizeValue::from(four_f32s);
         let alignment = encase::private::AlignmentValue::from_next_power_of_two_size(size);
         Metadata {
             alignment,
@@ -616,9 +621,14 @@ impl encase::private::FromVectorParts<f32, 3> for Simd32x3 {
 impl encase::ShaderType for Simd32x3 {
     type ExtraMetadata = ();
     const METADATA: Metadata<Self::ExtraMetadata> = {
-        let ss = <f32 as encase::private::ShaderSize>::SHADER_SIZE;
-        let stuff = NonZeroU64::new(ss.get() * 3u64).expect("non-zero times non-zero is non-zero");
-        let size = encase::private::SizeValue::from(stuff);
+        let f32_size = <f32 as encase::private::ShaderSize>::SHADER_SIZE;
+        let three = NonZeroU64::new(3u64);
+        // const eval can be annoying
+        let three_f32s = match three {
+            Some(three) => f32_size.saturating_mul(three),
+            None => f32_size,
+        };
+        let size = encase::private::SizeValue::from(three_f32s);
         let alignment = encase::private::AlignmentValue::from_next_power_of_two_size(size);
         Metadata {
             alignment,
@@ -686,9 +696,14 @@ impl encase::private::FromVectorParts<f32, 2> for Simd32x2 {
 impl encase::ShaderType for Simd32x2 {
     type ExtraMetadata = ();
     const METADATA: Metadata<Self::ExtraMetadata> = {
-        let ss = <f32 as encase::private::ShaderSize>::SHADER_SIZE;
-        let stuff = NonZeroU64::new(ss.get() * 2u64).expect("non-zero times non-zero is non-zero");
-        let size = encase::private::SizeValue::from(stuff);
+        let f32_size = <f32 as encase::private::ShaderSize>::SHADER_SIZE;
+        let two = NonZeroU64::new(2u64);
+        // const eval can be annoying
+        let two_f32s = match two {
+            Some(two) => f32_size.saturating_mul(two),
+            None => f32_size,
+        };
+        let size = encase::private::SizeValue::from(two_f32s);
         let alignment = encase::private::AlignmentValue::from_next_power_of_two_size(size);
         Metadata {
             alignment,

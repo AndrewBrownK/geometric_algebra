@@ -1,4 +1,5 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// AntiInverse
@@ -6,14 +7,8 @@ use crate::simd::*;
 pub trait AntiInverse {
     fn anti_inverse(self) -> AntiScalar;
 }
-#[allow(non_camel_case_types)]
+#[allow(non_camel_case_types, dead_code)]
 pub struct anti_inverse;
-impl<A: AntiInverse> std::ops::Div<anti_inverse> for A {
-    type Output = AntiScalar;
-    fn div(self, _rhs: anti_inverse) -> Self::Output {
-        self.anti_inverse()
-    }
-}
 impl<A: AntiInverse> std::ops::Div<A> for anti_inverse {
     type Output = AntiScalar;
     fn div(self, rhs: A) -> Self::Output {

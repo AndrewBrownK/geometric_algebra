@@ -20,7 +20,12 @@ use crate::traits::GeometricAntiProduct;
 //   Median:        19      39       0
 //  Average:        44      63       0
 //  Maximum:       354     394       0
-impl InfixAntiSandwich for AntiScalar {}
+impl std::ops::Div<anti_sandwich> for AntiScalar {
+    type Output = anti_sandwich_partial<AntiScalar>;
+    fn div(self, _rhs: anti_sandwich) -> Self::Output {
+        anti_sandwich_partial(self)
+    }
+}
 impl AntiSandwich<AntiScalar> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
@@ -179,7 +184,12 @@ impl AntiSandwich<Scalar> for AntiScalar {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
-impl InfixAntiSandwich for DualNum {}
+impl std::ops::Div<anti_sandwich> for DualNum {
+    type Output = anti_sandwich_partial<DualNum>;
+    fn div(self, _rhs: anti_sandwich) -> Self::Output {
+        anti_sandwich_partial(self)
+    }
+}
 impl AntiSandwich<AntiScalar> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
@@ -376,7 +386,12 @@ impl AntiSandwich<Scalar> for DualNum {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
-impl InfixAntiSandwich for Flector {}
+impl std::ops::Div<anti_sandwich> for Flector {
+    type Output = anti_sandwich_partial<Flector>;
+    fn div(self, _rhs: anti_sandwich) -> Self::Output {
+        anti_sandwich_partial(self)
+    }
+}
 impl AntiSandwich<AntiScalar> for Flector {
     type Output = Motor;
     // Operative Statistics for this implementation:
@@ -713,7 +728,12 @@ impl AntiSandwich<Scalar> for Flector {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
-impl InfixAntiSandwich for Horizon {}
+impl std::ops::Div<anti_sandwich> for Horizon {
+    type Output = anti_sandwich_partial<Horizon>;
+    fn div(self, _rhs: anti_sandwich) -> Self::Output {
+        anti_sandwich_partial(self)
+    }
+}
 impl AntiSandwich<Flector> for Horizon {
     type Output = Flector;
     // Operative Statistics for this implementation:
@@ -814,7 +834,12 @@ impl AntiSandwich<Plane> for Horizon {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
-impl InfixAntiSandwich for Line {}
+impl std::ops::Div<anti_sandwich> for Line {
+    type Output = anti_sandwich_partial<Line>;
+    fn div(self, _rhs: anti_sandwich) -> Self::Output {
+        anti_sandwich_partial(self)
+    }
+}
 impl AntiSandwich<AntiScalar> for Line {
     type Output = Motor;
     // Operative Statistics for this implementation:
@@ -1138,7 +1163,12 @@ impl AntiSandwich<Scalar> for Line {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
-impl InfixAntiSandwich for Motor {}
+impl std::ops::Div<anti_sandwich> for Motor {
+    type Output = anti_sandwich_partial<Motor>;
+    fn div(self, _rhs: anti_sandwich) -> Self::Output {
+        anti_sandwich_partial(self)
+    }
+}
 impl AntiSandwich<AntiScalar> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
@@ -1482,7 +1512,12 @@ impl AntiSandwich<Scalar> for Motor {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
-impl InfixAntiSandwich for MultiVector {}
+impl std::ops::Div<anti_sandwich> for MultiVector {
+    type Output = anti_sandwich_partial<MultiVector>;
+    fn div(self, _rhs: anti_sandwich) -> Self::Output {
+        anti_sandwich_partial(self)
+    }
+}
 impl AntiSandwich<AntiScalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -2031,7 +2066,12 @@ impl AntiSandwich<Scalar> for MultiVector {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
-impl InfixAntiSandwich for Origin {}
+impl std::ops::Div<anti_sandwich> for Origin {
+    type Output = anti_sandwich_partial<Origin>;
+    fn div(self, _rhs: anti_sandwich) -> Self::Output {
+        anti_sandwich_partial(self)
+    }
+}
 impl AntiSandwich<AntiScalar> for Origin {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
@@ -2224,7 +2264,12 @@ impl AntiSandwich<Scalar> for Origin {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
-impl InfixAntiSandwich for Plane {}
+impl std::ops::Div<anti_sandwich> for Plane {
+    type Output = anti_sandwich_partial<Plane>;
+    fn div(self, _rhs: anti_sandwich) -> Self::Output {
+        anti_sandwich_partial(self)
+    }
+}
 impl AntiSandwich<AntiScalar> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
@@ -2524,7 +2569,12 @@ impl AntiSandwich<Scalar> for Plane {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
-impl InfixAntiSandwich for Point {}
+impl std::ops::Div<anti_sandwich> for Point {
+    type Output = anti_sandwich_partial<Point>;
+    fn div(self, _rhs: anti_sandwich) -> Self::Output {
+        anti_sandwich_partial(self)
+    }
+}
 impl AntiSandwich<AntiScalar> for Point {
     type Output = Motor;
     // Operative Statistics for this implementation:
@@ -2789,7 +2839,12 @@ impl AntiSandwich<Scalar> for Point {
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
 }
-impl InfixAntiSandwich for Scalar {}
+impl std::ops::Div<anti_sandwich> for Scalar {
+    type Output = anti_sandwich_partial<Scalar>;
+    fn div(self, _rhs: anti_sandwich) -> Self::Output {
+        anti_sandwich_partial(self)
+    }
+}
 impl AntiSandwich<Flector> for Scalar {
     type Output = Flector;
     // Operative Statistics for this implementation:

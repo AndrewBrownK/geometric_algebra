@@ -18,14 +18,47 @@
 //   Median:         0       1       0
 //  Average:         0       2       0
 //  Maximum:         0      10       0
+impl std::ops::Div<anti_reverse> for AntiScalar {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_reverse) -> Self::Output {
+        self.anti_reverse()
+    }
+}
+impl std::ops::DivAssign<anti_reverse> for AntiScalar {
+    fn div_assign(&mut self, _rhs: anti_reverse) {
+        *self = self.anti_reverse()
+    }
+}
 impl AntiReverse for AntiScalar {
     fn anti_reverse(self) -> Self {
         return self;
     }
 }
+impl std::ops::Div<anti_reverse> for DualNum {
+    type Output = DualNum;
+    fn div(self, _rhs: anti_reverse) -> Self::Output {
+        self.anti_reverse()
+    }
+}
+impl std::ops::DivAssign<anti_reverse> for DualNum {
+    fn div_assign(&mut self, _rhs: anti_reverse) {
+        *self = self.anti_reverse()
+    }
+}
 impl AntiReverse for DualNum {
     fn anti_reverse(self) -> Self {
         return self;
+    }
+}
+impl std::ops::Div<anti_reverse> for Flector {
+    type Output = Flector;
+    fn div(self, _rhs: anti_reverse) -> Self::Output {
+        self.anti_reverse()
+    }
+}
+impl std::ops::DivAssign<anti_reverse> for Flector {
+    fn div_assign(&mut self, _rhs: anti_reverse) {
+        *self = self.anti_reverse()
     }
 }
 impl AntiReverse for Flector {
@@ -37,9 +70,31 @@ impl AntiReverse for Flector {
         return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0), /* e423, e431, e412, e321 */ self.group1());
     }
 }
+impl std::ops::Div<anti_reverse> for Horizon {
+    type Output = Horizon;
+    fn div(self, _rhs: anti_reverse) -> Self::Output {
+        self.anti_reverse()
+    }
+}
+impl std::ops::DivAssign<anti_reverse> for Horizon {
+    fn div_assign(&mut self, _rhs: anti_reverse) {
+        *self = self.anti_reverse()
+    }
+}
 impl AntiReverse for Horizon {
     fn anti_reverse(self) -> Self {
         return self;
+    }
+}
+impl std::ops::Div<anti_reverse> for Line {
+    type Output = Line;
+    fn div(self, _rhs: anti_reverse) -> Self::Output {
+        self.anti_reverse()
+    }
+}
+impl std::ops::DivAssign<anti_reverse> for Line {
+    fn div_assign(&mut self, _rhs: anti_reverse) {
+        *self = self.anti_reverse()
     }
 }
 impl AntiReverse for Line {
@@ -56,6 +111,17 @@ impl AntiReverse for Line {
         );
     }
 }
+impl std::ops::Div<anti_reverse> for Motor {
+    type Output = Motor;
+    fn div(self, _rhs: anti_reverse) -> Self::Output {
+        self.anti_reverse()
+    }
+}
+impl std::ops::DivAssign<anti_reverse> for Motor {
+    fn div_assign(&mut self, _rhs: anti_reverse) {
+        *self = self.anti_reverse()
+    }
+}
 impl AntiReverse for Motor {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -67,6 +133,17 @@ impl AntiReverse for Motor {
             // e23, e31, e12, scalar
             Simd32x4::from([self.group1()[0] * -1.0, self.group1()[1] * -1.0, self.group1()[2] * -1.0, self.group1()[3]]),
         );
+    }
+}
+impl std::ops::Div<anti_reverse> for MultiVector {
+    type Output = MultiVector;
+    fn div(self, _rhs: anti_reverse) -> Self::Output {
+        self.anti_reverse()
+    }
+}
+impl std::ops::DivAssign<anti_reverse> for MultiVector {
+    fn div_assign(&mut self, _rhs: anti_reverse) {
+        *self = self.anti_reverse()
     }
 }
 impl AntiReverse for MultiVector {
@@ -92,6 +169,17 @@ impl AntiReverse for MultiVector {
         );
     }
 }
+impl std::ops::Div<anti_reverse> for Origin {
+    type Output = Origin;
+    fn div(self, _rhs: anti_reverse) -> Self::Output {
+        self.anti_reverse()
+    }
+}
+impl std::ops::DivAssign<anti_reverse> for Origin {
+    fn div_assign(&mut self, _rhs: anti_reverse) {
+        *self = self.anti_reverse()
+    }
+}
 impl AntiReverse for Origin {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -101,9 +189,31 @@ impl AntiReverse for Origin {
         return Origin::from_groups(/* e4 */ self[e4] * -1.0);
     }
 }
+impl std::ops::Div<anti_reverse> for Plane {
+    type Output = Plane;
+    fn div(self, _rhs: anti_reverse) -> Self::Output {
+        self.anti_reverse()
+    }
+}
+impl std::ops::DivAssign<anti_reverse> for Plane {
+    fn div_assign(&mut self, _rhs: anti_reverse) {
+        *self = self.anti_reverse()
+    }
+}
 impl AntiReverse for Plane {
     fn anti_reverse(self) -> Self {
         return self;
+    }
+}
+impl std::ops::Div<anti_reverse> for Point {
+    type Output = Point;
+    fn div(self, _rhs: anti_reverse) -> Self::Output {
+        self.anti_reverse()
+    }
+}
+impl std::ops::DivAssign<anti_reverse> for Point {
+    fn div_assign(&mut self, _rhs: anti_reverse) {
+        *self = self.anti_reverse()
     }
 }
 impl AntiReverse for Point {
@@ -113,6 +223,17 @@ impl AntiReverse for Point {
     // no simd        0        4        0
     fn anti_reverse(self) -> Self {
         return Point::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0));
+    }
+}
+impl std::ops::Div<anti_reverse> for Scalar {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_reverse) -> Self::Output {
+        self.anti_reverse()
+    }
+}
+impl std::ops::DivAssign<anti_reverse> for Scalar {
+    fn div_assign(&mut self, _rhs: anti_reverse) {
+        *self = self.anti_reverse()
     }
 }
 impl AntiReverse for Scalar {

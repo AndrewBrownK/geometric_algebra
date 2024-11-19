@@ -433,6 +433,7 @@ postgres-types = "0.2.7""#
                 let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
                 // TODO remove these imports when they are unused
                 writeln!(&mut file, "use crate::data::*;")?;
+                writeln!(&mut file, "#[allow(unused_imports)]")?;
                 writeln!(&mut file, "use crate::simd::*;")?;
                 self.declare_trait_def(&mut file, td)?;
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
@@ -989,9 +990,14 @@ postgres-types = "0.2.7""#
 
                         (1.0, false) => self.write_float(w, factor, false)?,
                         (-1.0, false) => {
-                            write!(w, "(1.0/")?;
+                            if !grouping_provided {
+                                write!(w, "(")?;
+                            }
+                            write!(w, "1.0/")?;
                             self.write_float(w, factor, false)?;
-                            write!(w, ")")?;
+                            if !grouping_provided {
+                                write!(w, ")")?;
+                            }
                         }
                         (e, false) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
@@ -2540,10 +2546,7 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
         }
 
         if let Some(op) = &self.fancy_infix {
-            if let TraitArity::Two = def.arity {
-                writeln!(w, "pub trait Infix{ucc} {{}}")?;
-            }
-            writeln!(w, "#[allow(non_camel_case_types)]")?;
+            writeln!(w, "#[allow(non_camel_case_types, dead_code)]")?;
             writeln!(w, "pub struct {lsc};")?;
             if let TraitArity::Two = def.arity {
                 writeln!(w, "#[allow(non_camel_case_types)]")?;
@@ -2552,11 +2555,6 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
             let operator_name = op.rust_trait_name();
             let operator_method = op.rust_trait_method();
             if let TraitArity::Two = def.arity {
-                writeln!(w, "impl<A: Infix{ucc}> std::ops::{operator_name}<{lsc}> for A {{")?;
-                writeln!(w, "    type Output = {lsc}_partial<A>;")?;
-                writeln!(w, "    fn {operator_method}(self, _rhs: {lsc}) -> Self::Output {{")?;
-                writeln!(w, "        {lsc}_partial(self)")?;
-                writeln!(w, "    }}\n}}")?;
                 writeln!(w, "impl<A: {ucc}<B>, B> std::ops::{operator_name}<B> for {lsc}_partial<A> {{")?;
                 write!(w, "    type Output = ")?;
                 match *output_ty {
@@ -2570,17 +2568,6 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
                 writeln!(w, "    }}\n}}")?;
             }
             if let TraitArity::One = def.arity {
-                writeln!(w, "impl<A: {ucc}> std::ops::{operator_name}<{lsc}> for A {{")?;
-                write!(w, "    type Output = ")?;
-                match *output_ty {
-                    TraitTypeConsensus::AlwaysSelf => write!(w, "A")?,
-                    TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
-                    TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "<A as {ucc}>::Output")?,
-                }
-                writeln!(w, ";")?;
-                writeln!(w, "    fn {operator_method}(self, _rhs: {lsc}) -> Self::Output {{")?;
-                writeln!(w, "        self.{lsc}()")?;
-                writeln!(w, "    }}\n}}")?;
                 writeln!(w, "impl<A: {ucc}> std::ops::{operator_name}<A> for {lsc} {{")?;
                 write!(w, "    type Output = ")?;
                 match *output_ty {
@@ -2592,12 +2579,6 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
                 writeln!(w, "    fn {operator_method}(self, rhs: A) -> Self::Output {{")?;
                 writeln!(w, "        rhs.{lsc}()")?;
                 writeln!(w, "    }}\n}}")?;
-                if let TraitTypeConsensus::AlwaysSelf = *output_ty {
-                    writeln!(w, "impl<A: {ucc}> std::ops::{operator_name}Assign<A> for {lsc} {{")?;
-                    writeln!(w, "    fn {operator_method}_assign(&mut self, rhs: {lsc}) {{")?;
-                    writeln!(w, "        *self = *self.{lsc}()")?;
-                    writeln!(w, "    }}\n}}")?;
-                }
             }
         }
 
@@ -2648,12 +2629,36 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
             }
             var_param = Some(v_param);
         }
-        if let TraitArity::Two = def.arity {
+
+        if let Some(op) = self.fancy_infix {
+            let operator_name = op.rust_trait_name();
+            let operator_method = op.rust_trait_method();
             if let TraitParam::Class(mv) = &owner_ty {
                 let n = mv.name();
                 if !is_op && !already_granted_infix.contains(n) {
                     already_granted_infix.insert(n);
-                    writeln!(w, "impl Infix{ucc} for {n} {{}}")?;
+                    if let TraitArity::Two = def.arity {
+                        writeln!(w, "impl std::ops::{operator_name}<{lsc}> for {n} {{")?;
+                        writeln!(w, "    type Output = {lsc}_partial<{n}>;")?;
+                        writeln!(w, "    fn {operator_method}(self, _rhs: {lsc}) -> Self::Output {{")?;
+                        writeln!(w, "        {lsc}_partial(self)")?;
+                        writeln!(w, "    }}\n}}")?;
+                    }
+                    if let TraitArity::One = def.arity {
+                        writeln!(w, "impl std::ops::{operator_name}<{lsc}> for {n} {{")?;
+                        write!(w, "    type Output = ")?;
+                        self.write_type(w, output_ty)?;
+                        writeln!(w, ";")?;
+                        writeln!(w, "    fn {operator_method}(self, _rhs: {lsc}) -> Self::Output {{")?;
+                        writeln!(w, "        self.{lsc}()")?;
+                        writeln!(w, "    }}\n}}")?;
+                        if &output_ty == owner_ty {
+                            writeln!(w, "impl std::ops::{operator_name}Assign<{lsc}> for {n} {{")?;
+                            writeln!(w, "    fn {operator_method}_assign(&mut self, _rhs: {lsc}) {{")?;
+                            writeln!(w, "        *self = self.{lsc}()")?;
+                            writeln!(w, "    }}\n}}")?;
+                        }
+                    }
                 }
             }
         }

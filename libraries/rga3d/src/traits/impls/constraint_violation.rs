@@ -18,6 +18,12 @@
 //   Median:         1       7       0
 //  Average:        12      15       0
 //  Maximum:        67      74       0
+impl std::ops::Div<constraint_violation> for DualNum {
+    type Output = AntiScalar;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
+    }
+}
 impl ConstraintViolation for DualNum {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
@@ -33,6 +39,12 @@ impl ConstraintViolation for DualNum {
             Simd32x2::from([f32::powi(self.group0()[0], 2), self.group0()[0] * self.group0()[1]]) * Simd32x2::from([1.0, 2.0]),
         );
         return AntiScalar::from_groups(/* e1234 */ geometric_product.group0()[1]);
+    }
+}
+impl std::ops::Div<constraint_violation> for Flector {
+    type Output = DualNum;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for Flector {
@@ -69,6 +81,12 @@ impl ConstraintViolation for Flector {
         );
     }
 }
+impl std::ops::Div<constraint_violation> for Horizon {
+    type Output = Scalar;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
+    }
+}
 impl ConstraintViolation for Horizon {
     type Output = Scalar;
     // Operative Statistics for this implementation:
@@ -80,6 +98,12 @@ impl ConstraintViolation for Horizon {
         let geometric_product = Scalar::from_groups(/* scalar */ reverse[e321] * self[e321] * -1.0);
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self[e321], 2) * -1.0);
         return Scalar::from_groups(/* scalar */ geometric_product[scalar] - scalar_product[scalar]);
+    }
+}
+impl std::ops::Div<constraint_violation> for Line {
+    type Output = DualNum;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for Line {
@@ -114,6 +138,12 @@ impl ConstraintViolation for Line {
             // scalar, e1234
             Simd32x2::from([geometric_product.group0()[0] - scalar_product[scalar], geometric_product.group0()[1]]),
         );
+    }
+}
+impl std::ops::Div<constraint_violation> for Motor {
+    type Output = DualNum;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for Motor {
@@ -152,6 +182,17 @@ impl ConstraintViolation for Motor {
             // scalar, e1234
             Simd32x2::from([geometric_product.group0()[0] - scalar_product[scalar], geometric_product.group0()[1]]),
         );
+    }
+}
+impl std::ops::Div<constraint_violation> for MultiVector {
+    type Output = MultiVector;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
+    }
+}
+impl std::ops::DivAssign<constraint_violation> for MultiVector {
+    fn div_assign(&mut self, _rhs: constraint_violation) {
+        *self = self.constraint_violation()
     }
 }
 impl ConstraintViolation for MultiVector {
@@ -249,6 +290,12 @@ impl ConstraintViolation for MultiVector {
         );
     }
 }
+impl std::ops::Div<constraint_violation> for Plane {
+    type Output = Scalar;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
+    }
+}
 impl ConstraintViolation for Plane {
     type Output = Scalar;
     // Operative Statistics for this implementation:
@@ -266,10 +313,27 @@ impl ConstraintViolation for Plane {
         return Scalar::from_groups(/* scalar */ geometric_product[scalar] - scalar_product[scalar]);
     }
 }
+impl std::ops::Div<constraint_violation> for Point {
+    type Output = Scalar;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
+    }
+}
 impl ConstraintViolation for Point {
     type Output = Scalar;
     fn constraint_violation(self) -> Self::Output {
         return Scalar::from_groups(/* scalar */ 0.0);
+    }
+}
+impl std::ops::Div<constraint_violation> for Scalar {
+    type Output = Scalar;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
+    }
+}
+impl std::ops::DivAssign<constraint_violation> for Scalar {
+    fn div_assign(&mut self, _rhs: constraint_violation) {
+        *self = self.constraint_violation()
     }
 }
 impl ConstraintViolation for Scalar {

@@ -18,10 +18,22 @@
 //   Median:         1       7       0
 //  Average:        12      15       0
 //  Maximum:        67      74       0
+impl std::ops::Div<anti_constraint_violation> for AntiScalar {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for AntiScalar {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
         return Scalar::from_groups(/* scalar */ 0.0);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for DualNum {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for DualNum {
@@ -39,6 +51,12 @@ impl AntiConstraintViolation for DualNum {
             Simd32x2::from([self.group0()[0] * self.group0()[1], f32::powi(self.group0()[1], 2)]) * Simd32x2::from([2.0, 1.0]),
         );
         return Scalar::from_groups(/* scalar */ geometric_anti_product.group0()[0]);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for Flector {
+    type Output = DualNum;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for Flector {
@@ -75,6 +93,12 @@ impl AntiConstraintViolation for Flector {
         );
     }
 }
+impl std::ops::Div<anti_constraint_violation> for Line {
+    type Output = DualNum;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for Line {
     type Output = DualNum;
     // Operative Statistics for this implementation:
@@ -107,6 +131,12 @@ impl AntiConstraintViolation for Line {
             // scalar, e1234
             Simd32x2::from([geometric_anti_product.group0()[0], geometric_anti_product.group0()[1] - anti_scalar_product[e1234]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for Motor {
+    type Output = DualNum;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for Motor {
@@ -145,6 +175,17 @@ impl AntiConstraintViolation for Motor {
             // scalar, e1234
             Simd32x2::from([geometric_anti_product.group0()[0], geometric_anti_product.group0()[1] - anti_scalar_product[e1234]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for MultiVector {
+    type Output = MultiVector;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
+impl std::ops::DivAssign<anti_constraint_violation> for MultiVector {
+    fn div_assign(&mut self, _rhs: anti_constraint_violation) {
+        *self = self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for MultiVector {
@@ -242,6 +283,12 @@ impl AntiConstraintViolation for MultiVector {
         );
     }
 }
+impl std::ops::Div<anti_constraint_violation> for Origin {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for Origin {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
@@ -255,10 +302,22 @@ impl AntiConstraintViolation for Origin {
         return AntiScalar::from_groups(/* e1234 */ -anti_scalar_product[e1234] + geometric_anti_product[e1234]);
     }
 }
+impl std::ops::Div<anti_constraint_violation> for Plane {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for Plane {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
         return Scalar::from_groups(/* scalar */ 0.0);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for Point {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for Point {

@@ -1,4 +1,5 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// AntiOne
@@ -6,6 +7,6 @@ use crate::simd::*;
 pub trait AntiOne {
     fn anti_one() -> Self;
 }
-#[allow(non_camel_case_types)]
+#[allow(non_camel_case_types, dead_code)]
 pub struct anti_one;
 include!("./impls/anti_one.rs");

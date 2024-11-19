@@ -18,9 +18,31 @@
 //   Median:         0       0       0
 //  Average:         0       0       0
 //  Maximum:         0       0       0
+impl std::ops::Div<constraint_valid> for AntiScalar {
+    type Output = AntiScalar;
+    fn div(self, _rhs: constraint_valid) -> Self::Output {
+        self.constraint_valid()
+    }
+}
+impl std::ops::DivAssign<constraint_valid> for AntiScalar {
+    fn div_assign(&mut self, _rhs: constraint_valid) {
+        *self = self.constraint_valid()
+    }
+}
 impl ConstraintValid for AntiScalar {
     fn constraint_valid(self) -> Self {
         return self;
+    }
+}
+impl std::ops::Div<constraint_valid> for Origin {
+    type Output = Origin;
+    fn div(self, _rhs: constraint_valid) -> Self::Output {
+        self.constraint_valid()
+    }
+}
+impl std::ops::DivAssign<constraint_valid> for Origin {
+    fn div_assign(&mut self, _rhs: constraint_valid) {
+        *self = self.constraint_valid()
     }
 }
 impl ConstraintValid for Origin {

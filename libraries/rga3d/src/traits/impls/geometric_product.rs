@@ -18,7 +18,12 @@
 //   Median:         0       8       0
 //  Average:        10      18       0
 //  Maximum:       177     192       0
-impl InfixGeometricProduct for AntiScalar {}
+impl std::ops::Div<geometric_product> for AntiScalar {
+    type Output = geometric_product_partial<AntiScalar>;
+    fn div(self, _rhs: geometric_product) -> Self::Output {
+        geometric_product_partial(self)
+    }
+}
 impl GeometricProduct<DualNum> for AntiScalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
@@ -151,7 +156,12 @@ impl GeometricProduct<Scalar> for AntiScalar {
         return AntiScalar::from_groups(/* e1234 */ self[e1234] * other[scalar]);
     }
 }
-impl InfixGeometricProduct for DualNum {}
+impl std::ops::Div<geometric_product> for DualNum {
+    type Output = geometric_product_partial<DualNum>;
+    fn div(self, _rhs: geometric_product) -> Self::Output {
+        geometric_product_partial(self)
+    }
+}
 impl GeometricProduct<AntiScalar> for DualNum {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
@@ -339,7 +349,12 @@ impl GeometricProduct<Scalar> for DualNum {
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from(other[scalar]) * self.group0());
     }
 }
-impl InfixGeometricProduct for Flector {}
+impl std::ops::Div<geometric_product> for Flector {
+    type Output = geometric_product_partial<Flector>;
+    fn div(self, _rhs: geometric_product) -> Self::Output {
+        geometric_product_partial(self)
+    }
+}
 impl GeometricProduct<AntiScalar> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
@@ -668,7 +683,12 @@ impl GeometricProduct<Scalar> for Flector {
         );
     }
 }
-impl InfixGeometricProduct for Horizon {}
+impl std::ops::Div<geometric_product> for Horizon {
+    type Output = geometric_product_partial<Horizon>;
+    fn div(self, _rhs: geometric_product) -> Self::Output {
+        geometric_product_partial(self)
+    }
+}
 impl GeometricProduct<AntiScalar> for Horizon {
     type Output = Origin;
     // Operative Statistics for this implementation:
@@ -827,7 +847,12 @@ impl GeometricProduct<Scalar> for Horizon {
         return Horizon::from_groups(/* e321 */ self[e321] * other[scalar]);
     }
 }
-impl InfixGeometricProduct for Line {}
+impl std::ops::Div<geometric_product> for Line {
+    type Output = geometric_product_partial<Line>;
+    fn div(self, _rhs: geometric_product) -> Self::Output {
+        geometric_product_partial(self)
+    }
+}
 impl GeometricProduct<AntiScalar> for Line {
     type Output = Line;
     // Operative Statistics for this implementation:
@@ -1096,7 +1121,12 @@ impl GeometricProduct<Scalar> for Line {
         );
     }
 }
-impl InfixGeometricProduct for Motor {}
+impl std::ops::Div<geometric_product> for Motor {
+    type Output = geometric_product_partial<Motor>;
+    fn div(self, _rhs: geometric_product) -> Self::Output {
+        geometric_product_partial(self)
+    }
+}
 impl GeometricProduct<AntiScalar> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
@@ -1384,7 +1414,12 @@ impl GeometricProduct<Scalar> for Motor {
         );
     }
 }
-impl InfixGeometricProduct for MultiVector {}
+impl std::ops::Div<geometric_product> for MultiVector {
+    type Output = geometric_product_partial<MultiVector>;
+    fn div(self, _rhs: geometric_product) -> Self::Output {
+        geometric_product_partial(self)
+    }
+}
 impl GeometricProduct<AntiScalar> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -1920,7 +1955,12 @@ impl GeometricProduct<Scalar> for MultiVector {
         );
     }
 }
-impl InfixGeometricProduct for Origin {}
+impl std::ops::Div<geometric_product> for Origin {
+    type Output = geometric_product_partial<Origin>;
+    fn div(self, _rhs: geometric_product) -> Self::Output {
+        geometric_product_partial(self)
+    }
+}
 impl GeometricProduct<DualNum> for Origin {
     type Output = Origin;
     // Operative Statistics for this implementation:
@@ -2046,7 +2086,12 @@ impl GeometricProduct<Scalar> for Origin {
         return Origin::from_groups(/* e4 */ self[e4] * other[scalar]);
     }
 }
-impl InfixGeometricProduct for Plane {}
+impl std::ops::Div<geometric_product> for Plane {
+    type Output = geometric_product_partial<Plane>;
+    fn div(self, _rhs: geometric_product) -> Self::Output {
+        geometric_product_partial(self)
+    }
+}
 impl GeometricProduct<AntiScalar> for Plane {
     type Output = Origin;
     // Operative Statistics for this implementation:
@@ -2272,7 +2317,12 @@ impl GeometricProduct<Scalar> for Plane {
         return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(other[scalar]) * self.group0());
     }
 }
-impl InfixGeometricProduct for Point {}
+impl std::ops::Div<geometric_product> for Point {
+    type Output = geometric_product_partial<Point>;
+    fn div(self, _rhs: geometric_product) -> Self::Output {
+        geometric_product_partial(self)
+    }
+}
 impl GeometricProduct<AntiScalar> for Point {
     type Output = Plane;
     // Operative Statistics for this implementation:
@@ -2537,7 +2587,12 @@ impl GeometricProduct<Scalar> for Point {
         return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(other[scalar]) * self.group0());
     }
 }
-impl InfixGeometricProduct for Scalar {}
+impl std::ops::Div<geometric_product> for Scalar {
+    type Output = geometric_product_partial<Scalar>;
+    fn div(self, _rhs: geometric_product) -> Self::Output {
+        geometric_product_partial(self)
+    }
+}
 impl GeometricProduct<AntiScalar> for Scalar {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:

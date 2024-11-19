@@ -18,9 +18,31 @@
 //   Median:         0       0       0
 //  Average:         0       0       0
 //  Maximum:         0       0       0
+impl std::ops::Div<anti_constraint_valid> for Horizon {
+    type Output = Horizon;
+    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+        self.anti_constraint_valid()
+    }
+}
+impl std::ops::DivAssign<anti_constraint_valid> for Horizon {
+    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+        *self = self.anti_constraint_valid()
+    }
+}
 impl AntiConstraintValid for Horizon {
     fn anti_constraint_valid(self) -> Self {
         return self;
+    }
+}
+impl std::ops::Div<anti_constraint_valid> for Scalar {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_valid) -> Self::Output {
+        self.anti_constraint_valid()
+    }
+}
+impl std::ops::DivAssign<anti_constraint_valid> for Scalar {
+    fn div_assign(&mut self, _rhs: anti_constraint_valid) {
+        *self = self.anti_constraint_valid()
     }
 }
 impl AntiConstraintValid for Scalar {

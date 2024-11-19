@@ -18,6 +18,17 @@
 //   Median:         2       0       1
 //  Average:         1       0       1
 //  Maximum:         7       1       1
+impl std::ops::Div<anti_inverse> for AntiScalar {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_inverse) -> Self::Output {
+        self.anti_inverse()
+    }
+}
+impl std::ops::DivAssign<anti_inverse> for AntiScalar {
+    fn div_assign(&mut self, _rhs: anti_inverse) {
+        *self = self.anti_inverse()
+    }
+}
 impl AntiInverse for AntiScalar {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -25,7 +36,13 @@ impl AntiInverse for AntiScalar {
     fn anti_inverse(self) -> AntiScalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e1234], 2));
-        return AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
+        return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
+    }
+}
+impl std::ops::Div<anti_inverse> for DualNum {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_inverse) -> Self::Output {
+        self.anti_inverse()
     }
 }
 impl AntiInverse for DualNum {
@@ -35,7 +52,13 @@ impl AntiInverse for DualNum {
     fn anti_inverse(self) -> AntiScalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self.group0()[1], 2));
-        return AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
+        return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
+    }
+}
+impl std::ops::Div<anti_inverse> for Flector {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_inverse) -> Self::Output {
+        self.anti_inverse()
     }
 }
 impl AntiInverse for Flector {
@@ -48,7 +71,13 @@ impl AntiInverse for Flector {
             // e1234
             -f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2),
         );
-        return AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
+        return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
+    }
+}
+impl std::ops::Div<anti_inverse> for Line {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_inverse) -> Self::Output {
+        self.anti_inverse()
     }
 }
 impl AntiInverse for Line {
@@ -58,7 +87,13 @@ impl AntiInverse for Line {
     fn anti_inverse(self) -> AntiScalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ -f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2));
-        return AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
+        return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
+    }
+}
+impl std::ops::Div<anti_inverse> for Motor {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_inverse) -> Self::Output {
+        self.anti_inverse()
     }
 }
 impl AntiInverse for Motor {
@@ -71,7 +106,13 @@ impl AntiInverse for Motor {
             // e1234
             -f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2),
         );
-        return AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
+        return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
+    }
+}
+impl std::ops::Div<anti_inverse> for MultiVector {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_inverse) -> Self::Output {
+        self.anti_inverse()
     }
 }
 impl AntiInverse for MultiVector {
@@ -87,7 +128,13 @@ impl AntiInverse for MultiVector {
                 + f32::powi(self.group4()[1], 2)
                 + f32::powi(self.group4()[2], 2),
         );
-        return AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
+        return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
+    }
+}
+impl std::ops::Div<anti_inverse> for Origin {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_inverse) -> Self::Output {
+        self.anti_inverse()
     }
 }
 impl AntiInverse for Origin {
@@ -97,7 +144,13 @@ impl AntiInverse for Origin {
     fn anti_inverse(self) -> AntiScalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e4], 2) * -1.0);
-        return AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
+        return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
+    }
+}
+impl std::ops::Div<anti_inverse> for Plane {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_inverse) -> Self::Output {
+        self.anti_inverse()
     }
 }
 impl AntiInverse for Plane {
@@ -107,7 +160,13 @@ impl AntiInverse for Plane {
     fn anti_inverse(self) -> AntiScalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2));
-        return AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
+        return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
+    }
+}
+impl std::ops::Div<anti_inverse> for Point {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_inverse) -> Self::Output {
+        self.anti_inverse()
     }
 }
 impl AntiInverse for Point {
@@ -117,6 +176,6 @@ impl AntiInverse for Point {
     fn anti_inverse(self) -> AntiScalar {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self.group0()[3], 2) * -1.0);
-        return AntiScalar::from_groups(/* e1234 */ (1.0 / anti_scalar_product[e1234]));
+        return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
     }
 }
