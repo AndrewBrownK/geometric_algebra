@@ -9,6 +9,9 @@ pub use std::arch::x86::*;
 #[cfg(all(target_arch = "x86_64", target_feature = "sse2"))]
 pub use std::arch::x86_64::*;
 
+use encase::internal::{BufferMut, BufferRef, Reader, Writer};
+use encase::private::Metadata;
+
 // TODO add cargo feature driven support for f64 (and maybe f16, if that is a thing?)
 
 #[derive(Clone, Copy)]
@@ -510,3 +513,200 @@ impl std::ops::Div<Simd32x2> for Simd32x2 {
         )
     }
 }
+
+
+
+
+impl encase::private::AsRefVectorParts<f32, 4> for Simd32x4 {
+    #[inline]
+    fn as_ref_parts(&self) -> &[f32; 4] {
+        &self.f32x4
+    }
+}
+impl encase::private::AsMutVectorParts<f32, 4> for Simd32x4 {
+    #[inline]
+    fn as_mut_parts(&mut self) -> &mut [f32; 4] {
+        &mut self.f32x4
+    }
+}
+impl encase::private::FromVectorParts<f32, 4> for Simd32x4 {
+    #[inline]
+    fn from_parts(parts: [f32; 4]) -> Self {
+        Simd32x4::from(parts)
+    }
+}
+impl encase::ShaderType for Simd32x4 {
+    type ExtraMetadata = ();
+    const METADATA: Metadata<Self::ExtraMetadata> = {
+        let size = encase::private::SizeValue::from(<f32 as encase::private::ShaderSize>::SHADER_SIZE.mul(4));
+        let alignment = encase::private::AlignmentValue::from_next_power_of_two_size(size);
+        Metadata {
+            alignment,
+            has_uniform_min_alignment: false,
+            min_size: size,
+            is_pod: <[f32; 4] as encase::ShaderType>::METADATA.is_pod(),
+            extra: (),
+        }
+    };
+}
+impl encase::ShaderSize for Simd32x4 {}
+impl encase::private::WriteInto for Simd32x4 {
+    #[inline]
+    fn write_into<B>(&self, writer: &mut Writer<B>) where B: BufferMut
+    {
+        let elements = encase::private::AsRefVectorParts::<f32, 4>::as_ref_parts(self);
+        encase::private::WriteInto::write_into(elements, writer);
+    }
+}
+impl encase::private::ReadFrom for Simd32x4 {
+    #[inline]
+    fn read_from<B>(&mut self, reader: &mut Reader<B>) where B: BufferRef
+    {
+        let elements = encase::private::AsMutVectorParts::<f32, 4>::as_mut_parts(self);
+        encase::private::ReadFrom::read_from(elements, reader);
+    }
+}
+impl encase::private::CreateFrom for Simd32x4 {
+    #[inline]
+    fn create_from<B>(reader: &mut Reader<B>) -> Self where B: BufferRef
+    {
+        let elements = encase::private::CreateFrom::create_from(reader);
+        encase::private::FromVectorParts::<f32, 4>::from_parts(elements)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+impl encase::private::AsRefVectorParts<f32, 3> for Simd32x3 {
+    #[inline]
+    fn as_ref_parts(&self) -> &[f32; 3] {
+        &self.f32x3
+    }
+}
+impl encase::private::AsMutVectorParts<f32, 3> for Simd32x3 {
+    #[inline]
+    fn as_mut_parts(&mut self) -> &mut [f32; 3] {
+        &mut self.f32x3
+    }
+}
+impl encase::private::FromVectorParts<f32, 3> for Simd32x3 {
+    #[inline]
+    fn from_parts(parts: [f32; 3]) -> Self {
+        Simd32x3::from(parts)
+    }
+}
+impl encase::ShaderType for Simd32x3 {
+    type ExtraMetadata = ();
+    const METADATA: Metadata<Self::ExtraMetadata> = {
+        let size = encase::private::SizeValue::from(<f32 as encase::private::ShaderSize>::SHADER_SIZE.mul(3));
+        let alignment = encase::private::AlignmentValue::from_next_power_of_two_size(size);
+        Metadata {
+            alignment,
+            has_uniform_min_alignment: false,
+            min_size: size,
+            is_pod: <[f32; 3] as encase::ShaderType>::METADATA.is_pod(),
+            extra: (),
+        }
+    };
+}
+impl encase::ShaderSize for Simd32x3 {}
+impl encase::private::WriteInto for Simd32x3 {
+    #[inline]
+    fn write_into<B>(&self, writer: &mut Writer<B>) where B: BufferMut
+    {
+        let elements = encase::private::AsRefVectorParts::<f32, 3>::as_ref_parts(self);
+        encase::private::WriteInto::write_into(elements, writer);
+    }
+}
+impl encase::private::ReadFrom for Simd32x3 {
+    #[inline]
+    fn read_from<B>(&mut self, reader: &mut Reader<B>) where B: BufferRef
+    {
+        let elements = encase::private::AsMutVectorParts::<f32, 3>::as_mut_parts(self);
+        encase::private::ReadFrom::read_from(elements, reader);
+    }
+}
+impl encase::private::CreateFrom for Simd32x3 {
+    #[inline]
+    fn create_from<B>(reader: &mut Reader<B>) -> Self where B: BufferRef
+    {
+        let elements = encase::private::CreateFrom::create_from(reader);
+        encase::private::FromVectorParts::<f32, 3>::from_parts(elements)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+impl encase::private::AsRefVectorParts<f32, 2> for Simd32x2 {
+    #[inline]
+    fn as_ref_parts(&self) -> &[f32; 2] {
+        &self.f32x2
+    }
+}
+impl encase::private::AsMutVectorParts<f32, 2> for Simd32x2 {
+    #[inline]
+    fn as_mut_parts(&mut self) -> &mut [f32; 2] {
+        &mut self.f32x2
+    }
+}
+impl encase::private::FromVectorParts<f32, 2> for Simd32x2 {
+    #[inline]
+    fn from_parts(parts: [f32; 2]) -> Self {
+        Simd32x2::from(parts)
+    }
+}
+impl encase::ShaderType for Simd32x2 {
+    type ExtraMetadata = ();
+    const METADATA: Metadata<Self::ExtraMetadata> = {
+        let size = encase::private::SizeValue::from(<f32 as encase::private::ShaderSize>::SHADER_SIZE.mul(2));
+        let alignment = encase::private::AlignmentValue::from_next_power_of_two_size(size);
+        Metadata {
+            alignment,
+            has_uniform_min_alignment: false,
+            min_size: size,
+            is_pod: <[f32; 2] as encase::ShaderType>::METADATA.is_pod(),
+            extra: (),
+        }
+    };
+}
+impl encase::ShaderSize for Simd32x2 {}
+impl encase::private::WriteInto for Simd32x2 {
+    #[inline]
+    fn write_into<B>(&self, writer: &mut Writer<B>) where B: BufferMut
+    {
+        let elements = encase::private::AsRefVectorParts::<f32, 2>::as_ref_parts(self);
+        encase::private::WriteInto::write_into(elements, writer);
+    }
+}
+impl encase::private::ReadFrom for Simd32x2 {
+    #[inline]
+    fn read_from<B>(&mut self, reader: &mut Reader<B>) where B: BufferRef
+    {
+        let elements = encase::private::AsMutVectorParts::<f32, 2>::as_mut_parts(self);
+        encase::private::ReadFrom::read_from(elements, reader);
+    }
+}
+impl encase::private::CreateFrom for Simd32x2 {
+    #[inline]
+    fn create_from<B>(reader: &mut Reader<B>) -> Self where B: BufferRef
+    {
+        let elements = encase::private::CreateFrom::create_from(reader);
+        encase::private::FromVectorParts::<f32, 2>::from_parts(elements)
+    }
+}
+

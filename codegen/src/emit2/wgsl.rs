@@ -13,6 +13,11 @@ use crate::ast2::expressions::{AnyExpression, Expression, FloatExpr, IntExpr, Mu
 use crate::ast2::traits::{CommentOrVariableDeclaration, progress_style, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus};
 use crate::emit2::sort_trait_impls;
 
+// Awesome function reference:
+// https://webgpufundamentals.org/webgpu/lessons/webgpu-wgsl-function-reference.html
+// TODO add AST support for more of the above functions. If there's a good reason for it, I guess.
+
+
 // Generate WGSL shader source code
 #[derive(Copy, Clone)]
 pub struct Wgsl {

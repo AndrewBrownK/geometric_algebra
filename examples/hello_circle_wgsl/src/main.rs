@@ -15,6 +15,9 @@ use winit::event::WindowEvent;
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::window::{Window, WindowId};
 
+// TODO for more advanced ray-marching, check this out
+//  https://youtu.be/khblXafu7iA?si=UHOplxYQ5NLgvcBJ
+
 fn main() -> Result<(), Box<dyn Error>> {
     let event_loop = EventLoop::new().unwrap();
     event_loop.set_control_flow(ControlFlow::Poll);
