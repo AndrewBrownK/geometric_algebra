@@ -61,16 +61,16 @@ impl std::ops::Add<AntiDipoleInversion> for Line {
             other.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                self.group0()[0] + other.group1()[0],
+                self.group0()[1] + other.group1()[1],
+                self.group0()[2] + other.group1()[2],
                 other.group1()[3],
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group1()[0] + other.group2()[0]),
-                (self.group1()[1] + other.group2()[1]),
-                (self.group1()[2] + other.group2()[2]),
+                self.group1()[0] + other.group2()[0],
+                self.group1()[1] + other.group2()[1],
+                self.group1()[2] + other.group2()[2],
                 other.group2()[3],
             ]),
             // e1, e2, e3, e5
@@ -120,7 +120,7 @@ impl std::ops::Add<AntiFlatPoint> for Line {
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[3]]),
             // e235, e315, e125
-            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1()),
+            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) + self.group1(),
         );
     }
 }
@@ -136,12 +136,7 @@ impl std::ops::Add<AntiFlector> for Line {
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[3]]),
             // e235, e315, e125, e4
-            Simd32x4::from([
-                (self.group1()[0] + other.group0()[0]),
-                (self.group1()[1] + other.group0()[1]),
-                (self.group1()[2] + other.group0()[2]),
-                0.0,
-            ]),
+            Simd32x4::from([self.group1()[0] + other.group0()[0], self.group1()[1] + other.group0()[1], self.group1()[2] + other.group0()[2], 0.0]),
             // e1, e2, e3, e5
             other.group1(),
         );
@@ -247,13 +242,13 @@ impl std::ops::Add<Circle> for Line {
             other.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                self.group0()[0] + other.group1()[0],
+                self.group0()[1] + other.group1()[1],
+                self.group0()[2] + other.group1()[2],
                 other.group1()[3],
             ]),
             // e235, e315, e125
-            (other.group2() + self.group1()),
+            other.group2() + self.group1(),
         );
     }
 }
@@ -268,16 +263,16 @@ impl std::ops::Add<CircleRotor> for Line {
             other.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                self.group0()[0] + other.group1()[0],
+                self.group0()[1] + other.group1()[1],
+                self.group0()[2] + other.group1()[2],
                 other.group1()[3],
             ]),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group1()[0] + other.group2()[0]),
-                (self.group1()[1] + other.group2()[1]),
-                (self.group1()[2] + other.group2()[2]),
+                self.group1()[0] + other.group2()[0],
+                self.group1()[1] + other.group2()[1],
+                self.group1()[2] + other.group2()[2],
                 other.group2()[3],
             ]),
         );
@@ -421,22 +416,12 @@ impl std::ops::Add<Line> for Line {
     //   simd3        2        0        0
     // no simd        6        0        0
     fn add(self, other: Line) -> Self::Output {
-        return Line::from_groups(
-            // e415, e425, e435
-            (other.group0() + self.group0()),
-            // e235, e315, e125
-            (other.group1() + self.group1()),
-        );
+        return Line::from_groups(/* e415, e425, e435 */ other.group0() + self.group0(), /* e235, e315, e125 */ other.group1() + self.group1());
     }
 }
 impl std::ops::AddAssign<Line> for Line {
     fn add_assign(&mut self, other: Line) {
-        *self = Line::from_groups(
-            // e415, e425, e435
-            (other.group0() + self.group0()),
-            // e235, e315, e125
-            (other.group1() + self.group1()),
-        );
+        *self = Line::from_groups(/* e415, e425, e435 */ other.group0() + self.group0(), /* e235, e315, e125 */ other.group1() + self.group1());
     }
 }
 impl std::ops::Add<Motor> for Line {
@@ -448,16 +433,16 @@ impl std::ops::Add<Motor> for Line {
         return Motor::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([
-                (self.group0()[0] + other.group0()[0]),
-                (self.group0()[1] + other.group0()[1]),
-                (self.group0()[2] + other.group0()[2]),
+                self.group0()[0] + other.group0()[0],
+                self.group0()[1] + other.group0()[1],
+                self.group0()[2] + other.group0()[2],
                 other.group0()[3],
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
-                (self.group1()[0] + other.group1()[0]),
-                (self.group1()[1] + other.group1()[1]),
-                (self.group1()[2] + other.group1()[2]),
+                self.group1()[0] + other.group1()[0],
+                self.group1()[1] + other.group1()[1],
+                self.group1()[2] + other.group1()[2],
                 other.group1()[3],
             ]),
         );
@@ -489,15 +474,15 @@ impl std::ops::Add<MultiVector> for Line {
             other.group5(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] + other.group6()[0]),
-                (self.group0()[1] + other.group6()[1]),
-                (self.group0()[2] + other.group6()[2]),
+                self.group0()[0] + other.group6()[0],
+                self.group0()[1] + other.group6()[1],
+                self.group0()[2] + other.group6()[2],
                 other.group6()[3],
             ]),
             // e423, e431, e412
             other.group7(),
             // e235, e315, e125
-            (self.group1() + other.group8()),
+            self.group1() + other.group8(),
             // e4235, e4315, e4125, e3215
             other.group9(),
             // e1234
@@ -621,16 +606,16 @@ impl std::ops::Add<VersorEven> for Line {
             other.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] + other.group1()[0]),
-                (self.group0()[1] + other.group1()[1]),
-                (self.group0()[2] + other.group1()[2]),
+                self.group0()[0] + other.group1()[0],
+                self.group0()[1] + other.group1()[1],
+                self.group0()[2] + other.group1()[2],
                 other.group1()[3],
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
-                (self.group1()[0] + other.group2()[0]),
-                (self.group1()[1] + other.group2()[1]),
-                (self.group1()[2] + other.group2()[2]),
+                self.group1()[0] + other.group2()[0],
+                self.group1()[1] + other.group2()[1],
+                self.group1()[2] + other.group2()[2],
                 other.group2()[3],
             ]),
             // e1, e2, e3, e4
@@ -809,13 +794,11 @@ impl std::ops::BitXor<Scalar> for Line {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn bitxor(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
 impl std::ops::BitXorAssign<Scalar> for Line {
     fn bitxor_assign(&mut self, other: Scalar) {
-        use crate::elements::*;
         *self = self.wedge(other);
     }
 }
@@ -944,7 +927,6 @@ impl std::ops::Mul<AntiScalar> for Line {
     //   simd3        0        4        0
     // no simd        0       12        0
     fn mul(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -1068,7 +1050,6 @@ impl std::ops::Mul<MultiVector> for Line {
     // yes simd      117      141        0
     //  no simd      160      192        0
     fn mul(self, other: MultiVector) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -1096,7 +1077,6 @@ impl std::ops::Mul<RoundPoint> for Line {
     // yes simd       13       29        0
     //  no simd       16       36        0
     fn mul(self, other: RoundPoint) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -1107,13 +1087,11 @@ impl std::ops::Mul<Scalar> for Line {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn mul(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
 impl std::ops::MulAssign<Scalar> for Line {
     fn mul_assign(&mut self, other: Scalar) {
-        use crate::elements::*;
         *self = self.geometric_product(other);
     }
 }
@@ -1128,7 +1106,6 @@ impl std::ops::Mul<Sphere> for Line {
     // yes simd       13       25        0
     //  no simd       16       30        0
     fn mul(self, other: Sphere) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -1159,16 +1136,17 @@ impl std::ops::Mul<VersorOdd> for Line {
     }
 }
 impl std::ops::Neg for Line {
+    type Output = Line;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd3        0        2        0
     // no simd        0        6        0
-    fn neg(self) -> Self {
+    fn neg(self) -> Self::Output {
         return Line::from_groups(
             // e415, e425, e435
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            (self.group1() * Simd32x3::from(-1.0)),
+            self.group1() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -1191,17 +1169,17 @@ impl std::ops::Sub<AntiCircleRotor> for Line {
     fn sub(self, other: AntiCircleRotor) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group2()[3] * -1.0), 0.0]),
+            Simd32x2::from([other.group2()[3] * -1.0, 0.0]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
             0.0,
             // e15, e25, e35, e45
-            (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0)),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0),
             // e41, e42, e43
-            (other.group0() * Simd32x3::from(-1.0)),
+            other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             // e423, e431, e412
@@ -1228,23 +1206,23 @@ impl std::ops::Sub<AntiDipoleInversion> for Line {
     fn sub(self, other: AntiDipoleInversion) -> Self::Output {
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (other.group0() * Simd32x3::from(-1.0)),
+            other.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
-                (other.group1()[3] * -1.0),
+                self.group0()[0] - other.group1()[0],
+                self.group0()[1] - other.group1()[1],
+                self.group0()[2] - other.group1()[2],
+                other.group1()[3] * -1.0,
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self.group1()[0] - other.group2()[0]),
-                (self.group1()[1] - other.group2()[1]),
-                (self.group1()[2] - other.group2()[2]),
-                (other.group2()[3] * -1.0),
+                self.group1()[0] - other.group2()[0],
+                self.group1()[1] - other.group2()[1],
+                self.group1()[2] - other.group2()[2],
+                other.group2()[3] * -1.0,
             ]),
             // e1, e2, e3, e5
-            (other.group3() * Simd32x4::from(-1.0)),
+            other.group3() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1256,7 +1234,7 @@ impl std::ops::Sub<AntiDualNum> for Line {
     fn sub(self, other: AntiDualNum) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group0()[1] * -1.0), 0.0]),
+            Simd32x2::from([other.group0()[1] * -1.0, 0.0]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -1276,7 +1254,7 @@ impl std::ops::Sub<AntiDualNum> for Line {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
-            (other.group0()[0] * -1.0),
+            other.group0()[0] * -1.0,
         );
     }
 }
@@ -1294,9 +1272,9 @@ impl std::ops::Sub<AntiFlatPoint> for Line {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] * -1.0)]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[3] * -1.0]),
             // e235, e315, e125
-            (Simd32x3::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0)]) + self.group1()),
+            Simd32x3::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0]) + self.group1(),
         );
     }
 }
@@ -1314,16 +1292,11 @@ impl std::ops::Sub<AntiFlector> for Line {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] * -1.0)]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[3] * -1.0]),
             // e235, e315, e125, e4
-            Simd32x4::from([
-                (self.group1()[0] - other.group0()[0]),
-                (self.group1()[1] - other.group0()[1]),
-                (self.group1()[2] - other.group0()[2]),
-                0.0,
-            ]),
+            Simd32x4::from([self.group1()[0] - other.group0()[0], self.group1()[1] - other.group0()[1], self.group1()[2] - other.group0()[2], 0.0]),
             // e1, e2, e3, e5
-            (other.group1() * Simd32x4::from(-1.0)),
+            other.group1() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1345,11 +1318,11 @@ impl std::ops::Sub<AntiLine> for Line {
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), 0.0]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, 0.0]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
-            (other.group0() * Simd32x3::from(-1.0)),
+            other.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             // e423, e431, e412
@@ -1375,17 +1348,17 @@ impl std::ops::Sub<AntiMotor> for Line {
     fn sub(self, other: AntiMotor) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
+            Simd32x2::from([other.group0()[3] * -1.0, 0.0]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), 0.0]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, 0.0]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
-            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             // e423, e431, e412
@@ -1393,7 +1366,7 @@ impl std::ops::Sub<AntiMotor> for Line {
             // e235, e315, e125
             self.group1(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group1()[3] * -1.0)]),
+            Simd32x4::from([0.0, 0.0, 0.0, other.group1()[3] * -1.0]),
             // e1234
             0.0,
         );
@@ -1414,7 +1387,7 @@ impl std::ops::Sub<AntiPlane> for Line {
             // e235, e315, e125, e4
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
             // e1, e2, e3, e5
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1427,7 +1400,7 @@ impl std::ops::Sub<AntiScalar> for Line {
         use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other[e12345] * -1.0)]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other[e12345] * -1.0]),
             // e235, e315, e125, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
         );
@@ -1445,16 +1418,16 @@ impl std::ops::Sub<Circle> for Line {
     fn sub(self, other: Circle) -> Self::Output {
         return Circle::from_groups(
             // e423, e431, e412
-            (other.group0() * Simd32x3::from(-1.0)),
+            other.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
-                (other.group1()[3] * -1.0),
+                self.group0()[0] - other.group1()[0],
+                self.group0()[1] - other.group1()[1],
+                self.group0()[2] - other.group1()[2],
+                other.group1()[3] * -1.0,
             ]),
             // e235, e315, e125
-            (-other.group2() + self.group1()),
+            -other.group2() + self.group1(),
         );
     }
 }
@@ -1470,20 +1443,20 @@ impl std::ops::Sub<CircleRotor> for Line {
     fn sub(self, other: CircleRotor) -> Self::Output {
         return CircleRotor::from_groups(
             // e423, e431, e412
-            (other.group0() * Simd32x3::from(-1.0)),
+            other.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
-                (other.group1()[3] * -1.0),
+                self.group0()[0] - other.group1()[0],
+                self.group0()[1] - other.group1()[1],
+                self.group0()[2] - other.group1()[2],
+                other.group1()[3] * -1.0,
             ]),
             // e235, e315, e125, e12345
             Simd32x4::from([
-                (self.group1()[0] - other.group2()[0]),
-                (self.group1()[1] - other.group2()[1]),
-                (self.group1()[2] - other.group2()[2]),
-                (other.group2()[3] * -1.0),
+                self.group1()[0] - other.group2()[0],
+                self.group1()[1] - other.group2()[1],
+                self.group1()[2] - other.group2()[2],
+                other.group2()[3] * -1.0,
             ]),
         );
     }
@@ -1506,11 +1479,11 @@ impl std::ops::Sub<Dipole> for Line {
             // e5
             0.0,
             // e15, e25, e35, e45
-            (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0)),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0),
             // e41, e42, e43
-            (other.group0() * Simd32x3::from(-1.0)),
+            other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             // e423, e431, e412
@@ -1543,11 +1516,11 @@ impl std::ops::Sub<DipoleInversion> for Line {
             // e5
             0.0,
             // e15, e25, e35, e45
-            (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0)),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0),
             // e41, e42, e43
-            (other.group0() * Simd32x3::from(-1.0)),
+            other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             // e423, e431, e412
@@ -1555,9 +1528,9 @@ impl std::ops::Sub<DipoleInversion> for Line {
             // e235, e315, e125
             self.group1(),
             // e4235, e4315, e4125, e3215
-            (other.group3() * Simd32x4::from(-1.0)),
+            other.group3() * Simd32x4::from(-1.0),
             // e1234
-            (other.group2()[3] * -1.0),
+            other.group2()[3] * -1.0,
         );
     }
 }
@@ -1569,13 +1542,13 @@ impl std::ops::Sub<DualNum> for Line {
     fn sub(self, other: DualNum) -> Self::Output {
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[1] * -1.0)]),
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1] * -1.0]),
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             // e235, e315, e125, e5
             Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0] * -1.0]),
         );
     }
 }
@@ -1594,7 +1567,7 @@ impl std::ops::Sub<FlatPoint> for Line {
             // e5
             0.0,
             // e15, e25, e35, e45
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -1627,7 +1600,7 @@ impl std::ops::Sub<Flector> for Line {
             // e5
             0.0,
             // e15, e25, e35, e45
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -1639,7 +1612,7 @@ impl std::ops::Sub<Flector> for Line {
             // e235, e315, e125
             self.group1(),
             // e4235, e4315, e4125, e3215
-            (other.group1() * Simd32x4::from(-1.0)),
+            other.group1() * Simd32x4::from(-1.0),
             // e1234
             0.0,
         );
@@ -1652,22 +1625,12 @@ impl std::ops::Sub<Line> for Line {
     //   simd3        2        0        0
     // no simd        6        0        0
     fn sub(self, other: Line) -> Self::Output {
-        return Line::from_groups(
-            // e415, e425, e435
-            (-other.group0() + self.group0()),
-            // e235, e315, e125
-            (-other.group1() + self.group1()),
-        );
+        return Line::from_groups(/* e415, e425, e435 */ -other.group0() + self.group0(), /* e235, e315, e125 */ -other.group1() + self.group1());
     }
 }
 impl std::ops::SubAssign<Line> for Line {
     fn sub_assign(&mut self, other: Line) {
-        *self = Line::from_groups(
-            // e415, e425, e435
-            (-other.group0() + self.group0()),
-            // e235, e315, e125
-            (-other.group1() + self.group1()),
-        );
+        *self = Line::from_groups(/* e415, e425, e435 */ -other.group0() + self.group0(), /* e235, e315, e125 */ -other.group1() + self.group1());
     }
 }
 impl std::ops::Sub<Motor> for Line {
@@ -1679,17 +1642,17 @@ impl std::ops::Sub<Motor> for Line {
         return Motor::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([
-                (self.group0()[0] - other.group0()[0]),
-                (self.group0()[1] - other.group0()[1]),
-                (self.group0()[2] - other.group0()[2]),
-                (other.group0()[3] * -1.0),
+                self.group0()[0] - other.group0()[0],
+                self.group0()[1] - other.group0()[1],
+                self.group0()[2] - other.group0()[2],
+                other.group0()[3] * -1.0,
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
-                (self.group1()[0] - other.group1()[0]),
-                (self.group1()[1] - other.group1()[1]),
-                (self.group1()[2] - other.group1()[2]),
-                (other.group1()[3] * -1.0),
+                self.group1()[0] - other.group1()[0],
+                self.group1()[1] - other.group1()[1],
+                self.group1()[2] - other.group1()[2],
+                other.group1()[3] * -1.0,
             ]),
         );
     }
@@ -1709,32 +1672,32 @@ impl std::ops::Sub<MultiVector> for Line {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            (other.group0() * Simd32x2::from(-1.0)),
+            other.group0() * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
-            (other.group1() * Simd32x4::from(-1.0)),
+            other.group1() * Simd32x4::from(-1.0),
             // e5
-            (other[e1] * -1.0),
+            other[e1] * -1.0,
             // e15, e25, e35, e45
-            (other.group3() * Simd32x4::from(-1.0)),
+            other.group3() * Simd32x4::from(-1.0),
             // e41, e42, e43
-            (other.group4() * Simd32x3::from(-1.0)),
+            other.group4() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (other.group5() * Simd32x3::from(-1.0)),
+            other.group5() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] - other.group6()[0]),
-                (self.group0()[1] - other.group6()[1]),
-                (self.group0()[2] - other.group6()[2]),
-                (other.group6()[3] * -1.0),
+                self.group0()[0] - other.group6()[0],
+                self.group0()[1] - other.group6()[1],
+                self.group0()[2] - other.group6()[2],
+                other.group6()[3] * -1.0,
             ]),
             // e423, e431, e412
-            (other.group7() * Simd32x3::from(-1.0)),
+            other.group7() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            (self.group1() - other.group8()),
+            self.group1() - other.group8(),
             // e4235, e4315, e4125, e3215
-            (other.group9() * Simd32x4::from(-1.0)),
+            other.group9() * Simd32x4::from(-1.0),
             // e1234
-            (other[e45] * -1.0),
+            other[e45] * -1.0,
         );
     }
 }
@@ -1765,7 +1728,7 @@ impl std::ops::Sub<Plane> for Line {
             // e235, e315, e125
             self.group1(),
             // e4235, e4315, e4125, e3215
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
             // e1234
             0.0,
         );
@@ -1788,9 +1751,9 @@ impl std::ops::Sub<RoundPoint> for Line {
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             // e235, e315, e125, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[3] * -1.0)]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[3] * -1.0]),
             // e1, e2, e3, e5
-            (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]]) * Simd32x4::from(-1.0)),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other[e2]]) * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1803,7 +1766,7 @@ impl std::ops::Sub<Scalar> for Line {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other[scalar] * -1.0), 0.0]),
+            Simd32x2::from([other[scalar] * -1.0, 0.0]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -1858,9 +1821,9 @@ impl std::ops::Sub<Sphere> for Line {
             // e235, e315, e125
             self.group1(),
             // e4235, e4315, e4125, e3215
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
             // e1234
-            (other[e4315] * -1.0),
+            other[e4315] * -1.0,
         );
     }
 }
@@ -1876,23 +1839,23 @@ impl std::ops::Sub<VersorEven> for Line {
     fn sub(self, other: VersorEven) -> Self::Output {
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([
-                (self.group0()[0] - other.group1()[0]),
-                (self.group0()[1] - other.group1()[1]),
-                (self.group0()[2] - other.group1()[2]),
-                (other.group1()[3] * -1.0),
+                self.group0()[0] - other.group1()[0],
+                self.group0()[1] - other.group1()[1],
+                self.group0()[2] - other.group1()[2],
+                other.group1()[3] * -1.0,
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
-                (self.group1()[0] - other.group2()[0]),
-                (self.group1()[1] - other.group2()[1]),
-                (self.group1()[2] - other.group2()[2]),
-                (other.group2()[3] * -1.0),
+                self.group1()[0] - other.group2()[0],
+                self.group1()[1] - other.group2()[1],
+                self.group1()[2] - other.group2()[2],
+                other.group2()[3] * -1.0,
             ]),
             // e1, e2, e3, e4
-            (other.group3() * Simd32x4::from(-1.0)),
+            other.group3() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1909,17 +1872,17 @@ impl std::ops::Sub<VersorOdd> for Line {
     fn sub(self, other: VersorOdd) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group0()[3] * -1.0), 0.0]),
+            Simd32x2::from([other.group0()[3] * -1.0, 0.0]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
             0.0,
             // e15, e25, e35, e45
-            (Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0)),
+            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0),
             // e41, e42, e43
-            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             // e423, e431, e412
@@ -1927,9 +1890,9 @@ impl std::ops::Sub<VersorOdd> for Line {
             // e235, e315, e125
             self.group1(),
             // e4235, e4315, e4125, e3215
-            (other.group3() * Simd32x4::from(-1.0)),
+            other.group3() * Simd32x4::from(-1.0),
             // e1234
-            (other.group2()[3] * -1.0),
+            other.group2()[3] * -1.0,
         );
     }
 }

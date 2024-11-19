@@ -87,7 +87,7 @@ impl App {
             ..Default::default()
         };
 
-        let naga_module = cga3d_min::shaders::wgsl_compose_with_entrypoints(naga_module_descriptor).unwrap();
+        let naga_module = cga3d::integrations::wgsl::wgsl_compose_with_entrypoints(naga_module_descriptor).unwrap();
 
         // Load the shaders from disk
         let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {

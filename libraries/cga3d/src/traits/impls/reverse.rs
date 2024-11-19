@@ -18,6 +18,17 @@
 //   Median:         0       6       0
 //  Average:         0       5       0
 //  Maximum:         0      20       0
+impl std::ops::Div<reverse> for AntiCircleRotor {
+    type Output = AntiCircleRotor;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for AntiCircleRotor {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
+    }
+}
 impl Reverse for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
@@ -30,12 +41,23 @@ impl Reverse for AntiCircleRotor {
     fn reverse(self) -> Self {
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self.group2()[0] * -1.0, self.group2()[1] * -1.0, self.group2()[2] * -1.0, self.group2()[3]]),
         );
+    }
+}
+impl std::ops::Div<reverse> for AntiDipoleInversion {
+    type Output = AntiDipoleInversion;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for AntiDipoleInversion {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for AntiDipoleInversion {
@@ -50,19 +72,41 @@ impl Reverse for AntiDipoleInversion {
     fn reverse(self) -> Self {
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e4
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self.group2()[0] * -1.0, self.group2()[1] * -1.0, self.group2()[2] * -1.0, self.group2()[3]]),
             // e1, e2, e3, e5
             self.group3(),
         );
     }
 }
+impl std::ops::Div<reverse> for AntiDualNum {
+    type Output = AntiDualNum;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for AntiDualNum {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
+    }
+}
 impl Reverse for AntiDualNum {
     fn reverse(self) -> Self {
         return self;
+    }
+}
+impl std::ops::Div<reverse> for AntiFlatPoint {
+    type Output = AntiFlatPoint;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for AntiFlatPoint {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for AntiFlatPoint {
@@ -71,7 +115,18 @@ impl Reverse for AntiFlatPoint {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn reverse(self) -> Self {
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (self.group0() * Simd32x4::from(-1.0)));
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0));
+    }
+}
+impl std::ops::Div<reverse> for AntiFlector {
+    type Output = AntiFlector;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for AntiFlector {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for AntiFlector {
@@ -80,7 +135,18 @@ impl Reverse for AntiFlector {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn reverse(self) -> Self {
-        return AntiFlector::from_groups(/* e235, e315, e125, e321 */ (self.group0() * Simd32x4::from(-1.0)), /* e1, e2, e3, e5 */ self.group1());
+        return AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0), /* e1, e2, e3, e5 */ self.group1());
+    }
+}
+impl std::ops::Div<reverse> for AntiLine {
+    type Output = AntiLine;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for AntiLine {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for AntiLine {
@@ -91,10 +157,21 @@ impl Reverse for AntiLine {
     fn reverse(self) -> Self {
         return AntiLine::from_groups(
             // e23, e31, e12
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e15, e25, e35
-            (self.group1() * Simd32x3::from(-1.0)),
+            self.group1() * Simd32x3::from(-1.0),
         );
+    }
+}
+impl std::ops::Div<reverse> for AntiMotor {
+    type Output = AntiMotor;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for AntiMotor {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for AntiMotor {
@@ -104,10 +181,21 @@ impl Reverse for AntiMotor {
     fn reverse(self) -> Self {
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
             // e15, e25, e35, e3215
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self.group1()[0] * -1.0, self.group1()[1] * -1.0, self.group1()[2] * -1.0, self.group1()[3]]),
         );
+    }
+}
+impl std::ops::Div<reverse> for AntiPlane {
+    type Output = AntiPlane;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for AntiPlane {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for AntiPlane {
@@ -115,9 +203,31 @@ impl Reverse for AntiPlane {
         return self;
     }
 }
+impl std::ops::Div<reverse> for AntiScalar {
+    type Output = AntiScalar;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for AntiScalar {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
+    }
+}
 impl Reverse for AntiScalar {
     fn reverse(self) -> Self {
         return self;
+    }
+}
+impl std::ops::Div<reverse> for Circle {
+    type Output = Circle;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for Circle {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for Circle {
@@ -131,12 +241,23 @@ impl Reverse for Circle {
     fn reverse(self) -> Self {
         return Circle::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125
-            (self.group2() * Simd32x3::from(-1.0)),
+            self.group2() * Simd32x3::from(-1.0),
         );
+    }
+}
+impl std::ops::Div<reverse> for CircleRotor {
+    type Output = CircleRotor;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for CircleRotor {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for CircleRotor {
@@ -151,12 +272,23 @@ impl Reverse for CircleRotor {
     fn reverse(self) -> Self {
         return CircleRotor::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self.group2()[0] * -1.0, self.group2()[1] * -1.0, self.group2()[2] * -1.0, self.group2()[3]]),
         );
+    }
+}
+impl std::ops::Div<reverse> for Dipole {
+    type Output = Dipole;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for Dipole {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for Dipole {
@@ -170,12 +302,23 @@ impl Reverse for Dipole {
     fn reverse(self) -> Self {
         return Dipole::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35
-            (self.group2() * Simd32x3::from(-1.0)),
+            self.group2() * Simd32x3::from(-1.0),
         );
+    }
+}
+impl std::ops::Div<reverse> for DipoleInversion {
+    type Output = DipoleInversion;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for DipoleInversion {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for DipoleInversion {
@@ -190,19 +333,41 @@ impl Reverse for DipoleInversion {
     fn reverse(self) -> Self {
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self.group2()[0] * -1.0, self.group2()[1] * -1.0, self.group2()[2] * -1.0, self.group2()[3]]),
             // e4235, e4315, e4125, e3215
             self.group3(),
         );
     }
 }
+impl std::ops::Div<reverse> for DualNum {
+    type Output = DualNum;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for DualNum {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
+    }
+}
 impl Reverse for DualNum {
     fn reverse(self) -> Self {
         return self;
+    }
+}
+impl std::ops::Div<reverse> for FlatPoint {
+    type Output = FlatPoint;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for FlatPoint {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for FlatPoint {
@@ -211,7 +376,18 @@ impl Reverse for FlatPoint {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn reverse(self) -> Self {
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ (self.group0() * Simd32x4::from(-1.0)));
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0));
+    }
+}
+impl std::ops::Div<reverse> for Flector {
+    type Output = Flector;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for Flector {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for Flector {
@@ -220,12 +396,18 @@ impl Reverse for Flector {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn reverse(self) -> Self {
-        return Flector::from_groups(
-            // e15, e25, e35, e45
-            (self.group0() * Simd32x4::from(-1.0)),
-            // e4235, e4315, e4125, e3215
-            self.group1(),
-        );
+        return Flector::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0), /* e4235, e4315, e4125, e3215 */ self.group1());
+    }
+}
+impl std::ops::Div<reverse> for Line {
+    type Output = Line;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for Line {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for Line {
@@ -236,10 +418,21 @@ impl Reverse for Line {
     fn reverse(self) -> Self {
         return Line::from_groups(
             // e415, e425, e435
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            (self.group1() * Simd32x3::from(-1.0)),
+            self.group1() * Simd32x3::from(-1.0),
         );
+    }
+}
+impl std::ops::Div<reverse> for Motor {
+    type Output = Motor;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for Motor {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for Motor {
@@ -249,10 +442,21 @@ impl Reverse for Motor {
     fn reverse(self) -> Self {
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
             // e235, e315, e125, e5
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self.group1()[0] * -1.0, self.group1()[1] * -1.0, self.group1()[2] * -1.0, self.group1()[3]]),
         );
+    }
+}
+impl std::ops::Div<reverse> for MultiVector {
+    type Output = MultiVector;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for MultiVector {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for MultiVector {
@@ -273,17 +477,17 @@ impl Reverse for MultiVector {
             // e5
             self[e1],
             // e15, e25, e35, e45
-            (self.group3() * Simd32x4::from(-1.0)),
+            self.group3() * Simd32x4::from(-1.0),
             // e41, e42, e43
-            (self.group4() * Simd32x3::from(-1.0)),
+            self.group4() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (self.group5() * Simd32x3::from(-1.0)),
+            self.group5() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            (self.group6() * Simd32x4::from(-1.0)),
+            self.group6() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            (self.group7() * Simd32x3::from(-1.0)),
+            self.group7() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            (self.group8() * Simd32x3::from(-1.0)),
+            self.group8() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -291,9 +495,31 @@ impl Reverse for MultiVector {
         );
     }
 }
+impl std::ops::Div<reverse> for Plane {
+    type Output = Plane;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for Plane {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
+    }
+}
 impl Reverse for Plane {
     fn reverse(self) -> Self {
         return self;
+    }
+}
+impl std::ops::Div<reverse> for RoundPoint {
+    type Output = RoundPoint;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for RoundPoint {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for RoundPoint {
@@ -301,14 +527,47 @@ impl Reverse for RoundPoint {
         return self;
     }
 }
+impl std::ops::Div<reverse> for Scalar {
+    type Output = Scalar;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for Scalar {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
+    }
+}
 impl Reverse for Scalar {
     fn reverse(self) -> Self {
         return self;
     }
 }
+impl std::ops::Div<reverse> for Sphere {
+    type Output = Sphere;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for Sphere {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
+    }
+}
 impl Reverse for Sphere {
     fn reverse(self) -> Self {
         return self;
+    }
+}
+impl std::ops::Div<reverse> for VersorEven {
+    type Output = VersorEven;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for VersorEven {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for VersorEven {
@@ -322,14 +581,25 @@ impl Reverse for VersorEven {
     fn reverse(self) -> Self {
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
             // e415, e425, e435, e321
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self.group2()[0] * -1.0, self.group2()[1] * -1.0, self.group2()[2] * -1.0, self.group2()[3]]),
             // e1, e2, e3, e4
             self.group3(),
         );
+    }
+}
+impl std::ops::Div<reverse> for VersorOdd {
+    type Output = VersorOdd;
+    fn div(self, _rhs: reverse) -> Self::Output {
+        self.reverse()
+    }
+}
+impl std::ops::DivAssign<reverse> for VersorOdd {
+    fn div_assign(&mut self, _rhs: reverse) {
+        *self = self.reverse()
     }
 }
 impl Reverse for VersorOdd {
@@ -343,11 +613,11 @@ impl Reverse for VersorOdd {
     fn reverse(self) -> Self {
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
             // e23, e31, e12, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self.group2()[0] * -1.0, self.group2()[1] * -1.0, self.group2()[2] * -1.0, self.group2()[3]]),
             // e4235, e4315, e4125, e3215
             self.group3(),
         );

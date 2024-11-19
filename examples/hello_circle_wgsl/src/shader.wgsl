@@ -1,4 +1,4 @@
-#import cga3d_min as cga;
+#import cga3d as cga;
 
 // Quick refresher on shader stages:
 // 1) Objects start in homogenous space, perhaps also known as "view space"
@@ -65,9 +65,9 @@ fn fs_main(vertex: VertexOutput) -> @location(0) vec4<f32> {
     // We'll create our circle by joining 3 RoundPoints.
 
     // Create 3 round points
-    let left = cga::RoundPoint(vec3<f32>(-1.0, 0.0, 0.0), vec2<f32>(1.0, 0.5));
-    let top = cga::RoundPoint(vec3<f32>(0.0, 1.0, 0.0), vec2<f32>(1.0, 0.5));
-    let right = cga::RoundPoint(vec3<f32>(1.0, 0.0, 0.0), vec2<f32>(1.0, 0.5));
+    let left = cga::RoundPoint(vec4<f32>(-1.0, 0.0, 0.0, 1.0), 0.5);
+    let top = cga::RoundPoint(vec4<f32>(0.0, 1.0, 0.0, 0.5), 0.5);
+    let right = cga::RoundPoint(vec4<f32>(1.0, 0.0, 0.0, 1.0), 0.5);
 
     // Join the first pair
     let left_to_top_dipole = cga::roundPoint_wedge_roundPoint(left, top);
@@ -79,7 +79,7 @@ fn fs_main(vertex: VertexOutput) -> @location(0) vec4<f32> {
 
     // Let's create a line representing this fragment
     let fp_e5 = (new_x * new_x + new_y * new_y + 1.0) / 2.0;
-    let fragment_point = cga::RoundPoint(vec3<f32>(new_x, new_y, 1.0), vec2<f32>(1.0, fp_e5));
+    let fragment_point = cga::RoundPoint(vec4<f32>(new_x, new_y, 1.0, 1.0), fp_e5);
     let direction = cga::FlatPoint(vec4<f32>(0.0, 0.0, 1.0, 0.0));
 
     // Join a round point and point at infinity to create a line

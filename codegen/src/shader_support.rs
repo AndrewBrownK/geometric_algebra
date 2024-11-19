@@ -23,7 +23,7 @@ use naga::valid::{{Capabilities, ValidationFlags, Validator}};
 /// runtime. (Hint: Enable this feature in [build-dependencies], but not [dependencies].)
 /// Despite this recommendation, you can still include this in your app binary if you really want
 /// or need to recompile shaders at app runtime for some reason.
-pub const {upper_snake_case_name}_{upper_extension}_SRC: &str = include_str!("integrations/{algebra_name}.{lower_extension}");
+pub const {upper_snake_case_name}_{upper_extension}_SRC: &str = include_str!("{algebra_name}.{lower_extension}");
 
 pub fn {lower_extension}_composable_module_descriptor() -> naga_oil::compose::ComposableModuleDescriptor<'static> {{
     naga_oil::compose::ComposableModuleDescriptor {{

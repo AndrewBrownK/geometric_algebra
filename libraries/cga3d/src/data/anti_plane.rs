@@ -1,14 +1,17 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// AntiPlane
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy)]
 pub union AntiPlane {
     groups: AntiPlaneGroups,
     /// e1, e2, e3, e5
     elements: [f32; 4],
 }
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct AntiPlaneGroups {
     /// e1, e2, e3, e5
     g0: Simd32x4,
@@ -70,6 +73,129 @@ impl AntiPlane {
     pub const LEN: usize = 4;
 }
 
+impl nearly::NearlyEqEps<AntiPlane, f32, f32> for AntiPlane {
+    fn nearly_eq_eps(&self, other: &AntiPlane, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqUlps<AntiPlane, f32, f32> for AntiPlane {
+    fn nearly_eq_ulps(&self, other: &AntiPlane, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqTol<AntiPlane, f32, f32> for AntiPlane {}
+impl nearly::NearlyEq<AntiPlane, f32, f32> for AntiPlane {}
+impl nearly::NearlyOrdUlps<AntiPlane, f32, f32> for AntiPlane {
+    fn nearly_lt_ulps(&self, other: &AntiPlane, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_ulps(&self, other: &AntiPlane, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdEps<AntiPlane, f32, f32> for AntiPlane {
+    fn nearly_lt_eps(&self, other: &AntiPlane, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_eps(&self, other: &AntiPlane, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdTol<AntiPlane, f32, f32> for AntiPlane {}
+impl nearly::NearlyOrd<AntiPlane, f32, f32> for AntiPlane {}
+
 impl AntiPlane {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
@@ -129,6 +255,105 @@ impl std::hash::Hash for AntiPlane {
     }
 }
 
+unsafe impl bytemuck::Zeroable for AntiPlane {}
+unsafe impl bytemuck::Pod for AntiPlane {}
+impl encase::ShaderType for AntiPlane {
+    type ExtraMetadata = <AntiPlaneGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <AntiPlaneGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <AntiPlaneGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <AntiPlaneGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <AntiPlaneGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for AntiPlane {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("AntiPlane", 4)?;
+        state.serialize_field("e1", &self[crate::elements::e1])?;
+        state.serialize_field("e2", &self[crate::elements::e2])?;
+        state.serialize_field("e3", &self[crate::elements::e3])?;
+        state.serialize_field("e5", &self[crate::elements::e5])?;
+        state.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AntiPlane {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum AntiPlaneField {
+            e1,
+            e2,
+            e3,
+            e5,
+        }
+        struct AntiPlaneVisitor;
+        impl<'de> Visitor<'de> for AntiPlaneVisitor {
+            type Value = AntiPlane;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct AntiPlane")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<AntiPlane, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e1 = None;
+                let mut e2 = None;
+                let mut e3 = None;
+                let mut e5 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        AntiPlaneField::e1 => {
+                            if e1.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e1"));
+                            }
+                            e1 = Some(map.next_value()?);
+                        }
+
+                        AntiPlaneField::e2 => {
+                            if e2.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e2"));
+                            }
+                            e2 = Some(map.next_value()?);
+                        }
+
+                        AntiPlaneField::e3 => {
+                            if e3.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e3"));
+                            }
+                            e3 = Some(map.next_value()?);
+                        }
+
+                        AntiPlaneField::e5 => {
+                            if e5.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e5"));
+                            }
+                            e5 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = AntiPlane::from([0.0; 4]);
+                result[crate::elements::e1] = e1.ok_or_else(|| serde::de::Error::missing_field("e1"))?;
+                result[crate::elements::e2] = e2.ok_or_else(|| serde::de::Error::missing_field("e2"))?;
+                result[crate::elements::e3] = e3.ok_or_else(|| serde::de::Error::missing_field("e3"))?;
+                result[crate::elements::e5] = e5.ok_or_else(|| serde::de::Error::missing_field("e5"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e1", "e2", "e3", "e5"];
+        deserializer.deserialize_struct("AntiPlane", FIELDS, AntiPlaneVisitor)
+    }
+}
 impl std::ops::Index<crate::elements::e1> for AntiPlane {
     type Output = f32;
     fn index(&self, _: crate::elements::e1) -> &Self::Output {
@@ -154,22 +379,22 @@ impl std::ops::Index<crate::elements::e5> for AntiPlane {
     }
 }
 impl std::ops::IndexMut<crate::elements::e1> for AntiPlane {
-    fn index_mut(&self, _: crate::elements::e1) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e1) -> &mut Self::Output {
         &mut self[0]
     }
 }
 impl std::ops::IndexMut<crate::elements::e2> for AntiPlane {
-    fn index_mut(&self, _: crate::elements::e2) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e2) -> &mut Self::Output {
         &mut self[1]
     }
 }
 impl std::ops::IndexMut<crate::elements::e3> for AntiPlane {
-    fn index_mut(&self, _: crate::elements::e3) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e3) -> &mut Self::Output {
         &mut self[2]
     }
 }
 impl std::ops::IndexMut<crate::elements::e5> for AntiPlane {
-    fn index_mut(&self, _: crate::elements::e5) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e5) -> &mut Self::Output {
         &mut self[3]
     }
 }

@@ -18,6 +18,12 @@
 //   Median:        14      16       0
 //  Average:        41      47       0
 //  Maximum:       396     420       0
+impl std::ops::Div<constraint_violation> for AntiCircleRotor {
+    type Output = VersorOdd;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
+    }
+}
 impl ConstraintViolation for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
@@ -32,11 +38,11 @@ impl ConstraintViolation for AntiCircleRotor {
         use crate::elements::*;
         let reverse = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self.group2()[0] * -1.0, self.group2()[1] * -1.0, self.group2()[2] * -1.0, self.group2()[3]]),
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -44,7 +50,7 @@ impl ConstraintViolation for AntiCircleRotor {
                 0.0,
                 0.0,
                 0.0,
-                (-(reverse.group0()[0] * self.group2()[0])
+                -(reverse.group0()[0] * self.group2()[0])
                     - (reverse.group0()[1] * self.group2()[1])
                     - (reverse.group0()[2] * self.group2()[2])
                     - (self.group0()[0] * reverse.group2()[0])
@@ -54,7 +60,7 @@ impl ConstraintViolation for AntiCircleRotor {
                     - (reverse.group1()[1] * self.group1()[1])
                     - (reverse.group1()[2] * self.group1()[2])
                     + (reverse.group1()[3] * self.group1()[3])
-                    + (reverse.group2()[3] * self.group2()[3])),
+                    + (reverse.group2()[3] * self.group2()[3]),
             ]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
@@ -63,44 +69,44 @@ impl ConstraintViolation for AntiCircleRotor {
                 0.0,
                 0.0,
                 0.0,
-                (-(reverse.group0()[0] * self.group1()[0])
+                -(reverse.group0()[0] * self.group1()[0])
                     - (reverse.group0()[1] * self.group1()[1])
                     - (reverse.group0()[2] * self.group1()[2])
                     - (self.group0()[0] * reverse.group1()[0])
                     - (self.group0()[1] * reverse.group1()[1])
-                    - (self.group0()[2] * reverse.group1()[2])),
+                    - (self.group0()[2] * reverse.group1()[2]),
             ]),
             // e4235, e4315, e4125, e3215
-            (Simd32x4::from([
-                ((reverse.group0()[1] * self.group2()[2])
+            Simd32x4::from([
+                (reverse.group0()[1] * self.group2()[2])
                     + (self.group0()[1] * reverse.group2()[2])
                     + (reverse.group1()[0] * self.group1()[3])
-                    + (reverse.group1()[3] * self.group1()[0])),
-                ((reverse.group0()[2] * self.group2()[0])
+                    + (reverse.group1()[3] * self.group1()[0]),
+                (reverse.group0()[2] * self.group2()[0])
                     + (self.group0()[2] * reverse.group2()[0])
                     + (reverse.group1()[1] * self.group1()[3])
-                    + (reverse.group1()[3] * self.group1()[1])),
-                ((reverse.group0()[0] * self.group2()[1])
+                    + (reverse.group1()[3] * self.group1()[1]),
+                (reverse.group0()[0] * self.group2()[1])
                     + (self.group0()[0] * reverse.group2()[1])
                     + (reverse.group1()[2] * self.group1()[3])
-                    + (reverse.group1()[3] * self.group1()[2])),
-                (-(reverse.group1()[1] * self.group2()[1])
+                    + (reverse.group1()[3] * self.group1()[2]),
+                -(reverse.group1()[1] * self.group2()[1])
                     - (reverse.group1()[2] * self.group2()[2])
                     - (reverse.group2()[1] * self.group1()[1])
-                    - (reverse.group2()[2] * self.group1()[2])),
-            ]) - (Simd32x4::from([reverse.group0()[2], reverse.group0()[0], reverse.group0()[1], reverse.group1()[0]]) * swizzle!(self.group2(), 1, 2, 0, 0))
-                - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(reverse.group2(), 1, 2, 0, 0))),
+                    - (reverse.group2()[2] * self.group1()[2]),
+            ]) - (Simd32x4::from([reverse.group0()[2], reverse.group0()[0], reverse.group0()[1], reverse.group1()[0]]) * crate::swizzle!(self.group2(), 1, 2, 0, 0))
+                - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * crate::swizzle!(reverse.group2(), 1, 2, 0, 0)),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2) + f32::powi(self.group2()[3], 2)
+            -f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2) + f32::powi(self.group2()[3], 2)
                 - 2.0 * (self.group0()[0] * self.group2()[0])
                 - 2.0 * (self.group0()[1] * self.group2()[1])
-                - 2.0 * (self.group0()[2] * self.group2()[2])),
+                - 2.0 * (self.group0()[2] * self.group2()[2]),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group0()[3] - scalar_product[scalar]]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -108,6 +114,12 @@ impl ConstraintViolation for AntiCircleRotor {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
+    }
+}
+impl std::ops::Div<constraint_violation> for AntiDipoleInversion {
+    type Output = VersorOdd;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for AntiDipoleInversion {
@@ -124,11 +136,11 @@ impl ConstraintViolation for AntiDipoleInversion {
         use crate::elements::*;
         let reverse = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e4
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self.group2()[0] * -1.0, self.group2()[1] * -1.0, self.group2()[2] * -1.0, self.group2()[3]]),
             // e1, e2, e3, e5
             self.group3(),
         );
@@ -138,7 +150,7 @@ impl ConstraintViolation for AntiDipoleInversion {
                 0.0,
                 0.0,
                 0.0,
-                ((reverse.group0()[0] * self.group2()[0])
+                (reverse.group0()[0] * self.group2()[0])
                     + (reverse.group0()[1] * self.group2()[1])
                     + (reverse.group0()[2] * self.group2()[2])
                     + (self.group0()[0] * reverse.group2()[0])
@@ -152,7 +164,7 @@ impl ConstraintViolation for AntiDipoleInversion {
                     + (reverse.group3()[0] * self.group3()[0])
                     + (reverse.group3()[1] * self.group3()[1])
                     + (reverse.group3()[2] * self.group3()[2])
-                    - (reverse.group3()[3] * self.group2()[3])),
+                    - (reverse.group3()[3] * self.group2()[3]),
             ]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
@@ -161,7 +173,7 @@ impl ConstraintViolation for AntiDipoleInversion {
                 0.0,
                 0.0,
                 0.0,
-                ((reverse.group0()[0] * self.group1()[0])
+                (reverse.group0()[0] * self.group1()[0])
                     + (reverse.group0()[0] * self.group3()[0])
                     + (reverse.group0()[1] * self.group1()[1])
                     + (reverse.group0()[1] * self.group3()[1])
@@ -174,41 +186,41 @@ impl ConstraintViolation for AntiDipoleInversion {
                     + (self.group0()[2] * reverse.group1()[2])
                     - (self.group0()[2] * reverse.group3()[2])
                     + (reverse.group1()[3] * self.group2()[3])
-                    - (reverse.group2()[3] * self.group1()[3])),
+                    - (reverse.group2()[3] * self.group1()[3]),
             ]),
             // e4235, e4315, e4125, e3215
-            (Simd32x4::from([
-                (-(reverse.group0()[1] * self.group2()[2]) - (reverse.group3()[2] * self.group1()[1])),
-                (-(reverse.group0()[2] * self.group2()[0]) - (reverse.group3()[0] * self.group1()[2])),
-                (-(reverse.group0()[0] * self.group2()[1]) - (reverse.group3()[1] * self.group1()[0])),
-                ((reverse.group3()[2] * self.group2()[2]) + (reverse.group3()[3] * self.group1()[3])),
+            Simd32x4::from([
+                -(reverse.group0()[1] * self.group2()[2]) - (reverse.group3()[2] * self.group1()[1]),
+                -(reverse.group0()[2] * self.group2()[0]) - (reverse.group3()[0] * self.group1()[2]),
+                -(reverse.group0()[0] * self.group2()[1]) - (reverse.group3()[1] * self.group1()[0]),
+                (reverse.group3()[2] * self.group2()[2]) + (reverse.group3()[3] * self.group1()[3]),
             ]) - (Simd32x4::from(self.group3()[3]) * Simd32x4::from([reverse.group0()[0], reverse.group0()[1], reverse.group0()[2], reverse.group1()[3]]))
-                + (Simd32x4::from([reverse.group0()[2], reverse.group0()[0], reverse.group0()[1], reverse.group1()[0]]) * swizzle!(self.group2(), 1, 2, 0, 0))
-                + (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[0]]) * swizzle!(reverse.group3(), 3, 3, 3, 0))
-                - (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group3()[0]]) * swizzle!(reverse.group2(), 2, 0, 1, 0))
-                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(reverse.group2(), 1, 2, 0, 0))
-                - (Simd32x4::from([reverse.group1()[2], reverse.group1()[0], reverse.group1()[1], reverse.group2()[1]]) * swizzle!(self.group3(), 1, 2, 0, 1))
-                + (Simd32x4::from([reverse.group1()[3], reverse.group1()[3], reverse.group1()[3], reverse.group2()[1]]) * swizzle!(self.group1(), 0, 1, 2, 1))
-                + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group2()[1]]) * swizzle!(reverse.group3(), 1, 2, 0, 1))
-                + (Simd32x4::from([self.group1()[3], self.group1()[3], self.group3()[1], self.group2()[1]]) * swizzle!(reverse.group1(), 0, 1, 0, 1))
-                - (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[2]]) * swizzle!(reverse.group2(), 3, 3, 3, 2))
-                + (Simd32x4::from([self.group2()[3], self.group2()[3], self.group2()[3], self.group1()[2]]) * swizzle!(reverse.group2(), 0, 1, 2, 2))
-                + (Simd32x4::from([self.group3()[2], self.group3()[0], self.group1()[3], self.group2()[2]]) * swizzle!(reverse.group1(), 1, 2, 2, 2))),
+                + (Simd32x4::from([reverse.group0()[2], reverse.group0()[0], reverse.group0()[1], reverse.group1()[0]]) * crate::swizzle!(self.group2(), 1, 2, 0, 0))
+                + (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[0]]) * crate::swizzle!(reverse.group3(), 3, 3, 3, 0))
+                - (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group3()[0]]) * crate::swizzle!(reverse.group2(), 2, 0, 1, 0))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * crate::swizzle!(reverse.group2(), 1, 2, 0, 0))
+                - (Simd32x4::from([reverse.group1()[2], reverse.group1()[0], reverse.group1()[1], reverse.group2()[1]]) * crate::swizzle!(self.group3(), 1, 2, 0, 1))
+                + (Simd32x4::from([reverse.group1()[3], reverse.group1()[3], reverse.group1()[3], reverse.group2()[1]]) * crate::swizzle!(self.group1(), 0, 1, 2, 1))
+                + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group2()[1]]) * crate::swizzle!(reverse.group3(), 1, 2, 0, 1))
+                + (Simd32x4::from([self.group1()[3], self.group1()[3], self.group3()[1], self.group2()[1]]) * crate::swizzle!(reverse.group1(), 0, 1, 0, 1))
+                - (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[2]]) * crate::swizzle!(reverse.group2(), 3, 3, 3, 2))
+                + (Simd32x4::from([self.group2()[3], self.group2()[3], self.group2()[3], self.group1()[2]]) * crate::swizzle!(reverse.group2(), 0, 1, 2, 2))
+                + (Simd32x4::from([self.group3()[2], self.group3()[0], self.group1()[3], self.group2()[2]]) * crate::swizzle!(reverse.group1(), 1, 2, 2, 2)),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2)
+            f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2)
                 + f32::powi(self.group3()[0], 2)
                 + f32::powi(self.group3()[1], 2)
                 + f32::powi(self.group3()[2], 2)
                 + 2.0 * (self.group0()[0] * self.group2()[0])
                 + 2.0 * (self.group0()[1] * self.group2()[1])
                 + 2.0 * (self.group0()[2] * self.group2()[2])
-                - 2.0 * (self.group2()[3] * self.group3()[3])),
+                - 2.0 * (self.group2()[3] * self.group3()[3]),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group0()[3] - scalar_product[scalar]]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -216,6 +228,17 @@ impl ConstraintViolation for AntiDipoleInversion {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
+    }
+}
+impl std::ops::Div<constraint_violation> for AntiDualNum {
+    type Output = AntiDualNum;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
+    }
+}
+impl std::ops::DivAssign<constraint_violation> for AntiDualNum {
+    fn div_assign(&mut self, _rhs: constraint_violation) {
+        *self = self.constraint_violation()
     }
 }
 impl ConstraintViolation for AntiDualNum {
@@ -230,9 +253,15 @@ impl ConstraintViolation for AntiDualNum {
     fn constraint_violation(self) -> Self::Output {
         let geometric_product = AntiDualNum::from_groups(
             // e1234, scalar
-            (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([2.0, 1.0])),
+            Simd32x2::from([self.group0()[0] * self.group0()[1], f32::powi(self.group0()[1], 2)]) * Simd32x2::from([2.0, 1.0]),
         );
         return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([geometric_product.group0()[0], 0.0]));
+    }
+}
+impl std::ops::Div<constraint_violation> for AntiFlatPoint {
+    type Output = Scalar;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for AntiFlatPoint {
@@ -246,10 +275,16 @@ impl ConstraintViolation for AntiFlatPoint {
     //  no simd        1        7        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let reverse = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (self.group0() * Simd32x4::from(-1.0)));
-        let geometric_product = Scalar::from_groups(/* scalar */ (reverse.group0()[3] * self.group0()[3] * -1.0));
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(self.group0()[3], 2) * -1.0));
-        return Scalar::from_groups(/* scalar */ (geometric_product[scalar] - scalar_product[scalar]));
+        let reverse = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0));
+        let geometric_product = Scalar::from_groups(/* scalar */ reverse.group0()[3] * self.group0()[3] * -1.0);
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self.group0()[3], 2) * -1.0);
+        return Scalar::from_groups(/* scalar */ geometric_product[scalar] - scalar_product[scalar]);
+    }
+}
+impl std::ops::Div<constraint_violation> for AntiFlector {
+    type Output = AntiMotor;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for AntiFlector {
@@ -263,43 +298,49 @@ impl ConstraintViolation for AntiFlector {
     //  no simd       14       16        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let reverse = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (self.group0() * Simd32x4::from(-1.0)), /* e1, e2, e3, e5 */ self.group1());
+        let reverse = AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0), /* e1, e2, e3, e5 */ self.group1());
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                (-(reverse.group0()[3] * self.group0()[3])
+                -(reverse.group0()[3] * self.group0()[3])
                     + (reverse.group1()[0] * self.group1()[0])
                     + (reverse.group1()[1] * self.group1()[1])
-                    + (reverse.group1()[2] * self.group1()[2])),
+                    + (reverse.group1()[2] * self.group1()[2]),
             ]),
             // e15, e25, e35, e3215
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                (-(reverse.group0()[0] * self.group1()[0])
+                -(reverse.group0()[0] * self.group1()[0])
                     - (reverse.group0()[1] * self.group1()[1])
                     - (reverse.group0()[2] * self.group1()[2])
                     - (reverse.group0()[3] * self.group1()[3])
                     + (reverse.group1()[0] * self.group0()[0])
                     + (reverse.group1()[1] * self.group0()[1])
                     + (reverse.group1()[2] * self.group0()[2])
-                    + (reverse.group1()[3] * self.group0()[3])),
+                    + (reverse.group1()[3] * self.group0()[3]),
             ]),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2)),
+            -f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group0()[3] - scalar_product[scalar]]),
             // e15, e25, e35, e3215
             Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group1()[3]]),
         );
+    }
+}
+impl std::ops::Div<constraint_violation> for AntiLine {
+    type Output = AntiMotor;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for AntiLine {
@@ -315,9 +356,9 @@ impl ConstraintViolation for AntiLine {
         use crate::elements::*;
         let reverse = AntiLine::from_groups(
             // e23, e31, e12
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e15, e25, e35
-            (self.group1() * Simd32x3::from(-1.0)),
+            self.group1() * Simd32x3::from(-1.0),
         );
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -325,28 +366,39 @@ impl ConstraintViolation for AntiLine {
                 0.0,
                 0.0,
                 0.0,
-                (-(reverse.group0()[0] * self.group0()[0]) - (reverse.group0()[1] * self.group0()[1]) - (reverse.group0()[2] * self.group0()[2])),
+                -(reverse.group0()[0] * self.group0()[0]) - (reverse.group0()[1] * self.group0()[1]) - (reverse.group0()[2] * self.group0()[2]),
             ]),
             // e15, e25, e35, e3215
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                (-(reverse.group0()[0] * self.group1()[0])
+                -(reverse.group0()[0] * self.group1()[0])
                     - (reverse.group0()[1] * self.group1()[1])
                     - (reverse.group0()[2] * self.group1()[2])
                     - (reverse.group1()[0] * self.group0()[0])
                     - (reverse.group1()[1] * self.group0()[1])
-                    - (reverse.group1()[2] * self.group0()[2])),
+                    - (reverse.group1()[2] * self.group0()[2]),
             ]),
         );
-        let scalar_product = Scalar::from_groups(/* scalar */ (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ -f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2));
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group0()[3] - scalar_product[scalar]]),
             // e15, e25, e35, e3215
             Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group1()[3]]),
         );
+    }
+}
+impl std::ops::Div<constraint_violation> for AntiMotor {
+    type Output = AntiMotor;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
+    }
+}
+impl std::ops::DivAssign<constraint_violation> for AntiMotor {
+    fn div_assign(&mut self, _rhs: constraint_violation) {
+        *self = self.constraint_violation()
     }
 }
 impl ConstraintViolation for AntiMotor {
@@ -358,9 +410,9 @@ impl ConstraintViolation for AntiMotor {
         use crate::elements::*;
         let reverse = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
             // e15, e25, e35, e3215
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self.group1()[0] * -1.0, self.group1()[1] * -1.0, self.group1()[2] * -1.0, self.group1()[3]]),
         );
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -368,32 +420,38 @@ impl ConstraintViolation for AntiMotor {
                 0.0,
                 0.0,
                 0.0,
-                (-(reverse.group0()[0] * self.group0()[0]) - (reverse.group0()[1] * self.group0()[1]) - (reverse.group0()[2] * self.group0()[2])
-                    + (reverse.group0()[3] * self.group0()[3])),
+                -(reverse.group0()[0] * self.group0()[0]) - (reverse.group0()[1] * self.group0()[1]) - (reverse.group0()[2] * self.group0()[2])
+                    + (reverse.group0()[3] * self.group0()[3]),
             ]),
             // e15, e25, e35, e3215
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                (-(reverse.group0()[0] * self.group1()[0]) - (reverse.group0()[1] * self.group1()[1]) - (reverse.group0()[2] * self.group1()[2])
+                -(reverse.group0()[0] * self.group1()[0]) - (reverse.group0()[1] * self.group1()[1]) - (reverse.group0()[2] * self.group1()[2])
                     + (reverse.group0()[3] * self.group1()[3])
                     - (reverse.group1()[0] * self.group0()[0])
                     - (reverse.group1()[1] * self.group0()[1])
                     - (reverse.group1()[2] * self.group0()[2])
-                    + (reverse.group1()[3] * self.group0()[3])),
+                    + (reverse.group1()[3] * self.group0()[3]),
             ]),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)),
+            -f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group0()[3] - scalar_product[scalar]]),
             // e15, e25, e35, e3215
             Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group1()[3]]),
         );
+    }
+}
+impl std::ops::Div<constraint_violation> for AntiPlane {
+    type Output = Scalar;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for AntiPlane {
@@ -402,10 +460,22 @@ impl ConstraintViolation for AntiPlane {
         return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
+impl std::ops::Div<constraint_violation> for AntiScalar {
+    type Output = Scalar;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
+    }
+}
 impl ConstraintViolation for AntiScalar {
     type Output = Scalar;
     fn constraint_violation(self) -> Self::Output {
         return Scalar::from_groups(/* scalar */ 0.0);
+    }
+}
+impl std::ops::Div<constraint_violation> for Circle {
+    type Output = VersorOdd;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for Circle {
@@ -422,11 +492,11 @@ impl ConstraintViolation for Circle {
         use crate::elements::*;
         let reverse = Circle::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125
-            (self.group2() * Simd32x3::from(-1.0)),
+            self.group2() * Simd32x3::from(-1.0),
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -434,7 +504,7 @@ impl ConstraintViolation for Circle {
                 0.0,
                 0.0,
                 0.0,
-                ((reverse.group0()[0] * self.group2()[0])
+                (reverse.group0()[0] * self.group2()[0])
                     + (reverse.group0()[1] * self.group2()[1])
                     + (reverse.group0()[2] * self.group2()[2])
                     + (reverse.group2()[0] * self.group0()[0])
@@ -443,7 +513,7 @@ impl ConstraintViolation for Circle {
                     + (reverse.group1()[0] * self.group1()[0])
                     + (reverse.group1()[1] * self.group1()[1])
                     + (reverse.group1()[2] * self.group1()[2])
-                    - (reverse.group1()[3] * self.group1()[3])),
+                    - (reverse.group1()[3] * self.group1()[3]),
             ]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
@@ -452,38 +522,38 @@ impl ConstraintViolation for Circle {
                 0.0,
                 0.0,
                 0.0,
-                ((reverse.group0()[0] * self.group1()[0])
+                (reverse.group0()[0] * self.group1()[0])
                     + (reverse.group0()[1] * self.group1()[1])
                     + (reverse.group0()[2] * self.group1()[2])
                     + (self.group0()[0] * reverse.group1()[0])
                     + (self.group0()[1] * reverse.group1()[1])
-                    + (self.group0()[2] * reverse.group1()[2])),
+                    + (self.group0()[2] * reverse.group1()[2]),
             ]),
             // e4235, e4315, e4125, e3215
-            (Simd32x4::from([
-                (-(reverse.group0()[1] * self.group2()[2]) + (reverse.group0()[2] * self.group2()[1]) + (reverse.group2()[1] * self.group0()[2])
-                    - (reverse.group2()[2] * self.group0()[1])),
-                ((reverse.group0()[0] * self.group2()[2]) - (reverse.group0()[2] * self.group2()[0]) - (reverse.group2()[0] * self.group0()[2])
-                    + (reverse.group2()[2] * self.group0()[0])),
-                (-(reverse.group0()[0] * self.group2()[1]) + (reverse.group0()[1] * self.group2()[0]) + (reverse.group2()[0] * self.group0()[1])
-                    - (reverse.group2()[1] * self.group0()[0])),
-                ((reverse.group2()[2] * self.group1()[2])
+            Simd32x4::from([
+                -(reverse.group0()[1] * self.group2()[2]) + (reverse.group0()[2] * self.group2()[1]) + (reverse.group2()[1] * self.group0()[2])
+                    - (reverse.group2()[2] * self.group0()[1]),
+                (reverse.group0()[0] * self.group2()[2]) - (reverse.group0()[2] * self.group2()[0]) - (reverse.group2()[0] * self.group0()[2])
+                    + (reverse.group2()[2] * self.group0()[0]),
+                -(reverse.group0()[0] * self.group2()[1]) + (reverse.group0()[1] * self.group2()[0]) + (reverse.group2()[0] * self.group0()[1])
+                    - (reverse.group2()[1] * self.group0()[0]),
+                (reverse.group2()[2] * self.group1()[2])
                     + (self.group2()[0] * reverse.group1()[0])
                     + (self.group2()[1] * reverse.group1()[1])
-                    + (self.group2()[2] * reverse.group1()[2])),
-            ]) + (Simd32x4::from([reverse.group1()[0], reverse.group1()[1], reverse.group1()[2], reverse.group2()[0]]) * swizzle!(self.group1(), 3, 3, 3, 0))
-                + (Simd32x4::from([reverse.group1()[3], reverse.group1()[3], reverse.group1()[3], reverse.group2()[1]]) * swizzle!(self.group1(), 0, 1, 2, 1))),
+                    + (self.group2()[2] * reverse.group1()[2]),
+            ]) + (Simd32x4::from([reverse.group1()[0], reverse.group1()[1], reverse.group1()[2], reverse.group2()[0]]) * crate::swizzle!(self.group1(), 3, 3, 3, 0))
+                + (Simd32x4::from([reverse.group1()[3], reverse.group1()[3], reverse.group1()[3], reverse.group2()[1]]) * crate::swizzle!(self.group1(), 0, 1, 2, 1)),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2)
+            f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2)
                 + 2.0 * (self.group0()[0] * self.group2()[0])
                 + 2.0 * (self.group0()[1] * self.group2()[1])
-                + 2.0 * (self.group0()[2] * self.group2()[2])),
+                + 2.0 * (self.group0()[2] * self.group2()[2]),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group0()[3] - scalar_product[scalar]]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -491,6 +561,12 @@ impl ConstraintViolation for Circle {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
+    }
+}
+impl std::ops::Div<constraint_violation> for CircleRotor {
+    type Output = VersorOdd;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for CircleRotor {
@@ -507,11 +583,11 @@ impl ConstraintViolation for CircleRotor {
         use crate::elements::*;
         let reverse = CircleRotor::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self.group2()[0] * -1.0, self.group2()[1] * -1.0, self.group2()[2] * -1.0, self.group2()[3]]),
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -519,7 +595,7 @@ impl ConstraintViolation for CircleRotor {
                 0.0,
                 0.0,
                 0.0,
-                ((reverse.group0()[0] * self.group2()[0])
+                (reverse.group0()[0] * self.group2()[0])
                     + (reverse.group0()[1] * self.group2()[1])
                     + (reverse.group0()[2] * self.group2()[2])
                     + (self.group0()[0] * reverse.group2()[0])
@@ -529,7 +605,7 @@ impl ConstraintViolation for CircleRotor {
                     + (reverse.group1()[1] * self.group1()[1])
                     + (reverse.group1()[2] * self.group1()[2])
                     - (reverse.group1()[3] * self.group1()[3])
-                    - (reverse.group2()[3] * self.group2()[3])),
+                    - (reverse.group2()[3] * self.group2()[3]),
             ]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
@@ -538,34 +614,34 @@ impl ConstraintViolation for CircleRotor {
                 0.0,
                 0.0,
                 0.0,
-                ((reverse.group0()[0] * self.group1()[0])
+                (reverse.group0()[0] * self.group1()[0])
                     + (reverse.group0()[1] * self.group1()[1])
                     + (reverse.group0()[2] * self.group1()[2])
                     + (self.group0()[0] * reverse.group1()[0])
                     + (self.group0()[1] * reverse.group1()[1])
-                    + (self.group0()[2] * reverse.group1()[2])),
+                    + (self.group0()[2] * reverse.group1()[2]),
             ]),
             // e4235, e4315, e4125, e3215
-            (Simd32x4::from([
-                (-(reverse.group0()[1] * self.group2()[2]) - (self.group0()[1] * reverse.group2()[2])),
-                (-(reverse.group0()[2] * self.group2()[0]) - (self.group0()[2] * reverse.group2()[0])),
-                (-(reverse.group0()[0] * self.group2()[1]) - (self.group0()[0] * reverse.group2()[1])),
-                ((reverse.group2()[1] * self.group1()[1]) + (reverse.group2()[2] * self.group1()[2])),
-            ]) + (Simd32x4::from([reverse.group0()[2], reverse.group0()[0], reverse.group0()[1], reverse.group1()[0]]) * swizzle!(self.group2(), 1, 2, 0, 0))
-                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(reverse.group2(), 1, 2, 0, 0))
-                + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group2()[2]]) * swizzle!(reverse.group1(), 3, 3, 3, 2))
-                + (Simd32x4::from([self.group1()[3], self.group1()[3], self.group1()[3], self.group2()[1]]) * swizzle!(reverse.group1(), 0, 1, 2, 1))),
+            Simd32x4::from([
+                -(reverse.group0()[1] * self.group2()[2]) - (self.group0()[1] * reverse.group2()[2]),
+                -(reverse.group0()[2] * self.group2()[0]) - (self.group0()[2] * reverse.group2()[0]),
+                -(reverse.group0()[0] * self.group2()[1]) - (self.group0()[0] * reverse.group2()[1]),
+                (reverse.group2()[1] * self.group1()[1]) + (reverse.group2()[2] * self.group1()[2]),
+            ]) + (Simd32x4::from([reverse.group0()[2], reverse.group0()[0], reverse.group0()[1], reverse.group1()[0]]) * crate::swizzle!(self.group2(), 1, 2, 0, 0))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * crate::swizzle!(reverse.group2(), 1, 2, 0, 0))
+                + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group2()[2]]) * crate::swizzle!(reverse.group1(), 3, 3, 3, 2))
+                + (Simd32x4::from([self.group1()[3], self.group1()[3], self.group1()[3], self.group2()[1]]) * crate::swizzle!(reverse.group1(), 0, 1, 2, 1)),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2) - f32::powi(self.group2()[3], 2)
+            f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2) - f32::powi(self.group2()[3], 2)
                 + 2.0 * (self.group0()[0] * self.group2()[0])
                 + 2.0 * (self.group0()[1] * self.group2()[1])
-                + 2.0 * (self.group0()[2] * self.group2()[2])),
+                + 2.0 * (self.group0()[2] * self.group2()[2]),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group0()[3] - scalar_product[scalar]]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -573,6 +649,12 @@ impl ConstraintViolation for CircleRotor {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
+    }
+}
+impl std::ops::Div<constraint_violation> for Dipole {
+    type Output = VersorOdd;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for Dipole {
@@ -589,11 +671,11 @@ impl ConstraintViolation for Dipole {
         use crate::elements::*;
         let reverse = Dipole::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35
-            (self.group2() * Simd32x3::from(-1.0)),
+            self.group2() * Simd32x3::from(-1.0),
         );
         let geometric_product = VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -601,7 +683,7 @@ impl ConstraintViolation for Dipole {
                 0.0,
                 0.0,
                 0.0,
-                (-(reverse.group0()[0] * self.group2()[0])
+                -(reverse.group0()[0] * self.group2()[0])
                     - (reverse.group0()[1] * self.group2()[1])
                     - (reverse.group0()[2] * self.group2()[2])
                     - (reverse.group2()[0] * self.group0()[0])
@@ -610,7 +692,7 @@ impl ConstraintViolation for Dipole {
                     - (reverse.group1()[0] * self.group1()[0])
                     - (reverse.group1()[1] * self.group1()[1])
                     - (reverse.group1()[2] * self.group1()[2])
-                    + (reverse.group1()[3] * self.group1()[3])),
+                    + (reverse.group1()[3] * self.group1()[3]),
             ]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
@@ -619,45 +701,45 @@ impl ConstraintViolation for Dipole {
                 0.0,
                 0.0,
                 0.0,
-                (-(reverse.group0()[0] * self.group1()[0])
+                -(reverse.group0()[0] * self.group1()[0])
                     - (reverse.group0()[1] * self.group1()[1])
                     - (reverse.group0()[2] * self.group1()[2])
                     - (self.group0()[0] * reverse.group1()[0])
                     - (self.group0()[1] * reverse.group1()[1])
-                    - (self.group0()[2] * reverse.group1()[2])),
+                    - (self.group0()[2] * reverse.group1()[2]),
             ]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
-                ((reverse.group0()[1] * self.group2()[2]) - (reverse.group0()[2] * self.group2()[1]) - (reverse.group2()[1] * self.group0()[2])
+                (reverse.group0()[1] * self.group2()[2]) - (reverse.group0()[2] * self.group2()[1]) - (reverse.group2()[1] * self.group0()[2])
                     + (reverse.group2()[2] * self.group0()[1])
                     + (reverse.group1()[0] * self.group1()[3])
-                    + (reverse.group1()[3] * self.group1()[0])),
-                (-(reverse.group0()[0] * self.group2()[2]) + (reverse.group0()[2] * self.group2()[0]) + (reverse.group2()[0] * self.group0()[2])
+                    + (reverse.group1()[3] * self.group1()[0]),
+                -(reverse.group0()[0] * self.group2()[2]) + (reverse.group0()[2] * self.group2()[0]) + (reverse.group2()[0] * self.group0()[2])
                     - (reverse.group2()[2] * self.group0()[0])
                     + (reverse.group1()[1] * self.group1()[3])
-                    + (reverse.group1()[3] * self.group1()[1])),
-                ((reverse.group0()[0] * self.group2()[1]) - (reverse.group0()[1] * self.group2()[0]) - (reverse.group2()[0] * self.group0()[1])
+                    + (reverse.group1()[3] * self.group1()[1]),
+                (reverse.group0()[0] * self.group2()[1]) - (reverse.group0()[1] * self.group2()[0]) - (reverse.group2()[0] * self.group0()[1])
                     + (reverse.group2()[1] * self.group0()[0])
                     + (reverse.group1()[2] * self.group1()[3])
-                    + (reverse.group1()[3] * self.group1()[2])),
-                (-(reverse.group2()[0] * self.group1()[0])
+                    + (reverse.group1()[3] * self.group1()[2]),
+                -(reverse.group2()[0] * self.group1()[0])
                     - (reverse.group2()[1] * self.group1()[1])
                     - (reverse.group2()[2] * self.group1()[2])
                     - (self.group2()[0] * reverse.group1()[0])
                     - (self.group2()[1] * reverse.group1()[1])
-                    - (self.group2()[2] * reverse.group1()[2])),
+                    - (self.group2()[2] * reverse.group1()[2]),
             ]),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2)
+            -f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2)
                 - 2.0 * (self.group0()[0] * self.group2()[0])
                 - 2.0 * (self.group0()[1] * self.group2()[1])
-                - 2.0 * (self.group0()[2] * self.group2()[2])),
+                - 2.0 * (self.group0()[2] * self.group2()[2]),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group0()[3] - scalar_product[scalar]]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -665,6 +747,12 @@ impl ConstraintViolation for Dipole {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
+    }
+}
+impl std::ops::Div<constraint_violation> for DipoleInversion {
+    type Output = VersorOdd;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for DipoleInversion {
@@ -681,11 +769,11 @@ impl ConstraintViolation for DipoleInversion {
         use crate::elements::*;
         let reverse = DipoleInversion::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self.group2()[0] * -1.0, self.group2()[1] * -1.0, self.group2()[2] * -1.0, self.group2()[3]]),
             // e4235, e4315, e4125, e3215
             self.group3(),
         );
@@ -695,7 +783,7 @@ impl ConstraintViolation for DipoleInversion {
                 0.0,
                 0.0,
                 0.0,
-                (-(reverse.group0()[0] * self.group2()[0])
+                -(reverse.group0()[0] * self.group2()[0])
                     - (reverse.group0()[1] * self.group2()[1])
                     - (reverse.group0()[2] * self.group2()[2])
                     - (self.group0()[0] * reverse.group2()[0])
@@ -709,7 +797,7 @@ impl ConstraintViolation for DipoleInversion {
                     - (reverse.group3()[0] * self.group3()[0])
                     - (reverse.group3()[1] * self.group3()[1])
                     - (reverse.group3()[2] * self.group3()[2])
-                    + (reverse.group3()[3] * self.group2()[3])),
+                    + (reverse.group3()[3] * self.group2()[3]),
             ]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
@@ -718,7 +806,7 @@ impl ConstraintViolation for DipoleInversion {
                 0.0,
                 0.0,
                 0.0,
-                (-(reverse.group0()[0] * self.group1()[0]) + (reverse.group0()[0] * self.group3()[0]) - (reverse.group0()[1] * self.group1()[1])
+                -(reverse.group0()[0] * self.group1()[0]) + (reverse.group0()[0] * self.group3()[0]) - (reverse.group0()[1] * self.group1()[1])
                     + (reverse.group0()[1] * self.group3()[1])
                     - (reverse.group0()[2] * self.group1()[2])
                     + (reverse.group0()[2] * self.group3()[2])
@@ -729,50 +817,50 @@ impl ConstraintViolation for DipoleInversion {
                     - (self.group0()[2] * reverse.group1()[2])
                     - (self.group0()[2] * reverse.group3()[2])
                     + (reverse.group1()[3] * self.group2()[3])
-                    - (reverse.group2()[3] * self.group1()[3])),
+                    - (reverse.group2()[3] * self.group1()[3]),
             ]),
             // e4235, e4315, e4125, e3215
-            (Simd32x4::from([
-                ((reverse.group0()[0] * self.group3()[3]) - (self.group0()[0] * reverse.group3()[3])
+            Simd32x4::from([
+                (reverse.group0()[0] * self.group3()[3]) - (self.group0()[0] * reverse.group3()[3])
                     + (self.group0()[1] * reverse.group2()[2])
                     + (reverse.group1()[1] * self.group3()[2])
-                    + (reverse.group1()[3] * self.group1()[0])),
-                ((reverse.group0()[1] * self.group3()[3]) - (self.group0()[1] * reverse.group3()[3])
+                    + (reverse.group1()[3] * self.group1()[0]),
+                (reverse.group0()[1] * self.group3()[3]) - (self.group0()[1] * reverse.group3()[3])
                     + (self.group0()[2] * reverse.group2()[0])
                     + (reverse.group1()[2] * self.group3()[0])
-                    + (reverse.group1()[3] * self.group1()[1])),
-                ((reverse.group0()[2] * self.group3()[3]) + (self.group0()[0] * reverse.group2()[1]) - (self.group0()[2] * reverse.group3()[3])
+                    + (reverse.group1()[3] * self.group1()[1]),
+                (reverse.group0()[2] * self.group3()[3]) + (self.group0()[0] * reverse.group2()[1]) - (self.group0()[2] * reverse.group3()[3])
                     + (reverse.group1()[0] * self.group3()[1])
-                    + (reverse.group1()[3] * self.group1()[2])),
-                (-(reverse.group1()[3] * self.group3()[3])
+                    + (reverse.group1()[3] * self.group1()[2]),
+                -(reverse.group1()[3] * self.group3()[3])
                     - (reverse.group2()[0] * self.group3()[0])
                     - (reverse.group2()[1] * self.group3()[1])
                     - (reverse.group2()[2] * self.group1()[2])
-                    - (reverse.group2()[2] * self.group3()[2])),
+                    - (reverse.group2()[2] * self.group3()[2]),
             ]) + (Simd32x4::from(self.group1()[3]) * Simd32x4::from([reverse.group1()[0], reverse.group1()[1], reverse.group1()[2], reverse.group3()[3]]))
-                + (Simd32x4::from([reverse.group0()[1], reverse.group0()[2], reverse.group0()[0], reverse.group3()[0]]) * swizzle!(self.group2(), 2, 0, 1, 0))
-                - (Simd32x4::from([reverse.group0()[2], reverse.group0()[0], reverse.group0()[1], reverse.group1()[0]]) * swizzle!(self.group2(), 1, 2, 0, 0))
-                - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * swizzle!(reverse.group2(), 1, 2, 0, 0))
-                - (Simd32x4::from([reverse.group2()[0], reverse.group2()[1], reverse.group2()[2], reverse.group1()[2]]) * swizzle!(self.group2(), 3, 3, 3, 2))
-                + (Simd32x4::from([reverse.group2()[3], reverse.group2()[3], reverse.group2()[3], reverse.group3()[1]]) * swizzle!(self.group2(), 0, 1, 2, 1))
-                - (Simd32x4::from([reverse.group3()[2], reverse.group3()[0], reverse.group3()[1], reverse.group2()[1]]) * swizzle!(self.group1(), 1, 2, 0, 1))
-                + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group2()[2]]) * swizzle!(reverse.group3(), 1, 2, 0, 2))
-                - (Simd32x4::from([self.group3()[1], self.group3()[2], self.group3()[0], self.group2()[1]]) * swizzle!(reverse.group1(), 2, 0, 1, 1))),
+                + (Simd32x4::from([reverse.group0()[1], reverse.group0()[2], reverse.group0()[0], reverse.group3()[0]]) * crate::swizzle!(self.group2(), 2, 0, 1, 0))
+                - (Simd32x4::from([reverse.group0()[2], reverse.group0()[0], reverse.group0()[1], reverse.group1()[0]]) * crate::swizzle!(self.group2(), 1, 2, 0, 0))
+                - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * crate::swizzle!(reverse.group2(), 1, 2, 0, 0))
+                - (Simd32x4::from([reverse.group2()[0], reverse.group2()[1], reverse.group2()[2], reverse.group1()[2]]) * crate::swizzle!(self.group2(), 3, 3, 3, 2))
+                + (Simd32x4::from([reverse.group2()[3], reverse.group2()[3], reverse.group2()[3], reverse.group3()[1]]) * crate::swizzle!(self.group2(), 0, 1, 2, 1))
+                - (Simd32x4::from([reverse.group3()[2], reverse.group3()[0], reverse.group3()[1], reverse.group2()[1]]) * crate::swizzle!(self.group1(), 1, 2, 0, 1))
+                + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group2()[2]]) * crate::swizzle!(reverse.group3(), 1, 2, 0, 2))
+                - (Simd32x4::from([self.group3()[1], self.group3()[2], self.group3()[0], self.group2()[1]]) * crate::swizzle!(reverse.group1(), 2, 0, 1, 1)),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2)
+            -f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2)
                 - f32::powi(self.group3()[0], 2)
                 - f32::powi(self.group3()[1], 2)
                 - f32::powi(self.group3()[2], 2)
                 - 2.0 * (self.group0()[0] * self.group2()[0])
                 - 2.0 * (self.group0()[1] * self.group2()[1])
                 - 2.0 * (self.group0()[2] * self.group2()[2])
-                + 2.0 * (self.group2()[3] * self.group3()[3])),
+                + 2.0 * (self.group2()[3] * self.group3()[3]),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group0()[3] - scalar_product[scalar]]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -780,6 +868,12 @@ impl ConstraintViolation for DipoleInversion {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
+    }
+}
+impl std::ops::Div<constraint_violation> for DualNum {
+    type Output = AntiDualNum;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for DualNum {
@@ -794,9 +888,15 @@ impl ConstraintViolation for DualNum {
     fn constraint_violation(self) -> Self::Output {
         let geometric_product = AntiDualNum::from_groups(
             // e1234, scalar
-            (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([-2.0, -1.0])),
+            Simd32x2::from([self.group0()[0] * self.group0()[1], f32::powi(self.group0()[1], 2)]) * Simd32x2::from([-2.0, -1.0]),
         );
         return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([geometric_product.group0()[0], 0.0]));
+    }
+}
+impl std::ops::Div<constraint_violation> for FlatPoint {
+    type Output = Scalar;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for FlatPoint {
@@ -810,10 +910,16 @@ impl ConstraintViolation for FlatPoint {
     //  no simd        1        5        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ (self.group0() * Simd32x4::from(-1.0)));
-        let geometric_product = Scalar::from_groups(/* scalar */ (reverse.group0()[3] * self.group0()[3]));
+        let reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0));
+        let geometric_product = Scalar::from_groups(/* scalar */ reverse.group0()[3] * self.group0()[3]);
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self.group0()[3], 2));
-        return Scalar::from_groups(/* scalar */ (geometric_product[scalar] - scalar_product[scalar]));
+        return Scalar::from_groups(/* scalar */ geometric_product[scalar] - scalar_product[scalar]);
+    }
+}
+impl std::ops::Div<constraint_violation> for Flector {
+    type Output = AntiMotor;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for Flector {
@@ -827,48 +933,49 @@ impl ConstraintViolation for Flector {
     //  no simd       14       16        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let reverse = Flector::from_groups(
-            // e15, e25, e35, e45
-            (self.group0() * Simd32x4::from(-1.0)),
-            // e4235, e4315, e4125, e3215
-            self.group1(),
-        );
+        let reverse = Flector::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0), /* e4235, e4315, e4125, e3215 */ self.group1());
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                ((reverse.group0()[3] * self.group0()[3])
+                (reverse.group0()[3] * self.group0()[3])
                     - (reverse.group1()[0] * self.group1()[0])
                     - (reverse.group1()[1] * self.group1()[1])
-                    - (reverse.group1()[2] * self.group1()[2])),
+                    - (reverse.group1()[2] * self.group1()[2]),
             ]),
             // e15, e25, e35, e3215
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                (-(reverse.group0()[0] * self.group1()[0])
+                -(reverse.group0()[0] * self.group1()[0])
                     - (reverse.group0()[1] * self.group1()[1])
                     - (reverse.group0()[2] * self.group1()[2])
                     - (reverse.group0()[3] * self.group1()[3])
                     + (reverse.group1()[0] * self.group0()[0])
                     + (reverse.group1()[1] * self.group0()[1])
                     + (reverse.group1()[2] * self.group0()[2])
-                    + (reverse.group1()[3] * self.group0()[3])),
+                    + (reverse.group1()[3] * self.group0()[3]),
             ]),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(self.group0()[3], 2) - f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2)),
+            f32::powi(self.group0()[3], 2) - f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group0()[3] - scalar_product[scalar]]),
             // e15, e25, e35, e3215
             Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group1()[3]]),
         );
+    }
+}
+impl std::ops::Div<constraint_violation> for Line {
+    type Output = AntiMotor;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for Line {
@@ -884,9 +991,9 @@ impl ConstraintViolation for Line {
         use crate::elements::*;
         let reverse = Line::from_groups(
             // e415, e425, e435
-            (self.group0() * Simd32x3::from(-1.0)),
+            self.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            (self.group1() * Simd32x3::from(-1.0)),
+            self.group1() * Simd32x3::from(-1.0),
         );
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -894,28 +1001,34 @@ impl ConstraintViolation for Line {
                 0.0,
                 0.0,
                 0.0,
-                ((reverse.group0()[0] * self.group0()[0]) + (reverse.group0()[1] * self.group0()[1]) + (reverse.group0()[2] * self.group0()[2])),
+                (reverse.group0()[0] * self.group0()[0]) + (reverse.group0()[1] * self.group0()[1]) + (reverse.group0()[2] * self.group0()[2]),
             ]),
             // e15, e25, e35, e3215
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                ((reverse.group0()[0] * self.group1()[0])
+                (reverse.group0()[0] * self.group1()[0])
                     + (reverse.group0()[1] * self.group1()[1])
                     + (reverse.group0()[2] * self.group1()[2])
                     + (reverse.group1()[0] * self.group0()[0])
                     + (reverse.group1()[1] * self.group0()[1])
-                    + (reverse.group1()[2] * self.group0()[2])),
+                    + (reverse.group1()[2] * self.group0()[2]),
             ]),
         );
-        let scalar_product = Scalar::from_groups(/* scalar */ (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2)));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2));
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group0()[3] - scalar_product[scalar]]),
             // e15, e25, e35, e3215
             Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group1()[3]]),
         );
+    }
+}
+impl std::ops::Div<constraint_violation> for Motor {
+    type Output = AntiMotor;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for Motor {
@@ -927,9 +1040,9 @@ impl ConstraintViolation for Motor {
         use crate::elements::*;
         let reverse = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
             // e235, e315, e125, e5
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self.group1()[0] * -1.0, self.group1()[1] * -1.0, self.group1()[2] * -1.0, self.group1()[3]]),
         );
         let geometric_product = AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -937,32 +1050,43 @@ impl ConstraintViolation for Motor {
                 0.0,
                 0.0,
                 0.0,
-                ((reverse.group0()[0] * self.group0()[0]) + (reverse.group0()[1] * self.group0()[1]) + (reverse.group0()[2] * self.group0()[2])
-                    - (reverse.group0()[3] * self.group0()[3])),
+                (reverse.group0()[0] * self.group0()[0]) + (reverse.group0()[1] * self.group0()[1]) + (reverse.group0()[2] * self.group0()[2])
+                    - (reverse.group0()[3] * self.group0()[3]),
             ]),
             // e15, e25, e35, e3215
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                ((reverse.group0()[0] * self.group1()[0]) + (reverse.group0()[1] * self.group1()[1]) + (reverse.group0()[2] * self.group1()[2])
+                (reverse.group0()[0] * self.group1()[0]) + (reverse.group0()[1] * self.group1()[1]) + (reverse.group0()[2] * self.group1()[2])
                     - (reverse.group0()[3] * self.group1()[3])
                     + (reverse.group1()[0] * self.group0()[0])
                     + (reverse.group1()[1] * self.group0()[1])
                     + (reverse.group1()[2] * self.group0()[2])
-                    - (reverse.group1()[3] * self.group0()[3])),
+                    - (reverse.group1()[3] * self.group0()[3]),
             ]),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2)),
+            f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2),
         );
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group0()[3] - scalar_product[scalar]]),
             // e15, e25, e35, e3215
             Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group1()[3]]),
         );
+    }
+}
+impl std::ops::Div<constraint_violation> for MultiVector {
+    type Output = MultiVector;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
+    }
+}
+impl std::ops::DivAssign<constraint_violation> for MultiVector {
+    fn div_assign(&mut self, _rhs: constraint_violation) {
+        *self = self.constraint_violation()
     }
 }
 impl ConstraintViolation for MultiVector {
@@ -986,17 +1110,17 @@ impl ConstraintViolation for MultiVector {
             // e5
             self[e1],
             // e15, e25, e35, e45
-            (self.group3() * Simd32x4::from(-1.0)),
+            self.group3() * Simd32x4::from(-1.0),
             // e41, e42, e43
-            (self.group4() * Simd32x3::from(-1.0)),
+            self.group4() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (self.group5() * Simd32x3::from(-1.0)),
+            self.group5() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            (self.group6() * Simd32x4::from(-1.0)),
+            self.group6() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            (self.group7() * Simd32x3::from(-1.0)),
+            self.group7() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            (self.group8() * Simd32x3::from(-1.0)),
+            self.group8() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -1004,8 +1128,8 @@ impl ConstraintViolation for MultiVector {
         );
         let geometric_product = MultiVector::from_groups(
             // scalar, e12345
-            (Simd32x2::from([
-                (-(reverse.group0()[1] * self.group0()[1])
+            Simd32x2::from([
+                -(reverse.group0()[1] * self.group0()[1])
                     + (reverse.group7()[0] * self.group8()[0])
                     + (reverse.group7()[1] * self.group8()[1])
                     + (reverse.group7()[2] * self.group8()[2])
@@ -1020,8 +1144,8 @@ impl ConstraintViolation for MultiVector {
                     - (reverse.group9()[0] * self.group9()[0])
                     - (reverse.group9()[1] * self.group9()[1])
                     - (reverse.group9()[2] * self.group9()[2])
-                    - (self.group1()[3] * reverse[e1])),
-                ((reverse.group0()[1] * self.group0()[0])
+                    - (self.group1()[3] * reverse[e1]),
+                (reverse.group0()[1] * self.group0()[0])
                     - (reverse.group7()[0] * self.group3()[0])
                     - (reverse.group7()[1] * self.group3()[1])
                     - (reverse.group7()[2] * self.group3()[2])
@@ -1036,7 +1160,7 @@ impl ConstraintViolation for MultiVector {
                     + (reverse.group9()[1] * self.group1()[1])
                     + (reverse.group9()[2] * self.group1()[2])
                     + (reverse[e1] * self[e45])
-                    + (reverse[e45] * self[e1])),
+                    + (reverse[e45] * self[e1]),
             ]) + (Simd32x2::from(reverse.group0()[0]) * self.group0())
                 - (Simd32x2::from(reverse.group4()[0]) * Simd32x2::from([self.group3()[0], self.group8()[0]]))
                 - (Simd32x2::from(reverse.group4()[1]) * Simd32x2::from([self.group3()[1], self.group8()[1]]))
@@ -1052,11 +1176,10 @@ impl ConstraintViolation for MultiVector {
                 + (Simd32x2::from(reverse.group1()[2]) * Simd32x2::from([self.group1()[2], self.group9()[2]]))
                 + (Simd32x2::from(reverse.group9()[3]) * Simd32x2::from([self[e45], self.group1()[3]]))
                 - (Simd32x2::from(self.group6()[3]) * Simd32x2::from([reverse.group6()[3], reverse.group3()[3]]))
-                + (Simd32x2::from(self.group9()[3]) * Simd32x2::from([reverse[e45], reverse.group1()[3]]))),
+                + (Simd32x2::from(self.group9()[3]) * Simd32x2::from([reverse[e45], reverse.group1()[3]])),
             // e1, e2, e3, e4
-            (Simd32x4::from([
-                (-(reverse.group0()[1] * self.group9()[0]) - (reverse.group4()[0] * self[e1]) - (reverse.group4()[1] * self.group8()[2])
-                    + (reverse.group4()[2] * self.group8()[1])
+            Simd32x4::from([
+                -(reverse.group0()[1] * self.group9()[0]) - (reverse.group4()[0] * self[e1]) - (reverse.group4()[1] * self.group8()[2]) + (reverse.group4()[2] * self.group8()[1])
                     - (reverse.group7()[0] * self.group9()[3])
                     + (reverse.group7()[2] * self.group3()[1])
                     + (reverse.group8()[1] * self.group4()[2])
@@ -1070,10 +1193,8 @@ impl ConstraintViolation for MultiVector {
                     - (self.group8()[0] * reverse[e45])
                     - (reverse.group1()[3] * self.group3()[0])
                     + (reverse.group3()[0] * self.group1()[3])
-                    + (reverse.group9()[2] * self.group6()[1])),
-                (-(reverse.group0()[1] * self.group9()[1]) + (reverse.group4()[0] * self.group8()[2])
-                    - (reverse.group4()[1] * self[e1])
-                    - (reverse.group4()[2] * self.group8()[0])
+                    + (reverse.group9()[2] * self.group6()[1]),
+                -(reverse.group0()[1] * self.group9()[1]) + (reverse.group4()[0] * self.group8()[2]) - (reverse.group4()[1] * self[e1]) - (reverse.group4()[2] * self.group8()[0])
                     + (reverse.group7()[0] * self.group3()[2])
                     - (reverse.group7()[1] * self.group9()[3])
                     - (reverse.group8()[0] * self.group4()[2])
@@ -1087,9 +1208,8 @@ impl ConstraintViolation for MultiVector {
                     - (self.group8()[1] * reverse[e45])
                     - (reverse.group1()[3] * self.group3()[1])
                     + (reverse.group3()[1] * self.group1()[3])
-                    + (reverse.group9()[0] * self.group6()[2])),
-                (-(reverse.group0()[1] * self.group9()[2]) - (reverse.group4()[0] * self.group8()[1]) + (reverse.group4()[1] * self.group8()[0])
-                    - (reverse.group4()[2] * self[e1])
+                    + (reverse.group9()[0] * self.group6()[2]),
+                -(reverse.group0()[1] * self.group9()[2]) - (reverse.group4()[0] * self.group8()[1]) + (reverse.group4()[1] * self.group8()[0]) - (reverse.group4()[2] * self[e1])
                     + (reverse.group7()[1] * self.group3()[0])
                     - (reverse.group7()[2] * self.group9()[3])
                     + (reverse.group8()[0] * self.group4()[1])
@@ -1103,8 +1223,8 @@ impl ConstraintViolation for MultiVector {
                     - (self.group8()[2] * reverse[e45])
                     - (reverse.group1()[3] * self.group3()[2])
                     + (reverse.group3()[2] * self.group1()[3])
-                    + (reverse.group9()[1] * self.group6()[0])),
-                ((self.group0()[1] * reverse[e45])
+                    + (reverse.group9()[1] * self.group6()[0]),
+                (self.group0()[1] * reverse[e45])
                     - (reverse.group4()[1] * self.group1()[1])
                     - (reverse.group4()[2] * self.group1()[2])
                     - (reverse.group4()[2] * self.group6()[2])
@@ -1121,23 +1241,23 @@ impl ConstraintViolation for MultiVector {
                     - (self.group4()[2] * reverse.group6()[2])
                     - (self.group7()[1] * reverse.group9()[1])
                     - (self.group7()[2] * reverse.group9()[2])
-                    - (reverse.group6()[3] * self[e45])),
+                    - (reverse.group6()[3] * self[e45]),
             ]) + (Simd32x4::from(reverse.group0()[0]) * self.group1())
                 + (Simd32x4::from(self.group0()[0]) * reverse.group1())
                 + (Simd32x4::from(self.group6()[3]) * Simd32x4::from([reverse.group5()[0], reverse.group5()[1], reverse.group5()[2], reverse[e45]]))
                 + (Simd32x4::from(self[e45]) * Simd32x4::from([reverse.group8()[0], reverse.group8()[1], reverse.group8()[2], reverse.group0()[1]]))
-                - (Simd32x4::from([self.group0()[1], self.group0()[1], self.group0()[1], self.group7()[0]]) * swizzle!(reverse.group9(), 0, 1, 2, 0))
-                + (Simd32x4::from([reverse.group5()[1], reverse.group5()[2], reverse.group5()[0], reverse.group3()[3]]) * swizzle!(self.group1(), 2, 0, 1, 3))
-                - (Simd32x4::from([reverse.group5()[2], reverse.group5()[0], reverse.group5()[1], reverse.group4()[0]]) * swizzle!(self.group1(), 1, 2, 0, 0))
-                - (Simd32x4::from([reverse.group7()[1], reverse.group7()[2], reverse.group7()[0], reverse.group1()[3]]) * swizzle!(self.group3(), 2, 0, 1, 3))
-                + (Simd32x4::from([self.group5()[2], self.group5()[0], self.group5()[1], self.group4()[0]]) * swizzle!(reverse.group1(), 1, 2, 0, 0))
-                - (Simd32x4::from([reverse.group3()[3], reverse.group3()[3], reverse.group3()[3], reverse.group4()[0]]) * swizzle!(self.group6(), 0, 1, 2, 0))
-                + (Simd32x4::from([reverse.group6()[2], reverse.group6()[0], reverse.group6()[1], reverse.group7()[0]]) * swizzle!(self.group9(), 1, 2, 0, 0))
-                - (Simd32x4::from([reverse.group9()[1], reverse.group9()[2], reverse.group9()[0], reverse.group4()[1]]) * swizzle!(self.group6(), 2, 0, 1, 1))
-                - (Simd32x4::from([self.group3()[3], self.group3()[3], self.group9()[1], self.group4()[0]]) * swizzle!(reverse.group6(), 0, 1, 0, 0))
-                - (Simd32x4::from([self.group9()[2], self.group9()[0], self.group3()[3], self.group4()[1]]) * swizzle!(reverse.group6(), 1, 2, 2, 1))),
+                - (Simd32x4::from([self.group0()[1], self.group0()[1], self.group0()[1], self.group7()[0]]) * crate::swizzle!(reverse.group9(), 0, 1, 2, 0))
+                + (Simd32x4::from([reverse.group5()[1], reverse.group5()[2], reverse.group5()[0], reverse.group3()[3]]) * crate::swizzle!(self.group1(), 2, 0, 1, 3))
+                - (Simd32x4::from([reverse.group5()[2], reverse.group5()[0], reverse.group5()[1], reverse.group4()[0]]) * crate::swizzle!(self.group1(), 1, 2, 0, 0))
+                - (Simd32x4::from([reverse.group7()[1], reverse.group7()[2], reverse.group7()[0], reverse.group1()[3]]) * crate::swizzle!(self.group3(), 2, 0, 1, 3))
+                + (Simd32x4::from([self.group5()[2], self.group5()[0], self.group5()[1], self.group4()[0]]) * crate::swizzle!(reverse.group1(), 1, 2, 0, 0))
+                - (Simd32x4::from([reverse.group3()[3], reverse.group3()[3], reverse.group3()[3], reverse.group4()[0]]) * crate::swizzle!(self.group6(), 0, 1, 2, 0))
+                + (Simd32x4::from([reverse.group6()[2], reverse.group6()[0], reverse.group6()[1], reverse.group7()[0]]) * crate::swizzle!(self.group9(), 1, 2, 0, 0))
+                - (Simd32x4::from([reverse.group9()[1], reverse.group9()[2], reverse.group9()[0], reverse.group4()[1]]) * crate::swizzle!(self.group6(), 2, 0, 1, 1))
+                - (Simd32x4::from([self.group3()[3], self.group3()[3], self.group9()[1], self.group4()[0]]) * crate::swizzle!(reverse.group6(), 0, 1, 0, 0))
+                - (Simd32x4::from([self.group9()[2], self.group9()[0], self.group3()[3], self.group4()[1]]) * crate::swizzle!(reverse.group6(), 1, 2, 2, 1)),
             // e5
-            ((reverse.group0()[0] * self[e1]) + (reverse.group0()[1] * self.group9()[3]) + (self.group0()[0] * reverse[e1]) + (self.group0()[1] * reverse.group9()[3])
+            (reverse.group0()[0] * self[e1]) + (reverse.group0()[1] * self.group9()[3]) + (self.group0()[0] * reverse[e1]) + (self.group0()[1] * reverse.group9()[3])
                 - (reverse.group5()[0] * self.group8()[0])
                 - (reverse.group5()[1] * self.group8()[1])
                 - (reverse.group5()[2] * self.group8()[2])
@@ -1165,7 +1285,7 @@ impl ConstraintViolation for MultiVector {
                 - (reverse.group6()[2] * self.group3()[2])
                 + (reverse.group6()[3] * self.group9()[3])
                 - (reverse.group9()[3] * self.group6()[3])
-                + (self.group3()[3] * reverse[e1])),
+                + (self.group3()[3] * reverse[e1]),
             // e15, e25, e35, e45
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -1179,8 +1299,8 @@ impl ConstraintViolation for MultiVector {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            (Simd32x4::from([
-                ((reverse.group0()[1] * self.group1()[0]) + (reverse.group4()[0] * self.group9()[3]) + (reverse.group5()[1] * self.group9()[2])
+            Simd32x4::from([
+                (reverse.group0()[1] * self.group1()[0]) + (reverse.group4()[0] * self.group9()[3]) + (reverse.group5()[1] * self.group9()[2])
                     - (reverse.group7()[1] * self.group8()[2])
                     + (reverse.group7()[2] * self.group8()[1])
                     + (reverse.group8()[0] * self.group1()[3])
@@ -1191,8 +1311,8 @@ impl ConstraintViolation for MultiVector {
                     + (self.group5()[0] * reverse.group3()[3])
                     - (self.group5()[1] * reverse.group9()[2])
                     - (self.group8()[0] * reverse.group1()[3])
-                    - (reverse.group1()[2] * self.group6()[1])),
-                ((reverse.group0()[1] * self.group1()[1])
+                    - (reverse.group1()[2] * self.group6()[1]),
+                (reverse.group0()[1] * self.group1()[1])
                     + (reverse.group4()[1] * self.group9()[3])
                     + (reverse.group5()[2] * self.group9()[0])
                     + (reverse.group7()[0] * self.group8()[2])
@@ -1205,8 +1325,8 @@ impl ConstraintViolation for MultiVector {
                     + (self.group5()[1] * reverse.group3()[3])
                     - (self.group5()[2] * reverse.group9()[0])
                     - (self.group8()[1] * reverse.group1()[3])
-                    - (reverse.group1()[0] * self.group6()[2])),
-                ((reverse.group0()[1] * self.group1()[2]) + (reverse.group4()[2] * self.group9()[3]) + (reverse.group5()[0] * self.group9()[1])
+                    - (reverse.group1()[0] * self.group6()[2]),
+                (reverse.group0()[1] * self.group1()[2]) + (reverse.group4()[2] * self.group9()[3]) + (reverse.group5()[0] * self.group9()[1])
                     - (reverse.group7()[0] * self.group8()[1])
                     + (reverse.group7()[1] * self.group8()[0])
                     + (reverse.group8()[0] * self.group7()[1])
@@ -1217,8 +1337,8 @@ impl ConstraintViolation for MultiVector {
                     - (self.group5()[0] * reverse.group9()[1])
                     + (self.group5()[2] * reverse.group3()[3])
                     - (self.group8()[2] * reverse.group1()[3])
-                    - (reverse.group1()[1] * self.group6()[0])),
-                (-(self.group0()[1] * reverse[e1])
+                    - (reverse.group1()[1] * self.group6()[0]),
+                -(self.group0()[1] * reverse[e1])
                     - (reverse.group5()[1] * self.group3()[1])
                     - (reverse.group5()[2] * self.group3()[2])
                     - (reverse.group8()[1] * self.group1()[1])
@@ -1231,27 +1351,27 @@ impl ConstraintViolation for MultiVector {
                     - (reverse.group3()[1] * self.group9()[1])
                     - (reverse.group3()[2] * self.group9()[2])
                     - (reverse.group3()[3] * self.group9()[3])
-                    - (reverse.group6()[3] * self[e1])),
+                    - (reverse.group6()[3] * self[e1]),
             ]) + (Simd32x4::from(reverse.group0()[0]) * self.group9())
                 + (Simd32x4::from(self.group0()[0]) * reverse.group9())
                 + (Simd32x4::from(reverse[e1]) * Simd32x4::from([self.group7()[0], self.group7()[1], self.group7()[2], self.group6()[3]]))
                 - (Simd32x4::from(self[e1]) * Simd32x4::from([reverse.group7()[0], reverse.group7()[1], reverse.group7()[2], reverse.group0()[1]]))
-                + (Simd32x4::from([self.group0()[1], self.group0()[1], self.group0()[1], self.group8()[0]]) * swizzle!(reverse.group1(), 0, 1, 2, 0))
-                + (Simd32x4::from([reverse.group4()[1], reverse.group4()[2], reverse.group4()[0], reverse.group9()[0]]) * swizzle!(self.group3(), 2, 0, 1, 0))
-                - (Simd32x4::from([reverse.group4()[2], reverse.group4()[0], reverse.group4()[1], reverse.group5()[0]]) * swizzle!(self.group3(), 1, 2, 0, 0))
-                + (Simd32x4::from([reverse.group5()[0], reverse.group5()[1], reverse.group5()[2], reverse.group9()[1]]) * swizzle!(self.group3(), 3, 3, 3, 1))
-                - (Simd32x4::from([reverse.group5()[2], reverse.group5()[0], reverse.group5()[1], reverse.group3()[0]]) * swizzle!(self.group9(), 1, 2, 0, 0))
-                - (Simd32x4::from([self.group4()[2], self.group4()[0], self.group4()[1], self.group5()[0]]) * swizzle!(reverse.group3(), 1, 2, 0, 0))
-                + (Simd32x4::from([self.group5()[2], self.group5()[0], self.group5()[1], self.group3()[2]]) * swizzle!(reverse.group9(), 1, 2, 0, 2))
-                + (Simd32x4::from([reverse.group1()[1], reverse.group1()[2], reverse.group1()[0], reverse.group8()[0]]) * swizzle!(self.group6(), 2, 0, 1, 0))
-                - (Simd32x4::from([reverse.group6()[2], reverse.group6()[0], reverse.group6()[1], reverse.group8()[0]]) * swizzle!(self.group1(), 1, 2, 0, 0))
-                + (Simd32x4::from([reverse.group6()[3], reverse.group6()[3], reverse.group6()[3], reverse.group8()[1]]) * swizzle!(self.group6(), 0, 1, 2, 1))
-                + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group6()[3], self.group8()[1]]) * swizzle!(reverse.group6(), 1, 2, 2, 1))
-                + (Simd32x4::from([self.group6()[3], self.group6()[3], self.group1()[1], self.group8()[0]]) * swizzle!(reverse.group6(), 0, 1, 0, 0))
+                + (Simd32x4::from([self.group0()[1], self.group0()[1], self.group0()[1], self.group8()[0]]) * crate::swizzle!(reverse.group1(), 0, 1, 2, 0))
+                + (Simd32x4::from([reverse.group4()[1], reverse.group4()[2], reverse.group4()[0], reverse.group9()[0]]) * crate::swizzle!(self.group3(), 2, 0, 1, 0))
+                - (Simd32x4::from([reverse.group4()[2], reverse.group4()[0], reverse.group4()[1], reverse.group5()[0]]) * crate::swizzle!(self.group3(), 1, 2, 0, 0))
+                + (Simd32x4::from([reverse.group5()[0], reverse.group5()[1], reverse.group5()[2], reverse.group9()[1]]) * crate::swizzle!(self.group3(), 3, 3, 3, 1))
+                - (Simd32x4::from([reverse.group5()[2], reverse.group5()[0], reverse.group5()[1], reverse.group3()[0]]) * crate::swizzle!(self.group9(), 1, 2, 0, 0))
+                - (Simd32x4::from([self.group4()[2], self.group4()[0], self.group4()[1], self.group5()[0]]) * crate::swizzle!(reverse.group3(), 1, 2, 0, 0))
+                + (Simd32x4::from([self.group5()[2], self.group5()[0], self.group5()[1], self.group3()[2]]) * crate::swizzle!(reverse.group9(), 1, 2, 0, 2))
+                + (Simd32x4::from([reverse.group1()[1], reverse.group1()[2], reverse.group1()[0], reverse.group8()[0]]) * crate::swizzle!(self.group6(), 2, 0, 1, 0))
+                - (Simd32x4::from([reverse.group6()[2], reverse.group6()[0], reverse.group6()[1], reverse.group8()[0]]) * crate::swizzle!(self.group1(), 1, 2, 0, 0))
+                + (Simd32x4::from([reverse.group6()[3], reverse.group6()[3], reverse.group6()[3], reverse.group8()[1]]) * crate::swizzle!(self.group6(), 0, 1, 2, 1))
+                + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group6()[3], self.group8()[1]]) * crate::swizzle!(reverse.group6(), 1, 2, 2, 1))
+                + (Simd32x4::from([self.group6()[3], self.group6()[3], self.group1()[1], self.group8()[0]]) * crate::swizzle!(reverse.group6(), 0, 1, 0, 0))
                 + (Simd32x4::from([reverse[e45], reverse[e45], reverse[e45], reverse.group9()[3]]) * self.group3())
-                - (Simd32x4::from([self[e45], self[e45], self[e45], self.group5()[1]]) * swizzle!(reverse.group3(), 0, 1, 2, 1))),
+                - (Simd32x4::from([self[e45], self[e45], self[e45], self.group5()[1]]) * crate::swizzle!(reverse.group3(), 0, 1, 2, 1)),
             // e1234
-            ((reverse.group0()[0] * self[e45]) - (reverse.group0()[1] * self.group1()[3]) + (self.group0()[0] * reverse[e45])
+            (reverse.group0()[0] * self[e45]) - (reverse.group0()[1] * self.group1()[3]) + (self.group0()[0] * reverse[e45])
                 - (self.group0()[1] * reverse.group1()[3])
                 - (reverse.group4()[0] * self.group5()[0])
                 + (reverse.group4()[0] * self.group9()[0])
@@ -1280,11 +1400,11 @@ impl ConstraintViolation for MultiVector {
                 - (reverse.group1()[3] * self.group6()[3])
                 + (reverse.group3()[3] * self[e45])
                 + (reverse.group6()[3] * self.group1()[3])
-                - (self.group3()[3] * reverse[e45])),
+                - (self.group3()[3] * reverse[e45]),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group5()[0], 2) - f32::powi(self.group5()[1], 2) - f32::powi(self.group5()[2], 2)
+            f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group5()[0], 2) - f32::powi(self.group5()[1], 2) - f32::powi(self.group5()[2], 2)
                 + f32::powi(self.group1()[0], 2)
                 + f32::powi(self.group1()[1], 2)
                 + f32::powi(self.group1()[2], 2)
@@ -1303,11 +1423,11 @@ impl ConstraintViolation for MultiVector {
                 + 2.0 * (self.group7()[1] * self.group8()[1])
                 + 2.0 * (self.group7()[2] * self.group8()[2])
                 - 2.0 * (self.group1()[3] * self[e1])
-                + 2.0 * (self.group9()[3] * self[e45])),
+                + 2.0 * (self.group9()[3] * self[e45]),
         );
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(geometric_product.group0()[0] - scalar_product[scalar]), geometric_product.group0()[1]]),
+            Simd32x2::from([geometric_product.group0()[0] - scalar_product[scalar], geometric_product.group0()[1]]),
             // e1, e2, e3, e4
             geometric_product.group1(),
             // e5
@@ -1331,10 +1451,22 @@ impl ConstraintViolation for MultiVector {
         );
     }
 }
+impl std::ops::Div<constraint_violation> for Plane {
+    type Output = Scalar;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
+    }
+}
 impl ConstraintViolation for Plane {
     type Output = Scalar;
     fn constraint_violation(self) -> Self::Output {
         return Scalar::from_groups(/* scalar */ 0.0);
+    }
+}
+impl std::ops::Div<constraint_violation> for RoundPoint {
+    type Output = Scalar;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for RoundPoint {
@@ -1343,16 +1475,39 @@ impl ConstraintViolation for RoundPoint {
         return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
+impl std::ops::Div<constraint_violation> for Scalar {
+    type Output = Scalar;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
+    }
+}
+impl std::ops::DivAssign<constraint_violation> for Scalar {
+    fn div_assign(&mut self, _rhs: constraint_violation) {
+        *self = self.constraint_violation()
+    }
+}
 impl ConstraintViolation for Scalar {
     type Output = Scalar;
     fn constraint_violation(self) -> Self::Output {
         return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
+impl std::ops::Div<constraint_violation> for Sphere {
+    type Output = Scalar;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
+    }
+}
 impl ConstraintViolation for Sphere {
     type Output = Scalar;
     fn constraint_violation(self) -> Self::Output {
         return Scalar::from_groups(/* scalar */ 0.0);
+    }
+}
+impl std::ops::Div<constraint_violation> for VersorEven {
+    type Output = VersorOdd;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
     }
 }
 impl ConstraintViolation for VersorEven {
@@ -1368,11 +1523,11 @@ impl ConstraintViolation for VersorEven {
         use crate::elements::*;
         let reverse = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
             // e415, e425, e435, e321
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self.group2()[0] * -1.0, self.group2()[1] * -1.0, self.group2()[2] * -1.0, self.group2()[3]]),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -1382,7 +1537,7 @@ impl ConstraintViolation for VersorEven {
                 0.0,
                 0.0,
                 0.0,
-                ((reverse.group0()[0] * self.group2()[0]) + (reverse.group0()[1] * self.group2()[1]) + (reverse.group0()[2] * self.group2()[2])
+                (reverse.group0()[0] * self.group2()[0]) + (reverse.group0()[1] * self.group2()[1]) + (reverse.group0()[2] * self.group2()[2])
                     - (reverse.group0()[3] * self.group0()[3])
                     + (reverse.group1()[0] * self.group1()[0])
                     + (reverse.group1()[1] * self.group1()[1])
@@ -1395,7 +1550,7 @@ impl ConstraintViolation for VersorEven {
                     + (reverse.group3()[0] * self.group3()[0])
                     + (reverse.group3()[1] * self.group3()[1])
                     + (reverse.group3()[2] * self.group3()[2])
-                    - (reverse.group3()[3] * self.group2()[3])),
+                    - (reverse.group3()[3] * self.group2()[3]),
             ]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
@@ -1404,7 +1559,7 @@ impl ConstraintViolation for VersorEven {
                 0.0,
                 0.0,
                 0.0,
-                ((reverse.group0()[0] * self.group1()[0])
+                (reverse.group0()[0] * self.group1()[0])
                     + (reverse.group0()[0] * self.group3()[0])
                     + (reverse.group0()[1] * self.group1()[1])
                     + (reverse.group0()[1] * self.group3()[1])
@@ -1419,42 +1574,42 @@ impl ConstraintViolation for VersorEven {
                     - (reverse.group3()[1] * self.group0()[1])
                     - (reverse.group3()[2] * self.group0()[2])
                     - (reverse.group3()[3] * self.group0()[3])
-                    - (reverse.group3()[3] * self.group1()[3])),
+                    - (reverse.group3()[3] * self.group1()[3]),
             ]),
             // e4235, e4315, e4125, e3215
-            (Simd32x4::from([
-                ((reverse.group0()[3] * self.group3()[0]) - (reverse.group3()[2] * self.group1()[1]) - (reverse.group3()[3] * self.group2()[0])),
-                ((reverse.group0()[3] * self.group3()[1]) - (reverse.group3()[0] * self.group1()[2]) - (reverse.group3()[3] * self.group2()[1])),
-                ((reverse.group0()[3] * self.group3()[2]) - (reverse.group3()[1] * self.group1()[0]) - (reverse.group3()[3] * self.group2()[2])),
-                (-(reverse.group2()[2] * self.group3()[2]) - (reverse.group2()[3] * self.group0()[3]) + (reverse.group3()[2] * self.group2()[2])),
+            Simd32x4::from([
+                (reverse.group0()[3] * self.group3()[0]) - (reverse.group3()[2] * self.group1()[1]) - (reverse.group3()[3] * self.group2()[0]),
+                (reverse.group0()[3] * self.group3()[1]) - (reverse.group3()[0] * self.group1()[2]) - (reverse.group3()[3] * self.group2()[1]),
+                (reverse.group0()[3] * self.group3()[2]) - (reverse.group3()[1] * self.group1()[0]) - (reverse.group3()[3] * self.group2()[2]),
+                -(reverse.group2()[2] * self.group3()[2]) - (reverse.group2()[3] * self.group0()[3]) + (reverse.group3()[2] * self.group2()[2]),
             ]) + (Simd32x4::from(reverse.group2()[3]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]))
-                - (Simd32x4::from([reverse.group0()[1], reverse.group0()[2], reverse.group0()[2], reverse.group1()[3]]) * swizzle!(self.group2(), 2, 0, 3, 3))
-                + (Simd32x4::from([reverse.group0()[2], reverse.group0()[0], reverse.group0()[1], reverse.group1()[0]]) * swizzle!(self.group2(), 1, 2, 0, 0))
-                - (Simd32x4::from([reverse.group1()[2], reverse.group1()[0], reverse.group1()[1], reverse.group2()[0]]) * swizzle!(self.group3(), 1, 2, 0, 0))
-                + (Simd32x4::from([reverse.group1()[3], reverse.group1()[3], reverse.group1()[3], reverse.group2()[0]]) * swizzle!(self.group1(), 0, 1, 2, 0))
-                - (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group3()[1]]) * swizzle!(reverse.group2(), 2, 0, 1, 1))
-                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group3()[3], self.group1()[2]]) * swizzle!(reverse.group2(), 1, 2, 2, 2))
-                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group1()[1], self.group2()[0]]) * swizzle!(reverse.group3(), 0, 1, 0, 0))
-                + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group0()[3], self.group2()[1]]) * swizzle!(reverse.group3(), 1, 2, 2, 1))
-                + (Simd32x4::from([self.group1()[3], self.group1()[3], self.group3()[1], self.group2()[1]]) * swizzle!(reverse.group1(), 0, 1, 0, 1))
-                + (Simd32x4::from([self.group3()[2], self.group3()[0], self.group1()[3], self.group2()[2]]) * swizzle!(reverse.group1(), 1, 2, 2, 2))
-                + (Simd32x4::from([self.group3()[3], self.group3()[3], self.group0()[1], self.group1()[1]]) * swizzle!(reverse.group2(), 0, 1, 0, 1))
-                - (swizzle!(reverse.group0(), 0, 1, 0, 3) * swizzle!(self.group2(), 3, 3, 1, 3))),
+                - (Simd32x4::from([reverse.group0()[1], reverse.group0()[2], reverse.group0()[2], reverse.group1()[3]]) * crate::swizzle!(self.group2(), 2, 0, 3, 3))
+                + (Simd32x4::from([reverse.group0()[2], reverse.group0()[0], reverse.group0()[1], reverse.group1()[0]]) * crate::swizzle!(self.group2(), 1, 2, 0, 0))
+                - (Simd32x4::from([reverse.group1()[2], reverse.group1()[0], reverse.group1()[1], reverse.group2()[0]]) * crate::swizzle!(self.group3(), 1, 2, 0, 0))
+                + (Simd32x4::from([reverse.group1()[3], reverse.group1()[3], reverse.group1()[3], reverse.group2()[0]]) * crate::swizzle!(self.group1(), 0, 1, 2, 0))
+                - (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group3()[1]]) * crate::swizzle!(reverse.group2(), 2, 0, 1, 1))
+                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group3()[3], self.group1()[2]]) * crate::swizzle!(reverse.group2(), 1, 2, 2, 2))
+                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group1()[1], self.group2()[0]]) * crate::swizzle!(reverse.group3(), 0, 1, 0, 0))
+                + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group0()[3], self.group2()[1]]) * crate::swizzle!(reverse.group3(), 1, 2, 2, 1))
+                + (Simd32x4::from([self.group1()[3], self.group1()[3], self.group3()[1], self.group2()[1]]) * crate::swizzle!(reverse.group1(), 0, 1, 0, 1))
+                + (Simd32x4::from([self.group3()[2], self.group3()[0], self.group1()[3], self.group2()[2]]) * crate::swizzle!(reverse.group1(), 1, 2, 2, 2))
+                + (Simd32x4::from([self.group3()[3], self.group3()[3], self.group0()[1], self.group1()[1]]) * crate::swizzle!(reverse.group2(), 0, 1, 0, 1))
+                - (crate::swizzle!(reverse.group0(), 0, 1, 0, 3) * crate::swizzle!(self.group2(), 3, 3, 1, 3)),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
-            (-f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2)
+            -f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2)
                 + f32::powi(self.group3()[0], 2)
                 + f32::powi(self.group3()[1], 2)
                 + f32::powi(self.group3()[2], 2)
                 + 2.0 * (self.group0()[0] * self.group2()[0])
                 + 2.0 * (self.group0()[1] * self.group2()[1])
                 + 2.0 * (self.group0()[2] * self.group2()[2])
-                - 2.0 * (self.group2()[3] * self.group3()[3])),
+                - 2.0 * (self.group2()[3] * self.group3()[3]),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group0()[3] - scalar_product[scalar]]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -1462,6 +1617,17 @@ impl ConstraintViolation for VersorEven {
             // e4235, e4315, e4125, e3215
             geometric_product.group3(),
         );
+    }
+}
+impl std::ops::Div<constraint_violation> for VersorOdd {
+    type Output = VersorOdd;
+    fn div(self, _rhs: constraint_violation) -> Self::Output {
+        self.constraint_violation()
+    }
+}
+impl std::ops::DivAssign<constraint_violation> for VersorOdd {
+    fn div_assign(&mut self, _rhs: constraint_violation) {
+        *self = self.constraint_violation()
     }
 }
 impl ConstraintViolation for VersorOdd {
@@ -1477,11 +1643,11 @@ impl ConstraintViolation for VersorOdd {
         use crate::elements::*;
         let reverse = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
             // e23, e31, e12, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self.group2()[0] * -1.0, self.group2()[1] * -1.0, self.group2()[2] * -1.0, self.group2()[3]]),
             // e4235, e4315, e4125, e3215
             self.group3(),
         );
@@ -1491,7 +1657,7 @@ impl ConstraintViolation for VersorOdd {
                 0.0,
                 0.0,
                 0.0,
-                (-(reverse.group0()[0] * self.group2()[0]) - (reverse.group0()[1] * self.group2()[1]) - (reverse.group0()[2] * self.group2()[2])
+                -(reverse.group0()[0] * self.group2()[0]) - (reverse.group0()[1] * self.group2()[1]) - (reverse.group0()[2] * self.group2()[2])
                     + (reverse.group0()[3] * self.group0()[3])
                     - (reverse.group1()[0] * self.group1()[0])
                     - (reverse.group1()[1] * self.group1()[1])
@@ -1504,7 +1670,7 @@ impl ConstraintViolation for VersorOdd {
                     - (reverse.group3()[0] * self.group3()[0])
                     - (reverse.group3()[1] * self.group3()[1])
                     - (reverse.group3()[2] * self.group3()[2])
-                    + (reverse.group3()[3] * self.group2()[3])),
+                    + (reverse.group3()[3] * self.group2()[3]),
             ]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
@@ -1513,7 +1679,7 @@ impl ConstraintViolation for VersorOdd {
                 0.0,
                 0.0,
                 0.0,
-                (-(reverse.group0()[0] * self.group1()[0]) + (reverse.group0()[0] * self.group3()[0]) - (reverse.group0()[1] * self.group1()[1])
+                -(reverse.group0()[0] * self.group1()[0]) + (reverse.group0()[0] * self.group3()[0]) - (reverse.group0()[1] * self.group1()[1])
                     + (reverse.group0()[1] * self.group3()[1])
                     - (reverse.group0()[2] * self.group1()[2])
                     + (reverse.group0()[2] * self.group3()[2])
@@ -1526,56 +1692,56 @@ impl ConstraintViolation for VersorOdd {
                     - (reverse.group2()[3] * self.group1()[3])
                     - (reverse.group3()[0] * self.group0()[0])
                     - (reverse.group3()[1] * self.group0()[1])
-                    - (reverse.group3()[2] * self.group0()[2])),
+                    - (reverse.group3()[2] * self.group0()[2]),
             ]),
             // e4235, e4315, e4125, e3215
-            (Simd32x4::from([
-                ((reverse.group0()[3] * self.group3()[0])
+            Simd32x4::from([
+                (reverse.group0()[3] * self.group3()[0])
                     + (reverse.group1()[1] * self.group3()[2])
                     + (reverse.group1()[3] * self.group1()[0])
                     + (reverse.group2()[3] * self.group2()[0])
-                    - (reverse.group3()[3] * self.group0()[0])),
-                ((reverse.group0()[3] * self.group3()[1])
+                    - (reverse.group3()[3] * self.group0()[0]),
+                (reverse.group0()[3] * self.group3()[1])
                     + (reverse.group1()[2] * self.group3()[0])
                     + (reverse.group1()[3] * self.group1()[1])
                     + (reverse.group2()[3] * self.group2()[1])
-                    - (reverse.group3()[3] * self.group0()[1])),
-                ((reverse.group0()[2] * self.group3()[3])
+                    - (reverse.group3()[3] * self.group0()[1]),
+                (reverse.group0()[2] * self.group3()[3])
                     + (reverse.group0()[3] * self.group3()[2])
                     + (reverse.group1()[0] * self.group3()[1])
                     + (reverse.group1()[3] * self.group1()[2])
-                    - (reverse.group3()[3] * self.group0()[2])),
-                (-(reverse.group1()[2] * self.group2()[2])
+                    - (reverse.group3()[3] * self.group0()[2]),
+                -(reverse.group1()[2] * self.group2()[2])
                     - (reverse.group1()[3] * self.group3()[3])
                     - (reverse.group2()[1] * self.group3()[1])
                     - (reverse.group2()[2] * self.group1()[2])
-                    - (reverse.group2()[2] * self.group3()[2])),
+                    - (reverse.group2()[2] * self.group3()[2]),
             ]) + (Simd32x4::from(self.group1()[3]) * Simd32x4::from([reverse.group1()[0], reverse.group1()[1], reverse.group1()[2], reverse.group3()[3]]))
-                + (Simd32x4::from([reverse.group0()[1], reverse.group0()[2], reverse.group2()[3], reverse.group3()[0]]) * swizzle!(self.group2(), 2, 0, 2, 0))
-                - (Simd32x4::from([reverse.group0()[2], reverse.group0()[0], reverse.group0()[1], reverse.group1()[0]]) * swizzle!(self.group2(), 1, 2, 0, 0))
-                + (Simd32x4::from([reverse.group2()[2], reverse.group2()[0], reverse.group2()[1], reverse.group3()[3]]) * swizzle!(self.group0(), 1, 2, 0, 3))
-                - (Simd32x4::from([reverse.group3()[2], reverse.group3()[0], reverse.group3()[1], reverse.group2()[1]]) * swizzle!(self.group1(), 1, 2, 0, 1))
-                - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group2()[3], self.group3()[0]]) * swizzle!(reverse.group2(), 1, 2, 2, 0))
-                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group1()[1], self.group2()[1]]) * swizzle!(reverse.group3(), 0, 1, 0, 1))
-                + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group0()[3], self.group2()[2]]) * swizzle!(reverse.group3(), 1, 2, 2, 2))
-                - (Simd32x4::from([self.group2()[3], self.group2()[3], self.group0()[1], self.group1()[0]]) * swizzle!(reverse.group2(), 0, 1, 0, 0))
-                - (Simd32x4::from([self.group3()[1], self.group3()[2], self.group3()[0], self.group2()[1]]) * swizzle!(reverse.group1(), 2, 0, 1, 1))
-                + (Simd32x4::from([self.group3()[3], self.group3()[3], self.group2()[1], self.group3()[3]]) * swizzle!(reverse.group0(), 0, 1, 0, 3))),
+                + (Simd32x4::from([reverse.group0()[1], reverse.group0()[2], reverse.group2()[3], reverse.group3()[0]]) * crate::swizzle!(self.group2(), 2, 0, 2, 0))
+                - (Simd32x4::from([reverse.group0()[2], reverse.group0()[0], reverse.group0()[1], reverse.group1()[0]]) * crate::swizzle!(self.group2(), 1, 2, 0, 0))
+                + (Simd32x4::from([reverse.group2()[2], reverse.group2()[0], reverse.group2()[1], reverse.group3()[3]]) * crate::swizzle!(self.group0(), 1, 2, 0, 3))
+                - (Simd32x4::from([reverse.group3()[2], reverse.group3()[0], reverse.group3()[1], reverse.group2()[1]]) * crate::swizzle!(self.group1(), 1, 2, 0, 1))
+                - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group2()[3], self.group3()[0]]) * crate::swizzle!(reverse.group2(), 1, 2, 2, 0))
+                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group1()[1], self.group2()[1]]) * crate::swizzle!(reverse.group3(), 0, 1, 0, 1))
+                + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group0()[3], self.group2()[2]]) * crate::swizzle!(reverse.group3(), 1, 2, 2, 2))
+                - (Simd32x4::from([self.group2()[3], self.group2()[3], self.group0()[1], self.group1()[0]]) * crate::swizzle!(reverse.group2(), 0, 1, 0, 0))
+                - (Simd32x4::from([self.group3()[1], self.group3()[2], self.group3()[0], self.group2()[1]]) * crate::swizzle!(reverse.group1(), 2, 0, 1, 1))
+                + (Simd32x4::from([self.group3()[3], self.group3()[3], self.group2()[1], self.group3()[3]]) * crate::swizzle!(reverse.group0(), 0, 1, 0, 3)),
         );
         let scalar_product = Scalar::from_groups(
             // scalar
-            (f32::powi(self.group0()[3], 2) - f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2)
+            f32::powi(self.group0()[3], 2) - f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2)
                 - f32::powi(self.group3()[0], 2)
                 - f32::powi(self.group3()[1], 2)
                 - f32::powi(self.group3()[2], 2)
                 - 2.0 * (self.group0()[0] * self.group2()[0])
                 - 2.0 * (self.group0()[1] * self.group2()[1])
                 - 2.0 * (self.group0()[2] * self.group2()[2])
-                + 2.0 * (self.group2()[3] * self.group3()[3])),
+                + 2.0 * (self.group2()[3] * self.group3()[3]),
         );
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_product.group0()[3] - scalar_product[scalar])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_product.group0()[3] - scalar_product[scalar]]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234

@@ -12,7 +12,7 @@ edition = "2021"
 default = []
 wgsl = []
 glsl = []
-postgres = []
+sql = []
 
 [dependencies]
 naga_oil = { version =  "0.13.0", features = ["prune", "glsl"] }

@@ -909,7 +909,7 @@ name = "hello_circle_wgsl"
 version = "0.1.0"
 dependencies = [
  "bytemuck",
- "cga3d_min",
+ "cga3d",
  "naga",
  "naga_oil",
  "parking_lot",

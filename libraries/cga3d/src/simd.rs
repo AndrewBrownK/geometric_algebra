@@ -1,3 +1,6 @@
+use encase::internal::{BufferMut, BufferRef, Reader, Writer};
+use encase::private::Metadata;
+use nearly::{EpsToleranceType, NearlyEqEps, NearlyEqTol, NearlyEqUlps, UlpsToleranceType};
 #[cfg(all(target_arch = "aarch64", target_feature = "neon"))]
 pub use std::arch::aarch64::*;
 #[cfg(all(target_arch = "arm", target_feature = "neon"))]
@@ -8,7 +11,7 @@ pub use std::arch::wasm32::*;
 pub use std::arch::x86::*;
 #[cfg(all(target_arch = "x86_64", target_feature = "sse2"))]
 pub use std::arch::x86_64::*;
-
+use std::num::NonZeroU64;
 // TODO add cargo feature driven support for f64 (and maybe f16, if that is a thing?)
 
 #[derive(Clone, Copy)]
@@ -510,3 +513,272 @@ impl std::ops::Div<Simd32x2> for Simd32x2 {
         )
     }
 }
+
+// encase implementations are based on this code
+//  https://github.com/teoxoy/encase/blob/main/src/types/vector.rs
+
+impl encase::private::AsRefVectorParts<f32, 4> for Simd32x4 {
+    #[inline]
+    fn as_ref_parts(&self) -> &[f32; 4] {
+        unsafe { &self.f32x4 }
+    }
+}
+impl encase::private::AsMutVectorParts<f32, 4> for Simd32x4 {
+    #[inline]
+    fn as_mut_parts(&mut self) -> &mut [f32; 4] {
+        unsafe { &mut self.f32x4 }
+    }
+}
+impl encase::private::FromVectorParts<f32, 4> for Simd32x4 {
+    #[inline]
+    fn from_parts(parts: [f32; 4]) -> Self {
+        Simd32x4::from(parts)
+    }
+}
+impl encase::ShaderType for Simd32x4 {
+    type ExtraMetadata = ();
+    const METADATA: Metadata<Self::ExtraMetadata> = {
+        let f32_size = <f32 as encase::private::ShaderSize>::SHADER_SIZE;
+        let four = NonZeroU64::new(4u64);
+        // const eval can be annoying
+        let four_f32s = match four {
+            Some(four) => f32_size.saturating_mul(four),
+            None => f32_size,
+        };
+        let size = encase::private::SizeValue::from(four_f32s);
+        let alignment = encase::private::AlignmentValue::from_next_power_of_two_size(size);
+        Metadata {
+            alignment,
+            has_uniform_min_alignment: false,
+            min_size: size,
+            is_pod: <[f32; 4] as encase::ShaderType>::METADATA.is_pod(),
+            extra: (),
+        }
+    };
+}
+impl encase::ShaderSize for Simd32x4 {}
+impl encase::private::WriteInto for Simd32x4 {
+    #[inline]
+    fn write_into<B>(&self, writer: &mut Writer<B>)
+    where
+        B: BufferMut,
+    {
+        let elements = encase::private::AsRefVectorParts::<f32, 4>::as_ref_parts(self);
+        encase::private::WriteInto::write_into(elements, writer);
+    }
+}
+impl encase::private::ReadFrom for Simd32x4 {
+    #[inline]
+    fn read_from<B>(&mut self, reader: &mut Reader<B>)
+    where
+        B: BufferRef,
+    {
+        let elements = encase::private::AsMutVectorParts::<f32, 4>::as_mut_parts(self);
+        encase::private::ReadFrom::read_from(elements, reader);
+    }
+}
+impl encase::private::CreateFrom for Simd32x4 {
+    #[inline]
+    fn create_from<B>(reader: &mut Reader<B>) -> Self
+    where
+        B: BufferRef,
+    {
+        let elements = encase::private::CreateFrom::create_from(reader);
+        encase::private::FromVectorParts::<f32, 4>::from_parts(elements)
+    }
+}
+
+impl encase::private::AsRefVectorParts<f32, 3> for Simd32x3 {
+    #[inline]
+    fn as_ref_parts(&self) -> &[f32; 3] {
+        unsafe { &self.f32x3 }
+    }
+}
+impl encase::private::AsMutVectorParts<f32, 3> for Simd32x3 {
+    #[inline]
+    fn as_mut_parts(&mut self) -> &mut [f32; 3] {
+        unsafe { &mut self.f32x3 }
+    }
+}
+impl encase::private::FromVectorParts<f32, 3> for Simd32x3 {
+    #[inline]
+    fn from_parts(parts: [f32; 3]) -> Self {
+        Simd32x3::from(parts)
+    }
+}
+impl encase::ShaderType for Simd32x3 {
+    type ExtraMetadata = ();
+    const METADATA: Metadata<Self::ExtraMetadata> = {
+        let f32_size = <f32 as encase::private::ShaderSize>::SHADER_SIZE;
+        let three = NonZeroU64::new(3u64);
+        // const eval can be annoying
+        let three_f32s = match three {
+            Some(three) => f32_size.saturating_mul(three),
+            None => f32_size,
+        };
+        let size = encase::private::SizeValue::from(three_f32s);
+        let alignment = encase::private::AlignmentValue::from_next_power_of_two_size(size);
+        Metadata {
+            alignment,
+            has_uniform_min_alignment: false,
+            min_size: size,
+            is_pod: <[f32; 3] as encase::ShaderType>::METADATA.is_pod(),
+            extra: (),
+        }
+    };
+}
+impl encase::ShaderSize for Simd32x3 {}
+impl encase::private::WriteInto for Simd32x3 {
+    #[inline]
+    fn write_into<B>(&self, writer: &mut Writer<B>)
+    where
+        B: BufferMut,
+    {
+        let elements = encase::private::AsRefVectorParts::<f32, 3>::as_ref_parts(self);
+        encase::private::WriteInto::write_into(elements, writer);
+    }
+}
+impl encase::private::ReadFrom for Simd32x3 {
+    #[inline]
+    fn read_from<B>(&mut self, reader: &mut Reader<B>)
+    where
+        B: BufferRef,
+    {
+        let elements = encase::private::AsMutVectorParts::<f32, 3>::as_mut_parts(self);
+        encase::private::ReadFrom::read_from(elements, reader);
+    }
+}
+impl encase::private::CreateFrom for Simd32x3 {
+    #[inline]
+    fn create_from<B>(reader: &mut Reader<B>) -> Self
+    where
+        B: BufferRef,
+    {
+        let elements = encase::private::CreateFrom::create_from(reader);
+        encase::private::FromVectorParts::<f32, 3>::from_parts(elements)
+    }
+}
+
+impl encase::private::AsRefVectorParts<f32, 2> for Simd32x2 {
+    #[inline]
+    fn as_ref_parts(&self) -> &[f32; 2] {
+        unsafe { &self.f32x2 }
+    }
+}
+impl encase::private::AsMutVectorParts<f32, 2> for Simd32x2 {
+    #[inline]
+    fn as_mut_parts(&mut self) -> &mut [f32; 2] {
+        unsafe { &mut self.f32x2 }
+    }
+}
+impl encase::private::FromVectorParts<f32, 2> for Simd32x2 {
+    #[inline]
+    fn from_parts(parts: [f32; 2]) -> Self {
+        Simd32x2::from(parts)
+    }
+}
+impl encase::ShaderType for Simd32x2 {
+    type ExtraMetadata = ();
+    const METADATA: Metadata<Self::ExtraMetadata> = {
+        let f32_size = <f32 as encase::private::ShaderSize>::SHADER_SIZE;
+        let two = NonZeroU64::new(2u64);
+        // const eval can be annoying
+        let two_f32s = match two {
+            Some(two) => f32_size.saturating_mul(two),
+            None => f32_size,
+        };
+        let size = encase::private::SizeValue::from(two_f32s);
+        let alignment = encase::private::AlignmentValue::from_next_power_of_two_size(size);
+        Metadata {
+            alignment,
+            has_uniform_min_alignment: false,
+            min_size: size,
+            is_pod: <[f32; 2] as encase::ShaderType>::METADATA.is_pod(),
+            extra: (),
+        }
+    };
+}
+impl encase::ShaderSize for Simd32x2 {}
+impl encase::private::WriteInto for Simd32x2 {
+    #[inline]
+    fn write_into<B>(&self, writer: &mut Writer<B>)
+    where
+        B: BufferMut,
+    {
+        let elements = encase::private::AsRefVectorParts::<f32, 2>::as_ref_parts(self);
+        encase::private::WriteInto::write_into(elements, writer);
+    }
+}
+impl encase::private::ReadFrom for Simd32x2 {
+    #[inline]
+    fn read_from<B>(&mut self, reader: &mut Reader<B>)
+    where
+        B: BufferRef,
+    {
+        let elements = encase::private::AsMutVectorParts::<f32, 2>::as_mut_parts(self);
+        encase::private::ReadFrom::read_from(elements, reader);
+    }
+}
+impl encase::private::CreateFrom for Simd32x2 {
+    #[inline]
+    fn create_from<B>(reader: &mut Reader<B>) -> Self
+    where
+        B: BufferRef,
+    {
+        let elements = encase::private::CreateFrom::create_from(reader);
+        encase::private::FromVectorParts::<f32, 2>::from_parts(elements)
+    }
+}
+
+impl NearlyEqTol<Self, f32, f32> for Simd32x4 {}
+impl NearlyEqEps<Self, f32, f32> for Simd32x4 {
+    fn nearly_eq_eps(&self, other: &Self, eps: &EpsToleranceType<f32, f32>) -> bool {
+        let s = unsafe { &self.f32x4 };
+        let o = unsafe { &other.f32x4 };
+        s.nearly_eq_eps(o, eps)
+    }
+}
+impl NearlyEqUlps<Self, f32, f32> for Simd32x4 {
+    fn nearly_eq_ulps(&self, other: &Self, ulps: &UlpsToleranceType<f32, f32>) -> bool {
+        let s = unsafe { &self.f32x4 };
+        let o = unsafe { &other.f32x4 };
+        s.nearly_eq_ulps(o, ulps)
+    }
+}
+impl nearly::NearlyEq<Self, f32, f32> for Simd32x4 {}
+
+impl NearlyEqTol<Self, f32, f32> for Simd32x3 {}
+impl NearlyEqEps<Self, f32, f32> for Simd32x3 {
+    fn nearly_eq_eps(&self, other: &Self, eps: &EpsToleranceType<f32, f32>) -> bool {
+        let s = unsafe { &self.f32x3 };
+        let o = unsafe { &other.f32x3 };
+        s.nearly_eq_eps(o, eps)
+    }
+}
+impl NearlyEqUlps<Self, f32, f32> for Simd32x3 {
+    fn nearly_eq_ulps(&self, other: &Self, ulps: &UlpsToleranceType<f32, f32>) -> bool {
+        let s = unsafe { &self.f32x3 };
+        let o = unsafe { &other.f32x3 };
+        s.nearly_eq_ulps(o, ulps)
+    }
+}
+impl nearly::NearlyEq<Self, f32, f32> for Simd32x3 {}
+
+impl NearlyEqTol<Self, f32, f32> for Simd32x2 {}
+impl NearlyEqEps<Self, f32, f32> for Simd32x2 {
+    fn nearly_eq_eps(&self, other: &Self, eps: &EpsToleranceType<f32, f32>) -> bool {
+        let s = unsafe { &self.f32x2 };
+        let o = unsafe { &other.f32x2 };
+        s.nearly_eq_eps(o, eps)
+    }
+}
+impl NearlyEqUlps<Self, f32, f32> for Simd32x2 {
+    fn nearly_eq_ulps(&self, other: &Self, ulps: &UlpsToleranceType<f32, f32>) -> bool {
+        let s = unsafe { &self.f32x2 };
+        let o = unsafe { &other.f32x2 };
+        s.nearly_eq_ulps(o, ulps)
+    }
+}
+impl nearly::NearlyEq<Self, f32, f32> for Simd32x2 {}
+
+//

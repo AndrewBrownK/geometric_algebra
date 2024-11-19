@@ -33,14 +33,14 @@ impl std::ops::Add<AntiCircleRotor> for VersorOdd {
     fn add(self, other: AntiCircleRotor) -> Self::Output {
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]) + self.group0()),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]) + self.group0(),
             // e23, e31, e12, e45
-            (other.group1() + self.group1()),
+            other.group1() + self.group1(),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other.group2()[0] + self.group2()[0]),
-                (other.group2()[1] + self.group2()[1]),
-                (other.group2()[2] + self.group2()[2]),
+                other.group2()[0] + self.group2()[0],
+                other.group2()[1] + self.group2()[1],
+                other.group2()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -52,14 +52,14 @@ impl std::ops::AddAssign<AntiCircleRotor> for VersorOdd {
     fn add_assign(&mut self, other: AntiCircleRotor) {
         *self = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]) + self.group0()),
+            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]) + self.group0(),
             // e23, e31, e12, e45
-            (other.group1() + self.group1()),
+            other.group1() + self.group1(),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other.group2()[0] + self.group2()[0]),
-                (other.group2()[1] + self.group2()[1]),
-                (other.group2()[2] + self.group2()[2]),
+                other.group2()[0] + self.group2()[0],
+                other.group2()[1] + self.group2()[1],
+                other.group2()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -104,11 +104,11 @@ impl std::ops::Add<AntiDualNum> for VersorOdd {
     fn add(self, other: AntiDualNum) -> Self::Output {
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] + self.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[1] + self.group0()[3]]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (other.group0()[0] + self.group2()[3])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], other.group0()[0] + self.group2()[3]]),
             // e4235, e4315, e4125, e3215
             self.group3(),
         );
@@ -118,11 +118,11 @@ impl std::ops::AddAssign<AntiDualNum> for VersorOdd {
     fn add_assign(&mut self, other: AntiDualNum) {
         *self = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[1] + self.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[1] + self.group0()[3]]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (other.group0()[0] + self.group2()[3])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], other.group0()[0] + self.group2()[3]]),
             // e4235, e4315, e4125, e3215
             self.group3(),
         );
@@ -197,16 +197,16 @@ impl std::ops::Add<AntiLine> for VersorOdd {
             self.group0(),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (other.group0()[0] + self.group1()[0]),
-                (other.group0()[1] + self.group1()[1]),
-                (other.group0()[2] + self.group1()[2]),
+                other.group0()[0] + self.group1()[0],
+                other.group0()[1] + self.group1()[1],
+                other.group0()[2] + self.group1()[2],
                 self.group1()[3],
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other.group1()[0] + self.group2()[0]),
-                (other.group1()[1] + self.group2()[1]),
-                (other.group1()[2] + self.group2()[2]),
+                other.group1()[0] + self.group2()[0],
+                other.group1()[1] + self.group2()[1],
+                other.group1()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -221,16 +221,16 @@ impl std::ops::AddAssign<AntiLine> for VersorOdd {
             self.group0(),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (other.group0()[0] + self.group1()[0]),
-                (other.group0()[1] + self.group1()[1]),
-                (other.group0()[2] + self.group1()[2]),
+                other.group0()[0] + self.group1()[0],
+                other.group0()[1] + self.group1()[1],
+                other.group0()[2] + self.group1()[2],
                 self.group1()[3],
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other.group1()[0] + self.group2()[0]),
-                (other.group1()[1] + self.group2()[1]),
-                (other.group1()[2] + self.group2()[2]),
+                other.group1()[0] + self.group2()[0],
+                other.group1()[1] + self.group2()[1],
+                other.group1()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -246,23 +246,23 @@ impl std::ops::Add<AntiMotor> for VersorOdd {
     fn add(self, other: AntiMotor) -> Self::Output {
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] + self.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[3] + self.group0()[3]]),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (other.group0()[0] + self.group1()[0]),
-                (other.group0()[1] + self.group1()[1]),
-                (other.group0()[2] + self.group1()[2]),
+                other.group0()[0] + self.group1()[0],
+                other.group0()[1] + self.group1()[1],
+                other.group0()[2] + self.group1()[2],
                 self.group1()[3],
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other.group1()[0] + self.group2()[0]),
-                (other.group1()[1] + self.group2()[1]),
-                (other.group1()[2] + self.group2()[2]),
+                other.group1()[0] + self.group2()[0],
+                other.group1()[1] + self.group2()[1],
+                other.group1()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group1()[3] + self.group3()[3])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], other.group1()[3] + self.group3()[3]]),
         );
     }
 }
@@ -270,23 +270,23 @@ impl std::ops::AddAssign<AntiMotor> for VersorOdd {
     fn add_assign(&mut self, other: AntiMotor) {
         *self = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (other.group0()[3] + self.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[3] + self.group0()[3]]),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (other.group0()[0] + self.group1()[0]),
-                (other.group0()[1] + self.group1()[1]),
-                (other.group0()[2] + self.group1()[2]),
+                other.group0()[0] + self.group1()[0],
+                other.group0()[1] + self.group1()[1],
+                other.group0()[2] + self.group1()[2],
                 self.group1()[3],
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other.group1()[0] + self.group2()[0]),
-                (other.group1()[1] + self.group2()[1]),
-                (other.group1()[2] + self.group2()[2]),
+                other.group1()[0] + self.group2()[0],
+                other.group1()[1] + self.group2()[1],
+                other.group1()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (other.group1()[3] + self.group3()[3])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], other.group1()[3] + self.group3()[3]]),
         );
     }
 }
@@ -420,18 +420,18 @@ impl std::ops::Add<Dipole> for VersorOdd {
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
-                (other.group0()[0] + self.group0()[0]),
-                (other.group0()[1] + self.group0()[1]),
-                (other.group0()[2] + self.group0()[2]),
+                other.group0()[0] + self.group0()[0],
+                other.group0()[1] + self.group0()[1],
+                other.group0()[2] + self.group0()[2],
                 self.group0()[3],
             ]),
             // e23, e31, e12, e45
-            (other.group1() + self.group1()),
+            other.group1() + self.group1(),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other.group2()[0] + self.group2()[0]),
-                (other.group2()[1] + self.group2()[1]),
-                (other.group2()[2] + self.group2()[2]),
+                other.group2()[0] + self.group2()[0],
+                other.group2()[1] + self.group2()[1],
+                other.group2()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -444,18 +444,18 @@ impl std::ops::AddAssign<Dipole> for VersorOdd {
         *self = VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
-                (other.group0()[0] + self.group0()[0]),
-                (other.group0()[1] + self.group0()[1]),
-                (other.group0()[2] + self.group0()[2]),
+                other.group0()[0] + self.group0()[0],
+                other.group0()[1] + self.group0()[1],
+                other.group0()[2] + self.group0()[2],
                 self.group0()[3],
             ]),
             // e23, e31, e12, e45
-            (other.group1() + self.group1()),
+            other.group1() + self.group1(),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other.group2()[0] + self.group2()[0]),
-                (other.group2()[1] + self.group2()[1]),
-                (other.group2()[2] + self.group2()[2]),
+                other.group2()[0] + self.group2()[0],
+                other.group2()[1] + self.group2()[1],
+                other.group2()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -476,17 +476,17 @@ impl std::ops::Add<DipoleInversion> for VersorOdd {
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
-                (other.group0()[0] + self.group0()[0]),
-                (other.group0()[1] + self.group0()[1]),
-                (other.group0()[2] + self.group0()[2]),
+                other.group0()[0] + self.group0()[0],
+                other.group0()[1] + self.group0()[1],
+                other.group0()[2] + self.group0()[2],
                 self.group0()[3],
             ]),
             // e23, e31, e12, e45
-            (other.group1() + self.group1()),
+            other.group1() + self.group1(),
             // e15, e25, e35, e1234
-            (other.group2() + self.group2()),
+            other.group2() + self.group2(),
             // e4235, e4315, e4125, e3215
-            (other.group3() + self.group3()),
+            other.group3() + self.group3(),
         );
     }
 }
@@ -495,17 +495,17 @@ impl std::ops::AddAssign<DipoleInversion> for VersorOdd {
         *self = VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
-                (other.group0()[0] + self.group0()[0]),
-                (other.group0()[1] + self.group0()[1]),
-                (other.group0()[2] + self.group0()[2]),
+                other.group0()[0] + self.group0()[0],
+                other.group0()[1] + self.group0()[1],
+                other.group0()[2] + self.group0()[2],
                 self.group0()[3],
             ]),
             // e23, e31, e12, e45
-            (other.group1() + self.group1()),
+            other.group1() + self.group1(),
             // e15, e25, e35, e1234
-            (other.group2() + self.group2()),
+            other.group2() + self.group2(),
             // e4235, e4315, e4125, e3215
-            (other.group3() + self.group3()),
+            other.group3() + self.group3(),
         );
     }
 }
@@ -548,12 +548,12 @@ impl std::ops::Add<FlatPoint> for VersorOdd {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[3] + self.group1()[3])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[3] + self.group1()[3]]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other.group0()[0] + self.group2()[0]),
-                (other.group0()[1] + self.group2()[1]),
-                (other.group0()[2] + self.group2()[2]),
+                other.group0()[0] + self.group2()[0],
+                other.group0()[1] + self.group2()[1],
+                other.group0()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -567,12 +567,12 @@ impl std::ops::AddAssign<FlatPoint> for VersorOdd {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[3] + self.group1()[3])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[3] + self.group1()[3]]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other.group0()[0] + self.group2()[0]),
-                (other.group0()[1] + self.group2()[1]),
-                (other.group0()[2] + self.group2()[2]),
+                other.group0()[0] + self.group2()[0],
+                other.group0()[1] + self.group2()[1],
+                other.group0()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -594,16 +594,16 @@ impl std::ops::Add<Flector> for VersorOdd {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[3] + self.group1()[3])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[3] + self.group1()[3]]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other.group0()[0] + self.group2()[0]),
-                (other.group0()[1] + self.group2()[1]),
-                (other.group0()[2] + self.group2()[2]),
+                other.group0()[0] + self.group2()[0],
+                other.group0()[1] + self.group2()[1],
+                other.group0()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
-            (other.group1() + self.group3()),
+            other.group1() + self.group3(),
         );
     }
 }
@@ -613,16 +613,16 @@ impl std::ops::AddAssign<Flector> for VersorOdd {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (other.group0()[3] + self.group1()[3])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], other.group0()[3] + self.group1()[3]]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other.group0()[0] + self.group2()[0]),
-                (other.group0()[1] + self.group2()[1]),
-                (other.group0()[2] + self.group2()[2]),
+                other.group0()[0] + self.group2()[0],
+                other.group0()[1] + self.group2()[1],
+                other.group0()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
-            (other.group1() + self.group3()),
+            other.group1() + self.group3(),
         );
     }
 }
@@ -698,17 +698,17 @@ impl std::ops::Add<MultiVector> for VersorOdd {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(other.group0()[0] + self.group0()[3]), other.group0()[1]]),
+            Simd32x2::from([other.group0()[0] + self.group0()[3], other.group0()[1]]),
             // e1, e2, e3, e4
             other.group1(),
             // e5
             other[e1],
             // e15, e25, e35, e45
-            (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]) + other.group3()),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]) + other.group3(),
             // e41, e42, e43
-            (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group4()),
+            Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group4(),
             // e23, e31, e12
-            (Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) + other.group5()),
+            Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) + other.group5(),
             // e415, e425, e435, e321
             other.group6(),
             // e423, e431, e412
@@ -716,9 +716,9 @@ impl std::ops::Add<MultiVector> for VersorOdd {
             // e235, e315, e125
             other.group8(),
             // e4235, e4315, e4125, e3215
-            (other.group9() + self.group3()),
+            other.group9() + self.group3(),
             // e1234
-            (self.group2()[3] + other[e45]),
+            self.group2()[3] + other[e45],
         );
     }
 }
@@ -737,7 +737,7 @@ impl std::ops::Add<Plane> for VersorOdd {
             // e15, e25, e35, e1234
             self.group2(),
             // e4235, e4315, e4125, e3215
-            (other.group0() + self.group3()),
+            other.group0() + self.group3(),
         );
     }
 }
@@ -751,7 +751,7 @@ impl std::ops::AddAssign<Plane> for VersorOdd {
             // e15, e25, e35, e1234
             self.group2(),
             // e4235, e4315, e4125, e3215
-            (other.group0() + self.group3()),
+            other.group0() + self.group3(),
         );
     }
 }
@@ -794,7 +794,7 @@ impl std::ops::Add<Scalar> for VersorOdd {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other[scalar])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] + other[scalar]]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
@@ -809,7 +809,7 @@ impl std::ops::AddAssign<Scalar> for VersorOdd {
         use crate::elements::*;
         *self = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] + other[scalar])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] + other[scalar]]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
@@ -836,9 +836,9 @@ impl std::ops::Add<Sphere> for VersorOdd {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other[e4315])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[3] + other[e4315]]),
             // e4235, e4315, e4125, e3215
-            (other.group0() + self.group3()),
+            other.group0() + self.group3(),
         );
     }
 }
@@ -851,9 +851,9 @@ impl std::ops::AddAssign<Sphere> for VersorOdd {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] + other[e4315])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[3] + other[e4315]]),
             // e4235, e4315, e4125, e3215
-            (other.group0() + self.group3()),
+            other.group0() + self.group3(),
         );
     }
 }
@@ -895,13 +895,13 @@ impl std::ops::Add<VersorOdd> for VersorOdd {
     fn add(self, other: VersorOdd) -> Self::Output {
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (other.group0() + self.group0()),
+            other.group0() + self.group0(),
             // e23, e31, e12, e45
-            (other.group1() + self.group1()),
+            other.group1() + self.group1(),
             // e15, e25, e35, e1234
-            (other.group2() + self.group2()),
+            other.group2() + self.group2(),
             // e4235, e4315, e4125, e3215
-            (other.group3() + self.group3()),
+            other.group3() + self.group3(),
         );
     }
 }
@@ -909,13 +909,13 @@ impl std::ops::AddAssign<VersorOdd> for VersorOdd {
     fn add_assign(&mut self, other: VersorOdd) {
         *self = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (other.group0() + self.group0()),
+            other.group0() + self.group0(),
             // e23, e31, e12, e45
-            (other.group1() + self.group1()),
+            other.group1() + self.group1(),
             // e15, e25, e35, e1234
-            (other.group2() + self.group2()),
+            other.group2() + self.group2(),
             // e4235, e4315, e4125, e3215
-            (other.group3() + self.group3()),
+            other.group3() + self.group3(),
         );
     }
 }
@@ -1036,7 +1036,6 @@ impl std::ops::BitXor<AntiScalar> for VersorOdd {
     //      add/sub      mul      div
     // f32        0        1        0
     fn bitxor(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -1164,7 +1163,6 @@ impl std::ops::BitXor<MultiVector> for VersorOdd {
     // yes simd       57       79        0
     //  no simd       90      122        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -1188,7 +1186,6 @@ impl std::ops::BitXor<RoundPoint> for VersorOdd {
     // yes simd       15       31        0
     //  no simd       24       43        0
     fn bitxor(self, other: RoundPoint) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -1199,13 +1196,11 @@ impl std::ops::BitXor<Scalar> for VersorOdd {
     //   simd4        0        4        0
     // no simd        0       16        0
     fn bitxor(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
 impl std::ops::BitXorAssign<Scalar> for VersorOdd {
     fn bitxor_assign(&mut self, other: Scalar) {
-        use crate::elements::*;
         *self = self.wedge(other);
     }
 }
@@ -1219,7 +1214,6 @@ impl std::ops::BitXor<Sphere> for VersorOdd {
     // yes simd        0        2        0
     //  no simd        0        5        0
     fn bitxor(self, other: Sphere) -> Self::Output {
-        use crate::elements::*;
         return self.wedge(other);
     }
 }
@@ -1256,15 +1250,15 @@ impl std::ops::BitXorAssign<VersorOdd> for VersorOdd {
 }
 
 impl From<AntiCircleRotor> for VersorOdd {
-    fn from(anti_circle_rotor: AntiCircleRotor) -> Self {
+    fn from(from_anti_circle_rotor: AntiCircleRotor) -> Self {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([anti_circle_rotor[e41], anti_circle_rotor[e42], anti_circle_rotor[e43], anti_circle_rotor[scalar]]),
+            Simd32x4::from([from_anti_circle_rotor[e41], from_anti_circle_rotor[e42], from_anti_circle_rotor[e43], from_anti_circle_rotor[scalar]]),
             // e23, e31, e12, e45
-            Simd32x4::from([anti_circle_rotor[e23], anti_circle_rotor[e31], anti_circle_rotor[e12], anti_circle_rotor[e45]]),
+            Simd32x4::from([from_anti_circle_rotor[e23], from_anti_circle_rotor[e31], from_anti_circle_rotor[e12], from_anti_circle_rotor[e45]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([anti_circle_rotor[e15], anti_circle_rotor[e25], anti_circle_rotor[e35], 0.0]),
+            Simd32x4::from([from_anti_circle_rotor[e15], from_anti_circle_rotor[e25], from_anti_circle_rotor[e35], 0.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
@@ -1272,15 +1266,15 @@ impl From<AntiCircleRotor> for VersorOdd {
 }
 
 impl From<AntiDualNum> for VersorOdd {
-    fn from(anti_dual_num: AntiDualNum) -> Self {
+    fn from(from_anti_dual_num: AntiDualNum) -> Self {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, anti_dual_num[scalar]]),
+            Simd32x4::from([0.0, 0.0, 0.0, from_anti_dual_num[scalar]]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, anti_dual_num[e1234]]),
+            Simd32x4::from([0.0, 0.0, 0.0, from_anti_dual_num[e1234]]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
@@ -1288,15 +1282,15 @@ impl From<AntiDualNum> for VersorOdd {
 }
 
 impl From<AntiLine> for VersorOdd {
-    fn from(anti_line: AntiLine) -> Self {
+    fn from(from_anti_line: AntiLine) -> Self {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(0.0),
             // e23, e31, e12, e45
-            Simd32x4::from([anti_line[e23], anti_line[e31], anti_line[e12], 0.0]),
+            Simd32x4::from([from_anti_line[e23], from_anti_line[e31], from_anti_line[e12], 0.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([anti_line[e15], anti_line[e25], anti_line[e35], 0.0]),
+            Simd32x4::from([from_anti_line[e15], from_anti_line[e25], from_anti_line[e35], 0.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
@@ -1304,31 +1298,31 @@ impl From<AntiLine> for VersorOdd {
 }
 
 impl From<AntiMotor> for VersorOdd {
-    fn from(anti_motor: AntiMotor) -> Self {
+    fn from(from_anti_motor: AntiMotor) -> Self {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, anti_motor[scalar]]),
+            Simd32x4::from([0.0, 0.0, 0.0, from_anti_motor[scalar]]),
             // e23, e31, e12, e45
-            Simd32x4::from([anti_motor[e23], anti_motor[e31], anti_motor[e12], 0.0]),
+            Simd32x4::from([from_anti_motor[e23], from_anti_motor[e31], from_anti_motor[e12], 0.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([anti_motor[e15], anti_motor[e25], anti_motor[e35], 0.0]),
+            Simd32x4::from([from_anti_motor[e15], from_anti_motor[e25], from_anti_motor[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, anti_motor[e3215]]),
+            Simd32x4::from([0.0, 0.0, 0.0, from_anti_motor[e3215]]),
         );
     }
 }
 
 impl From<Dipole> for VersorOdd {
-    fn from(dipole: Dipole) -> Self {
+    fn from(from_dipole: Dipole) -> Self {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([dipole[e41], dipole[e42], dipole[e43], 0.0]),
+            Simd32x4::from([from_dipole[e41], from_dipole[e42], from_dipole[e43], 0.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([dipole[e23], dipole[e31], dipole[e12], dipole[e45]]),
+            Simd32x4::from([from_dipole[e23], from_dipole[e31], from_dipole[e12], from_dipole[e45]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([dipole[e15], dipole[e25], dipole[e35], 0.0]),
+            Simd32x4::from([from_dipole[e15], from_dipole[e25], from_dipole[e35], 0.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
@@ -1336,31 +1330,31 @@ impl From<Dipole> for VersorOdd {
 }
 
 impl From<DipoleInversion> for VersorOdd {
-    fn from(dipole_inversion: DipoleInversion) -> Self {
+    fn from(from_dipole_inversion: DipoleInversion) -> Self {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([dipole_inversion[e41], dipole_inversion[e42], dipole_inversion[e43], 0.0]),
+            Simd32x4::from([from_dipole_inversion[e41], from_dipole_inversion[e42], from_dipole_inversion[e43], 0.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([dipole_inversion[e23], dipole_inversion[e31], dipole_inversion[e12], dipole_inversion[e45]]),
+            Simd32x4::from([from_dipole_inversion[e23], from_dipole_inversion[e31], from_dipole_inversion[e12], from_dipole_inversion[e45]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([dipole_inversion[e15], dipole_inversion[e25], dipole_inversion[e35], dipole_inversion[e1234]]),
+            Simd32x4::from([from_dipole_inversion[e15], from_dipole_inversion[e25], from_dipole_inversion[e35], from_dipole_inversion[e1234]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([dipole_inversion[e4235], dipole_inversion[e4315], dipole_inversion[e4125], dipole_inversion[e3215]]),
+            Simd32x4::from([from_dipole_inversion[e4235], from_dipole_inversion[e4315], from_dipole_inversion[e4125], from_dipole_inversion[e3215]]),
         );
     }
 }
 
 impl From<FlatPoint> for VersorOdd {
-    fn from(flat_point: FlatPoint) -> Self {
+    fn from(from_flat_point: FlatPoint) -> Self {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(0.0),
             // e23, e31, e12, e45
-            Simd32x4::from([0.0, 0.0, 0.0, flat_point[e45]]),
+            Simd32x4::from([0.0, 0.0, 0.0, from_flat_point[e45]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([flat_point[e15], flat_point[e25], flat_point[e35], 0.0]),
+            Simd32x4::from([from_flat_point[e15], from_flat_point[e25], from_flat_point[e35], 0.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
@@ -1368,23 +1362,23 @@ impl From<FlatPoint> for VersorOdd {
 }
 
 impl From<Flector> for VersorOdd {
-    fn from(flector: Flector) -> Self {
+    fn from(from_flector: Flector) -> Self {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(0.0),
             // e23, e31, e12, e45
-            Simd32x4::from([0.0, 0.0, 0.0, flector[e45]]),
+            Simd32x4::from([0.0, 0.0, 0.0, from_flector[e45]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([flector[e15], flector[e25], flector[e35], 0.0]),
+            Simd32x4::from([from_flector[e15], from_flector[e25], from_flector[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([flector[e4235], flector[e4315], flector[e4125], flector[e3215]]),
+            Simd32x4::from([from_flector[e4235], from_flector[e4315], from_flector[e4125], from_flector[e3215]]),
         );
     }
 }
 
 impl From<Plane> for VersorOdd {
-    fn from(plane: Plane) -> Self {
+    fn from(from_plane: Plane) -> Self {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -1394,17 +1388,17 @@ impl From<Plane> for VersorOdd {
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([plane[e4235], plane[e4315], plane[e4125], plane[e3215]]),
+            Simd32x4::from([from_plane[e4235], from_plane[e4315], from_plane[e4125], from_plane[e3215]]),
         );
     }
 }
 
 impl From<Scalar> for VersorOdd {
-    fn from(scalar: Scalar) -> Self {
+    fn from(from_scalar: Scalar) -> Self {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, scalar[scalar]]),
+            Simd32x4::from([0.0, 0.0, 0.0, from_scalar[scalar]]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
@@ -1416,7 +1410,7 @@ impl From<Scalar> for VersorOdd {
 }
 
 impl From<Sphere> for VersorOdd {
-    fn from(sphere: Sphere) -> Self {
+    fn from(from_sphere: Sphere) -> Self {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -1424,9 +1418,9 @@ impl From<Sphere> for VersorOdd {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, sphere[e1234]]),
+            Simd32x4::from([0.0, 0.0, 0.0, from_sphere[e1234]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([sphere[e4235], sphere[e4315], sphere[e4125], sphere[e3215]]),
+            Simd32x4::from([from_sphere[e4235], from_sphere[e4315], from_sphere[e4125], from_sphere[e3215]]),
         );
     }
 }
@@ -1561,7 +1555,6 @@ impl std::ops::Mul<AntiScalar> for VersorOdd {
     //   simd4        0        6        0
     // no simd        0       24        0
     fn mul(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -1714,7 +1707,6 @@ impl std::ops::Mul<MultiVector> for VersorOdd {
     // yes simd      220      252        0
     //  no simd      480      512        0
     fn mul(self, other: MultiVector) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -1746,7 +1738,6 @@ impl std::ops::Mul<RoundPoint> for VersorOdd {
     // yes simd       28       47        0
     //  no simd       64       83        0
     fn mul(self, other: RoundPoint) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
@@ -1757,13 +1748,11 @@ impl std::ops::Mul<Scalar> for VersorOdd {
     //   simd4        0        4        0
     // no simd        0       16        0
     fn mul(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
 impl std::ops::MulAssign<Scalar> for VersorOdd {
     fn mul_assign(&mut self, other: Scalar) {
-        use crate::elements::*;
         *self = self.geometric_product(other);
     }
 }
@@ -1777,13 +1766,11 @@ impl std::ops::Mul<Sphere> for VersorOdd {
     // yes simd       31       48        0
     //  no simd       64       81        0
     fn mul(self, other: Sphere) -> Self::Output {
-        use crate::elements::*;
         return self.geometric_product(other);
     }
 }
 impl std::ops::MulAssign<Sphere> for VersorOdd {
     fn mul_assign(&mut self, other: Sphere) {
-        use crate::elements::*;
         *self = self.geometric_product(other);
     }
 }
@@ -1819,20 +1806,21 @@ impl std::ops::MulAssign<VersorOdd> for VersorOdd {
     }
 }
 impl std::ops::Neg for VersorOdd {
+    type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd4        0        4        0
     // no simd        0       16        0
-    fn neg(self) -> Self {
+    fn neg(self) -> Self::Output {
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (self.group0() * Simd32x4::from(-1.0)),
+            self.group0() * Simd32x4::from(-1.0),
             // e23, e31, e12, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            (self.group2() * Simd32x4::from(-1.0)),
+            self.group2() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
-            (self.group3() * Simd32x4::from(-1.0)),
+            self.group3() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1857,14 +1845,14 @@ impl std::ops::Sub<AntiCircleRotor> for VersorOdd {
     fn sub(self, other: AntiCircleRotor) -> Self::Output {
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group2()[3] * -1.0)]) + self.group0()),
+            Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, other.group2()[3] * -1.0]) + self.group0(),
             // e23, e31, e12, e45
-            (-other.group1() + self.group1()),
+            -other.group1() + self.group1(),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (-other.group2()[0] + self.group2()[0]),
-                (-other.group2()[1] + self.group2()[1]),
-                (-other.group2()[2] + self.group2()[2]),
+                -other.group2()[0] + self.group2()[0],
+                -other.group2()[1] + self.group2()[1],
+                -other.group2()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -1876,14 +1864,14 @@ impl std::ops::SubAssign<AntiCircleRotor> for VersorOdd {
     fn sub_assign(&mut self, other: AntiCircleRotor) {
         *self = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), (other.group2()[3] * -1.0)]) + self.group0()),
+            Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, other.group2()[3] * -1.0]) + self.group0(),
             // e23, e31, e12, e45
-            (-other.group1() + self.group1()),
+            -other.group1() + self.group1(),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (-other.group2()[0] + self.group2()[0]),
-                (-other.group2()[1] + self.group2()[1]),
-                (-other.group2()[2] + self.group2()[2]),
+                -other.group2()[0] + self.group2()[0],
+                -other.group2()[1] + self.group2()[1],
+                -other.group2()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -1906,9 +1894,9 @@ impl std::ops::Sub<AntiDipoleInversion> for VersorOdd {
             // scalar, e12345
             Simd32x2::from([self.group0()[3], 0.0]),
             // e1, e2, e3, e4
-            (Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]]) * Simd32x4::from(-1.0)),
+            Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]]) * Simd32x4::from(-1.0),
             // e5
-            (other.group3()[3] * -1.0),
+            other.group3()[3] * -1.0,
             // e15, e25, e35, e45
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]),
             // e41, e42, e43
@@ -1916,11 +1904,11 @@ impl std::ops::Sub<AntiDipoleInversion> for VersorOdd {
             // e23, e31, e12
             Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x4::from(-1.0)),
+            other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            (other.group0() * Simd32x3::from(-1.0)),
+            other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            (Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group3(),
             // e1234
@@ -1936,11 +1924,11 @@ impl std::ops::Sub<AntiDualNum> for VersorOdd {
     fn sub(self, other: AntiDualNum) -> Self::Output {
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[1] + self.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], -other.group0()[1] + self.group0()[3]]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (-other.group0()[0] + self.group2()[3])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], -other.group0()[0] + self.group2()[3]]),
             // e4235, e4315, e4125, e3215
             self.group3(),
         );
@@ -1950,11 +1938,11 @@ impl std::ops::SubAssign<AntiDualNum> for VersorOdd {
     fn sub_assign(&mut self, other: AntiDualNum) {
         *self = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[1] + self.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], -other.group0()[1] + self.group0()[3]]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (-other.group0()[0] + self.group2()[3])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], -other.group0()[0] + self.group2()[3]]),
             // e4235, e4315, e4125, e3215
             self.group3(),
         );
@@ -1984,11 +1972,11 @@ impl std::ops::Sub<AntiFlatPoint> for VersorOdd {
             // e23, e31, e12
             Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3] * -1.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group3(),
             // e1234
@@ -2010,9 +1998,9 @@ impl std::ops::Sub<AntiFlector> for VersorOdd {
             // scalar, e12345
             Simd32x2::from([self.group0()[3], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([(other.group1()[0] * -1.0), (other.group1()[1] * -1.0), (other.group1()[2] * -1.0), 0.0]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, 0.0]),
             // e5
-            (other.group1()[3] * -1.0),
+            other.group1()[3] * -1.0,
             // e15, e25, e35, e45
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]),
             // e41, e42, e43
@@ -2020,11 +2008,11 @@ impl std::ops::Sub<AntiFlector> for VersorOdd {
             // e23, e31, e12
             Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[3] * -1.0)]),
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3] * -1.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group3(),
             // e1234
@@ -2043,16 +2031,16 @@ impl std::ops::Sub<AntiLine> for VersorOdd {
             self.group0(),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (-other.group0()[0] + self.group1()[0]),
-                (-other.group0()[1] + self.group1()[1]),
-                (-other.group0()[2] + self.group1()[2]),
+                -other.group0()[0] + self.group1()[0],
+                -other.group0()[1] + self.group1()[1],
+                -other.group0()[2] + self.group1()[2],
                 self.group1()[3],
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (-other.group1()[0] + self.group2()[0]),
-                (-other.group1()[1] + self.group2()[1]),
-                (-other.group1()[2] + self.group2()[2]),
+                -other.group1()[0] + self.group2()[0],
+                -other.group1()[1] + self.group2()[1],
+                -other.group1()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -2067,16 +2055,16 @@ impl std::ops::SubAssign<AntiLine> for VersorOdd {
             self.group0(),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (-other.group0()[0] + self.group1()[0]),
-                (-other.group0()[1] + self.group1()[1]),
-                (-other.group0()[2] + self.group1()[2]),
+                -other.group0()[0] + self.group1()[0],
+                -other.group0()[1] + self.group1()[1],
+                -other.group0()[2] + self.group1()[2],
                 self.group1()[3],
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (-other.group1()[0] + self.group2()[0]),
-                (-other.group1()[1] + self.group2()[1]),
-                (-other.group1()[2] + self.group2()[2]),
+                -other.group1()[0] + self.group2()[0],
+                -other.group1()[1] + self.group2()[1],
+                -other.group1()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -2092,23 +2080,23 @@ impl std::ops::Sub<AntiMotor> for VersorOdd {
     fn sub(self, other: AntiMotor) -> Self::Output {
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[3] + self.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], -other.group0()[3] + self.group0()[3]]),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (-other.group0()[0] + self.group1()[0]),
-                (-other.group0()[1] + self.group1()[1]),
-                (-other.group0()[2] + self.group1()[2]),
+                -other.group0()[0] + self.group1()[0],
+                -other.group0()[1] + self.group1()[1],
+                -other.group0()[2] + self.group1()[2],
                 self.group1()[3],
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (-other.group1()[0] + self.group2()[0]),
-                (-other.group1()[1] + self.group2()[1]),
-                (-other.group1()[2] + self.group2()[2]),
+                -other.group1()[0] + self.group2()[0],
+                -other.group1()[1] + self.group2()[1],
+                -other.group1()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group1()[3] + self.group3()[3])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], -other.group1()[3] + self.group3()[3]]),
         );
     }
 }
@@ -2116,23 +2104,23 @@ impl std::ops::SubAssign<AntiMotor> for VersorOdd {
     fn sub_assign(&mut self, other: AntiMotor) {
         *self = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (-other.group0()[3] + self.group0()[3])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], -other.group0()[3] + self.group0()[3]]),
             // e23, e31, e12, e45
             Simd32x4::from([
-                (-other.group0()[0] + self.group1()[0]),
-                (-other.group0()[1] + self.group1()[1]),
-                (-other.group0()[2] + self.group1()[2]),
+                -other.group0()[0] + self.group1()[0],
+                -other.group0()[1] + self.group1()[1],
+                -other.group0()[2] + self.group1()[2],
                 self.group1()[3],
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (-other.group1()[0] + self.group2()[0]),
-                (-other.group1()[1] + self.group2()[1]),
-                (-other.group1()[2] + self.group2()[2]),
+                -other.group1()[0] + self.group2()[0],
+                -other.group1()[1] + self.group2()[1],
+                -other.group1()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], (-other.group1()[3] + self.group3()[3])]),
+            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], -other.group1()[3] + self.group3()[3]]),
         );
     }
 }
@@ -2146,9 +2134,9 @@ impl std::ops::Sub<AntiPlane> for VersorOdd {
             // scalar, e12345
             Simd32x2::from([self.group0()[3], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
+            Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, 0.0]),
             // e5
-            (other.group0()[3] * -1.0),
+            other.group0()[3] * -1.0,
             // e15, e25, e35, e45
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]),
             // e41, e42, e43
@@ -2177,7 +2165,7 @@ impl std::ops::Sub<AntiScalar> for VersorOdd {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self.group0()[3], (other[e12345] * -1.0)]),
+            Simd32x2::from([self.group0()[3], other[e12345] * -1.0]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -2225,11 +2213,11 @@ impl std::ops::Sub<Circle> for VersorOdd {
             // e23, e31, e12
             Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x4::from(-1.0)),
+            other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            (other.group0() * Simd32x3::from(-1.0)),
+            other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            (other.group2() * Simd32x3::from(-1.0)),
+            other.group2() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group3(),
             // e1234
@@ -2250,7 +2238,7 @@ impl std::ops::Sub<CircleRotor> for VersorOdd {
     fn sub(self, other: CircleRotor) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self.group0()[3], (other.group2()[3] * -1.0)]),
+            Simd32x2::from([self.group0()[3], other.group2()[3] * -1.0]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -2262,11 +2250,11 @@ impl std::ops::Sub<CircleRotor> for VersorOdd {
             // e23, e31, e12
             Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x4::from(-1.0)),
+            other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            (other.group0() * Simd32x3::from(-1.0)),
+            other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            (Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group3(),
             // e1234
@@ -2287,18 +2275,18 @@ impl std::ops::Sub<Dipole> for VersorOdd {
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
-                (-other.group0()[0] + self.group0()[0]),
-                (-other.group0()[1] + self.group0()[1]),
-                (-other.group0()[2] + self.group0()[2]),
+                -other.group0()[0] + self.group0()[0],
+                -other.group0()[1] + self.group0()[1],
+                -other.group0()[2] + self.group0()[2],
                 self.group0()[3],
             ]),
             // e23, e31, e12, e45
-            (-other.group1() + self.group1()),
+            -other.group1() + self.group1(),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (-other.group2()[0] + self.group2()[0]),
-                (-other.group2()[1] + self.group2()[1]),
-                (-other.group2()[2] + self.group2()[2]),
+                -other.group2()[0] + self.group2()[0],
+                -other.group2()[1] + self.group2()[1],
+                -other.group2()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -2311,18 +2299,18 @@ impl std::ops::SubAssign<Dipole> for VersorOdd {
         *self = VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
-                (-other.group0()[0] + self.group0()[0]),
-                (-other.group0()[1] + self.group0()[1]),
-                (-other.group0()[2] + self.group0()[2]),
+                -other.group0()[0] + self.group0()[0],
+                -other.group0()[1] + self.group0()[1],
+                -other.group0()[2] + self.group0()[2],
                 self.group0()[3],
             ]),
             // e23, e31, e12, e45
-            (-other.group1() + self.group1()),
+            -other.group1() + self.group1(),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (-other.group2()[0] + self.group2()[0]),
-                (-other.group2()[1] + self.group2()[1]),
-                (-other.group2()[2] + self.group2()[2]),
+                -other.group2()[0] + self.group2()[0],
+                -other.group2()[1] + self.group2()[1],
+                -other.group2()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -2343,17 +2331,17 @@ impl std::ops::Sub<DipoleInversion> for VersorOdd {
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
-                (-other.group0()[0] + self.group0()[0]),
-                (-other.group0()[1] + self.group0()[1]),
-                (-other.group0()[2] + self.group0()[2]),
+                -other.group0()[0] + self.group0()[0],
+                -other.group0()[1] + self.group0()[1],
+                -other.group0()[2] + self.group0()[2],
                 self.group0()[3],
             ]),
             // e23, e31, e12, e45
-            (-other.group1() + self.group1()),
+            -other.group1() + self.group1(),
             // e15, e25, e35, e1234
-            (-other.group2() + self.group2()),
+            -other.group2() + self.group2(),
             // e4235, e4315, e4125, e3215
-            (-other.group3() + self.group3()),
+            -other.group3() + self.group3(),
         );
     }
 }
@@ -2362,17 +2350,17 @@ impl std::ops::SubAssign<DipoleInversion> for VersorOdd {
         *self = VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from([
-                (-other.group0()[0] + self.group0()[0]),
-                (-other.group0()[1] + self.group0()[1]),
-                (-other.group0()[2] + self.group0()[2]),
+                -other.group0()[0] + self.group0()[0],
+                -other.group0()[1] + self.group0()[1],
+                -other.group0()[2] + self.group0()[2],
                 self.group0()[3],
             ]),
             // e23, e31, e12, e45
-            (-other.group1() + self.group1()),
+            -other.group1() + self.group1(),
             // e15, e25, e35, e1234
-            (-other.group2() + self.group2()),
+            -other.group2() + self.group2(),
             // e4235, e4315, e4125, e3215
-            (-other.group3() + self.group3()),
+            -other.group3() + self.group3(),
         );
     }
 }
@@ -2384,9 +2372,9 @@ impl std::ops::Sub<DualNum> for VersorOdd {
     fn sub(self, other: DualNum) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self.group0()[3], (other.group0()[1] * -1.0)]),
+            Simd32x2::from([self.group0()[3], other.group0()[1] * -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, (other.group0()[0] * -1.0)]),
+            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0] * -1.0]),
             // e5
             0.0,
             // e15, e25, e35, e45
@@ -2418,12 +2406,12 @@ impl std::ops::Sub<FlatPoint> for VersorOdd {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[3] + self.group1()[3])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], -other.group0()[3] + self.group1()[3]]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (-other.group0()[0] + self.group2()[0]),
-                (-other.group0()[1] + self.group2()[1]),
-                (-other.group0()[2] + self.group2()[2]),
+                -other.group0()[0] + self.group2()[0],
+                -other.group0()[1] + self.group2()[1],
+                -other.group0()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -2437,12 +2425,12 @@ impl std::ops::SubAssign<FlatPoint> for VersorOdd {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[3] + self.group1()[3])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], -other.group0()[3] + self.group1()[3]]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (-other.group0()[0] + self.group2()[0]),
-                (-other.group0()[1] + self.group2()[1]),
-                (-other.group0()[2] + self.group2()[2]),
+                -other.group0()[0] + self.group2()[0],
+                -other.group0()[1] + self.group2()[1],
+                -other.group0()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
@@ -2464,16 +2452,16 @@ impl std::ops::Sub<Flector> for VersorOdd {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[3] + self.group1()[3])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], -other.group0()[3] + self.group1()[3]]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (-other.group0()[0] + self.group2()[0]),
-                (-other.group0()[1] + self.group2()[1]),
-                (-other.group0()[2] + self.group2()[2]),
+                -other.group0()[0] + self.group2()[0],
+                -other.group0()[1] + self.group2()[1],
+                -other.group0()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
-            (-other.group1() + self.group3()),
+            -other.group1() + self.group3(),
         );
     }
 }
@@ -2483,16 +2471,16 @@ impl std::ops::SubAssign<Flector> for VersorOdd {
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], (-other.group0()[3] + self.group1()[3])]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], -other.group0()[3] + self.group1()[3]]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (-other.group0()[0] + self.group2()[0]),
-                (-other.group0()[1] + self.group2()[1]),
-                (-other.group0()[2] + self.group2()[2]),
+                -other.group0()[0] + self.group2()[0],
+                -other.group0()[1] + self.group2()[1],
+                -other.group0()[2] + self.group2()[2],
                 self.group2()[3],
             ]),
             // e4235, e4315, e4125, e3215
-            (-other.group1() + self.group3()),
+            -other.group1() + self.group3(),
         );
     }
 }
@@ -2520,11 +2508,11 @@ impl std::ops::Sub<Line> for VersorOdd {
             // e23, e31, e12
             Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
-            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
+            Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, 0.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            (other.group1() * Simd32x3::from(-1.0)),
+            other.group1() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group3(),
             // e1234
@@ -2544,11 +2532,11 @@ impl std::ops::Sub<Motor> for VersorOdd {
     fn sub(self, other: Motor) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self.group0()[3], (other.group0()[3] * -1.0)]),
+            Simd32x2::from([self.group0()[3], other.group0()[3] * -1.0]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
-            (other.group1()[3] * -1.0),
+            other.group1()[3] * -1.0,
             // e15, e25, e35, e45
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]),
             // e41, e42, e43
@@ -2556,11 +2544,11 @@ impl std::ops::Sub<Motor> for VersorOdd {
             // e23, e31, e12
             Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
-            Simd32x4::from([(other.group0()[0] * -1.0), (other.group0()[1] * -1.0), (other.group0()[2] * -1.0), 0.0]),
+            Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, 0.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            (Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group3(),
             // e1234
@@ -2582,27 +2570,27 @@ impl std::ops::Sub<MultiVector> for VersorOdd {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([(-other.group0()[0] + self.group0()[3]), (other.group0()[1] * -1.0)]),
+            Simd32x2::from([-other.group0()[0] + self.group0()[3], other.group0()[1] * -1.0]),
             // e1, e2, e3, e4
-            (other.group1() * Simd32x4::from(-1.0)),
+            other.group1() * Simd32x4::from(-1.0),
             // e5
-            (other[e1] * -1.0),
+            other[e1] * -1.0,
             // e15, e25, e35, e45
-            (Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]) - other.group3()),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]) - other.group3(),
             // e41, e42, e43
-            (Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group4()),
+            Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group4(),
             // e23, e31, e12
-            (Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) - other.group5()),
+            Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) - other.group5(),
             // e415, e425, e435, e321
-            (other.group6() * Simd32x4::from(-1.0)),
+            other.group6() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            (other.group7() * Simd32x3::from(-1.0)),
+            other.group7() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            (other.group8() * Simd32x3::from(-1.0)),
+            other.group8() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            (-other.group9() + self.group3()),
+            -other.group9() + self.group3(),
             // e1234
-            (self.group2()[3] - other[e45]),
+            self.group2()[3] - other[e45],
         );
     }
 }
@@ -2621,7 +2609,7 @@ impl std::ops::Sub<Plane> for VersorOdd {
             // e15, e25, e35, e1234
             self.group2(),
             // e4235, e4315, e4125, e3215
-            (-other.group0() + self.group3()),
+            -other.group0() + self.group3(),
         );
     }
 }
@@ -2635,7 +2623,7 @@ impl std::ops::SubAssign<Plane> for VersorOdd {
             // e15, e25, e35, e1234
             self.group2(),
             // e4235, e4315, e4125, e3215
-            (-other.group0() + self.group3()),
+            -other.group0() + self.group3(),
         );
     }
 }
@@ -2654,9 +2642,9 @@ impl std::ops::Sub<RoundPoint> for VersorOdd {
             // scalar, e12345
             Simd32x2::from([self.group0()[3], 0.0]),
             // e1, e2, e3, e4
-            (other.group0() * Simd32x4::from(-1.0)),
+            other.group0() * Simd32x4::from(-1.0),
             // e5
-            (other[e2] * -1.0),
+            other[e2] * -1.0,
             // e15, e25, e35, e45
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]),
             // e41, e42, e43
@@ -2685,7 +2673,7 @@ impl std::ops::Sub<Scalar> for VersorOdd {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other[scalar])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] - other[scalar]]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
@@ -2700,7 +2688,7 @@ impl std::ops::SubAssign<Scalar> for VersorOdd {
         use crate::elements::*;
         *self = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], (self.group0()[3] - other[scalar])]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] - other[scalar]]),
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
@@ -2727,9 +2715,9 @@ impl std::ops::Sub<Sphere> for VersorOdd {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other[e4315])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[3] - other[e4315]]),
             // e4235, e4315, e4125, e3215
-            (-other.group0() + self.group3()),
+            -other.group0() + self.group3(),
         );
     }
 }
@@ -2742,9 +2730,9 @@ impl std::ops::SubAssign<Sphere> for VersorOdd {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], (self.group2()[3] - other[e4315])]),
+            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[3] - other[e4315]]),
             // e4235, e4315, e4125, e3215
-            (-other.group0() + self.group3()),
+            -other.group0() + self.group3(),
         );
     }
 }
@@ -2761,11 +2749,11 @@ impl std::ops::Sub<VersorEven> for VersorOdd {
     fn sub(self, other: VersorEven) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self.group0()[3], (other.group0()[3] * -1.0)]),
+            Simd32x2::from([self.group0()[3], other.group0()[3] * -1.0]),
             // e1, e2, e3, e4
-            (other.group3() * Simd32x4::from(-1.0)),
+            other.group3() * Simd32x4::from(-1.0),
             // e5
-            (other.group2()[3] * -1.0),
+            other.group2()[3] * -1.0,
             // e15, e25, e35, e45
             Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]),
             // e41, e42, e43
@@ -2773,11 +2761,11 @@ impl std::ops::Sub<VersorEven> for VersorOdd {
             // e23, e31, e12
             Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
             // e415, e425, e435, e321
-            (other.group1() * Simd32x4::from(-1.0)),
+            other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            (Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0),
             // e235, e315, e125
-            (Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) * Simd32x3::from(-1.0)),
+            Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]) * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group3(),
             // e1234
@@ -2794,13 +2782,13 @@ impl std::ops::Sub<VersorOdd> for VersorOdd {
     fn sub(self, other: VersorOdd) -> Self::Output {
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (-other.group0() + self.group0()),
+            -other.group0() + self.group0(),
             // e23, e31, e12, e45
-            (-other.group1() + self.group1()),
+            -other.group1() + self.group1(),
             // e15, e25, e35, e1234
-            (-other.group2() + self.group2()),
+            -other.group2() + self.group2(),
             // e4235, e4315, e4125, e3215
-            (-other.group3() + self.group3()),
+            -other.group3() + self.group3(),
         );
     }
 }
@@ -2808,13 +2796,13 @@ impl std::ops::SubAssign<VersorOdd> for VersorOdd {
     fn sub_assign(&mut self, other: VersorOdd) {
         *self = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            (-other.group0() + self.group0()),
+            -other.group0() + self.group0(),
             // e23, e31, e12, e45
-            (-other.group1() + self.group1()),
+            -other.group1() + self.group1(),
             // e15, e25, e35, e1234
-            (-other.group2() + self.group2()),
+            -other.group2() + self.group2(),
             // e4235, e4315, e4125, e3215
-            (-other.group3() + self.group3()),
+            -other.group3() + self.group3(),
         );
     }
 }

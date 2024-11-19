@@ -10,7 +10,7 @@ use naga::ShaderStage;
 /// runtime. (Hint: Enable this feature in [build-dependencies], but not [dependencies].)
 /// Despite this recommendation, you can still include this in your app binary if you really want
 /// or need to recompile shaders at app runtime for some reason.
-pub const RGA3D_WGSL_SRC: &str = include_str!("integrations/rga3d.wgsl");
+pub const RGA3D_WGSL_SRC: &str = include_str!("rga3d.wgsl");
 
 pub fn wgsl_composable_module_descriptor() -> naga_oil::compose::ComposableModuleDescriptor<'static> {
     naga_oil::compose::ComposableModuleDescriptor {

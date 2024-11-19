@@ -8,7 +8,7 @@ pub mod arity_0 {
 }
 pub mod arity_1 {
     pub use crate::traits::anti_constraint_violation::AntiConstraintViolation;
-    pub use crate::traits::anti_fix_impl::AntiFixImpl;
+    pub use crate::traits::anti_fix::AntiFix;
     pub use crate::traits::anti_reverse::AntiReverse;
     pub use crate::traits::constraint_violation::ConstraintViolation;
     pub use crate::traits::fix::Fix;
@@ -26,7 +26,7 @@ pub mod arity_2 {
 }
 pub mod infix {
     pub use crate::traits::anti_constraint_violation::anti_constraint_violation;
-    pub use crate::traits::anti_fix_impl::anti_fix_impl;
+    pub use crate::traits::anti_fix::anti_fix;
     pub use crate::traits::anti_reverse::anti_reverse;
     pub use crate::traits::anti_sandwich::anti_sandwich;
     pub use crate::traits::anti_sandwich::anti_sandwich_partial;
@@ -48,8 +48,8 @@ pub mod infix {
 }
 mod anti_constraint_violation;
 pub use anti_constraint_violation::AntiConstraintViolation;
-mod anti_fix_impl;
-pub use anti_fix_impl::AntiFixImpl;
+mod anti_fix;
+pub use anti_fix::AntiFix;
 mod anti_grade;
 pub use anti_grade::AntiGrade;
 mod anti_one;
