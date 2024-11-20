@@ -455,7 +455,7 @@ impl std::ops::Sub<DualNum> for Scalar {
     // f32        1        1        0
     fn sub(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([-other.group0()[0] + self[scalar], other.group0()[1] * -1.0]));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self[scalar] - other.group0()[0], other.group0()[1] * -1.0]));
     }
 }
 impl std::ops::Sub<Flector> for Scalar {
@@ -531,7 +531,7 @@ impl std::ops::Sub<Motor> for Scalar {
             // e41, e42, e43, e1234
             other.group0() * Simd32x4::from(-1.0),
             // e23, e31, e12, scalar
-            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, -other.group1()[3] + self[scalar]]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, self[scalar] - other.group1()[3]]),
         );
     }
 }
@@ -549,7 +549,7 @@ impl std::ops::Sub<MultiVector> for Scalar {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([-other.group0()[0] + self[scalar], other.group0()[1] * -1.0]),
+            Simd32x2::from([self[scalar] - other.group0()[0], other.group0()[1] * -1.0]),
             // e1, e2, e3, e4
             other.group1() * Simd32x4::from(-1.0),
             // e41, e42, e43
@@ -633,13 +633,13 @@ impl std::ops::Sub<Scalar> for Scalar {
     // f32        1        0        0
     fn sub(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ -other[scalar] + self[scalar]);
+        return Scalar::from_groups(/* scalar */ self[scalar] - other[scalar]);
     }
 }
 impl std::ops::SubAssign<Scalar> for Scalar {
     fn sub_assign(&mut self, other: Scalar) {
         use crate::elements::*;
-        *self = Scalar::from_groups(/* scalar */ -other[scalar] + self[scalar]);
+        *self = Scalar::from_groups(/* scalar */ self[scalar] - other[scalar]);
     }
 }
 

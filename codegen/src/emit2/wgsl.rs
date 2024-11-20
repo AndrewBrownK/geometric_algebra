@@ -180,10 +180,27 @@ impl Wgsl {
     ) -> anyhow::Result<()> {
         let name = TraitKey::new(multi_vec.name);
         let ucc = name.as_upper_camel();
-        writeln!(w, "struct {ucc} {{")?;
+        let lcc = name.as_lower_camel();
+        write!(w, "\nstruct {ucc} {{\n    ")?;
         for (i, g) in multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
-                writeln!(w, ",")?;
+                write!(w, ",\n    ")?;
+            }
+            let mut g = g.into_vec();
+            for (i, el) in g.clone().into_iter().enumerate() {
+                if i > 0 {
+                    write!(w, ", ")?;
+                }
+                write!(w, "{el}: f32")?;
+            }
+        }
+        writeln!(w, "\n}}")?;
+
+
+        writeln!(w, "struct {ucc}Groups {{")?;
+        for (i, g) in multi_vec.groups().into_iter().enumerate() {
+            if i > 0 {
+                write!(w, ",\n    ")?;
             }
             write!(w, "    // ")?;
             let mut g = g.into_vec();
@@ -194,13 +211,73 @@ impl Wgsl {
                 write!(w, "{el}")?;
             }
             let l = g.len();
+            match l {
+                1 => write!(w, ", 0, 0, 0")?,
+                2 => write!(w, ", 0, 0")?,
+                3 => write!(w, ", 0")?,
+                _ => (),
+            }
             if l > 1 {
-                write!(w, "\n    g{i}_: vec{l}<f32>")?;
+                write!(w, "\n    group{i}_: vec4<f32>")?;
             } else {
-                write!(w, "\n    g{i}_: f32")?;
+                write!(w, "\n    group{i}_: vec4<f32>")?;
             }
         }
         writeln!(w, "\n}}")?;
+
+
+
+        writeln!(w, "fn {lcc}_grouped(self_: {ucc}) -> {ucc}Groups {{")?;
+        write!(w, "    return {ucc}Groups(\n        ")?;
+        for (i, g) in multi_vec.groups().into_iter().enumerate() {
+            if i > 0 {
+                write!(w, ",\n        ")?;
+            }
+            write!(w, "vec4<f32>(")?;
+            let mut g = g.into_vec();
+            let l = g.len();
+            for (i, el) in g.clone().into_iter().enumerate() {
+                if i > 0 {
+                    write!(w, ", ")?;
+                }
+                write!(w, "self_.{el}")?;
+            }
+            match l {
+                1 => write!(w, ", 0.0, 0.0, 0.0")?,
+                2 => write!(w, ", 0.0, 0.0")?,
+                3 => write!(w, ", 0.0")?,
+                _ => (),
+            }
+            write!(w, ")")?;
+        }
+        writeln!(w, "\n    );")?;
+        writeln!(w, "}}")?;
+
+
+        writeln!(w, "fn {lcc}_degroup(self_: {ucc}Groups) -> {ucc} {{")?;
+        write!(w, "    return {ucc}(\n        ")?;
+        for (i, g) in multi_vec.groups().into_iter().enumerate() {
+            if i > 0 {
+                write!(w, ",\n        ")?;
+            }
+            let mut g = g.into_vec();
+            for (j, _) in g.clone().into_iter().enumerate() {
+                if j > 0 {
+                    write!(w, ", ")?;
+                }
+                let j = match j {
+                    0 => "x",
+                    1 => "y",
+                    2 => "z",
+                    3 => "w",
+                    _ => unreachable!("simd vecs max length of 4")
+                };
+                write!(w, "self_.group{i}_.{j}")?;
+            }
+        }
+        writeln!(w, "\n    );")?;
+        writeln!(w, "}}\n")?;
+
         Ok(())
     }
 
@@ -239,36 +316,53 @@ impl Wgsl {
             bail!("We do not support high arity traits yet");
         }
         write!(w, "fn ")?;
-        self.write_type(w, *owner_ty, false)?;
+        self.write_type(w, *owner_ty, false, false)?;
         write!(w, "_{trait_lcc}")?;
         if trait_lcc == "into" {
             let other_ty = type_param.expect("into always has a type param, even if only 1 arg");
             write!(w, "_")?;
-            self.write_type(w, other_ty, false)?;
+            self.write_type(w, other_ty, false, false)?;
         }
         if let (TraitArity::Two, Some(other_ty)) = (def.arity, var_param) {
             write!(w, "_")?;
-            self.write_type(w, *other_ty, false)?;
+            self.write_type(w, *other_ty, false, false)?;
         }
         write!(w, "(")?;
         match (def.arity, var_param) {
             (TraitArity::Zero, _) => {}
             (TraitArity::One, _) => {
                 write!(w, "self_: ")?;
-                self.write_type(w, *owner_ty, true)?
+                self.write_type(w, *owner_ty, true, false)?
             },
             (TraitArity::Two, Some(other_ty)) => {
                 write!(w, "self_: ")?;
-                self.write_type(w, *owner_ty, true)?;
+                self.write_type(w, *owner_ty, true, false)?;
                 write!(w, ", other: ")?;
-                self.write_type(w, *other_ty, true)?
+                self.write_type(w, *other_ty, true, false)?
             }
             _ => panic!("Arity 2 should always have other type"),
         }
         write!(w, ") -> ")?;
         let output_ty = impls.return_expr.expression_type();
-        self.write_type(w, output_ty, true)?;
+        self.write_type(w, output_ty, true, false)?;
         writeln!(w, " {{")?;
+        match (def.arity, var_param) {
+            (TraitArity::Zero, _) => {}
+            (TraitArity::One, _) => {
+                write!(w, "    let self_groups = ")?;
+                self.write_type(w, *owner_ty, false, false)?;
+                write!(w, "_grouped(self_);")?;
+            },
+            (TraitArity::Two, Some(other_ty)) => {
+                write!(w, "    let self_groups = ")?;
+                self.write_type(w, *owner_ty, false, false)?;
+                writeln!(w, "_grouped(self_);")?;
+                write!(w, "    let other_groups = ")?;
+                self.write_type(w, *other_ty, false, false)?;
+                writeln!(w, "_grouped(other);")?;
+            }
+            _ => panic!("Arity 2 should always have other type"),
+        }
         for line in impls.lines.iter() {
             match line {
                 CommentOrVariableDeclaration::Comment(c) => {
@@ -282,19 +376,56 @@ impl Wgsl {
                     }
                     let name = var_dec.name.0.to_string();
                     let mut no = var_dec.name.1;
-                    if no == 0 {
-                        write!(w, "    let {name}: ")?;
-                    } else {
-                        no += 1;
-                        write!(w, "    let {name}_{no}: ")?;
-                    }
                     let guard = expr.read();
                     let x = guard.deref();
                     let x_ty = x.expression_type();
-                    self.write_type(w, x_ty, true)?;
+
+                    let mut is_multivector_var = false;
+                    let mut is_multivector_var_grouped = false;
+                    if let AnyExpression::Class(mve) = &x {
+                        is_multivector_var = true;
+                        if let box MultiVectorVia::Construct(_) = &mve.expr {
+                            is_multivector_var_grouped = true;
+                        }
+                    }
+
+                    let g = if is_multivector_var_grouped { "_groups" } else { "" };
+                    if no == 0 {
+                        write!(w, "    let {name}{g}: ")?;
+                    } else {
+                        let no = no + 1;
+                        write!(w, "    let {name}{g}_{no}: ")?;
+                    }
+                    self.write_type(w, x_ty, true, is_multivector_var_grouped)?;
                     write!(w, " = ")?;
-                    self.write_expression(w, x)?;
+                    self.write_expression(w, x, false, is_multivector_var_grouped)?;
                     writeln!(w, ";")?;
+
+                    if is_multivector_var {
+                        let g = if !is_multivector_var_grouped { "_groups" } else { "" };
+                        if no == 0 {
+                            write!(w, "    let {name}{g}: ")?;
+                        } else {
+                            let no = no + 1;
+                            write!(w, "    let {name}{g}_{no}: ")?;
+                        }
+                        self.write_type(w, x_ty, true, !is_multivector_var_grouped)?;
+                        write!(w, " = ")?;
+                        self.write_type(w, x_ty, false, false)?;
+                        if is_multivector_var_grouped {
+                            write!(w, "_degroup(")?;
+                        } else {
+                            write!(w, "_grouped(")?;
+                        }
+                        let g = if is_multivector_var_grouped { "_groups" } else { "" };
+                        if no == 0 {
+                            write!(w, "{name}{g}")?;
+                        } else {
+                            let no = no + 1;
+                            write!(w, "{name}{g}_{no}")?;
+                        }
+                        writeln!(w, ");")?;
+                    }
                 }
             }
         }
@@ -302,13 +433,13 @@ impl Wgsl {
             self.emit_comment(w, false, c.to_string())?;
         }
         write!(w, "    return ")?;
-        self.write_expression(w, &impls.return_expr)?;
+        self.write_expression(w, &impls.return_expr, false, false)?;
         writeln!(w, ";")?;
         writeln!(w, "}}")?;
         Ok(())
     }
 
-    fn write_type<W: Write>(&self, w: &mut W, data_type: ExpressionType, upper_camel_case: bool) -> anyhow::Result<()> {
+    fn write_type<W: Write>(&self, w: &mut W, data_type: ExpressionType, upper_camel_case: bool, multivector_grouped: bool) -> anyhow::Result<()> {
         match data_type {
             ExpressionType::Int(i) => write!(w, "i32")?,
             ExpressionType::Float(f) => write!(w, "f32")?,
@@ -317,12 +448,13 @@ impl Wgsl {
             ExpressionType::Vec4(v) => write!(w, "vec4<f32>")?,
             ExpressionType::Class(mv) => {
                 let n = mv.name();
+                let g = if multivector_grouped { "Groups" } else { "" };
                 if upper_camel_case {
-                    write!(w, "{n}")?;
+                    write!(w, "{n}{g}")?;
                 } else {
                     let n = TraitKey::new(n);
                     let lcc = n.as_lower_camel();
-                    write!(w, "{lcc}")?;
+                    write!(w, "{lcc}{g}")?;
                 }
             }
         }
@@ -356,14 +488,14 @@ impl Wgsl {
         Ok(())
     }
 
-    fn write_expression<W: Write>(&self, w: &mut W, expr: &AnyExpression) -> anyhow::Result<()> {
+    fn write_expression<W: Write>(&self, w: &mut W, expr: &AnyExpression, f32_as_vec4: bool, multivector_grouped: bool) -> anyhow::Result<()> {
         match expr {
             AnyExpression::Int(e) => self.write_int(w, e)?,
-            AnyExpression::Float(e) => self.write_float(w, e, false)?,
+            AnyExpression::Float(e) => self.write_float(w, e, false, f32_as_vec4)?,
             AnyExpression::Vec2(e) => self.write_vec2(w, e, false)?,
             AnyExpression::Vec3(e) => self.write_vec3(w, e, false)?,
             AnyExpression::Vec4(e) => self.write_vec4(w, e, false)?,
-            AnyExpression::Class(e) => self.write_multi_vec(w, e)?,
+            AnyExpression::Class(e) => self.write_multi_vec(w, e, multivector_grouped)?,
         }
         Ok(())
     }
@@ -405,7 +537,11 @@ impl Wgsl {
         Ok(())
     }
 
-    fn write_float<W: Write>(&self, w: &mut W, expr: &FloatExpr, grouping_provided: bool) -> anyhow::Result<()> {
+    fn write_float<W: Write>(&self, w: &mut W, expr: &FloatExpr, grouping_provided: bool, as_vec4: bool) -> anyhow::Result<()> {
+        let grouping_provided = grouping_provided || as_vec4;
+        if as_vec4 {
+            write!(w, "vec4<f32>(")?;
+        }
         match expr {
             FloatExpr::Variable(v) => {
                 let name = &v.decl.name.0;
@@ -455,28 +591,18 @@ impl Wgsl {
                 }
             }
             FloatExpr::AccessMultiVecGroup(mv, i) => {
-                self.write_multi_vec(w, mv)?;
+                self.write_multi_vec(w, mv, true)?;
                 let mut i = *i;
-                write!(w, ".g{i}_")?;
+                write!(w, ".group{i}_")?;
             }
             FloatExpr::AccessMultiVecFlat(mv, i) => {
-                self.write_multi_vec(w, mv)?;
+                self.write_multi_vec(w, mv, false)?;
                 let mut i = *i as usize;
-                for (group_index, group) in mv.mv_class.groups().iter().enumerate() {
+                for group in mv.mv_class.groups().iter() {
                     let group_size = group.into_vec().len();
                     if i < group_size {
-                        let inner_index = match i {
-                            0 => "x",
-                            1 => "y",
-                            2 => "z",
-                            3 => "w",
-                            _ => unreachable!("i should be less than group_size which is always 4 or less")
-                        };
-                        if group.simd_width() == 1 {
-                            write!(w, ".g{group_index}_")?;
-                        } else {
-                            write!(w, ".g{group_index}_.{inner_index}")?;
-                        }
+                        let el = group.into_vec()[i];
+                        write!(w, ".{el}")?;
                         break;
                     }
                     i = i - group_size;
@@ -486,7 +612,7 @@ impl Wgsl {
                 let method = t.as_lower_camel();
                 let arg_type = TraitKey::new(arg.expression_type().name()).as_lower_camel();
                 write!(w, "{arg_type}_{method}(")?;
-                self.write_multi_vec(w, arg)?;
+                self.write_multi_vec(w, arg, false)?;
                 write!(w, ")")?;
             }
             FloatExpr::Product(v, last_factor) => {
@@ -507,13 +633,13 @@ impl Wgsl {
                     match (*exponent, i > 0) {
                         (f, _) if f == 0.0 => continue,
 
-                        (1.0, false) => self.write_float(w, factor, false)?,
+                        (1.0, false) => self.write_float(w, factor, false, false)?,
                         (-1.0, false) => {
                             if !grouping_provided {
                                 write!(w, "(")?;
                             }
                             write!(w, "1.0/(")?;
-                            self.write_float(w, factor, true)?;
+                            self.write_float(w, factor, true, false)?;
                             write!(w, ")")?;
                             if !grouping_provided {
                                 write!(w, ")")?;
@@ -523,33 +649,33 @@ impl Wgsl {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, "pow(")?;
-                                self.write_float(w, factor, true)?;
+                                self.write_float(w, factor, true, false)?;
                                 write!(w, ", {e})")?;
                             } else {
                                 write!(w, "pow(")?;
-                                self.write_float(w, factor, true)?;
+                                self.write_float(w, factor, true, false)?;
                                 write!(w, ", {e})")?;
                             }
                         }
 
                         (1.0, true) => {
                             write!(w, " * ")?;
-                            self.write_float(w, factor, false)?;
+                            self.write_float(w, factor, false, false)?;
                         }
                         (-1.0, true) => {
                             write!(w, " / (")?;
-                            self.write_float(w, factor, true)?;
+                            self.write_float(w, factor, true, false)?;
                             write!(w, ")")?;
                         }
                         (e, true) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, " * pow(")?;
-                                self.write_float(w, factor, true)?;
+                                self.write_float(w, factor, true, false)?;
                                 write!(w, ", {e})")?;
                             } else {
                                 write!(w, " * pow(")?;
-                                self.write_float(w, factor, true)?;
+                                self.write_float(w, factor, true, false)?;
                                 write!(w, ", {e})")?;
                             }
                         }
@@ -610,7 +736,7 @@ impl Wgsl {
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_float(w, addend, false)?;
+                    self.write_float(w, addend, false, false)?;
                 }
                 match (*last_addend, len > 1) {
                     (fl, _) if fl == 0.0 => {}
@@ -637,10 +763,10 @@ impl Wgsl {
                 } else {
                     write!(w, "pow(")?;
                 }
-                self.write_float(w, factor, true)?;
+                self.write_float(w, factor, true, false)?;
                 write!(w, ", ")?;
                 if let Some(exponent) = exponent {
-                    self.write_float(w, exponent, *last_exponent == 1.0)?;
+                    self.write_float(w, exponent, *last_exponent == 1.0, false)?;
                     if *last_exponent != 1.0 {
                         write!(w, " * ")?;
                     }
@@ -650,6 +776,9 @@ impl Wgsl {
                 }
                 write!(w, ")")?;
             }
+        }
+        if as_vec4 {
+            write!(w, ", 0.0, 0.0, 0.0)")?;
         }
         Ok(())
     }
@@ -671,20 +800,20 @@ impl Wgsl {
                 }
             }
             Vec2Expr::Gather1(f) => {
-                write!(w, "vec2<f32>(")?;
-                self.write_float(w, f, true)?;
-                write!(w, ")")?;
+                write!(w, "vec4<f32>(vec2<f32>(")?;
+                self.write_float(w, f, true, false)?;
+                write!(w, "), 0.0, 0.0)")?;
             }
             Vec2Expr::Gather2(f0, f1) => {
-                write!(w, "vec2<f32>(")?;
-                self.write_float(w, f0, true)?;
+                write!(w, "vec4<f32>(")?;
+                self.write_float(w, f0, true, false)?;
                 write!(w, ", ")?;
-                self.write_float(w, f1, true)?;
-                write!(w, ")")?;
+                self.write_float(w, f1, true, false)?;
+                write!(w, ", 0.0, 0.0)")?;
             }
             Vec2Expr::AccessMultiVecGroup(mv, i) => {
-                self.write_multi_vec(w, mv)?;
-                write!(w, ".g{i}_")?;
+                self.write_multi_vec(w, mv, true)?;
+                write!(w, ".group{i}_")?;
             }
             Vec2Expr::Product(v, last_factor) => {
                 let has_last_factor = *last_factor != [1.0; 2];
@@ -870,22 +999,22 @@ impl Wgsl {
                 }
             }
             Vec3Expr::Gather1(f) => {
-                write!(w, "vec3<f32>(")?;
-                self.write_float(w, f, true)?;
-                write!(w, ")")?;
+                write!(w, "vec4<f32>(vec3<f32>(")?;
+                self.write_float(w, f, true, false)?;
+                write!(w, "), 0.0)")?;
             }
             Vec3Expr::Gather3(f0, f1, f2) => {
-                write!(w, "vec3<f32>(")?;
-                self.write_float(w, f0, true)?;
+                write!(w, "vec4<f32>(")?;
+                self.write_float(w, f0, true, false)?;
                 write!(w, ", ")?;
-                self.write_float(w, f1, true)?;
+                self.write_float(w, f1, true, false)?;
                 write!(w, ", ")?;
-                self.write_float(w, f2, true)?;
-                write!(w, ")")?;
+                self.write_float(w, f2, true, false)?;
+                write!(w, ", 0.0)")?;
             }
             Vec3Expr::AccessMultiVecGroup(mv, i) => {
-                self.write_multi_vec(w, mv)?;
-                write!(w, ".g{i}_")?;
+                self.write_multi_vec(w, mv, true)?;
+                write!(w, ".group{i}_")?;
             }
             Vec3Expr::Product(v, last_factor) => {
                 let has_last_factor = *last_factor != [1.0; 3];
@@ -1086,23 +1215,23 @@ impl Wgsl {
             }
             Vec4Expr::Gather1(f) => {
                 write!(w, "vec4<f32>(")?;
-                self.write_float(w, f, true)?;
+                self.write_float(w, f, true, false)?;
                 write!(w, ")")?;
             }
             Vec4Expr::Gather4(f0, f1, f2, f3) => {
                 write!(w, "vec4<f32>(")?;
-                self.write_float(w, f0, true)?;
+                self.write_float(w, f0, true, false)?;
                 write!(w, ", ")?;
-                self.write_float(w, f1, true)?;
+                self.write_float(w, f1, true, false)?;
                 write!(w, ", ")?;
-                self.write_float(w, f2, true)?;
+                self.write_float(w, f2, true, false)?;
                 write!(w, ", ")?;
-                self.write_float(w, f3, true)?;
+                self.write_float(w, f3, true, false)?;
                 write!(w, ")")?;
             }
             Vec4Expr::AccessMultiVecGroup(mv, i) => {
-                self.write_multi_vec(w, mv)?;
-                write!(w, ".g{i}_")?;
+                self.write_multi_vec(w, mv, true)?;
+                write!(w, ".group{i}_")?;
             }
             Vec4Expr::Product(v, last_factor) => {
                 let has_last_factor = *last_factor != [1.0; 4];
@@ -1301,32 +1430,43 @@ impl Wgsl {
         Ok(())
     }
 
-    fn write_multi_vec<W: Write>(&self, w: &mut W, expr: &MultiVectorExpr) -> anyhow::Result<()> {
+    fn write_multi_vec<W: Write>(&self, w: &mut W, expr: &MultiVectorExpr, grouped: bool) -> anyhow::Result<()> {
         let mv = expr.mv_class;
+        let n = mv.name();
+        let tk = TraitKey::new(n);
+        let ucc = tk.as_upper_camel();
+        let lcc = tk.as_lower_camel();
         match &*expr.expr {
             MultiVectorVia::Variable(v) => {
                 let name = &v.decl.name.0;
                 let mut no = v.decl.name.1;
+                let g = if grouped { "_groups" } else { "" };
                 if no == 0 {
                     if name.as_str() == "self" {
-                        write!(w, "self_")?;
+                        if grouped {
+                            write!(w, "self_")?;
+                        } else {
+                            write!(w, "self{g}")?;
+                        }
                     } else {
-                        write!(w, "{name}")?;
+                        write!(w, "{name}{g}")?;
                     }
                 } else {
                     no += 1;
-                    write!(w, "{name}_{no}")?;
+                    write!(w, "{name}{g}_{no}")?;
                 }
             }
             MultiVectorVia::Construct(v) => {
-                let n = mv.name();
-                write!(w, "{n}(")?;
+                if !grouped {
+                    write!(w, "{lcc}_degroup(")?;
+                }
+                write!(w, "{ucc}Groups(")?;
                 let groups = mv.groups();
                 for (i, g) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, ", ")?;
                     }
-                    write!(w, "/* ")?;
+                    write!(w, "\n        /* ")?;
                     for (i, el) in groups[i].into_vec().into_iter().enumerate() {
                         if i > 0 {
                             write!(w, ", ")?;
@@ -1335,58 +1475,91 @@ impl Wgsl {
                     }
                     write!(w, " */ ")?;
                     match g {
-                        MultiVectorGroupExpr::JustFloat(f) => self.write_float(w, f, true)?,
+                        MultiVectorGroupExpr::JustFloat(f) => self.write_float(w, f, true, true)?,
                         MultiVectorGroupExpr::Vec2(g) => self.write_vec2(w, g, true)?,
                         MultiVectorGroupExpr::Vec3(g) => self.write_vec3(w, g, true)?,
                         MultiVectorGroupExpr::Vec4(g) => self.write_vec4(w, g, true)?,
                     }
+                }
+                if !grouped {
+                    write!(w, "\n    )")?;
                 }
                 write!(w, ")")?;
             }
             MultiVectorVia::TraitInvoke11ToClass(t, arg) => {
                 let method = t.as_lower_camel();
                 let arg_type = TraitKey::new(arg.expression_type().name()).as_lower_camel();
+                if grouped {
+                    write!(w, "{lcc}_grouped(")?;
+                }
                 write!(w, "{arg_type}_{method}(")?;
-                self.write_multi_vec(w, arg)?;
+                self.write_multi_vec(w, arg, false)?;
                 write!(w, ")")?;
+                if grouped {
+                    write!(w, ")")?;
+                }
             }
             MultiVectorVia::TraitInvoke21ToClass(t, arg, mv) => {
                 let method = t.as_lower_camel();
                 let a_type = TraitKey::new(arg.expression_type().name()).as_lower_camel();
                 let b_type = TraitKey::new(mv.name()).as_lower_camel();
+                if grouped {
+                    write!(w, "{lcc}_grouped(")?;
+                }
                 write!(w, "{a_type}_{method}_{b_type}(")?;
-                self.write_multi_vec(w, arg)?;
+                self.write_multi_vec(w, arg, false)?;
                 write!(w, ")")?;
+                if grouped {
+                    write!(w, ")")?;
+                }
             }
             MultiVectorVia::TraitInvoke22ToClass(t, a, b) => {
                 let method = t.as_lower_camel();
                 let a_type = TraitKey::new(a.expression_type().name()).as_lower_camel();
                 let b_type = TraitKey::new(b.expression_type().name()).as_lower_camel();
+                if grouped {
+                    write!(w, "{lcc}_grouped(")?;
+                }
                 write!(w, "{a_type}_{method}_{b_type}(")?;
-                self.write_multi_vec(w, a)?;
+                self.write_multi_vec(w, a, false)?;
                 write!(w, ", ")?;
-                self.write_multi_vec(w, b)?;
+                self.write_multi_vec(w, b, false)?;
                 write!(w, ")")?;
+                if grouped {
+                    write!(w, ")")?;
+                }
             }
             MultiVectorVia::TraitInvoke12iToClass(t, a, b) => {
                 let method = t.as_lower_camel();
                 let a_type = TraitKey::new(a.expression_type().name()).as_lower_camel();
                 let b_type = TraitKey::new(a.expression_type().name()).as_lower_camel();
+                if grouped {
+                    write!(w, "{lcc}_grouped(")?;
+                }
                 write!(w, "{a_type}_{method}_{b_type}(")?;
-                self.write_multi_vec(w, a)?;
+                self.write_multi_vec(w, a, false)?;
                 write!(w, ", ")?;
                 self.write_int(w, b)?;
                 write!(w, ")")?;
+                if grouped {
+                    write!(w, ")")?;
+                }
             }
             MultiVectorVia::TraitInvoke12fToClass(t, a, b) => {
                 let method = t.as_lower_camel();
                 let a_type = TraitKey::new(a.expression_type().name()).as_lower_camel();
                 let b_type = TraitKey::new(a.expression_type().name()).as_lower_camel();
+                if grouped {
+                    write!(w, "{lcc}_grouped(")?;
+                }
                 write!(w, "{a_type}_{method}_{b_type}(")?;
-                self.write_multi_vec(w, a)?;
+                self.write_multi_vec(w, a, false)?;
                 write!(w, ", ")?;
-                self.write_float(w, b, true)?;
+                self.write_float(w, b, true, false)?;
                 write!(w, ")")?;
+                if grouped {
+                    write!(w, ")")?;
+                }
             }
         }
         Ok(())

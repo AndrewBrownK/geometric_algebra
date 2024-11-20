@@ -361,13 +361,13 @@ impl std::ops::Sub<AntiScalar> for AntiScalar {
     // f32        1        0        0
     fn sub(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
-        return AntiScalar::from_groups(/* e1234 */ -other[e1234] + self[e1234]);
+        return AntiScalar::from_groups(/* e1234 */ self[e1234] - other[e1234]);
     }
 }
 impl std::ops::SubAssign<AntiScalar> for AntiScalar {
     fn sub_assign(&mut self, other: AntiScalar) {
         use crate::elements::*;
-        *self = AntiScalar::from_groups(/* e1234 */ -other[e1234] + self[e1234]);
+        *self = AntiScalar::from_groups(/* e1234 */ self[e1234] - other[e1234]);
     }
 }
 impl std::ops::Sub<DualNum> for AntiScalar {
@@ -377,7 +377,7 @@ impl std::ops::Sub<DualNum> for AntiScalar {
     // f32        1        1        0
     fn sub(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([other.group0()[0] * -1.0, -other.group0()[1] + self[e1234]]));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([other.group0()[0] * -1.0, self[e1234] - other.group0()[1]]));
     }
 }
 impl std::ops::Sub<Flector> for AntiScalar {
@@ -451,7 +451,7 @@ impl std::ops::Sub<Motor> for AntiScalar {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, -other.group0()[3] + self[e1234]]),
+            Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, self[e1234] - other.group0()[3]]),
             // e23, e31, e12, scalar
             other.group1() * Simd32x4::from(-1.0),
         );
@@ -471,7 +471,7 @@ impl std::ops::Sub<MultiVector> for AntiScalar {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([other.group0()[0] * -1.0, -other.group0()[1] + self[e1234]]),
+            Simd32x2::from([other.group0()[0] * -1.0, self[e1234] - other.group0()[1]]),
             // e1, e2, e3, e4
             other.group1() * Simd32x4::from(-1.0),
             // e41, e42, e43

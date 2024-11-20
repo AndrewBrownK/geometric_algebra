@@ -501,12 +501,12 @@ impl std::ops::Sub<DualNum> for DualNum {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn sub(self, other: DualNum) -> Self::Output {
-        return DualNum::from_groups(/* scalar, e1234 */ -other.group0() + self.group0());
+        return DualNum::from_groups(/* scalar, e1234 */ self.group0() - other.group0());
     }
 }
 impl std::ops::SubAssign<DualNum> for DualNum {
     fn sub_assign(&mut self, other: DualNum) {
-        *self = DualNum::from_groups(/* scalar, e1234 */ -other.group0() + self.group0());
+        *self = DualNum::from_groups(/* scalar, e1234 */ self.group0() - other.group0());
     }
 }
 impl std::ops::Sub<Flector> for DualNum {

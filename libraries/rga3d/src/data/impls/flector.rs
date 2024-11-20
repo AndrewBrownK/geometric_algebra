@@ -641,9 +641,9 @@ impl std::ops::Sub<Flector> for Flector {
     fn sub(self, other: Flector) -> Self::Output {
         return Flector::from_groups(
             // e1, e2, e3, e4
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e423, e431, e412, e321
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
         );
     }
 }
@@ -651,9 +651,9 @@ impl std::ops::SubAssign<Flector> for Flector {
     fn sub_assign(&mut self, other: Flector) {
         *self = Flector::from_groups(
             // e1, e2, e3, e4
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e423, e431, e412, e321
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
         );
     }
 }

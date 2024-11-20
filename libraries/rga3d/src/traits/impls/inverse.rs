@@ -99,7 +99,7 @@ impl Inverse for Motor {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            -f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2),
+            f32::powi(self.group1()[3], 2) - f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2),
         );
         return Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
     }
@@ -118,10 +118,10 @@ impl Inverse for MultiVector {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            f32::powi(self.group0()[0], 2) - f32::powi(self.group3()[0], 2) - f32::powi(self.group3()[1], 2) - f32::powi(self.group3()[2], 2)
-                + f32::powi(self.group1()[0], 2)
-                + f32::powi(self.group1()[1], 2)
-                + f32::powi(self.group1()[2], 2)
+            f32::powi(self.group0()[0], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2)
+                - f32::powi(self.group3()[0], 2)
+                - f32::powi(self.group3()[1], 2)
+                - f32::powi(self.group3()[2], 2)
                 - f32::powi(self.group4()[3], 2),
         );
         return Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);

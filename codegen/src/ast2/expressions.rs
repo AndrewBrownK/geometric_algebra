@@ -3107,6 +3107,15 @@ impl FloatExpr {
         }
     }
 }
+
+// TODO see in wgsl "horizon_add_motor", "horizon_add_line", and perhaps several other places
+//  it'd be nice to add AST for vec2 -> vec3, vec2 -> vec4, and vec3 -> vec4, so that
+//  we can FloatExpr::AccessMultiVecGroup only as much as necessary (and not excessively), so that
+//  we can safely simplify FloatExpr::AccessMultiVecGroup into FloatExpr::AccessMultiVecFlat without
+//  obstructing SIMD transposition. The reason we want to convert to flat where possible is to make
+//  the wgsl shorter and easier to read. Ideally (at least in wgsl) we should never have to access
+//  x,y,z,w on a groupN_, we should either get the whole group or access flat.
+
 impl Vec2Expr {
     pub(crate) fn simplify(&mut self) {
         self.simplify_nuanced(false, false);

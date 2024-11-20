@@ -1105,7 +1105,7 @@ impl std::ops::Sub<DualNum> for MultiVector {
     fn sub(self, other: DualNum) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e1234
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e1, e2, e3, e4
             self.group1(),
             // e41, e42, e43
@@ -1121,7 +1121,7 @@ impl std::ops::SubAssign<DualNum> for MultiVector {
     fn sub_assign(&mut self, other: DualNum) {
         *self = MultiVector::from_groups(
             // scalar, e1234
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e1, e2, e3, e4
             self.group1(),
             // e41, e42, e43
@@ -1144,13 +1144,13 @@ impl std::ops::Sub<Flector> for MultiVector {
             // scalar, e1234
             self.group0(),
             // e1, e2, e3, e4
-            -other.group0() + self.group1(),
+            self.group1() - other.group0(),
             // e41, e42, e43
             self.group2(),
             // e23, e31, e12
             self.group3(),
             // e423, e431, e412, e321
-            -other.group1() + self.group4(),
+            self.group4() - other.group1(),
         );
     }
 }
@@ -1160,13 +1160,13 @@ impl std::ops::SubAssign<Flector> for MultiVector {
             // scalar, e1234
             self.group0(),
             // e1, e2, e3, e4
-            -other.group0() + self.group1(),
+            self.group1() - other.group0(),
             // e41, e42, e43
             self.group2(),
             // e23, e31, e12
             self.group3(),
             // e423, e431, e412, e321
-            -other.group1() + self.group4(),
+            self.group4() - other.group1(),
         );
     }
 }
@@ -1221,9 +1221,9 @@ impl std::ops::Sub<Line> for MultiVector {
             // e1, e2, e3, e4
             self.group1(),
             // e41, e42, e43
-            -other.group0() + self.group2(),
+            self.group2() - other.group0(),
             // e23, e31, e12
-            -other.group1() + self.group3(),
+            self.group3() - other.group1(),
             // e423, e431, e412, e321
             self.group4(),
         );
@@ -1237,9 +1237,9 @@ impl std::ops::SubAssign<Line> for MultiVector {
             // e1, e2, e3, e4
             self.group1(),
             // e41, e42, e43
-            -other.group0() + self.group2(),
+            self.group2() - other.group0(),
             // e23, e31, e12
-            -other.group1() + self.group3(),
+            self.group3() - other.group1(),
             // e423, e431, e412, e321
             self.group4(),
         );
@@ -1299,15 +1299,15 @@ impl std::ops::Sub<MultiVector> for MultiVector {
     fn sub(self, other: MultiVector) -> Self::Output {
         return MultiVector::from_groups(
             // scalar, e1234
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e1, e2, e3, e4
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
             // e41, e42, e43
-            -other.group2() + self.group2(),
+            self.group2() - other.group2(),
             // e23, e31, e12
-            -other.group3() + self.group3(),
+            self.group3() - other.group3(),
             // e423, e431, e412, e321
-            -other.group4() + self.group4(),
+            self.group4() - other.group4(),
         );
     }
 }
@@ -1315,15 +1315,15 @@ impl std::ops::SubAssign<MultiVector> for MultiVector {
     fn sub_assign(&mut self, other: MultiVector) {
         *self = MultiVector::from_groups(
             // scalar, e1234
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e1, e2, e3, e4
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
             // e41, e42, e43
-            -other.group2() + self.group2(),
+            self.group2() - other.group2(),
             // e23, e31, e12
-            -other.group3() + self.group3(),
+            self.group3() - other.group3(),
             // e423, e431, e412, e321
-            -other.group4() + self.group4(),
+            self.group4() - other.group4(),
         );
     }
 }

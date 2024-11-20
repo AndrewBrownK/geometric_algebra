@@ -523,7 +523,7 @@ impl std::ops::Sub<Flector> for Point {
     fn sub(self, other: Flector) -> Self::Output {
         return Flector::from_groups(
             // e1, e2, e3, e4
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e423, e431, e412, e321
             other.group1() * Simd32x4::from(-1.0),
         );
@@ -604,7 +604,7 @@ impl std::ops::Sub<MultiVector> for Point {
             // scalar, e1234
             other.group0() * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
-            -other.group1() + self.group0(),
+            self.group0() - other.group1(),
             // e41, e42, e43
             other.group2() * Simd32x3::from(-1.0),
             // e23, e31, e12
@@ -653,12 +653,12 @@ impl std::ops::Sub<Point> for Point {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: Point) -> Self::Output {
-        return Point::from_groups(/* e1, e2, e3, e4 */ -other.group0() + self.group0());
+        return Point::from_groups(/* e1, e2, e3, e4 */ self.group0() - other.group0());
     }
 }
 impl std::ops::SubAssign<Point> for Point {
     fn sub_assign(&mut self, other: Point) {
-        *self = Point::from_groups(/* e1, e2, e3, e4 */ -other.group0() + self.group0());
+        *self = Point::from_groups(/* e1, e2, e3, e4 */ self.group0() - other.group0());
     }
 }
 impl std::ops::Sub<Scalar> for Point {

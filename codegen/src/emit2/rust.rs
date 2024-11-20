@@ -2806,7 +2806,7 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
                     if no == 0 {
                         write!(w, "let {name} = ")?;
                     } else {
-                        no += 1;
+                        let no = no + 1;
                         write!(w, "let {name}_{no} = ")?;
                     }
                     self.write_expression(w, expr.read().deref())?;

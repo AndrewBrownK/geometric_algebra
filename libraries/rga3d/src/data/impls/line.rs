@@ -538,12 +538,12 @@ impl std::ops::Sub<Line> for Line {
     //   simd3        2        0        0
     // no simd        6        0        0
     fn sub(self, other: Line) -> Self::Output {
-        return Line::from_groups(/* e41, e42, e43 */ -other.group0() + self.group0(), /* e23, e31, e12 */ -other.group1() + self.group1());
+        return Line::from_groups(/* e41, e42, e43 */ self.group0() - other.group0(), /* e23, e31, e12 */ self.group1() - other.group1());
     }
 }
 impl std::ops::SubAssign<Line> for Line {
     fn sub_assign(&mut self, other: Line) {
-        *self = Line::from_groups(/* e41, e42, e43 */ -other.group0() + self.group0(), /* e23, e31, e12 */ -other.group1() + self.group1());
+        *self = Line::from_groups(/* e41, e42, e43 */ self.group0() - other.group0(), /* e23, e31, e12 */ self.group1() - other.group1());
     }
 }
 impl std::ops::Sub<Motor> for Line {

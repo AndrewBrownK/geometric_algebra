@@ -410,21 +410,21 @@ impl GeometricProduct<Flector> for Flector {
                 (other.group0()[1] * self.group1()[2]) - (other.group1()[1] * self.group0()[2]),
                 (other.group0()[2] * self.group1()[0]) - (other.group1()[2] * self.group0()[0]),
                 (other.group0()[0] * self.group1()[1]) - (other.group1()[0] * self.group0()[1]),
-                -(other.group0()[3] * self.group1()[3]) + (other.group1()[3] * self.group0()[3]),
+                (other.group1()[3] * self.group0()[3]) - (other.group0()[3] * self.group1()[3]),
             ]) + (Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]) * crate::swizzle!(self.group0(), 3, 3, 3, 0))
+                + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[2]]) * crate::swizzle!(other.group1(), 3, 3, 3, 2))
+                + (crate::swizzle!(other.group1(), 2, 0, 1, 1) * crate::swizzle!(self.group0(), 1, 2, 0, 1))
                 - (Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[2]]) * crate::swizzle!(self.group1(), 3, 3, 3, 2))
                 - (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]]) * crate::swizzle!(other.group0(), 3, 3, 3, 1))
-                + (Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[2]]) * crate::swizzle!(other.group1(), 3, 3, 3, 2))
-                - (crate::swizzle!(other.group0(), 2, 0, 1, 0) * crate::swizzle!(self.group1(), 1, 2, 0, 0))
-                + (crate::swizzle!(other.group1(), 2, 0, 1, 1) * crate::swizzle!(self.group0(), 1, 2, 0, 1)),
+                - (crate::swizzle!(other.group0(), 2, 0, 1, 0) * crate::swizzle!(self.group1(), 1, 2, 0, 0)),
             // e23, e31, e12, scalar
             Simd32x4::from([
                 -(other.group0()[1] * self.group0()[2]) - (other.group1()[3] * self.group0()[0]),
                 -(other.group0()[2] * self.group0()[0]) - (other.group1()[3] * self.group0()[1]),
                 -(other.group0()[0] * self.group0()[1]) - (other.group1()[3] * self.group0()[2]),
                 (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2]),
-            ]) - (Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]))
-                + (crate::swizzle!(other.group0(), 2, 0, 1, 0) * crate::swizzle!(self.group0(), 1, 2, 0, 0)),
+            ]) + (crate::swizzle!(other.group0(), 2, 0, 1, 0) * crate::swizzle!(self.group0(), 1, 2, 0, 0))
+                - (Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]])),
         );
     }
 }
@@ -470,11 +470,10 @@ impl GeometricProduct<Line> for Flector {
             Simd32x4::from([
                 (other.group0()[0] * self.group1()[3]) + (other.group0()[1] * self.group0()[2]) + (other.group1()[0] * self.group0()[3]) + (other.group1()[1] * self.group1()[2])
                     - (other.group1()[2] * self.group1()[1]),
-                (other.group0()[1] * self.group1()[3]) + (other.group0()[2] * self.group0()[0]) - (other.group1()[0] * self.group1()[2])
-                    + (other.group1()[1] * self.group0()[3])
-                    + (other.group1()[2] * self.group1()[0]),
-                (other.group0()[0] * self.group0()[1]) + (other.group0()[2] * self.group1()[3]) + (other.group1()[0] * self.group1()[1]) - (other.group1()[1] * self.group1()[0])
-                    + (other.group1()[2] * self.group0()[3]),
+                (other.group0()[1] * self.group1()[3]) + (other.group0()[2] * self.group0()[0]) + (other.group1()[1] * self.group0()[3]) + (other.group1()[2] * self.group1()[0])
+                    - (other.group1()[0] * self.group1()[2]),
+                (other.group0()[0] * self.group0()[1]) + (other.group0()[2] * self.group1()[3]) + (other.group1()[0] * self.group1()[1]) + (other.group1()[2] * self.group0()[3])
+                    - (other.group1()[1] * self.group1()[0]),
                 -(other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2]),
             ]) - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * crate::swizzle!(self.group0(), 1, 2, 0, 0)),
         );
@@ -502,8 +501,8 @@ impl GeometricProduct<Motor> for Flector {
                     - (self.group1()[1] * other.group1()[1])
                     - (self.group1()[2] * other.group1()[2]),
             ]) + (Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[3]]))
-                - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * crate::swizzle!(self.group0(), 1, 2, 0, 0))
-                + (crate::swizzle!(self.group0(), 0, 0, 1, 3) * crate::swizzle!(other.group1(), 3, 2, 0, 3)),
+                + (crate::swizzle!(self.group0(), 0, 0, 1, 3) * crate::swizzle!(other.group1(), 3, 2, 0, 3))
+                - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * crate::swizzle!(self.group0(), 1, 2, 0, 0)),
             // e423, e431, e412, e321
             Simd32x4::from([
                 (self.group0()[0] * other.group0()[3])
@@ -564,17 +563,17 @@ impl GeometricProduct<MultiVector> for Flector {
                 - (Simd32x4::from([other.group3()[2], other.group3()[0], other.group3()[1], other.group2()[0]]) * crate::swizzle!(self.group0(), 1, 2, 0, 0)),
             // e41, e42, e43
             Simd32x3::from([
-                (self.group0()[1] * other.group4()[2]) - (self.group0()[2] * other.group4()[1]) - (self.group1()[1] * other.group1()[2]) + (self.group1()[2] * other.group1()[1]),
-                -(self.group0()[0] * other.group4()[2]) + (self.group0()[2] * other.group4()[0]) + (self.group1()[0] * other.group1()[2]) - (self.group1()[2] * other.group1()[0]),
-                (self.group0()[0] * other.group4()[1]) - (self.group0()[1] * other.group4()[0]) - (self.group1()[0] * other.group1()[1]) + (self.group1()[1] * other.group1()[0]),
+                (self.group0()[1] * other.group4()[2]) + (self.group1()[2] * other.group1()[1]) - (self.group0()[2] * other.group4()[1]) - (self.group1()[1] * other.group1()[2]),
+                (self.group0()[2] * other.group4()[0]) + (self.group1()[0] * other.group1()[2]) - (self.group0()[0] * other.group4()[2]) - (self.group1()[2] * other.group1()[0]),
+                (self.group0()[0] * other.group4()[1]) + (self.group1()[1] * other.group1()[0]) - (self.group0()[1] * other.group4()[0]) - (self.group1()[0] * other.group1()[1]),
             ]) + (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
+                + (Simd32x3::from(other.group4()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
                 - (Simd32x3::from(self.group1()[3]) * Simd32x3::from([other.group4()[0], other.group4()[1], other.group4()[2]]))
-                - (Simd32x3::from(other.group1()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
-                + (Simd32x3::from(other.group4()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]])),
+                - (Simd32x3::from(other.group1()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])),
             // e23, e31, e12
             Simd32x3::from([
                 (self.group0()[1] * other.group1()[2]) - (self.group0()[2] * other.group1()[1]),
-                -(self.group0()[0] * other.group1()[2]) + (self.group0()[2] * other.group1()[0]),
+                (self.group0()[2] * other.group1()[0]) - (self.group0()[0] * other.group1()[2]),
                 (self.group0()[0] * other.group1()[1]) - (self.group0()[1] * other.group1()[0]),
             ]) - (Simd32x3::from(self.group1()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
                 - (Simd32x3::from(other.group4()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])),
@@ -586,12 +585,18 @@ impl GeometricProduct<MultiVector> for Flector {
                     + (other.group3()[0] * self.group0()[3])
                     + (other.group3()[1] * self.group1()[2])
                     - (other.group3()[2] * self.group1()[1]),
-                (other.group0()[1] * self.group0()[1]) + (other.group2()[1] * self.group1()[3]) + (other.group2()[2] * self.group0()[0]) - (other.group3()[0] * self.group1()[2])
+                (other.group0()[1] * self.group0()[1])
+                    + (other.group2()[1] * self.group1()[3])
+                    + (other.group2()[2] * self.group0()[0])
                     + (other.group3()[1] * self.group0()[3])
-                    + (other.group3()[2] * self.group1()[0]),
-                (other.group0()[1] * self.group0()[2]) + (other.group2()[0] * self.group0()[1]) + (other.group2()[2] * self.group1()[3]) + (other.group3()[0] * self.group1()[1])
-                    - (other.group3()[1] * self.group1()[0])
-                    + (other.group3()[2] * self.group0()[3]),
+                    + (other.group3()[2] * self.group1()[0])
+                    - (other.group3()[0] * self.group1()[2]),
+                (other.group0()[1] * self.group0()[2])
+                    + (other.group2()[0] * self.group0()[1])
+                    + (other.group2()[2] * self.group1()[3])
+                    + (other.group3()[0] * self.group1()[1])
+                    + (other.group3()[2] * self.group0()[3])
+                    - (other.group3()[1] * self.group1()[0]),
                 -(other.group3()[1] * self.group0()[1]) - (other.group3()[2] * self.group0()[2]),
             ]) + (Simd32x4::from(other.group0()[0]) * self.group1())
                 - (Simd32x4::from([other.group2()[2], other.group2()[0], other.group2()[1], other.group3()[0]]) * crate::swizzle!(self.group0(), 1, 2, 0, 0)),
@@ -894,7 +899,7 @@ impl GeometricProduct<Flector> for Line {
             Simd32x4::from([
                 (self.group1()[0] * other.group1()[3]) - (self.group1()[1] * other.group0()[2]),
                 (self.group1()[1] * other.group1()[3]) - (self.group1()[2] * other.group0()[0]),
-                -(self.group1()[0] * other.group0()[1]) + (self.group1()[2] * other.group1()[3]),
+                (self.group1()[2] * other.group1()[3]) - (self.group1()[0] * other.group0()[1]),
                 (self.group0()[1] * other.group0()[1]) + (self.group0()[2] * other.group0()[2])
                     - (self.group1()[0] * other.group1()[0])
                     - (self.group1()[1] * other.group1()[1])
@@ -902,13 +907,15 @@ impl GeometricProduct<Flector> for Line {
             ]) + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * crate::swizzle!(other.group0(), 1, 2, 0, 0)),
             // e423, e431, e412, e321
             Simd32x4::from([
-                -(self.group0()[0] * other.group1()[3]) + (self.group0()[1] * other.group0()[2]) + (self.group1()[0] * other.group0()[3]) - (self.group1()[1] * other.group1()[2])
-                    + (self.group1()[2] * other.group1()[1]),
-                -(self.group0()[1] * other.group1()[3]) + (self.group0()[2] * other.group0()[0]) + (self.group1()[0] * other.group1()[2]) + (self.group1()[1] * other.group0()[3])
+                (self.group0()[1] * other.group0()[2]) + (self.group1()[0] * other.group0()[3]) + (self.group1()[2] * other.group1()[1])
+                    - (self.group0()[0] * other.group1()[3])
+                    - (self.group1()[1] * other.group1()[2]),
+                (self.group0()[2] * other.group0()[0]) + (self.group1()[0] * other.group1()[2]) + (self.group1()[1] * other.group0()[3])
+                    - (self.group0()[1] * other.group1()[3])
                     - (self.group1()[2] * other.group1()[0]),
-                (self.group0()[0] * other.group0()[1]) - (self.group0()[2] * other.group1()[3]) - (self.group1()[0] * other.group1()[1])
-                    + (self.group1()[1] * other.group1()[0])
-                    + (self.group1()[2] * other.group0()[3]),
+                (self.group0()[0] * other.group0()[1]) + (self.group1()[1] * other.group1()[0]) + (self.group1()[2] * other.group0()[3])
+                    - (self.group0()[2] * other.group1()[3])
+                    - (self.group1()[0] * other.group1()[1]),
                 -(self.group1()[1] * other.group0()[1]) - (self.group1()[2] * other.group0()[2]),
             ]) - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * crate::swizzle!(other.group0(), 1, 2, 0, 0)),
         );
@@ -938,9 +945,9 @@ impl GeometricProduct<Line> for Line {
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                (other.group0()[1] * self.group1()[2]) - (other.group0()[2] * self.group1()[1]) + (other.group1()[1] * self.group0()[2]) - (other.group1()[2] * self.group0()[1]),
-                -(other.group0()[0] * self.group1()[2]) + (other.group0()[2] * self.group1()[0]) - (other.group1()[0] * self.group0()[2]) + (other.group1()[2] * self.group0()[0]),
-                (other.group0()[0] * self.group1()[1]) - (other.group0()[1] * self.group1()[0]) + (other.group1()[0] * self.group0()[1]) - (other.group1()[1] * self.group0()[0]),
+                (other.group0()[1] * self.group1()[2]) + (other.group1()[1] * self.group0()[2]) - (other.group0()[2] * self.group1()[1]) - (other.group1()[2] * self.group0()[1]),
+                (other.group0()[2] * self.group1()[0]) + (other.group1()[2] * self.group0()[0]) - (other.group0()[0] * self.group1()[2]) - (other.group1()[0] * self.group0()[2]),
+                (other.group0()[0] * self.group1()[1]) + (other.group1()[0] * self.group0()[1]) - (other.group0()[1] * self.group1()[0]) - (other.group1()[1] * self.group0()[0]),
                 -(other.group0()[0] * self.group1()[0])
                     - (other.group0()[1] * self.group1()[1])
                     - (other.group0()[2] * self.group1()[2])
@@ -951,7 +958,7 @@ impl GeometricProduct<Line> for Line {
             // e23, e31, e12, scalar
             Simd32x4::from([
                 (other.group1()[1] * self.group1()[2]) - (other.group1()[2] * self.group1()[1]),
-                -(other.group1()[0] * self.group1()[2]) + (other.group1()[2] * self.group1()[0]),
+                (other.group1()[2] * self.group1()[0]) - (other.group1()[0] * self.group1()[2]),
                 (other.group1()[0] * self.group1()[1]) - (other.group1()[1] * self.group1()[0]),
                 -(other.group1()[0] * self.group1()[0]) - (other.group1()[1] * self.group1()[1]) - (other.group1()[2] * self.group1()[2]),
             ]),
@@ -1011,30 +1018,33 @@ impl GeometricProduct<MultiVector> for Line {
             Simd32x4::from([
                 (self.group1()[0] * other.group4()[3]) - (self.group1()[1] * other.group1()[2]),
                 (self.group1()[1] * other.group4()[3]) - (self.group1()[2] * other.group1()[0]),
-                -(self.group1()[0] * other.group1()[1]) + (self.group1()[2] * other.group4()[3]),
+                (self.group1()[2] * other.group4()[3]) - (self.group1()[0] * other.group1()[1]),
                 (self.group0()[1] * other.group1()[1]) + (self.group0()[2] * other.group1()[2])
                     - (self.group1()[0] * other.group4()[0])
                     - (self.group1()[1] * other.group4()[1])
                     - (self.group1()[2] * other.group4()[2]),
             ]) + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * crate::swizzle!(other.group1(), 1, 2, 0, 0)),
             // e41, e42, e43
-            (Simd32x3::from(other.group0()[0]) * self.group0()) + (Simd32x3::from(other.group0()[1]) * self.group1())
-                - (crate::swizzle!(self.group0(), 1, 2, 0) * crate::swizzle!(other.group3(), 2, 0, 1))
+            (Simd32x3::from(other.group0()[0]) * self.group0())
+                + (Simd32x3::from(other.group0()[1]) * self.group1())
                 + (crate::swizzle!(self.group0(), 2, 0, 1) * crate::swizzle!(other.group3(), 1, 2, 0))
-                - (crate::swizzle!(self.group1(), 1, 2, 0) * crate::swizzle!(other.group2(), 2, 0, 1))
-                + (crate::swizzle!(self.group1(), 2, 0, 1) * crate::swizzle!(other.group2(), 1, 2, 0)),
+                + (crate::swizzle!(self.group1(), 2, 0, 1) * crate::swizzle!(other.group2(), 1, 2, 0))
+                - (crate::swizzle!(self.group0(), 1, 2, 0) * crate::swizzle!(other.group3(), 2, 0, 1))
+                - (crate::swizzle!(self.group1(), 1, 2, 0) * crate::swizzle!(other.group2(), 2, 0, 1)),
             // e23, e31, e12
-            (Simd32x3::from(other.group0()[0]) * self.group1()) - (crate::swizzle!(self.group1(), 1, 2, 0) * crate::swizzle!(other.group3(), 2, 0, 1))
-                + (crate::swizzle!(self.group1(), 2, 0, 1) * crate::swizzle!(other.group3(), 1, 2, 0)),
+            (Simd32x3::from(other.group0()[0]) * self.group1()) + (crate::swizzle!(self.group1(), 2, 0, 1) * crate::swizzle!(other.group3(), 1, 2, 0))
+                - (crate::swizzle!(self.group1(), 1, 2, 0) * crate::swizzle!(other.group3(), 2, 0, 1)),
             // e423, e431, e412, e321
             Simd32x4::from([
-                -(self.group0()[0] * other.group4()[3]) + (self.group0()[1] * other.group1()[2]) + (self.group1()[0] * other.group1()[3]) - (self.group1()[1] * other.group4()[2])
-                    + (self.group1()[2] * other.group4()[1]),
-                -(self.group0()[1] * other.group4()[3]) + (self.group0()[2] * other.group1()[0]) + (self.group1()[0] * other.group4()[2]) + (self.group1()[1] * other.group1()[3])
+                (self.group0()[1] * other.group1()[2]) + (self.group1()[0] * other.group1()[3]) + (self.group1()[2] * other.group4()[1])
+                    - (self.group0()[0] * other.group4()[3])
+                    - (self.group1()[1] * other.group4()[2]),
+                (self.group0()[2] * other.group1()[0]) + (self.group1()[0] * other.group4()[2]) + (self.group1()[1] * other.group1()[3])
+                    - (self.group0()[1] * other.group4()[3])
                     - (self.group1()[2] * other.group4()[0]),
-                (self.group0()[0] * other.group1()[1]) - (self.group0()[2] * other.group4()[3]) - (self.group1()[0] * other.group4()[1])
-                    + (self.group1()[1] * other.group4()[0])
-                    + (self.group1()[2] * other.group1()[3]),
+                (self.group0()[0] * other.group1()[1]) + (self.group1()[1] * other.group4()[0]) + (self.group1()[2] * other.group1()[3])
+                    - (self.group0()[2] * other.group4()[3])
+                    - (self.group1()[0] * other.group4()[1]),
                 -(self.group1()[1] * other.group1()[1]) - (self.group1()[2] * other.group1()[2]),
             ]) - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * crate::swizzle!(other.group1(), 1, 2, 0, 0)),
         );
@@ -1069,9 +1079,9 @@ impl GeometricProduct<Plane> for Line {
             ]),
             // e423, e431, e412, e321
             Simd32x4::from([
-                -(self.group0()[0] * other.group0()[3]) - (self.group1()[1] * other.group0()[2]) + (self.group1()[2] * other.group0()[1]),
-                -(self.group0()[1] * other.group0()[3]) + (self.group1()[0] * other.group0()[2]) - (self.group1()[2] * other.group0()[0]),
-                -(self.group0()[2] * other.group0()[3]) - (self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[0]),
+                (self.group1()[2] * other.group0()[1]) - (self.group0()[0] * other.group0()[3]) - (self.group1()[1] * other.group0()[2]),
+                (self.group1()[0] * other.group0()[2]) - (self.group0()[1] * other.group0()[3]) - (self.group1()[2] * other.group0()[0]),
+                (self.group1()[1] * other.group0()[0]) - (self.group0()[2] * other.group0()[3]) - (self.group1()[0] * other.group0()[1]),
                 0.0,
             ]),
         );
@@ -1175,10 +1185,10 @@ impl GeometricProduct<Flector> for Motor {
                 0.0,
                 0.0,
                 (other.group0()[2] * self.group0()[2]) - (other.group1()[1] * self.group1()[1]) - (other.group1()[2] * self.group1()[2]) - (other.group1()[3] * self.group0()[3]),
-            ]) - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * crate::swizzle!(self.group1(), 1, 2, 0, 0))
-                + (Simd32x4::from([other.group1()[3], other.group1()[3], other.group1()[3], other.group0()[3]]) * self.group1())
+            ]) + (Simd32x4::from([other.group1()[3], other.group1()[3], other.group1()[3], other.group0()[3]]) * self.group1())
                 + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[3], self.group0()[1]]) * crate::swizzle!(other.group0(), 1, 2, 2, 1))
-                + (Simd32x4::from([self.group1()[3], self.group1()[3], self.group1()[1], self.group0()[0]]) * crate::swizzle!(other.group0(), 0, 1, 0, 0)),
+                + (Simd32x4::from([self.group1()[3], self.group1()[3], self.group1()[1], self.group0()[0]]) * crate::swizzle!(other.group0(), 0, 1, 0, 0))
+                - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * crate::swizzle!(self.group1(), 1, 2, 0, 0)),
             // e423, e431, e412, e321
             Simd32x4::from([
                 (other.group0()[2] * self.group0()[1]) + (other.group1()[0] * self.group1()[3]) + (other.group1()[1] * self.group1()[2]) - (other.group1()[3] * self.group0()[0]),
@@ -1255,8 +1265,8 @@ impl GeometricProduct<Motor> for Motor {
                 (other.group0()[2] * self.group1()[3]) + (other.group0()[3] * self.group1()[2]) + (other.group1()[2] * self.group0()[3]) + (other.group1()[3] * self.group0()[2]),
                 -(other.group0()[1] * self.group1()[1]) - (other.group0()[2] * self.group1()[2]) - (other.group1()[1] * self.group0()[1]) - (other.group1()[2] * self.group0()[2]),
             ]) + (crate::swizzle!(other.group0(), 0, 1, 0, 3) * crate::swizzle!(self.group1(), 3, 3, 1, 3))
-                - (crate::swizzle!(other.group0(), 2, 0, 1, 0) * crate::swizzle!(self.group1(), 1, 2, 0, 0))
                 + (crate::swizzle!(other.group1(), 0, 1, 0, 3) * crate::swizzle!(self.group0(), 3, 3, 1, 3))
+                - (crate::swizzle!(other.group0(), 2, 0, 1, 0) * crate::swizzle!(self.group1(), 1, 2, 0, 0))
                 - (crate::swizzle!(other.group1(), 2, 0, 1, 0) * crate::swizzle!(self.group0(), 1, 2, 0, 0)),
             // e23, e31, e12, scalar
             Simd32x4::from([
@@ -1300,31 +1310,31 @@ impl GeometricProduct<MultiVector> for Motor {
                     - (self.group1()[1] * other.group4()[1])
                     - (self.group1()[2] * other.group4()[2]),
             ]) + (Simd32x4::from([self.group1()[2], self.group1()[3], self.group1()[3], self.group0()[0]]) * crate::swizzle!(other.group1(), 1, 1, 2, 0))
-                - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group4()[0]]) * crate::swizzle!(self.group1(), 1, 2, 0, 0))
-                + (Simd32x4::from([other.group4()[3], other.group1()[2], other.group1()[0], other.group1()[3]]) * crate::swizzle!(self.group1(), 0, 0, 1, 3)),
+                + (Simd32x4::from([other.group4()[3], other.group1()[2], other.group1()[0], other.group1()[3]]) * crate::swizzle!(self.group1(), 0, 0, 1, 3))
+                - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group4()[0]]) * crate::swizzle!(self.group1(), 1, 2, 0, 0)),
             // e41, e42, e43
             (Simd32x3::from(other.group0()[0]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
                 + (Simd32x3::from(other.group0()[1]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
-                - (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * crate::swizzle!(other.group3(), 2, 0, 1))
                 + (Simd32x3::from([self.group0()[2], self.group0()[0], self.group0()[3]]) * crate::swizzle!(other.group3(), 1, 2, 2))
                 + (Simd32x3::from([self.group0()[3], self.group0()[3], self.group0()[1]]) * crate::swizzle!(other.group3(), 0, 1, 0))
-                - (Simd32x3::from([self.group1()[1], self.group1()[2], self.group1()[0]]) * crate::swizzle!(other.group2(), 2, 0, 1))
                 + (Simd32x3::from([self.group1()[2], self.group1()[0], self.group1()[3]]) * crate::swizzle!(other.group2(), 1, 2, 2))
-                + (Simd32x3::from([self.group1()[3], self.group1()[3], self.group1()[1]]) * crate::swizzle!(other.group2(), 0, 1, 0)),
+                + (Simd32x3::from([self.group1()[3], self.group1()[3], self.group1()[1]]) * crate::swizzle!(other.group2(), 0, 1, 0))
+                - (Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[0]]) * crate::swizzle!(other.group3(), 2, 0, 1))
+                - (Simd32x3::from([self.group1()[1], self.group1()[2], self.group1()[0]]) * crate::swizzle!(other.group2(), 2, 0, 1)),
             // e23, e31, e12
             (Simd32x3::from(other.group0()[0]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
-                - (Simd32x3::from([self.group1()[1], self.group1()[2], self.group1()[0]]) * crate::swizzle!(other.group3(), 2, 0, 1))
                 + (Simd32x3::from([self.group1()[2], self.group1()[0], self.group1()[3]]) * crate::swizzle!(other.group3(), 1, 2, 2))
-                + (Simd32x3::from([self.group1()[3], self.group1()[3], self.group1()[1]]) * crate::swizzle!(other.group3(), 0, 1, 0)),
+                + (Simd32x3::from([self.group1()[3], self.group1()[3], self.group1()[1]]) * crate::swizzle!(other.group3(), 0, 1, 0))
+                - (Simd32x3::from([self.group1()[1], self.group1()[2], self.group1()[0]]) * crate::swizzle!(other.group3(), 2, 0, 1)),
             // e423, e431, e412, e321
             Simd32x4::from([
-                -(self.group0()[0] * other.group4()[3]) + (self.group0()[1] * other.group1()[2]) + (self.group1()[2] * other.group4()[1]) + (self.group1()[3] * other.group4()[0]),
-                -(self.group0()[1] * other.group4()[3]) + (self.group0()[2] * other.group1()[0]) + (self.group1()[1] * other.group1()[3]) + (self.group1()[3] * other.group4()[1]),
-                (self.group0()[0] * other.group1()[1]) - (self.group0()[2] * other.group4()[3]) + (self.group1()[2] * other.group1()[3]) + (self.group1()[3] * other.group4()[2]),
+                (self.group0()[1] * other.group1()[2]) + (self.group1()[2] * other.group4()[1]) + (self.group1()[3] * other.group4()[0]) - (self.group0()[0] * other.group4()[3]),
+                (self.group0()[2] * other.group1()[0]) + (self.group1()[1] * other.group1()[3]) + (self.group1()[3] * other.group4()[1]) - (self.group0()[1] * other.group4()[3]),
+                (self.group0()[0] * other.group1()[1]) + (self.group1()[2] * other.group1()[3]) + (self.group1()[3] * other.group4()[2]) - (self.group0()[2] * other.group4()[3]),
                 0.0,
-            ]) - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * crate::swizzle!(other.group1(), 1, 2, 0, 0))
+            ]) + (Simd32x4::from([other.group1()[3], other.group4()[2], other.group4()[0], other.group4()[3]]) * crate::swizzle!(self.group1(), 0, 0, 1, 3))
+                - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[0]]) * crate::swizzle!(other.group1(), 1, 2, 0, 0))
                 - (Simd32x4::from([self.group0()[3], self.group0()[3], self.group0()[3], self.group1()[1]]) * crate::swizzle!(other.group1(), 0, 1, 2, 1))
-                + (Simd32x4::from([other.group1()[3], other.group4()[2], other.group4()[0], other.group4()[3]]) * crate::swizzle!(self.group1(), 0, 0, 1, 3))
                 - (Simd32x4::from([other.group4()[2], other.group4()[0], other.group4()[1], other.group1()[2]]) * crate::swizzle!(self.group1(), 1, 2, 0, 2)),
         );
     }
@@ -1360,9 +1370,9 @@ impl GeometricProduct<Plane> for Motor {
             ]),
             // e423, e431, e412, e321
             Simd32x4::from([
-                -(self.group0()[0] * other.group0()[3]) - (self.group1()[1] * other.group0()[2]) + (self.group1()[2] * other.group0()[1]) + (self.group1()[3] * other.group0()[0]),
-                -(self.group0()[1] * other.group0()[3]) + (self.group1()[0] * other.group0()[2]) - (self.group1()[2] * other.group0()[0]) + (self.group1()[3] * other.group0()[1]),
-                -(self.group0()[2] * other.group0()[3]) - (self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[0]) + (self.group1()[3] * other.group0()[2]),
+                (self.group1()[2] * other.group0()[1]) + (self.group1()[3] * other.group0()[0]) - (self.group0()[0] * other.group0()[3]) - (self.group1()[1] * other.group0()[2]),
+                (self.group1()[0] * other.group0()[2]) + (self.group1()[3] * other.group0()[1]) - (self.group0()[1] * other.group0()[3]) - (self.group1()[2] * other.group0()[0]),
+                (self.group1()[1] * other.group0()[0]) + (self.group1()[3] * other.group0()[2]) - (self.group0()[2] * other.group0()[3]) - (self.group1()[0] * other.group0()[1]),
                 self.group1()[3] * other.group0()[3],
             ]),
         );
@@ -1495,7 +1505,7 @@ impl GeometricProduct<Flector> for MultiVector {
             // scalar, e1234
             Simd32x2::from([
                 0.0,
-                -(other.group0()[0] * self.group4()[0]) - (other.group0()[1] * self.group4()[1]) - (other.group0()[2] * self.group4()[2]) + (other.group1()[3] * self.group1()[3]),
+                (other.group1()[3] * self.group1()[3]) - (other.group0()[0] * self.group4()[0]) - (other.group0()[1] * self.group4()[1]) - (other.group0()[2] * self.group4()[2]),
             ]) + (Simd32x2::from(self.group1()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]]))
                 + (Simd32x2::from(self.group1()[1]) * Simd32x2::from([other.group0()[1], other.group1()[1]]))
                 + (Simd32x2::from(self.group1()[2]) * Simd32x2::from([other.group0()[2], other.group1()[2]]))
@@ -1504,8 +1514,9 @@ impl GeometricProduct<Flector> for MultiVector {
             Simd32x4::from([
                 (self.group3()[0] * other.group1()[3]) - (self.group3()[1] * other.group0()[2]),
                 (self.group3()[1] * other.group1()[3]) - (self.group3()[2] * other.group0()[0]),
-                -(self.group3()[0] * other.group0()[1]) + (self.group3()[2] * other.group1()[3]),
-                -(self.group0()[1] * other.group1()[3]) + (self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2])
+                (self.group3()[2] * other.group1()[3]) - (self.group3()[0] * other.group0()[1]),
+                (self.group2()[1] * other.group0()[1]) + (self.group2()[2] * other.group0()[2])
+                    - (self.group0()[1] * other.group1()[3])
                     - (self.group3()[0] * other.group1()[0])
                     - (self.group3()[1] * other.group1()[1])
                     - (self.group3()[2] * other.group1()[2]),
@@ -1513,29 +1524,31 @@ impl GeometricProduct<Flector> for MultiVector {
                 + (Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group2()[0]]) * crate::swizzle!(other.group0(), 1, 2, 0, 0)),
             // e41, e42, e43
             Simd32x3::from([
-                (other.group0()[1] * self.group4()[2]) - (other.group0()[2] * self.group4()[1]) - (other.group1()[1] * self.group1()[2]) + (other.group1()[2] * self.group1()[1]),
-                -(other.group0()[0] * self.group4()[2]) + (other.group0()[2] * self.group4()[0]) + (other.group1()[0] * self.group1()[2]) - (other.group1()[2] * self.group1()[0]),
-                (other.group0()[0] * self.group4()[1]) - (other.group0()[1] * self.group4()[0]) - (other.group1()[0] * self.group1()[1]) + (other.group1()[1] * self.group1()[0]),
-            ]) - (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
-                + (Simd32x3::from(other.group1()[3]) * Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]))
+                (other.group0()[1] * self.group4()[2]) + (other.group1()[2] * self.group1()[1]) - (other.group0()[2] * self.group4()[1]) - (other.group1()[1] * self.group1()[2]),
+                (other.group0()[2] * self.group4()[0]) + (other.group1()[0] * self.group1()[2]) - (other.group0()[0] * self.group4()[2]) - (other.group1()[2] * self.group1()[0]),
+                (other.group0()[0] * self.group4()[1]) + (other.group1()[1] * self.group1()[0]) - (other.group0()[1] * self.group4()[0]) - (other.group1()[0] * self.group1()[1]),
+            ]) + (Simd32x3::from(other.group1()[3]) * Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]))
                 + (Simd32x3::from(self.group1()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
+                - (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
                 - (Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
             // e23, e31, e12
             Simd32x3::from([
-                -(other.group0()[1] * self.group1()[2]) + (other.group0()[2] * self.group1()[1]),
+                (other.group0()[2] * self.group1()[1]) - (other.group0()[1] * self.group1()[2]),
                 (other.group0()[0] * self.group1()[2]) - (other.group0()[2] * self.group1()[0]),
-                -(other.group0()[0] * self.group1()[1]) + (other.group0()[1] * self.group1()[0]),
+                (other.group0()[1] * self.group1()[0]) - (other.group0()[0] * self.group1()[1]),
             ]) - (Simd32x3::from(other.group1()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
                 - (Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
             // e423, e431, e412, e321
             Simd32x4::from([
-                -(self.group2()[0] * other.group1()[3]) + (self.group2()[1] * other.group0()[2]) + (self.group3()[0] * other.group0()[3]) - (self.group3()[1] * other.group1()[2])
-                    + (self.group3()[2] * other.group1()[1]),
-                -(self.group2()[1] * other.group1()[3]) + (self.group2()[2] * other.group0()[0]) + (self.group3()[0] * other.group1()[2]) + (self.group3()[1] * other.group0()[3])
+                (self.group2()[1] * other.group0()[2]) + (self.group3()[0] * other.group0()[3]) + (self.group3()[2] * other.group1()[1])
+                    - (self.group2()[0] * other.group1()[3])
+                    - (self.group3()[1] * other.group1()[2]),
+                (self.group2()[2] * other.group0()[0]) + (self.group3()[0] * other.group1()[2]) + (self.group3()[1] * other.group0()[3])
+                    - (self.group2()[1] * other.group1()[3])
                     - (self.group3()[2] * other.group1()[0]),
-                (self.group2()[0] * other.group0()[1]) - (self.group2()[2] * other.group1()[3]) - (self.group3()[0] * other.group1()[1])
-                    + (self.group3()[1] * other.group1()[0])
-                    + (self.group3()[2] * other.group0()[3]),
+                (self.group2()[0] * other.group0()[1]) + (self.group3()[1] * other.group1()[0]) + (self.group3()[2] * other.group0()[3])
+                    - (self.group2()[2] * other.group1()[3])
+                    - (self.group3()[0] * other.group1()[1]),
                 (self.group3()[2] * other.group0()[2]) * -1.0,
             ]) + (Simd32x4::from(self.group0()[0]) * other.group1())
                 - (Simd32x4::from([self.group0()[1], self.group0()[1], self.group0()[1], self.group3()[0]]) * crate::swizzle!(other.group0(), 0, 1, 2, 0))
@@ -1604,8 +1617,8 @@ impl GeometricProduct<Line> for MultiVector {
             (Simd32x3::from(self.group0()[0]) * other.group0())
                 + (Simd32x3::from(self.group0()[1]) * other.group1())
                 + (crate::swizzle!(other.group0(), 1, 2, 0) * crate::swizzle!(self.group3(), 2, 0, 1))
-                - (crate::swizzle!(other.group0(), 2, 0, 1) * crate::swizzle!(self.group3(), 1, 2, 0))
                 + (crate::swizzle!(other.group1(), 1, 2, 0) * crate::swizzle!(self.group2(), 2, 0, 1))
+                - (crate::swizzle!(other.group0(), 2, 0, 1) * crate::swizzle!(self.group3(), 1, 2, 0))
                 - (crate::swizzle!(other.group1(), 2, 0, 1) * crate::swizzle!(self.group2(), 1, 2, 0)),
             // e23, e31, e12
             (Simd32x3::from(self.group0()[0]) * other.group1()) + (crate::swizzle!(other.group1(), 1, 2, 0) * crate::swizzle!(self.group3(), 2, 0, 1))
@@ -1614,11 +1627,10 @@ impl GeometricProduct<Line> for MultiVector {
             Simd32x4::from([
                 (other.group0()[0] * self.group4()[3]) + (other.group0()[1] * self.group1()[2]) + (other.group1()[0] * self.group1()[3]) + (other.group1()[1] * self.group4()[2])
                     - (other.group1()[2] * self.group4()[1]),
-                (other.group0()[1] * self.group4()[3]) + (other.group0()[2] * self.group1()[0]) - (other.group1()[0] * self.group4()[2])
-                    + (other.group1()[1] * self.group1()[3])
-                    + (other.group1()[2] * self.group4()[0]),
-                (other.group0()[0] * self.group1()[1]) + (other.group0()[2] * self.group4()[3]) + (other.group1()[0] * self.group4()[1]) - (other.group1()[1] * self.group4()[0])
-                    + (other.group1()[2] * self.group1()[3]),
+                (other.group0()[1] * self.group4()[3]) + (other.group0()[2] * self.group1()[0]) + (other.group1()[1] * self.group1()[3]) + (other.group1()[2] * self.group4()[0])
+                    - (other.group1()[0] * self.group4()[2]),
+                (other.group0()[0] * self.group1()[1]) + (other.group0()[2] * self.group4()[3]) + (other.group1()[0] * self.group4()[1]) + (other.group1()[2] * self.group1()[3])
+                    - (other.group1()[1] * self.group4()[0]),
                 -(other.group1()[1] * self.group1()[1]) - (other.group1()[2] * self.group1()[2]),
             ]) - (Simd32x4::from([other.group0()[2], other.group0()[0], other.group0()[1], other.group1()[0]]) * crate::swizzle!(self.group1(), 1, 2, 0, 0)),
         );
@@ -1650,26 +1662,28 @@ impl GeometricProduct<Motor> for MultiVector {
                 (other.group1()[1] * self.group1()[2]) + (other.group1()[3] * self.group1()[0]),
                 (other.group1()[2] * self.group1()[0]) + (other.group1()[3] * self.group1()[1]),
                 (other.group1()[2] * self.group4()[3]) + (other.group1()[3] * self.group1()[2]),
-                -(other.group0()[1] * self.group1()[1]) - (other.group0()[2] * self.group1()[2]) + (other.group0()[3] * self.group4()[3])
+                (other.group0()[3] * self.group4()[3])
+                    - (other.group0()[1] * self.group1()[1])
+                    - (other.group0()[2] * self.group1()[2])
                     - (other.group1()[0] * self.group4()[0])
                     - (other.group1()[1] * self.group4()[1])
                     - (other.group1()[2] * self.group4()[2]),
-            ]) - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * crate::swizzle!(self.group1(), 1, 2, 0, 0))
-                + (Simd32x4::from([self.group4()[3], self.group4()[3], self.group1()[1], self.group1()[3]]) * crate::swizzle!(other.group1(), 0, 1, 0, 3)),
+            ]) + (Simd32x4::from([self.group4()[3], self.group4()[3], self.group1()[1], self.group1()[3]]) * crate::swizzle!(other.group1(), 0, 1, 0, 3))
+                - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * crate::swizzle!(self.group1(), 1, 2, 0, 0)),
             // e41, e42, e43
             (Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
                 + (Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
                 + (Simd32x3::from([other.group0()[1], other.group0()[3], other.group0()[3]]) * crate::swizzle!(self.group3(), 2, 1, 2))
-                - (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * crate::swizzle!(self.group3(), 1, 2, 0))
                 + (Simd32x3::from([other.group0()[3], other.group0()[2], other.group0()[0]]) * crate::swizzle!(self.group3(), 0, 0, 1))
                 + (Simd32x3::from([other.group1()[1], other.group1()[3], other.group1()[3]]) * crate::swizzle!(self.group2(), 2, 1, 2))
-                - (Simd32x3::from([other.group1()[2], other.group1()[0], other.group1()[1]]) * crate::swizzle!(self.group2(), 1, 2, 0))
-                + (Simd32x3::from([other.group1()[3], other.group1()[2], other.group1()[0]]) * crate::swizzle!(self.group2(), 0, 0, 1)),
+                + (Simd32x3::from([other.group1()[3], other.group1()[2], other.group1()[0]]) * crate::swizzle!(self.group2(), 0, 0, 1))
+                - (Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]]) * crate::swizzle!(self.group3(), 1, 2, 0))
+                - (Simd32x3::from([other.group1()[2], other.group1()[0], other.group1()[1]]) * crate::swizzle!(self.group2(), 1, 2, 0)),
             // e23, e31, e12
             (Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
                 + (Simd32x3::from([other.group1()[1], other.group1()[3], other.group1()[3]]) * crate::swizzle!(self.group3(), 2, 1, 2))
-                - (Simd32x3::from([other.group1()[2], other.group1()[0], other.group1()[1]]) * crate::swizzle!(self.group3(), 1, 2, 0))
-                + (Simd32x3::from([other.group1()[3], other.group1()[2], other.group1()[0]]) * crate::swizzle!(self.group3(), 0, 0, 1)),
+                + (Simd32x3::from([other.group1()[3], other.group1()[2], other.group1()[0]]) * crate::swizzle!(self.group3(), 0, 0, 1))
+                - (Simd32x3::from([other.group1()[2], other.group1()[0], other.group1()[1]]) * crate::swizzle!(self.group3(), 1, 2, 0)),
             // e423, e431, e412, e321
             Simd32x4::from([
                 (other.group0()[1] * self.group1()[2])
@@ -1710,70 +1724,68 @@ impl GeometricProduct<MultiVector> for MultiVector {
             // scalar, e1234
             Simd32x2::from([
                 0.0,
-                (other.group0()[1] * self.group0()[0])
+                (other.group0()[1] * self.group0()[0]) + (other.group4()[3] * self.group1()[3])
                     - (other.group3()[0] * self.group2()[0])
                     - (other.group3()[1] * self.group2()[1])
                     - (other.group3()[2] * self.group2()[2])
                     - (other.group1()[0] * self.group4()[0])
                     - (other.group1()[1] * self.group4()[1])
-                    - (other.group1()[2] * self.group4()[2])
-                    + (other.group4()[3] * self.group1()[3]),
+                    - (other.group1()[2] * self.group4()[2]),
             ]) + (Simd32x2::from(other.group0()[0]) * self.group0())
-                - (Simd32x2::from(self.group3()[0]) * Simd32x2::from([other.group3()[0], other.group2()[0]]))
-                - (Simd32x2::from(self.group3()[1]) * Simd32x2::from([other.group3()[1], other.group2()[1]]))
-                - (Simd32x2::from(self.group3()[2]) * Simd32x2::from([other.group3()[2], other.group2()[2]]))
                 + (Simd32x2::from(self.group1()[0]) * Simd32x2::from([other.group1()[0], other.group4()[0]]))
                 + (Simd32x2::from(self.group1()[1]) * Simd32x2::from([other.group1()[1], other.group4()[1]]))
                 + (Simd32x2::from(self.group1()[2]) * Simd32x2::from([other.group1()[2], other.group4()[2]]))
+                - (Simd32x2::from(self.group3()[0]) * Simd32x2::from([other.group3()[0], other.group2()[0]]))
+                - (Simd32x2::from(self.group3()[1]) * Simd32x2::from([other.group3()[1], other.group2()[1]]))
+                - (Simd32x2::from(self.group3()[2]) * Simd32x2::from([other.group3()[2], other.group2()[2]]))
                 - (Simd32x2::from(self.group4()[3]) * Simd32x2::from([other.group4()[3], other.group1()[3]])),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other.group3()[1] * self.group1()[2]) + (self.group3()[0] * other.group4()[3]) - (self.group3()[1] * other.group1()[2]),
                 (other.group3()[2] * self.group1()[0]) + (self.group3()[1] * other.group4()[3]) - (self.group3()[2] * other.group1()[0]),
-                (other.group3()[0] * self.group1()[1]) - (self.group3()[0] * other.group1()[1]) + (self.group3()[2] * other.group4()[3]),
-                -(self.group0()[1] * other.group4()[3])
+                (other.group3()[0] * self.group1()[1]) + (self.group3()[2] * other.group4()[3]) - (self.group3()[0] * other.group1()[1]),
+                (self.group2()[1] * other.group1()[1]) + (self.group2()[2] * other.group1()[2])
+                    - (self.group0()[1] * other.group4()[3])
                     - (other.group2()[1] * self.group1()[1])
                     - (other.group2()[2] * self.group1()[2])
                     - (other.group3()[0] * self.group4()[0])
                     - (other.group3()[1] * self.group4()[1])
                     - (other.group3()[2] * self.group4()[2])
-                    + (self.group2()[1] * other.group1()[1])
-                    + (self.group2()[2] * other.group1()[2])
                     - (self.group3()[0] * other.group4()[0])
                     - (self.group3()[1] * other.group4()[1])
                     - (self.group3()[2] * other.group4()[2]),
             ]) + (Simd32x4::from(other.group0()[0]) * self.group1())
                 + (Simd32x4::from(self.group0()[0]) * other.group1())
                 + (Simd32x4::from(self.group4()[3]) * Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group0()[1]]))
-                - (Simd32x4::from([other.group3()[2], other.group3()[0], other.group3()[1], other.group2()[0]]) * crate::swizzle!(self.group1(), 1, 2, 0, 0))
-                + (Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group2()[0]]) * crate::swizzle!(other.group1(), 1, 2, 0, 0)),
+                + (Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group2()[0]]) * crate::swizzle!(other.group1(), 1, 2, 0, 0))
+                - (Simd32x4::from([other.group3()[2], other.group3()[0], other.group3()[1], other.group2()[0]]) * crate::swizzle!(self.group1(), 1, 2, 0, 0)),
             // e41, e42, e43
             Simd32x3::from([
-                (other.group1()[1] * self.group4()[2]) - (other.group1()[2] * self.group4()[1]) - (other.group4()[1] * self.group1()[2]) + (other.group4()[2] * self.group1()[1]),
-                -(other.group1()[0] * self.group4()[2]) + (other.group1()[2] * self.group4()[0]) + (other.group4()[0] * self.group1()[2]) - (other.group4()[2] * self.group1()[0]),
-                (other.group1()[0] * self.group4()[1]) - (other.group1()[1] * self.group4()[0]) - (other.group4()[0] * self.group1()[1]) + (other.group4()[1] * self.group1()[0]),
+                (other.group1()[1] * self.group4()[2]) + (other.group4()[2] * self.group1()[1]) - (other.group1()[2] * self.group4()[1]) - (other.group4()[1] * self.group1()[2]),
+                (other.group1()[2] * self.group4()[0]) + (other.group4()[0] * self.group1()[2]) - (other.group1()[0] * self.group4()[2]) - (other.group4()[2] * self.group1()[0]),
+                (other.group1()[0] * self.group4()[1]) + (other.group4()[1] * self.group1()[0]) - (other.group1()[1] * self.group4()[0]) - (other.group4()[0] * self.group1()[1]),
             ]) + (Simd32x3::from(other.group0()[0]) * self.group2())
                 + (Simd32x3::from(other.group0()[1]) * self.group3())
                 + (Simd32x3::from(self.group0()[0]) * other.group2())
                 + (Simd32x3::from(self.group0()[1]) * other.group3())
-                - (Simd32x3::from(other.group1()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
                 + (Simd32x3::from(other.group4()[3]) * Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]))
                 + (Simd32x3::from(self.group1()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
-                - (Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group4()[0], other.group4()[1], other.group4()[2]]))
                 + (crate::swizzle!(other.group2(), 1, 2, 0) * crate::swizzle!(self.group3(), 2, 0, 1))
-                - (crate::swizzle!(other.group2(), 2, 0, 1) * crate::swizzle!(self.group3(), 1, 2, 0))
                 + (crate::swizzle!(other.group3(), 1, 2, 0) * crate::swizzle!(self.group2(), 2, 0, 1))
+                - (Simd32x3::from(other.group1()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
+                - (Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group4()[0], other.group4()[1], other.group4()[2]]))
+                - (crate::swizzle!(other.group2(), 2, 0, 1) * crate::swizzle!(self.group3(), 1, 2, 0))
                 - (crate::swizzle!(other.group3(), 2, 0, 1) * crate::swizzle!(self.group2(), 1, 2, 0)),
             // e23, e31, e12
             Simd32x3::from([
-                -(other.group1()[1] * self.group1()[2]) + (other.group1()[2] * self.group1()[1]),
+                (other.group1()[2] * self.group1()[1]) - (other.group1()[1] * self.group1()[2]),
                 (other.group1()[0] * self.group1()[2]) - (other.group1()[2] * self.group1()[0]),
-                -(other.group1()[0] * self.group1()[1]) + (other.group1()[1] * self.group1()[0]),
+                (other.group1()[1] * self.group1()[0]) - (other.group1()[0] * self.group1()[1]),
             ]) + (Simd32x3::from(other.group0()[0]) * self.group3())
                 + (Simd32x3::from(self.group0()[0]) * other.group3())
+                + (crate::swizzle!(other.group3(), 1, 2, 0) * crate::swizzle!(self.group3(), 2, 0, 1))
                 - (Simd32x3::from(other.group4()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]))
                 - (Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
-                + (crate::swizzle!(other.group3(), 1, 2, 0) * crate::swizzle!(self.group3(), 2, 0, 1))
                 - (crate::swizzle!(other.group3(), 2, 0, 1) * crate::swizzle!(self.group3(), 1, 2, 0)),
             // e423, e431, e412, e321
             Simd32x4::from([
@@ -1782,28 +1794,34 @@ impl GeometricProduct<MultiVector> for MultiVector {
                     + (other.group2()[1] * self.group1()[2])
                     + (other.group3()[0] * self.group1()[3])
                     + (other.group3()[1] * self.group4()[2])
-                    - (other.group3()[2] * self.group4()[1])
-                    - (self.group2()[0] * other.group4()[3])
                     + (self.group2()[1] * other.group1()[2])
                     + (self.group3()[0] * other.group1()[3])
-                    - (self.group3()[1] * other.group4()[2])
-                    + (self.group3()[2] * other.group4()[1]),
-                (other.group0()[1] * self.group1()[1]) + (other.group2()[1] * self.group4()[3]) + (other.group2()[2] * self.group1()[0]) - (other.group3()[0] * self.group4()[2])
+                    + (self.group3()[2] * other.group4()[1])
+                    - (other.group3()[2] * self.group4()[1])
+                    - (self.group2()[0] * other.group4()[3])
+                    - (self.group3()[1] * other.group4()[2]),
+                (other.group0()[1] * self.group1()[1])
+                    + (other.group2()[1] * self.group4()[3])
+                    + (other.group2()[2] * self.group1()[0])
                     + (other.group3()[1] * self.group1()[3])
                     + (other.group3()[2] * self.group4()[0])
-                    - (self.group2()[1] * other.group4()[3])
                     + (self.group2()[2] * other.group1()[0])
                     + (self.group3()[0] * other.group4()[2])
                     + (self.group3()[1] * other.group1()[3])
+                    - (other.group3()[0] * self.group4()[2])
+                    - (self.group2()[1] * other.group4()[3])
                     - (self.group3()[2] * other.group4()[0]),
-                (other.group0()[1] * self.group1()[2]) + (other.group2()[0] * self.group1()[1]) + (other.group2()[2] * self.group4()[3]) + (other.group3()[0] * self.group4()[1])
-                    - (other.group3()[1] * self.group4()[0])
+                (other.group0()[1] * self.group1()[2])
+                    + (other.group2()[0] * self.group1()[1])
+                    + (other.group2()[2] * self.group4()[3])
+                    + (other.group3()[0] * self.group4()[1])
                     + (other.group3()[2] * self.group1()[3])
                     + (self.group2()[0] * other.group1()[1])
-                    - (self.group2()[2] * other.group4()[3])
-                    - (self.group3()[0] * other.group4()[1])
                     + (self.group3()[1] * other.group4()[0])
-                    + (self.group3()[2] * other.group1()[3]),
+                    + (self.group3()[2] * other.group1()[3])
+                    - (other.group3()[1] * self.group4()[0])
+                    - (self.group2()[2] * other.group4()[3])
+                    - (self.group3()[0] * other.group4()[1]),
                 -(other.group3()[1] * self.group1()[1]) - (other.group3()[2] * self.group1()[2]) - (self.group3()[2] * other.group1()[2]),
             ]) + (Simd32x4::from(other.group0()[0]) * self.group4())
                 + (Simd32x4::from(self.group0()[0]) * other.group4())
@@ -1864,17 +1882,17 @@ impl GeometricProduct<Plane> for MultiVector {
             // e41, e42, e43
             Simd32x3::from([
                 (self.group1()[1] * other.group0()[2]) - (self.group1()[2] * other.group0()[1]),
-                -(self.group1()[0] * other.group0()[2]) + (self.group1()[2] * other.group0()[0]),
+                (self.group1()[2] * other.group0()[0]) - (self.group1()[0] * other.group0()[2]),
                 (self.group1()[0] * other.group0()[1]) - (self.group1()[1] * other.group0()[0]),
-            ]) - (Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
-                + (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]])),
+            ]) + (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]))
+                - (Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
             // e23, e31, e12
             Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             Simd32x4::from([
-                (self.group0()[0] * other.group0()[0]) - (self.group2()[0] * other.group0()[3]) - (self.group3()[1] * other.group0()[2]) + (self.group3()[2] * other.group0()[1]),
-                (self.group0()[0] * other.group0()[1]) - (self.group2()[1] * other.group0()[3]) + (self.group3()[0] * other.group0()[2]) - (self.group3()[2] * other.group0()[0]),
-                (self.group0()[0] * other.group0()[2]) - (self.group2()[2] * other.group0()[3]) - (self.group3()[0] * other.group0()[1]) + (self.group3()[1] * other.group0()[0]),
+                (self.group0()[0] * other.group0()[0]) + (self.group3()[2] * other.group0()[1]) - (self.group2()[0] * other.group0()[3]) - (self.group3()[1] * other.group0()[2]),
+                (self.group0()[0] * other.group0()[1]) + (self.group3()[0] * other.group0()[2]) - (self.group2()[1] * other.group0()[3]) - (self.group3()[2] * other.group0()[0]),
+                (self.group0()[0] * other.group0()[2]) + (self.group3()[1] * other.group0()[0]) - (self.group2()[2] * other.group0()[3]) - (self.group3()[0] * other.group0()[1]),
                 self.group0()[0] * other.group0()[3],
             ]),
         );
@@ -1907,15 +1925,15 @@ impl GeometricProduct<Point> for MultiVector {
                 + (Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group2()[0]]) * crate::swizzle!(other.group0(), 1, 2, 0, 0)),
             // e41, e42, e43
             Simd32x3::from([
-                -(self.group4()[1] * other.group0()[2]) + (self.group4()[2] * other.group0()[1]),
+                (self.group4()[2] * other.group0()[1]) - (self.group4()[1] * other.group0()[2]),
                 (self.group4()[0] * other.group0()[2]) - (self.group4()[2] * other.group0()[0]),
-                -(self.group4()[0] * other.group0()[1]) + (self.group4()[1] * other.group0()[0]),
+                (self.group4()[1] * other.group0()[0]) - (self.group4()[0] * other.group0()[1]),
             ]) + (Simd32x3::from(self.group1()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]))
                 - (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]])),
             // e23, e31, e12
             Simd32x3::from([
                 (self.group1()[1] * other.group0()[2]) - (self.group1()[2] * other.group0()[1]),
-                -(self.group1()[0] * other.group0()[2]) + (self.group1()[2] * other.group0()[0]),
+                (self.group1()[2] * other.group0()[0]) - (self.group1()[0] * other.group0()[2]),
                 (self.group1()[0] * other.group0()[1]) - (self.group1()[1] * other.group0()[0]),
             ]) - (Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
             // e423, e431, e412, e321
@@ -2176,7 +2194,7 @@ impl GeometricProduct<Line> for Plane {
             // e423, e431, e412, e321
             Simd32x4::from([
                 (other.group0()[0] * self.group0()[3]) + (other.group1()[1] * self.group0()[2]) - (other.group1()[2] * self.group0()[1]),
-                (other.group0()[1] * self.group0()[3]) - (other.group1()[0] * self.group0()[2]) + (other.group1()[2] * self.group0()[0]),
+                (other.group0()[1] * self.group0()[3]) + (other.group1()[2] * self.group0()[0]) - (other.group1()[0] * self.group0()[2]),
                 (other.group0()[2] * self.group0()[3]) + (other.group1()[0] * self.group0()[1]) - (other.group1()[1] * self.group0()[0]),
                 0.0,
             ]),
@@ -2199,9 +2217,9 @@ impl GeometricProduct<Motor> for Plane {
             ]),
             // e423, e431, e412, e321
             Simd32x4::from([
-                (other.group0()[0] * self.group0()[3]) + (other.group1()[1] * self.group0()[2]) - (other.group1()[2] * self.group0()[1]) + (other.group1()[3] * self.group0()[0]),
-                (other.group0()[1] * self.group0()[3]) - (other.group1()[0] * self.group0()[2]) + (other.group1()[2] * self.group0()[0]) + (other.group1()[3] * self.group0()[1]),
-                (other.group0()[2] * self.group0()[3]) + (other.group1()[0] * self.group0()[1]) - (other.group1()[1] * self.group0()[0]) + (other.group1()[3] * self.group0()[2]),
+                (other.group0()[0] * self.group0()[3]) + (other.group1()[1] * self.group0()[2]) + (other.group1()[3] * self.group0()[0]) - (other.group1()[2] * self.group0()[1]),
+                (other.group0()[1] * self.group0()[3]) + (other.group1()[2] * self.group0()[0]) + (other.group1()[3] * self.group0()[1]) - (other.group1()[0] * self.group0()[2]),
+                (other.group0()[2] * self.group0()[3]) + (other.group1()[0] * self.group0()[1]) + (other.group1()[3] * self.group0()[2]) - (other.group1()[1] * self.group0()[0]),
                 other.group1()[3] * self.group0()[3],
             ]),
         );
@@ -2233,7 +2251,7 @@ impl GeometricProduct<MultiVector> for Plane {
             // e41, e42, e43
             Simd32x3::from([
                 (other.group1()[1] * self.group0()[2]) - (other.group1()[2] * self.group0()[1]),
-                -(other.group1()[0] * self.group0()[2]) + (other.group1()[2] * self.group0()[0]),
+                (other.group1()[2] * self.group0()[0]) - (other.group1()[0] * self.group0()[2]),
                 (other.group1()[0] * self.group0()[1]) - (other.group1()[1] * self.group0()[0]),
             ]) + (Simd32x3::from(other.group4()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
                 - (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group4()[0], other.group4()[1], other.group4()[2]])),
@@ -2242,7 +2260,7 @@ impl GeometricProduct<MultiVector> for Plane {
             // e423, e431, e412, e321
             Simd32x4::from([
                 (other.group0()[0] * self.group0()[0]) + (other.group2()[0] * self.group0()[3]) + (other.group3()[1] * self.group0()[2]) - (other.group3()[2] * self.group0()[1]),
-                (other.group0()[0] * self.group0()[1]) + (other.group2()[1] * self.group0()[3]) - (other.group3()[0] * self.group0()[2]) + (other.group3()[2] * self.group0()[0]),
+                (other.group0()[0] * self.group0()[1]) + (other.group2()[1] * self.group0()[3]) + (other.group3()[2] * self.group0()[0]) - (other.group3()[0] * self.group0()[2]),
                 (other.group0()[0] * self.group0()[2]) + (other.group2()[2] * self.group0()[3]) + (other.group3()[0] * self.group0()[1]) - (other.group3()[1] * self.group0()[0]),
                 other.group0()[0] * self.group0()[3],
             ]),
@@ -2268,9 +2286,9 @@ impl GeometricProduct<Plane> for Plane {
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                -(other.group0()[0] * self.group0()[3]) + (other.group0()[3] * self.group0()[0]),
-                -(other.group0()[1] * self.group0()[3]) + (other.group0()[3] * self.group0()[1]),
-                -(other.group0()[2] * self.group0()[3]) + (other.group0()[3] * self.group0()[2]),
+                (other.group0()[3] * self.group0()[0]) - (other.group0()[0] * self.group0()[3]),
+                (other.group0()[3] * self.group0()[1]) - (other.group0()[1] * self.group0()[3]),
+                (other.group0()[3] * self.group0()[2]) - (other.group0()[2] * self.group0()[3]),
                 0.0,
             ]),
             // e23, e31, e12, scalar
@@ -2443,8 +2461,8 @@ impl GeometricProduct<Motor> for Point {
                 other.group1()[3] * self.group0()[1],
                 other.group1()[3] * self.group0()[2],
                 -(other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2]),
-            ]) - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * crate::swizzle!(self.group0(), 1, 2, 0, 0))
-                + (crate::swizzle!(other.group1(), 1, 2, 0, 3) * crate::swizzle!(self.group0(), 2, 0, 1, 3)),
+            ]) + (crate::swizzle!(other.group1(), 1, 2, 0, 3) * crate::swizzle!(self.group0(), 2, 0, 1, 3))
+                - (Simd32x4::from([other.group1()[2], other.group1()[0], other.group1()[1], other.group0()[0]]) * crate::swizzle!(self.group0(), 1, 2, 0, 0)),
             // e423, e431, e412, e321
             Simd32x4::from([
                 (other.group0()[1] * self.group0()[2]) + (other.group0()[3] * self.group0()[0]) + (other.group1()[0] * self.group0()[3]),
@@ -2483,16 +2501,16 @@ impl GeometricProduct<MultiVector> for Point {
                 - (Simd32x4::from([other.group3()[2], other.group3()[0], other.group3()[1], other.group2()[0]]) * crate::swizzle!(self.group0(), 1, 2, 0, 0)),
             // e41, e42, e43
             Simd32x3::from([
-                -(other.group4()[1] * self.group0()[2]) + (other.group4()[2] * self.group0()[1]),
+                (other.group4()[2] * self.group0()[1]) - (other.group4()[1] * self.group0()[2]),
                 (other.group4()[0] * self.group0()[2]) - (other.group4()[2] * self.group0()[0]),
-                -(other.group4()[0] * self.group0()[1]) + (other.group4()[1] * self.group0()[0]),
-            ]) - (Simd32x3::from(other.group1()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]))
-                + (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
+                (other.group4()[1] * self.group0()[0]) - (other.group4()[0] * self.group0()[1]),
+            ]) + (Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]))
+                - (Simd32x3::from(other.group1()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])),
             // e23, e31, e12
             Simd32x3::from([
-                -(other.group1()[1] * self.group0()[2]) + (other.group1()[2] * self.group0()[1]),
+                (other.group1()[2] * self.group0()[1]) - (other.group1()[1] * self.group0()[2]),
                 (other.group1()[0] * self.group0()[2]) - (other.group1()[2] * self.group0()[0]),
-                -(other.group1()[0] * self.group0()[1]) + (other.group1()[1] * self.group0()[0]),
+                (other.group1()[1] * self.group0()[0]) - (other.group1()[0] * self.group0()[1]),
             ]) - (Simd32x3::from(other.group4()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])),
             // e423, e431, e412, e321
             Simd32x4::from([

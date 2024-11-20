@@ -474,7 +474,7 @@ impl std::ops::Sub<Flector> for Plane {
             // e1, e2, e3, e4
             other.group0() * Simd32x4::from(-1.0),
             // e423, e431, e412, e321
-            -other.group1() + self.group0(),
+            self.group0() - other.group1(),
         );
     }
 }
@@ -566,7 +566,7 @@ impl std::ops::Sub<MultiVector> for Plane {
             // e23, e31, e12
             other.group3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
-            -other.group4() + self.group0(),
+            self.group0() - other.group4(),
         );
     }
 }
@@ -592,12 +592,12 @@ impl std::ops::Sub<Plane> for Plane {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: Plane) -> Self::Output {
-        return Plane::from_groups(/* e423, e431, e412, e321 */ -other.group0() + self.group0());
+        return Plane::from_groups(/* e423, e431, e412, e321 */ self.group0() - other.group0());
     }
 }
 impl std::ops::SubAssign<Plane> for Plane {
     fn sub_assign(&mut self, other: Plane) {
-        *self = Plane::from_groups(/* e423, e431, e412, e321 */ -other.group0() + self.group0());
+        *self = Plane::from_groups(/* e423, e431, e412, e321 */ self.group0() - other.group0());
     }
 }
 impl std::ops::Sub<Point> for Plane {

@@ -675,9 +675,9 @@ impl std::ops::Sub<DualNum> for Motor {
     fn sub(self, other: DualNum) -> Self::Output {
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], -other.group0()[1] + self.group0()[3]]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] - other.group0()[1]]),
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], -other.group0()[0] + self.group1()[3]]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] - other.group0()[0]]),
         );
     }
 }
@@ -685,9 +685,9 @@ impl std::ops::SubAssign<DualNum> for Motor {
     fn sub_assign(&mut self, other: DualNum) {
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], -other.group0()[1] + self.group0()[3]]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] - other.group0()[1]]),
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], -other.group0()[0] + self.group1()[3]]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] - other.group0()[0]]),
         );
     }
 }
@@ -742,16 +742,16 @@ impl std::ops::Sub<Line> for Motor {
         return Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                -other.group0()[0] + self.group0()[0],
-                -other.group0()[1] + self.group0()[1],
-                -other.group0()[2] + self.group0()[2],
+                self.group0()[0] - other.group0()[0],
+                self.group0()[1] - other.group0()[1],
+                self.group0()[2] - other.group0()[2],
                 self.group0()[3],
             ]),
             // e23, e31, e12, scalar
             Simd32x4::from([
-                -other.group1()[0] + self.group1()[0],
-                -other.group1()[1] + self.group1()[1],
-                -other.group1()[2] + self.group1()[2],
+                self.group1()[0] - other.group1()[0],
+                self.group1()[1] - other.group1()[1],
+                self.group1()[2] - other.group1()[2],
                 self.group1()[3],
             ]),
         );
@@ -762,16 +762,16 @@ impl std::ops::SubAssign<Line> for Motor {
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
             Simd32x4::from([
-                -other.group0()[0] + self.group0()[0],
-                -other.group0()[1] + self.group0()[1],
-                -other.group0()[2] + self.group0()[2],
+                self.group0()[0] - other.group0()[0],
+                self.group0()[1] - other.group0()[1],
+                self.group0()[2] - other.group0()[2],
                 self.group0()[3],
             ]),
             // e23, e31, e12, scalar
             Simd32x4::from([
-                -other.group1()[0] + self.group1()[0],
-                -other.group1()[1] + self.group1()[1],
-                -other.group1()[2] + self.group1()[2],
+                self.group1()[0] - other.group1()[0],
+                self.group1()[1] - other.group1()[1],
+                self.group1()[2] - other.group1()[2],
                 self.group1()[3],
             ]),
         );
@@ -786,9 +786,9 @@ impl std::ops::Sub<Motor> for Motor {
     fn sub(self, other: Motor) -> Self::Output {
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e23, e31, e12, scalar
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
         );
     }
 }
@@ -796,9 +796,9 @@ impl std::ops::SubAssign<Motor> for Motor {
     fn sub_assign(&mut self, other: Motor) {
         *self = Motor::from_groups(
             // e41, e42, e43, e1234
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e23, e31, e12, scalar
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
         );
     }
 }
