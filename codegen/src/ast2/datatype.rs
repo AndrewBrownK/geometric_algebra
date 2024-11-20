@@ -3,7 +3,7 @@ use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::multivector::{BasisElementGroup, MultiVec};
 use crate::ast2::expressions::{FloatExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
 use std::cmp::Ordering;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{Display, Formatter};
 
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug, Ord, PartialOrd)]
@@ -175,6 +175,14 @@ impl MultiVector {
 
     pub fn elements(&self) -> Vec<BasisElement> {
         self.multi_vec.elements()
+    }
+
+    pub fn signatures(&self) -> BTreeSet<BasisSignature> {
+        let mut set = BTreeSet::new();
+        for el in self.multi_vec.elements() {
+            set.insert(el.signature());
+        }
+        set
     }
 
     pub fn groups(&self) -> Vec<BasisElementGroup> {

@@ -221,16 +221,31 @@ impl Wgsl {
             }
             var_param = Some(v_param);
         }
+        let mut type_param = None;
+        if !impls.other_type_params.is_empty() {
+            type_param = Some(impls.other_type_params[0]);
+        }
         let owner_ty = &impls.owner;
 
         let trait_ucc = def.names.trait_key.as_upper_camel();
         let trait_lcc = def.names.trait_key.as_lower_camel();
+
+        // Unsupported traits in wgsl - no algebraic data types
+        if trait_lcc == "tryInto" {
+            return Ok(());
+        }
+
         if impls.other_var_params.len() > 1 || impls.other_type_params.len() > 1 {
             bail!("We do not support high arity traits yet");
         }
         write!(w, "fn ")?;
         self.write_type(w, *owner_ty, false)?;
         write!(w, "_{trait_lcc}")?;
+        if trait_lcc == "into" {
+            let other_ty = type_param.expect("into always has a type param, even if only 1 arg");
+            write!(w, "_")?;
+            self.write_type(w, other_ty, false)?;
+        }
         if let (TraitArity::Two, Some(other_ty)) = (def.arity, var_param) {
             write!(w, "_")?;
             self.write_type(w, *other_ty, false)?;
@@ -457,7 +472,11 @@ impl Wgsl {
                             3 => "w",
                             _ => unreachable!("i should be less than group_size which is always 4 or less")
                         };
-                        write!(w, ".g{group_index}_.{inner_index}")?;
+                        if group.simd_width() == 1 {
+                            write!(w, ".g{group_index}_")?;
+                        } else {
+                            write!(w, ".g{group_index}_.{inner_index}")?;
+                        }
                         break;
                     }
                     i = i - group_size;
@@ -1336,7 +1355,7 @@ impl Wgsl {
             MultiVectorVia::TraitInvoke22ToClass(t, a, b) => {
                 let method = t.as_lower_camel();
                 let a_type = TraitKey::new(a.expression_type().name()).as_lower_camel();
-                let b_type = TraitKey::new(a.expression_type().name()).as_lower_camel();
+                let b_type = TraitKey::new(b.expression_type().name()).as_lower_camel();
                 write!(w, "{a_type}_{method}_{b_type}(")?;
                 self.write_multi_vec(w, a)?;
                 write!(w, ", ")?;

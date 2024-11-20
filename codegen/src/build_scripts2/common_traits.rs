@@ -1,10 +1,13 @@
 #![cfg_attr(rustfmt, rustfmt_skip)]
 #![allow(non_upper_case_globals)]
 
+use crate::algebra2::basis::filter::{SigFilter, SigSetFilter};
 use crate::algebra2::basis::grades::{AntiGrades, Grades};
 use crate::ast2::impls::{Elaborated, InlineOnly};
 use crate::ast2::traits::{NameTrait, TraitDef_1_Type_1_Arg, TraitImpl_10, TraitImpl_11, TraitImpl_21};
 use crate::build_scripts2::common_traits::impls::*;
+
+pub mod conformal;
 
 pub static Zero: Elaborated<ZeroImpl> = ZeroImpl
     .new_trait_named("Zero")
@@ -244,6 +247,15 @@ pub static TryInto: Elaborated<TryIntoImpl> = TryIntoImpl
     .new_trait_named("TryInto")
     .blurb("TODO");
 
+#[allow(non_snake_case)]
+pub fn SubType<F1, F2, F3>(filter_multivecs_in: F1, filter_elements: F2, filter_multivecs_out: F3) -> InlineOnly<SubTypeImpl<F1, F2, F3>> where
+    F1: SigSetFilter + Copy + Send + Sync + 'static,
+    F2: SigFilter + Copy + Send + Sync + 'static,
+    F3: SigSetFilter + Copy + Send + Sync + 'static {
+    InlineOnly::new("SubType", SubTypeImpl { filter_multivecs_in, filter_elements, filter_multivecs_out })
+}
+
+
 // NOTE: If you find yourself wanting to generate grade selection traits, you are
 // probably generating extremely wasteful implementations that perform a lot more
 // floating point calculations than necessary. That is why these trait definitions
@@ -278,6 +290,7 @@ mod impls {
     use async_trait::async_trait;
 
     use crate::algebra2::basis::{BasisElement, BasisSignature};
+    use crate::algebra2::basis::filter::{SigFilter, SigSetFilter};
     use crate::algebra2::basis::grades::{AntiGrades, Grades};
     use crate::algebra2::multivector::DynamicMultiVector;
     use crate::ast2::datatype::{Integer, MultiVector};
@@ -1005,6 +1018,50 @@ mod impls {
         let result = other.construct(|el| these_elements.remove(&el).unwrap_or(FloatExpr::Literal(0.0)));
         builder.return_expr(result)
     });
+
+
+
+
+    #[derive(Clone, Copy)]
+    pub struct SubTypeImpl<F1, F2, F3> {
+        pub filter_multivecs_in: F1,
+        pub filter_elements: F2,
+        pub filter_multivecs_out: F3,
+    }
+    #[async_trait]
+    impl<F1, F2, F3> TraitImpl_11 for SubTypeImpl<F1, F2, F3> where
+        F1: SigSetFilter + Copy + Send + Sync + 'static,
+        F2: SigFilter + Copy + Send + Sync + 'static,
+        F3: SigSetFilter + Copy + Send + Sync + 'static {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let sig_in = slf.expr_type.signatures();
+            if !self.filter_multivecs_in.filter_sig_set(&sig_in) {
+                return None;
+            }
+            let mut dyn_mv = DynamicMultiVector::zero();
+            for (a, a_el) in slf.elements_by_groups() {
+                if self.filter_elements.filter_sig(a_el.signature()) {
+                    dyn_mv += (a, a_el);
+                }
+            }
+            let mv = dyn_mv.construct(&builder)?;
+            let sig_out = mv.mv_class.signatures();
+            if !self.filter_multivecs_out.filter_sig_set(&sig_out) {
+                return None;
+            }
+            builder.return_expr(mv)
+        }
+    }
+
+
+
+
+
 
     #[derive(Clone, Copy)]
     pub struct SelectGradesImpl(pub Grades);
