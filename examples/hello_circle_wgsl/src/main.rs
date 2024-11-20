@@ -3,8 +3,9 @@ use std::error::Error;
 use std::fmt::Debug;
 use std::fs;
 use std::io::Read;
+use std::process::exit;
 use std::sync::Arc;
-
+use naga::valid::{Capabilities, ValidationFlags, Validator};
 use naga_oil::compose::NagaModuleDescriptor;
 use parking_lot::Mutex;
 use wgpu::util::{BufferInitDescriptor, DeviceExt};
@@ -88,6 +89,34 @@ impl App {
         };
 
         let naga_module = cga3d::integrations::wgsl::wgsl_compose_with_entrypoints(naga_module_descriptor).unwrap();
+
+
+        // let validator_flags = ValidationFlags::default();
+        // let capabilities = Capabilities::default();
+        // let mut validator = Validator::new(validator_flags, capabilities);
+        // let Ok(naga_module_info) = validator.validate(&naga_module) else {
+        //     eprintln!("could not write compiled shader source");
+        //     exit(1);
+        // };
+        // match naga::back::wgsl::write_string(&naga_module, &naga_module_info, naga::back::wgsl::WriterFlags::EXPLICIT_TYPES) {
+        //     Ok(s) => {
+        //         let mut file = fs::OpenOptions::new().create(true).write(true).open("examples/hello_circle_wgsl/src/compiled_shader.wgsl");
+        //         let Ok(mut file) = file else {
+        //             eprintln!("could not write compiled shader source");
+        //             exit(2);
+        //         };
+        //         use std::io::Write;
+        //         let result = write!(&mut file, "{s}");
+        //         if let Err(e) = result {
+        //             eprintln!("could not write compiled shader source: {e}");
+        //             exit(3);
+        //         }
+        //     }
+        //     Err(e) => {
+        //         eprintln!("could not write compiled shader source: {e}");
+        //         exit(4)
+        //     }
+        // }
 
         // Load the shaders from disk
         let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {

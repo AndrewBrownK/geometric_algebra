@@ -14,6 +14,6 @@ cga3d = { path = "../../libraries/cga3d", features = ["wgsl"] }
 
 # naga_oil limits the version of wgpu and naga we can use
 naga_oil = { version = "0.13.0", features = ["prune"] }
-naga = "0.19.2"
+naga = { version = "0.19.2", features = ["default", "wgsl-out"] }
 wgpu = { version = "0.19.4", features = ["naga-ir"] }
 bytemuck = "1.16.0"

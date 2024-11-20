@@ -4083,7 +4083,16 @@ fn roundPoint_wedge_plane(self_: RoundPoint, other: Plane) -> AntiScalar {
 }
 
 fn roundPoint_wedge_roundPoint(self_: RoundPoint, other: RoundPoint) -> Dipole {
-    return Dipole(vec3<f32>(0.0) - self_.g0_ * vec3<f32>(other.g1_.x) + vec3<f32>(self_.g1_.x) * other.g0_, vec3<f32>(self_.g0_.x) * vec3<f32>(0.0, -other.g0_.z, other.g0_.y) + vec3<f32>(self_.g0_.y) * vec3<f32>(other.g0_.z, 0.0, -other.g0_.x) + vec3<f32>(self_.g0_.z) * vec3<f32>(-other.g0_.y, other.g0_.x, 0.0), vec4<f32>(self_.g0_.x, self_.g0_.y, self_.g0_.z, self_.g0_.x) * vec4<f32>(other.g1_.y, other.g1_.y, other.g1_.y, 0.0) + vec4<f32>(self_.g1_.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1_.y) - vec4<f32>(self_.g1_.y) * vec4<f32>(other.g0_.x, other.g0_.y, other.g0_.z, other.g1_.x));
+    return Dipole(
+        vec3<f32>(0.0) - self_.g0_ * vec3<f32>(other.g1_.x)
+            + vec3<f32>(self_.g1_.x) * other.g0_,
+        vec3<f32>(self_.g0_.x) * vec3<f32>(0.0, -other.g0_.z, other.g0_.y)
+            + vec3<f32>(self_.g0_.y) * vec3<f32>(other.g0_.z, 0.0, -other.g0_.x)
+            + vec3<f32>(self_.g0_.z) * vec3<f32>(-other.g0_.y, other.g0_.x, 0.0),
+        vec4<f32>(self_.g0_.x, self_.g0_.y, self_.g0_.z, self_.g0_.x) * vec4<f32>(other.g1_.y, other.g1_.y, other.g1_.y, 0.0)
+            + vec4<f32>(self_.g1_.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1_.y)
+            - vec4<f32>(self_.g1_.y) * vec4<f32>(other.g0_.x, other.g0_.y, other.g0_.z, other.g1_.x)
+    );
 }
 
 fn roundPoint_wedge_scalar(self_: RoundPoint, other: Scalar) -> RoundPoint {

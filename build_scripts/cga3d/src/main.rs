@@ -81,9 +81,9 @@ fn main() {
         // TODO the way dependencies are handled, the following traits SHOULDN'T need to be
         //  broken into so many serial steps. It should all be able to work in parallel. The
         //  serial registration partition is just intended to ensure specialized trait
-        //  implementations get registered first, before the general definitions have any chance
-        //  to get inlined. Despite the intention that registration should work in parallel, it
-        //  seems there is some kind of dead lock happening here. So I'm partitioning to serial
+        //  implementations get registered first, before the non-specialized definitions have any
+        //  chance to get inlined. Despite the intention that registration should work in parallel,
+        //  it seems there is some kind of dead lock happening here. So I'm partitioning to serial
         //  registration to debug it. It seems related to UnitizedRadiusNorm.
         //  ..
         //  I didn't get to prove it in debugging, but it seemed to unclog when I put a
