@@ -1299,12 +1299,12 @@ impl std::ops::Sub<AntiDualNum> for AntiDualNum {
     //   simd2        1        0        0
     // no simd        2        0        0
     fn sub(self, other: AntiDualNum) -> Self::Output {
-        return AntiDualNum::from_groups(/* e1234, scalar */ -other.group0() + self.group0());
+        return AntiDualNum::from_groups(/* e1234, scalar */ self.group0() - other.group0());
     }
 }
 impl std::ops::SubAssign<AntiDualNum> for AntiDualNum {
     fn sub_assign(&mut self, other: AntiDualNum) {
-        *self = AntiDualNum::from_groups(/* e1234, scalar */ -other.group0() + self.group0());
+        *self = AntiDualNum::from_groups(/* e1234, scalar */ self.group0() - other.group0());
     }
 }
 impl std::ops::Sub<AntiFlatPoint> for AntiDualNum {

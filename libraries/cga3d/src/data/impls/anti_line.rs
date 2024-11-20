@@ -1374,12 +1374,12 @@ impl std::ops::Sub<AntiLine> for AntiLine {
     //   simd3        2        0        0
     // no simd        6        0        0
     fn sub(self, other: AntiLine) -> Self::Output {
-        return AntiLine::from_groups(/* e23, e31, e12 */ -other.group0() + self.group0(), /* e15, e25, e35 */ -other.group1() + self.group1());
+        return AntiLine::from_groups(/* e23, e31, e12 */ self.group0() - other.group0(), /* e15, e25, e35 */ self.group1() - other.group1());
     }
 }
 impl std::ops::SubAssign<AntiLine> for AntiLine {
     fn sub_assign(&mut self, other: AntiLine) {
-        *self = AntiLine::from_groups(/* e23, e31, e12 */ -other.group0() + self.group0(), /* e15, e25, e35 */ -other.group1() + self.group1());
+        *self = AntiLine::from_groups(/* e23, e31, e12 */ self.group0() - other.group0(), /* e15, e25, e35 */ self.group1() - other.group1());
     }
 }
 impl std::ops::Sub<AntiMotor> for AntiLine {

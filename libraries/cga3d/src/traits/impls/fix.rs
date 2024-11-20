@@ -234,7 +234,7 @@ impl Fix for Sphere {
         use crate::elements::*;
         let geometric_product = Scalar::from_groups(
             // scalar
-            -f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + 2.0 * (self.group0()[3] * self[e4315]),
+            2.0 * (self.group0()[3] * self[e4315]) - f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2),
         );
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));

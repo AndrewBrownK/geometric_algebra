@@ -9,16 +9,16 @@ use crate::traits::UnitizedFlatNormSquared;
 // Total Implementations: 15
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:         2       7       1
-//   Median:         6      10       1
-//  Average:        10      19       1
-//  Maximum:        63      84       1
+//  Minimum:         2       6       1
+//   Median:         6       9       1
+//  Average:        10      18       1
+//  Maximum:        63      83       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         2       7       1
-//   Median:         6      13       1
-//  Average:        10      21       1
-//  Maximum:        63      90       1
+//  Minimum:         2       6       1
+//   Median:         6      12       1
+//  Average:        10      20       1
+//  Maximum:        63      89       1
 impl std::ops::Div<unitized_flat_norm> for AntiCircleRotor {
     type Output = f32;
     fn div(self, _rhs: unitized_flat_norm) -> Self::Output {
@@ -28,11 +28,11 @@ impl std::ops::Div<unitized_flat_norm> for AntiCircleRotor {
 impl UnitizedFlatNorm for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        6        1
+    //      f32        2        5        1
     //    simd3        0        1        0
     // Totals...
-    // yes simd        2        7        1
-    //  no simd        2        9        1
+    // yes simd        2        6        1
+    //  no simd        2        8        1
     fn unitized_flat_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
@@ -46,11 +46,11 @@ impl std::ops::Div<unitized_flat_norm> for AntiDipoleInversion {
 impl UnitizedFlatNorm for AntiDipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       29        1
+    //      f32       16       28        1
     //    simd3        0        2        0
     // Totals...
-    // yes simd       16       31        1
-    //  no simd       16       35        1
+    // yes simd       16       30        1
+    //  no simd       16       34        1
     fn unitized_flat_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
@@ -64,7 +64,7 @@ impl std::ops::Div<unitized_flat_norm> for Circle {
 impl UnitizedFlatNorm for Circle {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        6       17        1
+    // f32        6       16        1
     fn unitized_flat_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
@@ -78,7 +78,7 @@ impl std::ops::Div<unitized_flat_norm> for CircleRotor {
 impl UnitizedFlatNorm for CircleRotor {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        7       18        1
+    // f32        7       17        1
     fn unitized_flat_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
@@ -92,11 +92,11 @@ impl std::ops::Div<unitized_flat_norm> for Dipole {
 impl UnitizedFlatNorm for Dipole {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        6        1
+    //      f32        2        5        1
     //    simd3        0        1        0
     // Totals...
-    // yes simd        2        7        1
-    //  no simd        2        9        1
+    // yes simd        2        6        1
+    //  no simd        2        8        1
     fn unitized_flat_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
@@ -110,11 +110,11 @@ impl std::ops::Div<unitized_flat_norm> for DipoleInversion {
 impl UnitizedFlatNorm for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6        9        1
+    //      f32        6        8        1
     //    simd4        0        1        0
     // Totals...
-    // yes simd        6       10        1
-    //  no simd        6       13        1
+    // yes simd        6        9        1
+    //  no simd        6       12        1
     fn unitized_flat_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
@@ -128,11 +128,11 @@ impl std::ops::Div<unitized_flat_norm> for FlatPoint {
 impl UnitizedFlatNorm for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        6        1
+    //      f32        2        5        1
     //    simd3        0        1        0
     // Totals...
-    // yes simd        2        7        1
-    //  no simd        2        9        1
+    // yes simd        2        6        1
+    //  no simd        2        8        1
     fn unitized_flat_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
@@ -146,11 +146,11 @@ impl std::ops::Div<unitized_flat_norm> for Flector {
 impl UnitizedFlatNorm for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6        9        1
+    //      f32        6        8        1
     //    simd4        0        1        0
     // Totals...
-    // yes simd        6       10        1
-    //  no simd        6       13        1
+    // yes simd        6        9        1
+    //  no simd        6       12        1
     fn unitized_flat_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
@@ -164,7 +164,7 @@ impl std::ops::Div<unitized_flat_norm> for Line {
 impl UnitizedFlatNorm for Line {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        6       17        1
+    // f32        6       16        1
     fn unitized_flat_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
@@ -178,11 +178,11 @@ impl std::ops::Div<unitized_flat_norm> for Motor {
 impl UnitizedFlatNorm for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       30        1
+    //      f32       17       29        1
     //    simd3        0        2        0
     // Totals...
-    // yes simd       17       32        1
-    //  no simd       17       36        1
+    // yes simd       17       31        1
+    //  no simd       17       35        1
     fn unitized_flat_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
@@ -196,11 +196,11 @@ impl std::ops::Div<unitized_flat_norm> for MultiVector {
 impl UnitizedFlatNorm for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       63       81        1
+    //      f32       63       80        1
     //    simd3        0        3        0
     // Totals...
-    // yes simd       63       84        1
-    //  no simd       63       90        1
+    // yes simd       63       83        1
+    //  no simd       63       89        1
     fn unitized_flat_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
@@ -214,7 +214,7 @@ impl std::ops::Div<unitized_flat_norm> for Plane {
 impl UnitizedFlatNorm for Plane {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        2        7        1
+    // f32        2        6        1
     fn unitized_flat_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
@@ -228,7 +228,7 @@ impl std::ops::Div<unitized_flat_norm> for Sphere {
 impl UnitizedFlatNorm for Sphere {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        2        7        1
+    // f32        2        6        1
     fn unitized_flat_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
@@ -242,11 +242,11 @@ impl std::ops::Div<unitized_flat_norm> for VersorEven {
 impl UnitizedFlatNorm for VersorEven {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       30        1
+    //      f32       17       29        1
     //    simd3        0        2        0
     // Totals...
-    // yes simd       17       32        1
-    //  no simd       17       36        1
+    // yes simd       17       31        1
+    //  no simd       17       35        1
     fn unitized_flat_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }
@@ -260,11 +260,11 @@ impl std::ops::Div<unitized_flat_norm> for VersorOdd {
 impl UnitizedFlatNorm for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6        9        1
+    //      f32        6        8        1
     //    simd4        0        1        0
     // Totals...
-    // yes simd        6       10        1
-    //  no simd        6       13        1
+    // yes simd        6        9        1
+    //  no simd        6       12        1
     fn unitized_flat_norm(self) -> f32 {
         return f32::powf(self.unitized_flat_norm_squared(), 0.5);
     }

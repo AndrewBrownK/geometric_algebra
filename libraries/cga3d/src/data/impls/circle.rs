@@ -1371,9 +1371,9 @@ impl std::ops::Sub<AntiDipoleInversion> for Circle {
     fn sub(self, other: AntiDipoleInversion) -> Self::Output {
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e415, e425, e435, e321
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
             // e235, e315, e125, e4
             Simd32x4::from([
                 self.group2()[0] - other.group2()[0],
@@ -1432,7 +1432,7 @@ impl std::ops::Sub<AntiFlatPoint> for Circle {
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], -other.group0()[3] + self.group1()[3]]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] - other.group0()[3]]),
             // e235, e315, e125
             Simd32x3::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0]) + self.group2(),
         );
@@ -1444,7 +1444,7 @@ impl std::ops::SubAssign<AntiFlatPoint> for Circle {
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], -other.group0()[3] + self.group1()[3]]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] - other.group0()[3]]),
             // e235, e315, e125
             Simd32x3::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0]) + self.group2(),
         );
@@ -1464,7 +1464,7 @@ impl std::ops::Sub<AntiFlector> for Circle {
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], -other.group0()[3] + self.group1()[3]]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] - other.group0()[3]]),
             // e235, e315, e125, e4
             Simd32x4::from([self.group2()[0] - other.group0()[0], self.group2()[1] - other.group0()[1], self.group2()[2] - other.group0()[2], 0.0]),
             // e1, e2, e3, e5
@@ -1592,11 +1592,11 @@ impl std::ops::Sub<Circle> for Circle {
     fn sub(self, other: Circle) -> Self::Output {
         return Circle::from_groups(
             // e423, e431, e412
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e415, e425, e435, e321
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
             // e235, e315, e125
-            -other.group2() + self.group2(),
+            self.group2() - other.group2(),
         );
     }
 }
@@ -1604,11 +1604,11 @@ impl std::ops::SubAssign<Circle> for Circle {
     fn sub_assign(&mut self, other: Circle) {
         *self = Circle::from_groups(
             // e423, e431, e412
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e415, e425, e435, e321
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
             // e235, e315, e125
-            -other.group2() + self.group2(),
+            self.group2() - other.group2(),
         );
     }
 }
@@ -1810,9 +1810,9 @@ impl std::ops::Sub<Line> for Circle {
             self.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                -other.group0()[0] + self.group1()[0],
-                -other.group0()[1] + self.group1()[1],
-                -other.group0()[2] + self.group1()[2],
+                self.group1()[0] - other.group0()[0],
+                self.group1()[1] - other.group0()[1],
+                self.group1()[2] - other.group0()[2],
                 self.group1()[3],
             ]),
             // e235, e315, e125
@@ -1827,9 +1827,9 @@ impl std::ops::SubAssign<Line> for Circle {
             self.group0(),
             // e415, e425, e435, e321
             Simd32x4::from([
-                -other.group0()[0] + self.group1()[0],
-                -other.group0()[1] + self.group1()[1],
-                -other.group0()[2] + self.group1()[2],
+                self.group1()[0] - other.group0()[0],
+                self.group1()[1] - other.group0()[1],
+                self.group1()[2] - other.group0()[2],
                 self.group1()[3],
             ]),
             // e235, e315, e125

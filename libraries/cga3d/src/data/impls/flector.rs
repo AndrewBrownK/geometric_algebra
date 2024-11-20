@@ -1257,9 +1257,9 @@ impl std::ops::Sub<AntiCircleRotor> for Flector {
             // e41, e42, e43, scalar
             Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]) * Simd32x4::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, -other.group1()[3] + self.group0()[3]]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, self.group0()[3] - other.group1()[3]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([-other.group2()[0] + self.group0()[0], -other.group2()[1] + self.group0()[1], -other.group2()[2] + self.group0()[2], 0.0]),
+            Simd32x4::from([self.group0()[0] - other.group2()[0], self.group0()[1] - other.group2()[1], self.group0()[2] - other.group2()[2], 0.0]),
             // e4235, e4315, e4125, e3215
             self.group1(),
         );
@@ -1404,7 +1404,7 @@ impl std::ops::Sub<AntiLine> for Flector {
             // e23, e31, e12, e45
             Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, self.group0()[3]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([-other.group1()[0] + self.group0()[0], -other.group1()[1] + self.group0()[1], -other.group1()[2] + self.group0()[2], 0.0]),
+            Simd32x4::from([self.group0()[0] - other.group1()[0], self.group0()[1] - other.group1()[1], self.group0()[2] - other.group1()[2], 0.0]),
             // e4235, e4315, e4125, e3215
             self.group1(),
         );
@@ -1422,9 +1422,9 @@ impl std::ops::Sub<AntiMotor> for Flector {
             // e23, e31, e12, e45
             Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, self.group0()[3]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([-other.group1()[0] + self.group0()[0], -other.group1()[1] + self.group0()[1], -other.group1()[2] + self.group0()[2], 0.0]),
+            Simd32x4::from([self.group0()[0] - other.group1()[0], self.group0()[1] - other.group1()[1], self.group0()[2] - other.group1()[2], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], -other.group1()[3] + self.group1()[3]]),
+            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] - other.group1()[3]]),
         );
     }
 }
@@ -1580,9 +1580,9 @@ impl std::ops::Sub<Dipole> for Flector {
             // e41, e42, e43
             other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, -other.group1()[3] + self.group0()[3]]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, self.group0()[3] - other.group1()[3]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([-other.group2()[0] + self.group0()[0], -other.group2()[1] + self.group0()[1], -other.group2()[2] + self.group0()[2], 0.0]),
+            Simd32x4::from([self.group0()[0] - other.group2()[0], self.group0()[1] - other.group2()[1], self.group0()[2] - other.group2()[2], 0.0]),
             // e4235, e4315, e4125, e3215
             self.group1(),
         );
@@ -1603,16 +1603,16 @@ impl std::ops::Sub<DipoleInversion> for Flector {
             // e41, e42, e43
             other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, -other.group1()[3] + self.group0()[3]]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, self.group0()[3] - other.group1()[3]]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                -other.group2()[0] + self.group0()[0],
-                -other.group2()[1] + self.group0()[1],
-                -other.group2()[2] + self.group0()[2],
+                self.group0()[0] - other.group2()[0],
+                self.group0()[1] - other.group2()[1],
+                self.group0()[2] - other.group2()[2],
                 other.group2()[3] * -1.0,
             ]),
             // e4235, e4315, e4125, e3215
-            -other.group3() + self.group1(),
+            self.group1() - other.group3(),
         );
     }
 }
@@ -1655,12 +1655,12 @@ impl std::ops::Sub<FlatPoint> for Flector {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: FlatPoint) -> Self::Output {
-        return Flector::from_groups(/* e15, e25, e35, e45 */ -other.group0() + self.group0(), /* e4235, e4315, e4125, e3215 */ self.group1());
+        return Flector::from_groups(/* e15, e25, e35, e45 */ self.group0() - other.group0(), /* e4235, e4315, e4125, e3215 */ self.group1());
     }
 }
 impl std::ops::SubAssign<FlatPoint> for Flector {
     fn sub_assign(&mut self, other: FlatPoint) {
-        *self = Flector::from_groups(/* e15, e25, e35, e45 */ -other.group0() + self.group0(), /* e4235, e4315, e4125, e3215 */ self.group1());
+        *self = Flector::from_groups(/* e15, e25, e35, e45 */ self.group0() - other.group0(), /* e4235, e4315, e4125, e3215 */ self.group1());
     }
 }
 impl std::ops::Sub<Flector> for Flector {
@@ -1672,9 +1672,9 @@ impl std::ops::Sub<Flector> for Flector {
     fn sub(self, other: Flector) -> Self::Output {
         return Flector::from_groups(
             // e15, e25, e35, e45
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e4235, e4315, e4125, e3215
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
         );
     }
 }
@@ -1682,9 +1682,9 @@ impl std::ops::SubAssign<Flector> for Flector {
     fn sub_assign(&mut self, other: Flector) {
         *self = Flector::from_groups(
             // e15, e25, e35, e45
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e4235, e4315, e4125, e3215
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
         );
     }
 }

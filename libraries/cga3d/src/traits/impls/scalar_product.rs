@@ -45,7 +45,7 @@ impl ScalarProduct<AntiFlector> for AntiFlector {
     fn scalar_product(self, other: AntiFlector) -> Scalar {
         return Scalar::from_groups(
             // scalar
-            -(other.group0()[3] * self.group0()[3]) + (other.group1()[0] * self.group1()[0]) + (other.group1()[1] * self.group1()[1]) + (other.group1()[2] * self.group1()[2]),
+            (other.group1()[0] * self.group1()[0]) + (other.group1()[1] * self.group1()[1]) + (other.group1()[2] * self.group1()[2]) - (other.group0()[3] * self.group0()[3]),
         );
     }
 }
@@ -79,7 +79,7 @@ impl ScalarProduct<AntiMotor> for AntiMotor {
     fn scalar_product(self, other: AntiMotor) -> Scalar {
         return Scalar::from_groups(
             // scalar
-            -(other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2]) + (other.group0()[3] * self.group0()[3]),
+            (other.group0()[3] * self.group0()[3]) - (other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2]),
         );
     }
 }
@@ -128,7 +128,8 @@ impl ScalarProduct<Dipole> for Dipole {
     fn scalar_product(self, other: Dipole) -> Scalar {
         return Scalar::from_groups(
             // scalar
-            -(other.group0()[0] * self.group2()[0])
+            (other.group1()[3] * self.group1()[3])
+                - (other.group0()[0] * self.group2()[0])
                 - (other.group0()[1] * self.group2()[1])
                 - (other.group0()[2] * self.group2()[2])
                 - (other.group2()[0] * self.group0()[0])
@@ -136,8 +137,7 @@ impl ScalarProduct<Dipole> for Dipole {
                 - (other.group2()[2] * self.group0()[2])
                 - (other.group1()[0] * self.group1()[0])
                 - (other.group1()[1] * self.group1()[1])
-                - (other.group1()[2] * self.group1()[2])
-                + (other.group1()[3] * self.group1()[3]),
+                - (other.group1()[2] * self.group1()[2]),
         );
     }
 }
@@ -154,7 +154,8 @@ impl ScalarProduct<DipoleInversion> for DipoleInversion {
     fn scalar_product(self, other: DipoleInversion) -> Scalar {
         return Scalar::from_groups(
             // scalar
-            -(other.group0()[0] * self.group2()[0])
+            (other.group1()[3] * self.group1()[3]) + (other.group2()[3] * self.group3()[3]) + (other.group3()[3] * self.group2()[3])
+                - (other.group0()[0] * self.group2()[0])
                 - (other.group0()[1] * self.group2()[1])
                 - (other.group0()[2] * self.group2()[2])
                 - (self.group0()[0] * other.group2()[0])
@@ -163,12 +164,9 @@ impl ScalarProduct<DipoleInversion> for DipoleInversion {
                 - (other.group1()[0] * self.group1()[0])
                 - (other.group1()[1] * self.group1()[1])
                 - (other.group1()[2] * self.group1()[2])
-                + (other.group1()[3] * self.group1()[3])
-                + (other.group2()[3] * self.group3()[3])
                 - (other.group3()[0] * self.group3()[0])
                 - (other.group3()[1] * self.group3()[1])
-                - (other.group3()[2] * self.group3()[2])
-                + (other.group3()[3] * self.group2()[3]),
+                - (other.group3()[2] * self.group3()[2]),
         );
     }
 }
@@ -221,6 +219,21 @@ impl ScalarProduct<MultiVector> for MultiVector {
         return Scalar::from_groups(
             // scalar
             (other.group0()[0] * self.group0()[0])
+                + (other.group7()[0] * self.group8()[0])
+                + (other.group7()[1] * self.group8()[1])
+                + (other.group7()[2] * self.group8()[2])
+                + (other.group8()[0] * self.group7()[0])
+                + (other.group8()[1] * self.group7()[1])
+                + (other.group8()[2] * self.group7()[2])
+                + (other.group1()[0] * self.group1()[0])
+                + (other.group1()[1] * self.group1()[1])
+                + (other.group1()[2] * self.group1()[2])
+                + (other.group3()[3] * self.group3()[3])
+                + (other.group6()[0] * self.group6()[0])
+                + (other.group6()[1] * self.group6()[1])
+                + (other.group6()[2] * self.group6()[2])
+                + (other.group9()[3] * self[e45])
+                + (self.group9()[3] * other[e45])
                 - (other.group0()[1] * self.group0()[1])
                 - (other.group4()[0] * self.group3()[0])
                 - (other.group4()[1] * self.group3()[1])
@@ -228,30 +241,15 @@ impl ScalarProduct<MultiVector> for MultiVector {
                 - (other.group5()[0] * self.group5()[0])
                 - (other.group5()[1] * self.group5()[1])
                 - (other.group5()[2] * self.group5()[2])
-                + (other.group7()[0] * self.group8()[0])
-                + (other.group7()[1] * self.group8()[1])
-                + (other.group7()[2] * self.group8()[2])
-                + (other.group8()[0] * self.group7()[0])
-                + (other.group8()[1] * self.group7()[1])
-                + (other.group8()[2] * self.group7()[2])
                 - (self.group4()[0] * other.group3()[0])
                 - (self.group4()[1] * other.group3()[1])
                 - (self.group4()[2] * other.group3()[2])
-                + (other.group1()[0] * self.group1()[0])
-                + (other.group1()[1] * self.group1()[1])
-                + (other.group1()[2] * self.group1()[2])
                 - (other.group1()[3] * self[e1])
-                + (other.group3()[3] * self.group3()[3])
-                + (other.group6()[0] * self.group6()[0])
-                + (other.group6()[1] * self.group6()[1])
-                + (other.group6()[2] * self.group6()[2])
                 - (other.group6()[3] * self.group6()[3])
                 - (other.group9()[0] * self.group9()[0])
                 - (other.group9()[1] * self.group9()[1])
                 - (other.group9()[2] * self.group9()[2])
-                + (other.group9()[3] * self[e45])
-                - (self.group1()[3] * other[e1])
-                + (self.group9()[3] * other[e45]),
+                - (self.group1()[3] * other[e1]),
         );
     }
 }
@@ -284,9 +282,10 @@ impl ScalarProduct<Sphere> for Sphere {
         use crate::elements::*;
         return Scalar::from_groups(
             // scalar
-            -(other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])
-                + (other.group0()[3] * self[e4315])
-                + (self.group0()[3] * other[e4315]),
+            (other.group0()[3] * self[e4315]) + (self.group0()[3] * other[e4315])
+                - (other.group0()[0] * self.group0()[0])
+                - (other.group0()[1] * self.group0()[1])
+                - (other.group0()[2] * self.group0()[2]),
         );
     }
 }

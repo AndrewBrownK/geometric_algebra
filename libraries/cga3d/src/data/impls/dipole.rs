@@ -1386,9 +1386,9 @@ impl std::ops::Sub<AntiCircleRotor> for Dipole {
     fn sub(self, other: AntiCircleRotor) -> Self::Output {
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e23, e31, e12, e45
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
             // e15, e25, e35, scalar
             Simd32x4::from([
                 self.group2()[0] - other.group2()[0],
@@ -1541,13 +1541,13 @@ impl std::ops::Sub<AntiLine> for Dipole {
             self.group0(),
             // e23, e31, e12, e45
             Simd32x4::from([
-                -other.group0()[0] + self.group1()[0],
-                -other.group0()[1] + self.group1()[1],
-                -other.group0()[2] + self.group1()[2],
+                self.group1()[0] - other.group0()[0],
+                self.group1()[1] - other.group0()[1],
+                self.group1()[2] - other.group0()[2],
                 self.group1()[3],
             ]),
             // e15, e25, e35
-            -other.group1() + self.group2(),
+            self.group2() - other.group1(),
         );
     }
 }
@@ -1558,13 +1558,13 @@ impl std::ops::SubAssign<AntiLine> for Dipole {
             self.group0(),
             // e23, e31, e12, e45
             Simd32x4::from([
-                -other.group0()[0] + self.group1()[0],
-                -other.group0()[1] + self.group1()[1],
-                -other.group0()[2] + self.group1()[2],
+                self.group1()[0] - other.group0()[0],
+                self.group1()[1] - other.group0()[1],
+                self.group1()[2] - other.group0()[2],
                 self.group1()[3],
             ]),
             // e15, e25, e35
-            -other.group1() + self.group2(),
+            self.group2() - other.group1(),
         );
     }
 }
@@ -1579,9 +1579,9 @@ impl std::ops::Sub<AntiMotor> for Dipole {
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], other.group0()[3] * -1.0]),
             // e23, e31, e12, e45
             Simd32x4::from([
-                -other.group0()[0] + self.group1()[0],
-                -other.group0()[1] + self.group1()[1],
-                -other.group0()[2] + self.group1()[2],
+                self.group1()[0] - other.group0()[0],
+                self.group1()[1] - other.group0()[1],
+                self.group1()[2] - other.group0()[2],
                 self.group1()[3],
             ]),
             // e15, e25, e35, e1234
@@ -1741,11 +1741,11 @@ impl std::ops::Sub<Dipole> for Dipole {
     fn sub(self, other: Dipole) -> Self::Output {
         return Dipole::from_groups(
             // e41, e42, e43
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e23, e31, e12, e45
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
             // e15, e25, e35
-            -other.group2() + self.group2(),
+            self.group2() - other.group2(),
         );
     }
 }
@@ -1753,11 +1753,11 @@ impl std::ops::SubAssign<Dipole> for Dipole {
     fn sub_assign(&mut self, other: Dipole) {
         *self = Dipole::from_groups(
             // e41, e42, e43
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e23, e31, e12, e45
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
             // e15, e25, e35
-            -other.group2() + self.group2(),
+            self.group2() - other.group2(),
         );
     }
 }

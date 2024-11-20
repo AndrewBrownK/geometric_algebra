@@ -1151,12 +1151,12 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiFlatPoint {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, -other.group1()[3] + self.group0()[3]]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, self.group0()[3] - other.group1()[3]]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                -other.group2()[0] + self.group0()[0],
-                -other.group2()[1] + self.group0()[1],
-                -other.group2()[2] + self.group0()[2],
+                self.group0()[0] - other.group2()[0],
+                self.group0()[1] - other.group2()[1],
+                self.group0()[2] - other.group2()[2],
                 other.group2()[3] * -1.0,
             ]),
             // e1, e2, e3, e5
@@ -1203,12 +1203,12 @@ impl std::ops::Sub<AntiFlatPoint> for AntiFlatPoint {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: AntiFlatPoint) -> Self::Output {
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ -other.group0() + self.group0());
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() - other.group0());
     }
 }
 impl std::ops::SubAssign<AntiFlatPoint> for AntiFlatPoint {
     fn sub_assign(&mut self, other: AntiFlatPoint) {
-        *self = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ -other.group0() + self.group0());
+        *self = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() - other.group0());
     }
 }
 impl std::ops::Sub<AntiFlector> for AntiFlatPoint {

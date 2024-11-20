@@ -1301,7 +1301,7 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiPlane {
             // e235, e315, e125, e4
             other.group2() * Simd32x4::from(-1.0),
             // e1, e2, e3, e5
-            -other.group3() + self.group0(),
+            self.group0() - other.group3(),
         );
     }
 }
@@ -1358,7 +1358,7 @@ impl std::ops::Sub<AntiFlector> for AntiPlane {
             // e235, e315, e125, e321
             other.group0() * Simd32x4::from(-1.0),
             // e1, e2, e3, e5
-            -other.group1() + self.group0(),
+            self.group0() - other.group1(),
         );
     }
 }
@@ -1441,12 +1441,12 @@ impl std::ops::Sub<AntiPlane> for AntiPlane {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: AntiPlane) -> Self::Output {
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ -other.group0() + self.group0());
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ self.group0() - other.group0());
     }
 }
 impl std::ops::SubAssign<AntiPlane> for AntiPlane {
     fn sub_assign(&mut self, other: AntiPlane) {
-        *self = AntiPlane::from_groups(/* e1, e2, e3, e5 */ -other.group0() + self.group0());
+        *self = AntiPlane::from_groups(/* e1, e2, e3, e5 */ self.group0() - other.group0());
     }
 }
 impl std::ops::Sub<AntiScalar> for AntiPlane {

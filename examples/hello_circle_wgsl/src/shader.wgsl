@@ -69,6 +69,12 @@ fn fs_main(vertex: VertexOutput) -> @location(0) vec4<f32> {
     let top = cga::RoundPoint(vec4<f32>(0.0, 1.0, 0.0, 0.5), 0.5);
     let right = cga::RoundPoint(vec4<f32>(1.0, 0.0, 0.0, 1.0), 0.5);
 
+
+
+//    return background_color;
+
+
+
     // Join the first pair
     let left_to_top_dipole = cga::roundPoint_wedge_roundPoint(left, top);
 

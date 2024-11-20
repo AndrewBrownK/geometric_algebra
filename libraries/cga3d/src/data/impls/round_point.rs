@@ -1389,7 +1389,7 @@ impl std::ops::Sub<AntiDipoleInversion> for RoundPoint {
             // e415, e425, e435, e321
             other.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e4
-            Simd32x4::from([other.group2()[0] * -1.0, other.group2()[1] * -1.0, other.group2()[2] * -1.0, -other.group2()[3] + self.group0()[3]]),
+            Simd32x4::from([other.group2()[0] * -1.0, other.group2()[1] * -1.0, other.group2()[2] * -1.0, self.group0()[3] - other.group2()[3]]),
             // e1, e2, e3, e5
             Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2]]) - other.group3(),
         );
@@ -1554,13 +1554,13 @@ impl std::ops::Sub<AntiPlane> for RoundPoint {
         return RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
-                -other.group0()[0] + self.group0()[0],
-                -other.group0()[1] + self.group0()[1],
-                -other.group0()[2] + self.group0()[2],
+                self.group0()[0] - other.group0()[0],
+                self.group0()[1] - other.group0()[1],
+                self.group0()[2] - other.group0()[2],
                 self.group0()[3],
             ]),
             // e5
-            -other.group0()[3] + self[e2],
+            self[e2] - other.group0()[3],
         );
     }
 }
@@ -1570,13 +1570,13 @@ impl std::ops::SubAssign<AntiPlane> for RoundPoint {
         *self = RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from([
-                -other.group0()[0] + self.group0()[0],
-                -other.group0()[1] + self.group0()[1],
-                -other.group0()[2] + self.group0()[2],
+                self.group0()[0] - other.group0()[0],
+                self.group0()[1] - other.group0()[1],
+                self.group0()[2] - other.group0()[2],
                 self.group0()[3],
             ]),
             // e5
-            -other.group0()[3] + self[e2],
+            self[e2] - other.group0()[3],
         );
     }
 }
@@ -1736,7 +1736,7 @@ impl std::ops::Sub<DualNum> for RoundPoint {
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, self[e2]]),
             // e1, e2, e3, e4
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], -other.group0()[0] + self.group0()[3]]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] - other.group0()[0]]),
         );
     }
 }
@@ -1840,7 +1840,7 @@ impl std::ops::Sub<Motor> for RoundPoint {
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, 0.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, -other.group1()[3] + self[e2]]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, self[e2] - other.group1()[3]]),
             // e1, e2, e3, e4
             self.group0(),
         );
@@ -1863,9 +1863,9 @@ impl std::ops::Sub<MultiVector> for RoundPoint {
             // scalar, e12345
             other.group0() * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
-            -other.group1() + self.group0(),
+            self.group0() - other.group1(),
             // e5
-            -other[e1] + self[e2],
+            self[e2] - other[e1],
             // e15, e25, e35, e45
             other.group3() * Simd32x4::from(-1.0),
             // e41, e42, e43
@@ -1930,13 +1930,13 @@ impl std::ops::Sub<RoundPoint> for RoundPoint {
     //  no simd        5        0        0
     fn sub(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ -other.group0() + self.group0(), /* e5 */ -other[e2] + self[e2]);
+        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0() - other.group0(), /* e5 */ self[e2] - other[e2]);
     }
 }
 impl std::ops::SubAssign<RoundPoint> for RoundPoint {
     fn sub_assign(&mut self, other: RoundPoint) {
         use crate::elements::*;
-        *self = RoundPoint::from_groups(/* e1, e2, e3, e4 */ -other.group0() + self.group0(), /* e5 */ -other[e2] + self[e2]);
+        *self = RoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0() - other.group0(), /* e5 */ self[e2] - other[e2]);
     }
 }
 impl std::ops::Sub<Scalar> for RoundPoint {
@@ -2026,7 +2026,7 @@ impl std::ops::Sub<VersorEven> for RoundPoint {
             // e415, e425, e435, e321
             other.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group2()[0] * -1.0, other.group2()[1] * -1.0, other.group2()[2] * -1.0, -other.group2()[3] + self[e2]]),
+            Simd32x4::from([other.group2()[0] * -1.0, other.group2()[1] * -1.0, other.group2()[2] * -1.0, self[e2] - other.group2()[3]]),
             // e1, e2, e3, e4
             self.group0() - other.group3(),
         );

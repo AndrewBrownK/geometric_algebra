@@ -1244,7 +1244,7 @@ impl std::ops::Sub<AntiDualNum> for Sphere {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0] + self[e4315]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e4315] - other.group0()[0]]),
             // e4235, e4315, e4125, e3215
             self.group0(),
         );
@@ -1358,7 +1358,7 @@ impl std::ops::Sub<AntiMotor> for Sphere {
             // e15, e25, e35, e1234
             Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, self[e4315]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], -other.group1()[3] + self.group0()[3]]),
+            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] - other.group1()[3]]),
         );
     }
 }
@@ -1545,9 +1545,9 @@ impl std::ops::Sub<DipoleInversion> for Sphere {
             // e23, e31, e12, e45
             other.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([other.group2()[0] * -1.0, other.group2()[1] * -1.0, other.group2()[2] * -1.0, -other.group2()[3] + self[e4315]]),
+            Simd32x4::from([other.group2()[0] * -1.0, other.group2()[1] * -1.0, other.group2()[2] * -1.0, self[e4315] - other.group2()[3]]),
             // e4235, e4315, e4125, e3215
-            -other.group3() + self.group0(),
+            self.group0() - other.group3(),
         );
     }
 }
@@ -1622,7 +1622,7 @@ impl std::ops::Sub<Flector> for Sphere {
             // e15, e25, e35, e1234
             Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, self[e4315]]),
             // e4235, e4315, e4125, e3215
-            -other.group1() + self.group0(),
+            self.group0() - other.group1(),
         );
     }
 }
@@ -1733,9 +1733,9 @@ impl std::ops::Sub<MultiVector> for Sphere {
             // e235, e315, e125
             other.group8() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            -other.group9() + self.group0(),
+            self.group0() - other.group9(),
             // e1234
-            -other[e45] + self[e4315],
+            self[e4315] - other[e45],
         );
     }
 }
@@ -1747,13 +1747,13 @@ impl std::ops::Sub<Plane> for Sphere {
     // no simd        4        0        0
     fn sub(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ -other.group0() + self.group0(), /* e1234 */ self[e4315]);
+        return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0() - other.group0(), /* e1234 */ self[e4315]);
     }
 }
 impl std::ops::SubAssign<Plane> for Sphere {
     fn sub_assign(&mut self, other: Plane) {
         use crate::elements::*;
-        *self = Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ -other.group0() + self.group0(), /* e1234 */ self[e4315]);
+        *self = Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0() - other.group0(), /* e1234 */ self[e4315]);
     }
 }
 impl std::ops::Sub<RoundPoint> for Sphere {
@@ -1823,13 +1823,13 @@ impl std::ops::Sub<Sphere> for Sphere {
     //  no simd        5        0        0
     fn sub(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ -other.group0() + self.group0(), /* e1234 */ -other[e4315] + self[e4315]);
+        return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0() - other.group0(), /* e1234 */ self[e4315] - other[e4315]);
     }
 }
 impl std::ops::SubAssign<Sphere> for Sphere {
     fn sub_assign(&mut self, other: Sphere) {
         use crate::elements::*;
-        *self = Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ -other.group0() + self.group0(), /* e1234 */ -other[e4315] + self[e4315]);
+        *self = Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0() - other.group0(), /* e1234 */ self[e4315] - other[e4315]);
     }
 }
 impl std::ops::Sub<VersorEven> for Sphere {
@@ -1887,7 +1887,7 @@ impl std::ops::Sub<VersorOdd> for Sphere {
             // e23, e31, e12, e45
             other.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([other.group2()[0] * -1.0, other.group2()[1] * -1.0, other.group2()[2] * -1.0, -other.group2()[3] + self[e4315]]),
+            Simd32x4::from([other.group2()[0] * -1.0, other.group2()[1] * -1.0, other.group2()[2] * -1.0, self[e4315] - other.group2()[3]]),
             // e4235, e4315, e4125, e3215
             self.group0() - other.group3(),
         );

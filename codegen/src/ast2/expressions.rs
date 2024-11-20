@@ -2650,9 +2650,12 @@ trait SortVecDespiteF32 {
 impl<Expr: Ord> SortVecDespiteF32 for Vec<(Expr, f32)> {
     fn sort_with_f32(&mut self) {
         self.sort_by(|(a_expr, a_f32), (b_expr, b_f32)| {
-            a_expr.cmp(b_expr).then_with(|| {
-                FloatOrd(*a_f32).cmp(&FloatOrd(*b_f32))
-            })
+            // Sort higher coefficients/exponents (additions and multiplications) first,
+            // then lower coefficients/exponents (subtractions and divisions) last
+            FloatOrd(*a_f32).cmp(&FloatOrd(*b_f32))
+                .reverse()
+                // Then deterministically sort the expressions themselves
+                .then_with(|| a_expr.cmp(b_expr))
         });
     }
 }

@@ -58,7 +58,8 @@ impl AntiScalarProduct<AntiDipoleInversion> for AntiDipoleInversion {
     fn anti_scalar_product(self, other: AntiDipoleInversion) -> AntiScalar {
         return AntiScalar::from_groups(
             // e12345
-            -(other.group0()[0] * self.group2()[0])
+            (other.group1()[3] * self.group1()[3]) + (other.group2()[3] * self.group3()[3]) + (other.group3()[3] * self.group2()[3])
+                - (other.group0()[0] * self.group2()[0])
                 - (other.group0()[1] * self.group2()[1])
                 - (other.group0()[2] * self.group2()[2])
                 - (self.group0()[0] * other.group2()[0])
@@ -67,12 +68,9 @@ impl AntiScalarProduct<AntiDipoleInversion> for AntiDipoleInversion {
                 - (other.group1()[0] * self.group1()[0])
                 - (other.group1()[1] * self.group1()[1])
                 - (other.group1()[2] * self.group1()[2])
-                + (other.group1()[3] * self.group1()[3])
-                + (other.group2()[3] * self.group3()[3])
                 - (other.group3()[0] * self.group3()[0])
                 - (other.group3()[1] * self.group3()[1])
-                - (other.group3()[2] * self.group3()[2])
-                + (other.group3()[3] * self.group2()[3]),
+                - (other.group3()[2] * self.group3()[2]),
         );
     }
 }
@@ -200,7 +198,8 @@ impl AntiScalarProduct<Circle> for Circle {
     fn anti_scalar_product(self, other: Circle) -> AntiScalar {
         return AntiScalar::from_groups(
             // e12345
-            -(other.group0()[0] * self.group2()[0])
+            (other.group1()[3] * self.group1()[3])
+                - (other.group0()[0] * self.group2()[0])
                 - (other.group0()[1] * self.group2()[1])
                 - (other.group0()[2] * self.group2()[2])
                 - (other.group2()[0] * self.group0()[0])
@@ -208,8 +207,7 @@ impl AntiScalarProduct<Circle> for Circle {
                 - (other.group2()[2] * self.group0()[2])
                 - (other.group1()[0] * self.group1()[0])
                 - (other.group1()[1] * self.group1()[1])
-                - (other.group1()[2] * self.group1()[2])
-                + (other.group1()[3] * self.group1()[3]),
+                - (other.group1()[2] * self.group1()[2]),
         );
     }
 }
@@ -226,7 +224,8 @@ impl AntiScalarProduct<CircleRotor> for CircleRotor {
     fn anti_scalar_product(self, other: CircleRotor) -> AntiScalar {
         return AntiScalar::from_groups(
             // e12345
-            -(other.group0()[0] * self.group2()[0])
+            (other.group1()[3] * self.group1()[3]) + (other.group2()[3] * self.group2()[3])
+                - (other.group0()[0] * self.group2()[0])
                 - (other.group0()[1] * self.group2()[1])
                 - (other.group0()[2] * self.group2()[2])
                 - (self.group0()[0] * other.group2()[0])
@@ -234,9 +233,7 @@ impl AntiScalarProduct<CircleRotor> for CircleRotor {
                 - (self.group0()[2] * other.group2()[2])
                 - (other.group1()[0] * self.group1()[0])
                 - (other.group1()[1] * self.group1()[1])
-                - (other.group1()[2] * self.group1()[2])
-                + (other.group1()[3] * self.group1()[3])
-                + (other.group2()[3] * self.group2()[3]),
+                - (other.group1()[2] * self.group1()[2]),
         );
     }
 }
@@ -288,11 +285,11 @@ impl AntiScalarProduct<DipoleInversion> for DipoleInversion {
                 + (other.group1()[0] * self.group1()[0])
                 + (other.group1()[1] * self.group1()[1])
                 + (other.group1()[2] * self.group1()[2])
-                - (other.group1()[3] * self.group1()[3])
-                - (other.group2()[3] * self.group3()[3])
                 + (other.group3()[0] * self.group3()[0])
                 + (other.group3()[1] * self.group3()[1])
                 + (other.group3()[2] * self.group3()[2])
+                - (other.group1()[3] * self.group1()[3])
+                - (other.group2()[3] * self.group3()[3])
                 - (other.group3()[3] * self.group2()[3]),
         );
     }
@@ -338,7 +335,7 @@ impl AntiScalarProduct<Flector> for Flector {
     fn anti_scalar_product(self, other: Flector) -> AntiScalar {
         return AntiScalar::from_groups(
             // e12345
-            -(other.group0()[3] * self.group0()[3]) + (other.group1()[0] * self.group1()[0]) + (other.group1()[1] * self.group1()[1]) + (other.group1()[2] * self.group1()[2]),
+            (other.group1()[0] * self.group1()[0]) + (other.group1()[1] * self.group1()[1]) + (other.group1()[2] * self.group1()[2]) - (other.group0()[3] * self.group0()[3]),
         );
     }
 }
@@ -372,7 +369,7 @@ impl AntiScalarProduct<Motor> for Motor {
     fn anti_scalar_product(self, other: Motor) -> AntiScalar {
         return AntiScalar::from_groups(
             // e12345
-            -(other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2]) + (other.group0()[3] * self.group0()[3]),
+            (other.group0()[3] * self.group0()[3]) - (other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2]),
         );
     }
 }
@@ -390,37 +387,37 @@ impl AntiScalarProduct<MultiVector> for MultiVector {
         use crate::elements::*;
         return AntiScalar::from_groups(
             // e12345
-            -(other.group0()[0] * self.group0()[0])
-                + (other.group0()[1] * self.group0()[1])
+            (other.group0()[1] * self.group0()[1])
                 + (other.group4()[0] * self.group3()[0])
                 + (other.group4()[1] * self.group3()[1])
                 + (other.group4()[2] * self.group3()[2])
                 + (other.group5()[0] * self.group5()[0])
                 + (other.group5()[1] * self.group5()[1])
                 + (other.group5()[2] * self.group5()[2])
+                + (self.group4()[0] * other.group3()[0])
+                + (self.group4()[1] * other.group3()[1])
+                + (self.group4()[2] * other.group3()[2])
+                + (other.group1()[3] * self[e1])
+                + (other.group6()[3] * self.group6()[3])
+                + (other.group9()[0] * self.group9()[0])
+                + (other.group9()[1] * self.group9()[1])
+                + (other.group9()[2] * self.group9()[2])
+                + (self.group1()[3] * other[e1])
+                - (other.group0()[0] * self.group0()[0])
                 - (other.group7()[0] * self.group8()[0])
                 - (other.group7()[1] * self.group8()[1])
                 - (other.group7()[2] * self.group8()[2])
                 - (other.group8()[0] * self.group7()[0])
                 - (other.group8()[1] * self.group7()[1])
                 - (other.group8()[2] * self.group7()[2])
-                + (self.group4()[0] * other.group3()[0])
-                + (self.group4()[1] * other.group3()[1])
-                + (self.group4()[2] * other.group3()[2])
                 - (other.group1()[0] * self.group1()[0])
                 - (other.group1()[1] * self.group1()[1])
                 - (other.group1()[2] * self.group1()[2])
-                + (other.group1()[3] * self[e1])
                 - (other.group3()[3] * self.group3()[3])
                 - (other.group6()[0] * self.group6()[0])
                 - (other.group6()[1] * self.group6()[1])
                 - (other.group6()[2] * self.group6()[2])
-                + (other.group6()[3] * self.group6()[3])
-                + (other.group9()[0] * self.group9()[0])
-                + (other.group9()[1] * self.group9()[1])
-                + (other.group9()[2] * self.group9()[2])
                 - (other.group9()[3] * self[e45])
-                + (self.group1()[3] * other[e1])
                 - (self.group9()[3] * other[e45]),
         );
     }
@@ -456,9 +453,10 @@ impl AntiScalarProduct<RoundPoint> for RoundPoint {
         use crate::elements::*;
         return AntiScalar::from_groups(
             // e12345
-            -(other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2])
-                + (other.group0()[3] * self[e2])
-                + (self.group0()[3] * other[e2]),
+            (other.group0()[3] * self[e2]) + (self.group0()[3] * other[e2])
+                - (other.group0()[0] * self.group0()[0])
+                - (other.group0()[1] * self.group0()[1])
+                - (other.group0()[2] * self.group0()[2]),
         );
     }
 }
@@ -510,19 +508,19 @@ impl AntiScalarProduct<VersorEven> for VersorEven {
     fn anti_scalar_product(self, other: VersorEven) -> AntiScalar {
         return AntiScalar::from_groups(
             // e12345
-            -(other.group0()[0] * self.group2()[0]) - (other.group0()[1] * self.group2()[1]) - (other.group0()[2] * self.group2()[2]) + (other.group0()[3] * self.group0()[3])
+            (other.group0()[3] * self.group0()[3]) + (other.group1()[3] * self.group1()[3]) + (other.group2()[3] * self.group3()[3]) + (other.group3()[3] * self.group2()[3])
+                - (other.group0()[0] * self.group2()[0])
+                - (other.group0()[1] * self.group2()[1])
+                - (other.group0()[2] * self.group2()[2])
                 - (other.group1()[0] * self.group1()[0])
                 - (other.group1()[1] * self.group1()[1])
                 - (other.group1()[2] * self.group1()[2])
-                + (other.group1()[3] * self.group1()[3])
                 - (other.group2()[0] * self.group0()[0])
                 - (other.group2()[1] * self.group0()[1])
                 - (other.group2()[2] * self.group0()[2])
-                + (other.group2()[3] * self.group3()[3])
                 - (other.group3()[0] * self.group3()[0])
                 - (other.group3()[1] * self.group3()[1])
-                - (other.group3()[2] * self.group3()[2])
-                + (other.group3()[3] * self.group2()[3]),
+                - (other.group3()[2] * self.group3()[2]),
         );
     }
 }
@@ -539,18 +537,21 @@ impl AntiScalarProduct<VersorOdd> for VersorOdd {
     fn anti_scalar_product(self, other: VersorOdd) -> AntiScalar {
         return AntiScalar::from_groups(
             // e12345
-            (other.group0()[0] * self.group2()[0]) + (other.group0()[1] * self.group2()[1]) + (other.group0()[2] * self.group2()[2]) - (other.group0()[3] * self.group0()[3])
+            (other.group0()[0] * self.group2()[0])
+                + (other.group0()[1] * self.group2()[1])
+                + (other.group0()[2] * self.group2()[2])
                 + (other.group1()[0] * self.group1()[0])
                 + (other.group1()[1] * self.group1()[1])
                 + (other.group1()[2] * self.group1()[2])
-                - (other.group1()[3] * self.group1()[3])
                 + (other.group2()[0] * self.group0()[0])
                 + (other.group2()[1] * self.group0()[1])
                 + (other.group2()[2] * self.group0()[2])
-                - (other.group2()[3] * self.group3()[3])
                 + (other.group3()[0] * self.group3()[0])
                 + (other.group3()[1] * self.group3()[1])
                 + (other.group3()[2] * self.group3()[2])
+                - (other.group0()[3] * self.group0()[3])
+                - (other.group1()[3] * self.group1()[3])
+                - (other.group2()[3] * self.group3()[3])
                 - (other.group3()[3] * self.group2()[3]),
         );
     }

@@ -1149,12 +1149,12 @@ impl std::ops::Sub<AntiCircleRotor> for FlatPoint {
             // e41, e42, e43
             other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, -other.group1()[3] + self.group0()[3]]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, self.group0()[3] - other.group1()[3]]),
             // e15, e25, e35, scalar
             Simd32x4::from([
-                -other.group2()[0] + self.group0()[0],
-                -other.group2()[1] + self.group0()[1],
-                -other.group2()[2] + self.group0()[2],
+                self.group0()[0] - other.group2()[0],
+                self.group0()[1] - other.group2()[1],
+                self.group0()[2] - other.group2()[2],
                 other.group2()[3] * -1.0,
             ]),
         );
@@ -1319,7 +1319,7 @@ impl std::ops::Sub<AntiMotor> for FlatPoint {
             // e23, e31, e12, e45
             Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, self.group0()[3]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([-other.group1()[0] + self.group0()[0], -other.group1()[1] + self.group0()[1], -other.group1()[2] + self.group0()[2], 0.0]),
+            Simd32x4::from([self.group0()[0] - other.group1()[0], self.group0()[1] - other.group1()[1], self.group0()[2] - other.group1()[2], 0.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, other.group1()[3] * -1.0]),
         );
@@ -1477,7 +1477,7 @@ impl std::ops::Sub<Dipole> for FlatPoint {
             // e41, e42, e43
             other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, -other.group1()[3] + self.group0()[3]]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, self.group0()[3] - other.group1()[3]]),
             // e15, e25, e35
             Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group2(),
         );
@@ -1498,12 +1498,12 @@ impl std::ops::Sub<DipoleInversion> for FlatPoint {
             // e41, e42, e43
             other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, -other.group1()[3] + self.group0()[3]]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, self.group0()[3] - other.group1()[3]]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                -other.group2()[0] + self.group0()[0],
-                -other.group2()[1] + self.group0()[1],
-                -other.group2()[2] + self.group0()[2],
+                self.group0()[0] - other.group2()[0],
+                self.group0()[1] - other.group2()[1],
+                self.group0()[2] - other.group2()[2],
                 other.group2()[3] * -1.0,
             ]),
             // e4235, e4315, e4125, e3215
@@ -1550,12 +1550,12 @@ impl std::ops::Sub<FlatPoint> for FlatPoint {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: FlatPoint) -> Self::Output {
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ -other.group0() + self.group0());
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() - other.group0());
     }
 }
 impl std::ops::SubAssign<FlatPoint> for FlatPoint {
     fn sub_assign(&mut self, other: FlatPoint) {
-        *self = FlatPoint::from_groups(/* e15, e25, e35, e45 */ -other.group0() + self.group0());
+        *self = FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() - other.group0());
     }
 }
 impl std::ops::Sub<Flector> for FlatPoint {

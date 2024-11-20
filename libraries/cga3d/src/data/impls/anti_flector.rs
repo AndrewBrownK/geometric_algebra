@@ -1391,16 +1391,16 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiFlector {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, -other.group1()[3] + self.group0()[3]]),
+            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, self.group0()[3] - other.group1()[3]]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                -other.group2()[0] + self.group0()[0],
-                -other.group2()[1] + self.group0()[1],
-                -other.group2()[2] + self.group0()[2],
+                self.group0()[0] - other.group2()[0],
+                self.group0()[1] - other.group2()[1],
+                self.group0()[2] - other.group2()[2],
                 other.group2()[3] * -1.0,
             ]),
             // e1, e2, e3, e5
-            -other.group3() + self.group1(),
+            self.group1() - other.group3(),
         );
     }
 }
@@ -1443,12 +1443,12 @@ impl std::ops::Sub<AntiFlatPoint> for AntiFlector {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: AntiFlatPoint) -> Self::Output {
-        return AntiFlector::from_groups(/* e235, e315, e125, e321 */ -other.group0() + self.group0(), /* e1, e2, e3, e5 */ self.group1());
+        return AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0() - other.group0(), /* e1, e2, e3, e5 */ self.group1());
     }
 }
 impl std::ops::SubAssign<AntiFlatPoint> for AntiFlector {
     fn sub_assign(&mut self, other: AntiFlatPoint) {
-        *self = AntiFlector::from_groups(/* e235, e315, e125, e321 */ -other.group0() + self.group0(), /* e1, e2, e3, e5 */ self.group1());
+        *self = AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0() - other.group0(), /* e1, e2, e3, e5 */ self.group1());
     }
 }
 impl std::ops::Sub<AntiFlector> for AntiFlector {
@@ -1460,9 +1460,9 @@ impl std::ops::Sub<AntiFlector> for AntiFlector {
     fn sub(self, other: AntiFlector) -> Self::Output {
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e1, e2, e3, e5
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
         );
     }
 }
@@ -1470,9 +1470,9 @@ impl std::ops::SubAssign<AntiFlector> for AntiFlector {
     fn sub_assign(&mut self, other: AntiFlector) {
         *self = AntiFlector::from_groups(
             // e235, e315, e125, e321
-            -other.group0() + self.group0(),
+            self.group0() - other.group0(),
             // e1, e2, e3, e5
-            -other.group1() + self.group1(),
+            self.group1() - other.group1(),
         );
     }
 }
@@ -1598,7 +1598,7 @@ impl std::ops::Sub<Circle> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, self.group0()[3] - other.group1()[3]]),
             // e235, e315, e125, e4
-            Simd32x4::from([-other.group2()[0] + self.group0()[0], -other.group2()[1] + self.group0()[1], -other.group2()[2] + self.group0()[2], 0.0]),
+            Simd32x4::from([self.group0()[0] - other.group2()[0], self.group0()[1] - other.group2()[1], self.group0()[2] - other.group2()[2], 0.0]),
             // e1, e2, e3, e5
             self.group1(),
         );
@@ -1800,7 +1800,7 @@ impl std::ops::Sub<Line> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, self.group0()[3]]),
             // e235, e315, e125, e4
-            Simd32x4::from([-other.group1()[0] + self.group0()[0], -other.group1()[1] + self.group0()[1], -other.group1()[2] + self.group0()[2], 0.0]),
+            Simd32x4::from([self.group0()[0] - other.group1()[0], self.group0()[1] - other.group1()[1], self.group0()[2] - other.group1()[2], 0.0]),
             // e1, e2, e3, e5
             self.group1(),
         );

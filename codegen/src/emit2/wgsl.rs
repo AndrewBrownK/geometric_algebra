@@ -359,10 +359,10 @@ impl Wgsl {
     fn write_expression<W: Write>(&self, w: &mut W, expr: &AnyExpression) -> anyhow::Result<()> {
         match expr {
             AnyExpression::Int(e) => self.write_int(w, e)?,
-            AnyExpression::Float(e) => self.write_float(w, e)?,
-            AnyExpression::Vec2(e) => self.write_vec2(w, e)?,
-            AnyExpression::Vec3(e) => self.write_vec3(w, e)?,
-            AnyExpression::Vec4(e) => self.write_vec4(w, e)?,
+            AnyExpression::Float(e) => self.write_float(w, e, false)?,
+            AnyExpression::Vec2(e) => self.write_vec2(w, e, false)?,
+            AnyExpression::Vec3(e) => self.write_vec3(w, e, false)?,
+            AnyExpression::Vec4(e) => self.write_vec4(w, e, false)?,
             AnyExpression::Class(e) => self.write_multi_vec(w, e)?,
         }
         Ok(())
@@ -405,7 +405,7 @@ impl Wgsl {
         Ok(())
     }
 
-    fn write_float<W: Write>(&self, w: &mut W, expr: &FloatExpr) -> anyhow::Result<()> {
+    fn write_float<W: Write>(&self, w: &mut W, expr: &FloatExpr, grouping_provided: bool) -> anyhow::Result<()> {
         match expr {
             FloatExpr::Variable(v) => {
                 let name = &v.decl.name.0;
@@ -428,7 +428,7 @@ impl Wgsl {
                 write!(w, " as f32)")?;
             }
             FloatExpr::AccessVec2(v, i) => {
-                self.write_vec2(w, v.as_ref())?;
+                self.write_vec2(w, v.as_ref(), false)?;
                 match *i {
                     0 => write!(w, ".x")?,
                     1 => write!(w, ".y")?,
@@ -436,7 +436,7 @@ impl Wgsl {
                 }
             }
             FloatExpr::AccessVec3(v, i) => {
-                self.write_vec3(w, v.as_ref())?;
+                self.write_vec3(w, v.as_ref(), false)?;
                 match *i {
                     0 => write!(w, ".x")?,
                     1 => write!(w, ".y")?,
@@ -445,7 +445,7 @@ impl Wgsl {
                 }
             }
             FloatExpr::AccessVec4(v, i) => {
-                self.write_vec4(w, v.as_ref())?;
+                self.write_vec4(w, v.as_ref(), false)?;
                 match *i {
                     0 => write!(w, ".x")?,
                     1 => write!(w, ".y")?,
@@ -498,7 +498,7 @@ impl Wgsl {
                 if has_last_factor {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (factor, exponent)) in v.iter().enumerate() {
@@ -507,43 +507,49 @@ impl Wgsl {
                     match (*exponent, i > 0) {
                         (f, _) if f == 0.0 => continue,
 
-                        (1.0, false) => self.write_float(w, factor)?,
+                        (1.0, false) => self.write_float(w, factor, false)?,
                         (-1.0, false) => {
-                            write!(w, "(1.0/")?;
-                            self.write_float(w, factor)?;
+                            if !grouping_provided {
+                                write!(w, "(")?;
+                            }
+                            write!(w, "1.0/(")?;
+                            self.write_float(w, factor, true)?;
                             write!(w, ")")?;
+                            if !grouping_provided {
+                                write!(w, ")")?;
+                            }
                         }
                         (e, false) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, "pow(")?;
-                                self.write_float(w, factor)?;
+                                self.write_float(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
                                 write!(w, "pow(")?;
-                                self.write_float(w, factor)?;
+                                self.write_float(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
                         }
 
                         (1.0, true) => {
                             write!(w, " * ")?;
-                            self.write_float(w, factor)?;
+                            self.write_float(w, factor, false)?;
                         }
                         (-1.0, true) => {
                             write!(w, " / (")?;
-                            self.write_float(w, factor)?;
+                            self.write_float(w, factor, true)?;
                             write!(w, ")")?;
                         }
                         (e, true) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, " * pow(")?;
-                                self.write_float(w, factor)?;
+                                self.write_float(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             } else {
                                 write!(w, " * pow(")?;
-                                self.write_float(w, factor)?;
+                                self.write_float(w, factor, true)?;
                                 write!(w, ", {e})")?;
                             }
                         }
@@ -560,7 +566,7 @@ impl Wgsl {
                     }
                     _ => {}
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
@@ -573,7 +579,7 @@ impl Wgsl {
                 if has_last_addend {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (addend, factor)) in v.iter().enumerate() {
@@ -604,7 +610,7 @@ impl Wgsl {
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_float(w, addend)?;
+                    self.write_float(w, addend, false)?;
                 }
                 match (*last_addend, len > 1) {
                     (fl, _) if fl == 0.0 => {}
@@ -620,7 +626,7 @@ impl Wgsl {
                     }
                     _ => {}
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
@@ -631,10 +637,10 @@ impl Wgsl {
                 } else {
                     write!(w, "pow(")?;
                 }
-                self.write_float(w, factor)?;
+                self.write_float(w, factor, true)?;
                 write!(w, ", ")?;
                 if let Some(exponent) = exponent {
-                    self.write_float(w, exponent)?;
+                    self.write_float(w, exponent, *last_exponent == 1.0)?;
                     if *last_exponent != 1.0 {
                         write!(w, " * ")?;
                     }
@@ -648,7 +654,7 @@ impl Wgsl {
         Ok(())
     }
 
-    fn write_vec2<W: Write>(&self, w: &mut W, expr: &Vec2Expr) -> anyhow::Result<()> {
+    fn write_vec2<W: Write>(&self, w: &mut W, expr: &Vec2Expr, grouping_provided: bool) -> anyhow::Result<()> {
         match expr {
             Vec2Expr::Variable(v) => {
                 let name = &v.decl.name.0;
@@ -666,14 +672,14 @@ impl Wgsl {
             }
             Vec2Expr::Gather1(f) => {
                 write!(w, "vec2<f32>(")?;
-                self.write_float(w, f)?;
+                self.write_float(w, f, true)?;
                 write!(w, ")")?;
             }
             Vec2Expr::Gather2(f0, f1) => {
                 write!(w, "vec2<f32>(")?;
-                self.write_float(w, f0)?;
+                self.write_float(w, f0, true)?;
                 write!(w, ", ")?;
-                self.write_float(w, f1)?;
+                self.write_float(w, f1, true)?;
                 write!(w, ")")?;
             }
             Vec2Expr::AccessMultiVecGroup(mv, i) => {
@@ -689,7 +695,7 @@ impl Wgsl {
                 if has_last_factor {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (factor, exponent)) in v.iter().enumerate() {
@@ -698,43 +704,43 @@ impl Wgsl {
                     match (*exponent, i > 0) {
                         (f, _) if f == 0.0 => continue,
 
-                        (1.0, false) => self.write_vec2(w, factor)?,
+                        (1.0, false) => self.write_vec2(w, factor, false)?,
                         (-1.0, false) => {
                             write!(w, "(vec2<f32>(1.0) / ")?;
-                            self.write_vec2(w, factor)?;
+                            self.write_vec2(w, factor, false)?;
                             write!(w, ")")?;
                         }
                         (e, false) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, "pow(")?;
-                                self.write_vec2(w, factor)?;
+                                self.write_vec2(w, factor, true)?;
                                 write!(w, ", vec2<f32>({e}))")?;
                             } else {
                                 write!(w, "pow(")?;
-                                self.write_vec2(w, factor)?;
+                                self.write_vec2(w, factor, true)?;
                                 write!(w, ", vec2<f32>({e}))")?;
                             }
                         }
 
                         (1.0, true) => {
                             write!(w, " * ")?;
-                            self.write_vec2(w, factor)?
+                            self.write_vec2(w, factor, false)?
                         }
                         (-1.0, true) => {
                             write!(w, " / (")?;
-                            self.write_vec2(w, factor)?;
+                            self.write_vec2(w, factor, true)?;
                             write!(w, ")")?;
                         }
                         (e, true) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, " * pow(")?;
-                                self.write_vec2(w, factor)?;
+                                self.write_vec2(w, factor, true)?;
                                 write!(w, ", vec2<f32>({e}))")?;
                             } else {
                                 write!(w, " * pow(")?;
-                                self.write_vec2(w, factor)?;
+                                self.write_vec2(w, factor, true)?;
                                 write!(w, ", vec2<f32>({e}))")?;
                             }
                         }
@@ -760,7 +766,7 @@ impl Wgsl {
                         write!(w, ")")?;
                     }
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
@@ -773,7 +779,7 @@ impl Wgsl {
                 if has_last_addend {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (addend, factor)) in v.iter().enumerate() {
@@ -805,7 +811,7 @@ impl Wgsl {
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_vec2(w, addend)?;
+                    self.write_vec2(w, addend, false)?;
                 }
                 let a0 = last_addend[0];
                 let a1 = last_addend[1];
@@ -825,12 +831,12 @@ impl Wgsl {
                         write!(w, ")")?;
                     }
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
             Vec2Expr::SwizzleVec2(box v, i0, i1) => {
-                self.write_vec2(w, v)?;
+                self.write_vec2(w, v, false)?;
                 let x = match *i0 {
                     0 => "x",
                     1 => "y",
@@ -847,7 +853,7 @@ impl Wgsl {
         Ok(())
     }
 
-    fn write_vec3<W: Write>(&self, w: &mut W, expr: &Vec3Expr) -> anyhow::Result<()> {
+    fn write_vec3<W: Write>(&self, w: &mut W, expr: &Vec3Expr, grouping_provided: bool) -> anyhow::Result<()> {
         match expr {
             Vec3Expr::Variable(v) => {
                 let name = &v.decl.name.0;
@@ -865,16 +871,16 @@ impl Wgsl {
             }
             Vec3Expr::Gather1(f) => {
                 write!(w, "vec3<f32>(")?;
-                self.write_float(w, f)?;
+                self.write_float(w, f, true)?;
                 write!(w, ")")?;
             }
             Vec3Expr::Gather3(f0, f1, f2) => {
                 write!(w, "vec3<f32>(")?;
-                self.write_float(w, f0)?;
+                self.write_float(w, f0, true)?;
                 write!(w, ", ")?;
-                self.write_float(w, f1)?;
+                self.write_float(w, f1, true)?;
                 write!(w, ", ")?;
-                self.write_float(w, f2)?;
+                self.write_float(w, f2, true)?;
                 write!(w, ")")?;
             }
             Vec3Expr::AccessMultiVecGroup(mv, i) => {
@@ -890,7 +896,7 @@ impl Wgsl {
                 if has_last_factor {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (factor, exponent)) in v.iter().enumerate() {
@@ -899,43 +905,43 @@ impl Wgsl {
                     match (*exponent, i > 0) {
                         (f, _) if f == 0.0 => continue,
 
-                        (1.0, false) => self.write_vec3(w, factor)?,
+                        (1.0, false) => self.write_vec3(w, factor, false)?,
                         (-1.0, false) => {
                             write!(w, "(vec3<f32>(1.0) / ")?;
-                            self.write_vec3(w, factor)?;
+                            self.write_vec3(w, factor, false)?;
                             write!(w, ")")?;
                         }
                         (e, false) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, "pow(")?;
-                                self.write_vec3(w, factor)?;
+                                self.write_vec3(w, factor, true)?;
                                 write!(w, ", vec3<f32>({e}))")?;
                             } else {
                                 write!(w, "pow(")?;
-                                self.write_vec3(w, factor)?;
+                                self.write_vec3(w, factor, true)?;
                                 write!(w, ", vec3<f32>({e}))")?;
                             }
                         }
 
                         (1.0, true) => {
                             write!(w, " * ")?;
-                            self.write_vec3(w, factor)?
+                            self.write_vec3(w, factor, false)?
                         }
                         (-1.0, true) => {
                             write!(w, " / (")?;
-                            self.write_vec3(w, factor)?;
+                            self.write_vec3(w, factor, true)?;
                             write!(w, ")")?;
                         }
                         (e, true) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, " * pow(")?;
-                                self.write_vec3(w, factor)?;
+                                self.write_vec3(w, factor, true)?;
                                 write!(w, ", vec3<f32>({e}))")?;
                             } else {
                                 write!(w, " * pow(")?;
-                                self.write_vec3(w, factor)?;
+                                self.write_vec3(w, factor, true)?;
                                 write!(w, ", vec3<f32>({e}))")?;
                             }
                         }
@@ -964,7 +970,7 @@ impl Wgsl {
                         write!(w, ")")?;
                     }
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
@@ -977,7 +983,7 @@ impl Wgsl {
                 if has_last_addend {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (addend, factor)) in v.iter().enumerate() {
@@ -1009,7 +1015,7 @@ impl Wgsl {
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_vec3(w, addend)?;
+                    self.write_vec3(w, addend, false)?;
                 }
                 if *last_addend != [0.0; 3] {
                     if len > 1 {
@@ -1032,12 +1038,12 @@ impl Wgsl {
                         write!(w, ")")?;
                     }
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
             Vec3Expr::SwizzleVec3(box v, i0, i1, i2) => {
-                self.write_vec3(w, v)?;
+                self.write_vec3(w, v, false)?;
                 let x = match *i0 {
                     0 => "x",
                     1 => "y",
@@ -1062,7 +1068,7 @@ impl Wgsl {
         Ok(())
     }
 
-    fn write_vec4<W: Write>(&self, w: &mut W, expr: &Vec4Expr) -> anyhow::Result<()> {
+    fn write_vec4<W: Write>(&self, w: &mut W, expr: &Vec4Expr, grouping_provided: bool) -> anyhow::Result<()> {
         match expr {
             Vec4Expr::Variable(v) => {
                 let name = &v.decl.name.0;
@@ -1080,18 +1086,18 @@ impl Wgsl {
             }
             Vec4Expr::Gather1(f) => {
                 write!(w, "vec4<f32>(")?;
-                self.write_float(w, f)?;
+                self.write_float(w, f, true)?;
                 write!(w, ")")?;
             }
             Vec4Expr::Gather4(f0, f1, f2, f3) => {
                 write!(w, "vec4<f32>(")?;
-                self.write_float(w, f0)?;
+                self.write_float(w, f0, true)?;
                 write!(w, ", ")?;
-                self.write_float(w, f1)?;
+                self.write_float(w, f1, true)?;
                 write!(w, ", ")?;
-                self.write_float(w, f2)?;
+                self.write_float(w, f2, true)?;
                 write!(w, ", ")?;
-                self.write_float(w, f3)?;
+                self.write_float(w, f3, true)?;
                 write!(w, ")")?;
             }
             Vec4Expr::AccessMultiVecGroup(mv, i) => {
@@ -1107,7 +1113,7 @@ impl Wgsl {
                 if has_last_factor {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (factor, exponent)) in v.iter().enumerate() {
@@ -1116,43 +1122,43 @@ impl Wgsl {
                     match (*exponent, i > 0) {
                         (f, _) if f == 0.0 => continue,
 
-                        (1.0, false) => self.write_vec4(w, factor)?,
+                        (1.0, false) => self.write_vec4(w, factor, false)?,
                         (-1.0, false) => {
                             write!(w, "(vec4<f32>(1.0) / ")?;
-                            self.write_vec4(w, factor)?;
+                            self.write_vec4(w, factor, false)?;
                             write!(w, ")")?;
                         }
                         (e, false) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, "pow(")?;
-                                self.write_vec4(w, factor)?;
+                                self.write_vec4(w, factor, true)?;
                                 write!(w, ", vec4<f32>({e}))")?;
                             } else {
                                 write!(w, "pow(")?;
-                                self.write_vec4(w, factor)?;
+                                self.write_vec4(w, factor, true)?;
                                 write!(w, ", vec4<f32>({e}))")?;
                             }
                         }
 
                         (1.0, true) => {
                             write!(w, " * ")?;
-                            self.write_vec4(w, factor)?
+                            self.write_vec4(w, factor, false)?
                         }
                         (-1.0, true) => {
                             write!(w, " / (")?;
-                            self.write_vec4(w, factor)?;
+                            self.write_vec4(w, factor, true)?;
                             write!(w, ")")?;
                         }
                         (e, true) => {
                             if e.fract() == 0.0 && e <= i32::MAX as f32 && e >= i32::MIN as f32 {
                                 let e = e as i32;
                                 write!(w, " * pow(")?;
-                                self.write_vec4(w, factor)?;
+                                self.write_vec4(w, factor, true)?;
                                 write!(w, ", vec4<f32>({e}))")?;
                             } else {
                                 write!(w, " * pow(")?;
-                                self.write_vec4(w, factor)?;
+                                self.write_vec4(w, factor, true)?;
                                 write!(w, ", vec4<f32>({e}))")?;
                             }
                         }
@@ -1184,7 +1190,7 @@ impl Wgsl {
                         write!(w, ")")?;
                     }
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
@@ -1197,7 +1203,7 @@ impl Wgsl {
                 if has_last_addend {
                     len += 1;
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, "(")?;
                 }
                 for (i, (addend, factor)) in v.iter().enumerate() {
@@ -1229,7 +1235,7 @@ impl Wgsl {
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_vec4(w, addend)?;
+                    self.write_vec4(w, addend, false)?;
                 }
                 if *last_addend != [0.0; 4] {
                     if len > 1 {
@@ -1255,12 +1261,12 @@ impl Wgsl {
                         write!(w, ")")?;
                     }
                 }
-                if len > 1 {
+                if len > 1 && !grouping_provided {
                     write!(w, ")")?;
                 }
             }
             Vec4Expr::SwizzleVec4(box v, i0, i1, i2, i3) => {
-                self.write_vec4(w, v)?;
+                self.write_vec4(w, v, false)?;
                 let x = match *i0 {
                     0 => "x",
                     1 => "y",
@@ -1329,10 +1335,10 @@ impl Wgsl {
                     }
                     write!(w, " */ ")?;
                     match g {
-                        MultiVectorGroupExpr::JustFloat(f) => self.write_float(w, f)?,
-                        MultiVectorGroupExpr::Vec2(g) => self.write_vec2(w, g)?,
-                        MultiVectorGroupExpr::Vec3(g) => self.write_vec3(w, g)?,
-                        MultiVectorGroupExpr::Vec4(g) => self.write_vec4(w, g)?,
+                        MultiVectorGroupExpr::JustFloat(f) => self.write_float(w, f, true)?,
+                        MultiVectorGroupExpr::Vec2(g) => self.write_vec2(w, g, true)?,
+                        MultiVectorGroupExpr::Vec3(g) => self.write_vec3(w, g, true)?,
+                        MultiVectorGroupExpr::Vec4(g) => self.write_vec4(w, g, true)?,
                     }
                 }
                 write!(w, ")")?;
@@ -1379,7 +1385,7 @@ impl Wgsl {
                 write!(w, "{a_type}_{method}_{b_type}(")?;
                 self.write_multi_vec(w, a)?;
                 write!(w, ", ")?;
-                self.write_float(w, b)?;
+                self.write_float(w, b, true)?;
                 write!(w, ")")?;
             }
         }
