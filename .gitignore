@@ -1,2 +1,3 @@
 target
 /libraries/cga3d_faceted/src/integrations/cga3d_faceted.wgsl
+/codegen/src/transient notes/

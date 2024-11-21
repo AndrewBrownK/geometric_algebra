@@ -1,16 +1,16 @@
-use crate::algebra::basis_element;
-use crate::algebra2::basis::generators::GeneratorElement;
-use crate::algebra2::basis::grades::{AntiGrades, Grades};
-use crate::generator_squares;
-use crate::utility::ConstOption;
-use const_panic::PanicFmt;
-use generators::GeneratorSquares;
-use rand::Rng;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fmt::{Debug, Display, Formatter};
 use std::marker::ConstParamTy;
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, Neg, Sub};
+
+use const_panic::PanicFmt;
+use rand::Rng;
+
+use crate::algebra2::basis::generators::GeneratorElement;
+use crate::algebra2::basis::grades::{AntiGrades, Grades};
+use crate::generator_squares;
+use crate::utility::ConstOption;
 
 pub mod arithmetic;
 pub mod filter;
@@ -903,68 +903,6 @@ impl BasisElementNames {
     }
 }
 
-#[test]
-fn new_basis_elements_wedge() {
-    let mut rng = rand::thread_rng();
-    let mut i = 0;
-    while i < 100 {
-        let mut a: u16 = rng.gen();
-        let mut b: u16 = rng.gen();
-        let a_s: i8 = rng.gen::<i8>().signum();
-        let b_s: i8 = rng.gen::<i8>().signum();
-        let d: usize = (rng.gen::<usize>() % 15) + 1;
-        for remove_d in d..16 {
-            a = a & !(1u16 << remove_d);
-            b = b & !(1u16 << remove_d);
-        }
-
-        let mut squares = GeneratorSquares::empty();
-        for _ in 0..d {
-            let basis = squares.next_available_basis().unwrap();
-            let sq: i8 = ((rng.gen::<i8>().max(i8::MIN + 1).abs() % 11) - 5).signum();
-            squares = squares.append([(basis, sq)]).unwrap();
-        }
-
-        let old_a = basis_element::BasisElement {
-            coefficient: a_s as isize,
-            index: a,
-        };
-        let old_b = basis_element::BasisElement {
-            coefficient: b_s as isize,
-            index: b,
-        };
-
-        let mut new_a = BasisElement::from(BasisSignature::from_bits_retain(a));
-        new_a.coefficient = a_s;
-        let mut new_b = BasisElement::from(BasisSignature::from_bits_retain(b));
-        new_b.coefficient = b_s;
-
-        let sq: Vec<_> = squares.raw_squares[0..d].iter().map(|it| it.clone() as isize).collect();
-        // The old BasisElement product is a geometric product, not a wedge product
-        let old_product = old_a.primitive_product(&old_b, sq.as_slice());
-        let new_product = new_a.wedge(new_b);
-
-        // So we do this check to make sure we are comparing apples to apples
-        if old_product.coefficient != 0 && old_product.index.count_ones() != (a.count_ones() + b.count_ones()) {
-            continue;
-        }
-        i += 1;
-
-        println!("Squares: {squares:?}");
-        println!("a: {a_s} {a:016b}");
-        println!("b: {b_s} {b:016b}");
-
-        let old_coefficient = old_product.coefficient;
-        let old_sig = old_product.index;
-        let new_coefficient = new_product.coefficient as isize;
-        let new_sig = new_product.signature.bits();
-        println!("old result: {old_coefficient} {old_sig:016b}");
-        println!("new result: {new_coefficient} {new_sig:016b}");
-
-        assert_eq!(old_coefficient, new_coefficient, "coefficients mismatch");
-        assert_eq!(old_sig, new_sig, "signature mismatch");
-    }
-}
 
 #[test]
 fn test_metric() {

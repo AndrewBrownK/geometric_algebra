@@ -18,15 +18,10 @@
 //  https://www.youtube.com/watch?v=VEnglRKNHjU
 
 
-mod algebra;
 // TODO calculus: https://en.wikipedia.org/wiki/Geometric_calculus
 pub mod algebra2;
-mod ast;
 pub mod ast2;
-mod compile;
-mod emit;
 pub mod emit2;
-mod impls;
 mod shader_support;
 pub mod utility;
 mod validate;
@@ -39,14 +34,6 @@ pub mod build_scripts2 {
     mod pga3d;
     mod rga3d;
     mod uwu;
-}
-
-mod build_scripts {
-    pub mod cga;
-    pub mod cga3d;
-    pub mod cga3d_min;
-    pub mod rga;
-    pub mod rga3d;
 }
 
 const SIMD_SRC: &'static str = include_str!("simd.rs");
