@@ -32,7 +32,7 @@ impl One for AntiCircleRotor {
 }
 impl One for AntiDualNum {
     fn one() -> Self {
-        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([0.0, 1.0]));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([0.0, 1.0]));
     }
 }
 impl One for AntiMotor {

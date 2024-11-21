@@ -8,17 +8,17 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 103
+// Total Implementations: 102
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         2       3       0
+//   Median:         3       3       0
 //  Average:         5       9       0
 //  Maximum:        66      98       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         2       4       0
+//   Median:         3       5       0
 //  Average:         6      11       0
 //  Maximum:        97     137       0
 impl std::ops::Add<AntiCircleRotor> for FlatPoint {
@@ -78,9 +78,9 @@ impl std::ops::Add<AntiDualNum> for FlatPoint {
             // e23, e31, e12, e45
             Simd32x4::from([0.0, 0.0, 0.0, self[e45]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], other[e1234]]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
         );
     }
 }
@@ -343,9 +343,9 @@ impl std::ops::Add<DualNum> for FlatPoint {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x4::from(0.0),
             // e5
-            0.0,
+            other[e5],
             // e15, e25, e35, e45
             self.group0(),
             // e41, e42, e43
@@ -743,16 +743,6 @@ impl std::ops::BitXor<DipoleInversion> for FlatPoint {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<DualNum> for FlatPoint {
-    type Output = Line;
-    // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd3        0        1        0
-    // no simd        0        3        0
-    fn bitxor(self, other: DualNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
 impl std::ops::BitXor<MultiVector> for FlatPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -843,14 +833,14 @@ impl std::ops::Mul<AntiDipoleInversion> for FlatPoint {
     }
 }
 impl std::ops::Mul<AntiDualNum> for FlatPoint {
-    type Output = DipoleInversion;
+    type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       11        0
+    //      f32        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        0       12        0
-    //  no simd        0       15        0
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -955,14 +945,14 @@ impl std::ops::Mul<DipoleInversion> for FlatPoint {
     }
 }
 impl std::ops::Mul<DualNum> for FlatPoint {
-    type Output = AntiDipoleInversion;
+    type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       14        0
+    //      f32        0        1        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0       16        0
-    //  no simd        0       22        0
+    // yes simd        0        3        0
+    //  no simd        0        9        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1182,9 +1172,9 @@ impl std::ops::Sub<AntiDualNum> for FlatPoint {
             // e23, e31, e12, e45
             Simd32x4::from([0.0, 0.0, 0.0, self[e45]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], other[e1234] * -1.0]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215] * -1.0]),
         );
     }
 }
@@ -1495,9 +1485,9 @@ impl std::ops::Sub<DualNum> for FlatPoint {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345] * -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4] * -1.0]),
+            Simd32x4::from(0.0),
             // e5
-            0.0,
+            other[e5] * -1.0,
             // e15, e25, e35, e45
             self.group0(),
             // e41, e42, e43

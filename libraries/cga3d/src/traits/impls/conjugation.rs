@@ -359,7 +359,7 @@ impl Conjugation for DualNum {
     // no simd        0        2        0
     fn conjugation(self) -> Self {
         use crate::elements::*;
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self[e4], self[e12345]]) * Simd32x2::from(-1.0));
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([self[e5], self[e12345]]) * Simd32x2::from(-1.0));
     }
 }
 impl std::ops::Div<conjugation> for FlatPoint {

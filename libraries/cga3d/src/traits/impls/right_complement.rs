@@ -77,20 +77,24 @@ impl RightComplement for AntiDipoleInversion {
     }
 }
 impl std::ops::Div<right_complement> for AntiDualNum {
-    type Output = Motor;
+    type Output = VersorEven;
     fn div(self, _rhs: right_complement) -> Self::Output {
         self.right_complement()
     }
 }
 impl RightComplement for AntiDualNum {
-    type Output = Motor;
+    type Output = VersorEven;
     fn right_complement(self) -> Self::Output {
         use crate::elements::*;
-        return Motor::from_groups(
-            // e415, e425, e435, e12345
+        return VersorEven::from_groups(
+            // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self[scalar]]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self[e1234]]),
+            Simd32x4::from(0.0),
+            // e1, e2, e3, e4
+            Simd32x4::from([0.0, 0.0, 0.0, self[e3215]]),
         );
     }
 }
@@ -345,20 +349,24 @@ impl RightComplement for DipoleInversion {
     }
 }
 impl std::ops::Div<right_complement> for DualNum {
-    type Output = AntiMotor;
+    type Output = VersorOdd;
     fn div(self, _rhs: right_complement) -> Self::Output {
         self.right_complement()
     }
 }
 impl RightComplement for DualNum {
-    type Output = AntiMotor;
+    type Output = VersorOdd;
     fn right_complement(self) -> Self::Output {
         use crate::elements::*;
-        return AntiMotor::from_groups(
-            // e23, e31, e12, scalar
+        return VersorOdd::from_groups(
+            // e41, e42, e43, scalar
             Simd32x4::from([0.0, 0.0, 0.0, self[e12345]]),
-            // e15, e25, e35, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, self[e4]]),
+            // e23, e31, e12, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(0.0),
         );
     }
 }

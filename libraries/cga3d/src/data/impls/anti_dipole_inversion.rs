@@ -12,7 +12,7 @@ use crate::traits::Wedge;
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         6       4       0
+//   Median:         6       3       0
 //  Average:        26      30       0
 //  Maximum:       341     373       0
 //
@@ -109,9 +109,9 @@ impl std::ops::Add<AntiDualNum> for AntiDipoleInversion {
             // e235, e315, e125
             Simd32x3::from([self[e235], self[e315], self[e125]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
             // e1234
-            other[e1234],
+            0.0,
         );
     }
 }
@@ -419,9 +419,9 @@ impl std::ops::Add<DualNum> for AntiDipoleInversion {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], self[e5] + other[e5]]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e4] + other[e4]]),
+            Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]),
         );
     }
 }
@@ -901,14 +901,11 @@ impl std::ops::BitXor<DipoleInversion> for AntiDipoleInversion {
     }
 }
 impl std::ops::BitXor<DualNum> for AntiDipoleInversion {
-    type Output = DipoleInversion;
+    type Output = Flector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       10        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0       12        0
-    //  no simd        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn bitxor(self, other: DualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -1178,11 +1175,11 @@ impl std::ops::Mul<AntiDualNum> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       22        0
-    //    simd4        2        3        0
+    //      f32        3       14        0
+    //    simd4        3        4        0
     // Totals...
-    // yes simd        8       25        0
-    //  no simd       14       34        0
+    // yes simd        6       18        0
+    //  no simd       15       30        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1317,11 +1314,11 @@ impl std::ops::Mul<DualNum> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       34        0
-    //    simd4        1        1        0
+    //      f32       10       28        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       11       35        0
-    //  no simd       14       38        0
+    // yes simd       11       30        0
+    //  no simd       14       36        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1603,9 +1600,9 @@ impl std::ops::Sub<AntiDualNum> for AntiDipoleInversion {
             // e235, e315, e125
             Simd32x3::from([self[e235], self[e315], self[e125]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215] * -1.0]),
             // e1234
-            other[e1234] * -1.0,
+            0.0,
         );
     }
 }
@@ -1945,9 +1942,9 @@ impl std::ops::Sub<DualNum> for AntiDipoleInversion {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], self[e5] - other[e5]]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e4] - other[e4]]),
+            Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]),
         );
     }
 }
@@ -2364,9 +2361,9 @@ impl TryFrom<DualNum> for AntiDipoleInversion {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e4
-            Simd32x4::from([0.0, 0.0, 0.0, dual_num[e4]]),
-            // e1, e2, e3, e5
             Simd32x4::from(0.0),
+            // e1, e2, e3, e5
+            Simd32x4::from([0.0, 0.0, 0.0, dual_num[e5]]),
         ));
     }
 }

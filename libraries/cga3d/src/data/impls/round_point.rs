@@ -94,9 +94,9 @@ impl std::ops::Add<AntiDualNum> for RoundPoint {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
             // e1234
-            other[e1234],
+            0.0,
         );
     }
 }
@@ -342,9 +342,9 @@ impl std::ops::Add<DualNum> for RoundPoint {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e5] + self[e5]]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], other[e4] + self[e4]]),
+            self.group0(),
         );
     }
 }
@@ -797,14 +797,11 @@ impl std::ops::BitXor<DipoleInversion> for RoundPoint {
     }
 }
 impl std::ops::BitXor<DualNum> for RoundPoint {
-    type Output = Dipole;
+    type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn bitxor(self, other: DualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -990,11 +987,11 @@ impl std::ops::Mul<AntiDualNum> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        0
+    //      f32        0        6        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       11        0
+    // yes simd        0        8        0
+    //  no simd        0       14        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1128,11 +1125,11 @@ impl std::ops::Mul<DualNum> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        4        0
+    //      f32        0        7        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        0        8        0
-    //  no simd        0       20        0
+    // yes simd        0       10        0
+    //  no simd        0       19        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1401,9 +1398,9 @@ impl std::ops::Sub<AntiDualNum> for RoundPoint {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215] * -1.0]),
             // e1234
-            other[e1234] * -1.0,
+            0.0,
         );
     }
 }
@@ -1699,9 +1696,9 @@ impl std::ops::Sub<DualNum> for RoundPoint {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e5] - other[e5]]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e4] - other[e4]]),
+            self.group0(),
         );
     }
 }
@@ -2201,7 +2198,7 @@ impl TryFrom<DualNum> for RoundPoint {
             error.push('}');
             return Err(error);
         }
-        return Ok(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, dual_num[e4]]), /* e5 */ 0.0));
+        return Ok(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(0.0), /* e5 */ dual_num[e5]));
     }
 }
 

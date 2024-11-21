@@ -83,7 +83,7 @@ impl AntiAutoMorphism for AntiDualNum {
     // no simd        0        2        0
     fn anti_auto_morphism(self) -> Self {
         use crate::elements::*;
-        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([self[e1234], self[scalar]]) * Simd32x2::from(-1.0));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([self[e3215], self[scalar]]) * Simd32x2::from(-1.0));
     }
 }
 impl std::ops::Div<anti_auto_morphism> for AntiFlatPoint {

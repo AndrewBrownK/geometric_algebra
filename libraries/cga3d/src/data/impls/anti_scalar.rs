@@ -91,9 +91,9 @@ impl std::ops::Add<AntiDualNum> for AntiScalar {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
             // e1234
-            other[e1234],
+            0.0,
         );
     }
 }
@@ -317,7 +317,7 @@ impl std::ops::Add<DualNum> for AntiScalar {
     // f32        1        0        0
     fn add(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([other[e4], self[e12345] + other[e12345]]));
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([other[e5], self[e12345] + other[e12345]]));
     }
 }
 impl std::ops::Add<FlatPoint> for AntiScalar {
@@ -1068,9 +1068,9 @@ impl std::ops::Sub<AntiDualNum> for AntiScalar {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215] * -1.0]),
             // e1234
-            other[e1234] * -1.0,
+            0.0,
         );
     }
 }
@@ -1349,7 +1349,7 @@ impl std::ops::Sub<DualNum> for AntiScalar {
     // f32        1        1        0
     fn sub(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([other[e4] * -1.0, self[e12345] - other[e12345]]));
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([other[e5] * -1.0, self[e12345] - other[e12345]]));
     }
 }
 impl std::ops::Sub<FlatPoint> for AntiScalar {
@@ -1776,7 +1776,7 @@ impl TryFrom<DualNum> for AntiScalar {
         let el = dual_num[0];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4: ");
+            error_string.push_str("e5: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }

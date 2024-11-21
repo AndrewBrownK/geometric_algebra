@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 245
+// Total Implementations: 237
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       1       0
@@ -316,7 +316,7 @@ impl DotProduct<DualNum> for AntiDipoleInversion {
     // f32        0        2        0
     fn dot_product(self, other: DualNum) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ self[e5] * other[e4] * -1.0);
+        return Scalar::from_groups(/* scalar */ self[e4] * other[e5] * -1.0);
     }
 }
 impl DotProduct<Line> for AntiDipoleInversion {
@@ -445,10 +445,10 @@ impl DotProduct<AntiDualNum> for AntiDualNum {
 impl DotProduct<AntiMotor> for AntiDualNum {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        1        2        0
+    // f32        0        1        0
     fn dot_product(self, other: AntiMotor) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e1234] * other[e3215]) + (self[scalar] * other[scalar]));
+        return Scalar::from_groups(/* scalar */ self[scalar] * other[scalar]);
     }
 }
 impl DotProduct<DipoleInversion> for AntiDualNum {
@@ -457,16 +457,7 @@ impl DotProduct<DipoleInversion> for AntiDualNum {
     // f32        0        1        0
     fn dot_product(self, other: DipoleInversion) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ self[e1234] * other[e3215]);
-    }
-}
-impl DotProduct<Flector> for AntiDualNum {
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn dot_product(self, other: Flector) -> Scalar {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ self[e1234] * other[e3215]);
+        return Scalar::from_groups(/* scalar */ self[e3215] * other[e1234]);
     }
 }
 impl DotProduct<MultiVector> for AntiDualNum {
@@ -475,16 +466,7 @@ impl DotProduct<MultiVector> for AntiDualNum {
     // f32        1        2        0
     fn dot_product(self, other: MultiVector) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e1234] * other[e3215]) + (self[scalar] * other[scalar]));
-    }
-}
-impl DotProduct<Plane> for AntiDualNum {
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn dot_product(self, other: Plane) -> Scalar {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ self[e1234] * other[e3215]);
+        return Scalar::from_groups(/* scalar */ (self[e3215] * other[e1234]) + (self[scalar] * other[scalar]));
     }
 }
 impl DotProduct<Scalar> for AntiDualNum {
@@ -502,7 +484,7 @@ impl DotProduct<Sphere> for AntiDualNum {
     // f32        0        1        0
     fn dot_product(self, other: Sphere) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ self[e1234] * other[e3215]);
+        return Scalar::from_groups(/* scalar */ self[e3215] * other[e1234]);
     }
 }
 impl DotProduct<VersorOdd> for AntiDualNum {
@@ -511,7 +493,7 @@ impl DotProduct<VersorOdd> for AntiDualNum {
     // f32        1        2        0
     fn dot_product(self, other: VersorOdd) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e1234] * other[e3215]) + (self[scalar] * other[scalar]));
+        return Scalar::from_groups(/* scalar */ (self[e3215] * other[e1234]) + (self[scalar] * other[scalar]));
     }
 }
 impl std::ops::Div<dot_product> for AntiFlatPoint {
@@ -669,15 +651,6 @@ impl DotProduct<CircleRotor> for AntiFlector {
         );
     }
 }
-impl DotProduct<DualNum> for AntiFlector {
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn dot_product(self, other: DualNum) -> Scalar {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ self[e5] * other[e4] * -1.0);
-    }
-}
 impl DotProduct<MultiVector> for AntiFlector {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -826,10 +799,10 @@ impl DotProduct<AntiCircleRotor> for AntiMotor {
 impl DotProduct<AntiDualNum> for AntiMotor {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        1        2        0
+    // f32        0        1        0
     fn dot_product(self, other: AntiDualNum) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (other[e1234] * self[e3215]) + (other[scalar] * self[scalar]));
+        return Scalar::from_groups(/* scalar */ other[scalar] * self[scalar]);
     }
 }
 impl DotProduct<AntiLine> for AntiMotor {
@@ -968,15 +941,6 @@ impl DotProduct<AntiPlane> for AntiPlane {
     fn dot_product(self, other: AntiPlane) -> Scalar {
         use crate::elements::*;
         return Scalar::from_groups(/* scalar */ (other[e1] * self[e1]) + (other[e2] * self[e2]) + (other[e3] * self[e3]));
-    }
-}
-impl DotProduct<DualNum> for AntiPlane {
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn dot_product(self, other: DualNum) -> Scalar {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ self[e5] * other[e4] * -1.0);
     }
 }
 impl DotProduct<MultiVector> for AntiPlane {
@@ -1618,7 +1582,7 @@ impl DotProduct<AntiDualNum> for DipoleInversion {
     // f32        0        1        0
     fn dot_product(self, other: AntiDualNum) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ other[e1234] * self[e3215]);
+        return Scalar::from_groups(/* scalar */ other[e3215] * self[e1234]);
     }
 }
 impl DotProduct<AntiLine> for DipoleInversion {
@@ -1810,25 +1774,7 @@ impl DotProduct<AntiDipoleInversion> for DualNum {
     // f32        0        2        0
     fn dot_product(self, other: AntiDipoleInversion) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ other[e5] * self[e4] * -1.0);
-    }
-}
-impl DotProduct<AntiFlector> for DualNum {
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn dot_product(self, other: AntiFlector) -> Scalar {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ other[e5] * self[e4] * -1.0);
-    }
-}
-impl DotProduct<AntiPlane> for DualNum {
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
-    fn dot_product(self, other: AntiPlane) -> Scalar {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ other[e5] * self[e4] * -1.0);
+        return Scalar::from_groups(/* scalar */ other[e4] * self[e5] * -1.0);
     }
 }
 impl DotProduct<AntiScalar> for DualNum {
@@ -1861,10 +1807,10 @@ impl DotProduct<DualNum> for DualNum {
 impl DotProduct<Motor> for DualNum {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        1        2        0
+    // f32        0        2        0
     fn dot_product(self, other: Motor) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ -(self[e4] * other[e5]) - (self[e12345] * other[e12345]));
+        return Scalar::from_groups(/* scalar */ self[e12345] * other[e12345] * -1.0);
     }
 }
 impl DotProduct<MultiVector> for DualNum {
@@ -1873,7 +1819,7 @@ impl DotProduct<MultiVector> for DualNum {
     // f32        1        2        0
     fn dot_product(self, other: MultiVector) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ -(self[e4] * other[e5]) - (self[e12345] * other[e12345]));
+        return Scalar::from_groups(/* scalar */ -(self[e5] * other[e4]) - (self[e12345] * other[e12345]));
     }
 }
 impl DotProduct<RoundPoint> for DualNum {
@@ -1882,7 +1828,7 @@ impl DotProduct<RoundPoint> for DualNum {
     // f32        0        2        0
     fn dot_product(self, other: RoundPoint) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ self[e4] * other[e5] * -1.0);
+        return Scalar::from_groups(/* scalar */ self[e5] * other[e4] * -1.0);
     }
 }
 impl DotProduct<VersorEven> for DualNum {
@@ -1891,7 +1837,7 @@ impl DotProduct<VersorEven> for DualNum {
     // f32        1        2        0
     fn dot_product(self, other: VersorEven) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ -(self[e4] * other[e5]) - (self[e12345] * other[e12345]));
+        return Scalar::from_groups(/* scalar */ -(self[e5] * other[e4]) - (self[e12345] * other[e12345]));
     }
 }
 impl std::ops::Div<dot_product> for FlatPoint {
@@ -1994,15 +1940,6 @@ impl DotProduct<AntiCircleRotor> for Flector {
             // scalar
             (other[e45] * self[e45]) - (other[e41] * self[e15]) - (other[e42] * self[e25]) - (other[e43] * self[e35]),
         );
-    }
-}
-impl DotProduct<AntiDualNum> for Flector {
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn dot_product(self, other: AntiDualNum) -> Scalar {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ other[e1234] * self[e3215]);
     }
 }
 impl DotProduct<Dipole> for Flector {
@@ -2293,10 +2230,10 @@ impl DotProduct<CircleRotor> for Motor {
 impl DotProduct<DualNum> for Motor {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        1        2        0
+    // f32        0        2        0
     fn dot_product(self, other: DualNum) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ -(other[e4] * self[e5]) - (other[e12345] * self[e12345]));
+        return Scalar::from_groups(/* scalar */ other[e12345] * self[e12345] * -1.0);
     }
 }
 impl DotProduct<Line> for Motor {
@@ -2426,7 +2363,7 @@ impl DotProduct<AntiDualNum> for MultiVector {
     // f32        1        2        0
     fn dot_product(self, other: AntiDualNum) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (other[e1234] * self[e3215]) + (other[scalar] * self[scalar]));
+        return Scalar::from_groups(/* scalar */ (other[e3215] * self[e1234]) + (other[scalar] * self[scalar]));
     }
 }
 impl DotProduct<AntiFlatPoint> for MultiVector {
@@ -2597,7 +2534,7 @@ impl DotProduct<DualNum> for MultiVector {
     // f32        1        2        0
     fn dot_product(self, other: DualNum) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ -(other[e4] * self[e5]) - (other[e12345] * self[e12345]));
+        return Scalar::from_groups(/* scalar */ -(other[e5] * self[e4]) - (other[e12345] * self[e12345]));
     }
 }
 impl DotProduct<FlatPoint> for MultiVector {
@@ -2811,15 +2748,6 @@ impl std::ops::Div<dot_product> for Plane {
         dot_product_partial(self)
     }
 }
-impl DotProduct<AntiDualNum> for Plane {
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn dot_product(self, other: AntiDualNum) -> Scalar {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ other[e1234] * self[e3215]);
-    }
-}
 impl DotProduct<DipoleInversion> for Plane {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
@@ -2928,7 +2856,7 @@ impl DotProduct<DualNum> for RoundPoint {
     // f32        0        2        0
     fn dot_product(self, other: DualNum) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ other[e4] * self[e5] * -1.0);
+        return Scalar::from_groups(/* scalar */ other[e5] * self[e4] * -1.0);
     }
 }
 impl DotProduct<Motor> for RoundPoint {
@@ -3048,7 +2976,7 @@ impl DotProduct<AntiDualNum> for Sphere {
     // f32        0        1        0
     fn dot_product(self, other: AntiDualNum) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ other[e1234] * self[e3215]);
+        return Scalar::from_groups(/* scalar */ other[e3215] * self[e1234]);
     }
 }
 impl DotProduct<AntiMotor> for Sphere {
@@ -3257,7 +3185,7 @@ impl DotProduct<DualNum> for VersorEven {
     // f32        1        2        0
     fn dot_product(self, other: DualNum) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ -(other[e4] * self[e5]) - (other[e12345] * self[e12345]));
+        return Scalar::from_groups(/* scalar */ -(other[e5] * self[e4]) - (other[e12345] * self[e12345]));
     }
 }
 impl DotProduct<Line> for VersorEven {
@@ -3395,7 +3323,7 @@ impl DotProduct<AntiDualNum> for VersorOdd {
     // f32        1        2        0
     fn dot_product(self, other: AntiDualNum) -> Scalar {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (other[e1234] * self[e3215]) + (other[scalar] * self[scalar]));
+        return Scalar::from_groups(/* scalar */ (other[e3215] * self[e1234]) + (other[scalar] * self[scalar]));
     }
 }
 impl DotProduct<AntiLine> for VersorOdd {

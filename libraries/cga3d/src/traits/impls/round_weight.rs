@@ -5,7 +5,7 @@
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 13
+// Total Implementations: 11
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -62,24 +62,6 @@ impl RoundWeight for AntiDipoleInversion {
             // e1, e2, e3, e5
             Simd32x4::from(0.0),
         );
-    }
-}
-impl std::ops::Div<round_weight> for AntiDualNum {
-    type Output = AntiDualNum;
-    fn div(self, _rhs: round_weight) -> Self::Output {
-        self.round_weight()
-    }
-}
-impl std::ops::DivAssign<round_weight> for AntiDualNum {
-    fn div_assign(&mut self, _rhs: round_weight) {
-        *self = self.round_weight()
-    }
-}
-impl RoundWeight for AntiDualNum {
-    type Output = AntiDualNum;
-    fn round_weight(self) -> Self::Output {
-        use crate::elements::*;
-        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([self[e1234], 0.0]));
     }
 }
 impl std::ops::Div<round_weight> for Circle {
@@ -176,24 +158,6 @@ impl RoundWeight for DipoleInversion {
         );
     }
 }
-impl std::ops::Div<round_weight> for DualNum {
-    type Output = DualNum;
-    fn div(self, _rhs: round_weight) -> Self::Output {
-        self.round_weight()
-    }
-}
-impl std::ops::DivAssign<round_weight> for DualNum {
-    fn div_assign(&mut self, _rhs: round_weight) {
-        *self = self.round_weight()
-    }
-}
-impl RoundWeight for DualNum {
-    type Output = DualNum;
-    fn round_weight(self) -> Self::Output {
-        use crate::elements::*;
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self[e4], 0.0]));
-    }
-}
 impl std::ops::Div<round_weight> for MultiVector {
     type Output = MultiVector;
     fn div(self, _rhs: round_weight) -> Self::Output {
@@ -236,29 +200,39 @@ impl RoundWeight for MultiVector {
     }
 }
 impl std::ops::Div<round_weight> for RoundPoint {
-    type Output = DualNum;
+    type Output = RoundPoint;
     fn div(self, _rhs: round_weight) -> Self::Output {
         self.round_weight()
+    }
+}
+impl std::ops::DivAssign<round_weight> for RoundPoint {
+    fn div_assign(&mut self, _rhs: round_weight) {
+        *self = self.round_weight()
     }
 }
 impl RoundWeight for RoundPoint {
-    type Output = DualNum;
+    type Output = RoundPoint;
     fn round_weight(self) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self[e4], 0.0]));
+        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, self[e4]]), /* e5 */ 0.0);
     }
 }
 impl std::ops::Div<round_weight> for Sphere {
-    type Output = AntiDualNum;
+    type Output = Sphere;
     fn div(self, _rhs: round_weight) -> Self::Output {
         self.round_weight()
     }
 }
+impl std::ops::DivAssign<round_weight> for Sphere {
+    fn div_assign(&mut self, _rhs: round_weight) {
+        *self = self.round_weight()
+    }
+}
 impl RoundWeight for Sphere {
-    type Output = AntiDualNum;
+    type Output = Sphere;
     fn round_weight(self) -> Self::Output {
         use crate::elements::*;
-        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([self[e1234], 0.0]));
+        return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(0.0), /* e1234 */ self[e1234]);
     }
 }
 impl std::ops::Div<round_weight> for VersorEven {

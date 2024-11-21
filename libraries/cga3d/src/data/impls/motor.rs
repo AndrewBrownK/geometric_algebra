@@ -8,7 +8,7 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 108
+// Total Implementations: 107
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
@@ -18,8 +18,8 @@ use crate::traits::Wedge;
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         1       5       0
-//  Average:        13      19       0
+//   Median:         2       4       0
+//  Average:        14      18       0
 //  Maximum:       224     256       0
 impl std::ops::Add<AntiCircleRotor> for Motor {
     type Output = MultiVector;
@@ -94,9 +94,9 @@ impl std::ops::Add<AntiDualNum> for Motor {
             // e235, e315, e125
             Simd32x3::from([self[e235], self[e315], self[e125]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
             // e1234
-            other[e1234],
+            0.0,
         );
     }
 }
@@ -342,21 +342,28 @@ impl std::ops::Add<DipoleInversion> for Motor {
     }
 }
 impl std::ops::Add<DualNum> for Motor {
-    type Output = VersorEven;
+    type Output = Motor;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        1        0        0
+    // f32        2        0        0
     fn add(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return VersorEven::from_groups(
-            // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, other[e12345] + self[e12345]]),
-            // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]),
+        return Motor::from_groups(
+            // e415, e425, e435, e12345
+            Simd32x4::from([self[e415], self[e425], self[e435], other[e12345] + self[e12345]]),
             // e235, e315, e125, e5
-            self.group1(),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], other[e5] + self[e5]]),
+        );
+    }
+}
+impl std::ops::AddAssign<DualNum> for Motor {
+    fn add_assign(&mut self, other: DualNum) {
+        use crate::elements::*;
+        *self = Motor::from_groups(
+            // e415, e425, e435, e12345
+            Simd32x4::from([self[e415], self[e425], self[e435], other[e12345] + self[e12345]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([self[e235], self[e315], self[e125], other[e5] + self[e5]]),
         );
     }
 }
@@ -697,12 +704,9 @@ impl std::ops::BitXor<AntiDipoleInversion> for Motor {
 impl std::ops::BitXor<AntiDualNum> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        5        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        1        6        0
-    //  no simd        1        9        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn bitxor(self, other: AntiDualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -713,7 +717,7 @@ impl std::ops::BitXorAssign<AntiDualNum> for Motor {
     }
 }
 impl std::ops::BitXor<AntiFlatPoint> for Motor {
-    type Output = Plane;
+    type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        2        0
@@ -815,15 +819,6 @@ impl std::ops::BitXorAssign<DipoleInversion> for Motor {
         *self = self.wedge(other);
     }
 }
-impl std::ops::BitXor<DualNum> for Motor {
-    type Output = Flector;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
-    fn bitxor(self, other: DualNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
 impl std::ops::BitXor<MultiVector> for Motor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -919,6 +914,18 @@ impl From<AntiScalar> for Motor {
     }
 }
 
+impl From<DualNum> for Motor {
+    fn from(from_dual_num: DualNum) -> Self {
+        use crate::elements::*;
+        return Motor::from_groups(
+            // e415, e425, e435, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, from_dual_num[e12345]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, from_dual_num[e5]]),
+        );
+    }
+}
+
 impl From<Line> for Motor {
     fn from(from_line: Line) -> Self {
         use crate::elements::*;
@@ -957,16 +964,18 @@ impl std::ops::Mul<AntiDipoleInversion> for Motor {
     }
 }
 impl std::ops::Mul<AntiDualNum> for Motor {
-    type Output = VersorEven;
+    type Output = Motor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       13        0
-    //    simd4        0        3        0
-    // Totals...
-    // yes simd        4       16        0
-    //  no simd        4       25        0
+    //          add/sub      mul      div
+    //   simd4        1        3        0
+    // no simd        4       12        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiDualNum> for Motor {
+    fn mul_assign(&mut self, other: AntiDualNum) {
+        *self = self.geometric_product(other);
     }
 }
 impl std::ops::Mul<AntiFlatPoint> for Motor {
@@ -1091,14 +1100,11 @@ impl std::ops::Mul<DipoleInversion> for Motor {
     }
 }
 impl std::ops::Mul<DualNum> for Motor {
-    type Output = VersorOdd;
+    type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       24        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        4       26        0
-    //  no simd        4       32        0
+    //          add/sub      mul      div
+    //   simd4        1        4        0
+    // no simd        4       16        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1350,9 +1356,9 @@ impl std::ops::Sub<AntiDualNum> for Motor {
             // e235, e315, e125
             Simd32x3::from([self[e235], self[e315], self[e125]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215] * -1.0]),
             // e1234
-            other[e1234] * -1.0,
+            0.0,
         );
     }
 }
@@ -1627,21 +1633,28 @@ impl std::ops::Sub<DipoleInversion> for Motor {
     }
 }
 impl std::ops::Sub<DualNum> for Motor {
-    type Output = VersorEven;
+    type Output = Motor;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        1        1        0
+    // f32        2        0        0
     fn sub(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return VersorEven::from_groups(
-            // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, self[e12345] - other[e12345]]),
-            // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]),
+        return Motor::from_groups(
+            // e415, e425, e435, e12345
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e12345] - other[e12345]]),
             // e235, e315, e125, e5
-            self.group1(),
-            // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4] * -1.0]),
+            Simd32x4::from([self[e235], self[e315], self[e125], self[e5] - other[e5]]),
+        );
+    }
+}
+impl std::ops::SubAssign<DualNum> for Motor {
+    fn sub_assign(&mut self, other: DualNum) {
+        use crate::elements::*;
+        *self = Motor::from_groups(
+            // e415, e425, e435, e12345
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e12345] - other[e12345]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([self[e235], self[e315], self[e125], self[e5] - other[e5]]),
         );
     }
 }
@@ -2282,34 +2295,6 @@ impl TryFrom<CircleRotor> for Motor {
             Simd32x4::from([circle_rotor[e415], circle_rotor[e425], circle_rotor[e435], circle_rotor[e12345]]),
             // e235, e315, e125, e5
             Simd32x4::from([circle_rotor[e235], circle_rotor[e315], circle_rotor[e125], 0.0]),
-        ));
-    }
-}
-
-impl TryFrom<DualNum> for Motor {
-    type Error = String;
-    fn try_from(dual_num: DualNum) -> Result<Self, Self::Error> {
-        use crate::elements::*;
-        let mut error_string = String::new();
-        let mut fail = false;
-        let el = dual_num[0];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e4: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        if fail {
-            let mut error = "Elements from DualNum do not fit into Motor { ".to_string();
-            error.push_str(error_string.as_str());
-            error.push('}');
-            return Err(error);
-        }
-        return Ok(Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, dual_num[e12345]]),
-            // e235, e315, e125, e5
-            Simd32x4::from(0.0),
         ));
     }
 }

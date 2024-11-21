@@ -8,19 +8,19 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 21
+// Total Implementations: 23
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       3       0
-//   Median:         4      13       0
-//  Average:         6      13       0
-//  Maximum:        32      51       0
+//   Median:         9      19       0
+//  Average:        12      22       0
+//  Maximum:        68      92       0
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       3       0
-//   Median:         4      13       0
-//  Average:         6      15       0
-//  Maximum:        32      57       0
+//  Minimum:         0       9       0
+//   Median:        12      22       0
+//  Average:        14      26       0
+//  Maximum:        80     112       0
 impl std::ops::Div<flat_bulk_norm_squared> for AntiCircleRotor {
     type Output = Scalar;
     fn div(self, _rhs: flat_bulk_norm_squared) -> Self::Output {
@@ -30,13 +30,13 @@ impl std::ops::Div<flat_bulk_norm_squared> for AntiCircleRotor {
 impl FlatBulkNormSquared for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd3        0        1        0
+    //      f32        5        9        0
+    //    simd3        1        2        0
     // Totals...
-    // yes simd        2        4        0
-    //  no simd        2        6        0
+    // yes simd        6       11        0
+    //  no simd        8       15        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -49,13 +49,32 @@ impl std::ops::Div<flat_bulk_norm_squared> for AntiDipoleInversion {
 impl FlatBulkNormSquared for AntiDipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       25        0
+    //      f32       23       41        0
     //    simd3        0        2        0
     // Totals...
-    // yes simd       14       27        0
-    //  no simd       14       31        0
+    // yes simd       23       43        0
+    //  no simd       23       47        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
+    }
+}
+impl std::ops::Div<flat_bulk_norm_squared> for AntiDualNum {
+    type Output = Scalar;
+    fn div(self, _rhs: flat_bulk_norm_squared) -> Self::Output {
+        self.flat_bulk_norm_squared()
+    }
+}
+impl FlatBulkNormSquared for AntiDualNum {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32       15       18        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       15       19        0
+    //  no simd       15       22        0
+    fn flat_bulk_norm_squared(self) -> Scalar {
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -68,9 +87,9 @@ impl std::ops::Div<flat_bulk_norm_squared> for AntiFlatPoint {
 impl FlatBulkNormSquared for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        4       13        0
+    // f32        7       17        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -83,13 +102,13 @@ impl std::ops::Div<flat_bulk_norm_squared> for AntiFlector {
 impl FlatBulkNormSquared for AntiFlector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       25        0
+    //      f32       23       41        0
     //    simd3        0        2        0
     // Totals...
-    // yes simd       14       27        0
-    //  no simd       14       31        0
+    // yes simd       23       43        0
+    //  no simd       23       47        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -102,13 +121,13 @@ impl std::ops::Div<flat_bulk_norm_squared> for AntiLine {
 impl FlatBulkNormSquared for AntiLine {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd3        0        1        0
+    //      f32        5        9        0
+    //    simd3        1        2        0
     // Totals...
-    // yes simd        2        4        0
-    //  no simd        2        6        0
+    // yes simd        6       11        0
+    //  no simd        8       15        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -121,13 +140,13 @@ impl std::ops::Div<flat_bulk_norm_squared> for AntiMotor {
 impl FlatBulkNormSquared for AntiMotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        1        0
+    //      f32        8       19        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        3        5        0
-    //  no simd        3        8        0
+    // yes simd        9       20        0
+    //  no simd       12       23        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -140,13 +159,13 @@ impl std::ops::Div<flat_bulk_norm_squared> for AntiPlane {
 impl FlatBulkNormSquared for AntiPlane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       12        0
-    //    simd3        0        2        0
+    //      f32        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        9       14        0
-    //  no simd        9       18        0
+    // yes simd        0        3        0
+    //  no simd        0        9        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -159,9 +178,9 @@ impl std::ops::Div<flat_bulk_norm_squared> for Circle {
 impl FlatBulkNormSquared for Circle {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        4       13        0
+    // f32        7       17        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -174,9 +193,9 @@ impl std::ops::Div<flat_bulk_norm_squared> for CircleRotor {
 impl FlatBulkNormSquared for CircleRotor {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        4       13        0
+    // f32        7       17        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -189,13 +208,13 @@ impl std::ops::Div<flat_bulk_norm_squared> for Dipole {
 impl FlatBulkNormSquared for Dipole {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd3        0        1        0
+    //      f32        5        9        0
+    //    simd3        1        2        0
     // Totals...
-    // yes simd        2        4        0
-    //  no simd        2        6        0
+    // yes simd        6       11        0
+    //  no simd        8       15        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -208,13 +227,32 @@ impl std::ops::Div<flat_bulk_norm_squared> for DipoleInversion {
 impl FlatBulkNormSquared for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        1        0
+    //      f32        8       19        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        3        5        0
-    //  no simd        3        8        0
+    // yes simd        9       20        0
+    //  no simd       12       23        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
+    }
+}
+impl std::ops::Div<flat_bulk_norm_squared> for DualNum {
+    type Output = Scalar;
+    fn div(self, _rhs: flat_bulk_norm_squared) -> Self::Output {
+        self.flat_bulk_norm_squared()
+    }
+}
+impl FlatBulkNormSquared for DualNum {
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        9        0
+    fn flat_bulk_norm_squared(self) -> Scalar {
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -227,13 +265,13 @@ impl std::ops::Div<flat_bulk_norm_squared> for FlatPoint {
 impl FlatBulkNormSquared for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        3        0
-    //    simd3        0        1        0
+    //      f32        5        9        0
+    //    simd3        1        2        0
     // Totals...
-    // yes simd        2        4        0
-    //  no simd        2        6        0
+    // yes simd        6       11        0
+    //  no simd        8       15        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -246,13 +284,13 @@ impl std::ops::Div<flat_bulk_norm_squared> for Flector {
 impl FlatBulkNormSquared for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        1        0
+    //      f32        8       19        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        3        5        0
-    //  no simd        3        8        0
+    // yes simd        9       20        0
+    //  no simd       12       23        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -265,9 +303,9 @@ impl std::ops::Div<flat_bulk_norm_squared> for Line {
 impl FlatBulkNormSquared for Line {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        4       13        0
+    // f32        7       17        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -280,13 +318,13 @@ impl std::ops::Div<flat_bulk_norm_squared> for Motor {
 impl FlatBulkNormSquared for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       25        0
+    //      f32       23       41        0
     //    simd3        0        2        0
     // Totals...
-    // yes simd       14       27        0
-    //  no simd       14       31        0
+    // yes simd       23       43        0
+    //  no simd       23       47        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -299,13 +337,14 @@ impl std::ops::Div<flat_bulk_norm_squared> for MultiVector {
 impl FlatBulkNormSquared for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       32       48        0
-    //    simd3        0        3        0
+    //      f32       63       84        0
+    //    simd3        3        4        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       32       51        0
-    //  no simd       32       57        0
+    // yes simd       68       92        0
+    //  no simd       80      112        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -317,10 +356,14 @@ impl std::ops::Div<flat_bulk_norm_squared> for Plane {
 }
 impl FlatBulkNormSquared for Plane {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //           add/sub      mul      div
+    //      f32       15       18        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       15       19        0
+    //  no simd       15       22        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -333,13 +376,13 @@ impl std::ops::Div<flat_bulk_norm_squared> for RoundPoint {
 impl FlatBulkNormSquared for RoundPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       12        0
-    //    simd3        0        2        0
+    //      f32        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        9       14        0
-    //  no simd        9       18        0
+    // yes simd        0        3        0
+    //  no simd        0        9        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -351,10 +394,14 @@ impl std::ops::Div<flat_bulk_norm_squared> for Sphere {
 }
 impl FlatBulkNormSquared for Sphere {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //           add/sub      mul      div
+    //      f32       15       18        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       15       19        0
+    //  no simd       15       22        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -367,13 +414,13 @@ impl std::ops::Div<flat_bulk_norm_squared> for VersorEven {
 impl FlatBulkNormSquared for VersorEven {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       25        0
+    //      f32       23       41        0
     //    simd3        0        2        0
     // Totals...
-    // yes simd       14       27        0
-    //  no simd       14       31        0
+    // yes simd       23       43        0
+    //  no simd       23       47        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
@@ -386,13 +433,13 @@ impl std::ops::Div<flat_bulk_norm_squared> for VersorOdd {
 impl FlatBulkNormSquared for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        4        0
-    //    simd4        0        1        0
+    //      f32        8       19        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        3        5        0
-    //  no simd        3        8        0
+    // yes simd        9       20        0
+    //  no simd       12       23        0
     fn flat_bulk_norm_squared(self) -> Scalar {
-        let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
+        let flat_bulk_thing = self.flat_bulk().wedge(RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]), /* e5 */ 0.0));
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }

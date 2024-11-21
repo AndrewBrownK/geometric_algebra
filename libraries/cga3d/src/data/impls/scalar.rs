@@ -75,7 +75,7 @@ impl std::ops::Add<AntiDualNum> for Scalar {
     // f32        1        0        0
     fn add(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([other[e1234], other[scalar] + self[scalar]]));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([other[e3215], other[scalar] + self[scalar]]));
     }
 }
 impl std::ops::Add<AntiFlatPoint> for Scalar {
@@ -323,9 +323,9 @@ impl std::ops::Add<DualNum> for Scalar {
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x4::from(0.0),
             // e5
-            0.0,
+            other[e5],
             // e15, e25, e35, e45
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -1242,7 +1242,7 @@ impl std::ops::Sub<AntiDualNum> for Scalar {
     // f32        1        1        0
     fn sub(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([other[e1234] * -1.0, self[scalar] - other[scalar]]));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([other[e3215] * -1.0, self[scalar] - other[scalar]]));
     }
 }
 impl std::ops::Sub<AntiFlatPoint> for Scalar {
@@ -1550,9 +1550,9 @@ impl std::ops::Sub<DualNum> for Scalar {
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345] * -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4] * -1.0]),
+            Simd32x4::from(0.0),
             // e5
-            0.0,
+            other[e5] * -1.0,
             // e15, e25, e35, e45
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -1977,7 +1977,7 @@ impl TryFrom<AntiDualNum> for Scalar {
         let el = anti_dual_num[0];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e1234: ");
+            error_string.push_str("e3215: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }

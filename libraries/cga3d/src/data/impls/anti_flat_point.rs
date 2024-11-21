@@ -94,9 +94,9 @@ impl std::ops::Add<AntiDualNum> for AntiFlatPoint {
             // e235, e315, e125
             Simd32x3::from([self[e235], self[e315], self[e125]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
             // e1234
-            other[e1234],
+            0.0,
         );
     }
 }
@@ -321,9 +321,9 @@ impl std::ops::Add<DualNum> for AntiFlatPoint {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]),
+            Simd32x4::from([self[e235], self[e315], self[e125], other[e5]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x4::from(0.0),
         );
     }
 }
@@ -645,7 +645,7 @@ impl std::ops::BitXorAssign<AntiDualNum> for AntiFlatPoint {
     }
 }
 impl std::ops::BitXor<AntiFlector> for AntiFlatPoint {
-    type Output = Plane;
+    type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        3        4        0
@@ -669,7 +669,7 @@ impl std::ops::BitXorAssign<AntiMotor> for AntiFlatPoint {
     }
 }
 impl std::ops::BitXor<AntiPlane> for AntiFlatPoint {
-    type Output = Plane;
+    type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        3        4        0
@@ -696,10 +696,10 @@ impl std::ops::BitXor<DipoleInversion> for AntiFlatPoint {
     }
 }
 impl std::ops::BitXor<DualNum> for AntiFlatPoint {
-    type Output = Sphere;
+    type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        8        0
+    // f32        0        1        0
     fn bitxor(self, other: DualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -723,7 +723,7 @@ impl std::ops::BitXor<Flector> for AntiFlatPoint {
     }
 }
 impl std::ops::BitXor<Motor> for AntiFlatPoint {
-    type Output = Plane;
+    type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
@@ -809,10 +809,14 @@ impl std::ops::Mul<AntiDipoleInversion> for AntiFlatPoint {
     }
 }
 impl std::ops::Mul<AntiDualNum> for AntiFlatPoint {
-    type Output = AntiDipoleInversion;
+    type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       14        0
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        3        0
+    //  no simd        0        6        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -917,14 +921,14 @@ impl std::ops::Mul<DipoleInversion> for AntiFlatPoint {
     }
 }
 impl std::ops::Mul<DualNum> for AntiFlatPoint {
-    type Output = DipoleInversion;
+    type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       14        0
+    //      f32        0        1        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0       16        0
-    //  no simd        0       22        0
+    // yes simd        0        3        0
+    //  no simd        0        9        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1164,9 +1168,9 @@ impl std::ops::Sub<AntiDualNum> for AntiFlatPoint {
             // e235, e315, e125
             Simd32x3::from([self[e235], self[e315], self[e125]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215] * -1.0]),
             // e1234
-            other[e1234] * -1.0,
+            0.0,
         );
     }
 }
@@ -1448,9 +1452,9 @@ impl std::ops::Sub<DualNum> for AntiFlatPoint {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]),
+            Simd32x4::from([self[e235], self[e315], self[e125], other[e5] * -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4] * -1.0]),
+            Simd32x4::from(0.0),
         );
     }
 }

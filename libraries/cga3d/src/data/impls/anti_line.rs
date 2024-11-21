@@ -13,7 +13,7 @@ use crate::traits::Wedge;
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         3       3       0
-//  Average:        10      14       0
+//  Average:        10      13       0
 //  Maximum:       132     163       0
 //
 //  No SIMD:   add/sub     mul     div
@@ -69,18 +69,14 @@ impl std::ops::Add<AntiDipoleInversion> for AntiLine {
     }
 }
 impl std::ops::Add<AntiDualNum> for AntiLine {
-    type Output = VersorOdd;
+    type Output = AntiMotor;
     fn add(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        return VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, other[scalar]]),
-            // e23, e31, e12, e45
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
-            // e15, e25, e35, e1234
-            crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(other[e1234]),
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+        return AntiMotor::from_groups(
+            // e23, e31, e12, scalar
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[scalar]),
+            // e15, e25, e35, e3215
+            crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(other[e3215]),
         );
     }
 }
@@ -348,9 +344,9 @@ impl std::ops::Add<DualNum> for AntiLine {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x4::from(0.0),
             // e5
-            0.0,
+            other[e5],
             // e15, e25, e35, e45
             crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(0.0),
             // e41, e42, e43
@@ -667,7 +663,7 @@ impl std::ops::BitXor<AntiFlector> for AntiLine {
     }
 }
 impl std::ops::BitXor<AntiLine> for AntiLine {
-    type Output = Plane;
+    type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        5        6        0
@@ -730,14 +726,10 @@ impl std::ops::BitXor<DipoleInversion> for AntiLine {
     }
 }
 impl std::ops::BitXor<DualNum> for AntiLine {
-    type Output = Circle;
+    type Output = AntiFlatPoint;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        6        0
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn bitxor(self, other: DualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -860,16 +852,18 @@ impl std::ops::Mul<AntiDipoleInversion> for AntiLine {
     }
 }
 impl std::ops::Mul<AntiDualNum> for AntiLine {
-    type Output = DipoleInversion;
+    type Output = AntiLine;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3       12        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        3       13        0
-    //  no simd        3       15        0
+    //          add/sub      mul      div
+    //   simd3        1        3        0
+    // no simd        3        9        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiDualNum> for AntiLine {
+    fn mul_assign(&mut self, other: AntiDualNum) {
+        *self = self.geometric_product(other);
     }
 }
 impl std::ops::Mul<AntiFlatPoint> for AntiLine {
@@ -964,14 +958,11 @@ impl std::ops::Mul<DipoleInversion> for AntiLine {
     }
 }
 impl std::ops::Mul<DualNum> for AntiLine {
-    type Output = AntiDipoleInversion;
+    type Output = Line;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3       15        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        3       16        0
-    //  no simd        3       18        0
+    //          add/sub      mul      div
+    //   simd3        1        3        0
+    // no simd        3        9        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1181,21 +1172,17 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiLine {
     }
 }
 impl std::ops::Sub<AntiDualNum> for AntiLine {
-    type Output = VersorOdd;
+    type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        2        0
     fn sub(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        return VersorOdd::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, other[scalar] * -1.0]),
-            // e23, e31, e12, e45
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
-            // e15, e25, e35, e1234
-            crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4((other[e1234] * -1.0)),
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+        return AntiMotor::from_groups(
+            // e23, e31, e12, scalar
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[scalar] * -1.0)),
+            // e15, e25, e35, e3215
+            crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4((other[e3215] * -1.0)),
         );
     }
 }
@@ -1511,9 +1498,9 @@ impl std::ops::Sub<DualNum> for AntiLine {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345] * -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4] * -1.0]),
+            Simd32x4::from(0.0),
             // e5
-            0.0,
+            other[e5] * -1.0,
             // e15, e25, e35, e45
             crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(0.0),
             // e41, e42, e43

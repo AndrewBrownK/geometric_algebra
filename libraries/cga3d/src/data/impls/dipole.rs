@@ -12,7 +12,7 @@ use crate::traits::Wedge;
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         4       3       0
+//   Median:         5       3       0
 //  Average:        18      23       0
 //  Maximum:       218     251       0
 //
@@ -78,9 +78,9 @@ impl std::ops::Add<AntiDualNum> for Dipole {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            crate::swizzle!(self.group2(), 0, 1, 2).extend_to_4(other[e1234]),
+            crate::swizzle!(self.group2(), 0, 1, 2).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
         );
     }
 }
@@ -370,9 +370,9 @@ impl std::ops::Add<DualNum> for Dipole {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x4::from(0.0),
             // e5
-            0.0,
+            other[e5],
             // e15, e25, e35, e45
             crate::swizzle!(self.group2(), 0, 1, 2).extend_to_4(self[e45]),
             // e41, e42, e43
@@ -794,14 +794,11 @@ impl std::ops::BitXor<DipoleInversion> for Dipole {
     }
 }
 impl std::ops::BitXor<DualNum> for Dipole {
-    type Output = Circle;
+    type Output = Line;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd3        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        6        0
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
     fn bitxor(self, other: DualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -972,11 +969,11 @@ impl std::ops::Mul<AntiDualNum> for Dipole {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       14        0
-    //    simd3        1        2        0
-    //    simd4        0        1        0
+    //      f32        6       13        0
+    //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        4       17        0
+    // yes simd        6       16        0
     //  no simd        6       24        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
@@ -1108,12 +1105,12 @@ impl std::ops::Mul<DualNum> for Dipole {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       18        0
-    //    simd3        1        2        0
+    //      f32        6       14        0
+    //    simd3        0        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        4       21        0
-    //  no simd        6       28        0
+    // yes simd        6       16        0
+    //  no simd        6       21        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1359,9 +1356,9 @@ impl std::ops::Sub<AntiDualNum> for Dipole {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            crate::swizzle!(self.group2(), 0, 1, 2).extend_to_4((other[e1234] * -1.0)),
+            crate::swizzle!(self.group2(), 0, 1, 2).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215] * -1.0]),
         );
     }
 }
@@ -1693,9 +1690,9 @@ impl std::ops::Sub<DualNum> for Dipole {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345] * -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4] * -1.0]),
+            Simd32x4::from(0.0),
             // e5
-            0.0,
+            other[e5] * -1.0,
             // e15, e25, e35, e45
             crate::swizzle!(self.group2(), 0, 1, 2).extend_to_4(self[e45]),
             // e41, e42, e43

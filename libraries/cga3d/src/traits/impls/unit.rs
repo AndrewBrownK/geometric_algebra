@@ -46,7 +46,7 @@ impl Unit for AntiDipoleInversion {
 }
 impl Unit for AntiDualNum {
     fn unit() -> Self {
-        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from(1.0));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(1.0));
     }
 }
 impl Unit for AntiFlatPoint {
@@ -131,7 +131,7 @@ impl Unit for DipoleInversion {
 }
 impl Unit for DualNum {
     fn unit() -> Self {
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from(1.0));
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(1.0));
     }
 }
 impl Unit for FlatPoint {

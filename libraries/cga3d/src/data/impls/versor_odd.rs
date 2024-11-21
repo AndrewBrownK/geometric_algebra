@@ -98,9 +98,9 @@ impl std::ops::Add<AntiDualNum> for VersorOdd {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], other[e1234] + self[e1234]]),
+            self.group2(),
             // e4235, e4315, e4125, e3215
-            self.group3(),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], other[e3215] + self[e3215]]),
         );
     }
 }
@@ -113,9 +113,9 @@ impl std::ops::AddAssign<AntiDualNum> for VersorOdd {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], other[e1234] + self[e1234]]),
+            self.group2(),
             // e4235, e4315, e4125, e3215
-            self.group3(),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], other[e3215] + self[e3215]]),
         );
     }
 }
@@ -443,9 +443,9 @@ impl std::ops::Add<DualNum> for VersorOdd {
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x4::from(0.0),
             // e5
-            0.0,
+            other[e5],
             // e15, e25, e35, e45
             Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]),
             // e41, e42, e43
@@ -991,10 +991,14 @@ impl std::ops::BitXor<DipoleInversion> for VersorOdd {
     }
 }
 impl std::ops::BitXor<DualNum> for VersorOdd {
-    type Output = VersorEven;
+    type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        9        0
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        1        6        0
+    //  no simd        1        9        0
     fn bitxor(self, other: DualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -1169,9 +1173,9 @@ impl From<AntiDualNum> for VersorOdd {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, from_anti_dual_num[e1234]]),
-            // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([0.0, 0.0, 0.0, from_anti_dual_num[e3215]]),
         );
     }
 }
@@ -1354,11 +1358,11 @@ impl std::ops::Mul<AntiDualNum> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       19        0
-    //    simd4        3        4        0
+    //      f32        8       28        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd        8       23        0
-    //  no simd       17       35        0
+    // yes simd       10       30        0
+    //  no simd       16       36        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1515,11 +1519,11 @@ impl std::ops::Mul<DualNum> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       22        0
+    //      f32        4       17        0
     //    simd4        3        4        0
     // Totals...
-    // yes simd        8       26        0
-    //  no simd       17       38        0
+    // yes simd        7       21        0
+    //  no simd       16       33        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1806,9 +1810,9 @@ impl std::ops::Sub<AntiDualNum> for VersorOdd {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], self[e1234] - other[e1234]]),
+            self.group2(),
             // e4235, e4315, e4125, e3215
-            self.group3(),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215] - other[e3215]]),
         );
     }
 }
@@ -1821,9 +1825,9 @@ impl std::ops::SubAssign<AntiDualNum> for VersorOdd {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], self[e1234] - other[e1234]]),
+            self.group2(),
             // e4235, e4315, e4125, e3215
-            self.group3(),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215] - other[e3215]]),
         );
     }
 }
@@ -2189,9 +2193,9 @@ impl std::ops::Sub<DualNum> for VersorOdd {
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345] * -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4] * -1.0]),
+            Simd32x4::from(0.0),
             // e5
-            0.0,
+            other[e5] * -1.0,
             // e15, e25, e35, e45
             Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]),
             // e41, e42, e43

@@ -9,13 +9,13 @@
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:        14      13       0
-//  Average:        38      41       0
+//   Median:        11       9       0
+//  Average:        37      41       0
 //  Maximum:       347     357       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:        14      16       0
+//   Median:        15      16       0
 //  Average:        41      47       0
 //  Maximum:       396     420       0
 impl std::ops::Div<anti_constraint_violation> for AntiCircleRotor {
@@ -282,10 +282,10 @@ impl AntiConstraintViolation for AntiDualNum {
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let geometric_anti_product = DualNum::from_groups(
-            // e4, e12345
-            Simd32x2::from([self[e1234] * self[scalar], f32::powi(self[scalar], 2)]) * Simd32x2::from([-2.0, -1.0]),
+            // e5, e12345
+            Simd32x2::from([self[e3215] * self[scalar], f32::powi(self[scalar], 2)]) * Simd32x2::from([-2.0, -1.0]),
         );
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([geometric_anti_product[e4], 0.0]));
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([geometric_anti_product[e5], 0.0]));
     }
 }
 impl std::ops::Div<anti_constraint_violation> for AntiFlatPoint {
@@ -315,20 +315,21 @@ impl AntiConstraintViolation for AntiFlatPoint {
     }
 }
 impl std::ops::Div<anti_constraint_violation> for AntiFlector {
-    type Output = Motor;
+    type Output = DualNum;
     fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
         self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiFlector {
-    type Output = Motor;
+    type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       12        0
+    //      f32        7        4        0
+    //    simd2        4        4        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd       14       13        0
-    //  no simd       14       16        0
+    // yes simd       11        9        0
+    //  no simd       15       16        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiFlector::from_groups(
@@ -337,50 +338,39 @@ impl AntiConstraintViolation for AntiFlector {
             // e1, e2, e3, e5
             self.group1(),
         );
-        let geometric_anti_product = Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([
+        let geometric_anti_product = DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([
+                (anti_reverse[e1] * self[e235]) + (anti_reverse[e2] * self[e315]) + (anti_reverse[e3] * self[e125]) - (anti_reverse[e321] * self[e5]),
                 0.0,
-                0.0,
-                0.0,
-                (anti_reverse[e321] * self[e321]) - (anti_reverse[e1] * self[e1]) - (anti_reverse[e2] * self[e2]) - (anti_reverse[e3] * self[e3]),
-            ]),
-            // e235, e315, e125, e5
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                (anti_reverse[e1] * self[e235]) + (anti_reverse[e2] * self[e315]) + (anti_reverse[e3] * self[e125]) + (anti_reverse[e5] * self[e321])
-                    - (anti_reverse[e235] * self[e1])
-                    - (anti_reverse[e315] * self[e2])
-                    - (anti_reverse[e125] * self[e3])
-                    - (anti_reverse[e321] * self[e5]),
-            ]),
+            ]) + (Simd32x2::from(self[e321]) * Simd32x2::from([anti_reverse[e5], anti_reverse[e321]]))
+                - (Simd32x2::from(self[e1]) * Simd32x2::from([anti_reverse[e235], anti_reverse[e1]]))
+                - (Simd32x2::from(self[e2]) * Simd32x2::from([anti_reverse[e315], anti_reverse[e2]]))
+                - (Simd32x2::from(self[e3]) * Simd32x2::from([anti_reverse[e125], anti_reverse[e3]])),
         );
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e321], 2) - f32::powi(self[e1], 2) - f32::powi(self[e2], 2) - f32::powi(self[e3], 2));
-        return Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
-            // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([geometric_anti_product[e5], geometric_anti_product[e12345] - anti_dot_product[e12345]]),
         );
     }
 }
 impl std::ops::Div<anti_constraint_violation> for AntiLine {
-    type Output = Motor;
+    type Output = DualNum;
     fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
         self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiLine {
-    type Output = Motor;
+    type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10        9        0
+    //      f32        5        3        0
+    //    simd2        3        3        0
     //    simd3        0        2        0
     // Totals...
-    // yes simd       10       11        0
-    //  no simd       10       15        0
+    // yes simd        8        8        0
+    //  no simd       11       15        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiLine::from_groups(
@@ -389,42 +379,35 @@ impl AntiConstraintViolation for AntiLine {
             // e15, e25, e35
             Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
         );
-        let geometric_anti_product = Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (anti_reverse[e23] * self[e23]) + (anti_reverse[e31] * self[e31]) + (anti_reverse[e12] * self[e12])]),
-            // e235, e315, e125, e5
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                (anti_reverse[e23] * self[e15])
-                    + (anti_reverse[e31] * self[e25])
-                    + (anti_reverse[e12] * self[e35])
-                    + (anti_reverse[e15] * self[e23])
-                    + (anti_reverse[e25] * self[e31])
-                    + (anti_reverse[e35] * self[e12]),
-            ]),
+        let geometric_anti_product = DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([(anti_reverse[e15] * self[e23]) + (anti_reverse[e25] * self[e31]) + (anti_reverse[e35] * self[e12]), 0.0])
+                + (Simd32x2::from(anti_reverse[e23]) * Simd32x2::from([self[e15], self[e23]]))
+                + (Simd32x2::from(anti_reverse[e31]) * Simd32x2::from([self[e25], self[e31]]))
+                + (Simd32x2::from(anti_reverse[e12]) * Simd32x2::from([self[e35], self[e12]])),
         );
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2));
-        return Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
-            // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([geometric_anti_product[e5], geometric_anti_product[e12345] - anti_dot_product[e12345]]),
         );
     }
 }
 impl std::ops::Div<anti_constraint_violation> for AntiMotor {
-    type Output = Motor;
+    type Output = DualNum;
     fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
         self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiMotor {
-    type Output = Motor;
+    type Output = DualNum;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       18        0
+    //           add/sub      mul      div
+    //      f32        7       10        0
+    //    simd2        4        4        0
+    // Totals...
+    // yes simd       11       14        0
+    //  no simd       15       18        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiMotor::from_groups(
@@ -433,38 +416,23 @@ impl AntiConstraintViolation for AntiMotor {
             // e15, e25, e35, e3215
             Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e3215]]),
         );
-        let geometric_anti_product = Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([
+        let geometric_anti_product = DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([
+                (anti_reverse[e15] * self[e23]) + (anti_reverse[e25] * self[e31]) + (anti_reverse[e35] * self[e12]) - (anti_reverse[e3215] * self[scalar]),
                 0.0,
-                0.0,
-                0.0,
-                (anti_reverse[e23] * self[e23]) + (anti_reverse[e31] * self[e31]) + (anti_reverse[e12] * self[e12]) - (anti_reverse[scalar] * self[scalar]),
-            ]),
-            // e235, e315, e125, e5
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                (anti_reverse[e23] * self[e15])
-                    + (anti_reverse[e31] * self[e25])
-                    + (anti_reverse[e12] * self[e35])
-                    + (anti_reverse[e15] * self[e23])
-                    + (anti_reverse[e25] * self[e31])
-                    + (anti_reverse[e35] * self[e12])
-                    - (anti_reverse[scalar] * self[e3215])
-                    - (anti_reverse[e3215] * self[scalar]),
-            ]),
+            ]) + (Simd32x2::from(anti_reverse[e23]) * Simd32x2::from([self[e15], self[e23]]))
+                + (Simd32x2::from(anti_reverse[e31]) * Simd32x2::from([self[e25], self[e31]]))
+                + (Simd32x2::from(anti_reverse[e12]) * Simd32x2::from([self[e35], self[e12]]))
+                - (Simd32x2::from(anti_reverse[scalar]) * Simd32x2::from([self[e3215], self[scalar]])),
         );
         let anti_dot_product = AntiScalar::from_groups(
             // e12345
             f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) - f32::powi(self[scalar], 2),
         );
-        return Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
-            // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([geometric_anti_product[e5], geometric_anti_product[e12345] - anti_dot_product[e12345]]),
         );
     }
 }
@@ -959,8 +927,8 @@ impl AntiConstraintViolation for DualNum {
     //  no simd        0        3        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let geometric_anti_product = DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self[e4] * self[e12345], f32::powi(self[e12345], 2)]) * Simd32x2::from([2.0, 1.0]));
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([geometric_anti_product[e4], 0.0]));
+        let geometric_anti_product = DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([self[e5] * self[e12345], f32::powi(self[e12345], 2)]) * Simd32x2::from([2.0, 1.0]));
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([geometric_anti_product[e5], 0.0]));
     }
 }
 impl std::ops::Div<anti_constraint_violation> for FlatPoint {
@@ -987,20 +955,21 @@ impl AntiConstraintViolation for FlatPoint {
     }
 }
 impl std::ops::Div<anti_constraint_violation> for Flector {
-    type Output = Motor;
+    type Output = DualNum;
     fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
         self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for Flector {
-    type Output = Motor;
+    type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       12        0
+    //      f32        7        4        0
+    //    simd2        4        4        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd       14       13        0
-    //  no simd       14       16        0
+    // yes simd       11        9        0
+    //  no simd       15       16        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = Flector::from_groups(
@@ -1009,53 +978,42 @@ impl AntiConstraintViolation for Flector {
             // e4235, e4315, e4125, e3215
             self.group1(),
         );
-        let geometric_anti_product = Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([
+        let geometric_anti_product = DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([
+                (anti_reverse[e3215] * self[e45]) - (anti_reverse[e15] * self[e4235]) - (anti_reverse[e25] * self[e4315]) - (anti_reverse[e35] * self[e4125]),
                 0.0,
-                0.0,
-                0.0,
-                (anti_reverse[e4235] * self[e4235]) + (anti_reverse[e4315] * self[e4315]) + (anti_reverse[e4125] * self[e4125]) - (anti_reverse[e45] * self[e45]),
-            ]),
-            // e235, e315, e125, e5
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                (anti_reverse[e4235] * self[e15]) + (anti_reverse[e4315] * self[e25]) + (anti_reverse[e4125] * self[e35]) + (anti_reverse[e3215] * self[e45])
-                    - (anti_reverse[e15] * self[e4235])
-                    - (anti_reverse[e25] * self[e4315])
-                    - (anti_reverse[e35] * self[e4125])
-                    - (anti_reverse[e45] * self[e3215]),
-            ]),
+            ]) + (Simd32x2::from(anti_reverse[e4235]) * Simd32x2::from([self[e15], self[e4235]]))
+                + (Simd32x2::from(anti_reverse[e4315]) * Simd32x2::from([self[e25], self[e4315]]))
+                + (Simd32x2::from(anti_reverse[e4125]) * Simd32x2::from([self[e35], self[e4125]]))
+                - (Simd32x2::from(anti_reverse[e45]) * Simd32x2::from([self[e3215], self[e45]])),
         );
         let anti_dot_product = AntiScalar::from_groups(
             // e12345
             f32::powi(self[e4235], 2) + f32::powi(self[e4315], 2) + f32::powi(self[e4125], 2) - f32::powi(self[e45], 2),
         );
-        return Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
-            // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([geometric_anti_product[e5], geometric_anti_product[e12345] - anti_dot_product[e12345]]),
         );
     }
 }
 impl std::ops::Div<anti_constraint_violation> for Line {
-    type Output = Motor;
+    type Output = DualNum;
     fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
         self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for Line {
-    type Output = Motor;
+    type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10        9        0
+    //      f32        5        3        0
+    //    simd2        3        3        0
     //    simd3        0        2        0
     // Totals...
-    // yes simd       10       11        0
-    //  no simd       10       15        0
+    // yes simd        8        8        0
+    //  no simd       11       15        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = Line::from_groups(
@@ -1064,52 +1022,35 @@ impl AntiConstraintViolation for Line {
             // e235, e315, e125
             Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
         );
-        let geometric_anti_product = Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                -(anti_reverse[e415] * self[e415]) - (anti_reverse[e425] * self[e425]) - (anti_reverse[e435] * self[e435]),
-            ]),
-            // e235, e315, e125, e5
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                -(anti_reverse[e415] * self[e235])
-                    - (anti_reverse[e425] * self[e315])
-                    - (anti_reverse[e435] * self[e125])
-                    - (anti_reverse[e235] * self[e415])
-                    - (anti_reverse[e315] * self[e425])
-                    - (anti_reverse[e125] * self[e435]),
-            ]),
+        let geometric_anti_product = DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([-(anti_reverse[e235] * self[e415]) - (anti_reverse[e315] * self[e425]) - (anti_reverse[e125] * self[e435]), 0.0])
+                - (Simd32x2::from(anti_reverse[e415]) * Simd32x2::from([self[e235], self[e415]]))
+                - (Simd32x2::from(anti_reverse[e425]) * Simd32x2::from([self[e315], self[e425]]))
+                - (Simd32x2::from(anti_reverse[e435]) * Simd32x2::from([self[e125], self[e435]])),
         );
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ -f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2));
-        return Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
-            // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([geometric_anti_product[e5], geometric_anti_product[e12345] - anti_dot_product[e12345]]),
         );
     }
 }
 impl std::ops::Div<anti_constraint_violation> for Motor {
-    type Output = Motor;
+    type Output = DualNum;
     fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
         self.anti_constraint_violation()
     }
 }
-impl std::ops::DivAssign<anti_constraint_violation> for Motor {
-    fn div_assign(&mut self, _rhs: anti_constraint_violation) {
-        *self = self.anti_constraint_violation()
-    }
-}
 impl AntiConstraintViolation for Motor {
-    type Output = Motor;
+    type Output = DualNum;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       18        0
+    //           add/sub      mul      div
+    //      f32        7       10        0
+    //    simd2        4        4        0
+    // Totals...
+    // yes simd       11       14        0
+    //  no simd       15       18        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = Motor::from_groups(
@@ -1118,37 +1059,23 @@ impl AntiConstraintViolation for Motor {
             // e235, e315, e125, e5
             Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e5]]),
         );
-        let geometric_anti_product = Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([
+        let geometric_anti_product = DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([
+                (anti_reverse[e5] * self[e12345]) - (anti_reverse[e235] * self[e415]) - (anti_reverse[e315] * self[e425]) - (anti_reverse[e125] * self[e435]),
                 0.0,
-                0.0,
-                0.0,
-                (anti_reverse[e12345] * self[e12345]) - (anti_reverse[e415] * self[e415]) - (anti_reverse[e425] * self[e425]) - (anti_reverse[e435] * self[e435]),
-            ]),
-            // e235, e315, e125, e5
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                (anti_reverse[e12345] * self[e5]) + (anti_reverse[e5] * self[e12345])
-                    - (anti_reverse[e415] * self[e235])
-                    - (anti_reverse[e425] * self[e315])
-                    - (anti_reverse[e435] * self[e125])
-                    - (anti_reverse[e235] * self[e415])
-                    - (anti_reverse[e315] * self[e425])
-                    - (anti_reverse[e125] * self[e435]),
-            ]),
+            ]) + (Simd32x2::from(anti_reverse[e12345]) * Simd32x2::from([self[e5], self[e12345]]))
+                - (Simd32x2::from(anti_reverse[e415]) * Simd32x2::from([self[e235], self[e415]]))
+                - (Simd32x2::from(anti_reverse[e425]) * Simd32x2::from([self[e315], self[e425]]))
+                - (Simd32x2::from(anti_reverse[e435]) * Simd32x2::from([self[e125], self[e435]])),
         );
         let anti_dot_product = AntiScalar::from_groups(
             // e12345
             f32::powi(self[e12345], 2) - f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2),
         );
-        return Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
-            // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
+        return DualNum::from_groups(
+            // e5, e12345
+            Simd32x2::from([geometric_anti_product[e5], geometric_anti_product[e12345] - anti_dot_product[e12345]]),
         );
     }
 }

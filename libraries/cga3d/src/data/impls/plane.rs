@@ -69,6 +69,9 @@ impl std::ops::Add<AntiDipoleInversion> for Plane {
 }
 impl std::ops::Add<AntiDualNum> for Plane {
     type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        0        0
     fn add(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -77,9 +80,9 @@ impl std::ops::Add<AntiDualNum> for Plane {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, other[e1234]]),
+            Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
-            self.group0(),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], other[e3215] + self[e3215]]),
         );
     }
 }
@@ -338,9 +341,9 @@ impl std::ops::Add<DualNum> for Plane {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x4::from(0.0),
             // e5
-            0.0,
+            other[e5],
             // e15, e25, e35, e45
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -681,15 +684,6 @@ impl std::ops::BitXor<AntiPlane> for Plane {
         return self.wedge(other);
     }
 }
-impl std::ops::BitXor<DualNum> for Plane {
-    type Output = AntiScalar;
-    // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
-    fn bitxor(self, other: DualNum) -> Self::Output {
-        return self.wedge(other);
-    }
-}
 impl std::ops::BitXor<MultiVector> for Plane {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
@@ -778,14 +772,14 @@ impl std::ops::Mul<AntiDipoleInversion> for Plane {
     }
 }
 impl std::ops::Mul<AntiDualNum> for Plane {
-    type Output = VersorOdd;
+    type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        3        0
+    //      f32        0        3        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       13        0
+    //  no simd        0        7        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -894,14 +888,14 @@ impl std::ops::Mul<DipoleInversion> for Plane {
     }
 }
 impl std::ops::Mul<DualNum> for Plane {
-    type Output = VersorEven;
+    type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        9        0
+    //      f32        0        3        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        0       11        0
-    //  no simd        0       17        0
+    // yes simd        0        5        0
+    //  no simd        0       11        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1126,7 +1120,7 @@ impl std::ops::Sub<AntiDualNum> for Plane {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        1        1        0
     fn sub(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -1135,9 +1129,9 @@ impl std::ops::Sub<AntiDualNum> for Plane {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, other[e1234] * -1.0]),
+            Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
-            self.group0(),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215] - other[e3215]]),
         );
     }
 }
@@ -1453,9 +1447,9 @@ impl std::ops::Sub<DualNum> for Plane {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345] * -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4] * -1.0]),
+            Simd32x4::from(0.0),
             // e5
-            0.0,
+            other[e5] * -1.0,
             // e15, e25, e35, e45
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -1779,6 +1773,29 @@ impl std::ops::Sub<VersorOdd> for Plane {
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self[e4235] - other[e4235], self[e4315] - other[e4315], self[e4125] - other[e4125], self[e3215] - other[e3215]]),
         );
+    }
+}
+
+impl TryFrom<AntiDualNum> for Plane {
+    type Error = String;
+    fn try_from(anti_dual_num: AntiDualNum) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = anti_dual_num[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from AntiDualNum do not fit into Plane { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from([0.0, 0.0, 0.0, anti_dual_num[e3215]])));
     }
 }
 

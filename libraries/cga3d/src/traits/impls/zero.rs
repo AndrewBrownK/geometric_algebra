@@ -46,7 +46,7 @@ impl Zero for AntiDipoleInversion {
 }
 impl Zero for AntiDualNum {
     fn zero() -> Self {
-        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from(0.0));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(0.0));
     }
 }
 impl Zero for AntiFlatPoint {
@@ -131,7 +131,7 @@ impl Zero for DipoleInversion {
 }
 impl Zero for DualNum {
     fn zero() -> Self {
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from(0.0));
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(0.0));
     }
 }
 impl Zero for FlatPoint {

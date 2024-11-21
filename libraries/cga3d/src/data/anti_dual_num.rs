@@ -7,20 +7,20 @@ use crate::simd::*;
 #[derive(Clone, Copy)]
 pub union AntiDualNum {
     groups: AntiDualNumGroups,
-    /// e1234, scalar, 0, 0
+    /// e3215, scalar, 0, 0
     elements: [f32; 4],
 }
 #[repr(C)]
 #[derive(Clone, Copy, encase::ShaderType)]
 pub struct AntiDualNumGroups {
-    /// e1234, scalar
+    /// e3215, scalar
     g0: Simd32x2,
 }
 impl AntiDualNum {
     #[allow(clippy::too_many_arguments)]
-    pub const fn from_elements(e1234: f32, scalar: f32) -> Self {
+    pub const fn from_elements(e3215: f32, scalar: f32) -> Self {
         Self {
-            elements: [e1234, scalar, 0.0, 0.0],
+            elements: [e3215, scalar, 0.0, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x2) -> Self {
@@ -61,7 +61,7 @@ impl From<[f32; 2]> for AntiDualNum {
 }
 impl std::fmt::Debug for AntiDualNum {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter.debug_struct("AntiDualNum").field("e1234", &self[0]).field("scalar", &self[1]).finish()
+        formatter.debug_struct("AntiDualNum").field("e3215", &self[0]).field("scalar", &self[1]).finish()
     }
 }
 
@@ -272,7 +272,7 @@ impl serde::Serialize for AntiDualNum {
     fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         use serde::ser::SerializeStruct;
         let mut state = serializer.serialize_struct("AntiDualNum", 2)?;
-        state.serialize_field("e1234", &self[crate::elements::e1234])?;
+        state.serialize_field("e3215", &self[crate::elements::e3215])?;
         state.serialize_field("scalar", &self[crate::elements::scalar])?;
         state.end()
     }
@@ -284,7 +284,7 @@ impl<'de> serde::Deserialize<'de> for AntiDualNum {
         #[allow(non_camel_case_types)]
         #[derive(serde::Deserialize)]
         enum AntiDualNumField {
-            e1234,
+            e3215,
             scalar,
         }
         struct AntiDualNumVisitor;
@@ -297,16 +297,16 @@ impl<'de> serde::Deserialize<'de> for AntiDualNum {
             where
                 V: MapAccess<'de>,
             {
-                let mut e1234 = None;
+                let mut e3215 = None;
                 let mut scalar = None;
 
                 while let Some(key) = map.next_key()? {
                     match key {
-                        AntiDualNumField::e1234 => {
-                            if e1234.is_some() {
-                                return Err(serde::de::Error::duplicate_field("e1234"));
+                        AntiDualNumField::e3215 => {
+                            if e3215.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e3215"));
                             }
-                            e1234 = Some(map.next_value()?);
+                            e3215 = Some(map.next_value()?);
                         }
 
                         AntiDualNumField::scalar => {
@@ -318,19 +318,19 @@ impl<'de> serde::Deserialize<'de> for AntiDualNum {
                     }
                 }
                 let mut result = AntiDualNum::from([0.0; 2]);
-                result[crate::elements::e1234] = e1234.ok_or_else(|| serde::de::Error::missing_field("e1234"))?;
+                result[crate::elements::e3215] = e3215.ok_or_else(|| serde::de::Error::missing_field("e3215"))?;
                 result[crate::elements::scalar] = scalar.ok_or_else(|| serde::de::Error::missing_field("scalar"))?;
                 Ok(result)
             }
         }
 
-        const FIELDS: &'static [&'static str] = &["e1234", "scalar"];
+        const FIELDS: &'static [&'static str] = &["e3215", "scalar"];
         deserializer.deserialize_struct("AntiDualNum", FIELDS, AntiDualNumVisitor)
     }
 }
-impl std::ops::Index<crate::elements::e1234> for AntiDualNum {
+impl std::ops::Index<crate::elements::e3215> for AntiDualNum {
     type Output = f32;
-    fn index(&self, _: crate::elements::e1234) -> &Self::Output {
+    fn index(&self, _: crate::elements::e3215) -> &Self::Output {
         &self[0]
     }
 }
@@ -340,8 +340,8 @@ impl std::ops::Index<crate::elements::scalar> for AntiDualNum {
         &self[1]
     }
 }
-impl std::ops::IndexMut<crate::elements::e1234> for AntiDualNum {
-    fn index_mut(&mut self, _: crate::elements::e1234) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e3215> for AntiDualNum {
+    fn index_mut(&mut self, _: crate::elements::e3215) -> &mut Self::Output {
         &mut self[0]
     }
 }

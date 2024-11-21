@@ -83,9 +83,9 @@ impl std::ops::Add<AntiDualNum> for DipoleInversion {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], other[e1234] + self[e1234]]),
+            self.group2(),
             // e4235, e4315, e4125, e3215
-            self.group3(),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], other[e3215] + self[e3215]]),
         );
     }
 }
@@ -398,9 +398,9 @@ impl std::ops::Add<DualNum> for DipoleInversion {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x4::from(0.0),
             // e5
-            0.0,
+            other[e5],
             // e15, e25, e35, e45
             Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]),
             // e41, e42, e43
@@ -895,13 +895,13 @@ impl std::ops::BitXor<DipoleInversion> for DipoleInversion {
     }
 }
 impl std::ops::BitXor<DualNum> for DipoleInversion {
-    type Output = CircleRotor;
+    type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd3        0        1        0
+    //      f32        0        3        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        5        0
+    // yes simd        0        4        0
     //  no simd        0        7        0
     fn bitxor(self, other: DualNum) -> Self::Output {
         return self.wedge(other);
@@ -1148,11 +1148,11 @@ impl std::ops::Mul<AntiDualNum> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       22        0
-    //    simd4        1        2        0
+    //      f32        6       26        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       11       24        0
-    //  no simd       14       30        0
+    // yes simd        8       28        0
+    //  no simd       14       34        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1287,11 +1287,11 @@ impl std::ops::Mul<DualNum> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       25        0
-    //    simd4        1        2        0
+    //      f32        3       19        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd       11       27        0
-    //  no simd       14       33        0
+    // yes simd        6       22        0
+    //  no simd       15       31        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1544,9 +1544,9 @@ impl std::ops::Sub<AntiDualNum> for DipoleInversion {
             // e23, e31, e12, e45
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], self[e1234] - other[e1234]]),
+            self.group2(),
             // e4235, e4315, e4125, e3215
-            self.group3(),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215] - other[e3215]]),
         );
     }
 }
@@ -1897,9 +1897,9 @@ impl std::ops::Sub<DualNum> for DipoleInversion {
             // scalar, e12345
             Simd32x2::from([0.0, other[e12345] * -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4] * -1.0]),
+            Simd32x4::from(0.0),
             // e5
-            0.0,
+            other[e5] * -1.0,
             // e15, e25, e35, e45
             Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]),
             // e41, e42, e43
@@ -2339,9 +2339,9 @@ impl TryFrom<AntiDualNum> for DipoleInversion {
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, anti_dual_num[e1234]]),
-            // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([0.0, 0.0, 0.0, anti_dual_num[e3215]]),
         ));
     }
 }

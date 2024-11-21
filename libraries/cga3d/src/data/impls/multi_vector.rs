@@ -172,9 +172,9 @@ impl std::ops::Add<AntiDualNum> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e4235, e4315, e4125, e3215
-            self.group9(),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], other[e3215] + self[e3215]]),
             // e1234
-            other[e1234] + self[e1234],
+            self[e1234],
         );
     }
 }
@@ -201,9 +201,9 @@ impl std::ops::AddAssign<AntiDualNum> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e4235, e4315, e4125, e3215
-            self.group9(),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], other[e3215] + self[e3215]]),
             // e1234
-            other[e1234] + self[e1234],
+            self[e1234],
         );
     }
 }
@@ -838,9 +838,9 @@ impl std::ops::Add<DualNum> for MultiVector {
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345] + self[e12345]]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], other[e4] + self[e4]]),
+            self.group1(),
             // e5
-            self[e5],
+            other[e5] + self[e5],
             // e15, e25, e35, e45
             self.group3(),
             // e41, e42, e43
@@ -867,9 +867,9 @@ impl std::ops::AddAssign<DualNum> for MultiVector {
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345] + self[e12345]]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], other[e4] + self[e4]]),
+            self.group1(),
             // e5
-            self[e5],
+            other[e5] + self[e5],
             // e15, e25, e35, e45
             self.group3(),
             // e41, e42, e43
@@ -1613,11 +1613,11 @@ impl std::ops::BitXor<AntiDualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        6        0
+    //      f32        2       10        0
     //    simd3        0        4        0
-    //    simd4        0        4        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        2       14        0
+    // yes simd        2       17        0
     //  no simd        2       34        0
     fn bitxor(self, other: AntiDualNum) -> Self::Output {
         return self.wedge(other);
@@ -1810,11 +1810,12 @@ impl std::ops::BitXor<DualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1       16        0
-    //    simd3        0        3        0
+    //      f32        1        6        0
+    //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        1       19        0
-    //  no simd        1       25        0
+    // yes simd        1        9        0
+    //  no simd        1       17        0
     fn bitxor(self, other: DualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -2123,9 +2124,9 @@ impl From<AntiDualNum> for MultiVector {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, from_anti_dual_num[e3215]]),
             // e1234
-            from_anti_dual_num[e1234],
+            0.0,
         );
     }
 }
@@ -2437,9 +2438,9 @@ impl From<DualNum> for MultiVector {
             // scalar, e12345
             Simd32x2::from([0.0, from_dual_num[e12345]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, from_dual_num[e4]]),
+            Simd32x4::from(0.0),
             // e5
-            0.0,
+            from_dual_num[e5],
             // e15, e25, e35, e45
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -2803,12 +2804,12 @@ impl std::ops::Mul<AntiDualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       29        0
+    //      f32        9       27        0
     //    simd2        1        2        0
-    //    simd3        5        9        0
-    //    simd4        2        2        0
+    //    simd3        3        7        0
+    //    simd4        3        4        0
     // Totals...
-    // yes simd       15       42        0
+    // yes simd       16       40        0
     //  no simd       32       68        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
@@ -3022,12 +3023,12 @@ impl std::ops::Mul<DualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       40        0
-    //    simd3        5        9        0
-    //    simd4        1        1        0
+    //      f32       11       33        0
+    //    simd3        3        8        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd       19       50        0
-    //  no simd       32       71        0
+    // yes simd       17       44        0
+    //  no simd       32       69        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3458,9 +3459,9 @@ impl std::ops::Sub<AntiDualNum> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e4235, e4315, e4125, e3215
-            self.group9(),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215] - other[e3215]]),
             // e1234
-            self[e1234] - other[e1234],
+            self[e1234],
         );
     }
 }
@@ -3487,9 +3488,9 @@ impl std::ops::SubAssign<AntiDualNum> for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e4235, e4315, e4125, e3215
-            self.group9(),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215] - other[e3215]]),
             // e1234
-            self[e1234] - other[e1234],
+            self[e1234],
         );
     }
 }
@@ -4124,9 +4125,9 @@ impl std::ops::Sub<DualNum> for MultiVector {
             // scalar, e12345
             Simd32x2::from([self[scalar], self[e12345] - other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e4] - other[e4]]),
+            self.group1(),
             // e5
-            self[e5],
+            self[e5] - other[e5],
             // e15, e25, e35, e45
             self.group3(),
             // e41, e42, e43
@@ -4153,9 +4154,9 @@ impl std::ops::SubAssign<DualNum> for MultiVector {
             // scalar, e12345
             Simd32x2::from([self[scalar], self[e12345] - other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e4] - other[e4]]),
+            self.group1(),
             // e5
-            self[e5],
+            self[e5] - other[e5],
             // e15, e25, e35, e45
             self.group3(),
             // e41, e42, e43

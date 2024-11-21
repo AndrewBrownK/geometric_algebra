@@ -37,7 +37,7 @@ impl AntiOne for CircleRotor {
 }
 impl AntiOne for DualNum {
     fn anti_one() -> Self {
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([0.0, 1.0]));
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([0.0, 1.0]));
     }
 }
 impl AntiOne for Motor {

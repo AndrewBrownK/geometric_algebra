@@ -315,7 +315,7 @@ impl RightDual for DualNum {
     // no simd        0        2        0
     fn right_dual(self) -> Self::Output {
         use crate::elements::*;
-        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([self[e4], self[e12345]]) * Simd32x2::from(-1.0));
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([self[e5], self[e12345]]) * Simd32x2::from(-1.0));
     }
 }
 impl std::ops::Div<right_dual> for FlatPoint {

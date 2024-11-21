@@ -22,8 +22,8 @@ codegen::multi_vecs! { e12345;
     // Special Objects
     Scalar     as scalar;
     AntiScalar as e12345;
-    DualNum    as e4, e12345;
-    // DualNum5   as e5, e12345;
+    DualNum    as e5, e12345;
+    // DualNum4   as e4, e12345;
     // DualNum321 as e321, e12345;
     // TripleNum    as e4, e5, e12345;
     // QuadNum    as e4, e5, e321, e12345;

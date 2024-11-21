@@ -18,7 +18,7 @@ use crate::traits::Wedge;
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         4       5       0
+//   Median:         4       4       0
 //  Average:        21      26       0
 //  Maximum:       320     352       0
 impl std::ops::Add<AntiCircleRotor> for CircleRotor {
@@ -94,9 +94,9 @@ impl std::ops::Add<AntiDualNum> for CircleRotor {
             // e235, e315, e125
             Simd32x3::from([self[e235], self[e315], self[e125]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
             // e1234
-            other[e1234],
+            0.0,
         );
     }
 }
@@ -388,9 +388,9 @@ impl std::ops::Add<DualNum> for CircleRotor {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]),
+            Simd32x4::from([self[e235], self[e315], self[e125], other[e5]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x4::from(0.0),
         );
     }
 }
@@ -814,10 +814,11 @@ impl std::ops::BitXor<DipoleInversion> for CircleRotor {
     }
 }
 impl std::ops::BitXor<DualNum> for CircleRotor {
-    type Output = Sphere;
+    type Output = Plane;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn bitxor(self, other: DualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -1012,8 +1013,12 @@ impl std::ops::Mul<AntiDipoleInversion> for CircleRotor {
 impl std::ops::Mul<AntiDualNum> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        7       25        0
+    //           add/sub      mul      div
+    //      f32        3       15        0
+    //    simd4        1        2        0
+    // Totals...
+    // yes simd        4       17        0
+    //  no simd        7       23        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1139,8 +1144,12 @@ impl std::ops::Mul<DipoleInversion> for CircleRotor {
 impl std::ops::Mul<DualNum> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        7       29        0
+    //           add/sub      mul      div
+    //      f32        7       18        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        7       20        0
+    //  no simd        7       26        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1407,9 +1416,9 @@ impl std::ops::Sub<AntiDualNum> for CircleRotor {
             // e235, e315, e125
             Simd32x3::from([self[e235], self[e315], self[e125]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215] * -1.0]),
             // e1234
-            other[e1234] * -1.0,
+            0.0,
         );
     }
 }
@@ -1733,9 +1742,9 @@ impl std::ops::Sub<DualNum> for CircleRotor {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]),
+            Simd32x4::from([self[e235], self[e315], self[e125], other[e5] * -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4] * -1.0]),
+            Simd32x4::from(0.0),
         );
     }
 }
@@ -2201,7 +2210,7 @@ impl TryFrom<DualNum> for CircleRotor {
         let el = dual_num[0];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4: ");
+            error_string.push_str("e5: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }

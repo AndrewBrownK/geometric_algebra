@@ -94,9 +94,9 @@ impl std::ops::Add<AntiDualNum> for Circle {
             // e235, e315, e125
             self.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
             // e1234
-            other[e1234],
+            0.0,
         );
     }
 }
@@ -354,9 +354,9 @@ impl std::ops::Add<DualNum> for Circle {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            crate::swizzle!(self.group2(), 0, 1, 2).extend_to_4(0.0),
+            crate::swizzle!(self.group2(), 0, 1, 2).extend_to_4(other[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x4::from(0.0),
         );
     }
 }
@@ -767,10 +767,11 @@ impl std::ops::BitXor<DipoleInversion> for Circle {
     }
 }
 impl std::ops::BitXor<DualNum> for Circle {
-    type Output = Sphere;
+    type Output = Plane;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn bitxor(self, other: DualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -933,11 +934,12 @@ impl std::ops::Mul<AntiDualNum> for Circle {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       17        0
-    //    simd3        1        2        0
+    //      f32        6       13        0
+    //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        4       19        0
-    //  no simd        6       23        0
+    // yes simd        6       16        0
+    //  no simd        6       24        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1064,12 +1066,12 @@ impl std::ops::Mul<DualNum> for Circle {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       17        0
-    //    simd3        1        2        0
+    //      f32        6       13        0
+    //    simd3        0        2        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        4       20        0
-    //  no simd        6       27        0
+    // yes simd        6       16        0
+    //  no simd        6       23        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1331,9 +1333,9 @@ impl std::ops::Sub<AntiDualNum> for Circle {
             // e235, e315, e125
             self.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215] * -1.0]),
             // e1234
-            other[e1234] * -1.0,
+            0.0,
         );
     }
 }
@@ -1636,9 +1638,9 @@ impl std::ops::Sub<DualNum> for Circle {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            crate::swizzle!(self.group2(), 0, 1, 2).extend_to_4(0.0),
+            crate::swizzle!(self.group2(), 0, 1, 2).extend_to_4((other[e5] * -1.0)),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4] * -1.0]),
+            Simd32x4::from(0.0),
         );
     }
 }

@@ -7,19 +7,19 @@ use crate::simd::*;
 #[derive(Clone, Copy)]
 pub union DualNum {
     groups: DualNumGroups,
-    /// e4, e12345, 0, 0
+    /// e5, e12345, 0, 0
     elements: [f32; 4],
 }
 #[repr(C)]
 #[derive(Clone, Copy, encase::ShaderType)]
 pub struct DualNumGroups {
-    /// e4, e12345
+    /// e5, e12345
     g0: Simd32x2,
 }
 impl DualNum {
     #[allow(clippy::too_many_arguments)]
-    pub const fn from_elements(e4: f32, e12345: f32) -> Self {
-        Self { elements: [e4, e12345, 0.0, 0.0] }
+    pub const fn from_elements(e5: f32, e12345: f32) -> Self {
+        Self { elements: [e5, e12345, 0.0, 0.0] }
     }
     pub const fn from_groups(g0: Simd32x2) -> Self {
         Self { groups: DualNumGroups { g0 } }
@@ -59,7 +59,7 @@ impl From<[f32; 2]> for DualNum {
 }
 impl std::fmt::Debug for DualNum {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter.debug_struct("DualNum").field("e4", &self[0]).field("e12345", &self[1]).finish()
+        formatter.debug_struct("DualNum").field("e5", &self[0]).field("e12345", &self[1]).finish()
     }
 }
 
@@ -270,7 +270,7 @@ impl serde::Serialize for DualNum {
     fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         use serde::ser::SerializeStruct;
         let mut state = serializer.serialize_struct("DualNum", 2)?;
-        state.serialize_field("e4", &self[crate::elements::e4])?;
+        state.serialize_field("e5", &self[crate::elements::e5])?;
         state.serialize_field("e12345", &self[crate::elements::e12345])?;
         state.end()
     }
@@ -282,7 +282,7 @@ impl<'de> serde::Deserialize<'de> for DualNum {
         #[allow(non_camel_case_types)]
         #[derive(serde::Deserialize)]
         enum DualNumField {
-            e4,
+            e5,
             e12345,
         }
         struct DualNumVisitor;
@@ -295,16 +295,16 @@ impl<'de> serde::Deserialize<'de> for DualNum {
             where
                 V: MapAccess<'de>,
             {
-                let mut e4 = None;
+                let mut e5 = None;
                 let mut e12345 = None;
 
                 while let Some(key) = map.next_key()? {
                     match key {
-                        DualNumField::e4 => {
-                            if e4.is_some() {
-                                return Err(serde::de::Error::duplicate_field("e4"));
+                        DualNumField::e5 => {
+                            if e5.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e5"));
                             }
-                            e4 = Some(map.next_value()?);
+                            e5 = Some(map.next_value()?);
                         }
 
                         DualNumField::e12345 => {
@@ -316,19 +316,19 @@ impl<'de> serde::Deserialize<'de> for DualNum {
                     }
                 }
                 let mut result = DualNum::from([0.0; 2]);
-                result[crate::elements::e4] = e4.ok_or_else(|| serde::de::Error::missing_field("e4"))?;
+                result[crate::elements::e5] = e5.ok_or_else(|| serde::de::Error::missing_field("e5"))?;
                 result[crate::elements::e12345] = e12345.ok_or_else(|| serde::de::Error::missing_field("e12345"))?;
                 Ok(result)
             }
         }
 
-        const FIELDS: &'static [&'static str] = &["e4", "e12345"];
+        const FIELDS: &'static [&'static str] = &["e5", "e12345"];
         deserializer.deserialize_struct("DualNum", FIELDS, DualNumVisitor)
     }
 }
-impl std::ops::Index<crate::elements::e4> for DualNum {
+impl std::ops::Index<crate::elements::e5> for DualNum {
     type Output = f32;
-    fn index(&self, _: crate::elements::e4) -> &Self::Output {
+    fn index(&self, _: crate::elements::e5) -> &Self::Output {
         &self[0]
     }
 }
@@ -338,8 +338,8 @@ impl std::ops::Index<crate::elements::e12345> for DualNum {
         &self[1]
     }
 }
-impl std::ops::IndexMut<crate::elements::e4> for DualNum {
-    fn index_mut(&mut self, _: crate::elements::e4) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e5> for DualNum {
+    fn index_mut(&mut self, _: crate::elements::e5) -> &mut Self::Output {
         &mut self[0]
     }
 }

@@ -8,18 +8,18 @@ use crate::traits::Wedge;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 111
+// Total Implementations: 112
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         4       4       0
-//  Average:        12      17       0
+//  Average:        12      16       0
 //  Maximum:       169     201       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         4       7       0
-//  Average:        15      20       0
+//  Average:        14      20       0
 //  Maximum:       224     256       0
 impl std::ops::Add<AntiCircleRotor> for AntiFlector {
     type Output = MultiVector;
@@ -94,9 +94,9 @@ impl std::ops::Add<AntiDualNum> for AntiFlector {
             // e235, e315, e125
             Simd32x3::from([self[e235], self[e315], self[e125]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
             // e1234
-            other[e1234],
+            0.0,
         );
     }
 }
@@ -354,6 +354,9 @@ impl std::ops::Add<DipoleInversion> for AntiFlector {
 }
 impl std::ops::Add<DualNum> for AntiFlector {
     type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        1        0        0
     fn add(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -362,9 +365,9 @@ impl std::ops::Add<DualNum> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], self[e5] + other[e5]]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], other[e4]]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
         );
     }
 }
@@ -681,20 +684,22 @@ impl std::ops::BitXor<AntiDipoleInversion> for AntiFlector {
     }
 }
 impl std::ops::BitXor<AntiDualNum> for AntiFlector {
-    type Output = VersorEven;
+    type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        5        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        6        0
-    //  no simd        0        9        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn bitxor(self, other: AntiDualNum) -> Self::Output {
         return self.wedge(other);
     }
 }
+impl std::ops::BitXorAssign<AntiDualNum> for AntiFlector {
+    fn bitxor_assign(&mut self, other: AntiDualNum) {
+        *self = self.wedge(other);
+    }
+}
 impl std::ops::BitXor<AntiFlatPoint> for AntiFlector {
-    type Output = Plane;
+    type Output = AntiDualNum;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        3        4        0
@@ -804,14 +809,10 @@ impl std::ops::BitXor<DipoleInversion> for AntiFlector {
     }
 }
 impl std::ops::BitXor<DualNum> for AntiFlector {
-    type Output = DipoleInversion;
+    type Output = Flector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0       10        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        0       12        0
-    //  no simd        0       16        0
+    //      add/sub      mul      div
+    // f32        0        4        0
     fn bitxor(self, other: DualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -990,16 +991,17 @@ impl std::ops::Mul<AntiDipoleInversion> for AntiFlector {
     }
 }
 impl std::ops::Mul<AntiDualNum> for AntiFlector {
-    type Output = VersorEven;
+    type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       12        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        4       14        0
-    //  no simd        4       20        0
+    //      add/sub      mul      div
+    // f32        4       12        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
+    }
+}
+impl std::ops::MulAssign<AntiDualNum> for AntiFlector {
+    fn mul_assign(&mut self, other: AntiDualNum) {
+        *self = self.geometric_product(other);
     }
 }
 impl std::ops::Mul<AntiFlatPoint> for AntiFlector {
@@ -1136,14 +1138,10 @@ impl std::ops::Mul<DipoleInversion> for AntiFlector {
     }
 }
 impl std::ops::Mul<DualNum> for AntiFlector {
-    type Output = VersorOdd;
+    type Output = Flector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4       20        0
-    //    simd4        0        3        0
-    // Totals...
-    // yes simd        4       23        0
-    //  no simd        4       32        0
+    //      add/sub      mul      div
+    // f32        4       12        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1400,9 +1398,9 @@ impl std::ops::Sub<AntiDualNum> for AntiFlector {
             // e235, e315, e125
             Simd32x3::from([self[e235], self[e315], self[e125]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(0.0),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215] * -1.0]),
             // e1234
-            other[e1234] * -1.0,
+            0.0,
         );
     }
 }
@@ -1702,7 +1700,7 @@ impl std::ops::Sub<DualNum> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        0
+    // f32        1        1        0
     fn sub(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -1711,9 +1709,9 @@ impl std::ops::Sub<DualNum> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], self[e5] - other[e5]]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], other[e4] * -1.0]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
         );
     }
 }
@@ -2246,6 +2244,34 @@ impl TryFrom<CircleRotor> for AntiFlector {
             Simd32x4::from([circle_rotor[e235], circle_rotor[e315], circle_rotor[e125], circle_rotor[e321]]),
             // e1, e2, e3, e5
             Simd32x4::from(0.0),
+        ));
+    }
+}
+
+impl TryFrom<DualNum> for AntiFlector {
+    type Error = String;
+    fn try_from(dual_num: DualNum) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = dual_num[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e12345: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from DualNum do not fit into AntiFlector { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(AntiFlector::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(0.0),
+            // e1, e2, e3, e5
+            Simd32x4::from([0.0, 0.0, 0.0, dual_num[e5]]),
         ));
     }
 }

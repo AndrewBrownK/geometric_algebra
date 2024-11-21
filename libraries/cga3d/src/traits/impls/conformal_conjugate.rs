@@ -86,8 +86,12 @@ impl std::ops::DivAssign<conformal_conjugate> for AntiDualNum {
     }
 }
 impl ConformalConjugate for AntiDualNum {
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn conformal_conjugate(self) -> Self {
-        return self;
+        use crate::elements::*;
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([self[e3215] * -1.0, self[scalar]]));
     }
 }
 impl std::ops::Div<conformal_conjugate> for AntiFlatPoint {
@@ -366,11 +370,12 @@ impl std::ops::DivAssign<conformal_conjugate> for DualNum {
 }
 impl ConformalConjugate for DualNum {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn conformal_conjugate(self) -> Self {
         use crate::elements::*;
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self[e4], self[e12345] * -1.0]));
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([self[e5], self[e12345]]) * Simd32x2::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for FlatPoint {
