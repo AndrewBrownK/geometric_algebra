@@ -11,6 +11,9 @@ pub mod rust;
 pub mod wgsl;
 pub mod glsl;
 pub mod sql;
+pub mod edsl;
+pub mod slang;
+pub mod rust_on_gpu;
 
 fn sort_trait_impls(trait_implementations: &mut Vec<Arc<RawTraitImplementation>>, mut already_ordered: HashSet<TraitKey>) -> anyhow::Result<()> {
     // Start with a sort by name, so we get stable outputs
