@@ -4,8 +4,8 @@ use crate::ga;
 
 #[allow(non_upper_case_globals)]
 mod elements {
-    use crate::algebra2::basis::elements::*;
-    use crate::algebra2::basis::BasisElement;
+    use crate::algebra::basis::elements::*;
+    use crate::algebra::basis::BasisElement;
 
     pub const sugar: BasisElement = e1.with_name("sugar", false);
     pub const spice: BasisElement = e2.with_name("spice", false);
@@ -17,8 +17,8 @@ mod elements {
 }
 #[allow(non_upper_case_globals)]
 mod generators {
-    use crate::algebra2::basis::generators::GeneratorElement;
-    use crate::algebra2::basis::generators::*;
+    use crate::algebra::basis::generators::GeneratorElement;
+    use crate::algebra::basis::generators::*;
 
     pub const girls: i8 = 1;
     pub const boys: i8 = -1;

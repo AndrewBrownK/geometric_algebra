@@ -1,7 +1,7 @@
-use crate::algebra2::basis::grades::{AntiGrades, Grades};
-use crate::algebra2::basis::{BasisElement, BasisSignature};
-use crate::algebra2::multivector::{BasisElementGroup, MultiVec};
-use crate::ast2::expressions::{FloatExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
+use crate::algebra::basis::grades::{AntiGrades, Grades};
+use crate::algebra::basis::{BasisElement, BasisSignature};
+use crate::algebra::multivector::{BasisElementGroup, MultiVec};
+use crate::ast::expressions::{FloatExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{Display, Formatter};

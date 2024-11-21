@@ -1,14 +1,14 @@
 use async_trait::async_trait;
 
-use crate::algebra2::basis::BasisElement;
-use crate::algebra2::basis::filter::{allow_all_signatures, signatures_containing, signatures_not_containing};
-use crate::algebra2::multivector::DynamicMultiVector;
-use crate::ast2::datatype::{Float, MultiVector};
-use crate::ast2::expressions::FloatExpr;
-use crate::ast2::impls::Elaborated;
-use crate::ast2::traits::{HasNotReturned, NameTrait, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_11, TraitImplBuilder};
-use crate::ast2::Variable;
-use crate::build_scripts2::common_traits::{Addition, AntiDotProduct, AntiSquareRoot, RightAntiDual, DotProduct, SquareRoot, SubType, Wedge};
+use crate::algebra::basis::BasisElement;
+use crate::algebra::basis::filter::{allow_all_signatures, signatures_containing, signatures_not_containing};
+use crate::algebra::multivector::DynamicMultiVector;
+use crate::ast::datatype::{Float, MultiVector};
+use crate::ast::expressions::FloatExpr;
+use crate::ast::impls::Elaborated;
+use crate::ast::traits::{HasNotReturned, NameTrait, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_11, TraitImplBuilder};
+use crate::ast::Variable;
+use crate::build_scripts::common_traits::{Addition, AntiDotProduct, AntiSquareRoot, RightAntiDual, DotProduct, SquareRoot, SubType, Wedge};
 use crate::trait_impl_1_type_1_arg;
 
 #[allow(non_snake_case)]

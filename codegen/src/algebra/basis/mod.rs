@@ -7,8 +7,8 @@ use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, Neg, Sub};
 use const_panic::PanicFmt;
 use rand::Rng;
 
-use crate::algebra2::basis::generators::GeneratorElement;
-use crate::algebra2::basis::grades::{AntiGrades, Grades};
+use crate::algebra::basis::generators::GeneratorElement;
+use crate::algebra::basis::grades::{AntiGrades, Grades};
 use crate::generator_squares;
 use crate::utility::ConstOption;
 
@@ -979,7 +979,7 @@ fn test_metric() {
 
 #[allow(non_upper_case_globals, dead_code)]
 pub(crate) mod elements {
-    use crate::algebra2::basis::*;
+    use crate::algebra::basis::*;
 
     // List a bunch of generated elements
 

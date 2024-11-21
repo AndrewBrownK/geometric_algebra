@@ -19,9 +19,9 @@
 
 
 // TODO calculus: https://en.wikipedia.org/wiki/Geometric_calculus
-pub mod algebra2;
-pub mod ast2;
-pub mod emit2;
+pub mod algebra;
+pub mod ast;
+pub mod emit;
 mod shader_support;
 pub mod utility;
 mod validate;
@@ -29,7 +29,7 @@ mod validate;
 //  https://github.com/rust-lang/rust/issues/86656
 //  That would also be the appropriate time to consider f64 support. Not eager until then.
 mod simd;
-pub mod build_scripts2 {
+pub mod build_scripts {
     pub mod common_traits;
     mod pga3d;
     mod rga3d;
@@ -38,8 +38,8 @@ pub mod build_scripts2 {
 
 const SIMD_SRC: &'static str = include_str!("simd.rs");
 
-pub use emit2::rust::Rust;
-pub use emit2::wgsl::Wgsl;
+pub use emit::rust::Rust;
+pub use emit::wgsl::Wgsl;
 pub mod elements {
-    pub use crate::algebra2::basis::elements::*;
+    pub use crate::algebra::basis::elements::*;
 }

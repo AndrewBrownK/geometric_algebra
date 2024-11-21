@@ -1,12 +1,12 @@
 #![allow(non_upper_case_globals)]
 
-use crate::algebra2::basis::elements::e0123;
-use crate::algebra2::multivector::DynamicMultiVector;
-use crate::ast2::datatype::{Float, MultiVector};
-use crate::ast2::expressions::FloatExpr;
-use crate::ast2::traits::{TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImplBuilder};
-use crate::ast2::Variable;
-use crate::build_scripts2::common_traits::{AntiReverse, AntiDotProduct, AntiWedge, GeometricProduct, Reverse, RightDual, Sandwich, DotProduct, Wedge};
+use crate::algebra::basis::elements::e0123;
+use crate::algebra::multivector::DynamicMultiVector;
+use crate::ast::datatype::{Float, MultiVector};
+use crate::ast::expressions::FloatExpr;
+use crate::ast::traits::{TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImplBuilder};
+use crate::ast::Variable;
+use crate::build_scripts::common_traits::{AntiReverse, AntiDotProduct, AntiWedge, GeometricProduct, Reverse, RightDual, Sandwich, DotProduct, Wedge};
 use crate::{ga, multi_vecs};
 
 fn float_var(n: &str) -> Variable<Float> {
@@ -51,7 +51,7 @@ fn anti_product_argument() {
         1 => e1, e2, e3;
         0 => e0;
     };
-    use crate::algebra2::basis::elements::*;
+    use crate::algebra::basis::elements::*;
     let repo = register_multi_vecs(rga3d.clone()).finished();
 
     let vector = MultiVector::from(&Vector);

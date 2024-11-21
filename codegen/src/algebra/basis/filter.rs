@@ -1,7 +1,7 @@
 use std::collections::BTreeSet;
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitXor, Neg, Not};
 
-use crate::algebra2::basis::{BasisElement, BasisSignature};
+use crate::algebra::basis::{BasisElement, BasisSignature};
 
 pub trait SigFilter: Copy {
     fn filter_sig(&self, sig: BasisSignature) -> bool;

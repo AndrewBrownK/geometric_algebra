@@ -4,16 +4,16 @@
 #![feature(effects)]
 #![feature(adt_const_params)]
 
-use codegen::algebra2::multivector::DeclareMultiVecs;
-use codegen::ast2::traits::{
+use codegen::algebra::multivector::DeclareMultiVecs;
+use codegen::ast::traits::{
     TraitDef_1_Type_1_Arg,
     TraitDef_1_Type_2_Args_f32,
     TraitDef_1_Type_2_Args_i32,
     TraitDef_2_Types_2_Args
     ,
 };
-use codegen::build_scripts2::common_traits::conformal::{RadiusNorm, RadiusNormSquared};
-use codegen::build_scripts2::common_traits::GeometricAntiProduct;
+use codegen::build_scripts::common_traits::conformal::{RadiusNorm, RadiusNormSquared};
+use codegen::build_scripts::common_traits::GeometricAntiProduct;
 use codegen::elements::e12345;
 use custom_traits::*;
 
@@ -200,12 +200,12 @@ fn base_documentation(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMult
 pub mod custom_traits {
     use async_trait::async_trait;
 
-    use codegen::algebra2::basis::BasisElement;
-    use codegen::algebra2::multivector::DynamicMultiVector;
-    use codegen::ast2::datatype::MultiVector;
-    use codegen::ast2::impls::Elaborated;
-    use codegen::ast2::traits::NameTrait;
-    use codegen::build_scripts2::common_traits::conformal::{CenterNorm, CenterNormImpl, CenterNormSquared, CenterNormSquaredImpl, FlatBulk, FlatBulkImpl, FlatBulkNorm, FlatBulkNormImpl, FlatBulkNormSquared, FlatBulkNormSquaredImpl, FlatNorm, FlatNormImpl, FlatNormSquared, FlatNormSquaredImpl, FlatWeight, FlatWeightImpl, FlatWeightNorm, FlatWeightNormImpl, FlatWeightNormSquared, FlatWeightNormSquaredImpl, RoundBulk, RoundBulkImpl, RoundBulkNorm, RoundBulkNormImpl, RoundBulkNormSquared, RoundBulkNormSquaredImpl, RoundNorm, RoundNormImpl, RoundNormSquared, RoundNormSquaredImpl, RoundWeight, RoundWeightImpl, RoundWeightNorm, RoundWeightNormImpl, RoundWeightNormSquared, RoundWeightNormSquaredImpl, UnitizedCenterNorm, UnitizedCenterNormImpl, UnitizedCenterNormSquared, UnitizedCenterNormSquaredImpl, UnitizedFlatNorm, UnitizedFlatNormImpl, UnitizedFlatNormSquared, UnitizedFlatNormSquaredImpl, UnitizedRadiusNorm, UnitizedRadiusNormImpl, UnitizedRadiusNormSquared, UnitizedRadiusNormSquaredImpl, UnitizedRoundNorm, UnitizedRoundNormImpl, UnitizedRoundNormSquared, UnitizedRoundNormSquaredImpl};
+    use codegen::algebra::basis::BasisElement;
+    use codegen::algebra::multivector::DynamicMultiVector;
+    use codegen::ast::datatype::MultiVector;
+    use codegen::ast::impls::Elaborated;
+    use codegen::ast::traits::NameTrait;
+    use codegen::build_scripts::common_traits::conformal::{CenterNorm, CenterNormImpl, CenterNormSquared, CenterNormSquaredImpl, FlatBulk, FlatBulkImpl, FlatBulkNorm, FlatBulkNormImpl, FlatBulkNormSquared, FlatBulkNormSquaredImpl, FlatNorm, FlatNormImpl, FlatNormSquared, FlatNormSquaredImpl, FlatWeight, FlatWeightImpl, FlatWeightNorm, FlatWeightNormImpl, FlatWeightNormSquared, FlatWeightNormSquaredImpl, RoundBulk, RoundBulkImpl, RoundBulkNorm, RoundBulkNormImpl, RoundBulkNormSquared, RoundBulkNormSquaredImpl, RoundNorm, RoundNormImpl, RoundNormSquared, RoundNormSquaredImpl, RoundWeight, RoundWeightImpl, RoundWeightNorm, RoundWeightNormImpl, RoundWeightNormSquared, RoundWeightNormSquaredImpl, UnitizedCenterNorm, UnitizedCenterNormImpl, UnitizedCenterNormSquared, UnitizedCenterNormSquaredImpl, UnitizedFlatNorm, UnitizedFlatNormImpl, UnitizedFlatNormSquared, UnitizedFlatNormSquaredImpl, UnitizedRadiusNorm, UnitizedRadiusNormImpl, UnitizedRadiusNormSquared, UnitizedRadiusNormSquaredImpl, UnitizedRoundNorm, UnitizedRoundNormImpl, UnitizedRoundNormSquared, UnitizedRoundNormSquaredImpl};
     use codegen::trait_impl_1_type_1_arg;
 
     const origin: BasisElement = codegen::elements::e4;

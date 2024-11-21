@@ -6,12 +6,12 @@ use std::path::Path;
 use std::sync::Arc;
 use anyhow::{anyhow, bail};
 use indicatif::ProgressFinish;
-use crate::algebra2::basis::BasisElement;
-use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
-use crate::ast2::datatype::{ExpressionType, MultiVector};
-use crate::ast2::expressions::{AnyExpression, Expression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
-use crate::ast2::traits::{CommentOrVariableDeclaration, progress_style, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus};
-use crate::emit2::sort_trait_impls;
+use crate::algebra::basis::BasisElement;
+use crate::algebra::multivector::{MultiVec, MultiVecRepository};
+use crate::ast::datatype::{ExpressionType, MultiVector};
+use crate::ast::expressions::{AnyExpression, Expression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
+use crate::ast::traits::{CommentOrVariableDeclaration, progress_style, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus};
+use crate::emit::sort_trait_impls;
 
 // Awesome function reference:
 // https://webgpufundamentals.org/webgpu/lessons/webgpu-wgsl-function-reference.html

@@ -1,6 +1,6 @@
 use std::cell::{Cell, RefCell};
-use crate::ast2::datatype::MultiVector;
-use crate::ast2::traits::{RawTraitImplementation, TraitKey};
+use crate::ast::datatype::MultiVector;
+use crate::ast::traits::{RawTraitImplementation, TraitKey};
 use std::collections::{BTreeSet, HashMap};
 use std::ops::{Add, AddAssign, Deref, Mul, MulAssign};
 use std::sync::Arc;

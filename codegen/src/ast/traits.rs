@@ -10,14 +10,14 @@ use parking_lot::{Mutex, RwLock};
 use regex::Regex;
 use tokio::task::JoinSet;
 
-use crate::algebra2::basis::{BasisElement, BasisSignature};
-use crate::algebra2::multivector::{DynamicMultiVector, MultiVecRepository};
-use crate::algebra2::GeometricAlgebra;
-use crate::ast2::datatype::{ClassesFromRegistry, ExpressionType, Float, Integer, MultiVector};
-use crate::ast2::expressions::{extract_multivector_expr, AnyExpression, Expression, MultiVectorExpr, TraitResultType, IntExpr, FloatExpr, Vec2Expr, Vec3Expr, Vec4Expr, MultiVectorVia, extract_float_expr, extract_integer_expr};
-use crate::ast2::impls::{Elaborated, InlineOnly, OvertDelegate};
-use crate::ast2::operations_tracker::{TrackOperations, TraitOperationsLookup, VectoredOperationsTracker};
-use crate::ast2::{RawVariableDeclaration, Variable};
+use crate::algebra::basis::{BasisElement, BasisSignature};
+use crate::algebra::multivector::{DynamicMultiVector, MultiVecRepository};
+use crate::algebra::GeometricAlgebra;
+use crate::ast::datatype::{ClassesFromRegistry, ExpressionType, Float, Integer, MultiVector};
+use crate::ast::expressions::{extract_multivector_expr, AnyExpression, Expression, MultiVectorExpr, TraitResultType, IntExpr, FloatExpr, Vec2Expr, Vec3Expr, Vec4Expr, MultiVectorVia, extract_float_expr, extract_integer_expr};
+use crate::ast::impls::{Elaborated, InlineOnly, OvertDelegate};
+use crate::ast::operations_tracker::{TrackOperations, TraitOperationsLookup, VectoredOperationsTracker};
+use crate::ast::{RawVariableDeclaration, Variable};
 use crate::utility::AsyncMap;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -2065,15 +2065,15 @@ pub fn indicatif_multi_progress() -> Arc<indicatif::MultiProgress> {
 macro_rules! register_all {
     ($mv_repo:expr; $($t:ident)+ $(| $($t2:ident)+)*) => {
         {
-            use $crate::build_scripts2::common_traits::*;
-            let tir = $crate::ast2::traits::TraitImplRegistry::new();
-            use $crate::ast2::traits::{Register10, Register11, Register21, Register22, Register12f, Register12i};
-            let rt = $crate::ast2::traits::tokio_rt();
+            use $crate::build_scripts::common_traits::*;
+            let tir = $crate::ast::traits::TraitImplRegistry::new();
+            use $crate::ast::traits::{Register10, Register11, Register21, Register22, Register12f, Register12i};
+            let rt = $crate::ast::traits::tokio_rt();
 
-            let multi_progress = $crate::ast2::traits::indicatif_multi_progress();
+            let multi_progress = $crate::ast::traits::indicatif_multi_progress();
             let _: () = rt.block_on(async {
 
-                let mut js = $crate::ast2::traits::tokio_joinset();
+                let mut js = $crate::ast::traits::tokio_joinset();
                 $(
                 let tir_c = tir.clone();
                 let mv_repo_c = $mv_repo.clone();
@@ -2085,7 +2085,7 @@ macro_rules! register_all {
                 while let Some(_) = js.join_next().await {}
 
                 $(
-                let mut js = $crate::ast2::traits::tokio_joinset();
+                let mut js = $crate::ast::traits::tokio_joinset();
                 $(
                 let tir_c = tir.clone();
                 let mv_repo_c = $mv_repo.clone();
@@ -2106,9 +2106,9 @@ macro_rules! register_all {
 macro_rules! operators {
     ($mv_repo:expr, $tir:ident $(; fancy_infix => $itr:ident)? $(; binary $($bop:ident => $btr:ident),+)? $(; unary $($uop:ident => $utr:ident),+ )? $(;)? ) => {
         {
-            use $crate::build_scripts2::common_traits::*;
-            use $crate::ast2::traits::BinaryOps::*;
-            use $crate::ast2::traits::UnaryOps::*;
+            use $crate::build_scripts::common_traits::*;
+            use $crate::ast::traits::BinaryOps::*;
+            use $crate::ast::traits::UnaryOps::*;
             $($tir.generate_infix_trick($itr);)?
             $($(
                 $tir.set_binary_operator($mv_repo.clone(), $bop, $btr);

@@ -2,10 +2,10 @@ use std::collections::BTreeMap;
 use std::fmt::Debug;
 use std::ops::{Add, AddAssign, Mul, MulAssign};
 
-use crate::algebra2::basis::arithmetic::{GradedSum, Product, Sum};
-use crate::algebra2::basis::generators::{GeneratorElement, GeneratorSquares};
-use crate::algebra2::basis::grades::grade1;
-use crate::algebra2::basis::{BasisElement, BasisSignature};
+use crate::algebra::basis::arithmetic::{GradedSum, Product, Sum};
+use crate::algebra::basis::generators::{GeneratorElement, GeneratorSquares};
+use crate::algebra::basis::grades::grade1;
+use crate::algebra::basis::{BasisElement, BasisSignature};
 use crate::generator_squares;
 use crate::utility::ConstOption;
 use im::HashMap;
@@ -32,7 +32,7 @@ pub struct Substitutions {
 macro_rules! substitutions {
     ($( $generator_element:expr => $sum:expr );+ $(;)? ) => {
         {
-            use $crate::algebra2::basis::generators::*;
+            use $crate::algebra::basis::generators::*;
             vec![$(($generator_element, $sum)),+]
         }
     };
@@ -610,7 +610,7 @@ impl From<GeneratorSquares> for Substitutions {
 
 #[test]
 fn sum_simplifications() {
-    use crate::algebra2::basis::elements::*;
+    use crate::algebra::basis::elements::*;
 
     let mut a = Sum {
         sum: vec![
@@ -2858,7 +2858,7 @@ fn support_both_underlying_anti_scalar_directions() {
     let cga3d_same_anti_scalars = generator_squares!(1 => e1, e2, e3, eB; -1 => eA) + substitutions!(e4 => 0.5 * (eA - eB); e5 => eA + eB);
     let cga3d_opposite_anti_scalars = generator_squares!(1 => e1, e2, e3, eA; -1 => eB) + substitutions!(e4 => 0.5 * (eB - eA); e5 => eB + eA);
 
-    use crate::algebra2::basis::elements::*;
+    use crate::algebra::basis::elements::*;
 
     let a = &cga3d_same_anti_scalars.substitutions_to_underlying[&e12345];
     assert_eq!(a.sum.len(), 1);
@@ -2880,7 +2880,7 @@ fn support_both_underlying_anti_scalar_directions() {
 fn metric_using_substitutions() {
     let cga = generator_squares!(1 => e1, e2, e3, e_plus; -1 => e_minus) + substitutions!(e4 => 0.5 * (e_minus - e_plus); e5 => e_plus + e_minus);
 
-    use crate::algebra2::basis::elements::*;
+    use crate::algebra::basis::elements::*;
 
     assert_eq!(scalar, cga.apply_metric(scalar));
 

@@ -3,7 +3,7 @@
 #![feature(const_trait_impl)]
 #![feature(effects)]
 
-use codegen::algebra2::multivector::DeclareMultiVecs;
+use codegen::algebra::multivector::DeclareMultiVecs;
 use codegen::elements::e1234;
 
 codegen::multi_vecs! { e1234;

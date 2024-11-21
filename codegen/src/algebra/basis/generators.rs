@@ -1,9 +1,9 @@
 #![allow(non_upper_case_globals)]
 
-use crate::algebra2::basis::arithmetic::{GradedProduct, GradedSum, Product};
-use crate::algebra2::basis::grades::{grade1, Grades};
-use crate::algebra2::basis::substitutes::Substitutions;
-use crate::algebra2::basis::{BasisElement, BasisSignature};
+use crate::algebra::basis::arithmetic::{GradedProduct, GradedSum, Product};
+use crate::algebra::basis::grades::{grade1, Grades};
+use crate::algebra::basis::substitutes::Substitutions;
+use crate::algebra::basis::{BasisElement, BasisSignature};
 use crate::utility::ConstOption;
 use std::cmp::Ordering;
 use std::ops::{Add, Mul, Sub};
@@ -27,8 +27,8 @@ pub struct GeneratorSquares {
 macro_rules! generator_squares {
     ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)? ) => {
         {
-            use $crate::algebra2::basis::generators::*;
-            let mut gs = $crate::algebra2::basis::generators::GeneratorSquares::empty();
+            use $crate::algebra::basis::generators::*;
+            let mut gs = $crate::algebra::basis::generators::GeneratorSquares::empty();
             $($(gs = gs.overwrite([($generator, $i8_lit)]);)+)+
             gs
         }
@@ -185,7 +185,7 @@ impl GeneratorSquares {
 
         // And construct a Product for the result
         let coefficient = result as f32;
-        use crate::algebra2::basis::elements::*;
+        use crate::algebra::basis::elements::*;
         Product { coefficient, element: scalar }
     }
 

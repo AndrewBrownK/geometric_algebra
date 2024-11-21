@@ -6,12 +6,12 @@ use std::pin::Pin;
 
 use async_trait::async_trait;
 
-use crate::algebra2::basis::BasisElement;
-use crate::algebra2::multivector::MultiVec;
-use crate::ast2::datatype::{AnyClasses, Float, Integer, MultiVector, Specifically};
-use crate::ast2::expressions::{Expression, TraitResultType};
-use crate::ast2::traits::{HasNotReturned, ProvideTraitNames, TraitAlias, TraitDef_1_Type_0_Args, TraitDef_1_Type_1_Arg, TraitDef_2_Types_1_Arg, TraitDef_2_Types_2_Args, TraitImplBuilder, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitKey, TraitNames, TraitImpl_12f, TraitDef_1_Type_2_Args_f32, TraitImpl_12i, TraitDef_1_Type_2_Args_i32};
-use crate::ast2::Variable;
+use crate::algebra::basis::BasisElement;
+use crate::algebra::multivector::MultiVec;
+use crate::ast::datatype::{AnyClasses, Float, Integer, MultiVector, Specifically};
+use crate::ast::expressions::{Expression, TraitResultType};
+use crate::ast::traits::{HasNotReturned, ProvideTraitNames, TraitAlias, TraitDef_1_Type_0_Args, TraitDef_1_Type_1_Arg, TraitDef_2_Types_1_Arg, TraitDef_2_Types_2_Args, TraitImplBuilder, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitKey, TraitNames, TraitImpl_12f, TraitDef_1_Type_2_Args_f32, TraitImpl_12i, TraitDef_1_Type_2_Args_i32};
+use crate::ast::Variable;
 
 #[derive(Clone, Copy)]
 pub struct Elaborated<Impl> {

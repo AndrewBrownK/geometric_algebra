@@ -5,7 +5,7 @@
 #![feature(adt_const_params)]
 
 use crate::custom_traits::{Carrier, CoCarrier, ConformalConjugate};
-use codegen::algebra2::multivector::DeclareMultiVecs;
+use codegen::algebra::multivector::DeclareMultiVecs;
 use codegen::elements::e12345;
 
 codegen::multi_vecs! { e12345;
@@ -140,7 +140,7 @@ fn base_documentation(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMult
 }
 
 fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMultiVecs<e12345> {
-    use codegen::algebra2::basis::filter::{allow_all_signatures, signatures_containing, SigFilter};
+    use codegen::algebra::basis::filter::{allow_all_signatures, signatures_containing, SigFilter};
     use codegen::elements::*;
 
     let origin = signatures_containing(e4);
@@ -199,9 +199,9 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMulti
 }
 
 pub mod specialized_traits {
-    use codegen::ast2::datatype::MultiVector;
-    use codegen::ast2::impls::{Specialize_22, Specialized_22};
-    use codegen::build_scripts2::common_traits::BulkExpansion;
+    use codegen::ast::datatype::MultiVector;
+    use codegen::ast::impls::{Specialize_22, Specialized_22};
+    use codegen::build_scripts::common_traits::BulkExpansion;
     use codegen::elements::e12345;
 
     use crate::Plane;
@@ -218,11 +218,11 @@ pub mod specialized_traits {
 pub mod custom_traits {
     use async_trait::async_trait;
 
-    use codegen::algebra2::multivector::DynamicMultiVector;
-    use codegen::ast2::datatype::MultiVector;
-    use codegen::ast2::impls::Elaborated;
-    use codegen::ast2::traits::{NameTrait, TraitDef_1_Type_1_Arg};
-    use codegen::build_scripts2::common_traits::RightAntiDual;
+    use codegen::algebra::multivector::DynamicMultiVector;
+    use codegen::ast::datatype::MultiVector;
+    use codegen::ast::impls::Elaborated;
+    use codegen::ast::traits::{NameTrait, TraitDef_1_Type_1_Arg};
+    use codegen::build_scripts::common_traits::RightAntiDual;
     use codegen::elements::e5;
     use codegen::trait_impl_1_type_1_arg;
 

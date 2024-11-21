@@ -1,11 +1,11 @@
 #![cfg_attr(rustfmt, rustfmt_skip)]
 #![allow(non_upper_case_globals)]
 
-use crate::algebra2::basis::filter::{SigFilter, SigSetFilter};
-use crate::algebra2::basis::grades::{AntiGrades, Grades};
-use crate::ast2::impls::{Elaborated, InlineOnly};
-use crate::ast2::traits::{NameTrait, TraitDef_1_Type_1_Arg, TraitImpl_10, TraitImpl_11, TraitImpl_21};
-use crate::build_scripts2::common_traits::impls::*;
+use crate::algebra::basis::filter::{SigFilter, SigSetFilter};
+use crate::algebra::basis::grades::{AntiGrades, Grades};
+use crate::ast::impls::{Elaborated, InlineOnly};
+use crate::ast::traits::{NameTrait, TraitDef_1_Type_1_Arg, TraitImpl_10, TraitImpl_11, TraitImpl_21};
+use crate::build_scripts::common_traits::impls::*;
 
 pub mod conformal;
 
@@ -289,15 +289,15 @@ mod impls {
 
     use async_trait::async_trait;
 
-    use crate::algebra2::basis::{BasisElement, BasisSignature};
-    use crate::algebra2::basis::filter::{SigFilter, SigSetFilter};
-    use crate::algebra2::basis::grades::{AntiGrades, Grades};
-    use crate::algebra2::multivector::DynamicMultiVector;
-    use crate::ast2::datatype::{Integer, MultiVector};
-    use crate::ast2::expressions::{Expression, FloatExpr, IntExpr};
-    use crate::ast2::traits::{HasNotReturned, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder};
-    use crate::ast2::Variable;
-    use crate::build_scripts2::common_traits::{AntiInverse, AntiReverse, AntiDotProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightDual, DotProduct, SquareRoot, Subtraction, Wedge};
+    use crate::algebra::basis::{BasisElement, BasisSignature};
+    use crate::algebra::basis::filter::{SigFilter, SigSetFilter};
+    use crate::algebra::basis::grades::{AntiGrades, Grades};
+    use crate::algebra::multivector::DynamicMultiVector;
+    use crate::ast::datatype::{Integer, MultiVector};
+    use crate::ast::expressions::{Expression, FloatExpr, IntExpr};
+    use crate::ast::traits::{HasNotReturned, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder};
+    use crate::ast::Variable;
+    use crate::build_scripts::common_traits::{AntiInverse, AntiReverse, AntiDotProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightDual, DotProduct, SquareRoot, Subtraction, Wedge};
     use crate::elements::scalar;
 
     #[macro_export]
@@ -306,13 +306,13 @@ mod impls {
             #[derive(Clone, Copy)]
             pub struct $trait_impl;
             #[async_trait]
-            impl $crate::ast2::traits::TraitImpl_10 for $trait_impl {
+            impl $crate::ast::traits::TraitImpl_10 for $trait_impl {
                 type Output = $output;
-                async fn general_implementation<const AntiScalar: $crate::algebra2::basis::BasisElement>(
+                async fn general_implementation<const AntiScalar: $crate::algebra::basis::BasisElement>(
                     self,
-                    mut $builder: $crate::ast2::traits::TraitImplBuilder<AntiScalar, $crate::ast2::traits::HasNotReturned>,
-                    $owner: $crate::ast2::datatype::MultiVector,
-                ) -> Option<$crate::ast2::traits::TraitImplBuilder<AntiScalar, Self::Output>> {
+                    mut $builder: $crate::ast::traits::TraitImplBuilder<AntiScalar, $crate::ast::traits::HasNotReturned>,
+                    $owner: $crate::ast::datatype::MultiVector,
+                ) -> Option<$crate::ast::traits::TraitImplBuilder<AntiScalar, Self::Output>> {
                     $the_impl
                 }
             }
@@ -324,13 +324,13 @@ mod impls {
             #[derive(Clone, Copy)]
             pub struct $trait_impl;
             #[async_trait]
-            impl $crate::ast2::traits::TraitImpl_11 for $trait_impl {
+            impl $crate::ast::traits::TraitImpl_11 for $trait_impl {
                 type Output = $output;
-                async fn general_implementation<const AntiScalar: $crate::algebra2::basis::BasisElement>(
+                async fn general_implementation<const AntiScalar: $crate::algebra::basis::BasisElement>(
                     self,
-                    mut $builder: $crate::ast2::traits::TraitImplBuilder<AntiScalar, $crate::ast2::traits::HasNotReturned>,
-                    $slf: $crate::ast2::Variable<$crate::ast2::datatype::MultiVector>,
-                ) -> Option<$crate::ast2::traits::TraitImplBuilder<AntiScalar, Self::Output>> {
+                    mut $builder: $crate::ast::traits::TraitImplBuilder<AntiScalar, $crate::ast::traits::HasNotReturned>,
+                    $slf: $crate::ast::Variable<$crate::ast::datatype::MultiVector>,
+                ) -> Option<$crate::ast::traits::TraitImplBuilder<AntiScalar, Self::Output>> {
                     $the_impl
                 }
             }
@@ -342,14 +342,14 @@ mod impls {
             #[derive(Clone, Copy)]
             pub struct $trait_impl;
             #[async_trait]
-            impl $crate::ast2::traits::TraitImpl_21 for $trait_impl {
+            impl $crate::ast::traits::TraitImpl_21 for $trait_impl {
                 type Output = $output;
-                async fn general_implementation<const AntiScalar: $crate::algebra2::basis::BasisElement>(
+                async fn general_implementation<const AntiScalar: $crate::algebra::basis::BasisElement>(
                     self,
-                    mut $builder: $crate::ast2::traits::TraitImplBuilder<AntiScalar, $crate::ast2::traits::HasNotReturned>,
-                    $slf: $crate::ast2::Variable<$crate::ast2::datatype::MultiVector>,
-                    $other: $crate::ast2::datatype::MultiVector,
-                ) -> Option<$crate::ast2::traits::TraitImplBuilder<AntiScalar, Self::Output>> {
+                    mut $builder: $crate::ast::traits::TraitImplBuilder<AntiScalar, $crate::ast::traits::HasNotReturned>,
+                    $slf: $crate::ast::Variable<$crate::ast::datatype::MultiVector>,
+                    $other: $crate::ast::datatype::MultiVector,
+                ) -> Option<$crate::ast::traits::TraitImplBuilder<AntiScalar, Self::Output>> {
                     $the_impl
                 }
             }
@@ -361,14 +361,14 @@ mod impls {
             #[derive(Clone, Copy)]
             pub struct $trait_impl;
             #[async_trait]
-            impl $crate::ast2::traits::TraitImpl_22 for $trait_impl {
+            impl $crate::ast::traits::TraitImpl_22 for $trait_impl {
                 type Output = $output;
-                async fn general_implementation<const AntiScalar: $crate::algebra2::basis::BasisElement>(
+                async fn general_implementation<const AntiScalar: $crate::algebra::basis::BasisElement>(
                     self,
-                    mut $builder: $crate::ast2::traits::TraitImplBuilder<AntiScalar, $crate::ast2::traits::HasNotReturned>,
-                    $slf: $crate::ast2::Variable<$crate::ast2::datatype::MultiVector>,
-                    $other: $crate::ast2::Variable<$crate::ast2::datatype::MultiVector>,
-                ) -> Option<$crate::ast2::traits::TraitImplBuilder<AntiScalar, Self::Output>> {
+                    mut $builder: $crate::ast::traits::TraitImplBuilder<AntiScalar, $crate::ast::traits::HasNotReturned>,
+                    $slf: $crate::ast::Variable<$crate::ast::datatype::MultiVector>,
+                    $other: $crate::ast::Variable<$crate::ast::datatype::MultiVector>,
+                ) -> Option<$crate::ast::traits::TraitImplBuilder<AntiScalar, Self::Output>> {
                     $the_impl
                 }
             }
@@ -380,14 +380,14 @@ mod impls {
             #[derive(Clone, Copy)]
             pub struct $trait_impl;
             #[async_trait]
-            impl $crate::ast2::traits::TraitImpl_12i for $trait_impl {
+            impl $crate::ast::traits::TraitImpl_12i for $trait_impl {
                 type Output = $output;
-                async fn general_implementation<const AntiScalar: $crate::algebra2::basis::BasisElement>(
+                async fn general_implementation<const AntiScalar: $crate::algebra::basis::BasisElement>(
                     self,
-                    mut $builder: $crate::ast2::traits::TraitImplBuilder<AntiScalar, $crate::ast2::traits::HasNotReturned>,
-                    $slf: $crate::ast2::Variable<$crate::ast2::datatype::MultiVector>,
-                    $other: $crate::ast2::Variable<$crate::ast2::datatype::Integer>,
-                ) -> Option<$crate::ast2::traits::TraitImplBuilder<AntiScalar, Self::Output>> {
+                    mut $builder: $crate::ast::traits::TraitImplBuilder<AntiScalar, $crate::ast::traits::HasNotReturned>,
+                    $slf: $crate::ast::Variable<$crate::ast::datatype::MultiVector>,
+                    $other: $crate::ast::Variable<$crate::ast::datatype::Integer>,
+                ) -> Option<$crate::ast::traits::TraitImplBuilder<AntiScalar, Self::Output>> {
                     $the_impl
                 }
             }
@@ -399,14 +399,14 @@ mod impls {
             #[derive(Clone, Copy)]
             pub struct $trait_impl;
             #[async_trait]
-            impl $crate::ast2::traits::TraitImpl_12f for $trait_impl {
+            impl $crate::ast::traits::TraitImpl_12f for $trait_impl {
                 type Output = $output;
-                async fn general_implementation<const AntiScalar: $crate::algebra2::basis::BasisElement>(
+                async fn general_implementation<const AntiScalar: $crate::algebra::basis::BasisElement>(
                     self,
-                    mut $builder: $crate::ast2::traits::TraitImplBuilder<AntiScalar, $crate::ast2::traits::HasNotReturned>,
-                    $slf: $crate::ast2::Variable<$crate::ast2::datatype::MultiVector>,
-                    $other: $crate::ast2::Variable<$crate::ast2::datatype::Float>,
-                ) -> Option<$crate::ast2::traits::TraitImplBuilder<AntiScalar, Self::Output>> {
+                    mut $builder: $crate::ast::traits::TraitImplBuilder<AntiScalar, $crate::ast::traits::HasNotReturned>,
+                    $slf: $crate::ast::Variable<$crate::ast::datatype::MultiVector>,
+                    $other: $crate::ast::Variable<$crate::ast::datatype::Float>,
+                ) -> Option<$crate::ast::traits::TraitImplBuilder<AntiScalar, Self::Output>> {
                     $the_impl
                 }
             }

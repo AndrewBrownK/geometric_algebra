@@ -1,6 +1,6 @@
-use crate::algebra2::basis::generators::{GeneratorElement, GeneratorSquares};
-use crate::algebra2::basis::grades::{grade1, Grades};
-use crate::algebra2::basis::{BasisElement, BasisElementNames};
+use crate::algebra::basis::generators::{GeneratorElement, GeneratorSquares};
+use crate::algebra::basis::grades::{grade1, Grades};
+use crate::algebra::basis::{BasisElement, BasisElementNames};
 use crate::grade_constraint;
 use im::HashMap;
 use std::fmt::{Debug, Display, Formatter};
@@ -25,8 +25,8 @@ pub struct GradedSum<const G: Grades>(PhantomData<Grades>, Sum);
 
 macro_rules! graded_sum {
     ($g:ty, $h:ty) => {
-        $crate::algebra2::basis::arithmetic::GradedSum<{
-            <$crate::algebra2::basis::grades::AddGradesImpl as $crate::algebra2::basis::grades::AddGradesTrait<$g, $h>>::OUTPUT
+        $crate::algebra::basis::arithmetic::GradedSum<{
+            <$crate::algebra::basis::grades::AddGradesImpl as $crate::algebra::basis::grades::AddGradesTrait<$g, $h>>::OUTPUT
         }>
     };
 }
@@ -469,7 +469,7 @@ impl Product {
     }
 
     pub fn zero() -> Self {
-        use crate::algebra2::basis::elements::*;
+        use crate::algebra::basis::elements::*;
         Product {
             coefficient: 0.0,
             element: scalar,

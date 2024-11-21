@@ -4,11 +4,11 @@ use std::sync::Arc;
 
 use parking_lot::RwLock;
 
-use crate::algebra2::basis::arithmetic::Sum;
-use crate::algebra2::basis::generators::GeneratorSquares;
-use crate::algebra2::basis::substitutes::Substitutions;
-use crate::algebra2::basis::{BasisElement, BasisElementNames};
-use crate::algebra2::multivector::MultiVec;
+use crate::algebra::basis::arithmetic::Sum;
+use crate::algebra::basis::generators::GeneratorSquares;
+use crate::algebra::basis::substitutes::Substitutions;
+use crate::algebra::basis::{BasisElement, BasisElementNames};
+use crate::algebra::multivector::MultiVec;
 
 pub mod basis;
 pub mod multivector;
@@ -22,29 +22,29 @@ pub struct GeometricAlgebra<const AntiScalar: BasisElement> {
 macro_rules! ga {
     ($anti_scalar:ident; $( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)? ) => {
         {
-            use $crate::algebra2::basis::generators::*;
+            use $crate::algebra::basis::generators::*;
             let gs = {
-                use $crate::algebra2::basis::generators::*;
-                let mut gs = $crate::algebra2::basis::generators::GeneratorSquares::empty();
+                use $crate::algebra::basis::generators::*;
+                let mut gs = $crate::algebra::basis::generators::GeneratorSquares::empty();
                 $($(gs = gs.overwrite([($generator, $i8_lit)]);)+)+
                 gs
             };
-            $crate::algebra2::GeometricAlgebra::<$anti_scalar>::from_squares(gs)
+            $crate::algebra::GeometricAlgebra::<$anti_scalar>::from_squares(gs)
         }
     };
     ($anti_scalar:ident; $( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ ; where $( $generator_element:expr => $sum:expr );+ $(;)? ) => {
         {
-            use $crate::algebra2::basis::generators::*;
+            use $crate::algebra::basis::generators::*;
             let gs = {
-                let mut gs = $crate::algebra2::basis::generators::GeneratorSquares::empty();
+                let mut gs = $crate::algebra::basis::generators::GeneratorSquares::empty();
                 $($(gs = gs.overwrite([($generator, $i8_lit)]);)+)+
                 gs
             };
             let subs = {
                 vec![$(($generator_element, $sum)),+]
             };
-            let subs = $crate::algebra2::basis::substitutes::Substitutions::new(gs, subs);
-            $crate::algebra2::GeometricAlgebra::<$anti_scalar>::from_substitutions(subs)
+            let subs = $crate::algebra::basis::substitutes::Substitutions::new(gs, subs);
+            $crate::algebra::GeometricAlgebra::<$anti_scalar>::from_substitutions(subs)
         }
     };
 }

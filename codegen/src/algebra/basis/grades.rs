@@ -2,7 +2,7 @@
 
 use std::marker::ConstParamTy;
 
-use crate::algebra2::basis::{BasisElement, BasisSignature};
+use crate::algebra::basis::{BasisElement, BasisSignature};
 use std::cmp::PartialEq;
 use std::hash::Hash;
 use std::ops::{BitAnd, BitOr, BitOrAssign, Not};
@@ -143,7 +143,7 @@ impl ConstParamTy for Grades {}
 #[macro_export]
 macro_rules! grade_constraint {
     ($g:ty, $h:ty) => {
-        [(); <$crate::algebra2::basis::grades::AddGradesImpl as $crate::algebra2::basis::grades::AddGradesTrait<$g, $h>>::OUTPUT.into_bits() as usize]
+        [(); <$crate::algebra::basis::grades::AddGradesImpl as $crate::algebra::basis::grades::AddGradesTrait<$g, $h>>::OUTPUT.into_bits() as usize]
     };
 }
 

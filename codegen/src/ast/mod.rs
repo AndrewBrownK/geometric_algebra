@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use parking_lot::RwLock;
 
-use crate::ast2::expressions::AnyExpression;
+use crate::ast::expressions::AnyExpression;
 
 pub mod datatype;
 pub mod expressions;

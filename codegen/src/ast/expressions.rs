@@ -4,12 +4,12 @@ use std::mem;
 use std::ops::{Add, AddAssign, Deref, DerefMut, Mul, MulAssign, Neg, Sub, SubAssign};
 use std::sync::Arc;
 use float_ord::FloatOrd;
-use crate::algebra2::basis::BasisElement;
-use crate::algebra2::multivector::{BasisElementGroup, DynamicMultiVector};
-use crate::ast2::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
-use crate::ast2::operations_tracker::{TrackOperations, TraitOperationsLookup, VectoredOperationsTracker};
-use crate::ast2::traits::TraitKey;
-use crate::ast2::{RawVariableDeclaration, RawVariableInvocation, Variable};
+use crate::algebra::basis::BasisElement;
+use crate::algebra::multivector::{BasisElementGroup, DynamicMultiVector};
+use crate::ast::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
+use crate::ast::operations_tracker::{TrackOperations, TraitOperationsLookup, VectoredOperationsTracker};
+use crate::ast::traits::TraitKey;
+use crate::ast::{RawVariableDeclaration, RawVariableInvocation, Variable};
 use crate::utility::slice_retain_mut;
 
 pub trait TraitResultType: Clone + Debug + Sized + Send + Sync + 'static {
@@ -3249,7 +3249,7 @@ impl Vec2Expr {
                 // Do I really want to do more here?
             }
             Vec2Expr::Gather2(ref mut f0, ref mut f1) => {
-                use crate::ast2::expressions::FloatExpr::*;
+                use crate::ast::expressions::FloatExpr::*;
                 if !insides_already_done {
                     f0.simplify_nuanced(insides_already_done, transpose_simd, true, prefer_flat_access);
                     f1.simplify_nuanced(insides_already_done, transpose_simd, true, prefer_flat_access);
@@ -3525,7 +3525,7 @@ impl Vec3Expr {
                 // Do I really want to do more here?
             }
             Vec3Expr::Gather3(ref mut f0, ref mut f1, ref mut f2) => {
-                use crate::ast2::expressions::FloatExpr::*;
+                use crate::ast::expressions::FloatExpr::*;
                 if !insides_already_done {
                     f0.simplify_nuanced(insides_already_done, transpose_simd, true, prefer_flat_access);
                     f1.simplify_nuanced(insides_already_done, transpose_simd, true, prefer_flat_access);
@@ -3847,7 +3847,7 @@ impl Vec4Expr {
                 // Do I really want to do more here?
             }
             Vec4Expr::Gather4(f0, f1, f2, f3) => {
-                use crate::ast2::expressions::FloatExpr::*;
+                use crate::ast::expressions::FloatExpr::*;
                 if !insides_already_done {
                     f0.simplify_nuanced(insides_already_done, transpose_simd, true, prefer_flat_access);
                     f1.simplify_nuanced(insides_already_done, transpose_simd, true, prefer_flat_access);
@@ -5516,7 +5516,7 @@ impl TrackOperations for MultiVectorExpr {
 }
 
 fn transpose_vec2_product(float_product_0: &mut Vec<(FloatExpr, f32)>, float_product_1: &mut Vec<(FloatExpr, f32)>, mut coalesce_product_literal: [f32; 2]) -> Option<Vec2Expr> {
-    use crate::ast2::expressions::FloatExpr::*;
+    use crate::ast::expressions::FloatExpr::*;
     // See if we can pull out a Vec2Expr::Product
     let mut vec2_product = vec![];
     float_product_0.retain_mut(|(e0, f0)| {
@@ -5566,7 +5566,7 @@ fn vec2_product_extract(
     e1: &mut FloatExpr,
     f1: &mut f32,
 ) -> bool {
-    use crate::ast2::expressions::FloatExpr::*;
+    use crate::ast::expressions::FloatExpr::*;
     let mut pulled_out_literal = false;
     if let Literal(f) = e0 {
         if *f != 1.0 {
@@ -5611,7 +5611,7 @@ fn vec2_product_extract(
 }
 
 fn transpose_vec2_sum(float_sum_0: &mut Vec<(FloatExpr, f32)>, float_sum_1: &mut Vec<(FloatExpr, f32)>, mut coalesce_sum_literal: [f32; 2]) -> Option<Vec2Expr> {
-    use crate::ast2::expressions::FloatExpr::*;
+    use crate::ast::expressions::FloatExpr::*;
     // See if we can pull out a Vec2Expr::Sum
     let mut vec2_sum = vec![];
     float_sum_0.retain_mut(|(e0, f0)| {
@@ -5654,7 +5654,7 @@ fn transpose_vec2_sum(float_sum_0: &mut Vec<(FloatExpr, f32)>, float_sum_1: &mut
 }
 
 fn vec2_sum_extract(vec2_sum: &mut Vec<(Vec2Expr, f32)>, coalesce_sum_literals: &mut [f32; 2], e0: &mut FloatExpr, f0: &mut f32, e1: &mut FloatExpr, f1: &mut f32) -> bool {
-    use crate::ast2::expressions::FloatExpr::*;
+    use crate::ast::expressions::FloatExpr::*;
     let mut pulled_out_literal = false;
     if let Literal(f) = e0 {
         if *f != 0.0 {
@@ -5704,7 +5704,7 @@ fn transpose_vec3_product(
     float_product_2: &mut Vec<(FloatExpr, f32)>,
     mut coalesce_product_literal: [f32; 3],
 ) -> Option<Vec3Expr> {
-    use crate::ast2::expressions::FloatExpr::*;
+    use crate::ast::expressions::FloatExpr::*;
     // See if we can pull out a Vec3Expr::Product
     let mut vec3_product = vec![];
     float_product_0.retain_mut(|(e0, f0)| {
@@ -5768,7 +5768,7 @@ fn vec3_product_extract(
     e2: &mut FloatExpr,
     f2: &mut f32,
 ) -> bool {
-    use crate::ast2::expressions::FloatExpr::*;
+    use crate::ast::expressions::FloatExpr::*;
     let mut pulled_out_literal = false;
     if let Literal(f) = e0 {
         if *f != 1.0 {
@@ -5826,7 +5826,7 @@ fn transpose_vec3_sum(
     float_sum_2: &mut Vec<(FloatExpr, f32)>,
     mut coalesce_sum_literal: [f32; 3],
 ) -> Option<Vec3Expr> {
-    use crate::ast2::expressions::FloatExpr::*;
+    use crate::ast::expressions::FloatExpr::*;
     // See if we can pull out a Vec3Expr::Sum
     let mut vec3_sum = vec![];
     float_sum_0.retain_mut(|(e0, f0)| {
@@ -5890,7 +5890,7 @@ fn vec3_sum_extract(
     e2: &mut FloatExpr,
     f2: &mut f32,
 ) -> bool {
-    use crate::ast2::expressions::FloatExpr::*;
+    use crate::ast::expressions::FloatExpr::*;
     let mut pulled_out_literal = false;
     if let Literal(f) = e0 {
         if *f != 0.0 {
@@ -5949,7 +5949,7 @@ fn transpose_vec4_product(
     float_product_3: &mut Vec<(FloatExpr, f32)>,
     mut coalesce_product_literal: [f32; 4],
 ) -> Option<Vec4Expr> {
-    use crate::ast2::expressions::FloatExpr::*;
+    use crate::ast::expressions::FloatExpr::*;
     // See if we can pull out a Vec4Expr::Product
     let mut vec4_product = vec![];
     float_product_0.retain_mut(|(e0, f0)| {
@@ -6027,7 +6027,7 @@ fn vec4_product_extract(
     e3: &mut FloatExpr,
     f3: &mut f32,
 ) -> bool {
-    use crate::ast2::expressions::FloatExpr::*;
+    use crate::ast::expressions::FloatExpr::*;
     let mut pulled_out_literal = false;
     if let Literal(f) = e0 {
         if *f != 1.0 {
@@ -6096,7 +6096,7 @@ fn transpose_vec4_sum(
     float_sum_3: &mut Vec<(FloatExpr, f32)>,
     mut coalesce_sum_literal: [f32; 4],
 ) -> Option<Vec4Expr> {
-    use crate::ast2::expressions::FloatExpr::*;
+    use crate::ast::expressions::FloatExpr::*;
     // See if we can pull out a Vec4Expr::Sum
     let mut vec4_sum = vec![];
     float_sum_0.retain_mut(|(e0, f0)| {
@@ -6174,7 +6174,7 @@ fn vec4_sum_extract(
     e3: &mut FloatExpr,
     f3: &mut f32,
 ) -> bool {
-    use crate::ast2::expressions::FloatExpr::*;
+    use crate::ast::expressions::FloatExpr::*;
     let mut pulled_out_literal = false;
     if let Literal(f) = e0 {
         if *f != 0.0 {

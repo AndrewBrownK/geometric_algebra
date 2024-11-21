@@ -8,14 +8,14 @@ use std::sync::Arc;
 use const_panic::concat_panic;
 use parking_lot::Mutex;
 
-use crate::algebra2::basis::elements::*;
-use crate::algebra2::basis::filter::{SigFilter, SigSetFilter};
-use crate::algebra2::basis::grades::Grades;
-use crate::algebra2::basis::{BasisElement, BasisSignature};
-use crate::algebra2::GeometricAlgebra;
-use crate::ast2::datatype::{ExpressionType, Float, MultiVector, Vec2, Vec3, Vec4};
-use crate::ast2::expressions::{FloatExpr, MultiVectorExpr};
-use crate::ast2::traits::{HasNotReturned, RawTraitDefinition, RawTraitImplementation, TraitImplBuilder};
+use crate::algebra::basis::elements::*;
+use crate::algebra::basis::filter::{SigFilter, SigSetFilter};
+use crate::algebra::basis::grades::Grades;
+use crate::algebra::basis::{BasisElement, BasisSignature};
+use crate::algebra::GeometricAlgebra;
+use crate::ast::datatype::{ExpressionType, Float, MultiVector, Vec2, Vec3, Vec4};
+use crate::ast::expressions::{FloatExpr, MultiVectorExpr};
+use crate::ast::traits::{HasNotReturned, RawTraitDefinition, RawTraitImplementation, TraitImplBuilder};
 use crate::utility::ConstVec;
 
 // We COULD use { qty_groups(AntiScalar) } everywhere to specify the size of
@@ -398,15 +398,15 @@ macro_rules! multi_vec {
             use $crate::elements::*;
             let name: &'static str = stringify!($mv_name);
             let groups: $crate::utility::ConstVec<
-                $crate::algebra2::multivector::BasisElementGroup,
-                { $crate::algebra2::multivector::QTY_GROUPS }
+                $crate::algebra::multivector::BasisElementGroup,
+                { $crate::algebra::multivector::QTY_GROUPS }
             > = {
-                use $crate::algebra2::multivector::TupleToGroup;
+                use $crate::algebra::multivector::TupleToGroup;
                 let mut cv = $crate::utility::ConstVec::new();
                 $(cv.push(($($basis_element),+,).tuple_to_group());)+
                 cv
             };
-            $crate::algebra2::multivector::MultiVec::<{$anti_scalar}>::new_by_groups(name, groups)
+            $crate::algebra::multivector::MultiVec::<{$anti_scalar}>::new_by_groups(name, groups)
         }
     };
     // grouped using arrays
@@ -415,15 +415,15 @@ macro_rules! multi_vec {
             use $crate::elements::*;
             let name: &'static str = stringify!($mv_name);
             let groups: $crate::utility::ConstVec<
-                $crate::algebra2::multivector::BasisElementGroup,
-                { $crate::algebra2::multivector::QTY_GROUPS }
+                $crate::algebra::multivector::BasisElementGroup,
+                { $crate::algebra::multivector::QTY_GROUPS }
             > = {
-                use $crate::algebra2::multivector::TupleToGroup;
+                use $crate::algebra::multivector::TupleToGroup;
                 let mut cv = $crate::utility::ConstVec::new();
                 $(cv.push(($($basis_element),+,).tuple_to_group());)+
                 cv
             };
-            $crate::algebra2::multivector::MultiVec::<{$anti_scalar}>::new_by_groups(name, groups)
+            $crate::algebra::multivector::MultiVec::<{$anti_scalar}>::new_by_groups(name, groups)
         }
     };
     // ungrouped list of BasisElement
@@ -433,10 +433,10 @@ macro_rules! multi_vec {
             // compatible version when specifying groups is fine instead.
             use $crate::elements::*;
             let name: &'static str = stringify!($mv_name);
-            let elements: std::vec::Vec<$crate::algebra2::basis::BasisElement> = vec![
+            let elements: std::vec::Vec<$crate::algebra::basis::BasisElement> = vec![
                 $($basis_element),+,
             ];
-            $crate::algebra2::multivector::MultiVec::<{$anti_scalar}>::new(name, elements)
+            $crate::algebra::multivector::MultiVec::<{$anti_scalar}>::new(name, elements)
         }
     };
     // Elegant and sparse
@@ -445,15 +445,15 @@ macro_rules! multi_vec {
             use $crate::elements::*;
             let name: &'static str = stringify!($mv_name);
             let groups: $crate::utility::ConstVec<
-                $crate::algebra2::multivector::BasisElementGroup,
-                { $crate::algebra2::multivector::QTY_GROUPS }
+                $crate::algebra::multivector::BasisElementGroup,
+                { $crate::algebra::multivector::QTY_GROUPS }
             > = {
-                use $crate::algebra2::multivector::TupleToGroup;
+                use $crate::algebra::multivector::TupleToGroup;
                 let mut cv = $crate::utility::ConstVec::new();
                 $(cv.push(($($basis_element),+,).tuple_to_group());)+
                 cv
             };
-            $crate::algebra2::multivector::MultiVec::<$anti_scalar>::new_by_groups(name, groups)
+            $crate::algebra::multivector::MultiVec::<$anti_scalar>::new_by_groups(name, groups)
         }
     };
 }
@@ -463,23 +463,23 @@ macro_rules! multi_vecs {
     // Grouped using tuples
     ($anti_scalar:ident; $( $mv_name:ident => $( ($($basis_element:ident),+ $(,)?)),+ $(,)? );+ $(;)?) => {
         $(
-        pub static $mv_name: $crate::algebra2::multivector::MultiVec<{$anti_scalar}> = {
+        pub static $mv_name: $crate::algebra::multivector::MultiVec<{$anti_scalar}> = {
             use $crate::elements::*;
             let name: &'static str = stringify!($mv_name);
             let groups: $crate::utility::ConstVec<
-                $crate::algebra2::multivector::BasisElementGroup,
-                { $crate::algebra2::multivector::QTY_GROUPS }
+                $crate::algebra::multivector::BasisElementGroup,
+                { $crate::algebra::multivector::QTY_GROUPS }
             > = {
-                use $crate::algebra2::multivector::TupleToGroup;
+                use $crate::algebra::multivector::TupleToGroup;
                 let mut cv = $crate::utility::ConstVec::new();
                 $(cv.push(($($basis_element),+,).tuple_to_group());)+
                 cv
             };
-            $crate::algebra2::multivector::MultiVec::<{$anti_scalar}>::new_by_groups(name, groups)
+            $crate::algebra::multivector::MultiVec::<{$anti_scalar}>::new_by_groups(name, groups)
         };
         )+
-        pub fn register_multi_vecs(ga: std::sync::Arc<$crate::algebra2::GeometricAlgebra<{$anti_scalar}>>) -> $crate::algebra2::multivector::DeclareMultiVecs<{$anti_scalar}> {
-            $crate::algebra2::multivector::DeclareMultiVecs::declare(ga, [
+        pub fn register_multi_vecs(ga: std::sync::Arc<$crate::algebra::GeometricAlgebra<{$anti_scalar}>>) -> $crate::algebra::multivector::DeclareMultiVecs<{$anti_scalar}> {
+            $crate::algebra::multivector::DeclareMultiVecs::declare(ga, [
                 $(&$mv_name,)+
             ])
         }
@@ -487,23 +487,23 @@ macro_rules! multi_vecs {
     // Grouped using arrays
     ($anti_scalar:ident; $( $mv_name:ident => $( [$($basis_element:ident),+ $(,)?]),+ $(,)? );+ $(;)?) => {
         $(
-        pub static $mv_name: $crate::algebra2::multivector::MultiVec<{$anti_scalar}> = {
+        pub static $mv_name: $crate::algebra::multivector::MultiVec<{$anti_scalar}> = {
             use $crate::elements::*;
             let name: &'static str = stringify!($mv_name);
             let groups: $crate::utility::ConstVec<
-                $crate::algebra2::multivector::BasisElementGroup,
-                { $crate::algebra2::multivector::QTY_GROUPS }
+                $crate::algebra::multivector::BasisElementGroup,
+                { $crate::algebra::multivector::QTY_GROUPS }
             > = {
-                use $crate::algebra2::multivector::TupleToGroup;
+                use $crate::algebra::multivector::TupleToGroup;
                 let mut cv = $crate::utility::ConstVec::new();
                 $(cv.push(($($basis_element),+,).tuple_to_group());)+
                 cv
             };
-            $crate::algebra2::multivector::MultiVec::<{$anti_scalar}>::new_by_groups(name, groups)
+            $crate::algebra::multivector::MultiVec::<{$anti_scalar}>::new_by_groups(name, groups)
         };
         )+
-        pub fn register_multi_vecs(ga: std::sync::Arc<$crate::algebra2::GeometricAlgebra<{$anti_scalar}>>) -> $crate::algebra2::multivector::DeclareMultiVecs<{$anti_scalar}> {
-            $crate::algebra2::multivector::DeclareMultiVecs::declare(ga, [
+        pub fn register_multi_vecs(ga: std::sync::Arc<$crate::algebra::GeometricAlgebra<{$anti_scalar}>>) -> $crate::algebra::multivector::DeclareMultiVecs<{$anti_scalar}> {
+            $crate::algebra::multivector::DeclareMultiVecs::declare(ga, [
                 $(&$mv_name, )+
             ])
         }
@@ -511,23 +511,23 @@ macro_rules! multi_vecs {
     // Elegant and sparse
     ($anti_scalar:ident; $( $mv_name:ident as $( $($basis_element:ident),+ $(,)?)|+ );+ $(;)?) => {
         $(
-        pub static $mv_name: $crate::algebra2::multivector::MultiVec<{$anti_scalar}> = {
+        pub static $mv_name: $crate::algebra::multivector::MultiVec<{$anti_scalar}> = {
             use $crate::elements::*;
             let name: &'static str = stringify!($mv_name);
             let groups: $crate::utility::ConstVec<
-                $crate::algebra2::multivector::BasisElementGroup,
-                { $crate::algebra2::multivector::QTY_GROUPS }
+                $crate::algebra::multivector::BasisElementGroup,
+                { $crate::algebra::multivector::QTY_GROUPS }
             > = {
-                use $crate::algebra2::multivector::TupleToGroup;
+                use $crate::algebra::multivector::TupleToGroup;
                 let mut cv = $crate::utility::ConstVec::new();
                 $(cv.push(($($basis_element),+,).tuple_to_group());)+
                 cv
             };
-            $crate::algebra2::multivector::MultiVec::<$anti_scalar>::new_by_groups(name, groups)
+            $crate::algebra::multivector::MultiVec::<$anti_scalar>::new_by_groups(name, groups)
         };
         )+
-        pub fn register_multi_vecs(ga: std::sync::Arc<$crate::algebra2::GeometricAlgebra<{$anti_scalar}>>) -> $crate::algebra2::multivector::DeclareMultiVecs<{$anti_scalar}> {
-            $crate::algebra2::multivector::DeclareMultiVecs::declare(ga, [
+        pub fn register_multi_vecs(ga: std::sync::Arc<$crate::algebra::GeometricAlgebra<{$anti_scalar}>>) -> $crate::algebra::multivector::DeclareMultiVecs<{$anti_scalar}> {
+            $crate::algebra::multivector::DeclareMultiVecs::declare(ga, [
                 $(&$mv_name, )+
             ])
         }
@@ -1001,7 +1001,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
         // Generate fallback types.
         let all_elements: Vec<_> = ga.all_elements().map(|el| ga.fix_name_and_sign(el).1).collect();
 
-        use crate::algebra2::basis::elements::*;
+        use crate::algebra::basis::elements::*;
         let mut has_fell_back = false;
         mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new("Scalar", [scalar]));
         mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new("AntiScalar", [AntiScalar]));

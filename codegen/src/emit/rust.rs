@@ -10,16 +10,16 @@ use std::time::Duration;
 use std::{fs, thread};
 use tokio::task::JoinSet;
 
-use crate::algebra2::basis::grades::{plane_based_k_reflections, point_based_k_reflections};
-use crate::algebra2::basis::BasisElement;
-use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
-use crate::ast2::datatype::{ExpressionType, MultiVector};
-use crate::ast2::expressions::{AnyExpression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
-use crate::ast2::traits::{
+use crate::algebra::basis::grades::{plane_based_k_reflections, point_based_k_reflections};
+use crate::algebra::basis::BasisElement;
+use crate::algebra::multivector::{MultiVec, MultiVecRepository};
+use crate::ast::datatype::{ExpressionType, MultiVector};
+use crate::ast::expressions::{AnyExpression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
+use crate::ast::traits::{
     progress_style, BinaryOps, CommentOrVariableDeclaration, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus,
 };
-use crate::ast2::RawVariableDeclaration;
-use crate::emit2::sort_trait_impls;
+use crate::ast::RawVariableDeclaration;
+use crate::emit::sort_trait_impls;
 use crate::shader_support::emit_shader_support;
 use crate::utility::CollectResults;
 use crate::SIMD_SRC;
