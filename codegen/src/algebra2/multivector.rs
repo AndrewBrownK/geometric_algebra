@@ -140,6 +140,7 @@ impl BasisElementGroup {
         }
     }
 
+    // TODO provide a len method, then seek usages of this method that are just trying to get the len
     pub const fn into_vec(self) -> ConstVec<BasisElement, 4> {
         match self {
             BasisElementGroup::G1(a) => {

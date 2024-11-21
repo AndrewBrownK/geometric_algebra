@@ -419,14 +419,7 @@ impl Wgsl {
                     if needs_second_var || (needs_group_var == is_multivector_expr_grouped) {
                         self.write_expression(w, x, false, is_multivector_expr_grouped)?;
                     } else {
-                        self.write_type(w, x_ty, false, false)?;
-                        if needs_flat_var {
-                            write!(w, "_degroup(")?;
-                        } else {
-                            write!(w, "_grouped(")?;
-                        }
-                        self.write_expression(w, x, false, is_multivector_expr_grouped)?;
-                        write!(w, ")")?;
+                        self.write_expression(w, x, false, needs_group_var)?;
                     }
                     writeln!(w, ";")?;
 
@@ -1520,6 +1513,21 @@ impl Wgsl {
                 }
             }
             MultiVectorVia::Construct(v) => {
+                if !grouped && mv.groups().into_iter().all(|it| it.simd_width() == 1) {
+                    write!(w, "{ucc}(")?;
+                    for (i, g) in v.iter().enumerate() {
+                        if i > 0 {
+                            write!(w, ", ")?;
+                        }
+                        match g {
+                            MultiVectorGroupExpr::JustFloat(f) => self.write_float(w, f, true, false)?,
+                            _ => unreachable!("We checked that there are only length 1 groups")
+                        }
+                    }
+                    write!(w, ")")?;
+                    return Ok(())
+                }
+
                 if !grouped {
                     write!(w, "{lcc}_degroup(")?;
                 }

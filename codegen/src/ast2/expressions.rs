@@ -2784,7 +2784,7 @@ impl FloatExpr {
                                 *self = FloatExpr::AccessMultiVecFlat(mve.take_as_owned(), flat_idx + (*idx_in_vec as u16));
                                 return
                             }
-                            flat_idx = flat_idx + (g.into_vec().len() as u16);
+                            flat_idx = flat_idx + (g.simd_width() as u16);
                         }
                     }
                     _ => {}
@@ -2808,7 +2808,7 @@ impl FloatExpr {
                                 *self = FloatExpr::AccessMultiVecFlat(mve.take_as_owned(), flat_idx + (*idx_in_vec as u16));
                                 return
                             }
-                            flat_idx = flat_idx + (g.into_vec().len() as u16);
+                            flat_idx = flat_idx + (g.simd_width() as u16);
                         }
                     }
                     _ => {}
@@ -2832,7 +2832,7 @@ impl FloatExpr {
                                 *self = FloatExpr::AccessMultiVecFlat(mve.take_as_owned(), flat_idx + (*idx_in_vec as u16));
                                 return
                             }
-                            flat_idx = flat_idx + (g.into_vec().len() as u16);
+                            flat_idx = flat_idx + (g.simd_width() as u16);
                         }
                     }
                     _ => {}
@@ -2870,7 +2870,7 @@ impl FloatExpr {
                             *self = FloatExpr::AccessMultiVecFlat(mve.take_as_owned(), flat_idx);
                             return
                         }
-                        flat_idx = flat_idx + (g.into_vec().len() as u16);
+                        flat_idx = flat_idx + (g.simd_width() as u16);
                     }
                 }
             }
