@@ -1,4 +1,4 @@
-use crate::traits::AntiScalarProduct;
+use crate::traits::AntiDotProduct;
 use crate::traits::RightAntiDual;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -31,7 +31,7 @@ impl RadiusNormSquared for AntiCircleRotor {
     //      add/sub      mul      div
     // f32       10       12        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for AntiDipoleInversion {
@@ -45,7 +45,7 @@ impl RadiusNormSquared for AntiDipoleInversion {
     //      add/sub      mul      div
     // f32       14       16        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for AntiDualNum {
@@ -59,7 +59,7 @@ impl RadiusNormSquared for AntiDualNum {
     //      add/sub      mul      div
     // f32        0        3        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for AntiFlatPoint {
@@ -73,7 +73,7 @@ impl RadiusNormSquared for AntiFlatPoint {
     //      add/sub      mul      div
     // f32        0        2        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for AntiFlector {
@@ -87,7 +87,7 @@ impl RadiusNormSquared for AntiFlector {
     //      add/sub      mul      div
     // f32        3        5        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for AntiLine {
@@ -101,7 +101,7 @@ impl RadiusNormSquared for AntiLine {
     //      add/sub      mul      div
     // f32        2        4        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for AntiMotor {
@@ -115,7 +115,7 @@ impl RadiusNormSquared for AntiMotor {
     //      add/sub      mul      div
     // f32        3        5        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for AntiPlane {
@@ -129,7 +129,7 @@ impl RadiusNormSquared for AntiPlane {
     //      add/sub      mul      div
     // f32        2        4        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for AntiScalar {
@@ -143,7 +143,7 @@ impl RadiusNormSquared for AntiScalar {
     //      add/sub      mul      div
     // f32        0        2        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for Circle {
@@ -157,7 +157,7 @@ impl RadiusNormSquared for Circle {
     //      add/sub      mul      div
     // f32        9       11        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for CircleRotor {
@@ -171,7 +171,7 @@ impl RadiusNormSquared for CircleRotor {
     //      add/sub      mul      div
     // f32       10       12        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for Dipole {
@@ -185,7 +185,7 @@ impl RadiusNormSquared for Dipole {
     //      add/sub      mul      div
     // f32        9       11        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for DipoleInversion {
@@ -199,7 +199,7 @@ impl RadiusNormSquared for DipoleInversion {
     //      add/sub      mul      div
     // f32       14       16        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for DualNum {
@@ -213,7 +213,7 @@ impl RadiusNormSquared for DualNum {
     //      add/sub      mul      div
     // f32        0        2        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for FlatPoint {
@@ -227,7 +227,7 @@ impl RadiusNormSquared for FlatPoint {
     //      add/sub      mul      div
     // f32        0        3        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for Flector {
@@ -241,7 +241,7 @@ impl RadiusNormSquared for Flector {
     //      add/sub      mul      div
     // f32        3        5        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for Line {
@@ -255,7 +255,7 @@ impl RadiusNormSquared for Line {
     //      add/sub      mul      div
     // f32        2        4        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for Motor {
@@ -269,7 +269,7 @@ impl RadiusNormSquared for Motor {
     //      add/sub      mul      div
     // f32        3        5        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for MultiVector {
@@ -283,7 +283,7 @@ impl RadiusNormSquared for MultiVector {
     //      add/sub      mul      div
     // f32       31       33        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for Plane {
@@ -297,7 +297,7 @@ impl RadiusNormSquared for Plane {
     //      add/sub      mul      div
     // f32        2        4        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for RoundPoint {
@@ -311,7 +311,7 @@ impl RadiusNormSquared for RoundPoint {
     //      add/sub      mul      div
     // f32        4        6        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for Scalar {
@@ -330,7 +330,7 @@ impl RadiusNormSquared for Scalar {
     //      add/sub      mul      div
     // f32        0        3        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for Sphere {
@@ -344,7 +344,7 @@ impl RadiusNormSquared for Sphere {
     //      add/sub      mul      div
     // f32        4        6        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for VersorEven {
@@ -358,7 +358,7 @@ impl RadiusNormSquared for VersorEven {
     //      add/sub      mul      div
     // f32       15       17        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }
 impl std::ops::Div<radius_norm_squared> for VersorOdd {
@@ -372,6 +372,6 @@ impl RadiusNormSquared for VersorOdd {
     //      add/sub      mul      div
     // f32       15       17        0
     fn radius_norm_squared(self) -> Scalar {
-        return self.anti_scalar_product(self).right_anti_dual();
+        return self.anti_dot_product(self).right_anti_dual();
     }
 }

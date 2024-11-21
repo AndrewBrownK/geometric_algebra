@@ -45,8 +45,8 @@ impl AntiFix for AntiFlatPoint {
         );
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e321] * self[e321]);
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
-        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_scalar_product[e12345]);
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
+        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
         return AntiFlatPoint::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e235], self[e315], self[e125], self[e321]]),
@@ -76,8 +76,8 @@ impl AntiFix for AntiPlane {
         use crate::elements::*;
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ -f32::powi(self[e1], 2) - f32::powi(self[e2], 2) - f32::powi(self[e3], 2));
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
-        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_scalar_product[e12345]);
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
+        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
         return AntiPlane::from_groups(
             // e1, e2, e3, e5
             Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e5]]),
@@ -103,8 +103,8 @@ impl AntiFix for AntiScalar {
         use crate::elements::*;
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e12345], 2));
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
-        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_scalar_product[e12345]);
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
+        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
         return AntiScalar::from_groups(/* e12345 */ anti_inverse[e12345] * self[e12345]);
     }
 }
@@ -132,8 +132,8 @@ impl AntiFix for FlatPoint {
         let anti_reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]) * Simd32x4::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e45] * self[e45] * -1.0);
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
-        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_scalar_product[e12345]);
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
+        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
         return FlatPoint::from_groups(
             // e15, e25, e35, e45
             Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]),
@@ -163,8 +163,8 @@ impl AntiFix for Plane {
         use crate::elements::*;
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e4235], 2) + f32::powi(self[e4315], 2) + f32::powi(self[e4125], 2));
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
-        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_scalar_product[e12345]);
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
+        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
         return Plane::from_groups(
             // e4235, e4315, e4125, e3215
             Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]),
@@ -195,8 +195,8 @@ impl AntiFix for RoundPoint {
         let geometric_anti_product =
             AntiScalar::from_groups(/* e12345 */ 2.0 * (self[e4] * self[e5]) - f32::powi(self[e1], 2) - f32::powi(self[e2], 2) - f32::powi(self[e3], 2));
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
-        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_scalar_product[e12345]);
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
+        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
         return RoundPoint::from_groups(
             // e1, e2, e3, e4
             Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]),
@@ -224,8 +224,8 @@ impl AntiFix for Scalar {
         use crate::elements::*;
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[scalar], 2) * -1.0);
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
-        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_scalar_product[e12345]);
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
+        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
         return Scalar::from_groups(/* scalar */ anti_inverse[e12345] * self[scalar]);
     }
 }
@@ -255,8 +255,8 @@ impl AntiFix for Sphere {
             f32::powi(self[e4235], 2) + f32::powi(self[e4315], 2) + f32::powi(self[e4125], 2) - 2.0 * (self[e3215] * self[e1234]),
         );
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
-        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_scalar_product[e12345]);
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
+        let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
             Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]),

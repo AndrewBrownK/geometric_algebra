@@ -1,5 +1,5 @@
+use crate::traits::DotProduct;
 use crate::traits::RoundBulk;
-use crate::traits::ScalarProduct;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
 // This is due to varying hardware capabilities and compiler optimizations.
@@ -32,7 +32,7 @@ impl RoundBulkNormSquared for AntiCircleRotor {
     // f32        3        4        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for AntiDipoleInversion {
@@ -47,7 +47,7 @@ impl RoundBulkNormSquared for AntiDipoleInversion {
     // f32        3        4        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for AntiDualNum {
@@ -62,7 +62,7 @@ impl RoundBulkNormSquared for AntiDualNum {
     // f32        0        1        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for AntiFlatPoint {
@@ -77,7 +77,7 @@ impl RoundBulkNormSquared for AntiFlatPoint {
     // f32        0        2        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for AntiFlector {
@@ -92,7 +92,7 @@ impl RoundBulkNormSquared for AntiFlector {
     // f32        3        4        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for AntiLine {
@@ -107,7 +107,7 @@ impl RoundBulkNormSquared for AntiLine {
     // f32        2        3        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for AntiMotor {
@@ -122,7 +122,7 @@ impl RoundBulkNormSquared for AntiMotor {
     // f32        3        4        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for AntiPlane {
@@ -137,7 +137,7 @@ impl RoundBulkNormSquared for AntiPlane {
     // f32        2        3        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for Circle {
@@ -152,7 +152,7 @@ impl RoundBulkNormSquared for Circle {
     // f32        0        2        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for CircleRotor {
@@ -167,7 +167,7 @@ impl RoundBulkNormSquared for CircleRotor {
     // f32        0        2        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for Dipole {
@@ -182,7 +182,7 @@ impl RoundBulkNormSquared for Dipole {
     // f32        2        3        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for DipoleInversion {
@@ -197,7 +197,7 @@ impl RoundBulkNormSquared for DipoleInversion {
     // f32        2        3        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for MultiVector {
@@ -212,7 +212,7 @@ impl RoundBulkNormSquared for MultiVector {
     // f32       31       32        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for RoundPoint {
@@ -227,7 +227,7 @@ impl RoundBulkNormSquared for RoundPoint {
     // f32        2        3        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for Scalar {
@@ -247,7 +247,7 @@ impl RoundBulkNormSquared for Scalar {
     // f32        0        1        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for VersorEven {
@@ -262,7 +262,7 @@ impl RoundBulkNormSquared for VersorEven {
     // f32        3        4        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }
 impl std::ops::Div<round_bulk_norm_squared> for VersorOdd {
@@ -277,6 +277,6 @@ impl RoundBulkNormSquared for VersorOdd {
     // f32        3        4        0
     fn round_bulk_norm_squared(self) -> Scalar {
         let round_bulk = self.round_bulk();
-        return round_bulk.scalar_product(round_bulk);
+        return round_bulk.dot_product(round_bulk);
     }
 }

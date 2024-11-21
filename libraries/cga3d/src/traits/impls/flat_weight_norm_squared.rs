@@ -1,4 +1,4 @@
-use crate::traits::AntiScalarProduct;
+use crate::traits::AntiDotProduct;
 use crate::traits::FlatWeight;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -32,7 +32,7 @@ impl FlatWeightNormSquared for AntiCircleRotor {
     // f32        0        2        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for AntiDipoleInversion {
@@ -47,7 +47,7 @@ impl FlatWeightNormSquared for AntiDipoleInversion {
     // f32        2        3        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for AntiScalar {
@@ -67,7 +67,7 @@ impl FlatWeightNormSquared for AntiScalar {
     // f32        0        1        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for Circle {
@@ -82,7 +82,7 @@ impl FlatWeightNormSquared for Circle {
     // f32        2        3        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for CircleRotor {
@@ -97,7 +97,7 @@ impl FlatWeightNormSquared for CircleRotor {
     // f32        3        4        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for Dipole {
@@ -112,7 +112,7 @@ impl FlatWeightNormSquared for Dipole {
     // f32        0        2        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for DipoleInversion {
@@ -127,7 +127,7 @@ impl FlatWeightNormSquared for DipoleInversion {
     // f32        3        4        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for DualNum {
@@ -142,7 +142,7 @@ impl FlatWeightNormSquared for DualNum {
     // f32        0        1        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for FlatPoint {
@@ -157,7 +157,7 @@ impl FlatWeightNormSquared for FlatPoint {
     // f32        0        2        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for Flector {
@@ -172,7 +172,7 @@ impl FlatWeightNormSquared for Flector {
     // f32        3        4        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for Line {
@@ -187,7 +187,7 @@ impl FlatWeightNormSquared for Line {
     // f32        2        3        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for Motor {
@@ -202,7 +202,7 @@ impl FlatWeightNormSquared for Motor {
     // f32        3        4        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for MultiVector {
@@ -217,7 +217,7 @@ impl FlatWeightNormSquared for MultiVector {
     // f32       31       32        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for Plane {
@@ -232,7 +232,7 @@ impl FlatWeightNormSquared for Plane {
     // f32        2        3        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for Sphere {
@@ -247,7 +247,7 @@ impl FlatWeightNormSquared for Sphere {
     // f32        2        3        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for VersorEven {
@@ -262,7 +262,7 @@ impl FlatWeightNormSquared for VersorEven {
     // f32        3        4        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }
 impl std::ops::Div<flat_weight_norm_squared> for VersorOdd {
@@ -277,6 +277,6 @@ impl FlatWeightNormSquared for VersorOdd {
     // f32        3        4        0
     fn flat_weight_norm_squared(self) -> AntiScalar {
         let flat_weight = self.flat_weight();
-        return flat_weight.anti_scalar_product(flat_weight);
+        return flat_weight.anti_dot_product(flat_weight);
     }
 }

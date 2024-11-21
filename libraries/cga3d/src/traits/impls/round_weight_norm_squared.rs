@@ -1,4 +1,4 @@
-use crate::traits::AntiScalarProduct;
+use crate::traits::AntiDotProduct;
 use crate::traits::RoundWeight;
 use crate::traits::Wedge;
 // Note on Operative Statistics:
@@ -37,7 +37,7 @@ impl RoundWeightNormSquared for AntiCircleRotor {
     //  no simd       23       34        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0])));
-        return round_weight_carrier.anti_scalar_product(round_weight_carrier);
+        return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
 impl std::ops::Div<round_weight_norm_squared> for AntiDipoleInversion {
@@ -57,7 +57,7 @@ impl RoundWeightNormSquared for AntiDipoleInversion {
     //  no simd       31       47        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0])));
-        return round_weight_carrier.anti_scalar_product(round_weight_carrier);
+        return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
 impl std::ops::Div<round_weight_norm_squared> for AntiDualNum {
@@ -72,7 +72,7 @@ impl RoundWeightNormSquared for AntiDualNum {
     // f32       15       21        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0])));
-        return round_weight_carrier.anti_scalar_product(round_weight_carrier);
+        return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
 impl std::ops::Div<round_weight_norm_squared> for Circle {
@@ -91,7 +91,7 @@ impl RoundWeightNormSquared for Circle {
     //  no simd       15       21        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0])));
-        return round_weight_carrier.anti_scalar_product(round_weight_carrier);
+        return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
 impl std::ops::Div<round_weight_norm_squared> for CircleRotor {
@@ -110,7 +110,7 @@ impl RoundWeightNormSquared for CircleRotor {
     //  no simd       15       21        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0])));
-        return round_weight_carrier.anti_scalar_product(round_weight_carrier);
+        return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
 impl std::ops::Div<round_weight_norm_squared> for Dipole {
@@ -129,7 +129,7 @@ impl RoundWeightNormSquared for Dipole {
     //  no simd       23       34        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0])));
-        return round_weight_carrier.anti_scalar_product(round_weight_carrier);
+        return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
 impl std::ops::Div<round_weight_norm_squared> for DipoleInversion {
@@ -148,7 +148,7 @@ impl RoundWeightNormSquared for DipoleInversion {
     //  no simd       27       39        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0])));
-        return round_weight_carrier.anti_scalar_product(round_weight_carrier);
+        return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
 impl std::ops::Div<round_weight_norm_squared> for DualNum {
@@ -167,7 +167,7 @@ impl RoundWeightNormSquared for DualNum {
     //  no simd        9       14        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0])));
-        return round_weight_carrier.anti_scalar_product(round_weight_carrier);
+        return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
 impl std::ops::Div<round_weight_norm_squared> for MultiVector {
@@ -187,7 +187,7 @@ impl RoundWeightNormSquared for MultiVector {
     //  no simd       65       96        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0])));
-        return round_weight_carrier.anti_scalar_product(round_weight_carrier);
+        return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
 impl std::ops::Div<round_weight_norm_squared> for RoundPoint {
@@ -206,7 +206,7 @@ impl RoundWeightNormSquared for RoundPoint {
     //  no simd        9       14        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0])));
-        return round_weight_carrier.anti_scalar_product(round_weight_carrier);
+        return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
 impl std::ops::Div<round_weight_norm_squared> for Sphere {
@@ -221,7 +221,7 @@ impl RoundWeightNormSquared for Sphere {
     // f32       15       21        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0])));
-        return round_weight_carrier.anti_scalar_product(round_weight_carrier);
+        return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
 impl std::ops::Div<round_weight_norm_squared> for VersorEven {
@@ -241,7 +241,7 @@ impl RoundWeightNormSquared for VersorEven {
     //  no simd       31       47        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0])));
-        return round_weight_carrier.anti_scalar_product(round_weight_carrier);
+        return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
 impl std::ops::Div<round_weight_norm_squared> for VersorOdd {
@@ -260,6 +260,6 @@ impl RoundWeightNormSquared for VersorOdd {
     //  no simd       27       39        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, 1.0])));
-        return round_weight_carrier.anti_scalar_product(round_weight_carrier);
+        return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }

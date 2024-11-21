@@ -1,5 +1,5 @@
+use crate::traits::DotProduct;
 use crate::traits::FlatBulk;
-use crate::traits::ScalarProduct;
 use crate::traits::Wedge;
 // Note on Operative Statistics:
 // Operative Statistics are not a precise predictor of performance or performance comparisons.
@@ -37,7 +37,7 @@ impl FlatBulkNormSquared for AntiCircleRotor {
     //  no simd        2        6        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for AntiDipoleInversion {
@@ -56,7 +56,7 @@ impl FlatBulkNormSquared for AntiDipoleInversion {
     //  no simd       14       31        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for AntiFlatPoint {
@@ -71,7 +71,7 @@ impl FlatBulkNormSquared for AntiFlatPoint {
     // f32        4       13        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for AntiFlector {
@@ -90,7 +90,7 @@ impl FlatBulkNormSquared for AntiFlector {
     //  no simd       14       31        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for AntiLine {
@@ -109,7 +109,7 @@ impl FlatBulkNormSquared for AntiLine {
     //  no simd        2        6        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for AntiMotor {
@@ -128,7 +128,7 @@ impl FlatBulkNormSquared for AntiMotor {
     //  no simd        3        8        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for AntiPlane {
@@ -147,7 +147,7 @@ impl FlatBulkNormSquared for AntiPlane {
     //  no simd        9       18        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for Circle {
@@ -162,7 +162,7 @@ impl FlatBulkNormSquared for Circle {
     // f32        4       13        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for CircleRotor {
@@ -177,7 +177,7 @@ impl FlatBulkNormSquared for CircleRotor {
     // f32        4       13        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for Dipole {
@@ -196,7 +196,7 @@ impl FlatBulkNormSquared for Dipole {
     //  no simd        2        6        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for DipoleInversion {
@@ -215,7 +215,7 @@ impl FlatBulkNormSquared for DipoleInversion {
     //  no simd        3        8        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for FlatPoint {
@@ -234,7 +234,7 @@ impl FlatBulkNormSquared for FlatPoint {
     //  no simd        2        6        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for Flector {
@@ -253,7 +253,7 @@ impl FlatBulkNormSquared for Flector {
     //  no simd        3        8        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for Line {
@@ -268,7 +268,7 @@ impl FlatBulkNormSquared for Line {
     // f32        4       13        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for Motor {
@@ -287,7 +287,7 @@ impl FlatBulkNormSquared for Motor {
     //  no simd       14       31        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for MultiVector {
@@ -306,7 +306,7 @@ impl FlatBulkNormSquared for MultiVector {
     //  no simd       32       57        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for Plane {
@@ -321,7 +321,7 @@ impl FlatBulkNormSquared for Plane {
     // f32        0        3        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for RoundPoint {
@@ -340,7 +340,7 @@ impl FlatBulkNormSquared for RoundPoint {
     //  no simd        9       18        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for Sphere {
@@ -355,7 +355,7 @@ impl FlatBulkNormSquared for Sphere {
     // f32        0        3        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for VersorEven {
@@ -374,7 +374,7 @@ impl FlatBulkNormSquared for VersorEven {
     //  no simd       14       31        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
 impl std::ops::Div<flat_bulk_norm_squared> for VersorOdd {
@@ -393,6 +393,6 @@ impl FlatBulkNormSquared for VersorOdd {
     //  no simd        3        8        0
     fn flat_bulk_norm_squared(self) -> Scalar {
         let flat_bulk_thing = self.flat_bulk().wedge(DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([1.0, 0.0])));
-        return flat_bulk_thing.scalar_product(flat_bulk_thing);
+        return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }

@@ -36,16 +36,22 @@ fn main() {
         Into TryInto
         Grade AntiGrade
         RightDual RightAntiDual
+        RightComplement LeftComplement DoubleComplement
         Reverse AntiReverse
         Wedge AntiWedge
         GeometricProduct GeometricAntiProduct
         Sandwich AntiSandwich
+        DotProduct AntiDotProduct
+        Inverse AntiInverse
+        GeometricQuotient GeometricAntiQuotient
         Fix AntiFix
         ConstraintViolation AntiConstraintViolation
         ConstraintValid AntiConstraintValid
-        Inverse AntiInverse
         SquareRoot AntiSquareRoot
-        GeometricQuotient GeometricAntiQuotient
+        AutoMorphism AntiAutoMorphism
+        Conjugation
+
+        // TODO bulk, weight, "right/left bulk/weight duals"
     };
     codegen::operators! { repo, traits;
         fancy_infix => Div;
