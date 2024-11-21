@@ -27,9 +27,10 @@ impl std::ops::Div<round_bulk> for AntiCircleRotor {
 impl RoundBulk for AntiCircleRotor {
     type Output = AntiMotor;
     fn round_bulk(self) -> Self::Output {
+        use crate::elements::*;
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group2()[3]]),
+            Simd32x4::from([self[e23], self[e31], self[e12], self[scalar]]),
             // e15, e25, e35, e3215
             Simd32x4::from(0.0),
         );
@@ -44,11 +45,12 @@ impl std::ops::Div<round_bulk> for AntiDipoleInversion {
 impl RoundBulk for AntiDipoleInversion {
     type Output = AntiFlector;
     fn round_bulk(self) -> Self::Output {
+        use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e1, e2, e3, e5
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], 0.0]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
         );
     }
 }
@@ -61,7 +63,8 @@ impl std::ops::Div<round_bulk> for AntiDualNum {
 impl RoundBulk for AntiDualNum {
     type Output = Scalar;
     fn round_bulk(self) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ self.group0()[1]);
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */ self[scalar]);
     }
 }
 impl std::ops::Div<round_bulk> for AntiFlatPoint {
@@ -78,7 +81,8 @@ impl std::ops::DivAssign<round_bulk> for AntiFlatPoint {
 impl RoundBulk for AntiFlatPoint {
     type Output = AntiFlatPoint;
     fn round_bulk(self) -> Self::Output {
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]));
+        use crate::elements::*;
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([0.0, 0.0, 0.0, self[e321]]));
     }
 }
 impl std::ops::Div<round_bulk> for AntiFlector {
@@ -95,11 +99,12 @@ impl std::ops::DivAssign<round_bulk> for AntiFlector {
 impl RoundBulk for AntiFlector {
     type Output = AntiFlector;
     fn round_bulk(self) -> Self::Output {
+        use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e1, e2, e3, e5
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
         );
     }
 }
@@ -151,7 +156,8 @@ impl std::ops::DivAssign<round_bulk> for AntiPlane {
 impl RoundBulk for AntiPlane {
     type Output = AntiPlane;
     fn round_bulk(self) -> Self::Output {
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]));
+        use crate::elements::*;
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([self[e1], self[e2], self[e3], 0.0]));
     }
 }
 impl std::ops::Div<round_bulk> for Circle {
@@ -163,7 +169,8 @@ impl std::ops::Div<round_bulk> for Circle {
 impl RoundBulk for Circle {
     type Output = AntiFlatPoint;
     fn round_bulk(self) -> Self::Output {
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([0.0, 0.0, 0.0, self.group1()[3]]));
+        use crate::elements::*;
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([0.0, 0.0, 0.0, self[e321]]));
     }
 }
 impl std::ops::Div<round_bulk> for CircleRotor {
@@ -175,7 +182,8 @@ impl std::ops::Div<round_bulk> for CircleRotor {
 impl RoundBulk for CircleRotor {
     type Output = AntiFlatPoint;
     fn round_bulk(self) -> Self::Output {
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([0.0, 0.0, 0.0, self.group1()[3]]));
+        use crate::elements::*;
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([0.0, 0.0, 0.0, self[e321]]));
     }
 }
 impl std::ops::Div<round_bulk> for Dipole {
@@ -187,12 +195,8 @@ impl std::ops::Div<round_bulk> for Dipole {
 impl RoundBulk for Dipole {
     type Output = AntiLine;
     fn round_bulk(self) -> Self::Output {
-        return AntiLine::from_groups(
-            // e23, e31, e12
-            Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-        );
+        use crate::elements::*;
+        return AntiLine::from_groups(/* e23, e31, e12 */ Simd32x3::from([self[e23], self[e31], self[e12]]), /* e15, e25, e35 */ Simd32x3::from(0.0));
     }
 }
 impl std::ops::Div<round_bulk> for DipoleInversion {
@@ -204,12 +208,8 @@ impl std::ops::Div<round_bulk> for DipoleInversion {
 impl RoundBulk for DipoleInversion {
     type Output = AntiLine;
     fn round_bulk(self) -> Self::Output {
-        return AntiLine::from_groups(
-            // e23, e31, e12
-            Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-        );
+        use crate::elements::*;
+        return AntiLine::from_groups(/* e23, e31, e12 */ Simd32x3::from([self[e23], self[e31], self[e12]]), /* e15, e25, e35 */ Simd32x3::from(0.0));
     }
 }
 impl std::ops::Div<round_bulk> for MultiVector {
@@ -226,11 +226,12 @@ impl std::ops::DivAssign<round_bulk> for MultiVector {
 impl RoundBulk for MultiVector {
     type Output = MultiVector;
     fn round_bulk(self) -> Self::Output {
+        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self.group0()[0], 0.0]),
+            Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
             // e5
             0.0,
             // e15, e25, e35, e45
@@ -240,7 +241,7 @@ impl RoundBulk for MultiVector {
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self.group6()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -261,7 +262,8 @@ impl std::ops::Div<round_bulk> for RoundPoint {
 impl RoundBulk for RoundPoint {
     type Output = AntiPlane;
     fn round_bulk(self) -> Self::Output {
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]));
+        use crate::elements::*;
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([self[e1], self[e2], self[e3], 0.0]));
     }
 }
 impl std::ops::Div<round_bulk> for Scalar {
@@ -290,11 +292,12 @@ impl std::ops::Div<round_bulk> for VersorEven {
 impl RoundBulk for VersorEven {
     type Output = AntiFlector;
     fn round_bulk(self) -> Self::Output {
+        use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e1, e2, e3, e5
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], 0.0]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
         );
     }
 }
@@ -307,9 +310,10 @@ impl std::ops::Div<round_bulk> for VersorOdd {
 impl RoundBulk for VersorOdd {
     type Output = AntiMotor;
     fn round_bulk(self) -> Self::Output {
+        use crate::elements::*;
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[3]]),
+            Simd32x4::from([self[e23], self[e31], self[e12], self[scalar]]),
             // e15, e25, e35, e3215
             Simd32x4::from(0.0),
         );

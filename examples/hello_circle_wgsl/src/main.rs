@@ -3,13 +3,12 @@ use std::error::Error;
 use std::fmt::Debug;
 use std::fs;
 use std::io::Read;
-use std::process::exit;
 use std::sync::Arc;
-use naga::valid::{Capabilities, ValidationFlags, Validator};
+
 use naga_oil::compose::NagaModuleDescriptor;
 use parking_lot::Mutex;
-use wgpu::util::{BufferInitDescriptor, DeviceExt};
 use wgpu::{BindGroupDescriptor, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BufferUsages, Instance, InstanceDescriptor, SurfaceTargetUnsafe};
+use wgpu::util::{BufferInitDescriptor, DeviceExt};
 use winit::application::ApplicationHandler;
 use winit::dpi::PhysicalSize;
 use winit::event::WindowEvent;

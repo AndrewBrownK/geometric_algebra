@@ -27,17 +27,17 @@ impl std::ops::Add<AntiCircleRotor> for AntiScalar {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group2()[3], self[e12345]]),
+            Simd32x2::from([other[scalar], self[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]),
+            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]),
             // e41, e42, e43
             other.group0(),
             // e23, e31, e12
-            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+            Simd32x3::from([other[e23], other[e31], other[e12]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -57,13 +57,13 @@ impl std::ops::Add<AntiDipoleInversion> for AntiScalar {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self[e12345]]),
+            crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(self[e12345]),
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group3()[3]]),
+            Simd32x4::from([other[e235], other[e315], other[e125], other[e5]]),
             // e1, e2, e3, e4
-            Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]]),
+            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]),
         );
     }
 }
@@ -73,7 +73,7 @@ impl std::ops::Add<AntiDualNum> for AntiScalar {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[1], self[e12345]]),
+            Simd32x2::from([other[scalar], self[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -93,7 +93,7 @@ impl std::ops::Add<AntiDualNum> for AntiScalar {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
-            other.group0()[0],
+            other[e1234],
         );
     }
 }
@@ -105,9 +105,9 @@ impl std::ops::Add<AntiFlatPoint> for AntiScalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
             // e235, e315, e125, e12345
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self[e12345]]),
+            Simd32x4::from([other[e235], other[e315], other[e125], self[e12345]]),
         );
     }
 }
@@ -119,11 +119,11 @@ impl std::ops::Add<AntiFlector> for AntiScalar {
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self[e12345]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]),
+            Simd32x4::from([other[e235], other[e315], other[e125], other[e5]]),
             // e1, e2, e3, e4
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
         );
     }
 }
@@ -139,7 +139,7 @@ impl std::ops::Add<AntiLine> for AntiScalar {
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -163,17 +163,17 @@ impl std::ops::Add<AntiMotor> for AntiScalar {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[3], self[e12345]]),
+            Simd32x2::from([other[scalar], self[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+            Simd32x4::from([other[e15], other[e25], other[e35], 0.0]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            Simd32x3::from([other[e23], other[e31], other[e12]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -181,7 +181,7 @@ impl std::ops::Add<AntiMotor> for AntiScalar {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, other.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
             // e1234
             0.0,
         );
@@ -197,9 +197,9 @@ impl std::ops::Add<AntiPlane> for AntiScalar {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e5]]),
             // e1, e2, e3, e4
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
         );
     }
 }
@@ -229,7 +229,7 @@ impl std::ops::Add<Circle> for AntiScalar {
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], self[e12345]]),
+            crate::swizzle!(other.group2(), 0, 1, 2).extend_to_4(self[e12345]),
         );
     }
 }
@@ -246,7 +246,7 @@ impl std::ops::Add<CircleRotor> for AntiScalar {
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group2()[3] + self[e12345]]),
+            Simd32x4::from([other[e235], other[e315], other[e125], self[e12345] + other[e12345]]),
         );
     }
 }
@@ -262,11 +262,11 @@ impl std::ops::Add<Dipole> for AntiScalar {
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]),
+            crate::swizzle!(other.group2(), 0, 1, 2).extend_to_4(other[e45]),
             // e41, e42, e43
             other.group0(),
             // e23, e31, e12
-            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+            Simd32x3::from([other[e23], other[e31], other[e12]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -292,11 +292,11 @@ impl std::ops::Add<DipoleInversion> for AntiScalar {
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]),
+            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]),
             // e41, e42, e43
             other.group0(),
             // e23, e31, e12
-            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+            Simd32x3::from([other[e23], other[e31], other[e12]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -306,7 +306,7 @@ impl std::ops::Add<DipoleInversion> for AntiScalar {
             // e4235, e4315, e4125, e3215
             other.group3(),
             // e1234
-            other.group2()[3],
+            other[e1234],
         );
     }
 }
@@ -317,7 +317,7 @@ impl std::ops::Add<DualNum> for AntiScalar {
     // f32        1        0        0
     fn add(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([other.group0()[0], other.group0()[1] + self[e12345]]));
+        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([other[e4], self[e12345] + other[e12345]]));
     }
 }
 impl std::ops::Add<FlatPoint> for AntiScalar {
@@ -386,9 +386,9 @@ impl std::ops::Add<Line> for AntiScalar {
         use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self[e12345]]),
+            crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(self[e12345]),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
         );
     }
 }
@@ -401,7 +401,7 @@ impl std::ops::Add<Motor> for AntiScalar {
         use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3] + self[e12345]]),
+            Simd32x4::from([other[e415], other[e425], other[e435], self[e12345] + other[e12345]]),
             // e235, e315, e125, e5
             other.group1(),
         );
@@ -416,11 +416,11 @@ impl std::ops::Add<MultiVector> for AntiScalar {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[0], other.group0()[1] + self[e12345]]),
+            Simd32x2::from([other[scalar], self[e12345] + other[e12345]]),
             // e1, e2, e3, e4
             other.group1(),
             // e5
-            other[e1],
+            other[e5],
             // e15, e25, e35, e45
             other.group3(),
             // e41, e42, e43
@@ -436,7 +436,7 @@ impl std::ops::Add<MultiVector> for AntiScalar {
             // e4235, e4315, e4125, e3215
             other.group9(),
             // e1234
-            other[e45],
+            other[e1234],
         );
     }
 }
@@ -480,7 +480,7 @@ impl std::ops::Add<RoundPoint> for AntiScalar {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, other[e2]]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e5]]),
             // e1, e2, e3, e4
             other.group0(),
         );
@@ -542,7 +542,7 @@ impl std::ops::Add<Sphere> for AntiScalar {
             // e4235, e4315, e4125, e3215
             other.group0(),
             // e1234
-            other[e4315],
+            other[e1234],
         );
     }
 }
@@ -555,7 +555,7 @@ impl std::ops::Add<VersorEven> for AntiScalar {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3] + self[e12345]]),
+            Simd32x4::from([other[e423], other[e431], other[e412], self[e12345] + other[e12345]]),
             // e415, e425, e435, e321
             other.group1(),
             // e235, e315, e125, e5
@@ -571,17 +571,17 @@ impl std::ops::Add<VersorOdd> for AntiScalar {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[3], self[e12345]]),
+            Simd32x2::from([other[scalar], self[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]),
+            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]),
             // e41, e42, e43
-            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            Simd32x3::from([other[e41], other[e42], other[e43]]),
             // e23, e31, e12
-            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+            Simd32x3::from([other[e23], other[e31], other[e12]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -591,7 +591,7 @@ impl std::ops::Add<VersorOdd> for AntiScalar {
             // e4235, e4315, e4125, e3215
             other.group3(),
             // e1234
-            other.group2()[3],
+            other[e1234],
         );
     }
 }
@@ -994,17 +994,17 @@ impl std::ops::Sub<AntiCircleRotor> for AntiScalar {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group2()[3] * -1.0, self[e12345]]),
+            Simd32x2::from([other[scalar] * -1.0, self[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
             // e41, e42, e43
-            other.group0() * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e41], other[e42], other[e43]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1031,13 +1031,13 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiScalar {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, self[e12345]]),
+            Simd32x4::from([other[e423] * -1.0, other[e431] * -1.0, other[e412] * -1.0, self[e12345]]),
             // e415, e425, e435, e321
-            other.group1() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e415], other[e425], other[e435], other[e321]]) * Simd32x4::from(-1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group3()[3]]) * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e235], other[e315], other[e125], other[e5]]) * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group2()[3]]) * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]) * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1050,7 +1050,7 @@ impl std::ops::Sub<AntiDualNum> for AntiScalar {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[1] * -1.0, self[e12345]]),
+            Simd32x2::from([other[scalar] * -1.0, self[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
@@ -1070,7 +1070,7 @@ impl std::ops::Sub<AntiDualNum> for AntiScalar {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
-            other.group0()[0] * -1.0,
+            other[e1234] * -1.0,
         );
     }
 }
@@ -1085,9 +1085,9 @@ impl std::ops::Sub<AntiFlatPoint> for AntiScalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3] * -1.0]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e321] * -1.0]),
             // e235, e315, e125, e12345
-            Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, self[e12345]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, self[e12345]]),
         );
     }
 }
@@ -1106,11 +1106,11 @@ impl std::ops::Sub<AntiFlector> for AntiScalar {
             // e423, e431, e412, e12345
             Simd32x4::from([0.0, 0.0, 0.0, self[e12345]]),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3] * -1.0]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e321] * -1.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]) * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e235], other[e315], other[e125], other[e5]]) * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, 0.0]),
+            Simd32x4::from([other[e1] * -1.0, other[e2] * -1.0, other[e3] * -1.0, 0.0]),
         );
     }
 }
@@ -1133,11 +1133,11 @@ impl std::ops::Sub<AntiLine> for AntiScalar {
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, 0.0]),
+            Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
-            other.group0() * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1164,17 +1164,17 @@ impl std::ops::Sub<AntiMotor> for AntiScalar {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[3] * -1.0, self[e12345]]),
+            Simd32x2::from([other[scalar] * -1.0, self[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, 0.0]),
+            Simd32x4::from([other[e15] * -1.0, other[e25] * -1.0, other[e35] * -1.0, 0.0]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1182,7 +1182,7 @@ impl std::ops::Sub<AntiMotor> for AntiScalar {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, other.group1()[3] * -1.0]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e3215] * -1.0]),
             // e1234
             0.0,
         );
@@ -1201,9 +1201,9 @@ impl std::ops::Sub<AntiPlane> for AntiScalar {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3] * -1.0]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e5] * -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, 0.0]),
+            Simd32x4::from([other[e1] * -1.0, other[e2] * -1.0, other[e3] * -1.0, 0.0]),
         );
     }
 }
@@ -1237,11 +1237,11 @@ impl std::ops::Sub<Circle> for AntiScalar {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            other.group0() * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            other.group1() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e415], other[e425], other[e435], other[e321]]) * Simd32x4::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([other.group2()[0] * -1.0, other.group2()[1] * -1.0, other.group2()[2] * -1.0, self[e12345]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, self[e12345]]),
         );
     }
 }
@@ -1259,11 +1259,11 @@ impl std::ops::Sub<CircleRotor> for AntiScalar {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            other.group0() * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            other.group1() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e415], other[e425], other[e435], other[e321]]) * Simd32x4::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([other.group2()[0] * -1.0, other.group2()[1] * -1.0, other.group2()[2] * -1.0, self[e12345] - other.group2()[3]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, self[e12345] - other[e12345]]),
         );
     }
 }
@@ -1286,11 +1286,11 @@ impl std::ops::Sub<Dipole> for AntiScalar {
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
             // e41, e42, e43
-            other.group0() * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e41], other[e42], other[e43]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1324,11 +1324,11 @@ impl std::ops::Sub<DipoleInversion> for AntiScalar {
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
             // e41, e42, e43
-            other.group0() * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e41], other[e42], other[e43]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1336,9 +1336,9 @@ impl std::ops::Sub<DipoleInversion> for AntiScalar {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            other.group3() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e4235], other[e4315], other[e4125], other[e3215]]) * Simd32x4::from(-1.0),
             // e1234
-            other.group2()[3] * -1.0,
+            other[e1234] * -1.0,
         );
     }
 }
@@ -1349,7 +1349,7 @@ impl std::ops::Sub<DualNum> for AntiScalar {
     // f32        1        1        0
     fn sub(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([other.group0()[0] * -1.0, self[e12345] - other.group0()[1]]));
+        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([other[e4] * -1.0, self[e12345] - other[e12345]]));
     }
 }
 impl std::ops::Sub<FlatPoint> for AntiScalar {
@@ -1368,7 +1368,7 @@ impl std::ops::Sub<FlatPoint> for AntiScalar {
             // e5
             0.0,
             // e15, e25, e35, e45
-            other.group0() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -1402,7 +1402,7 @@ impl std::ops::Sub<Flector> for AntiScalar {
             // e5
             0.0,
             // e15, e25, e35, e45
-            other.group0() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -1414,7 +1414,7 @@ impl std::ops::Sub<Flector> for AntiScalar {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            other.group1() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e4235], other[e4315], other[e4125], other[e3215]]) * Simd32x4::from(-1.0),
             // e1234
             0.0,
         );
@@ -1429,9 +1429,9 @@ impl std::ops::Sub<Line> for AntiScalar {
         use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, self[e12345]]),
+            Simd32x4::from([other[e415] * -1.0, other[e425] * -1.0, other[e435] * -1.0, self[e12345]]),
             // e235, e315, e125, e5
-            Simd32x4::from([other.group1()[0] * -1.0, other.group1()[1] * -1.0, other.group1()[2] * -1.0, 0.0]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, 0.0]),
         );
     }
 }
@@ -1448,9 +1448,9 @@ impl std::ops::Sub<Motor> for AntiScalar {
         use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, self[e12345] - other.group0()[3]]),
+            Simd32x4::from([other[e415] * -1.0, other[e425] * -1.0, other[e435] * -1.0, self[e12345] - other[e12345]]),
             // e235, e315, e125, e5
-            other.group1() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e235], other[e315], other[e125], other[e5]]) * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1468,27 +1468,27 @@ impl std::ops::Sub<MultiVector> for AntiScalar {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[0] * -1.0, self[e12345] - other.group0()[1]]),
+            Simd32x2::from([other[scalar] * -1.0, self[e12345] - other[e12345]]),
             // e1, e2, e3, e4
-            other.group1() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]) * Simd32x4::from(-1.0),
             // e5
-            other[e1] * -1.0,
+            other[e5] * -1.0,
             // e15, e25, e35, e45
-            other.group3() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
             // e41, e42, e43
-            other.group4() * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e41], other[e42], other[e43]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            other.group5() * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            other.group6() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e415], other[e425], other[e435], other[e321]]) * Simd32x4::from(-1.0),
             // e423, e431, e412
-            other.group7() * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
             // e235, e315, e125
-            other.group8() * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            other.group9() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e4235], other[e4315], other[e4125], other[e3215]]) * Simd32x4::from(-1.0),
             // e1234
-            other[e45] * -1.0,
+            other[e1234] * -1.0,
         );
     }
 }
@@ -1520,7 +1520,7 @@ impl std::ops::Sub<Plane> for AntiScalar {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            other.group0() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e4235], other[e4315], other[e4125], other[e3215]]) * Simd32x4::from(-1.0),
             // e1234
             0.0,
         );
@@ -1543,9 +1543,9 @@ impl std::ops::Sub<RoundPoint> for AntiScalar {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, other[e2] * -1.0]),
+            Simd32x4::from([0.0, 0.0, 0.0, other[e5] * -1.0]),
             // e1, e2, e3, e4
-            other.group0() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]) * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1613,9 +1613,9 @@ impl std::ops::Sub<Sphere> for AntiScalar {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            other.group0() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e4235], other[e4315], other[e4125], other[e3215]]) * Simd32x4::from(-1.0),
             // e1234
-            other[e4315] * -1.0,
+            other[e1234] * -1.0,
         );
     }
 }
@@ -1632,13 +1632,13 @@ impl std::ops::Sub<VersorEven> for AntiScalar {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other.group0()[0] * -1.0, other.group0()[1] * -1.0, other.group0()[2] * -1.0, self[e12345] - other.group0()[3]]),
+            Simd32x4::from([other[e423] * -1.0, other[e431] * -1.0, other[e412] * -1.0, self[e12345] - other[e12345]]),
             // e415, e425, e435, e321
-            other.group1() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e415], other[e425], other[e435], other[e321]]) * Simd32x4::from(-1.0),
             // e235, e315, e125, e5
-            other.group2() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e235], other[e315], other[e125], other[e5]]) * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            other.group3() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]) * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1656,17 +1656,17 @@ impl std::ops::Sub<VersorOdd> for AntiScalar {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other.group0()[3] * -1.0, self[e12345]]),
+            Simd32x2::from([other[scalar] * -1.0, self[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group1()[3]]) * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
             // e41, e42, e43
-            Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e41], other[e42], other[e43]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x3::from(-1.0),
+            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -1674,9 +1674,9 @@ impl std::ops::Sub<VersorOdd> for AntiScalar {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            other.group3() * Simd32x4::from(-1.0),
+            Simd32x4::from([other[e4235], other[e4315], other[e4125], other[e3215]]) * Simd32x4::from(-1.0),
             // e1234
-            other.group2()[3] * -1.0,
+            other[e1234] * -1.0,
         );
     }
 }

@@ -9,16 +9,16 @@ use crate::traits::UnitizedCenterNormSquared;
 // Total Implementations: 9
 //
 // Yes SIMD:   add/sub     mul     div
-//  Minimum:        12      24       1
-//   Median:        22      37       1
-//  Average:        30      46       1
-//  Maximum:       115     147       1
+//  Minimum:        15      24       1
+//   Median:        30      44       1
+//  Average:        37      52       1
+//  Maximum:       123     154       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:        18      30       1
-//   Median:        33      50       1
-//  Average:        40      58       1
-//  Maximum:       128     164       1
+//  Minimum:        18      27       1
+//   Median:        33      47       1
+//  Average:        40      55       1
+//  Maximum:       128     161       1
 impl std::ops::Div<unitized_center_norm> for AntiCircleRotor {
     type Output = f32;
     fn div(self, _rhs: unitized_center_norm) -> Self::Output {
@@ -28,11 +28,10 @@ impl std::ops::Div<unitized_center_norm> for AntiCircleRotor {
 impl UnitizedCenterNorm for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       22        1
-    //    simd3        3        5        0
-    //    simd4        1        1        0
+    //      f32       24       38        1
+    //    simd3        1        1        0
     // Totals...
-    // yes simd       18       28        1
+    // yes simd       25       39        1
     //  no simd       27       41        1
     fn unitized_center_norm(self) -> f32 {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
@@ -47,12 +46,12 @@ impl std::ops::Div<unitized_center_norm> for AntiDipoleInversion {
 impl UnitizedCenterNorm for AntiDipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       43        1
+    //      f32       33       48        1
     //    simd3        0        1        0
-    //    simd4        3        3        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       28       47        1
-    //  no simd       37       58        1
+    // yes simd       34       50        1
+    //  no simd       37       55        1
     fn unitized_center_norm(self) -> f32 {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
     }
@@ -66,11 +65,11 @@ impl std::ops::Div<unitized_center_norm> for Circle {
 impl UnitizedCenterNorm for Circle {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       22        1
-    //    simd4        2        2        0
+    //      f32       14       23        1
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       12       24        1
-    //  no simd       18       30        1
+    // yes simd       15       24        1
+    //  no simd       18       27        1
     fn unitized_center_norm(self) -> f32 {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
     }
@@ -84,11 +83,11 @@ impl std::ops::Div<unitized_center_norm> for CircleRotor {
 impl UnitizedCenterNorm for CircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       23        1
-    //    simd4        2        2        0
+    //      f32       15       24        1
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       13       25        1
-    //  no simd       19       31        1
+    // yes simd       16       25        1
+    //  no simd       19       28        1
     fn unitized_center_norm(self) -> f32 {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
     }
@@ -102,11 +101,10 @@ impl std::ops::Div<unitized_center_norm> for Dipole {
 impl UnitizedCenterNorm for Dipole {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       21        1
-    //    simd3        3        5        0
-    //    simd4        1        1        0
+    //      f32       23       37        1
+    //    simd3        1        1        0
     // Totals...
-    // yes simd       17       27        1
+    // yes simd       24       38        1
     //  no simd       26       40        1
     fn unitized_center_norm(self) -> f32 {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
@@ -121,12 +119,11 @@ impl std::ops::Div<unitized_center_norm> for DipoleInversion {
 impl UnitizedCenterNorm for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       32        1
-    //    simd3        1        2        0
-    //    simd4        3        3        0
+    //      f32       29       43        1
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       22       37        1
-    //  no simd       33       50        1
+    // yes simd       30       44        1
+    //  no simd       33       47        1
     fn unitized_center_norm(self) -> f32 {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
     }
@@ -140,12 +137,12 @@ impl std::ops::Div<unitized_center_norm> for MultiVector {
 impl UnitizedCenterNorm for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      110      140        1
-    //    simd3        2        4        0
-    //    simd4        3        3        0
+    //      f32      121      151        1
+    //    simd3        1        2        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd      115      147        1
-    //  no simd      128      164        1
+    // yes simd      123      154        1
+    //  no simd      128      161        1
     fn unitized_center_norm(self) -> f32 {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
     }
@@ -159,12 +156,12 @@ impl std::ops::Div<unitized_center_norm> for VersorEven {
 impl UnitizedCenterNorm for VersorEven {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       26       44        1
+    //      f32       34       49        1
     //    simd3        0        1        0
-    //    simd4        3        3        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       29       48        1
-    //  no simd       38       59        1
+    // yes simd       35       51        1
+    //  no simd       38       56        1
     fn unitized_center_norm(self) -> f32 {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
     }
@@ -178,12 +175,11 @@ impl std::ops::Div<unitized_center_norm> for VersorOdd {
 impl UnitizedCenterNorm for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       33        1
-    //    simd3        1        2        0
-    //    simd4        3        3        0
+    //      f32       30       44        1
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       23       38        1
-    //  no simd       34       51        1
+    // yes simd       31       45        1
+    //  no simd       34       48        1
     fn unitized_center_norm(self) -> f32 {
         return f32::powf(self.unitized_center_norm_squared(), 0.5);
     }

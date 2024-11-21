@@ -34,6 +34,74 @@ pub struct Wgsl {
 }
 
 
+// Pruner error.... adding an expression.... Expression::Compose which I think is struct construction....
+// It seems to imply I'm providing 3 arguments to a 2 parameter function.
+// in fn dualNum_wedge_antiPlane
+// if I'm digging into the memory correctly (FUCK debugging arenas), it's constructing RoundPointGroups
+// And that seems accurate to RoundPoints having 2 groups, not 3...
+// However there is no RoundPointGroups in fn dualNum_wedge_antiPlane
+// So do I have the wrong function/
+// maybe it is invoking the function? and composing the RoundPoint inside the args....
+
+// fs_main
+/*
+fs_main
+    add_entrypoint
+    add_function_ref
+    add_block
+    add_statement (call?)
+    add_function (roundPoint_unitizedRadiusNormSquared)
+roundPoint_unitizedRadiusNormSquared
+    add_function_ref
+    add_block
+    add_statement
+    add_function (roundPoint_roundWeightNormSquared)
+roundPoint_roundWeightNormSquared
+    add_function_ref
+    add_block
+    add_statement
+    add_function (dualNum_wedge_antiPlane)
+dualNum_wedge_antiPlane
+    add_function_ref
+    add_block
+    add_statement (call function, can't quite pick out which one)
+        well... since DipoleGroups is a struct, it's probably dipole_degroup
+    add_expression (Compose 3 expressions)
+    add_expression (Binary op multiply)
+    add_expression (Compose 2 expressions)
+        this caries the same exact &PartReq from the above expressions...
+        until it's in a compose again, where it does "sub-requirements" or whatever
+
+This helps narrow it down
+There is only one multiply that is a direct child of compose 3 in dualNum_wedge_antiPlane
+and inside that multiply, there is only one compose 2
+
+So the problem seems to be with expressions like this: vec4<f32>(vec3<f32>(self_.e4_), 0.0)
+
+So where does the PartReq get out of sync with the actual composition structure?
+add_statement
+    PartReq is immutable borrow from input_context
+    input_context is owned value
+    input_context might come from self.add_function(...), or might come from func_req.exprs_required, or both
+    func_req.exprs_required[handle expression matching 'result'] so yeah that's a thing
+    then from self.add_function(...) that uses func_req.body_required
+    so func_req.body_required and func_req.exprs_required
+    func_req is mutable
+    we get a func_req from above, but also create one from scratch in add_function_ref
+    it would seem the req for arguments to called function is derived in body_required (see add_function)
+    so I'm looking for 'context' field on BlockReq returned from add_block
+    that iterates through statements, passing in an &mut RequiredContext
+    so then we're in add_statement again, but looking at the mutable context variable now
+    goes into add_expression.... back to compose....
+UGh
+I'm just going to try to work around it.... not ideal.
+
+vec4<f32>(vec3<f32>(self_.e4_), 0.0)
+I can only guess that the PartReq determination gets confused after it sees vec3
+
+*/
+
+
 impl Wgsl {
     pub fn new() -> Self {
         Wgsl {
@@ -191,7 +259,12 @@ impl Wgsl {
                 if i > 0 {
                     write!(w, ", ")?;
                 }
-                write!(w, "{el}: f32")?;
+                let suffix = if let Some(char) = format!("{el}").chars().last() {
+                    if char.is_numeric() {
+                        "_"
+                    } else { "" }
+                } else { "" };
+                write!(w, "{el}{suffix}: f32")?;
             }
         }
         writeln!(w, "\n}}")?;
@@ -240,7 +313,12 @@ impl Wgsl {
                 if i > 0 {
                     write!(w, ", ")?;
                 }
-                write!(w, "self_.{el}")?;
+                let suffix = if let Some(char) = format!("{el}").chars().last() {
+                    if char.is_numeric() {
+                        "_"
+                    } else { "" }
+                } else { "" };
+                write!(w, "self_.{el}{suffix}")?;
             }
             match l {
                 1 => write!(w, ", 0.0, 0.0, 0.0")?,
@@ -624,7 +702,12 @@ impl Wgsl {
                     let group_size = group.into_vec().len();
                     if i < group_size {
                         let el = group.into_vec()[i];
-                        write!(w, ".{el}")?;
+                        let suffix = if let Some(char) = format!("{el}").chars().last() {
+                            if char.is_numeric() {
+                                "_"
+                            } else { "" }
+                        } else { "" };
+                        write!(w, ".{el}{suffix}")?;
                         break;
                     }
                     i = i - group_size;
@@ -825,9 +908,18 @@ impl Wgsl {
                 if let FloatExpr::Literal(0.0) = f {
                     write!(w, "vec4<f32>(0.0)")?;
                 } else {
-                    write!(w, "vec4<f32>(vec2<f32>(")?;
+                    // naga_oil Pruner bug if we try to only invoke the expression only once
+                    // (in case it is not a trivial expression) but also try to keep z and w as 0
+
+                    // write!(w, "vec4<f32>(vec2<f32>(")?;
+                    // self.write_float(w, f, true, false)?;
+                    // write!(w, "), 0.0, 0.0)")?;
+
+                    // So we'll just allow z and w to be non-zero until we can file an issue
+                    // to naga_oil and/or fix properly
+                    write!(w, "(vec4<f32>(")?;
                     self.write_float(w, f, true, false)?;
-                    write!(w, "), 0.0, 0.0)")?;
+                    write!(w, ") * vec4<f32>(1.0, 1.0, 0.0, 0.0))")?;
                 }
             }
             Vec2Expr::Gather2(f0, f1) => {
@@ -1028,9 +1120,18 @@ impl Wgsl {
                 if let FloatExpr::Literal(0.0) = f {
                     write!(w, "vec4<f32>(0.0)")?;
                 } else {
-                    write!(w, "vec4<f32>(vec3<f32>(")?;
+                    // naga_oil Pruner bug if we try to only invoke the expression only once
+                    // (in case it is not a trivial expression) but also try to keep w as 0
+
+                    // write!(w, "vec4<f32>(vec3<f32>(")?;
+                    // self.write_float(w, f, true, false)?;
+                    // write!(w, "), 0.0)")?;
+
+                    // So we'll just allow w to be non-zero until we can file an issue
+                    // to naga_oil and/or fix properly
+                    write!(w, "(vec4<f32>(")?;
                     self.write_float(w, f, true, false)?;
-                    write!(w, "), 0.0)")?;
+                    write!(w, ") * vec4<f32>(1.0, 1.0, 1.0, 0.0))")?;
                 }
             }
             Vec3Expr::Gather3(f0, f1, f2) => {

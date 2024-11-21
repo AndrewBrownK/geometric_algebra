@@ -51,13 +51,14 @@ impl std::ops::DivAssign<round_weight> for AntiDipoleInversion {
 impl RoundWeight for AntiDipoleInversion {
     type Output = AntiDipoleInversion;
     fn round_weight(self) -> Self::Output {
+        use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e4
-            Simd32x4::from([0.0, 0.0, 0.0, self.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e4]]),
             // e1, e2, e3, e5
             Simd32x4::from(0.0),
         );
@@ -77,7 +78,8 @@ impl std::ops::DivAssign<round_weight> for AntiDualNum {
 impl RoundWeight for AntiDualNum {
     type Output = AntiDualNum;
     fn round_weight(self) -> Self::Output {
-        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([self.group0()[0], 0.0]));
+        use crate::elements::*;
+        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([self[e1234], 0.0]));
     }
 }
 impl std::ops::Div<round_weight> for Circle {
@@ -161,13 +163,14 @@ impl std::ops::DivAssign<round_weight> for DipoleInversion {
 impl RoundWeight for DipoleInversion {
     type Output = DipoleInversion;
     fn round_weight(self) -> Self::Output {
+        use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, self.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e1234]]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );
@@ -187,7 +190,8 @@ impl std::ops::DivAssign<round_weight> for DualNum {
 impl RoundWeight for DualNum {
     type Output = DualNum;
     fn round_weight(self) -> Self::Output {
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[0], 0.0]));
+        use crate::elements::*;
+        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self[e4], 0.0]));
     }
 }
 impl std::ops::Div<round_weight> for MultiVector {
@@ -209,7 +213,7 @@ impl RoundWeight for MultiVector {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, self.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e4]]),
             // e5
             0.0,
             // e15, e25, e35, e45
@@ -227,7 +231,7 @@ impl RoundWeight for MultiVector {
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
-            self[e45],
+            self[e1234],
         );
     }
 }
@@ -240,7 +244,8 @@ impl std::ops::Div<round_weight> for RoundPoint {
 impl RoundWeight for RoundPoint {
     type Output = DualNum;
     fn round_weight(self) -> Self::Output {
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self.group0()[3], 0.0]));
+        use crate::elements::*;
+        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self[e4], 0.0]));
     }
 }
 impl std::ops::Div<round_weight> for Sphere {
@@ -253,7 +258,7 @@ impl RoundWeight for Sphere {
     type Output = AntiDualNum;
     fn round_weight(self) -> Self::Output {
         use crate::elements::*;
-        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([self[e4315], 0.0]));
+        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([self[e1234], 0.0]));
     }
 }
 impl std::ops::Div<round_weight> for VersorEven {
@@ -265,13 +270,14 @@ impl std::ops::Div<round_weight> for VersorEven {
 impl RoundWeight for VersorEven {
     type Output = AntiDipoleInversion;
     fn round_weight(self) -> Self::Output {
+        use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            Simd32x3::from([self[e423], self[e431], self[e412]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e4
-            Simd32x4::from([0.0, 0.0, 0.0, self.group3()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e4]]),
             // e1, e2, e3, e5
             Simd32x4::from(0.0),
         );
@@ -286,13 +292,14 @@ impl std::ops::Div<round_weight> for VersorOdd {
 impl RoundWeight for VersorOdd {
     type Output = DipoleInversion;
     fn round_weight(self) -> Self::Output {
+        use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            Simd32x3::from([self[e41], self[e42], self[e43]]),
             // e23, e31, e12, e45
             Simd32x4::from(0.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, self.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e1234]]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
         );

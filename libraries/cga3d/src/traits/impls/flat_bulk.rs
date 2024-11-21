@@ -27,7 +27,8 @@ impl std::ops::Div<flat_bulk> for AntiCircleRotor {
 impl FlatBulk for AntiCircleRotor {
     type Output = FlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]));
+        use crate::elements::*;
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self[e15], self[e25], self[e35], 0.0]));
     }
 }
 impl std::ops::Div<flat_bulk> for AntiDipoleInversion {
@@ -39,11 +40,12 @@ impl std::ops::Div<flat_bulk> for AntiDipoleInversion {
 impl FlatBulk for AntiDipoleInversion {
     type Output = AntiFlector;
     fn flat_bulk(self) -> Self::Output {
+        use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]),
             // e1, e2, e3, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self.group3()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
         );
     }
 }
@@ -61,7 +63,8 @@ impl std::ops::DivAssign<flat_bulk> for AntiFlatPoint {
 impl FlatBulk for AntiFlatPoint {
     type Output = AntiFlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]));
+        use crate::elements::*;
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([self[e235], self[e315], self[e125], 0.0]));
     }
 }
 impl std::ops::Div<flat_bulk> for AntiFlector {
@@ -78,11 +81,12 @@ impl std::ops::DivAssign<flat_bulk> for AntiFlector {
 impl FlatBulk for AntiFlector {
     type Output = AntiFlector;
     fn flat_bulk(self) -> Self::Output {
+        use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]),
             // e1, e2, e3, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
         );
     }
 }
@@ -95,7 +99,7 @@ impl std::ops::Div<flat_bulk> for AntiLine {
 impl FlatBulk for AntiLine {
     type Output = FlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]));
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(0.0));
     }
 }
 impl std::ops::Div<flat_bulk> for AntiMotor {
@@ -107,11 +111,12 @@ impl std::ops::Div<flat_bulk> for AntiMotor {
 impl FlatBulk for AntiMotor {
     type Output = Flector;
     fn flat_bulk(self) -> Self::Output {
+        use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, self.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e3215]]),
         );
     }
 }
@@ -129,7 +134,8 @@ impl std::ops::DivAssign<flat_bulk> for AntiPlane {
 impl FlatBulk for AntiPlane {
     type Output = AntiPlane;
     fn flat_bulk(self) -> Self::Output {
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]));
+        use crate::elements::*;
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, self[e5]]));
     }
 }
 impl std::ops::Div<flat_bulk> for Circle {
@@ -141,7 +147,7 @@ impl std::ops::Div<flat_bulk> for Circle {
 impl FlatBulk for Circle {
     type Output = AntiFlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]));
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ crate::swizzle!(self.group2(), 0, 1, 2).extend_to_4(0.0));
     }
 }
 impl std::ops::Div<flat_bulk> for CircleRotor {
@@ -153,7 +159,8 @@ impl std::ops::Div<flat_bulk> for CircleRotor {
 impl FlatBulk for CircleRotor {
     type Output = AntiFlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]));
+        use crate::elements::*;
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([self[e235], self[e315], self[e125], 0.0]));
     }
 }
 impl std::ops::Div<flat_bulk> for Dipole {
@@ -165,7 +172,7 @@ impl std::ops::Div<flat_bulk> for Dipole {
 impl FlatBulk for Dipole {
     type Output = FlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]));
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ crate::swizzle!(self.group2(), 0, 1, 2).extend_to_4(0.0));
     }
 }
 impl std::ops::Div<flat_bulk> for DipoleInversion {
@@ -177,11 +184,12 @@ impl std::ops::Div<flat_bulk> for DipoleInversion {
 impl FlatBulk for DipoleInversion {
     type Output = Flector;
     fn flat_bulk(self) -> Self::Output {
+        use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, self.group3()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e3215]]),
         );
     }
 }
@@ -199,7 +207,8 @@ impl std::ops::DivAssign<flat_bulk> for FlatPoint {
 impl FlatBulk for FlatPoint {
     type Output = FlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]));
+        use crate::elements::*;
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self[e15], self[e25], self[e35], 0.0]));
     }
 }
 impl std::ops::Div<flat_bulk> for Flector {
@@ -216,11 +225,12 @@ impl std::ops::DivAssign<flat_bulk> for Flector {
 impl FlatBulk for Flector {
     type Output = Flector;
     fn flat_bulk(self) -> Self::Output {
+        use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, self.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e3215]]),
         );
     }
 }
@@ -233,7 +243,7 @@ impl std::ops::Div<flat_bulk> for Line {
 impl FlatBulk for Line {
     type Output = AntiFlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]));
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(0.0));
     }
 }
 impl std::ops::Div<flat_bulk> for Motor {
@@ -245,11 +255,12 @@ impl std::ops::Div<flat_bulk> for Motor {
 impl FlatBulk for Motor {
     type Output = AntiFlector;
     fn flat_bulk(self) -> Self::Output {
+        use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]),
             // e1, e2, e3, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
         );
     }
 }
@@ -274,9 +285,9 @@ impl FlatBulk for MultiVector {
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
-            self[e1],
+            self[e5],
             // e15, e25, e35, e45
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], 0.0]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -288,7 +299,7 @@ impl FlatBulk for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, self.group9()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e3215]]),
             // e1234
             0.0,
         );
@@ -308,7 +319,8 @@ impl std::ops::DivAssign<flat_bulk> for Plane {
 impl FlatBulk for Plane {
     type Output = Plane;
     fn flat_bulk(self) -> Self::Output {
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]));
+        use crate::elements::*;
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from([0.0, 0.0, 0.0, self[e3215]]));
     }
 }
 impl std::ops::Div<flat_bulk> for RoundPoint {
@@ -321,7 +333,7 @@ impl FlatBulk for RoundPoint {
     type Output = AntiPlane;
     fn flat_bulk(self) -> Self::Output {
         use crate::elements::*;
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, self[e2]]));
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, self[e5]]));
     }
 }
 impl std::ops::Div<flat_bulk> for Sphere {
@@ -333,7 +345,8 @@ impl std::ops::Div<flat_bulk> for Sphere {
 impl FlatBulk for Sphere {
     type Output = Plane;
     fn flat_bulk(self) -> Self::Output {
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]));
+        use crate::elements::*;
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from([0.0, 0.0, 0.0, self[e3215]]));
     }
 }
 impl std::ops::Div<flat_bulk> for VersorEven {
@@ -345,11 +358,12 @@ impl std::ops::Div<flat_bulk> for VersorEven {
 impl FlatBulk for VersorEven {
     type Output = AntiFlector;
     fn flat_bulk(self) -> Self::Output {
+        use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]),
             // e1, e2, e3, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
         );
     }
 }
@@ -362,11 +376,12 @@ impl std::ops::Div<flat_bulk> for VersorOdd {
 impl FlatBulk for VersorOdd {
     type Output = Flector;
     fn flat_bulk(self) -> Self::Output {
+        use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]),
+            Simd32x4::from([self[e15], self[e25], self[e35], 0.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, self.group3()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e3215]]),
         );
     }
 }

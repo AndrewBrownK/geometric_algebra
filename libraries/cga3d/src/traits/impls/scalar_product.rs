@@ -29,7 +29,8 @@ impl ScalarProduct<AntiFlatPoint> for AntiFlatPoint {
     //      add/sub      mul      div
     // f32        0        2        0
     fn scalar_product(self, other: AntiFlatPoint) -> Scalar {
-        return Scalar::from_groups(/* scalar */ other.group0()[3] * self.group0()[3] * -1.0);
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */ other[e321] * self[e321] * -1.0);
     }
 }
 impl std::ops::Div<scalar_product> for AntiFlector {
@@ -43,10 +44,8 @@ impl ScalarProduct<AntiFlector> for AntiFlector {
     //      add/sub      mul      div
     // f32        3        4        0
     fn scalar_product(self, other: AntiFlector) -> Scalar {
-        return Scalar::from_groups(
-            // scalar
-            (other.group1()[0] * self.group1()[0]) + (other.group1()[1] * self.group1()[1]) + (other.group1()[2] * self.group1()[2]) - (other.group0()[3] * self.group0()[3]),
-        );
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */ (other[e1] * self[e1]) + (other[e2] * self[e2]) + (other[e3] * self[e3]) - (other[e321] * self[e321]));
     }
 }
 impl std::ops::Div<scalar_product> for AntiLine {
@@ -60,10 +59,8 @@ impl ScalarProduct<AntiLine> for AntiLine {
     //      add/sub      mul      div
     // f32        2        3        0
     fn scalar_product(self, other: AntiLine) -> Scalar {
-        return Scalar::from_groups(
-            // scalar
-            -(other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2]),
-        );
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */ -(other[e23] * self[e23]) - (other[e31] * self[e31]) - (other[e12] * self[e12]));
     }
 }
 impl std::ops::Div<scalar_product> for AntiMotor {
@@ -77,9 +74,10 @@ impl ScalarProduct<AntiMotor> for AntiMotor {
     //      add/sub      mul      div
     // f32        3        4        0
     fn scalar_product(self, other: AntiMotor) -> Scalar {
+        use crate::elements::*;
         return Scalar::from_groups(
             // scalar
-            (other.group0()[3] * self.group0()[3]) - (other.group0()[0] * self.group0()[0]) - (other.group0()[1] * self.group0()[1]) - (other.group0()[2] * self.group0()[2]),
+            (other[scalar] * self[scalar]) - (other[e23] * self[e23]) - (other[e31] * self[e31]) - (other[e12] * self[e12]),
         );
     }
 }
@@ -94,10 +92,8 @@ impl ScalarProduct<AntiPlane> for AntiPlane {
     //      add/sub      mul      div
     // f32        2        3        0
     fn scalar_product(self, other: AntiPlane) -> Scalar {
-        return Scalar::from_groups(
-            // scalar
-            (other.group0()[0] * self.group0()[0]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2]),
-        );
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */ (other[e1] * self[e1]) + (other[e2] * self[e2]) + (other[e3] * self[e3]));
     }
 }
 impl std::ops::Div<scalar_product> for AntiScalar {
@@ -126,18 +122,19 @@ impl ScalarProduct<Dipole> for Dipole {
     //      add/sub      mul      div
     // f32        9       10        0
     fn scalar_product(self, other: Dipole) -> Scalar {
+        use crate::elements::*;
         return Scalar::from_groups(
             // scalar
-            (other.group1()[3] * self.group1()[3])
-                - (other.group0()[0] * self.group2()[0])
-                - (other.group0()[1] * self.group2()[1])
-                - (other.group0()[2] * self.group2()[2])
-                - (other.group2()[0] * self.group0()[0])
-                - (other.group2()[1] * self.group0()[1])
-                - (other.group2()[2] * self.group0()[2])
-                - (other.group1()[0] * self.group1()[0])
-                - (other.group1()[1] * self.group1()[1])
-                - (other.group1()[2] * self.group1()[2]),
+            (other[e45] * self[e45])
+                - (other[e41] * self[e15])
+                - (other[e42] * self[e25])
+                - (other[e43] * self[e35])
+                - (other[e23] * self[e23])
+                - (other[e31] * self[e31])
+                - (other[e12] * self[e12])
+                - (other[e15] * self[e41])
+                - (other[e25] * self[e42])
+                - (other[e35] * self[e43]),
         );
     }
 }
@@ -152,21 +149,22 @@ impl ScalarProduct<DipoleInversion> for DipoleInversion {
     //      add/sub      mul      div
     // f32       14       15        0
     fn scalar_product(self, other: DipoleInversion) -> Scalar {
+        use crate::elements::*;
         return Scalar::from_groups(
             // scalar
-            (other.group1()[3] * self.group1()[3]) + (other.group2()[3] * self.group3()[3]) + (other.group3()[3] * self.group2()[3])
-                - (other.group0()[0] * self.group2()[0])
-                - (other.group0()[1] * self.group2()[1])
-                - (other.group0()[2] * self.group2()[2])
-                - (self.group0()[0] * other.group2()[0])
-                - (self.group0()[1] * other.group2()[1])
-                - (self.group0()[2] * other.group2()[2])
-                - (other.group1()[0] * self.group1()[0])
-                - (other.group1()[1] * self.group1()[1])
-                - (other.group1()[2] * self.group1()[2])
-                - (other.group3()[0] * self.group3()[0])
-                - (other.group3()[1] * self.group3()[1])
-                - (other.group3()[2] * self.group3()[2]),
+            (other[e45] * self[e45]) + (other[e1234] * self[e3215]) + (other[e3215] * self[e1234])
+                - (other[e41] * self[e15])
+                - (other[e42] * self[e25])
+                - (other[e43] * self[e35])
+                - (other[e23] * self[e23])
+                - (other[e31] * self[e31])
+                - (other[e12] * self[e12])
+                - (other[e15] * self[e41])
+                - (other[e25] * self[e42])
+                - (other[e35] * self[e43])
+                - (other[e4235] * self[e4235])
+                - (other[e4315] * self[e4315])
+                - (other[e4125] * self[e4125]),
         );
     }
 }
@@ -181,10 +179,8 @@ impl ScalarProduct<Line> for Line {
     //      add/sub      mul      div
     // f32        2        3        0
     fn scalar_product(self, other: Line) -> Scalar {
-        return Scalar::from_groups(
-            // scalar
-            (other.group0()[0] * self.group0()[0]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2]),
-        );
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */ (other[e415] * self[e415]) + (other[e425] * self[e425]) + (other[e435] * self[e435]));
     }
 }
 impl std::ops::Div<scalar_product> for Motor {
@@ -198,9 +194,10 @@ impl ScalarProduct<Motor> for Motor {
     //      add/sub      mul      div
     // f32        3        4        0
     fn scalar_product(self, other: Motor) -> Scalar {
+        use crate::elements::*;
         return Scalar::from_groups(
             // scalar
-            (other.group0()[0] * self.group0()[0]) + (other.group0()[1] * self.group0()[1]) + (other.group0()[2] * self.group0()[2]) - (other.group0()[3] * self.group0()[3]),
+            (other[e415] * self[e415]) + (other[e425] * self[e425]) + (other[e435] * self[e435]) - (other[e12345] * self[e12345]),
         );
     }
 }
@@ -218,38 +215,38 @@ impl ScalarProduct<MultiVector> for MultiVector {
         use crate::elements::*;
         return Scalar::from_groups(
             // scalar
-            (other.group0()[0] * self.group0()[0])
-                + (other.group7()[0] * self.group8()[0])
-                + (other.group7()[1] * self.group8()[1])
-                + (other.group7()[2] * self.group8()[2])
-                + (other.group8()[0] * self.group7()[0])
-                + (other.group8()[1] * self.group7()[1])
-                + (other.group8()[2] * self.group7()[2])
-                + (other.group1()[0] * self.group1()[0])
-                + (other.group1()[1] * self.group1()[1])
-                + (other.group1()[2] * self.group1()[2])
-                + (other.group3()[3] * self.group3()[3])
-                + (other.group6()[0] * self.group6()[0])
-                + (other.group6()[1] * self.group6()[1])
-                + (other.group6()[2] * self.group6()[2])
-                + (other.group9()[3] * self[e45])
-                + (self.group9()[3] * other[e45])
-                - (other.group0()[1] * self.group0()[1])
-                - (other.group4()[0] * self.group3()[0])
-                - (other.group4()[1] * self.group3()[1])
-                - (other.group4()[2] * self.group3()[2])
-                - (other.group5()[0] * self.group5()[0])
-                - (other.group5()[1] * self.group5()[1])
-                - (other.group5()[2] * self.group5()[2])
-                - (self.group4()[0] * other.group3()[0])
-                - (self.group4()[1] * other.group3()[1])
-                - (self.group4()[2] * other.group3()[2])
-                - (other.group1()[3] * self[e1])
-                - (other.group6()[3] * self.group6()[3])
-                - (other.group9()[0] * self.group9()[0])
-                - (other.group9()[1] * self.group9()[1])
-                - (other.group9()[2] * self.group9()[2])
-                - (self.group1()[3] * other[e1]),
+            (other[scalar] * self[scalar])
+                + (other[e1] * self[e1])
+                + (other[e2] * self[e2])
+                + (other[e3] * self[e3])
+                + (other[e45] * self[e45])
+                + (other[e415] * self[e415])
+                + (other[e425] * self[e425])
+                + (other[e435] * self[e435])
+                + (other[e423] * self[e235])
+                + (other[e431] * self[e315])
+                + (other[e412] * self[e125])
+                + (other[e235] * self[e423])
+                + (other[e315] * self[e431])
+                + (other[e125] * self[e412])
+                + (other[e3215] * self[e1234])
+                + (other[e1234] * self[e3215])
+                - (other[e12345] * self[e12345])
+                - (other[e4] * self[e5])
+                - (other[e5] * self[e4])
+                - (other[e15] * self[e41])
+                - (other[e25] * self[e42])
+                - (other[e35] * self[e43])
+                - (other[e41] * self[e15])
+                - (other[e42] * self[e25])
+                - (other[e43] * self[e35])
+                - (other[e23] * self[e23])
+                - (other[e31] * self[e31])
+                - (other[e12] * self[e12])
+                - (other[e321] * self[e321])
+                - (other[e4235] * self[e4235])
+                - (other[e4315] * self[e4315])
+                - (other[e4125] * self[e4125]),
         );
     }
 }
@@ -282,10 +279,7 @@ impl ScalarProduct<Sphere> for Sphere {
         use crate::elements::*;
         return Scalar::from_groups(
             // scalar
-            (other.group0()[3] * self[e4315]) + (self.group0()[3] * other[e4315])
-                - (other.group0()[0] * self.group0()[0])
-                - (other.group0()[1] * self.group0()[1])
-                - (other.group0()[2] * self.group0()[2]),
+            (other[e3215] * self[e1234]) + (other[e1234] * self[e3215]) - (other[e4235] * self[e4235]) - (other[e4315] * self[e4315]) - (other[e4125] * self[e4125]),
         );
     }
 }

@@ -39,12 +39,18 @@ impl Fix for AntiFlatPoint {
     //  no simd        0       10        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0));
-        let geometric_product = Scalar::from_groups(/* scalar */ reverse.group0()[3] * self.group0()[3] * -1.0);
+        let reverse = AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from([self[e235], self[e315], self[e125], self[e321]]) * Simd32x4::from(-1.0),
+        );
+        let geometric_product = Scalar::from_groups(/* scalar */ reverse[e321] * self[e321] * -1.0);
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(inverse[scalar]) * self.group0());
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e235], self[e315], self[e125], self[e321]]),
+        );
     }
 }
 impl std::ops::Div<fix> for AntiPlane {
@@ -68,11 +74,11 @@ impl Fix for AntiPlane {
     //  no simd        2        4        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let geometric_product = Scalar::from_groups(/* scalar */ f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2));
+        let geometric_product = Scalar::from_groups(/* scalar */ f32::powi(self[e1], 2) + f32::powi(self[e2], 2) + f32::powi(self[e3], 2));
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(inverse[scalar]) * self.group0());
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e5]]));
     }
 }
 impl std::ops::Div<fix> for AntiScalar {
@@ -120,12 +126,15 @@ impl Fix for FlatPoint {
     //  no simd        0        9        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0));
-        let geometric_product = Scalar::from_groups(/* scalar */ reverse.group0()[3] * self.group0()[3]);
+        let reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]) * Simd32x4::from(-1.0));
+        let geometric_product = Scalar::from_groups(/* scalar */ reverse[e45] * self[e45]);
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(inverse[scalar]) * self.group0());
+        return FlatPoint::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]),
+        );
     }
 }
 impl std::ops::Div<fix> for Plane {
@@ -149,11 +158,14 @@ impl Fix for Plane {
     //  no simd        2        4        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let geometric_product = Scalar::from_groups(/* scalar */ -f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2));
+        let geometric_product = Scalar::from_groups(/* scalar */ -f32::powi(self[e4235], 2) - f32::powi(self[e4315], 2) - f32::powi(self[e4125], 2));
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(inverse[scalar]) * self.group0());
+        return Plane::from_groups(
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]),
+        );
     }
 }
 impl std::ops::Div<fix> for RoundPoint {
@@ -177,14 +189,16 @@ impl Fix for RoundPoint {
     //  no simd        3        7        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let geometric_product = Scalar::from_groups(
-            // scalar
-            f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - 2.0 * (self.group0()[3] * self[e2]),
-        );
+        let geometric_product = Scalar::from_groups(/* scalar */ f32::powi(self[e1], 2) + f32::powi(self[e2], 2) + f32::powi(self[e3], 2) - 2.0 * (self[e4] * self[e5]));
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
-        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * self.group0(), /* e5 */ self[e2] * inverse[scalar]);
+        return RoundPoint::from_groups(
+            // e1, e2, e3, e4
+            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]),
+            // e5
+            self[e5] * inverse[scalar],
+        );
     }
 }
 impl std::ops::Div<fix> for Scalar {
@@ -234,16 +248,16 @@ impl Fix for Sphere {
         use crate::elements::*;
         let geometric_product = Scalar::from_groups(
             // scalar
-            2.0 * (self.group0()[3] * self[e4315]) - f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2),
+            2.0 * (self[e3215] * self[e1234]) - f32::powi(self[e4235], 2) - f32::powi(self[e4315], 2) - f32::powi(self[e4125], 2),
         );
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(inverse[scalar]) * self.group0(),
+            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]),
             // e1234
-            inverse[scalar] * self[e4315],
+            inverse[scalar] * self[e1234],
         );
     }
 }

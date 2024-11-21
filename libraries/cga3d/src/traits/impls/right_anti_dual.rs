@@ -34,13 +34,14 @@ impl RightAntiDual for AntiCircleRotor {
     // yes simd        0        7        0
     //  no simd        0        9        0
     fn right_anti_dual(self) -> Self::Output {
+        use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            self.group0() * Simd32x3::from(-1.0),
+            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group1()[0] * -1.0, self.group1()[1] * -1.0, self.group1()[2] * -1.0, self.group1()[3]]),
+            Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[e45]]),
             // e235, e315, e125, e12345
-            Simd32x4::from([self.group2()[0] * -1.0, self.group2()[1] * -1.0, self.group2()[2] * -1.0, self.group2()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[scalar]]),
         );
     }
 }
@@ -56,15 +57,16 @@ impl RightAntiDual for AntiDipoleInversion {
     //      add/sub      mul      div
     // f32        0        3        0
     fn right_anti_dual(self) -> Self::Output {
+        use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] * -1.0]),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321] * -1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[3] * -1.0]),
+            Simd32x4::from([self[e235], self[e315], self[e125], self[e4] * -1.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group3()[3] * -1.0]),
+            Simd32x4::from([self[e1], self[e2], self[e3], self[e5] * -1.0]),
         );
     }
 }
@@ -97,10 +99,8 @@ impl RightAntiDual for AntiFlatPoint {
     //      add/sub      mul      div
     // f32        0        1        0
     fn right_anti_dual(self) -> Self::Output {
-        return FlatPoint::from_groups(
-            // e15, e25, e35, e45
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] * -1.0]),
-        );
+        use crate::elements::*;
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self[e235], self[e315], self[e125], self[e321] * -1.0]));
     }
 }
 impl std::ops::Div<right_anti_dual> for AntiFlector {
@@ -115,11 +115,12 @@ impl RightAntiDual for AntiFlector {
     //      add/sub      mul      div
     // f32        0        2        0
     fn right_anti_dual(self) -> Self::Output {
+        use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] * -1.0]),
+            Simd32x4::from([self[e235], self[e315], self[e125], self[e321] * -1.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] * -1.0]),
+            Simd32x4::from([self[e1], self[e2], self[e3], self[e5] * -1.0]),
         );
     }
 }
@@ -136,11 +137,12 @@ impl RightAntiDual for AntiLine {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn right_anti_dual(self) -> Self::Output {
+        use crate::elements::*;
         return Line::from_groups(
             // e415, e425, e435
-            self.group0() * Simd32x3::from(-1.0),
+            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
             // e235, e315, e125
-            self.group1() * Simd32x3::from(-1.0),
+            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
         );
     }
 }
@@ -156,11 +158,12 @@ impl RightAntiDual for AntiMotor {
     //      add/sub      mul      div
     // f32        0        6        0
     fn right_anti_dual(self) -> Self::Output {
+        use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
+            Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[scalar]]),
             // e235, e315, e125, e5
-            Simd32x4::from([self.group1()[0] * -1.0, self.group1()[1] * -1.0, self.group1()[2] * -1.0, self.group1()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e3215]]),
         );
     }
 }
@@ -176,10 +179,8 @@ impl RightAntiDual for AntiPlane {
     //      add/sub      mul      div
     // f32        0        1        0
     fn right_anti_dual(self) -> Self::Output {
-        return Plane::from_groups(
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] * -1.0]),
-        );
+        use crate::elements::*;
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from([self[e1], self[e2], self[e3], self[e5] * -1.0]));
     }
 }
 impl std::ops::Div<right_anti_dual> for AntiScalar {
@@ -210,11 +211,12 @@ impl RightAntiDual for Circle {
     //      add/sub      mul      div
     // f32        0        1        0
     fn right_anti_dual(self) -> Self::Output {
+        use crate::elements::*;
         return Dipole::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] * -1.0]),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321] * -1.0]),
             // e15, e25, e35
             self.group2(),
         );
@@ -232,13 +234,14 @@ impl RightAntiDual for CircleRotor {
     //      add/sub      mul      div
     // f32        0        2        0
     fn right_anti_dual(self) -> Self::Output {
+        use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] * -1.0]),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321] * -1.0]),
             // e15, e25, e35, scalar
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[3] * -1.0]),
+            Simd32x4::from([self[e235], self[e315], self[e125], self[e12345] * -1.0]),
         );
     }
 }
@@ -258,13 +261,14 @@ impl RightAntiDual for Dipole {
     // yes simd        0        5        0
     //  no simd        0        9        0
     fn right_anti_dual(self) -> Self::Output {
+        use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            self.group0() * Simd32x3::from(-1.0),
+            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group1()[0] * -1.0, self.group1()[1] * -1.0, self.group1()[2] * -1.0, self.group1()[3]]),
+            Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[e45]]),
             // e235, e315, e125
-            self.group2() * Simd32x3::from(-1.0),
+            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
         );
     }
 }
@@ -284,15 +288,16 @@ impl RightAntiDual for DipoleInversion {
     // yes simd        0       10        0
     //  no simd        0       12        0
     fn right_anti_dual(self) -> Self::Output {
+        use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            self.group0() * Simd32x3::from(-1.0),
+            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group1()[0] * -1.0, self.group1()[1] * -1.0, self.group1()[2] * -1.0, self.group1()[3]]),
+            Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[e45]]),
             // e235, e315, e125, e4
-            Simd32x4::from([self.group2()[0] * -1.0, self.group2()[1] * -1.0, self.group2()[2] * -1.0, self.group2()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
             // e1, e2, e3, e5
-            Simd32x4::from([self.group3()[0] * -1.0, self.group3()[1] * -1.0, self.group3()[2] * -1.0, self.group3()[3]]),
+            Simd32x4::from([self[e4235] * -1.0, self[e4315] * -1.0, self[e4125] * -1.0, self[e3215]]),
         );
     }
 }
@@ -309,7 +314,8 @@ impl RightAntiDual for DualNum {
     //   simd2        0        1        0
     // no simd        0        2        0
     fn right_anti_dual(self) -> Self::Output {
-        return AntiDualNum::from_groups(/* e1234, scalar */ self.group0() * Simd32x2::from(-1.0));
+        use crate::elements::*;
+        return AntiDualNum::from_groups(/* e1234, scalar */ Simd32x2::from([self[e4], self[e12345]]) * Simd32x2::from(-1.0));
     }
 }
 impl std::ops::Div<right_anti_dual> for FlatPoint {
@@ -324,10 +330,8 @@ impl RightAntiDual for FlatPoint {
     //      add/sub      mul      div
     // f32        0        3        0
     fn right_anti_dual(self) -> Self::Output {
-        return AntiFlatPoint::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
-        );
+        use crate::elements::*;
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e45]]));
     }
 }
 impl std::ops::Div<right_anti_dual> for Flector {
@@ -342,11 +346,12 @@ impl RightAntiDual for Flector {
     //      add/sub      mul      div
     // f32        0        6        0
     fn right_anti_dual(self) -> Self::Output {
+        use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e45]]),
             // e1, e2, e3, e5
-            Simd32x4::from([self.group1()[0] * -1.0, self.group1()[1] * -1.0, self.group1()[2] * -1.0, self.group1()[3]]),
+            Simd32x4::from([self[e4235] * -1.0, self[e4315] * -1.0, self[e4125] * -1.0, self[e3215]]),
         );
     }
 }
@@ -379,11 +384,12 @@ impl RightAntiDual for Motor {
     //      add/sub      mul      div
     // f32        0        2        0
     fn right_anti_dual(self) -> Self::Output {
+        use crate::elements::*;
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] * -1.0]),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e12345] * -1.0]),
             // e15, e25, e35, e3215
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] * -1.0]),
+            Simd32x4::from([self[e235], self[e315], self[e125], self[e5] * -1.0]),
         );
     }
 }
@@ -411,27 +417,27 @@ impl RightAntiDual for MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self.group0()[1] * -1.0, self.group0()[0]]),
+            Simd32x2::from([self[e12345] * -1.0, self[scalar]]),
             // e1, e2, e3, e4
-            Simd32x4::from([self.group9()[0] * -1.0, self.group9()[1] * -1.0, self.group9()[2] * -1.0, self[e45]]),
+            Simd32x4::from([self[e4235] * -1.0, self[e4315] * -1.0, self[e4125] * -1.0, self[e1234]]),
             // e5
-            self.group9()[3],
+            self[e3215],
             // e15, e25, e35, e45
-            Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], self.group6()[3] * -1.0]),
+            crate::swizzle!(self.group8(), 0, 1, 2).extend_to_4((self[e321] * -1.0)),
             // e41, e42, e43
             self.group7(),
             // e23, e31, e12
-            Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]),
+            Simd32x3::from([self[e415], self[e425], self[e435]]),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group5()[0] * -1.0, self.group5()[1] * -1.0, self.group5()[2] * -1.0, self.group3()[3]]),
+            Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[e45]]),
             // e423, e431, e412
-            self.group4() * Simd32x3::from(-1.0),
+            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]) * Simd32x3::from(-1.0),
+            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self[e1] * -1.0]),
+            Simd32x4::from([self[e1], self[e2], self[e3], self[e5] * -1.0]),
             // e1234
-            self.group1()[3] * -1.0,
+            self[e4] * -1.0,
         );
     }
 }
@@ -447,10 +453,8 @@ impl RightAntiDual for Plane {
     //      add/sub      mul      div
     // f32        0        3        0
     fn right_anti_dual(self) -> Self::Output {
-        return AntiPlane::from_groups(
-            // e1, e2, e3, e5
-            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
-        );
+        use crate::elements::*;
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([self[e4235] * -1.0, self[e4315] * -1.0, self[e4125] * -1.0, self[e3215]]));
     }
 }
 impl std::ops::Div<right_anti_dual> for RoundPoint {
@@ -468,9 +472,9 @@ impl RightAntiDual for RoundPoint {
         use crate::elements::*;
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self[e2] * -1.0]),
+            Simd32x4::from([self[e1], self[e2], self[e3], self[e5] * -1.0]),
             // e1234
-            self.group0()[3] * -1.0,
+            self[e4] * -1.0,
         );
     }
 }
@@ -506,9 +510,9 @@ impl RightAntiDual for Sphere {
         use crate::elements::*;
         return RoundPoint::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self[e4315]]),
+            Simd32x4::from([self[e4235] * -1.0, self[e4315] * -1.0, self[e4125] * -1.0, self[e1234]]),
             // e5
-            self.group0()[3],
+            self[e3215],
         );
     }
 }
@@ -524,15 +528,16 @@ impl RightAntiDual for VersorEven {
     //      add/sub      mul      div
     // f32        0        4        0
     fn right_anti_dual(self) -> Self::Output {
+        use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3] * -1.0]),
+            Simd32x4::from([self[e423], self[e431], self[e412], self[e12345] * -1.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3] * -1.0]),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321] * -1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group3()[3] * -1.0]),
+            Simd32x4::from([self[e235], self[e315], self[e125], self[e4] * -1.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group2()[3] * -1.0]),
+            Simd32x4::from([self[e1], self[e2], self[e3], self[e5] * -1.0]),
         );
     }
 }
@@ -548,15 +553,16 @@ impl RightAntiDual for VersorOdd {
     //      add/sub      mul      div
     // f32        0       12        0
     fn right_anti_dual(self) -> Self::Output {
+        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
+            Simd32x4::from([self[e41] * -1.0, self[e42] * -1.0, self[e43] * -1.0, self[scalar]]),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group1()[0] * -1.0, self.group1()[1] * -1.0, self.group1()[2] * -1.0, self.group1()[3]]),
+            Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[e45]]),
             // e235, e315, e125, e5
-            Simd32x4::from([self.group2()[0] * -1.0, self.group2()[1] * -1.0, self.group2()[2] * -1.0, self.group3()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e3215]]),
             // e1, e2, e3, e4
-            Simd32x4::from([self.group3()[0] * -1.0, self.group3()[1] * -1.0, self.group3()[2] * -1.0, self.group2()[3]]),
+            Simd32x4::from([self[e4235] * -1.0, self[e4315] * -1.0, self[e4125] * -1.0, self[e1234]]),
         );
     }
 }

@@ -3229,6 +3229,8 @@ horizon_add_motor -> TODO need truncating swizzles in rust, then can simplify th
 horizon_add_line
 plane_add_antiScalar
 fn horizon_geometricQuotient_scalar
+roundPoint_roundWeightNormSquared -> TODO use straight constructor when all literals, even if grouped
+   or better yet, look at operation statistics and always construct flat if no simd operations
  */
 
 

@@ -27,7 +27,8 @@ impl std::ops::Div<flat_weight> for AntiCircleRotor {
 impl FlatWeight for AntiCircleRotor {
     type Output = FlatPoint;
     fn flat_weight(self) -> Self::Output {
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([0.0, 0.0, 0.0, self.group1()[3]]));
+        use crate::elements::*;
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([0.0, 0.0, 0.0, self[e45]]));
     }
 }
 impl std::ops::Div<flat_weight> for AntiDipoleInversion {
@@ -39,9 +40,10 @@ impl std::ops::Div<flat_weight> for AntiDipoleInversion {
 impl FlatWeight for AntiDipoleInversion {
     type Output = Line;
     fn flat_weight(self) -> Self::Output {
+        use crate::elements::*;
         return Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+            Simd32x3::from([self[e415], self[e425], self[e435]]),
             // e235, e315, e125
             Simd32x3::from(0.0),
         );
@@ -73,9 +75,10 @@ impl std::ops::Div<flat_weight> for Circle {
 impl FlatWeight for Circle {
     type Output = Line;
     fn flat_weight(self) -> Self::Output {
+        use crate::elements::*;
         return Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+            Simd32x3::from([self[e415], self[e425], self[e435]]),
             // e235, e315, e125
             Simd32x3::from(0.0),
         );
@@ -90,9 +93,10 @@ impl std::ops::Div<flat_weight> for CircleRotor {
 impl FlatWeight for CircleRotor {
     type Output = Motor;
     fn flat_weight(self) -> Self::Output {
+        use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group2()[3]]),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e12345]]),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
         );
@@ -107,7 +111,8 @@ impl std::ops::Div<flat_weight> for Dipole {
 impl FlatWeight for Dipole {
     type Output = FlatPoint;
     fn flat_weight(self) -> Self::Output {
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([0.0, 0.0, 0.0, self.group1()[3]]));
+        use crate::elements::*;
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([0.0, 0.0, 0.0, self[e45]]));
     }
 }
 impl std::ops::Div<flat_weight> for DipoleInversion {
@@ -119,11 +124,12 @@ impl std::ops::Div<flat_weight> for DipoleInversion {
 impl FlatWeight for DipoleInversion {
     type Output = Flector;
     fn flat_weight(self) -> Self::Output {
+        use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([0.0, 0.0, 0.0, self.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e45]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], 0.0]),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], 0.0]),
         );
     }
 }
@@ -136,7 +142,8 @@ impl std::ops::Div<flat_weight> for DualNum {
 impl FlatWeight for DualNum {
     type Output = AntiScalar;
     fn flat_weight(self) -> Self::Output {
-        return AntiScalar::from_groups(/* e12345 */ self.group0()[1]);
+        use crate::elements::*;
+        return AntiScalar::from_groups(/* e12345 */ self[e12345]);
     }
 }
 impl std::ops::Div<flat_weight> for FlatPoint {
@@ -153,7 +160,8 @@ impl std::ops::DivAssign<flat_weight> for FlatPoint {
 impl FlatWeight for FlatPoint {
     type Output = FlatPoint;
     fn flat_weight(self) -> Self::Output {
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]));
+        use crate::elements::*;
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([0.0, 0.0, 0.0, self[e45]]));
     }
 }
 impl std::ops::Div<flat_weight> for Flector {
@@ -170,11 +178,12 @@ impl std::ops::DivAssign<flat_weight> for Flector {
 impl FlatWeight for Flector {
     type Output = Flector;
     fn flat_weight(self) -> Self::Output {
+        use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e45]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], 0.0]),
         );
     }
 }
@@ -226,27 +235,28 @@ impl std::ops::DivAssign<flat_weight> for MultiVector {
 impl FlatWeight for MultiVector {
     type Output = MultiVector;
     fn flat_weight(self) -> Self::Output {
+        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([0.0, self.group0()[1]]),
+            Simd32x2::from([0.0, self[e12345]]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([0.0, 0.0, 0.0, self.group3()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e45]]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], 0.0]),
+            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], 0.0]),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], 0.0]),
             // e1234
             0.0,
         );
@@ -266,7 +276,8 @@ impl std::ops::DivAssign<flat_weight> for Plane {
 impl FlatWeight for Plane {
     type Output = Plane;
     fn flat_weight(self) -> Self::Output {
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]));
+        use crate::elements::*;
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from([self[e4235], self[e4315], self[e4125], 0.0]));
     }
 }
 impl std::ops::Div<flat_weight> for Sphere {
@@ -278,7 +289,8 @@ impl std::ops::Div<flat_weight> for Sphere {
 impl FlatWeight for Sphere {
     type Output = Plane;
     fn flat_weight(self) -> Self::Output {
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]));
+        use crate::elements::*;
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from([self[e4235], self[e4315], self[e4125], 0.0]));
     }
 }
 impl std::ops::Div<flat_weight> for VersorEven {
@@ -290,9 +302,10 @@ impl std::ops::Div<flat_weight> for VersorEven {
 impl FlatWeight for VersorEven {
     type Output = Motor;
     fn flat_weight(self) -> Self::Output {
+        use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[3]]),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e12345]]),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
         );
@@ -307,11 +320,12 @@ impl std::ops::Div<flat_weight> for VersorOdd {
 impl FlatWeight for VersorOdd {
     type Output = Flector;
     fn flat_weight(self) -> Self::Output {
+        use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([0.0, 0.0, 0.0, self.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, self[e45]]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], 0.0]),
+            Simd32x4::from([self[e4235], self[e4315], self[e4125], 0.0]),
         );
     }
 }
