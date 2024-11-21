@@ -6,14 +6,18 @@ edition = "2021"
 license = "MIT"
 publish = false
 
+[build-dependencies]
+hello_circle_wgsl_build = { path = "../hello_circle_wgsl_build" }
+anyhow = "1.0.81"
+
 [dependencies]
 winit = "0.30.0"
 pollster = "0.3.0"
 parking_lot = "0.12.2"
-cga3d = { path = "../../libraries/cga3d", features = ["wgsl"] }
+cga3d = { path = "../../../libraries/cga3d", features = ["wgsl"] }
 
 # naga_oil limits the version of wgpu and naga we can use
 naga_oil = { version = "0.13.0", features = ["prune"] }
-naga = { version = "0.19.2", features = ["default", "wgsl-out"] }
-wgpu = { version = "0.19.4", features = ["naga-ir"] }
+naga = { version = "0.19.2" }
+wgpu = { version = "0.19.4", features = ["naga-ir", "spirv"] }
 bytemuck = "1.16.0"

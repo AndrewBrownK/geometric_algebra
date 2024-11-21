@@ -16,8 +16,8 @@ members = [
     "build_scripts/cga3d",
     "build_scripts/cga3d_faceted",
 
-    "examples/compile_to_spirv",
-    "examples/hello_circle_wgsl",
+    "examples/hello_circle_wgsl/hello_circle_wgsl",
+    "examples/hello_circle_wgsl/hello_circle_wgsl_build",
     "examples/hello_circle_rust",
     "examples/broken_glsl/hello_circle_glsl",
     "examples/broken_glsl/debug_glsl",

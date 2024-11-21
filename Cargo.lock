@@ -483,21 +483,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "compile_to_spirv"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "bytemuck",
- "cga3d",
- "naga",
- "naga_oil",
- "parking_lot",
- "pollster",
- "wgpu",
- "winit",
-]
-
-[[package]]
 name = "concurrent-queue"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -908,14 +893,27 @@ dependencies = [
 name = "hello_circle_wgsl"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "bytemuck",
  "cga3d",
+ "hello_circle_wgsl_build",
  "naga",
  "naga_oil",
  "parking_lot",
  "pollster",
  "wgpu",
  "winit",
+]
+
+[[package]]
+name = "hello_circle_wgsl_build"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "bytemuck",
+ "cga3d",
+ "naga",
+ "naga_oil",
 ]
 
 [[package]]

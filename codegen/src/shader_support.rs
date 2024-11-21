@@ -8,6 +8,10 @@ pub fn emit_shader_support<W: Write>(w: &mut W, algebra_name: &str, shader_exten
         c.next().expect("Provide an extension").to_uppercase().collect::<String>() + c.as_str()
     };
 
+    /*
+    TODO output the spv files in "OUT_DIR" if that makes more sense
+     */
+
     let upper_snake_case_name = algebra_name.to_uppercase();
     let mut file = w;
     write!(&mut file, r#"
