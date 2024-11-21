@@ -1,6 +1,12 @@
 pub mod data;
 pub mod simd;
 pub mod traits;
+pub mod integrations {
+    #[cfg(feature = "glsl")]
+    pub mod glsl;
+    #[cfg(feature = "wgsl")]
+    pub mod wgsl;
+}
 #[allow(non_camel_case_types)]
 pub mod elements {
     pub struct scalar;
@@ -36,3 +42,5 @@ pub mod elements {
     pub struct e4235;
     pub struct e12345;
 }
+#[test]
+fn double_check_this_crate_compiles() {}

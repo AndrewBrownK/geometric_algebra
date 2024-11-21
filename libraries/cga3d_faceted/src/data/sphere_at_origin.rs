@@ -1,15 +1,18 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// SphereAtOrigin.
 /// This variant of Sphere is centered on the Origin.
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy)]
 pub union SphereAtOrigin {
     groups: SphereAtOriginGroups,
     /// e3215, e1234, 0, 0
     elements: [f32; 4],
 }
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct SphereAtOriginGroups {
     /// e3215, e1234
     g0: Simd32x2,
@@ -68,6 +71,129 @@ impl std::fmt::Debug for SphereAtOrigin {
 impl SphereAtOrigin {
     pub const LEN: usize = 2;
 }
+
+impl nearly::NearlyEqEps<SphereAtOrigin, f32, f32> for SphereAtOrigin {
+    fn nearly_eq_eps(&self, other: &SphereAtOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqUlps<SphereAtOrigin, f32, f32> for SphereAtOrigin {
+    fn nearly_eq_ulps(&self, other: &SphereAtOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqTol<SphereAtOrigin, f32, f32> for SphereAtOrigin {}
+impl nearly::NearlyEq<SphereAtOrigin, f32, f32> for SphereAtOrigin {}
+impl nearly::NearlyOrdUlps<SphereAtOrigin, f32, f32> for SphereAtOrigin {
+    fn nearly_lt_ulps(&self, other: &SphereAtOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_ulps(&self, other: &SphereAtOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdEps<SphereAtOrigin, f32, f32> for SphereAtOrigin {
+    fn nearly_lt_eps(&self, other: &SphereAtOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_eps(&self, other: &SphereAtOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdTol<SphereAtOrigin, f32, f32> for SphereAtOrigin {}
+impl nearly::NearlyOrd<SphereAtOrigin, f32, f32> for SphereAtOrigin {}
 
 impl SphereAtOrigin {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
@@ -128,6 +254,83 @@ impl std::hash::Hash for SphereAtOrigin {
     }
 }
 
+unsafe impl bytemuck::Zeroable for SphereAtOrigin {}
+unsafe impl bytemuck::Pod for SphereAtOrigin {}
+impl encase::ShaderType for SphereAtOrigin {
+    type ExtraMetadata = <SphereAtOriginGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <SphereAtOriginGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <SphereAtOriginGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <SphereAtOriginGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <SphereAtOriginGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for SphereAtOrigin {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("SphereAtOrigin", 2)?;
+        state.serialize_field("e3215", &self[crate::elements::e3215])?;
+        state.serialize_field("e1234", &self[crate::elements::e1234])?;
+        state.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for SphereAtOrigin {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum SphereAtOriginField {
+            e3215,
+            e1234,
+        }
+        struct SphereAtOriginVisitor;
+        impl<'de> Visitor<'de> for SphereAtOriginVisitor {
+            type Value = SphereAtOrigin;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct SphereAtOrigin")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<SphereAtOrigin, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e3215 = None;
+                let mut e1234 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        SphereAtOriginField::e3215 => {
+                            if e3215.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e3215"));
+                            }
+                            e3215 = Some(map.next_value()?);
+                        }
+
+                        SphereAtOriginField::e1234 => {
+                            if e1234.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e1234"));
+                            }
+                            e1234 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = SphereAtOrigin::from([0.0; 2]);
+                result[crate::elements::e3215] = e3215.ok_or_else(|| serde::de::Error::missing_field("e3215"))?;
+                result[crate::elements::e1234] = e1234.ok_or_else(|| serde::de::Error::missing_field("e1234"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e3215", "e1234"];
+        deserializer.deserialize_struct("SphereAtOrigin", FIELDS, SphereAtOriginVisitor)
+    }
+}
 impl std::ops::Index<crate::elements::e3215> for SphereAtOrigin {
     type Output = f32;
     fn index(&self, _: crate::elements::e3215) -> &Self::Output {
@@ -141,12 +344,12 @@ impl std::ops::Index<crate::elements::e1234> for SphereAtOrigin {
     }
 }
 impl std::ops::IndexMut<crate::elements::e3215> for SphereAtOrigin {
-    fn index_mut(&self, _: crate::elements::e3215) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e3215) -> &mut Self::Output {
         &mut self[0]
     }
 }
 impl std::ops::IndexMut<crate::elements::e1234> for SphereAtOrigin {
-    fn index_mut(&self, _: crate::elements::e1234) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e1234) -> &mut Self::Output {
         &mut self[1]
     }
 }

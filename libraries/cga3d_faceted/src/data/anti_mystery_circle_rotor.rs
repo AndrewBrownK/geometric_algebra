@@ -1,4 +1,5 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// AntiMysteryCircleRotor.
@@ -8,13 +9,15 @@ use crate::simd::*;
 /// object has behavioral and operative similarity to a MysteryVersorOdd,
 /// but an imaginary radius, and a spacial presence in the shape of a
 /// MysteryCircleRotor with a real radius.
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy)]
 pub union AntiMysteryCircleRotor {
     groups: AntiMysteryCircleRotorGroups,
     /// e23, e31, e12, e45, scalar, 0, 0, 0
     elements: [f32; 8],
 }
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct AntiMysteryCircleRotorGroups {
     /// e23, e31, e12, e45
     g0: Simd32x4,
@@ -91,6 +94,129 @@ impl AntiMysteryCircleRotor {
     pub const LEN: usize = 5;
 }
 
+impl nearly::NearlyEqEps<AntiMysteryCircleRotor, f32, f32> for AntiMysteryCircleRotor {
+    fn nearly_eq_eps(&self, other: &AntiMysteryCircleRotor, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqUlps<AntiMysteryCircleRotor, f32, f32> for AntiMysteryCircleRotor {
+    fn nearly_eq_ulps(&self, other: &AntiMysteryCircleRotor, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqTol<AntiMysteryCircleRotor, f32, f32> for AntiMysteryCircleRotor {}
+impl nearly::NearlyEq<AntiMysteryCircleRotor, f32, f32> for AntiMysteryCircleRotor {}
+impl nearly::NearlyOrdUlps<AntiMysteryCircleRotor, f32, f32> for AntiMysteryCircleRotor {
+    fn nearly_lt_ulps(&self, other: &AntiMysteryCircleRotor, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_ulps(&self, other: &AntiMysteryCircleRotor, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdEps<AntiMysteryCircleRotor, f32, f32> for AntiMysteryCircleRotor {
+    fn nearly_lt_eps(&self, other: &AntiMysteryCircleRotor, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_eps(&self, other: &AntiMysteryCircleRotor, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdTol<AntiMysteryCircleRotor, f32, f32> for AntiMysteryCircleRotor {}
+impl nearly::NearlyOrd<AntiMysteryCircleRotor, f32, f32> for AntiMysteryCircleRotor {}
+
 impl AntiMysteryCircleRotor {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
@@ -150,6 +276,116 @@ impl std::hash::Hash for AntiMysteryCircleRotor {
     }
 }
 
+unsafe impl bytemuck::Zeroable for AntiMysteryCircleRotor {}
+unsafe impl bytemuck::Pod for AntiMysteryCircleRotor {}
+impl encase::ShaderType for AntiMysteryCircleRotor {
+    type ExtraMetadata = <AntiMysteryCircleRotorGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <AntiMysteryCircleRotorGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <AntiMysteryCircleRotorGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <AntiMysteryCircleRotorGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <AntiMysteryCircleRotorGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for AntiMysteryCircleRotor {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("AntiMysteryCircleRotor", 5)?;
+        state.serialize_field("e23", &self[crate::elements::e23])?;
+        state.serialize_field("e31", &self[crate::elements::e31])?;
+        state.serialize_field("e12", &self[crate::elements::e12])?;
+        state.serialize_field("e45", &self[crate::elements::e45])?;
+        state.serialize_field("scalar", &self[crate::elements::scalar])?;
+        state.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AntiMysteryCircleRotor {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum AntiMysteryCircleRotorField {
+            e23,
+            e31,
+            e12,
+            e45,
+            scalar,
+        }
+        struct AntiMysteryCircleRotorVisitor;
+        impl<'de> Visitor<'de> for AntiMysteryCircleRotorVisitor {
+            type Value = AntiMysteryCircleRotor;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct AntiMysteryCircleRotor")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<AntiMysteryCircleRotor, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e23 = None;
+                let mut e31 = None;
+                let mut e12 = None;
+                let mut e45 = None;
+                let mut scalar = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        AntiMysteryCircleRotorField::e23 => {
+                            if e23.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e23"));
+                            }
+                            e23 = Some(map.next_value()?);
+                        }
+
+                        AntiMysteryCircleRotorField::e31 => {
+                            if e31.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e31"));
+                            }
+                            e31 = Some(map.next_value()?);
+                        }
+
+                        AntiMysteryCircleRotorField::e12 => {
+                            if e12.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e12"));
+                            }
+                            e12 = Some(map.next_value()?);
+                        }
+
+                        AntiMysteryCircleRotorField::e45 => {
+                            if e45.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e45"));
+                            }
+                            e45 = Some(map.next_value()?);
+                        }
+
+                        AntiMysteryCircleRotorField::scalar => {
+                            if scalar.is_some() {
+                                return Err(serde::de::Error::duplicate_field("scalar"));
+                            }
+                            scalar = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = AntiMysteryCircleRotor::from([0.0; 5]);
+                result[crate::elements::e23] = e23.ok_or_else(|| serde::de::Error::missing_field("e23"))?;
+                result[crate::elements::e31] = e31.ok_or_else(|| serde::de::Error::missing_field("e31"))?;
+                result[crate::elements::e12] = e12.ok_or_else(|| serde::de::Error::missing_field("e12"))?;
+                result[crate::elements::e45] = e45.ok_or_else(|| serde::de::Error::missing_field("e45"))?;
+                result[crate::elements::scalar] = scalar.ok_or_else(|| serde::de::Error::missing_field("scalar"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e23", "e31", "e12", "e45", "scalar"];
+        deserializer.deserialize_struct("AntiMysteryCircleRotor", FIELDS, AntiMysteryCircleRotorVisitor)
+    }
+}
 impl std::ops::Index<crate::elements::e23> for AntiMysteryCircleRotor {
     type Output = f32;
     fn index(&self, _: crate::elements::e23) -> &Self::Output {
@@ -181,27 +417,27 @@ impl std::ops::Index<crate::elements::scalar> for AntiMysteryCircleRotor {
     }
 }
 impl std::ops::IndexMut<crate::elements::e23> for AntiMysteryCircleRotor {
-    fn index_mut(&self, _: crate::elements::e23) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e23) -> &mut Self::Output {
         &mut self[0]
     }
 }
 impl std::ops::IndexMut<crate::elements::e31> for AntiMysteryCircleRotor {
-    fn index_mut(&self, _: crate::elements::e31) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e31) -> &mut Self::Output {
         &mut self[1]
     }
 }
 impl std::ops::IndexMut<crate::elements::e12> for AntiMysteryCircleRotor {
-    fn index_mut(&self, _: crate::elements::e12) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e12) -> &mut Self::Output {
         &mut self[2]
     }
 }
 impl std::ops::IndexMut<crate::elements::e45> for AntiMysteryCircleRotor {
-    fn index_mut(&self, _: crate::elements::e45) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e45) -> &mut Self::Output {
         &mut self[3]
     }
 }
 impl std::ops::IndexMut<crate::elements::scalar> for AntiMysteryCircleRotor {
-    fn index_mut(&self, _: crate::elements::scalar) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::scalar) -> &mut Self::Output {
         &mut self[4]
     }
 }

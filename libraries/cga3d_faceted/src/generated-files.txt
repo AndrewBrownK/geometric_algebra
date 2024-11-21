@@ -189,12 +189,14 @@
 ./libraries/cga3d_faceted/src/data/versor_odd.rs
 ./libraries/cga3d_faceted/src/data/versor_odd_at_infinity.rs
 ./libraries/cga3d_faceted/src/data/versor_odd_orthogonal_origin.rs
+./libraries/cga3d_faceted/src/integrations/glsl.rs
+./libraries/cga3d_faceted/src/integrations/wgsl.rs
 ./libraries/cga3d_faceted/src/lib.rs
 ./libraries/cga3d_faceted/src/simd.rs
 ./libraries/cga3d_faceted/src/traits.rs
 ./libraries/cga3d_faceted/src/traits/anti_constraint_valid.rs
 ./libraries/cga3d_faceted/src/traits/anti_constraint_violation.rs
-./libraries/cga3d_faceted/src/traits/anti_fix_impl.rs
+./libraries/cga3d_faceted/src/traits/anti_fix.rs
 ./libraries/cga3d_faceted/src/traits/anti_grade.rs
 ./libraries/cga3d_faceted/src/traits/anti_one.rs
 ./libraries/cga3d_faceted/src/traits/anti_reverse.rs
@@ -211,7 +213,7 @@
 ./libraries/cga3d_faceted/src/traits/grade.rs
 ./libraries/cga3d_faceted/src/traits/impls/anti_constraint_valid.rs
 ./libraries/cga3d_faceted/src/traits/impls/anti_constraint_violation.rs
-./libraries/cga3d_faceted/src/traits/impls/anti_fix_impl.rs
+./libraries/cga3d_faceted/src/traits/impls/anti_fix.rs
 ./libraries/cga3d_faceted/src/traits/impls/anti_grade.rs
 ./libraries/cga3d_faceted/src/traits/impls/anti_one.rs
 ./libraries/cga3d_faceted/src/traits/impls/anti_reverse.rs

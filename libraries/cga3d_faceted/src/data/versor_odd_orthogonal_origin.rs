@@ -1,15 +1,18 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// VersorOddOrthogonalOrigin.
 /// This variant of VersorOdd has a CoCarrier that intersects the Origin.
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy)]
 pub union VersorOddOrthogonalOrigin {
     groups: VersorOddOrthogonalOriginGroups,
     /// e41, e42, e43, scalar, e23, e31, e12, e3215, e15, e25, e35, e1234
     elements: [f32; 12],
 }
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct VersorOddOrthogonalOriginGroups {
     /// e41, e42, e43, scalar
     g0: Simd32x4,
@@ -108,6 +111,129 @@ impl VersorOddOrthogonalOrigin {
     pub const LEN: usize = 12;
 }
 
+impl nearly::NearlyEqEps<VersorOddOrthogonalOrigin, f32, f32> for VersorOddOrthogonalOrigin {
+    fn nearly_eq_eps(&self, other: &VersorOddOrthogonalOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqUlps<VersorOddOrthogonalOrigin, f32, f32> for VersorOddOrthogonalOrigin {
+    fn nearly_eq_ulps(&self, other: &VersorOddOrthogonalOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqTol<VersorOddOrthogonalOrigin, f32, f32> for VersorOddOrthogonalOrigin {}
+impl nearly::NearlyEq<VersorOddOrthogonalOrigin, f32, f32> for VersorOddOrthogonalOrigin {}
+impl nearly::NearlyOrdUlps<VersorOddOrthogonalOrigin, f32, f32> for VersorOddOrthogonalOrigin {
+    fn nearly_lt_ulps(&self, other: &VersorOddOrthogonalOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_ulps(&self, other: &VersorOddOrthogonalOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdEps<VersorOddOrthogonalOrigin, f32, f32> for VersorOddOrthogonalOrigin {
+    fn nearly_lt_eps(&self, other: &VersorOddOrthogonalOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_eps(&self, other: &VersorOddOrthogonalOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdTol<VersorOddOrthogonalOrigin, f32, f32> for VersorOddOrthogonalOrigin {}
+impl nearly::NearlyOrd<VersorOddOrthogonalOrigin, f32, f32> for VersorOddOrthogonalOrigin {}
+
 impl VersorOddOrthogonalOrigin {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
@@ -167,6 +293,193 @@ impl std::hash::Hash for VersorOddOrthogonalOrigin {
     }
 }
 
+unsafe impl bytemuck::Zeroable for VersorOddOrthogonalOrigin {}
+unsafe impl bytemuck::Pod for VersorOddOrthogonalOrigin {}
+impl encase::ShaderType for VersorOddOrthogonalOrigin {
+    type ExtraMetadata = <VersorOddOrthogonalOriginGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <VersorOddOrthogonalOriginGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <VersorOddOrthogonalOriginGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <VersorOddOrthogonalOriginGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <VersorOddOrthogonalOriginGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for VersorOddOrthogonalOrigin {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("VersorOddOrthogonalOrigin", 12)?;
+        state.serialize_field("e41", &self[crate::elements::e41])?;
+        state.serialize_field("e42", &self[crate::elements::e42])?;
+        state.serialize_field("e43", &self[crate::elements::e43])?;
+        state.serialize_field("scalar", &self[crate::elements::scalar])?;
+        state.serialize_field("e23", &self[crate::elements::e23])?;
+        state.serialize_field("e31", &self[crate::elements::e31])?;
+        state.serialize_field("e12", &self[crate::elements::e12])?;
+        state.serialize_field("e3215", &self[crate::elements::e3215])?;
+        state.serialize_field("e15", &self[crate::elements::e15])?;
+        state.serialize_field("e25", &self[crate::elements::e25])?;
+        state.serialize_field("e35", &self[crate::elements::e35])?;
+        state.serialize_field("e1234", &self[crate::elements::e1234])?;
+        state.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for VersorOddOrthogonalOrigin {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum VersorOddOrthogonalOriginField {
+            e41,
+            e42,
+            e43,
+            scalar,
+            e23,
+            e31,
+            e12,
+            e3215,
+            e15,
+            e25,
+            e35,
+            e1234,
+        }
+        struct VersorOddOrthogonalOriginVisitor;
+        impl<'de> Visitor<'de> for VersorOddOrthogonalOriginVisitor {
+            type Value = VersorOddOrthogonalOrigin;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct VersorOddOrthogonalOrigin")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<VersorOddOrthogonalOrigin, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e41 = None;
+                let mut e42 = None;
+                let mut e43 = None;
+                let mut scalar = None;
+                let mut e23 = None;
+                let mut e31 = None;
+                let mut e12 = None;
+                let mut e3215 = None;
+                let mut e15 = None;
+                let mut e25 = None;
+                let mut e35 = None;
+                let mut e1234 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        VersorOddOrthogonalOriginField::e41 => {
+                            if e41.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e41"));
+                            }
+                            e41 = Some(map.next_value()?);
+                        }
+
+                        VersorOddOrthogonalOriginField::e42 => {
+                            if e42.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e42"));
+                            }
+                            e42 = Some(map.next_value()?);
+                        }
+
+                        VersorOddOrthogonalOriginField::e43 => {
+                            if e43.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e43"));
+                            }
+                            e43 = Some(map.next_value()?);
+                        }
+
+                        VersorOddOrthogonalOriginField::scalar => {
+                            if scalar.is_some() {
+                                return Err(serde::de::Error::duplicate_field("scalar"));
+                            }
+                            scalar = Some(map.next_value()?);
+                        }
+
+                        VersorOddOrthogonalOriginField::e23 => {
+                            if e23.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e23"));
+                            }
+                            e23 = Some(map.next_value()?);
+                        }
+
+                        VersorOddOrthogonalOriginField::e31 => {
+                            if e31.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e31"));
+                            }
+                            e31 = Some(map.next_value()?);
+                        }
+
+                        VersorOddOrthogonalOriginField::e12 => {
+                            if e12.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e12"));
+                            }
+                            e12 = Some(map.next_value()?);
+                        }
+
+                        VersorOddOrthogonalOriginField::e3215 => {
+                            if e3215.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e3215"));
+                            }
+                            e3215 = Some(map.next_value()?);
+                        }
+
+                        VersorOddOrthogonalOriginField::e15 => {
+                            if e15.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e15"));
+                            }
+                            e15 = Some(map.next_value()?);
+                        }
+
+                        VersorOddOrthogonalOriginField::e25 => {
+                            if e25.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e25"));
+                            }
+                            e25 = Some(map.next_value()?);
+                        }
+
+                        VersorOddOrthogonalOriginField::e35 => {
+                            if e35.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e35"));
+                            }
+                            e35 = Some(map.next_value()?);
+                        }
+
+                        VersorOddOrthogonalOriginField::e1234 => {
+                            if e1234.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e1234"));
+                            }
+                            e1234 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = VersorOddOrthogonalOrigin::from([0.0; 12]);
+                result[crate::elements::e41] = e41.ok_or_else(|| serde::de::Error::missing_field("e41"))?;
+                result[crate::elements::e42] = e42.ok_or_else(|| serde::de::Error::missing_field("e42"))?;
+                result[crate::elements::e43] = e43.ok_or_else(|| serde::de::Error::missing_field("e43"))?;
+                result[crate::elements::scalar] = scalar.ok_or_else(|| serde::de::Error::missing_field("scalar"))?;
+                result[crate::elements::e23] = e23.ok_or_else(|| serde::de::Error::missing_field("e23"))?;
+                result[crate::elements::e31] = e31.ok_or_else(|| serde::de::Error::missing_field("e31"))?;
+                result[crate::elements::e12] = e12.ok_or_else(|| serde::de::Error::missing_field("e12"))?;
+                result[crate::elements::e3215] = e3215.ok_or_else(|| serde::de::Error::missing_field("e3215"))?;
+                result[crate::elements::e15] = e15.ok_or_else(|| serde::de::Error::missing_field("e15"))?;
+                result[crate::elements::e25] = e25.ok_or_else(|| serde::de::Error::missing_field("e25"))?;
+                result[crate::elements::e35] = e35.ok_or_else(|| serde::de::Error::missing_field("e35"))?;
+                result[crate::elements::e1234] = e1234.ok_or_else(|| serde::de::Error::missing_field("e1234"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e41", "e42", "e43", "scalar", "e23", "e31", "e12", "e3215", "e15", "e25", "e35", "e1234"];
+        deserializer.deserialize_struct("VersorOddOrthogonalOrigin", FIELDS, VersorOddOrthogonalOriginVisitor)
+    }
+}
 impl std::ops::Index<crate::elements::e41> for VersorOddOrthogonalOrigin {
     type Output = f32;
     fn index(&self, _: crate::elements::e41) -> &Self::Output {
@@ -240,62 +553,62 @@ impl std::ops::Index<crate::elements::e1234> for VersorOddOrthogonalOrigin {
     }
 }
 impl std::ops::IndexMut<crate::elements::e41> for VersorOddOrthogonalOrigin {
-    fn index_mut(&self, _: crate::elements::e41) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e41) -> &mut Self::Output {
         &mut self[0]
     }
 }
 impl std::ops::IndexMut<crate::elements::e42> for VersorOddOrthogonalOrigin {
-    fn index_mut(&self, _: crate::elements::e42) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e42) -> &mut Self::Output {
         &mut self[1]
     }
 }
 impl std::ops::IndexMut<crate::elements::e43> for VersorOddOrthogonalOrigin {
-    fn index_mut(&self, _: crate::elements::e43) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e43) -> &mut Self::Output {
         &mut self[2]
     }
 }
 impl std::ops::IndexMut<crate::elements::scalar> for VersorOddOrthogonalOrigin {
-    fn index_mut(&self, _: crate::elements::scalar) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::scalar) -> &mut Self::Output {
         &mut self[3]
     }
 }
 impl std::ops::IndexMut<crate::elements::e23> for VersorOddOrthogonalOrigin {
-    fn index_mut(&self, _: crate::elements::e23) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e23) -> &mut Self::Output {
         &mut self[4]
     }
 }
 impl std::ops::IndexMut<crate::elements::e31> for VersorOddOrthogonalOrigin {
-    fn index_mut(&self, _: crate::elements::e31) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e31) -> &mut Self::Output {
         &mut self[5]
     }
 }
 impl std::ops::IndexMut<crate::elements::e12> for VersorOddOrthogonalOrigin {
-    fn index_mut(&self, _: crate::elements::e12) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e12) -> &mut Self::Output {
         &mut self[6]
     }
 }
 impl std::ops::IndexMut<crate::elements::e3215> for VersorOddOrthogonalOrigin {
-    fn index_mut(&self, _: crate::elements::e3215) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e3215) -> &mut Self::Output {
         &mut self[7]
     }
 }
 impl std::ops::IndexMut<crate::elements::e15> for VersorOddOrthogonalOrigin {
-    fn index_mut(&self, _: crate::elements::e15) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e15) -> &mut Self::Output {
         &mut self[8]
     }
 }
 impl std::ops::IndexMut<crate::elements::e25> for VersorOddOrthogonalOrigin {
-    fn index_mut(&self, _: crate::elements::e25) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e25) -> &mut Self::Output {
         &mut self[9]
     }
 }
 impl std::ops::IndexMut<crate::elements::e35> for VersorOddOrthogonalOrigin {
-    fn index_mut(&self, _: crate::elements::e35) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e35) -> &mut Self::Output {
         &mut self[10]
     }
 }
 impl std::ops::IndexMut<crate::elements::e1234> for VersorOddOrthogonalOrigin {
-    fn index_mut(&self, _: crate::elements::e1234) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e1234) -> &mut Self::Output {
         &mut self[11]
     }
 }

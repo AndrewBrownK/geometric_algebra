@@ -1,15 +1,18 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// MysteryVersorOdd.
 /// TODO this is currently a mystery I'm investigating
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy)]
 pub union MysteryVersorOdd {
     groups: MysteryVersorOddGroups,
     /// scalar, e4235, e4315, e4125, e23, e31, e12, e45
     elements: [f32; 8],
 }
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct MysteryVersorOddGroups {
     /// scalar, e4235, e4315, e4125
     g0: Simd32x4,
@@ -93,6 +96,129 @@ impl MysteryVersorOdd {
     pub const LEN: usize = 8;
 }
 
+impl nearly::NearlyEqEps<MysteryVersorOdd, f32, f32> for MysteryVersorOdd {
+    fn nearly_eq_eps(&self, other: &MysteryVersorOdd, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqUlps<MysteryVersorOdd, f32, f32> for MysteryVersorOdd {
+    fn nearly_eq_ulps(&self, other: &MysteryVersorOdd, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqTol<MysteryVersorOdd, f32, f32> for MysteryVersorOdd {}
+impl nearly::NearlyEq<MysteryVersorOdd, f32, f32> for MysteryVersorOdd {}
+impl nearly::NearlyOrdUlps<MysteryVersorOdd, f32, f32> for MysteryVersorOdd {
+    fn nearly_lt_ulps(&self, other: &MysteryVersorOdd, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_ulps(&self, other: &MysteryVersorOdd, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdEps<MysteryVersorOdd, f32, f32> for MysteryVersorOdd {
+    fn nearly_lt_eps(&self, other: &MysteryVersorOdd, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_eps(&self, other: &MysteryVersorOdd, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdTol<MysteryVersorOdd, f32, f32> for MysteryVersorOdd {}
+impl nearly::NearlyOrd<MysteryVersorOdd, f32, f32> for MysteryVersorOdd {}
+
 impl MysteryVersorOdd {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
@@ -152,6 +278,149 @@ impl std::hash::Hash for MysteryVersorOdd {
     }
 }
 
+unsafe impl bytemuck::Zeroable for MysteryVersorOdd {}
+unsafe impl bytemuck::Pod for MysteryVersorOdd {}
+impl encase::ShaderType for MysteryVersorOdd {
+    type ExtraMetadata = <MysteryVersorOddGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <MysteryVersorOddGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <MysteryVersorOddGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <MysteryVersorOddGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <MysteryVersorOddGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for MysteryVersorOdd {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("MysteryVersorOdd", 8)?;
+        state.serialize_field("scalar", &self[crate::elements::scalar])?;
+        state.serialize_field("e4235", &self[crate::elements::e4235])?;
+        state.serialize_field("e4315", &self[crate::elements::e4315])?;
+        state.serialize_field("e4125", &self[crate::elements::e4125])?;
+        state.serialize_field("e23", &self[crate::elements::e23])?;
+        state.serialize_field("e31", &self[crate::elements::e31])?;
+        state.serialize_field("e12", &self[crate::elements::e12])?;
+        state.serialize_field("e45", &self[crate::elements::e45])?;
+        state.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for MysteryVersorOdd {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum MysteryVersorOddField {
+            scalar,
+            e4235,
+            e4315,
+            e4125,
+            e23,
+            e31,
+            e12,
+            e45,
+        }
+        struct MysteryVersorOddVisitor;
+        impl<'de> Visitor<'de> for MysteryVersorOddVisitor {
+            type Value = MysteryVersorOdd;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct MysteryVersorOdd")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<MysteryVersorOdd, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut scalar = None;
+                let mut e4235 = None;
+                let mut e4315 = None;
+                let mut e4125 = None;
+                let mut e23 = None;
+                let mut e31 = None;
+                let mut e12 = None;
+                let mut e45 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        MysteryVersorOddField::scalar => {
+                            if scalar.is_some() {
+                                return Err(serde::de::Error::duplicate_field("scalar"));
+                            }
+                            scalar = Some(map.next_value()?);
+                        }
+
+                        MysteryVersorOddField::e4235 => {
+                            if e4235.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e4235"));
+                            }
+                            e4235 = Some(map.next_value()?);
+                        }
+
+                        MysteryVersorOddField::e4315 => {
+                            if e4315.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e4315"));
+                            }
+                            e4315 = Some(map.next_value()?);
+                        }
+
+                        MysteryVersorOddField::e4125 => {
+                            if e4125.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e4125"));
+                            }
+                            e4125 = Some(map.next_value()?);
+                        }
+
+                        MysteryVersorOddField::e23 => {
+                            if e23.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e23"));
+                            }
+                            e23 = Some(map.next_value()?);
+                        }
+
+                        MysteryVersorOddField::e31 => {
+                            if e31.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e31"));
+                            }
+                            e31 = Some(map.next_value()?);
+                        }
+
+                        MysteryVersorOddField::e12 => {
+                            if e12.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e12"));
+                            }
+                            e12 = Some(map.next_value()?);
+                        }
+
+                        MysteryVersorOddField::e45 => {
+                            if e45.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e45"));
+                            }
+                            e45 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = MysteryVersorOdd::from([0.0; 8]);
+                result[crate::elements::scalar] = scalar.ok_or_else(|| serde::de::Error::missing_field("scalar"))?;
+                result[crate::elements::e4235] = e4235.ok_or_else(|| serde::de::Error::missing_field("e4235"))?;
+                result[crate::elements::e4315] = e4315.ok_or_else(|| serde::de::Error::missing_field("e4315"))?;
+                result[crate::elements::e4125] = e4125.ok_or_else(|| serde::de::Error::missing_field("e4125"))?;
+                result[crate::elements::e23] = e23.ok_or_else(|| serde::de::Error::missing_field("e23"))?;
+                result[crate::elements::e31] = e31.ok_or_else(|| serde::de::Error::missing_field("e31"))?;
+                result[crate::elements::e12] = e12.ok_or_else(|| serde::de::Error::missing_field("e12"))?;
+                result[crate::elements::e45] = e45.ok_or_else(|| serde::de::Error::missing_field("e45"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["scalar", "e4235", "e4315", "e4125", "e23", "e31", "e12", "e45"];
+        deserializer.deserialize_struct("MysteryVersorOdd", FIELDS, MysteryVersorOddVisitor)
+    }
+}
 impl std::ops::Index<crate::elements::scalar> for MysteryVersorOdd {
     type Output = f32;
     fn index(&self, _: crate::elements::scalar) -> &Self::Output {
@@ -201,42 +470,42 @@ impl std::ops::Index<crate::elements::e45> for MysteryVersorOdd {
     }
 }
 impl std::ops::IndexMut<crate::elements::scalar> for MysteryVersorOdd {
-    fn index_mut(&self, _: crate::elements::scalar) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::scalar) -> &mut Self::Output {
         &mut self[0]
     }
 }
 impl std::ops::IndexMut<crate::elements::e4235> for MysteryVersorOdd {
-    fn index_mut(&self, _: crate::elements::e4235) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e4235) -> &mut Self::Output {
         &mut self[1]
     }
 }
 impl std::ops::IndexMut<crate::elements::e4315> for MysteryVersorOdd {
-    fn index_mut(&self, _: crate::elements::e4315) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e4315) -> &mut Self::Output {
         &mut self[2]
     }
 }
 impl std::ops::IndexMut<crate::elements::e4125> for MysteryVersorOdd {
-    fn index_mut(&self, _: crate::elements::e4125) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e4125) -> &mut Self::Output {
         &mut self[3]
     }
 }
 impl std::ops::IndexMut<crate::elements::e23> for MysteryVersorOdd {
-    fn index_mut(&self, _: crate::elements::e23) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e23) -> &mut Self::Output {
         &mut self[4]
     }
 }
 impl std::ops::IndexMut<crate::elements::e31> for MysteryVersorOdd {
-    fn index_mut(&self, _: crate::elements::e31) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e31) -> &mut Self::Output {
         &mut self[5]
     }
 }
 impl std::ops::IndexMut<crate::elements::e12> for MysteryVersorOdd {
-    fn index_mut(&self, _: crate::elements::e12) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e12) -> &mut Self::Output {
         &mut self[6]
     }
 }
 impl std::ops::IndexMut<crate::elements::e45> for MysteryVersorOdd {
-    fn index_mut(&self, _: crate::elements::e45) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e45) -> &mut Self::Output {
         &mut self[7]
     }
 }

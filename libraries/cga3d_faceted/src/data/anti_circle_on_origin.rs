@@ -1,4 +1,5 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// AntiCircleOnOrigin.
@@ -8,13 +9,15 @@ use crate::simd::*;
 /// object has behavioral and operative similarity to a DipoleOrthogonalOrigin,
 /// but an imaginary radius, and a spacial presence in the shape of a
 /// CircleOnOrigin with a real radius.
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy)]
 pub union AntiCircleOnOrigin {
     groups: AntiCircleOnOriginGroups,
     /// e41, e42, e43, 0, e23, e31, e12, 0
     elements: [f32; 8],
 }
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct AntiCircleOnOriginGroups {
     /// e41, e42, e43
     g0: Simd32x3,
@@ -92,6 +95,129 @@ impl AntiCircleOnOrigin {
     pub const LEN: usize = 6;
 }
 
+impl nearly::NearlyEqEps<AntiCircleOnOrigin, f32, f32> for AntiCircleOnOrigin {
+    fn nearly_eq_eps(&self, other: &AntiCircleOnOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqUlps<AntiCircleOnOrigin, f32, f32> for AntiCircleOnOrigin {
+    fn nearly_eq_ulps(&self, other: &AntiCircleOnOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqTol<AntiCircleOnOrigin, f32, f32> for AntiCircleOnOrigin {}
+impl nearly::NearlyEq<AntiCircleOnOrigin, f32, f32> for AntiCircleOnOrigin {}
+impl nearly::NearlyOrdUlps<AntiCircleOnOrigin, f32, f32> for AntiCircleOnOrigin {
+    fn nearly_lt_ulps(&self, other: &AntiCircleOnOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_ulps(&self, other: &AntiCircleOnOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdEps<AntiCircleOnOrigin, f32, f32> for AntiCircleOnOrigin {
+    fn nearly_lt_eps(&self, other: &AntiCircleOnOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_eps(&self, other: &AntiCircleOnOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdTol<AntiCircleOnOrigin, f32, f32> for AntiCircleOnOrigin {}
+impl nearly::NearlyOrd<AntiCircleOnOrigin, f32, f32> for AntiCircleOnOrigin {}
+
 impl AntiCircleOnOrigin {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
@@ -151,6 +277,127 @@ impl std::hash::Hash for AntiCircleOnOrigin {
     }
 }
 
+unsafe impl bytemuck::Zeroable for AntiCircleOnOrigin {}
+unsafe impl bytemuck::Pod for AntiCircleOnOrigin {}
+impl encase::ShaderType for AntiCircleOnOrigin {
+    type ExtraMetadata = <AntiCircleOnOriginGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <AntiCircleOnOriginGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <AntiCircleOnOriginGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <AntiCircleOnOriginGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <AntiCircleOnOriginGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for AntiCircleOnOrigin {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("AntiCircleOnOrigin", 6)?;
+        state.serialize_field("e41", &self[crate::elements::e41])?;
+        state.serialize_field("e42", &self[crate::elements::e42])?;
+        state.serialize_field("e43", &self[crate::elements::e43])?;
+        state.serialize_field("e23", &self[crate::elements::e23])?;
+        state.serialize_field("e31", &self[crate::elements::e31])?;
+        state.serialize_field("e12", &self[crate::elements::e12])?;
+        state.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AntiCircleOnOrigin {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum AntiCircleOnOriginField {
+            e41,
+            e42,
+            e43,
+            e23,
+            e31,
+            e12,
+        }
+        struct AntiCircleOnOriginVisitor;
+        impl<'de> Visitor<'de> for AntiCircleOnOriginVisitor {
+            type Value = AntiCircleOnOrigin;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct AntiCircleOnOrigin")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<AntiCircleOnOrigin, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e41 = None;
+                let mut e42 = None;
+                let mut e43 = None;
+                let mut e23 = None;
+                let mut e31 = None;
+                let mut e12 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        AntiCircleOnOriginField::e41 => {
+                            if e41.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e41"));
+                            }
+                            e41 = Some(map.next_value()?);
+                        }
+
+                        AntiCircleOnOriginField::e42 => {
+                            if e42.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e42"));
+                            }
+                            e42 = Some(map.next_value()?);
+                        }
+
+                        AntiCircleOnOriginField::e43 => {
+                            if e43.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e43"));
+                            }
+                            e43 = Some(map.next_value()?);
+                        }
+
+                        AntiCircleOnOriginField::e23 => {
+                            if e23.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e23"));
+                            }
+                            e23 = Some(map.next_value()?);
+                        }
+
+                        AntiCircleOnOriginField::e31 => {
+                            if e31.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e31"));
+                            }
+                            e31 = Some(map.next_value()?);
+                        }
+
+                        AntiCircleOnOriginField::e12 => {
+                            if e12.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e12"));
+                            }
+                            e12 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = AntiCircleOnOrigin::from([0.0; 6]);
+                result[crate::elements::e41] = e41.ok_or_else(|| serde::de::Error::missing_field("e41"))?;
+                result[crate::elements::e42] = e42.ok_or_else(|| serde::de::Error::missing_field("e42"))?;
+                result[crate::elements::e43] = e43.ok_or_else(|| serde::de::Error::missing_field("e43"))?;
+                result[crate::elements::e23] = e23.ok_or_else(|| serde::de::Error::missing_field("e23"))?;
+                result[crate::elements::e31] = e31.ok_or_else(|| serde::de::Error::missing_field("e31"))?;
+                result[crate::elements::e12] = e12.ok_or_else(|| serde::de::Error::missing_field("e12"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e41", "e42", "e43", "e23", "e31", "e12"];
+        deserializer.deserialize_struct("AntiCircleOnOrigin", FIELDS, AntiCircleOnOriginVisitor)
+    }
+}
 impl std::ops::Index<crate::elements::e41> for AntiCircleOnOrigin {
     type Output = f32;
     fn index(&self, _: crate::elements::e41) -> &Self::Output {
@@ -188,32 +435,32 @@ impl std::ops::Index<crate::elements::e12> for AntiCircleOnOrigin {
     }
 }
 impl std::ops::IndexMut<crate::elements::e41> for AntiCircleOnOrigin {
-    fn index_mut(&self, _: crate::elements::e41) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e41) -> &mut Self::Output {
         &mut self[0]
     }
 }
 impl std::ops::IndexMut<crate::elements::e42> for AntiCircleOnOrigin {
-    fn index_mut(&self, _: crate::elements::e42) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e42) -> &mut Self::Output {
         &mut self[1]
     }
 }
 impl std::ops::IndexMut<crate::elements::e43> for AntiCircleOnOrigin {
-    fn index_mut(&self, _: crate::elements::e43) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e43) -> &mut Self::Output {
         &mut self[2]
     }
 }
 impl std::ops::IndexMut<crate::elements::e23> for AntiCircleOnOrigin {
-    fn index_mut(&self, _: crate::elements::e23) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e23) -> &mut Self::Output {
         &mut self[3]
     }
 }
 impl std::ops::IndexMut<crate::elements::e31> for AntiCircleOnOrigin {
-    fn index_mut(&self, _: crate::elements::e31) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e31) -> &mut Self::Output {
         &mut self[4]
     }
 }
 impl std::ops::IndexMut<crate::elements::e12> for AntiCircleOnOrigin {
-    fn index_mut(&self, _: crate::elements::e12) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e12) -> &mut Self::Output {
         &mut self[5]
     }
 }

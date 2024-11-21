@@ -1,4 +1,5 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// AntiDipoleInversionOnOrigin.
@@ -8,13 +9,15 @@ use crate::simd::*;
 /// object has behavioral and operative similarity to a VersorEvenOrthogonalOrigin,
 /// but an imaginary radius, and a spacial presence in the shape of a
 /// DipoleInversionOnOrigin with a real radius.
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy)]
 pub union AntiDipoleInversionOnOrigin {
     groups: AntiDipoleInversionOnOriginGroups,
     /// e423, e431, e412, e321, e4, e1, e2, e3
     elements: [f32; 8],
 }
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct AntiDipoleInversionOnOriginGroups {
     /// e423, e431, e412, e321
     g0: Simd32x4,
@@ -98,6 +101,129 @@ impl AntiDipoleInversionOnOrigin {
     pub const LEN: usize = 8;
 }
 
+impl nearly::NearlyEqEps<AntiDipoleInversionOnOrigin, f32, f32> for AntiDipoleInversionOnOrigin {
+    fn nearly_eq_eps(&self, other: &AntiDipoleInversionOnOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqUlps<AntiDipoleInversionOnOrigin, f32, f32> for AntiDipoleInversionOnOrigin {
+    fn nearly_eq_ulps(&self, other: &AntiDipoleInversionOnOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqTol<AntiDipoleInversionOnOrigin, f32, f32> for AntiDipoleInversionOnOrigin {}
+impl nearly::NearlyEq<AntiDipoleInversionOnOrigin, f32, f32> for AntiDipoleInversionOnOrigin {}
+impl nearly::NearlyOrdUlps<AntiDipoleInversionOnOrigin, f32, f32> for AntiDipoleInversionOnOrigin {
+    fn nearly_lt_ulps(&self, other: &AntiDipoleInversionOnOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_ulps(&self, other: &AntiDipoleInversionOnOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdEps<AntiDipoleInversionOnOrigin, f32, f32> for AntiDipoleInversionOnOrigin {
+    fn nearly_lt_eps(&self, other: &AntiDipoleInversionOnOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_eps(&self, other: &AntiDipoleInversionOnOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdTol<AntiDipoleInversionOnOrigin, f32, f32> for AntiDipoleInversionOnOrigin {}
+impl nearly::NearlyOrd<AntiDipoleInversionOnOrigin, f32, f32> for AntiDipoleInversionOnOrigin {}
+
 impl AntiDipoleInversionOnOrigin {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
@@ -157,6 +283,149 @@ impl std::hash::Hash for AntiDipoleInversionOnOrigin {
     }
 }
 
+unsafe impl bytemuck::Zeroable for AntiDipoleInversionOnOrigin {}
+unsafe impl bytemuck::Pod for AntiDipoleInversionOnOrigin {}
+impl encase::ShaderType for AntiDipoleInversionOnOrigin {
+    type ExtraMetadata = <AntiDipoleInversionOnOriginGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <AntiDipoleInversionOnOriginGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <AntiDipoleInversionOnOriginGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <AntiDipoleInversionOnOriginGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <AntiDipoleInversionOnOriginGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for AntiDipoleInversionOnOrigin {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("AntiDipoleInversionOnOrigin", 8)?;
+        state.serialize_field("e423", &self[crate::elements::e423])?;
+        state.serialize_field("e431", &self[crate::elements::e431])?;
+        state.serialize_field("e412", &self[crate::elements::e412])?;
+        state.serialize_field("e321", &self[crate::elements::e321])?;
+        state.serialize_field("e4", &self[crate::elements::e4])?;
+        state.serialize_field("e1", &self[crate::elements::e1])?;
+        state.serialize_field("e2", &self[crate::elements::e2])?;
+        state.serialize_field("e3", &self[crate::elements::e3])?;
+        state.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AntiDipoleInversionOnOrigin {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum AntiDipoleInversionOnOriginField {
+            e423,
+            e431,
+            e412,
+            e321,
+            e4,
+            e1,
+            e2,
+            e3,
+        }
+        struct AntiDipoleInversionOnOriginVisitor;
+        impl<'de> Visitor<'de> for AntiDipoleInversionOnOriginVisitor {
+            type Value = AntiDipoleInversionOnOrigin;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct AntiDipoleInversionOnOrigin")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<AntiDipoleInversionOnOrigin, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e423 = None;
+                let mut e431 = None;
+                let mut e412 = None;
+                let mut e321 = None;
+                let mut e4 = None;
+                let mut e1 = None;
+                let mut e2 = None;
+                let mut e3 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        AntiDipoleInversionOnOriginField::e423 => {
+                            if e423.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e423"));
+                            }
+                            e423 = Some(map.next_value()?);
+                        }
+
+                        AntiDipoleInversionOnOriginField::e431 => {
+                            if e431.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e431"));
+                            }
+                            e431 = Some(map.next_value()?);
+                        }
+
+                        AntiDipoleInversionOnOriginField::e412 => {
+                            if e412.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e412"));
+                            }
+                            e412 = Some(map.next_value()?);
+                        }
+
+                        AntiDipoleInversionOnOriginField::e321 => {
+                            if e321.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e321"));
+                            }
+                            e321 = Some(map.next_value()?);
+                        }
+
+                        AntiDipoleInversionOnOriginField::e4 => {
+                            if e4.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e4"));
+                            }
+                            e4 = Some(map.next_value()?);
+                        }
+
+                        AntiDipoleInversionOnOriginField::e1 => {
+                            if e1.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e1"));
+                            }
+                            e1 = Some(map.next_value()?);
+                        }
+
+                        AntiDipoleInversionOnOriginField::e2 => {
+                            if e2.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e2"));
+                            }
+                            e2 = Some(map.next_value()?);
+                        }
+
+                        AntiDipoleInversionOnOriginField::e3 => {
+                            if e3.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e3"));
+                            }
+                            e3 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = AntiDipoleInversionOnOrigin::from([0.0; 8]);
+                result[crate::elements::e423] = e423.ok_or_else(|| serde::de::Error::missing_field("e423"))?;
+                result[crate::elements::e431] = e431.ok_or_else(|| serde::de::Error::missing_field("e431"))?;
+                result[crate::elements::e412] = e412.ok_or_else(|| serde::de::Error::missing_field("e412"))?;
+                result[crate::elements::e321] = e321.ok_or_else(|| serde::de::Error::missing_field("e321"))?;
+                result[crate::elements::e4] = e4.ok_or_else(|| serde::de::Error::missing_field("e4"))?;
+                result[crate::elements::e1] = e1.ok_or_else(|| serde::de::Error::missing_field("e1"))?;
+                result[crate::elements::e2] = e2.ok_or_else(|| serde::de::Error::missing_field("e2"))?;
+                result[crate::elements::e3] = e3.ok_or_else(|| serde::de::Error::missing_field("e3"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e423", "e431", "e412", "e321", "e4", "e1", "e2", "e3"];
+        deserializer.deserialize_struct("AntiDipoleInversionOnOrigin", FIELDS, AntiDipoleInversionOnOriginVisitor)
+    }
+}
 impl std::ops::Index<crate::elements::e423> for AntiDipoleInversionOnOrigin {
     type Output = f32;
     fn index(&self, _: crate::elements::e423) -> &Self::Output {
@@ -206,42 +475,42 @@ impl std::ops::Index<crate::elements::e3> for AntiDipoleInversionOnOrigin {
     }
 }
 impl std::ops::IndexMut<crate::elements::e423> for AntiDipoleInversionOnOrigin {
-    fn index_mut(&self, _: crate::elements::e423) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e423) -> &mut Self::Output {
         &mut self[0]
     }
 }
 impl std::ops::IndexMut<crate::elements::e431> for AntiDipoleInversionOnOrigin {
-    fn index_mut(&self, _: crate::elements::e431) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e431) -> &mut Self::Output {
         &mut self[1]
     }
 }
 impl std::ops::IndexMut<crate::elements::e412> for AntiDipoleInversionOnOrigin {
-    fn index_mut(&self, _: crate::elements::e412) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e412) -> &mut Self::Output {
         &mut self[2]
     }
 }
 impl std::ops::IndexMut<crate::elements::e321> for AntiDipoleInversionOnOrigin {
-    fn index_mut(&self, _: crate::elements::e321) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e321) -> &mut Self::Output {
         &mut self[3]
     }
 }
 impl std::ops::IndexMut<crate::elements::e4> for AntiDipoleInversionOnOrigin {
-    fn index_mut(&self, _: crate::elements::e4) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e4) -> &mut Self::Output {
         &mut self[4]
     }
 }
 impl std::ops::IndexMut<crate::elements::e1> for AntiDipoleInversionOnOrigin {
-    fn index_mut(&self, _: crate::elements::e1) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e1) -> &mut Self::Output {
         &mut self[5]
     }
 }
 impl std::ops::IndexMut<crate::elements::e2> for AntiDipoleInversionOnOrigin {
-    fn index_mut(&self, _: crate::elements::e2) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e2) -> &mut Self::Output {
         &mut self[6]
     }
 }
 impl std::ops::IndexMut<crate::elements::e3> for AntiDipoleInversionOnOrigin {
-    fn index_mut(&self, _: crate::elements::e3) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e3) -> &mut Self::Output {
         &mut self[7]
     }
 }

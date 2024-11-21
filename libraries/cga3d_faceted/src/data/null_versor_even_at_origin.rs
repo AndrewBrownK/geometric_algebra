@@ -1,15 +1,18 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// NullVersorEvenAtOrigin.
 /// This variant of VersorEven has a radius of zero and is centered on the Origin.
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy)]
 pub union NullVersorEvenAtOrigin {
     groups: NullVersorEvenAtOriginGroups,
     /// e423, e431, e412, e4
     elements: [f32; 4],
 }
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct NullVersorEvenAtOriginGroups {
     /// e423, e431, e412, e4
     g0: Simd32x4,
@@ -73,6 +76,129 @@ impl NullVersorEvenAtOrigin {
     pub const LEN: usize = 4;
 }
 
+impl nearly::NearlyEqEps<NullVersorEvenAtOrigin, f32, f32> for NullVersorEvenAtOrigin {
+    fn nearly_eq_eps(&self, other: &NullVersorEvenAtOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqUlps<NullVersorEvenAtOrigin, f32, f32> for NullVersorEvenAtOrigin {
+    fn nearly_eq_ulps(&self, other: &NullVersorEvenAtOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqTol<NullVersorEvenAtOrigin, f32, f32> for NullVersorEvenAtOrigin {}
+impl nearly::NearlyEq<NullVersorEvenAtOrigin, f32, f32> for NullVersorEvenAtOrigin {}
+impl nearly::NearlyOrdUlps<NullVersorEvenAtOrigin, f32, f32> for NullVersorEvenAtOrigin {
+    fn nearly_lt_ulps(&self, other: &NullVersorEvenAtOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_ulps(&self, other: &NullVersorEvenAtOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdEps<NullVersorEvenAtOrigin, f32, f32> for NullVersorEvenAtOrigin {
+    fn nearly_lt_eps(&self, other: &NullVersorEvenAtOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_eps(&self, other: &NullVersorEvenAtOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdTol<NullVersorEvenAtOrigin, f32, f32> for NullVersorEvenAtOrigin {}
+impl nearly::NearlyOrd<NullVersorEvenAtOrigin, f32, f32> for NullVersorEvenAtOrigin {}
+
 impl NullVersorEvenAtOrigin {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
@@ -132,6 +258,105 @@ impl std::hash::Hash for NullVersorEvenAtOrigin {
     }
 }
 
+unsafe impl bytemuck::Zeroable for NullVersorEvenAtOrigin {}
+unsafe impl bytemuck::Pod for NullVersorEvenAtOrigin {}
+impl encase::ShaderType for NullVersorEvenAtOrigin {
+    type ExtraMetadata = <NullVersorEvenAtOriginGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <NullVersorEvenAtOriginGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <NullVersorEvenAtOriginGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <NullVersorEvenAtOriginGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <NullVersorEvenAtOriginGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for NullVersorEvenAtOrigin {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("NullVersorEvenAtOrigin", 4)?;
+        state.serialize_field("e423", &self[crate::elements::e423])?;
+        state.serialize_field("e431", &self[crate::elements::e431])?;
+        state.serialize_field("e412", &self[crate::elements::e412])?;
+        state.serialize_field("e4", &self[crate::elements::e4])?;
+        state.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for NullVersorEvenAtOrigin {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum NullVersorEvenAtOriginField {
+            e423,
+            e431,
+            e412,
+            e4,
+        }
+        struct NullVersorEvenAtOriginVisitor;
+        impl<'de> Visitor<'de> for NullVersorEvenAtOriginVisitor {
+            type Value = NullVersorEvenAtOrigin;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct NullVersorEvenAtOrigin")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<NullVersorEvenAtOrigin, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e423 = None;
+                let mut e431 = None;
+                let mut e412 = None;
+                let mut e4 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        NullVersorEvenAtOriginField::e423 => {
+                            if e423.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e423"));
+                            }
+                            e423 = Some(map.next_value()?);
+                        }
+
+                        NullVersorEvenAtOriginField::e431 => {
+                            if e431.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e431"));
+                            }
+                            e431 = Some(map.next_value()?);
+                        }
+
+                        NullVersorEvenAtOriginField::e412 => {
+                            if e412.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e412"));
+                            }
+                            e412 = Some(map.next_value()?);
+                        }
+
+                        NullVersorEvenAtOriginField::e4 => {
+                            if e4.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e4"));
+                            }
+                            e4 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = NullVersorEvenAtOrigin::from([0.0; 4]);
+                result[crate::elements::e423] = e423.ok_or_else(|| serde::de::Error::missing_field("e423"))?;
+                result[crate::elements::e431] = e431.ok_or_else(|| serde::de::Error::missing_field("e431"))?;
+                result[crate::elements::e412] = e412.ok_or_else(|| serde::de::Error::missing_field("e412"))?;
+                result[crate::elements::e4] = e4.ok_or_else(|| serde::de::Error::missing_field("e4"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e423", "e431", "e412", "e4"];
+        deserializer.deserialize_struct("NullVersorEvenAtOrigin", FIELDS, NullVersorEvenAtOriginVisitor)
+    }
+}
 impl std::ops::Index<crate::elements::e423> for NullVersorEvenAtOrigin {
     type Output = f32;
     fn index(&self, _: crate::elements::e423) -> &Self::Output {
@@ -157,22 +382,22 @@ impl std::ops::Index<crate::elements::e4> for NullVersorEvenAtOrigin {
     }
 }
 impl std::ops::IndexMut<crate::elements::e423> for NullVersorEvenAtOrigin {
-    fn index_mut(&self, _: crate::elements::e423) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e423) -> &mut Self::Output {
         &mut self[0]
     }
 }
 impl std::ops::IndexMut<crate::elements::e431> for NullVersorEvenAtOrigin {
-    fn index_mut(&self, _: crate::elements::e431) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e431) -> &mut Self::Output {
         &mut self[1]
     }
 }
 impl std::ops::IndexMut<crate::elements::e412> for NullVersorEvenAtOrigin {
-    fn index_mut(&self, _: crate::elements::e412) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e412) -> &mut Self::Output {
         &mut self[2]
     }
 }
 impl std::ops::IndexMut<crate::elements::e4> for NullVersorEvenAtOrigin {
-    fn index_mut(&self, _: crate::elements::e4) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e4) -> &mut Self::Output {
         &mut self[3]
     }
 }

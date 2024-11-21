@@ -1,14 +1,17 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// Scalar
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy)]
 pub union Scalar {
     groups: ScalarGroups,
     /// scalar, 0, 0, 0
     elements: [f32; 4],
 }
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct ScalarGroups {
     /// scalar
     g0: f32,
@@ -65,6 +68,129 @@ impl std::fmt::Debug for Scalar {
 impl Scalar {
     pub const LEN: usize = 1;
 }
+
+impl nearly::NearlyEqEps<Scalar, f32, f32> for Scalar {
+    fn nearly_eq_eps(&self, other: &Scalar, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqUlps<Scalar, f32, f32> for Scalar {
+    fn nearly_eq_ulps(&self, other: &Scalar, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqTol<Scalar, f32, f32> for Scalar {}
+impl nearly::NearlyEq<Scalar, f32, f32> for Scalar {}
+impl nearly::NearlyOrdUlps<Scalar, f32, f32> for Scalar {
+    fn nearly_lt_ulps(&self, other: &Scalar, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_ulps(&self, other: &Scalar, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdEps<Scalar, f32, f32> for Scalar {
+    fn nearly_lt_eps(&self, other: &Scalar, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_eps(&self, other: &Scalar, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdTol<Scalar, f32, f32> for Scalar {}
+impl nearly::NearlyOrd<Scalar, f32, f32> for Scalar {}
 
 impl Scalar {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
@@ -125,6 +251,72 @@ impl std::hash::Hash for Scalar {
     }
 }
 
+unsafe impl bytemuck::Zeroable for Scalar {}
+unsafe impl bytemuck::Pod for Scalar {}
+impl encase::ShaderType for Scalar {
+    type ExtraMetadata = <ScalarGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <ScalarGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <ScalarGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <ScalarGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <ScalarGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for Scalar {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("Scalar", 1)?;
+        state.serialize_field("scalar", &self[crate::elements::scalar])?;
+        state.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for Scalar {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum ScalarField {
+            scalar,
+        }
+        struct ScalarVisitor;
+        impl<'de> Visitor<'de> for ScalarVisitor {
+            type Value = Scalar;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct Scalar")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<Scalar, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut scalar = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        ScalarField::scalar => {
+                            if scalar.is_some() {
+                                return Err(serde::de::Error::duplicate_field("scalar"));
+                            }
+                            scalar = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = Scalar::from([0.0; 1]);
+                result[crate::elements::scalar] = scalar.ok_or_else(|| serde::de::Error::missing_field("scalar"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["scalar"];
+        deserializer.deserialize_struct("Scalar", FIELDS, ScalarVisitor)
+    }
+}
 impl std::ops::Index<crate::elements::scalar> for Scalar {
     type Output = f32;
     fn index(&self, _: crate::elements::scalar) -> &Self::Output {
@@ -132,7 +324,7 @@ impl std::ops::Index<crate::elements::scalar> for Scalar {
     }
 }
 impl std::ops::IndexMut<crate::elements::scalar> for Scalar {
-    fn index_mut(&self, _: crate::elements::scalar) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::scalar) -> &mut Self::Output {
         &mut self[0]
     }
 }

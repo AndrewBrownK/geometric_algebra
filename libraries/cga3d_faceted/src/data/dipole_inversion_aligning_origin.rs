@@ -1,15 +1,18 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// DipoleInversionAligningOrigin.
 /// This variant of DipoleInversion has a Carrier that intersects the Origin.
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy)]
 pub union DipoleInversionAligningOrigin {
     groups: DipoleInversionAligningOriginGroups,
     /// e41, e42, e43, e45, e15, e25, e35, e1234, e4235, e4315, e4125, e3215
     elements: [f32; 12],
 }
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct DipoleInversionAligningOriginGroups {
     /// e41, e42, e43, e45
     g0: Simd32x4,
@@ -108,6 +111,129 @@ impl DipoleInversionAligningOrigin {
     pub const LEN: usize = 12;
 }
 
+impl nearly::NearlyEqEps<DipoleInversionAligningOrigin, f32, f32> for DipoleInversionAligningOrigin {
+    fn nearly_eq_eps(&self, other: &DipoleInversionAligningOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqUlps<DipoleInversionAligningOrigin, f32, f32> for DipoleInversionAligningOrigin {
+    fn nearly_eq_ulps(&self, other: &DipoleInversionAligningOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqTol<DipoleInversionAligningOrigin, f32, f32> for DipoleInversionAligningOrigin {}
+impl nearly::NearlyEq<DipoleInversionAligningOrigin, f32, f32> for DipoleInversionAligningOrigin {}
+impl nearly::NearlyOrdUlps<DipoleInversionAligningOrigin, f32, f32> for DipoleInversionAligningOrigin {
+    fn nearly_lt_ulps(&self, other: &DipoleInversionAligningOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_ulps(&self, other: &DipoleInversionAligningOrigin, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdEps<DipoleInversionAligningOrigin, f32, f32> for DipoleInversionAligningOrigin {
+    fn nearly_lt_eps(&self, other: &DipoleInversionAligningOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_eps(&self, other: &DipoleInversionAligningOrigin, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdTol<DipoleInversionAligningOrigin, f32, f32> for DipoleInversionAligningOrigin {}
+impl nearly::NearlyOrd<DipoleInversionAligningOrigin, f32, f32> for DipoleInversionAligningOrigin {}
+
 impl DipoleInversionAligningOrigin {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
@@ -167,6 +293,193 @@ impl std::hash::Hash for DipoleInversionAligningOrigin {
     }
 }
 
+unsafe impl bytemuck::Zeroable for DipoleInversionAligningOrigin {}
+unsafe impl bytemuck::Pod for DipoleInversionAligningOrigin {}
+impl encase::ShaderType for DipoleInversionAligningOrigin {
+    type ExtraMetadata = <DipoleInversionAligningOriginGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <DipoleInversionAligningOriginGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <DipoleInversionAligningOriginGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <DipoleInversionAligningOriginGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <DipoleInversionAligningOriginGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for DipoleInversionAligningOrigin {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("DipoleInversionAligningOrigin", 12)?;
+        state.serialize_field("e41", &self[crate::elements::e41])?;
+        state.serialize_field("e42", &self[crate::elements::e42])?;
+        state.serialize_field("e43", &self[crate::elements::e43])?;
+        state.serialize_field("e45", &self[crate::elements::e45])?;
+        state.serialize_field("e15", &self[crate::elements::e15])?;
+        state.serialize_field("e25", &self[crate::elements::e25])?;
+        state.serialize_field("e35", &self[crate::elements::e35])?;
+        state.serialize_field("e1234", &self[crate::elements::e1234])?;
+        state.serialize_field("e4235", &self[crate::elements::e4235])?;
+        state.serialize_field("e4315", &self[crate::elements::e4315])?;
+        state.serialize_field("e4125", &self[crate::elements::e4125])?;
+        state.serialize_field("e3215", &self[crate::elements::e3215])?;
+        state.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for DipoleInversionAligningOrigin {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum DipoleInversionAligningOriginField {
+            e41,
+            e42,
+            e43,
+            e45,
+            e15,
+            e25,
+            e35,
+            e1234,
+            e4235,
+            e4315,
+            e4125,
+            e3215,
+        }
+        struct DipoleInversionAligningOriginVisitor;
+        impl<'de> Visitor<'de> for DipoleInversionAligningOriginVisitor {
+            type Value = DipoleInversionAligningOrigin;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct DipoleInversionAligningOrigin")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<DipoleInversionAligningOrigin, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e41 = None;
+                let mut e42 = None;
+                let mut e43 = None;
+                let mut e45 = None;
+                let mut e15 = None;
+                let mut e25 = None;
+                let mut e35 = None;
+                let mut e1234 = None;
+                let mut e4235 = None;
+                let mut e4315 = None;
+                let mut e4125 = None;
+                let mut e3215 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        DipoleInversionAligningOriginField::e41 => {
+                            if e41.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e41"));
+                            }
+                            e41 = Some(map.next_value()?);
+                        }
+
+                        DipoleInversionAligningOriginField::e42 => {
+                            if e42.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e42"));
+                            }
+                            e42 = Some(map.next_value()?);
+                        }
+
+                        DipoleInversionAligningOriginField::e43 => {
+                            if e43.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e43"));
+                            }
+                            e43 = Some(map.next_value()?);
+                        }
+
+                        DipoleInversionAligningOriginField::e45 => {
+                            if e45.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e45"));
+                            }
+                            e45 = Some(map.next_value()?);
+                        }
+
+                        DipoleInversionAligningOriginField::e15 => {
+                            if e15.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e15"));
+                            }
+                            e15 = Some(map.next_value()?);
+                        }
+
+                        DipoleInversionAligningOriginField::e25 => {
+                            if e25.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e25"));
+                            }
+                            e25 = Some(map.next_value()?);
+                        }
+
+                        DipoleInversionAligningOriginField::e35 => {
+                            if e35.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e35"));
+                            }
+                            e35 = Some(map.next_value()?);
+                        }
+
+                        DipoleInversionAligningOriginField::e1234 => {
+                            if e1234.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e1234"));
+                            }
+                            e1234 = Some(map.next_value()?);
+                        }
+
+                        DipoleInversionAligningOriginField::e4235 => {
+                            if e4235.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e4235"));
+                            }
+                            e4235 = Some(map.next_value()?);
+                        }
+
+                        DipoleInversionAligningOriginField::e4315 => {
+                            if e4315.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e4315"));
+                            }
+                            e4315 = Some(map.next_value()?);
+                        }
+
+                        DipoleInversionAligningOriginField::e4125 => {
+                            if e4125.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e4125"));
+                            }
+                            e4125 = Some(map.next_value()?);
+                        }
+
+                        DipoleInversionAligningOriginField::e3215 => {
+                            if e3215.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e3215"));
+                            }
+                            e3215 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = DipoleInversionAligningOrigin::from([0.0; 12]);
+                result[crate::elements::e41] = e41.ok_or_else(|| serde::de::Error::missing_field("e41"))?;
+                result[crate::elements::e42] = e42.ok_or_else(|| serde::de::Error::missing_field("e42"))?;
+                result[crate::elements::e43] = e43.ok_or_else(|| serde::de::Error::missing_field("e43"))?;
+                result[crate::elements::e45] = e45.ok_or_else(|| serde::de::Error::missing_field("e45"))?;
+                result[crate::elements::e15] = e15.ok_or_else(|| serde::de::Error::missing_field("e15"))?;
+                result[crate::elements::e25] = e25.ok_or_else(|| serde::de::Error::missing_field("e25"))?;
+                result[crate::elements::e35] = e35.ok_or_else(|| serde::de::Error::missing_field("e35"))?;
+                result[crate::elements::e1234] = e1234.ok_or_else(|| serde::de::Error::missing_field("e1234"))?;
+                result[crate::elements::e4235] = e4235.ok_or_else(|| serde::de::Error::missing_field("e4235"))?;
+                result[crate::elements::e4315] = e4315.ok_or_else(|| serde::de::Error::missing_field("e4315"))?;
+                result[crate::elements::e4125] = e4125.ok_or_else(|| serde::de::Error::missing_field("e4125"))?;
+                result[crate::elements::e3215] = e3215.ok_or_else(|| serde::de::Error::missing_field("e3215"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e41", "e42", "e43", "e45", "e15", "e25", "e35", "e1234", "e4235", "e4315", "e4125", "e3215"];
+        deserializer.deserialize_struct("DipoleInversionAligningOrigin", FIELDS, DipoleInversionAligningOriginVisitor)
+    }
+}
 impl std::ops::Index<crate::elements::e41> for DipoleInversionAligningOrigin {
     type Output = f32;
     fn index(&self, _: crate::elements::e41) -> &Self::Output {
@@ -240,62 +553,62 @@ impl std::ops::Index<crate::elements::e3215> for DipoleInversionAligningOrigin {
     }
 }
 impl std::ops::IndexMut<crate::elements::e41> for DipoleInversionAligningOrigin {
-    fn index_mut(&self, _: crate::elements::e41) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e41) -> &mut Self::Output {
         &mut self[0]
     }
 }
 impl std::ops::IndexMut<crate::elements::e42> for DipoleInversionAligningOrigin {
-    fn index_mut(&self, _: crate::elements::e42) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e42) -> &mut Self::Output {
         &mut self[1]
     }
 }
 impl std::ops::IndexMut<crate::elements::e43> for DipoleInversionAligningOrigin {
-    fn index_mut(&self, _: crate::elements::e43) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e43) -> &mut Self::Output {
         &mut self[2]
     }
 }
 impl std::ops::IndexMut<crate::elements::e45> for DipoleInversionAligningOrigin {
-    fn index_mut(&self, _: crate::elements::e45) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e45) -> &mut Self::Output {
         &mut self[3]
     }
 }
 impl std::ops::IndexMut<crate::elements::e15> for DipoleInversionAligningOrigin {
-    fn index_mut(&self, _: crate::elements::e15) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e15) -> &mut Self::Output {
         &mut self[4]
     }
 }
 impl std::ops::IndexMut<crate::elements::e25> for DipoleInversionAligningOrigin {
-    fn index_mut(&self, _: crate::elements::e25) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e25) -> &mut Self::Output {
         &mut self[5]
     }
 }
 impl std::ops::IndexMut<crate::elements::e35> for DipoleInversionAligningOrigin {
-    fn index_mut(&self, _: crate::elements::e35) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e35) -> &mut Self::Output {
         &mut self[6]
     }
 }
 impl std::ops::IndexMut<crate::elements::e1234> for DipoleInversionAligningOrigin {
-    fn index_mut(&self, _: crate::elements::e1234) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e1234) -> &mut Self::Output {
         &mut self[7]
     }
 }
 impl std::ops::IndexMut<crate::elements::e4235> for DipoleInversionAligningOrigin {
-    fn index_mut(&self, _: crate::elements::e4235) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e4235) -> &mut Self::Output {
         &mut self[8]
     }
 }
 impl std::ops::IndexMut<crate::elements::e4315> for DipoleInversionAligningOrigin {
-    fn index_mut(&self, _: crate::elements::e4315) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e4315) -> &mut Self::Output {
         &mut self[9]
     }
 }
 impl std::ops::IndexMut<crate::elements::e4125> for DipoleInversionAligningOrigin {
-    fn index_mut(&self, _: crate::elements::e4125) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e4125) -> &mut Self::Output {
         &mut self[10]
     }
 }
 impl std::ops::IndexMut<crate::elements::e3215> for DipoleInversionAligningOrigin {
-    fn index_mut(&self, _: crate::elements::e3215) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e3215) -> &mut Self::Output {
         &mut self[11]
     }
 }

@@ -1,14 +1,17 @@
 use crate::data::*;
+#[allow(unused_imports)]
 use crate::simd::*;
 
 /// Horizon
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy)]
 pub union Horizon {
     groups: HorizonGroups,
     /// e3215, 0, 0, 0
     elements: [f32; 4],
 }
-#[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
+#[repr(C)]
+#[derive(Clone, Copy, encase::ShaderType)]
 pub struct HorizonGroups {
     /// e3215
     g0: f32,
@@ -63,6 +66,129 @@ impl std::fmt::Debug for Horizon {
 impl Horizon {
     pub const LEN: usize = 1;
 }
+
+impl nearly::NearlyEqEps<Horizon, f32, f32> for Horizon {
+    fn nearly_eq_eps(&self, other: &Horizon, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_ne_eps(a, b, eps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqUlps<Horizon, f32, f32> for Horizon {
+    fn nearly_eq_ulps(&self, other: &Horizon, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_ne_ulps(a, b, ulps) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
+}
+impl nearly::NearlyEqTol<Horizon, f32, f32> for Horizon {}
+impl nearly::NearlyEq<Horizon, f32, f32> for Horizon {}
+impl nearly::NearlyOrdUlps<Horizon, f32, f32> for Horizon {
+    fn nearly_lt_ulps(&self, other: &Horizon, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_ulps(&self, other: &Horizon, ulps: &nearly::UlpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqUlps::nearly_eq_ulps(a, b, ulps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdEps<Horizon, f32, f32> for Horizon {
+    fn nearly_lt_eps(&self, other: &Horizon, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a < b {
+                // Nearly equal until less-than wins
+                return true;
+            } else {
+                // else greater-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+
+    fn nearly_gt_eps(&self, other: &Horizon, eps: &nearly::EpsToleranceType<f32, f32>) -> bool {
+        let mut i = 0;
+        while i < Self::LEN {
+            let a = &self[i];
+            let b = &other[i];
+            if nearly::NearlyEqEps::nearly_eq_eps(a, b, eps) {
+                // Too close, compare next element
+                i += 1;
+                continue;
+            }
+            if a > b {
+                // Nearly equal until greater-than wins
+                return true;
+            } else {
+                // else less-than wins
+                return false;
+            }
+        }
+        // Nearly equal the whole way
+        return false;
+    }
+}
+impl nearly::NearlyOrdTol<Horizon, f32, f32> for Horizon {}
+impl nearly::NearlyOrd<Horizon, f32, f32> for Horizon {}
 
 impl Horizon {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
@@ -123,6 +249,72 @@ impl std::hash::Hash for Horizon {
     }
 }
 
+unsafe impl bytemuck::Zeroable for Horizon {}
+unsafe impl bytemuck::Pod for Horizon {}
+impl encase::ShaderType for Horizon {
+    type ExtraMetadata = <HorizonGroups as encase::ShaderType>::ExtraMetadata;
+    const METADATA: encase::private::Metadata<Self::ExtraMetadata> = <HorizonGroups as encase::ShaderType>::METADATA;
+    fn min_size() -> std::num::NonZeroU64 {
+        return <HorizonGroups as encase::ShaderType>::min_size();
+    }
+    fn size(&self) -> std::num::NonZeroU64 {
+        return encase::ShaderType::size(unsafe { &self.groups });
+    }
+    const UNIFORM_COMPAT_ASSERT: fn() = <HorizonGroups as encase::ShaderType>::UNIFORM_COMPAT_ASSERT;
+    fn assert_uniform_compat() {
+        return <HorizonGroups as encase::ShaderType>::assert_uniform_compat();
+    }
+}
+
+impl serde::Serialize for Horizon {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("Horizon", 1)?;
+        state.serialize_field("e3215", &self[crate::elements::e3215])?;
+        state.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for Horizon {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        use serde::de::{MapAccess, Visitor};
+        use std::fmt;
+        #[allow(non_camel_case_types)]
+        #[derive(serde::Deserialize)]
+        enum HorizonField {
+            e3215,
+        }
+        struct HorizonVisitor;
+        impl<'de> Visitor<'de> for HorizonVisitor {
+            type Value = Horizon;
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct Horizon")
+            }
+            fn visit_map<V>(self, mut map: V) -> Result<Horizon, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut e3215 = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        HorizonField::e3215 => {
+                            if e3215.is_some() {
+                                return Err(serde::de::Error::duplicate_field("e3215"));
+                            }
+                            e3215 = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let mut result = Horizon::from([0.0; 1]);
+                result[crate::elements::e3215] = e3215.ok_or_else(|| serde::de::Error::missing_field("e3215"))?;
+                Ok(result)
+            }
+        }
+
+        const FIELDS: &'static [&'static str] = &["e3215"];
+        deserializer.deserialize_struct("Horizon", FIELDS, HorizonVisitor)
+    }
+}
 impl std::ops::Index<crate::elements::e3215> for Horizon {
     type Output = f32;
     fn index(&self, _: crate::elements::e3215) -> &Self::Output {
@@ -130,7 +322,7 @@ impl std::ops::Index<crate::elements::e3215> for Horizon {
     }
 }
 impl std::ops::IndexMut<crate::elements::e3215> for Horizon {
-    fn index_mut(&self, _: crate::elements::e3215) -> &mut Self::Output {
+    fn index_mut(&mut self, _: crate::elements::e3215) -> &mut Self::Output {
         &mut self[0]
     }
 }

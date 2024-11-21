@@ -9,15 +9,21 @@
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:        11      13       0
-//  Average:        20      23       0
-//  Maximum:       269     279       0
+//   Median:        12      14       0
+//  Average:        24      28       0
+//  Maximum:       347     357       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:        15      17       0
+//   Median:        14      17       0
 //  Average:        26      32       0
 //  Maximum:       396     420       0
+impl std::ops::Div<anti_constraint_violation> for AntiCircleOnOrigin {
+    type Output = DualNum;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for AntiCircleOnOrigin {
     type Output = DualNum;
     // Operative Statistics for this implementation:
@@ -32,45 +38,49 @@ impl AntiConstraintViolation for AntiCircleOnOrigin {
         use crate::elements::*;
         let anti_reverse = AntiCircleOnOrigin::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
-            (Simd32x2::from([
-                ((anti_reverse.group1()[0] * self.group0()[0]) + (anti_reverse.group1()[1] * self.group0()[1]) + (anti_reverse.group1()[2] * self.group0()[2])),
-                0.0,
-            ]) + (Simd32x2::from(self.group1()[0]) * Simd32x2::from([anti_reverse.group0()[0], anti_reverse.group1()[0]]))
-                + (Simd32x2::from(self.group1()[1]) * Simd32x2::from([anti_reverse.group0()[1], anti_reverse.group1()[1]]))
-                + (Simd32x2::from(self.group1()[2]) * Simd32x2::from([anti_reverse.group0()[2], anti_reverse.group1()[2]]))),
+            Simd32x2::from([(anti_reverse[e23] * self[e41]) + (anti_reverse[e31] * self[e42]) + (anti_reverse[e12] * self[e43]), 0.0])
+                + (Simd32x2::from(self[e23]) * Simd32x2::from([anti_reverse[e41], anti_reverse[e23]]))
+                + (Simd32x2::from(self[e31]) * Simd32x2::from([anti_reverse[e42], anti_reverse[e31]]))
+                + (Simd32x2::from(self[e12]) * Simd32x2::from([anti_reverse[e43], anti_reverse[e12]])),
         );
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2)));
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2));
         return DualNum::from_groups(
             // e4, e12345
-            Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
+            Simd32x2::from([geometric_anti_product[e4], geometric_anti_product[e12345] - anti_dot_product[e12345]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiCircleRotor {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       35       42        0
+    //      f32       43       50        0
     //    simd3        0        1        0
-    //    simd4        2        3        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       37       46        0
+    // yes simd       43       52        0
     //  no simd       43       57        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[scalar]]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -78,17 +88,17 @@ impl AntiConstraintViolation for AntiCircleRotor {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[0] * self.group2()[0])
-                    + (anti_reverse.group0()[1] * self.group2()[1])
-                    + (anti_reverse.group0()[2] * self.group2()[2])
-                    + (self.group0()[0] * anti_reverse.group2()[0])
-                    + (self.group0()[1] * anti_reverse.group2()[1])
-                    + (self.group0()[2] * anti_reverse.group2()[2])
-                    + (anti_reverse.group1()[0] * self.group1()[0])
-                    + (anti_reverse.group1()[1] * self.group1()[1])
-                    + (anti_reverse.group1()[2] * self.group1()[2])
-                    - (anti_reverse.group1()[3] * self.group1()[3])
-                    - (anti_reverse.group2()[3] * self.group2()[3])),
+                (anti_reverse[e41] * self[e15])
+                    + (anti_reverse[e42] * self[e25])
+                    + (anti_reverse[e43] * self[e35])
+                    + (anti_reverse[e23] * self[e23])
+                    + (anti_reverse[e31] * self[e31])
+                    + (anti_reverse[e12] * self[e12])
+                    + (anti_reverse[e15] * self[e41])
+                    + (anti_reverse[e25] * self[e42])
+                    + (anti_reverse[e35] * self[e43])
+                    - (anti_reverse[e45] * self[e45])
+                    - (anti_reverse[scalar] * self[scalar]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -97,45 +107,59 @@ impl AntiConstraintViolation for AntiCircleRotor {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group1()[0] * self.group2()[0])
-                    + (anti_reverse.group1()[1] * self.group2()[1])
-                    + (anti_reverse.group1()[2] * self.group2()[2])
-                    + (anti_reverse.group2()[0] * self.group1()[0])
-                    + (anti_reverse.group2()[1] * self.group1()[1])
-                    + (anti_reverse.group2()[2] * self.group1()[2])),
+                (anti_reverse[e23] * self[e15])
+                    + (anti_reverse[e31] * self[e25])
+                    + (anti_reverse[e12] * self[e35])
+                    + (anti_reverse[e15] * self[e23])
+                    + (anti_reverse[e25] * self[e31])
+                    + (anti_reverse[e35] * self[e12]),
             ]),
             // e1, e2, e3, e4
-            (Simd32x4::from([
-                ((anti_reverse.group0()[1] * self.group2()[2]) - (anti_reverse.group0()[2] * self.group2()[1]) + (self.group0()[1] * anti_reverse.group2()[2])
-                    - (self.group0()[2] * anti_reverse.group2()[1])),
-                (-(anti_reverse.group0()[0] * self.group2()[2]) + (anti_reverse.group0()[2] * self.group2()[0]) - (self.group0()[0] * anti_reverse.group2()[2])
-                    + (self.group0()[2] * anti_reverse.group2()[0])),
-                ((anti_reverse.group0()[0] * self.group2()[1]) - (anti_reverse.group0()[1] * self.group2()[0]) + (self.group0()[0] * anti_reverse.group2()[1])
-                    - (self.group0()[1] * anti_reverse.group2()[0])),
-                ((anti_reverse.group0()[2] * self.group1()[2])
-                    + (self.group0()[0] * anti_reverse.group1()[0])
-                    + (self.group0()[1] * anti_reverse.group1()[1])
-                    + (self.group0()[2] * anti_reverse.group1()[2])),
-            ]) + (Simd32x4::from([anti_reverse.group1()[0], anti_reverse.group1()[1], anti_reverse.group1()[2], anti_reverse.group0()[0]]) * swizzle!(self.group1(), 3, 3, 3, 0))
-                + (Simd32x4::from([anti_reverse.group1()[3], anti_reverse.group1()[3], anti_reverse.group1()[3], anti_reverse.group0()[1]]) * swizzle!(self.group1(), 0, 1, 2, 1))),
+            Simd32x4::from([
+                (anti_reverse[e42] * self[e35]) + (anti_reverse[e23] * self[e45]) + (anti_reverse[e45] * self[e23]) + (anti_reverse[e35] * self[e42])
+                    - (anti_reverse[e43] * self[e25])
+                    - (anti_reverse[e25] * self[e43]),
+                (anti_reverse[e43] * self[e15]) + (anti_reverse[e31] * self[e45]) + (anti_reverse[e45] * self[e31]) + (anti_reverse[e15] * self[e43])
+                    - (anti_reverse[e41] * self[e35])
+                    - (anti_reverse[e35] * self[e41]),
+                (anti_reverse[e41] * self[e25]) + (anti_reverse[e12] * self[e45]) + (anti_reverse[e45] * self[e12]) + (anti_reverse[e25] * self[e41])
+                    - (anti_reverse[e42] * self[e15])
+                    - (anti_reverse[e15] * self[e42]),
+                (anti_reverse[e41] * self[e23])
+                    + (anti_reverse[e42] * self[e31])
+                    + (anti_reverse[e43] * self[e12])
+                    + (anti_reverse[e23] * self[e41])
+                    + (anti_reverse[e31] * self[e42])
+                    + (anti_reverse[e12] * self[e43]),
+            ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2) - f32::powi(self.group2()[3], 2)
-                + 2.0 * (self.group0()[0] * self.group2()[0])
-                + 2.0 * (self.group0()[1] * self.group2()[1])
-                + 2.0 * (self.group0()[2] * self.group2()[2])),
+            2.0 * (self[e41] * self[e15])
+                + 2.0 * (self[e42] * self[e25])
+                + 2.0 * (self[e43] * self[e35])
+                + f32::powi(self[e23], 2)
+                + f32::powi(self[e31], 2)
+                + f32::powi(self[e12], 2)
+                - f32::powi(self[e45], 2)
+                - f32::powi(self[scalar], 2),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiCircleRotorAligningOrigin {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiCircleRotorAligningOrigin {
@@ -151,11 +175,11 @@ impl AntiConstraintViolation for AntiCircleRotorAligningOrigin {
         use crate::elements::*;
         let anti_reverse = AntiCircleRotorAligningOrigin::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[scalar]]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -163,16 +187,16 @@ impl AntiConstraintViolation for AntiCircleRotorAligningOrigin {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[0] * self.group2()[0])
-                    + (anti_reverse.group0()[1] * self.group2()[1])
-                    + (anti_reverse.group0()[2] * self.group2()[2])
-                    + (anti_reverse.group1()[0] * self.group1()[0])
-                    + (anti_reverse.group1()[1] * self.group1()[1])
-                    + (anti_reverse.group1()[2] * self.group1()[2])
-                    + (self.group0()[0] * anti_reverse.group2()[0])
-                    + (self.group0()[1] * anti_reverse.group2()[1])
-                    + (self.group0()[2] * anti_reverse.group2()[2])
-                    - (anti_reverse.group2()[3] * self.group2()[3])),
+                (anti_reverse[e41] * self[e15])
+                    + (anti_reverse[e42] * self[e25])
+                    + (anti_reverse[e43] * self[e35])
+                    + (anti_reverse[e23] * self[e23])
+                    + (anti_reverse[e31] * self[e31])
+                    + (anti_reverse[e12] * self[e12])
+                    + (anti_reverse[e15] * self[e41])
+                    + (anti_reverse[e25] * self[e42])
+                    + (anti_reverse[e35] * self[e43])
+                    - (anti_reverse[scalar] * self[scalar]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -181,46 +205,52 @@ impl AntiConstraintViolation for AntiCircleRotorAligningOrigin {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group1()[0] * self.group2()[0])
-                    + (anti_reverse.group1()[1] * self.group2()[1])
-                    + (anti_reverse.group1()[2] * self.group2()[2])
-                    + (self.group1()[0] * anti_reverse.group2()[0])
-                    + (self.group1()[1] * anti_reverse.group2()[1])
-                    + (self.group1()[2] * anti_reverse.group2()[2])),
+                (anti_reverse[e23] * self[e15])
+                    + (anti_reverse[e31] * self[e25])
+                    + (anti_reverse[e12] * self[e35])
+                    + (anti_reverse[e15] * self[e23])
+                    + (anti_reverse[e25] * self[e31])
+                    + (anti_reverse[e35] * self[e12]),
             ]),
             // e1, e2, e3, e4
             Simd32x4::from([
-                ((anti_reverse.group0()[1] * self.group2()[2]) - (anti_reverse.group0()[2] * self.group2()[1]) + (self.group0()[1] * anti_reverse.group2()[2])
-                    - (self.group0()[2] * anti_reverse.group2()[1])),
-                (-(anti_reverse.group0()[0] * self.group2()[2]) + (anti_reverse.group0()[2] * self.group2()[0]) - (self.group0()[0] * anti_reverse.group2()[2])
-                    + (self.group0()[2] * anti_reverse.group2()[0])),
-                ((anti_reverse.group0()[0] * self.group2()[1]) - (anti_reverse.group0()[1] * self.group2()[0]) + (self.group0()[0] * anti_reverse.group2()[1])
-                    - (self.group0()[1] * anti_reverse.group2()[0])),
-                ((anti_reverse.group0()[0] * self.group1()[0])
-                    + (anti_reverse.group0()[1] * self.group1()[1])
-                    + (anti_reverse.group0()[2] * self.group1()[2])
-                    + (anti_reverse.group1()[0] * self.group0()[0])
-                    + (anti_reverse.group1()[1] * self.group0()[1])
-                    + (anti_reverse.group1()[2] * self.group0()[2])),
+                (anti_reverse[e42] * self[e35]) + (anti_reverse[e35] * self[e42]) - (anti_reverse[e43] * self[e25]) - (anti_reverse[e25] * self[e43]),
+                (anti_reverse[e43] * self[e15]) + (anti_reverse[e15] * self[e43]) - (anti_reverse[e41] * self[e35]) - (anti_reverse[e35] * self[e41]),
+                (anti_reverse[e41] * self[e25]) + (anti_reverse[e25] * self[e41]) - (anti_reverse[e42] * self[e15]) - (anti_reverse[e15] * self[e42]),
+                (anti_reverse[e41] * self[e23])
+                    + (anti_reverse[e42] * self[e31])
+                    + (anti_reverse[e43] * self[e12])
+                    + (anti_reverse[e23] * self[e41])
+                    + (anti_reverse[e31] * self[e42])
+                    + (anti_reverse[e12] * self[e43]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group2()[3], 2)
-                + 2.0 * (self.group0()[0] * self.group2()[0])
-                + 2.0 * (self.group0()[1] * self.group2()[1])
-                + 2.0 * (self.group0()[2] * self.group2()[2])),
+            2.0 * (self[e41] * self[e15])
+                + 2.0 * (self[e42] * self[e25])
+                + 2.0 * (self[e43] * self[e35])
+                + f32::powi(self[e23], 2)
+                + f32::powi(self[e31], 2)
+                + f32::powi(self[e12], 2)
+                - f32::powi(self[scalar], 2),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiCircleRotorAligningOriginAtInfinity {
+    type Output = Motor;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiCircleRotorAligningOriginAtInfinity {
@@ -236,9 +266,9 @@ impl AntiConstraintViolation for AntiCircleRotorAligningOriginAtInfinity {
         use crate::elements::*;
         let anti_reverse = AntiCircleRotorAligningOriginAtInfinity::from_groups(
             // e23, e31, e12
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[scalar]]),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -246,60 +276,66 @@ impl AntiConstraintViolation for AntiCircleRotorAligningOriginAtInfinity {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[0] * self.group0()[0]) + (anti_reverse.group0()[1] * self.group0()[1]) + (anti_reverse.group0()[2] * self.group0()[2])
-                    - (anti_reverse.group1()[3] * self.group1()[3])),
+                (anti_reverse[e23] * self[e23]) + (anti_reverse[e31] * self[e31]) + (anti_reverse[e12] * self[e12]) - (anti_reverse[scalar] * self[scalar]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[0] * self.group1()[0])
-                    + (anti_reverse.group0()[1] * self.group1()[1])
-                    + (anti_reverse.group0()[2] * self.group1()[2])
-                    + (self.group0()[0] * anti_reverse.group1()[0])
-                    + (self.group0()[1] * anti_reverse.group1()[1])
-                    + (self.group0()[2] * anti_reverse.group1()[2])),
+                (anti_reverse[e23] * self[e15])
+                    + (anti_reverse[e31] * self[e25])
+                    + (anti_reverse[e12] * self[e35])
+                    + (anti_reverse[e15] * self[e23])
+                    + (anti_reverse[e25] * self[e31])
+                    + (anti_reverse[e35] * self[e12]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group1()[3], 2)),
+            f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) - f32::powi(self[scalar], 2),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiCircleRotorAtInfinity {
+    type Output = VersorEvenAtInfinity;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiCircleRotorAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       12        0
-    //    simd4        2        3        0
+    //      f32       17       20        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       14       15        0
-    //  no simd       20       24        0
+    // yes simd       17       21        0
+    //  no simd       17       24        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiCircleRotorAtInfinity::from_groups(
             // e23, e31, e12, e45
-            (self.group0() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[scalar]]),
         );
         let geometric_anti_product = VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                ((anti_reverse.group0()[2] * self.group0()[2]) - (anti_reverse.group0()[3] * self.group0()[3]) - (anti_reverse.group1()[3] * self.group1()[3])),
-                0.0,
-                0.0,
-                0.0,
-            ]) + (swizzle!(anti_reverse.group0(), 0, 0, 1, 2) * swizzle!(self.group0(), 0, 3, 3, 3))
-                + (swizzle!(anti_reverse.group0(), 1, 3, 3, 3) * swizzle!(self.group0(), 1, 0, 1, 2))),
+            Simd32x4::from([
+                (anti_reverse[e23] * self[e23]) + (anti_reverse[e31] * self[e31]) + (anti_reverse[e12] * self[e12])
+                    - (anti_reverse[e45] * self[e45])
+                    - (anti_reverse[scalar] * self[scalar]),
+                (anti_reverse[e23] * self[e45]) + (anti_reverse[e45] * self[e23]),
+                (anti_reverse[e31] * self[e45]) + (anti_reverse[e45] * self[e31]),
+                (anti_reverse[e12] * self[e45]) + (anti_reverse[e45] * self[e12]),
+            ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -307,31 +343,37 @@ impl AntiConstraintViolation for AntiCircleRotorAtInfinity {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[0] * self.group1()[0])
-                    + (anti_reverse.group0()[1] * self.group1()[1])
-                    + (anti_reverse.group0()[2] * self.group1()[2])
-                    + (anti_reverse.group1()[0] * self.group0()[0])
-                    + (anti_reverse.group1()[1] * self.group0()[1])
-                    + (anti_reverse.group1()[2] * self.group0()[2])),
+                (anti_reverse[e23] * self[e15])
+                    + (anti_reverse[e31] * self[e25])
+                    + (anti_reverse[e12] * self[e35])
+                    + (anti_reverse[e15] * self[e23])
+                    + (anti_reverse[e25] * self[e31])
+                    + (anti_reverse[e35] * self[e12]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2) - f32::powi(self.group1()[3], 2)),
+            f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) - f32::powi(self[e45], 2) - f32::powi(self[scalar], 2),
         );
         return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiCircleRotorOnOrigin {
+    type Output = DualNum;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiCircleRotorOnOrigin {
@@ -348,48 +390,54 @@ impl AntiConstraintViolation for AntiCircleRotorOnOrigin {
         use crate::elements::*;
         let anti_reverse = AntiCircleRotorOnOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self[e41] * -1.0, self[e42] * -1.0, self[e43] * -1.0, self[scalar]]),
             // e23, e31, e12
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
-            (Simd32x2::from([
-                ((self.group1()[0] * anti_reverse.group0()[0]) + (self.group1()[1] * anti_reverse.group0()[1]) + (self.group1()[2] * anti_reverse.group0()[2])),
-                ((anti_reverse.group0()[3] * self.group0()[3]) * -1.0),
-            ]) + (Simd32x2::from(anti_reverse.group1()[0]) * Simd32x2::from([self.group0()[0], self.group1()[0]]))
-                + (Simd32x2::from(anti_reverse.group1()[1]) * Simd32x2::from([self.group0()[1], self.group1()[1]]))
-                + (Simd32x2::from(anti_reverse.group1()[2]) * Simd32x2::from([self.group0()[2], self.group1()[2]]))),
+            Simd32x2::from([
+                (anti_reverse[e23] * self[e41]) + (anti_reverse[e31] * self[e42]) + (anti_reverse[e12] * self[e43]),
+                (anti_reverse[scalar] * self[scalar]) * -1.0,
+            ]) + (Simd32x2::from(self[e23]) * Simd32x2::from([anti_reverse[e41], anti_reverse[e23]]))
+                + (Simd32x2::from(self[e31]) * Simd32x2::from([anti_reverse[e42], anti_reverse[e31]]))
+                + (Simd32x2::from(self[e12]) * Simd32x2::from([anti_reverse[e43], anti_reverse[e12]])),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group0()[3], 2)),
+            f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) - f32::powi(self[scalar], 2),
         );
         return DualNum::from_groups(
             // e4, e12345
-            Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
+            Simd32x2::from([geometric_anti_product[e4], geometric_anti_product[e12345] - anti_dot_product[e12345]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiDipoleInversion {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       62       68        0
+    //      f32       86       92        0
     //    simd3        0        1        0
-    //    simd4        7        8        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       69       77        0
+    // yes simd       87       95        0
     //  no simd       90      103        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            (self.group1() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
             // e235, e315, e125, e4
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e4]]),
             // e1, e2, e3, e5
             self.group3(),
         );
@@ -399,21 +447,19 @@ impl AntiConstraintViolation for AntiDipoleInversion {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group2()[0])
-                    - (anti_reverse.group0()[1] * self.group2()[1])
-                    - (anti_reverse.group0()[2] * self.group2()[2])
-                    - (self.group0()[0] * anti_reverse.group2()[0])
-                    - (self.group0()[1] * anti_reverse.group2()[1])
-                    - (self.group0()[2] * anti_reverse.group2()[2])
-                    - (anti_reverse.group1()[0] * self.group1()[0])
-                    - (anti_reverse.group1()[1] * self.group1()[1])
-                    - (anti_reverse.group1()[2] * self.group1()[2])
-                    + (anti_reverse.group1()[3] * self.group1()[3])
-                    + (anti_reverse.group2()[3] * self.group3()[3])
-                    - (anti_reverse.group3()[0] * self.group3()[0])
-                    - (anti_reverse.group3()[1] * self.group3()[1])
-                    - (anti_reverse.group3()[2] * self.group3()[2])
-                    + (anti_reverse.group3()[3] * self.group2()[3])),
+                (anti_reverse[e321] * self[e321]) + (anti_reverse[e4] * self[e5]) + (anti_reverse[e5] * self[e4])
+                    - (anti_reverse[e423] * self[e235])
+                    - (anti_reverse[e431] * self[e315])
+                    - (anti_reverse[e412] * self[e125])
+                    - (anti_reverse[e415] * self[e415])
+                    - (anti_reverse[e425] * self[e425])
+                    - (anti_reverse[e435] * self[e435])
+                    - (anti_reverse[e235] * self[e423])
+                    - (anti_reverse[e315] * self[e431])
+                    - (anti_reverse[e125] * self[e412])
+                    - (anti_reverse[e1] * self[e1])
+                    - (anti_reverse[e2] * self[e2])
+                    - (anti_reverse[e3] * self[e3]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -422,113 +468,142 @@ impl AntiConstraintViolation for AntiDipoleInversion {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group1()[0] * self.group2()[0])
-                    - (anti_reverse.group1()[1] * self.group2()[1])
-                    - (anti_reverse.group1()[2] * self.group2()[2])
-                    - (anti_reverse.group1()[3] * self.group3()[3])
-                    - (anti_reverse.group2()[0] * self.group1()[0])
-                    - (anti_reverse.group2()[0] * self.group3()[0])
-                    - (anti_reverse.group2()[1] * self.group1()[1])
-                    - (anti_reverse.group2()[1] * self.group3()[1])
-                    - (anti_reverse.group2()[2] * self.group1()[2])
-                    - (anti_reverse.group2()[2] * self.group3()[2])
-                    + (anti_reverse.group3()[0] * self.group2()[0])
-                    + (anti_reverse.group3()[1] * self.group2()[1])
-                    + (anti_reverse.group3()[2] * self.group2()[2])
-                    + (anti_reverse.group3()[3] * self.group1()[3])),
+                (anti_reverse[e1] * self[e235]) + (anti_reverse[e2] * self[e315]) + (anti_reverse[e3] * self[e125]) + (anti_reverse[e5] * self[e321])
+                    - (anti_reverse[e415] * self[e235])
+                    - (anti_reverse[e425] * self[e315])
+                    - (anti_reverse[e435] * self[e125])
+                    - (anti_reverse[e321] * self[e5])
+                    - (anti_reverse[e235] * self[e415])
+                    - (anti_reverse[e235] * self[e1])
+                    - (anti_reverse[e315] * self[e425])
+                    - (anti_reverse[e315] * self[e2])
+                    - (anti_reverse[e125] * self[e435])
+                    - (anti_reverse[e125] * self[e3]),
             ]),
             // e1, e2, e3, e4
-            (Simd32x4::from([
-                (-(anti_reverse.group0()[1] * self.group2()[2])
-                    + (self.group0()[2] * anti_reverse.group2()[1])
-                    + (anti_reverse.group1()[0] * self.group1()[3])
-                    + (anti_reverse.group1()[3] * self.group1()[0])
-                    - (anti_reverse.group2()[0] * self.group2()[3])
-                    + (anti_reverse.group2()[3] * self.group2()[0])
-                    + (anti_reverse.group3()[2] * self.group1()[1])),
-                (-(anti_reverse.group0()[2] * self.group2()[0])
-                    + (self.group0()[0] * anti_reverse.group2()[2])
-                    + (anti_reverse.group1()[1] * self.group1()[3])
-                    + (anti_reverse.group1()[3] * self.group1()[1])
-                    - (anti_reverse.group2()[1] * self.group2()[3])
-                    + (anti_reverse.group2()[3] * self.group2()[1])
-                    + (anti_reverse.group3()[0] * self.group1()[2])),
-                (-(anti_reverse.group0()[0] * self.group2()[1])
-                    + (self.group0()[1] * anti_reverse.group2()[0])
-                    + (anti_reverse.group1()[2] * self.group1()[3])
-                    + (anti_reverse.group1()[3] * self.group1()[2])
-                    - (anti_reverse.group2()[2] * self.group2()[3])
-                    + (anti_reverse.group2()[3] * self.group2()[2])
-                    + (anti_reverse.group3()[1] * self.group1()[0])),
-                (-(anti_reverse.group0()[1] * self.group1()[1]) - (anti_reverse.group0()[2] * self.group1()[2]) + (anti_reverse.group0()[2] * self.group3()[2])
-                    - (self.group0()[1] * anti_reverse.group1()[1])
-                    - (self.group0()[1] * anti_reverse.group3()[1])
-                    - (self.group0()[2] * anti_reverse.group1()[2])
-                    - (self.group0()[2] * anti_reverse.group3()[2])),
-            ]) + (Simd32x4::from([anti_reverse.group0()[0], anti_reverse.group0()[1], anti_reverse.group0()[2], anti_reverse.group0()[0]]) * swizzle!(self.group3(), 3, 3, 3, 0))
-                + (Simd32x4::from([anti_reverse.group0()[2], anti_reverse.group0()[0], anti_reverse.group0()[1], anti_reverse.group1()[3]]) * swizzle!(self.group2(), 1, 2, 0, 3))
-                - (Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(anti_reverse.group3(), 3, 3, 3, 0))
-                - (Simd32x4::from([self.group0()[1], self.group0()[2], self.group0()[0], self.group1()[3]]) * swizzle!(anti_reverse.group2(), 2, 0, 1, 3))
-                + (Simd32x4::from([anti_reverse.group1()[2], anti_reverse.group1()[0], anti_reverse.group1()[1], anti_reverse.group0()[1]]) * swizzle!(self.group3(), 1, 2, 0, 1))
-                - (Simd32x4::from([anti_reverse.group3()[1], anti_reverse.group3()[2], anti_reverse.group3()[0], anti_reverse.group0()[0]]) * swizzle!(self.group1(), 2, 0, 1, 0))
-                - (Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group0()[0]]) * swizzle!(anti_reverse.group1(), 1, 2, 0, 0))),
+            Simd32x4::from([
+                (anti_reverse[e423] * self[e5])
+                    + (anti_reverse[e412] * self[e315])
+                    + (anti_reverse[e415] * self[e321])
+                    + (anti_reverse[e435] * self[e2])
+                    + (anti_reverse[e315] * self[e412])
+                    + (anti_reverse[e4] * self[e235])
+                    + (anti_reverse[e3] * self[e425])
+                    - (anti_reverse[e431] * self[e125])
+                    - (anti_reverse[e425] * self[e3])
+                    - (anti_reverse[e235] * self[e4])
+                    - (anti_reverse[e125] * self[e431])
+                    - (anti_reverse[e2] * self[e435])
+                    - (anti_reverse[e5] * self[e423]),
+                (anti_reverse[e423] * self[e125])
+                    + (anti_reverse[e431] * self[e5])
+                    + (anti_reverse[e415] * self[e3])
+                    + (anti_reverse[e425] * self[e321])
+                    + (anti_reverse[e125] * self[e423])
+                    + (anti_reverse[e4] * self[e315])
+                    + (anti_reverse[e1] * self[e435])
+                    - (anti_reverse[e412] * self[e235])
+                    - (anti_reverse[e435] * self[e1])
+                    - (anti_reverse[e235] * self[e412])
+                    - (anti_reverse[e315] * self[e4])
+                    - (anti_reverse[e3] * self[e415])
+                    - (anti_reverse[e5] * self[e431]),
+                (anti_reverse[e431] * self[e235])
+                    + (anti_reverse[e412] * self[e5])
+                    + (anti_reverse[e425] * self[e1])
+                    + (anti_reverse[e435] * self[e321])
+                    + (anti_reverse[e235] * self[e431])
+                    + (anti_reverse[e4] * self[e125])
+                    + (anti_reverse[e2] * self[e415])
+                    - (anti_reverse[e423] * self[e315])
+                    - (anti_reverse[e415] * self[e2])
+                    - (anti_reverse[e315] * self[e423])
+                    - (anti_reverse[e125] * self[e4])
+                    - (anti_reverse[e1] * self[e425])
+                    - (anti_reverse[e5] * self[e412]),
+                (anti_reverse[e423] * self[e1]) + (anti_reverse[e431] * self[e2]) + (anti_reverse[e412] * self[e3])
+                    - (anti_reverse[e423] * self[e415])
+                    - (anti_reverse[e431] * self[e425])
+                    - (anti_reverse[e412] * self[e435])
+                    - (anti_reverse[e415] * self[e423])
+                    - (anti_reverse[e425] * self[e431])
+                    - (anti_reverse[e435] * self[e412])
+                    - (anti_reverse[e4] * self[e321])
+                    - (anti_reverse[e1] * self[e423])
+                    - (anti_reverse[e2] * self[e431])
+                    - (anti_reverse[e3] * self[e412]),
+            ]) + (Simd32x4::from(anti_reverse[e321]) * Simd32x4::from([self[e415], self[e425], self[e435], self[e4]])),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2)
-                - f32::powi(self.group3()[0], 2)
-                - f32::powi(self.group3()[1], 2)
-                - f32::powi(self.group3()[2], 2)
-                - 2.0 * (self.group0()[0] * self.group2()[0])
-                - 2.0 * (self.group0()[1] * self.group2()[1])
-                - 2.0 * (self.group0()[2] * self.group2()[2])
-                + 2.0 * (self.group2()[3] * self.group3()[3])),
+            2.0 * (self[e4] * self[e5]) + f32::powi(self[e321], 2)
+                - f32::powi(self[e415], 2)
+                - f32::powi(self[e425], 2)
+                - f32::powi(self[e435], 2)
+                - f32::powi(self[e1], 2)
+                - f32::powi(self[e2], 2)
+                - f32::powi(self[e3], 2)
+                - 2.0 * (self[e423] * self[e235])
+                - 2.0 * (self[e431] * self[e315])
+                - 2.0 * (self[e412] * self[e125]),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiDipoleInversionAtInfinity {
+    type Output = VersorEvenAtInfinity;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiDipoleInversionAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       29       27        0
+    //      f32       37       35        0
     //    simd3        0        1        0
-    //    simd4        3        4        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       32       32        0
+    // yes simd       38       38        0
     //  no simd       41       46        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
-            (self.group0() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
             // e235, e315, e125
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
             // e1, e2, e3, e5
             self.group2(),
         );
         let geometric_anti_product = VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                (-(anti_reverse.group0()[2] * self.group0()[2])
-                    - (anti_reverse.group2()[0] * self.group2()[0])
-                    - (anti_reverse.group2()[1] * self.group2()[1])
-                    - (anti_reverse.group2()[2] * self.group2()[2])),
-                ((anti_reverse.group0()[2] * self.group2()[1]) + (anti_reverse.group0()[3] * self.group0()[0]) + (anti_reverse.group2()[2] * self.group0()[1])),
-                ((anti_reverse.group0()[1] * self.group0()[3]) + (anti_reverse.group0()[3] * self.group0()[1]) + (anti_reverse.group2()[0] * self.group0()[2])),
-                ((anti_reverse.group0()[2] * self.group0()[3]) + (anti_reverse.group0()[3] * self.group0()[2]) + (anti_reverse.group2()[1] * self.group0()[0])),
-            ]) - (Simd32x4::from([anti_reverse.group0()[1], anti_reverse.group2()[1], anti_reverse.group2()[2], anti_reverse.group2()[0]]) * swizzle!(self.group0(), 1, 2, 0, 1))
-                - (Simd32x4::from([self.group0()[0], self.group2()[2], self.group2()[0], self.group2()[1]]) * swizzle!(anti_reverse.group0(), 0, 1, 2, 0))
-                + (Simd32x4::from([self.group0()[3], self.group0()[3], self.group2()[2], self.group2()[0]]) * swizzle!(anti_reverse.group0(), 3, 0, 0, 1))),
+            Simd32x4::from([
+                -(anti_reverse[e415] * self[e415])
+                    - (anti_reverse[e425] * self[e425])
+                    - (anti_reverse[e435] * self[e435])
+                    - (anti_reverse[e1] * self[e1])
+                    - (anti_reverse[e2] * self[e2])
+                    - (anti_reverse[e3] * self[e3]),
+                (anti_reverse[e435] * self[e2]) + (anti_reverse[e321] * self[e415]) + (anti_reverse[e3] * self[e425])
+                    - (anti_reverse[e425] * self[e3])
+                    - (anti_reverse[e2] * self[e435]),
+                (anti_reverse[e415] * self[e3]) + (anti_reverse[e321] * self[e425]) + (anti_reverse[e1] * self[e435])
+                    - (anti_reverse[e435] * self[e1])
+                    - (anti_reverse[e3] * self[e415]),
+                (anti_reverse[e425] * self[e1]) + (anti_reverse[e321] * self[e435]) + (anti_reverse[e2] * self[e415])
+                    - (anti_reverse[e415] * self[e2])
+                    - (anti_reverse[e1] * self[e425]),
+            ]) + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -536,42 +611,48 @@ impl AntiConstraintViolation for AntiDipoleInversionAtInfinity {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group1()[0] * self.group0()[0])
-                    - (anti_reverse.group1()[0] * self.group2()[0])
-                    - (anti_reverse.group1()[1] * self.group0()[1])
-                    - (anti_reverse.group1()[1] * self.group2()[1])
-                    - (anti_reverse.group1()[2] * self.group0()[2])
-                    - (anti_reverse.group1()[2] * self.group2()[2])
-                    - (self.group1()[0] * anti_reverse.group0()[0])
-                    + (self.group1()[0] * anti_reverse.group2()[0])
-                    - (self.group1()[1] * anti_reverse.group0()[1])
-                    + (self.group1()[1] * anti_reverse.group2()[1])
-                    - (self.group1()[2] * anti_reverse.group0()[2])
-                    + (self.group1()[2] * anti_reverse.group2()[2])
-                    - (anti_reverse.group0()[3] * self.group2()[3])
-                    + (anti_reverse.group2()[3] * self.group0()[3])),
+                (anti_reverse[e1] * self[e235]) + (anti_reverse[e2] * self[e315]) + (anti_reverse[e3] * self[e125]) + (anti_reverse[e5] * self[e321])
+                    - (anti_reverse[e415] * self[e235])
+                    - (anti_reverse[e425] * self[e315])
+                    - (anti_reverse[e435] * self[e125])
+                    - (anti_reverse[e321] * self[e5])
+                    - (anti_reverse[e235] * self[e415])
+                    - (anti_reverse[e235] * self[e1])
+                    - (anti_reverse[e315] * self[e425])
+                    - (anti_reverse[e315] * self[e2])
+                    - (anti_reverse[e125] * self[e435])
+                    - (anti_reverse[e125] * self[e3]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)
-                - f32::powi(self.group2()[0], 2)
-                - f32::powi(self.group2()[1], 2)
-                - f32::powi(self.group2()[2], 2)),
+            f32::powi(self[e321], 2)
+                - f32::powi(self[e415], 2)
+                - f32::powi(self[e425], 2)
+                - f32::powi(self[e435], 2)
+                - f32::powi(self[e1], 2)
+                - f32::powi(self[e2], 2)
+                - f32::powi(self[e3], 2),
         );
         return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiDipoleInversionOnOrigin {
+    type Output = DualNum;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiDipoleInversionOnOrigin {
@@ -586,48 +667,53 @@ impl AntiConstraintViolation for AntiDipoleInversionOnOrigin {
     //  no simd       15       16        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse =
-            AntiDipoleInversionOnOrigin::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(-1.0)), /* e4, e1, e2, e3 */ self.group1());
+        let anti_reverse = AntiDipoleInversionOnOrigin::from_groups(
+            // e423, e431, e412, e321
+            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
+            // e4, e1, e2, e3
+            self.group1(),
+        );
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
-            (Simd32x2::from([
-                ((anti_reverse.group0()[0] * self.group1()[1]) + (anti_reverse.group0()[1] * self.group1()[2]) + (anti_reverse.group0()[2] * self.group1()[3])
-                    - (anti_reverse.group1()[0] * self.group0()[3])),
+            Simd32x2::from([
+                (anti_reverse[e423] * self[e1]) + (anti_reverse[e431] * self[e2]) + (anti_reverse[e412] * self[e3]) - (anti_reverse[e4] * self[e321]),
                 0.0,
-            ]) + (Simd32x2::from(anti_reverse.group0()[3]) * Simd32x2::from([self.group1()[0], self.group0()[3]]))
-                - (Simd32x2::from(anti_reverse.group1()[1]) * Simd32x2::from([self.group0()[0], self.group1()[1]]))
-                - (Simd32x2::from(anti_reverse.group1()[2]) * Simd32x2::from([self.group0()[1], self.group1()[2]]))
-                - (Simd32x2::from(anti_reverse.group1()[3]) * Simd32x2::from([self.group0()[2], self.group1()[3]]))),
+            ]) + (Simd32x2::from(anti_reverse[e321]) * Simd32x2::from([self[e4], self[e321]]))
+                - (Simd32x2::from(anti_reverse[e1]) * Simd32x2::from([self[e423], self[e1]]))
+                - (Simd32x2::from(anti_reverse[e2]) * Simd32x2::from([self[e431], self[e2]]))
+                - (Simd32x2::from(anti_reverse[e3]) * Simd32x2::from([self[e412], self[e3]])),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
-            // e12345
-            (f32::powi(self.group0()[3], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2)),
-        );
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e321], 2) - f32::powi(self[e1], 2) - f32::powi(self[e2], 2) - f32::powi(self[e3], 2));
         return DualNum::from_groups(
             // e4, e12345
-            Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
+            Simd32x2::from([geometric_anti_product[e4], geometric_anti_product[e12345] - anti_dot_product[e12345]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiDipoleInversionOrthogonalOrigin {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiDipoleInversionOrthogonalOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       36       49        0
+    //      f32       48       61        0
     //    simd3        0        1        0
-    //    simd4        3        3        0
     // Totals...
-    // yes simd       39       53        0
+    // yes simd       48       62        0
     //  no simd       48       64        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self[e423] * -1.0, self[e431] * -1.0, self[e412] * -1.0, self[e5]]),
             // e415, e425, e435
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
             // e235, e315, e125, e4
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e4]]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -635,17 +721,16 @@ impl AntiConstraintViolation for AntiDipoleInversionOrthogonalOrigin {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group1()[0] * self.group1()[0])
-                    - (anti_reverse.group1()[1] * self.group1()[1])
-                    - (anti_reverse.group1()[2] * self.group1()[2])
-                    - (anti_reverse.group0()[0] * self.group2()[0])
-                    - (anti_reverse.group0()[1] * self.group2()[1])
-                    - (anti_reverse.group0()[2] * self.group2()[2])
-                    + (anti_reverse.group0()[3] * self.group2()[3])
-                    - (anti_reverse.group2()[0] * self.group0()[0])
-                    - (anti_reverse.group2()[1] * self.group0()[1])
-                    - (anti_reverse.group2()[2] * self.group0()[2])
-                    + (anti_reverse.group2()[3] * self.group0()[3])),
+                (anti_reverse[e5] * self[e4]) + (anti_reverse[e4] * self[e5])
+                    - (anti_reverse[e423] * self[e235])
+                    - (anti_reverse[e431] * self[e315])
+                    - (anti_reverse[e412] * self[e125])
+                    - (anti_reverse[e415] * self[e415])
+                    - (anti_reverse[e425] * self[e425])
+                    - (anti_reverse[e435] * self[e435])
+                    - (anti_reverse[e235] * self[e423])
+                    - (anti_reverse[e315] * self[e431])
+                    - (anti_reverse[e125] * self[e412]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -654,49 +739,64 @@ impl AntiConstraintViolation for AntiDipoleInversionOrthogonalOrigin {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group1()[0] * self.group2()[0])
-                    - (anti_reverse.group1()[1] * self.group2()[1])
-                    - (anti_reverse.group1()[2] * self.group2()[2])
-                    - (self.group1()[0] * anti_reverse.group2()[0])
-                    - (self.group1()[1] * anti_reverse.group2()[1])
-                    - (self.group1()[2] * anti_reverse.group2()[2])),
+                -(anti_reverse[e415] * self[e235])
+                    - (anti_reverse[e425] * self[e315])
+                    - (anti_reverse[e435] * self[e125])
+                    - (anti_reverse[e235] * self[e415])
+                    - (anti_reverse[e315] * self[e425])
+                    - (anti_reverse[e125] * self[e435]),
             ]),
             // e1, e2, e3, e4
-            (Simd32x4::from([
-                ((anti_reverse.group0()[0] * self.group0()[3]) + (anti_reverse.group0()[2] * self.group2()[1]) - (anti_reverse.group2()[0] * self.group2()[3])
-                    + (anti_reverse.group2()[1] * self.group0()[2])
-                    + (anti_reverse.group2()[3] * self.group2()[0])),
-                ((anti_reverse.group0()[0] * self.group2()[2]) + (anti_reverse.group0()[1] * self.group0()[3]) - (anti_reverse.group2()[1] * self.group2()[3])
-                    + (anti_reverse.group2()[2] * self.group0()[0])
-                    + (anti_reverse.group2()[3] * self.group2()[1])),
-                ((anti_reverse.group0()[1] * self.group2()[0]) + (anti_reverse.group0()[2] * self.group0()[3]) + (anti_reverse.group2()[0] * self.group0()[1])
-                    - (anti_reverse.group2()[2] * self.group2()[3])
-                    + (anti_reverse.group2()[3] * self.group2()[2])),
-                (-(anti_reverse.group1()[2] * self.group0()[2]) - (self.group1()[1] * anti_reverse.group0()[1]) - (self.group1()[2] * anti_reverse.group0()[2])),
-            ]) - (Simd32x4::from([anti_reverse.group0()[3], anti_reverse.group0()[3], anti_reverse.group0()[3], anti_reverse.group1()[0]]) * swizzle!(self.group0(), 0, 1, 2, 0))
-                - (Simd32x4::from([anti_reverse.group2()[2], anti_reverse.group2()[0], anti_reverse.group2()[1], anti_reverse.group1()[1]]) * swizzle!(self.group0(), 1, 2, 0, 1))
-                - (Simd32x4::from([self.group2()[2], self.group2()[0], self.group2()[1], self.group1()[0]]) * swizzle!(anti_reverse.group0(), 1, 2, 0, 0))),
+            Simd32x4::from([
+                (anti_reverse[e423] * self[e5]) + (anti_reverse[e412] * self[e315]) + (anti_reverse[e315] * self[e412]) + (anti_reverse[e4] * self[e235])
+                    - (anti_reverse[e431] * self[e125])
+                    - (anti_reverse[e5] * self[e423])
+                    - (anti_reverse[e235] * self[e4])
+                    - (anti_reverse[e125] * self[e431]),
+                (anti_reverse[e423] * self[e125]) + (anti_reverse[e431] * self[e5]) + (anti_reverse[e125] * self[e423]) + (anti_reverse[e4] * self[e315])
+                    - (anti_reverse[e412] * self[e235])
+                    - (anti_reverse[e5] * self[e431])
+                    - (anti_reverse[e235] * self[e412])
+                    - (anti_reverse[e315] * self[e4]),
+                (anti_reverse[e431] * self[e235]) + (anti_reverse[e412] * self[e5]) + (anti_reverse[e235] * self[e431]) + (anti_reverse[e4] * self[e125])
+                    - (anti_reverse[e423] * self[e315])
+                    - (anti_reverse[e5] * self[e412])
+                    - (anti_reverse[e315] * self[e423])
+                    - (anti_reverse[e125] * self[e4]),
+                -(anti_reverse[e423] * self[e415])
+                    - (anti_reverse[e431] * self[e425])
+                    - (anti_reverse[e412] * self[e435])
+                    - (anti_reverse[e415] * self[e423])
+                    - (anti_reverse[e425] * self[e431])
+                    - (anti_reverse[e435] * self[e412]),
+            ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group1()[0], 2)
-                - f32::powi(self.group1()[1], 2)
-                - f32::powi(self.group1()[2], 2)
-                - 2.0 * (self.group0()[0] * self.group2()[0])
-                - 2.0 * (self.group0()[1] * self.group2()[1])
-                - 2.0 * (self.group0()[2] * self.group2()[2])
-                + 2.0 * (self.group0()[3] * self.group2()[3])),
+            2.0 * (self[e5] * self[e4])
+                - f32::powi(self[e415], 2)
+                - f32::powi(self[e425], 2)
+                - f32::powi(self[e435], 2)
+                - 2.0 * (self[e423] * self[e235])
+                - 2.0 * (self[e431] * self[e315])
+                - 2.0 * (self[e412] * self[e125]),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiDipoleOnOrigin {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiDipoleOnOrigin {
@@ -710,10 +810,19 @@ impl AntiConstraintViolation for AntiDipoleOnOrigin {
     //  no simd        1        5        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(-1.0)));
-        let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ (anti_reverse.group0()[3] * self.group0()[3]));
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self.group0()[3], 2));
-        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
+        let anti_reverse = AntiDipoleOnOrigin::from_groups(
+            // e423, e431, e412, e321
+            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
+        );
+        let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e321] * self[e321]);
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e321], 2));
+        return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiDualNum {
+    type Output = Origin;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiDualNum {
@@ -726,11 +835,18 @@ impl AntiConstraintViolation for AntiDualNum {
     // yes simd        0        2        0
     //  no simd        0        3        0
     fn anti_constraint_violation(self) -> Self::Output {
+        use crate::elements::*;
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
-            (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([-2.0, -1.0])),
+            Simd32x2::from([self[e1234] * self[scalar], f32::powi(self[scalar], 2)]) * Simd32x2::from([-2.0, -1.0]),
         );
-        return Origin::from_groups(/* e4 */ geometric_anti_product.group0()[0]);
+        return Origin::from_groups(/* e4 */ geometric_anti_product[e4]);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiFlatOrigin {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiFlatOrigin {
@@ -740,10 +856,16 @@ impl AntiConstraintViolation for AntiFlatOrigin {
     // f32        1        2        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiFlatOrigin::from_groups(/* e321 */ (self[e321] * -1.0));
-        let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ (anti_reverse[e321] * self[e321]));
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e321], 2));
-        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
+        let anti_reverse = AntiFlatOrigin::from_groups(/* e321 */ self[e321] * -1.0);
+        let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e321] * self[e321]);
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e321], 2));
+        return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiFlatPoint {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiFlatPoint {
@@ -757,10 +879,19 @@ impl AntiConstraintViolation for AntiFlatPoint {
     //  no simd        1        5        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (self.group0() * Simd32x4::from(-1.0)));
-        let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ (anti_reverse.group0()[3] * self.group0()[3]));
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self.group0()[3], 2));
-        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
+        let anti_reverse = AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from([self[e235], self[e315], self[e125], self[e321]]) * Simd32x4::from(-1.0),
+        );
+        let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e321] * self[e321]);
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e321], 2));
+        return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiFlector {
+    type Output = Motor;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiFlector {
@@ -774,43 +905,45 @@ impl AntiConstraintViolation for AntiFlector {
     //  no simd       14       16        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiFlector::from_groups(/* e235, e315, e125, e321 */ (self.group0() * Simd32x4::from(-1.0)), /* e1, e2, e3, e5 */ self.group1());
+        let anti_reverse = AntiFlector::from_groups(
+            // e235, e315, e125, e321
+            Simd32x4::from([self[e235], self[e315], self[e125], self[e321]]) * Simd32x4::from(-1.0),
+            // e1, e2, e3, e5
+            self.group1(),
+        );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[3] * self.group0()[3])
-                    - (anti_reverse.group1()[0] * self.group1()[0])
-                    - (anti_reverse.group1()[1] * self.group1()[1])
-                    - (anti_reverse.group1()[2] * self.group1()[2])),
+                (anti_reverse[e321] * self[e321]) - (anti_reverse[e1] * self[e1]) - (anti_reverse[e2] * self[e2]) - (anti_reverse[e3] * self[e3]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group1()[0])
-                    - (anti_reverse.group0()[1] * self.group1()[1])
-                    - (anti_reverse.group0()[2] * self.group1()[2])
-                    - (anti_reverse.group0()[3] * self.group1()[3])
-                    + (anti_reverse.group1()[0] * self.group0()[0])
-                    + (anti_reverse.group1()[1] * self.group0()[1])
-                    + (anti_reverse.group1()[2] * self.group0()[2])
-                    + (anti_reverse.group1()[3] * self.group0()[3])),
+                (anti_reverse[e1] * self[e235]) + (anti_reverse[e2] * self[e315]) + (anti_reverse[e3] * self[e125]) + (anti_reverse[e5] * self[e321])
+                    - (anti_reverse[e235] * self[e1])
+                    - (anti_reverse[e315] * self[e2])
+                    - (anti_reverse[e125] * self[e3])
+                    - (anti_reverse[e321] * self[e5]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
-            // e12345
-            (f32::powi(self.group0()[3], 2) - f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2)),
-        );
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e321], 2) - f32::powi(self[e1], 2) - f32::powi(self[e2], 2) - f32::powi(self[e3], 2));
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiFlectorOnOrigin {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiFlectorOnOrigin {
@@ -820,22 +953,19 @@ impl AntiConstraintViolation for AntiFlectorOnOrigin {
     // f32        7        5        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiFlectorOnOrigin::from_groups(
-            // e321, e1, e2, e3
-            Simd32x4::from([(self.group0()[0] * -1.0), self.group0()[1], self.group0()[2], self.group0()[3]]),
-        );
+        let anti_reverse = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from([self[e321] * -1.0, self[e1], self[e2], self[e3]]));
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
-            ((anti_reverse.group0()[0] * self.group0()[0])
-                - (anti_reverse.group0()[1] * self.group0()[1])
-                - (anti_reverse.group0()[2] * self.group0()[2])
-                - (anti_reverse.group0()[3] * self.group0()[3])),
+            (anti_reverse[e321] * self[e321]) - (anti_reverse[e1] * self[e1]) - (anti_reverse[e2] * self[e2]) - (anti_reverse[e3] * self[e3]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
-            // e12345
-            (f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2)),
-        );
-        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e321], 2) - f32::powi(self[e1], 2) - f32::powi(self[e2], 2) - f32::powi(self[e3], 2));
+        return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiLine {
+    type Output = Motor;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiLine {
@@ -851,38 +981,39 @@ impl AntiConstraintViolation for AntiLine {
         use crate::elements::*;
         let anti_reverse = AntiLine::from_groups(
             // e23, e31, e12
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
             // e15, e25, e35
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                ((anti_reverse.group0()[0] * self.group0()[0]) + (anti_reverse.group0()[1] * self.group0()[1]) + (anti_reverse.group0()[2] * self.group0()[2])),
-            ]),
+            Simd32x4::from([0.0, 0.0, 0.0, (anti_reverse[e23] * self[e23]) + (anti_reverse[e31] * self[e31]) + (anti_reverse[e12] * self[e12])]),
             // e235, e315, e125, e5
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[0] * self.group1()[0])
-                    + (anti_reverse.group0()[1] * self.group1()[1])
-                    + (anti_reverse.group0()[2] * self.group1()[2])
-                    + (anti_reverse.group1()[0] * self.group0()[0])
-                    + (anti_reverse.group1()[1] * self.group0()[1])
-                    + (anti_reverse.group1()[2] * self.group0()[2])),
+                (anti_reverse[e23] * self[e15])
+                    + (anti_reverse[e31] * self[e25])
+                    + (anti_reverse[e12] * self[e35])
+                    + (anti_reverse[e15] * self[e23])
+                    + (anti_reverse[e25] * self[e31])
+                    + (anti_reverse[e35] * self[e12]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2)));
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2));
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiLineOnOrigin {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiLineOnOrigin {
@@ -896,13 +1027,16 @@ impl AntiConstraintViolation for AntiLineOnOrigin {
     //  no simd        5        6        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (self.group0() * Simd32x3::from(-1.0)));
-        let geometric_anti_product = AntiScalar::from_groups(
-            // e12345
-            ((anti_reverse.group0()[0] * self.group0()[0]) + (anti_reverse.group0()[1] * self.group0()[1]) + (anti_reverse.group0()[2] * self.group0()[2])),
-        );
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2)));
-        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
+        let anti_reverse = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0));
+        let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ (anti_reverse[e23] * self[e23]) + (anti_reverse[e31] * self[e31]) + (anti_reverse[e12] * self[e12]));
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2));
+        return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiMotor {
+    type Output = Motor;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiMotor {
@@ -914,9 +1048,9 @@ impl AntiConstraintViolation for AntiMotor {
         use crate::elements::*;
         let anti_reverse = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[scalar]]),
             // e15, e25, e35, e3215
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e3215]]),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -924,32 +1058,39 @@ impl AntiConstraintViolation for AntiMotor {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[0] * self.group0()[0]) + (anti_reverse.group0()[1] * self.group0()[1]) + (anti_reverse.group0()[2] * self.group0()[2])
-                    - (anti_reverse.group0()[3] * self.group0()[3])),
+                (anti_reverse[e23] * self[e23]) + (anti_reverse[e31] * self[e31]) + (anti_reverse[e12] * self[e12]) - (anti_reverse[scalar] * self[scalar]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[0] * self.group1()[0]) + (anti_reverse.group0()[1] * self.group1()[1]) + (anti_reverse.group0()[2] * self.group1()[2])
-                    - (anti_reverse.group0()[3] * self.group1()[3])
-                    + (anti_reverse.group1()[0] * self.group0()[0])
-                    + (anti_reverse.group1()[1] * self.group0()[1])
-                    + (anti_reverse.group1()[2] * self.group0()[2])
-                    - (anti_reverse.group1()[3] * self.group0()[3])),
+                (anti_reverse[e23] * self[e15])
+                    + (anti_reverse[e31] * self[e25])
+                    + (anti_reverse[e12] * self[e35])
+                    + (anti_reverse[e15] * self[e23])
+                    + (anti_reverse[e25] * self[e31])
+                    + (anti_reverse[e35] * self[e12])
+                    - (anti_reverse[scalar] * self[e3215])
+                    - (anti_reverse[e3215] * self[scalar]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2)),
+            f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) - f32::powi(self[scalar], 2),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiMotorOnOrigin {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiMotorOnOrigin {
@@ -959,112 +1100,143 @@ impl AntiConstraintViolation for AntiMotorOnOrigin {
     // f32        7        7        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiMotorOnOrigin::from_groups(
-            // e23, e31, e12, scalar
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
-        );
+        let anti_reverse = AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[scalar]]));
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
-            ((anti_reverse.group0()[0] * self.group0()[0]) + (anti_reverse.group0()[1] * self.group0()[1]) + (anti_reverse.group0()[2] * self.group0()[2])
-                - (anti_reverse.group0()[3] * self.group0()[3])),
+            (anti_reverse[e23] * self[e23]) + (anti_reverse[e31] * self[e31]) + (anti_reverse[e12] * self[e12]) - (anti_reverse[scalar] * self[scalar]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2)),
+            f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) - f32::powi(self[scalar], 2),
         );
-        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
+        return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiMysteryCircleRotor {
+    type Output = MysteryVersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiMysteryCircleRotor {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7        3        0
-    //    simd4        2        3        0
+    //      f32       12       11        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        9        6        0
-    //  no simd       15       15        0
+    // yes simd       12       12        0
+    //  no simd       12       15        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiMysteryCircleRotor::from_groups(/* e23, e31, e12, e45 */ (self.group0() * Simd32x4::from(-1.0)), /* scalar */ self[e31]);
+        let anti_reverse = AntiMysteryCircleRotor::from_groups(
+            // e23, e31, e12, e45
+            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
+            // scalar
+            self[scalar],
+        );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                ((anti_reverse.group0()[2] * self.group0()[2]) - (anti_reverse.group0()[3] * self.group0()[3]) - (anti_reverse[e31] * self[e31])),
-                0.0,
-                0.0,
-                0.0,
-            ]) + (swizzle!(anti_reverse.group0(), 0, 0, 1, 2) * swizzle!(self.group0(), 0, 3, 3, 3))
-                + (swizzle!(anti_reverse.group0(), 1, 3, 3, 3) * swizzle!(self.group0(), 1, 0, 1, 2))),
+            Simd32x4::from([
+                (anti_reverse[e23] * self[e23]) + (anti_reverse[e31] * self[e31]) + (anti_reverse[e12] * self[e12])
+                    - (anti_reverse[e45] * self[e45])
+                    - (anti_reverse[scalar] * self[scalar]),
+                (anti_reverse[e23] * self[e45]) + (anti_reverse[e45] * self[e23]),
+                (anti_reverse[e31] * self[e45]) + (anti_reverse[e45] * self[e31]),
+                (anti_reverse[e12] * self[e45]) + (anti_reverse[e45] * self[e12]),
+            ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2) - f32::powi(self[e31], 2)),
+            f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) - f32::powi(self[e45], 2) - f32::powi(self[scalar], 2),
         );
         return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
     }
 }
+impl std::ops::Div<anti_constraint_violation> for AntiMysteryDipoleInversion {
+    type Output = MysteryVersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for AntiMysteryDipoleInversion {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       13        0
-    //    simd4        3        4        0
+    //      f32       24       21        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       19       17        0
+    // yes simd       25       23        0
     //  no simd       28       29        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiMysteryDipoleInversion::from_groups(/* e415, e425, e435, e321 */ (self.group0() * Simd32x4::from(-1.0)), /* e1, e2, e3 */ self.group1());
+        let anti_reverse = AntiMysteryDipoleInversion::from_groups(
+            // e415, e425, e435, e321
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            // e1, e2, e3
+            self.group1(),
+        );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                (-(anti_reverse.group1()[0] * self.group1()[0])
-                    - (anti_reverse.group1()[1] * self.group1()[1])
-                    - (anti_reverse.group1()[2] * self.group1()[2])
-                    - (anti_reverse.group0()[2] * self.group0()[2])),
-                ((self.group1()[1] * anti_reverse.group0()[2]) + (anti_reverse.group0()[0] * self.group0()[3]) + (anti_reverse.group0()[3] * self.group0()[0])),
-                ((self.group1()[2] * anti_reverse.group0()[0]) + (anti_reverse.group0()[1] * self.group0()[3]) + (anti_reverse.group0()[3] * self.group0()[1])),
-                ((self.group1()[0] * anti_reverse.group0()[1]) + (anti_reverse.group0()[2] * self.group0()[3]) + (anti_reverse.group0()[3] * self.group0()[2])),
-            ]) - (Simd32x4::from([anti_reverse.group0()[0], anti_reverse.group1()[1], anti_reverse.group1()[2], anti_reverse.group1()[0]]) * swizzle!(self.group0(), 0, 2, 0, 1))
-                + (Simd32x4::from([anti_reverse.group0()[3], anti_reverse.group1()[2], anti_reverse.group1()[0], anti_reverse.group1()[1]]) * swizzle!(self.group0(), 3, 1, 2, 0))
-                - (Simd32x4::from([self.group0()[1], self.group1()[2], self.group1()[0], self.group1()[1]]) * swizzle!(anti_reverse.group0(), 1, 1, 2, 0))),
+            Simd32x4::from([
+                -(anti_reverse[e415] * self[e415])
+                    - (anti_reverse[e425] * self[e425])
+                    - (anti_reverse[e435] * self[e435])
+                    - (anti_reverse[e1] * self[e1])
+                    - (anti_reverse[e2] * self[e2])
+                    - (anti_reverse[e3] * self[e3]),
+                (anti_reverse[e435] * self[e2]) + (anti_reverse[e321] * self[e415]) + (anti_reverse[e3] * self[e425])
+                    - (anti_reverse[e425] * self[e3])
+                    - (anti_reverse[e2] * self[e435]),
+                (anti_reverse[e415] * self[e3]) + (anti_reverse[e321] * self[e425]) + (anti_reverse[e1] * self[e435])
+                    - (anti_reverse[e435] * self[e1])
+                    - (anti_reverse[e3] * self[e415]),
+                (anti_reverse[e425] * self[e1]) + (anti_reverse[e321] * self[e435]) + (anti_reverse[e2] * self[e415])
+                    - (anti_reverse[e415] * self[e2])
+                    - (anti_reverse[e1] * self[e425]),
+            ]) + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group1()[0], 2)
-                - f32::powi(self.group1()[1], 2)
-                - f32::powi(self.group1()[2], 2)
-                - f32::powi(self.group0()[0], 2)
-                - f32::powi(self.group0()[1], 2)
-                - f32::powi(self.group0()[2], 2)
-                + f32::powi(self.group0()[3], 2)),
+            f32::powi(self[e321], 2)
+                - f32::powi(self[e415], 2)
+                - f32::powi(self[e425], 2)
+                - f32::powi(self[e435], 2)
+                - f32::powi(self[e1], 2)
+                - f32::powi(self[e2], 2)
+                - f32::powi(self[e3], 2),
         );
         return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiPlane {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiPlane {
@@ -1073,10 +1245,22 @@ impl AntiConstraintViolation for AntiPlane {
         return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
+impl std::ops::Div<anti_constraint_violation> for AntiPlaneOnOrigin {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for AntiPlaneOnOrigin {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
         return Scalar::from_groups(/* scalar */ 0.0);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiScalar {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiScalar {
@@ -1085,10 +1269,22 @@ impl AntiConstraintViolation for AntiScalar {
         return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
+impl std::ops::Div<anti_constraint_violation> for AntiSphereOnOrigin {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for AntiSphereOnOrigin {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
         return Scalar::from_groups(/* scalar */ 0.0);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for AntiVersorEvenOnOrigin {
+    type Output = DualNum;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for AntiVersorEvenOnOrigin {
@@ -1104,29 +1300,34 @@ impl AntiConstraintViolation for AntiVersorEvenOnOrigin {
         use crate::elements::*;
         let anti_reverse = AntiVersorEvenOnOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self[e41] * -1.0, self[e42] * -1.0, self[e43] * -1.0, self[scalar]]),
             // e23, e31, e12, e1234
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[e1234]]),
         );
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
-            (Simd32x2::from([
-                ((anti_reverse.group1()[0] * self.group0()[0]) + (anti_reverse.group1()[1] * self.group0()[1]) + (anti_reverse.group1()[2] * self.group0()[2])
-                    - (anti_reverse.group1()[3] * self.group0()[3])),
+            Simd32x2::from([
+                (anti_reverse[e23] * self[e41]) + (anti_reverse[e31] * self[e42]) + (anti_reverse[e12] * self[e43]) - (anti_reverse[e1234] * self[scalar]),
                 0.0,
-            ]) - (Simd32x2::from(anti_reverse.group0()[3]) * Simd32x2::from([self.group1()[3], self.group0()[3]]))
-                + (Simd32x2::from(self.group1()[0]) * Simd32x2::from([anti_reverse.group0()[0], anti_reverse.group1()[0]]))
-                + (Simd32x2::from(self.group1()[1]) * Simd32x2::from([anti_reverse.group0()[1], anti_reverse.group1()[1]]))
-                + (Simd32x2::from(self.group1()[2]) * Simd32x2::from([anti_reverse.group0()[2], anti_reverse.group1()[2]]))),
+            ]) + (Simd32x2::from(self[e23]) * Simd32x2::from([anti_reverse[e41], anti_reverse[e23]]))
+                + (Simd32x2::from(self[e31]) * Simd32x2::from([anti_reverse[e42], anti_reverse[e31]]))
+                + (Simd32x2::from(self[e12]) * Simd32x2::from([anti_reverse[e43], anti_reverse[e12]]))
+                - (Simd32x2::from(anti_reverse[scalar]) * Simd32x2::from([self[e1234], self[scalar]])),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2)),
+            f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) - f32::powi(self[scalar], 2),
         );
         return DualNum::from_groups(
             // e4, e12345
-            Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
+            Simd32x2::from([geometric_anti_product[e4], geometric_anti_product[e12345] - anti_dot_product[e12345]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for Circle {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for Circle {
@@ -1143,11 +1344,11 @@ impl AntiConstraintViolation for Circle {
         use crate::elements::*;
         let anti_reverse = Circle::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            (self.group1() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
             // e235, e315, e125
-            (self.group2() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -1155,16 +1356,16 @@ impl AntiConstraintViolation for Circle {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group2()[0])
-                    - (anti_reverse.group0()[1] * self.group2()[1])
-                    - (anti_reverse.group0()[2] * self.group2()[2])
-                    - (anti_reverse.group2()[0] * self.group0()[0])
-                    - (anti_reverse.group2()[1] * self.group0()[1])
-                    - (anti_reverse.group2()[2] * self.group0()[2])
-                    - (anti_reverse.group1()[0] * self.group1()[0])
-                    - (anti_reverse.group1()[1] * self.group1()[1])
-                    - (anti_reverse.group1()[2] * self.group1()[2])
-                    + (anti_reverse.group1()[3] * self.group1()[3])),
+                (anti_reverse[e321] * self[e321])
+                    - (anti_reverse[e423] * self[e235])
+                    - (anti_reverse[e431] * self[e315])
+                    - (anti_reverse[e412] * self[e125])
+                    - (anti_reverse[e415] * self[e415])
+                    - (anti_reverse[e425] * self[e425])
+                    - (anti_reverse[e435] * self[e435])
+                    - (anti_reverse[e235] * self[e423])
+                    - (anti_reverse[e315] * self[e431])
+                    - (anti_reverse[e125] * self[e412]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -1173,52 +1374,58 @@ impl AntiConstraintViolation for Circle {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group2()[0] * self.group1()[0])
-                    - (anti_reverse.group2()[1] * self.group1()[1])
-                    - (anti_reverse.group2()[2] * self.group1()[2])
-                    - (self.group2()[0] * anti_reverse.group1()[0])
-                    - (self.group2()[1] * anti_reverse.group1()[1])
-                    - (self.group2()[2] * anti_reverse.group1()[2])),
+                -(anti_reverse[e415] * self[e235])
+                    - (anti_reverse[e425] * self[e315])
+                    - (anti_reverse[e435] * self[e125])
+                    - (anti_reverse[e235] * self[e415])
+                    - (anti_reverse[e315] * self[e425])
+                    - (anti_reverse[e125] * self[e435]),
             ]),
             // e1, e2, e3, e4
             Simd32x4::from([
-                (-(anti_reverse.group0()[1] * self.group2()[2]) + (anti_reverse.group0()[2] * self.group2()[1]) + (anti_reverse.group2()[1] * self.group0()[2])
-                    - (anti_reverse.group2()[2] * self.group0()[1])
-                    + (anti_reverse.group1()[0] * self.group1()[3])
-                    + (anti_reverse.group1()[3] * self.group1()[0])),
-                ((anti_reverse.group0()[0] * self.group2()[2]) - (anti_reverse.group0()[2] * self.group2()[0]) - (anti_reverse.group2()[0] * self.group0()[2])
-                    + (anti_reverse.group2()[2] * self.group0()[0])
-                    + (anti_reverse.group1()[1] * self.group1()[3])
-                    + (anti_reverse.group1()[3] * self.group1()[1])),
-                (-(anti_reverse.group0()[0] * self.group2()[1]) + (anti_reverse.group0()[1] * self.group2()[0]) + (anti_reverse.group2()[0] * self.group0()[1])
-                    - (anti_reverse.group2()[1] * self.group0()[0])
-                    + (anti_reverse.group1()[2] * self.group1()[3])
-                    + (anti_reverse.group1()[3] * self.group1()[2])),
-                (-(anti_reverse.group0()[0] * self.group1()[0])
-                    - (anti_reverse.group0()[1] * self.group1()[1])
-                    - (anti_reverse.group0()[2] * self.group1()[2])
-                    - (self.group0()[0] * anti_reverse.group1()[0])
-                    - (self.group0()[1] * anti_reverse.group1()[1])
-                    - (self.group0()[2] * anti_reverse.group1()[2])),
+                (anti_reverse[e412] * self[e315]) + (anti_reverse[e415] * self[e321]) + (anti_reverse[e321] * self[e415]) + (anti_reverse[e315] * self[e412])
+                    - (anti_reverse[e431] * self[e125])
+                    - (anti_reverse[e125] * self[e431]),
+                (anti_reverse[e423] * self[e125]) + (anti_reverse[e425] * self[e321]) + (anti_reverse[e321] * self[e425]) + (anti_reverse[e125] * self[e423])
+                    - (anti_reverse[e412] * self[e235])
+                    - (anti_reverse[e235] * self[e412]),
+                (anti_reverse[e431] * self[e235]) + (anti_reverse[e435] * self[e321]) + (anti_reverse[e321] * self[e435]) + (anti_reverse[e235] * self[e431])
+                    - (anti_reverse[e423] * self[e315])
+                    - (anti_reverse[e315] * self[e423]),
+                -(anti_reverse[e423] * self[e415])
+                    - (anti_reverse[e431] * self[e425])
+                    - (anti_reverse[e412] * self[e435])
+                    - (anti_reverse[e415] * self[e423])
+                    - (anti_reverse[e425] * self[e431])
+                    - (anti_reverse[e435] * self[e412]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2)
-                - 2.0 * (self.group0()[0] * self.group2()[0])
-                - 2.0 * (self.group0()[1] * self.group2()[1])
-                - 2.0 * (self.group0()[2] * self.group2()[2])),
+            f32::powi(self[e321], 2)
+                - f32::powi(self[e415], 2)
+                - f32::powi(self[e425], 2)
+                - f32::powi(self[e435], 2)
+                - 2.0 * (self[e423] * self[e235])
+                - 2.0 * (self[e431] * self[e315])
+                - 2.0 * (self[e412] * self[e125]),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for CircleAligningOrigin {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for CircleAligningOrigin {
@@ -1234,11 +1441,11 @@ impl AntiConstraintViolation for CircleAligningOrigin {
         use crate::elements::*;
         let anti_reverse = CircleAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
             // e415, e425, e435
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
             // e235, e315, e125
-            (self.group2() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -1246,15 +1453,15 @@ impl AntiConstraintViolation for CircleAligningOrigin {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group2()[0])
-                    - (anti_reverse.group0()[1] * self.group2()[1])
-                    - (anti_reverse.group0()[2] * self.group2()[2])
-                    - (anti_reverse.group1()[0] * self.group1()[0])
-                    - (anti_reverse.group1()[1] * self.group1()[1])
-                    - (anti_reverse.group1()[2] * self.group1()[2])
-                    - (anti_reverse.group2()[0] * self.group0()[0])
-                    - (anti_reverse.group2()[1] * self.group0()[1])
-                    - (anti_reverse.group2()[2] * self.group0()[2])),
+                -(anti_reverse[e423] * self[e235])
+                    - (anti_reverse[e431] * self[e315])
+                    - (anti_reverse[e412] * self[e125])
+                    - (anti_reverse[e415] * self[e415])
+                    - (anti_reverse[e425] * self[e425])
+                    - (anti_reverse[e435] * self[e435])
+                    - (anti_reverse[e235] * self[e423])
+                    - (anti_reverse[e315] * self[e431])
+                    - (anti_reverse[e125] * self[e412]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -1263,48 +1470,51 @@ impl AntiConstraintViolation for CircleAligningOrigin {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group1()[0] * self.group2()[0])
-                    - (anti_reverse.group1()[1] * self.group2()[1])
-                    - (anti_reverse.group1()[2] * self.group2()[2])
-                    - (anti_reverse.group2()[0] * self.group1()[0])
-                    - (anti_reverse.group2()[1] * self.group1()[1])
-                    - (anti_reverse.group2()[2] * self.group1()[2])),
+                -(anti_reverse[e415] * self[e235])
+                    - (anti_reverse[e425] * self[e315])
+                    - (anti_reverse[e435] * self[e125])
+                    - (anti_reverse[e235] * self[e415])
+                    - (anti_reverse[e315] * self[e425])
+                    - (anti_reverse[e125] * self[e435]),
             ]),
             // e1, e2, e3, e4
             Simd32x4::from([
-                (-(anti_reverse.group0()[1] * self.group2()[2]) + (anti_reverse.group0()[2] * self.group2()[1]) + (anti_reverse.group2()[1] * self.group0()[2])
-                    - (anti_reverse.group2()[2] * self.group0()[1])),
-                ((anti_reverse.group0()[0] * self.group2()[2]) - (anti_reverse.group0()[2] * self.group2()[0]) - (anti_reverse.group2()[0] * self.group0()[2])
-                    + (anti_reverse.group2()[2] * self.group0()[0])),
-                (-(anti_reverse.group0()[0] * self.group2()[1]) + (anti_reverse.group0()[1] * self.group2()[0]) + (anti_reverse.group2()[0] * self.group0()[1])
-                    - (anti_reverse.group2()[1] * self.group0()[0])),
-                (-(anti_reverse.group0()[0] * self.group1()[0])
-                    - (anti_reverse.group0()[1] * self.group1()[1])
-                    - (anti_reverse.group0()[2] * self.group1()[2])
-                    - (anti_reverse.group1()[0] * self.group0()[0])
-                    - (anti_reverse.group1()[1] * self.group0()[1])
-                    - (anti_reverse.group1()[2] * self.group0()[2])),
+                (anti_reverse[e412] * self[e315]) + (anti_reverse[e315] * self[e412]) - (anti_reverse[e431] * self[e125]) - (anti_reverse[e125] * self[e431]),
+                (anti_reverse[e423] * self[e125]) + (anti_reverse[e125] * self[e423]) - (anti_reverse[e412] * self[e235]) - (anti_reverse[e235] * self[e412]),
+                (anti_reverse[e431] * self[e235]) + (anti_reverse[e235] * self[e431]) - (anti_reverse[e423] * self[e315]) - (anti_reverse[e315] * self[e423]),
+                -(anti_reverse[e423] * self[e415])
+                    - (anti_reverse[e431] * self[e425])
+                    - (anti_reverse[e412] * self[e435])
+                    - (anti_reverse[e415] * self[e423])
+                    - (anti_reverse[e425] * self[e431])
+                    - (anti_reverse[e435] * self[e412]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group1()[0], 2)
-                - f32::powi(self.group1()[1], 2)
-                - f32::powi(self.group1()[2], 2)
-                - 2.0 * (self.group0()[0] * self.group2()[0])
-                - 2.0 * (self.group0()[1] * self.group2()[1])
-                - 2.0 * (self.group0()[2] * self.group2()[2])),
+            -f32::powi(self[e415], 2)
+                - f32::powi(self[e425], 2)
+                - f32::powi(self[e435], 2)
+                - 2.0 * (self[e423] * self[e235])
+                - 2.0 * (self[e431] * self[e315])
+                - 2.0 * (self[e412] * self[e125]),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for CircleAtInfinity {
+    type Output = VersorEvenAtInfinity;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for CircleAtInfinity {
@@ -1321,18 +1531,18 @@ impl AntiConstraintViolation for CircleAtInfinity {
         use crate::elements::*;
         let anti_reverse = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            (self.group0() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
             // e235, e315, e125
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                (-(anti_reverse.group0()[0] * self.group0()[0]) - (anti_reverse.group0()[1] * self.group0()[1]) - (anti_reverse.group0()[2] * self.group0()[2])),
-                (anti_reverse.group0()[3] * self.group0()[0]),
-                (anti_reverse.group0()[3] * self.group0()[1]),
-                (anti_reverse.group0()[3] * self.group0()[2]),
-            ]) + (Simd32x4::from(self.group0()[3]) * swizzle!(anti_reverse.group0(), 3, 0, 1, 2))),
+            Simd32x4::from([
+                -(anti_reverse[e415] * self[e415]) - (anti_reverse[e425] * self[e425]) - (anti_reverse[e435] * self[e435]),
+                anti_reverse[e321] * self[e415],
+                anti_reverse[e321] * self[e425],
+                anti_reverse[e321] * self[e435],
+            ]) + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -1340,31 +1550,37 @@ impl AntiConstraintViolation for CircleAtInfinity {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group1()[0] * self.group0()[0])
-                    - (anti_reverse.group1()[1] * self.group0()[1])
-                    - (anti_reverse.group1()[2] * self.group0()[2])
-                    - (self.group1()[0] * anti_reverse.group0()[0])
-                    - (self.group1()[1] * anti_reverse.group0()[1])
-                    - (self.group1()[2] * anti_reverse.group0()[2])),
+                -(anti_reverse[e415] * self[e235])
+                    - (anti_reverse[e425] * self[e315])
+                    - (anti_reverse[e435] * self[e125])
+                    - (anti_reverse[e235] * self[e415])
+                    - (anti_reverse[e315] * self[e425])
+                    - (anti_reverse[e125] * self[e435]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)),
+            f32::powi(self[e321], 2) - f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2),
         );
         return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for CircleAtOrigin {
+    type Output = MysteryVersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for CircleAtOrigin {
@@ -1380,44 +1596,44 @@ impl AntiConstraintViolation for CircleAtOrigin {
         use crate::elements::*;
         let anti_reverse = CircleAtOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
             // e235, e315, e125
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (-(anti_reverse.group0()[0] * self.group1()[0])
-                    - (anti_reverse.group0()[1] * self.group1()[1])
-                    - (anti_reverse.group0()[2] * self.group1()[2])
-                    - (anti_reverse.group1()[0] * self.group0()[0])
-                    - (anti_reverse.group1()[1] * self.group0()[1])
-                    - (anti_reverse.group1()[2] * self.group0()[2])),
-                (-(anti_reverse.group0()[1] * self.group1()[2]) + (anti_reverse.group0()[2] * self.group1()[1]) + (anti_reverse.group1()[1] * self.group0()[2])
-                    - (anti_reverse.group1()[2] * self.group0()[1])),
-                ((anti_reverse.group0()[0] * self.group1()[2]) - (anti_reverse.group0()[2] * self.group1()[0]) - (anti_reverse.group1()[0] * self.group0()[2])
-                    + (anti_reverse.group1()[2] * self.group0()[0])),
-                (-(anti_reverse.group0()[0] * self.group1()[1]) + (anti_reverse.group0()[1] * self.group1()[0]) + (anti_reverse.group1()[0] * self.group0()[1])
-                    - (anti_reverse.group1()[1] * self.group0()[0])),
+                -(anti_reverse[e423] * self[e235])
+                    - (anti_reverse[e431] * self[e315])
+                    - (anti_reverse[e412] * self[e125])
+                    - (anti_reverse[e235] * self[e423])
+                    - (anti_reverse[e315] * self[e431])
+                    - (anti_reverse[e125] * self[e412]),
+                (anti_reverse[e412] * self[e315]) + (anti_reverse[e315] * self[e412]) - (anti_reverse[e431] * self[e125]) - (anti_reverse[e125] * self[e431]),
+                (anti_reverse[e423] * self[e125]) + (anti_reverse[e125] * self[e423]) - (anti_reverse[e412] * self[e235]) - (anti_reverse[e235] * self[e412]),
+                (anti_reverse[e431] * self[e235]) + (anti_reverse[e235] * self[e431]) - (anti_reverse[e423] * self[e315]) - (anti_reverse[e315] * self[e423]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
-            // e12345
-            (-2.0 * (self.group0()[0] * self.group1()[0]) - 2.0 * (self.group0()[1] * self.group1()[1]) - 2.0 * (self.group0()[2] * self.group1()[2])),
-        );
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ -2.0 * (self[e423] * self[e235]) - 2.0 * (self[e431] * self[e315]) - 2.0 * (self[e412] * self[e125]));
         return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for CircleOnOrigin {
+    type Output = DualNum;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for CircleOnOrigin {
@@ -1434,78 +1650,86 @@ impl AntiConstraintViolation for CircleOnOrigin {
         use crate::elements::*;
         let anti_reverse = CircleOnOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
             // e415, e425, e435
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
-            (Simd32x2::from([
-                (-(anti_reverse.group1()[0] * self.group0()[0]) - (anti_reverse.group1()[1] * self.group0()[1]) - (anti_reverse.group1()[2] * self.group0()[2])),
-                0.0,
-            ]) - (Simd32x2::from(self.group1()[0]) * Simd32x2::from([anti_reverse.group0()[0], anti_reverse.group1()[0]]))
-                - (Simd32x2::from(self.group1()[1]) * Simd32x2::from([anti_reverse.group0()[1], anti_reverse.group1()[1]]))
-                - (Simd32x2::from(self.group1()[2]) * Simd32x2::from([anti_reverse.group0()[2], anti_reverse.group1()[2]]))),
+            Simd32x2::from([-(anti_reverse[e415] * self[e423]) - (anti_reverse[e425] * self[e431]) - (anti_reverse[e435] * self[e412]), 0.0])
+                - (Simd32x2::from(self[e415]) * Simd32x2::from([anti_reverse[e423], anti_reverse[e415]]))
+                - (Simd32x2::from(self[e425]) * Simd32x2::from([anti_reverse[e431], anti_reverse[e425]]))
+                - (Simd32x2::from(self[e435]) * Simd32x2::from([anti_reverse[e412], anti_reverse[e435]])),
         );
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (-f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2)));
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ -f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2));
         return DualNum::from_groups(
             // e4, e12345
-            Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
+            Simd32x2::from([geometric_anti_product[e4], geometric_anti_product[e12345] - anti_dot_product[e12345]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for CircleOrthogonalOrigin {
+    type Output = MysteryVersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for CircleOrthogonalOrigin {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       13        0
+    //      f32       19       25        0
     //    simd3        0        1        0
-    //    simd4        3        4        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       10       18        0
+    // yes simd       19       27        0
     //  no simd       19       32        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = CircleOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
-            (self.group0() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
             // e235, e315, e125
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                (-(anti_reverse.group1()[1] * self.group0()[1])
-                    - (anti_reverse.group1()[2] * self.group0()[2])
-                    - (self.group1()[1] * anti_reverse.group0()[1])
-                    - (self.group1()[2] * anti_reverse.group0()[2])),
-                (self.group1()[1] * anti_reverse.group0()[2]),
-                (self.group1()[2] * anti_reverse.group0()[0]),
-                (self.group1()[0] * anti_reverse.group0()[1]),
-            ]) - (Simd32x4::from([anti_reverse.group1()[0], anti_reverse.group1()[2], anti_reverse.group1()[0], anti_reverse.group1()[1]]) * swizzle!(self.group0(), 0, 1, 2, 0))
-                - (Simd32x4::from([self.group1()[0], self.group1()[2], self.group1()[0], self.group1()[1]]) * swizzle!(anti_reverse.group0(), 0, 1, 2, 0))
-                + (Simd32x4::from([anti_reverse.group0()[3], anti_reverse.group1()[1], anti_reverse.group1()[2], anti_reverse.group1()[0]]) * swizzle!(self.group0(), 3, 2, 0, 1))),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-        );
-        let anti_scalar_product = AntiScalar::from_groups(
-            // e12345
-            (f32::powi(self.group0()[3], 2)
-                - 2.0 * (self.group1()[0] * self.group0()[0])
-                - 2.0 * (self.group1()[1] * self.group0()[1])
-                - 2.0 * (self.group1()[2] * self.group0()[2])),
-        );
-        return MysteryVersorEven::from_groups(
-            // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                (anti_reverse[e321] * self[e321])
+                    - (anti_reverse[e423] * self[e235])
+                    - (anti_reverse[e431] * self[e315])
+                    - (anti_reverse[e412] * self[e125])
+                    - (anti_reverse[e235] * self[e423])
+                    - (anti_reverse[e315] * self[e431])
+                    - (anti_reverse[e125] * self[e412]),
+                (anti_reverse[e412] * self[e315]) + (anti_reverse[e315] * self[e412]) - (anti_reverse[e431] * self[e125]) - (anti_reverse[e125] * self[e431]),
+                (anti_reverse[e423] * self[e125]) + (anti_reverse[e125] * self[e423]) - (anti_reverse[e412] * self[e235]) - (anti_reverse[e235] * self[e412]),
+                (anti_reverse[e431] * self[e235]) + (anti_reverse[e235] * self[e431]) - (anti_reverse[e423] * self[e315]) - (anti_reverse[e315] * self[e423]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
+        let anti_dot_product = AntiScalar::from_groups(
+            // e12345
+            f32::powi(self[e321], 2) - 2.0 * (self[e423] * self[e235]) - 2.0 * (self[e431] * self[e315]) - 2.0 * (self[e412] * self[e125]),
+        );
+        return MysteryVersorEven::from_groups(
+            // e12345, e1, e2, e3
+            Simd32x4::from([
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for CircleRotor {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for CircleRotor {
@@ -1522,11 +1746,11 @@ impl AntiConstraintViolation for CircleRotor {
         use crate::elements::*;
         let anti_reverse = CircleRotor::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            (self.group1() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e12345]]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -1534,17 +1758,16 @@ impl AntiConstraintViolation for CircleRotor {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group2()[0])
-                    - (anti_reverse.group0()[1] * self.group2()[1])
-                    - (anti_reverse.group0()[2] * self.group2()[2])
-                    - (self.group0()[0] * anti_reverse.group2()[0])
-                    - (self.group0()[1] * anti_reverse.group2()[1])
-                    - (self.group0()[2] * anti_reverse.group2()[2])
-                    - (anti_reverse.group1()[0] * self.group1()[0])
-                    - (anti_reverse.group1()[1] * self.group1()[1])
-                    - (anti_reverse.group1()[2] * self.group1()[2])
-                    + (anti_reverse.group1()[3] * self.group1()[3])
-                    + (anti_reverse.group2()[3] * self.group2()[3])),
+                (anti_reverse[e321] * self[e321]) + (anti_reverse[e12345] * self[e12345])
+                    - (anti_reverse[e423] * self[e235])
+                    - (anti_reverse[e431] * self[e315])
+                    - (anti_reverse[e412] * self[e125])
+                    - (anti_reverse[e415] * self[e415])
+                    - (anti_reverse[e425] * self[e425])
+                    - (anti_reverse[e435] * self[e435])
+                    - (anti_reverse[e235] * self[e423])
+                    - (anti_reverse[e315] * self[e431])
+                    - (anti_reverse[e125] * self[e412]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -1553,52 +1776,58 @@ impl AntiConstraintViolation for CircleRotor {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group1()[0] * self.group2()[0])
-                    - (anti_reverse.group1()[1] * self.group2()[1])
-                    - (anti_reverse.group1()[2] * self.group2()[2])
-                    - (anti_reverse.group2()[0] * self.group1()[0])
-                    - (anti_reverse.group2()[1] * self.group1()[1])
-                    - (anti_reverse.group2()[2] * self.group1()[2])),
+                -(anti_reverse[e415] * self[e235])
+                    - (anti_reverse[e425] * self[e315])
+                    - (anti_reverse[e435] * self[e125])
+                    - (anti_reverse[e235] * self[e415])
+                    - (anti_reverse[e315] * self[e425])
+                    - (anti_reverse[e125] * self[e435]),
             ]),
             // e1, e2, e3, e4
             Simd32x4::from([
-                (-(anti_reverse.group0()[1] * self.group2()[2]) + (anti_reverse.group0()[2] * self.group2()[1]) - (self.group0()[1] * anti_reverse.group2()[2])
-                    + (self.group0()[2] * anti_reverse.group2()[1])
-                    + (anti_reverse.group1()[0] * self.group1()[3])
-                    + (anti_reverse.group1()[3] * self.group1()[0])),
-                ((anti_reverse.group0()[0] * self.group2()[2]) - (anti_reverse.group0()[2] * self.group2()[0]) + (self.group0()[0] * anti_reverse.group2()[2])
-                    - (self.group0()[2] * anti_reverse.group2()[0])
-                    + (anti_reverse.group1()[1] * self.group1()[3])
-                    + (anti_reverse.group1()[3] * self.group1()[1])),
-                (-(anti_reverse.group0()[0] * self.group2()[1]) + (anti_reverse.group0()[1] * self.group2()[0]) - (self.group0()[0] * anti_reverse.group2()[1])
-                    + (self.group0()[1] * anti_reverse.group2()[0])
-                    + (anti_reverse.group1()[2] * self.group1()[3])
-                    + (anti_reverse.group1()[3] * self.group1()[2])),
-                (-(anti_reverse.group0()[0] * self.group1()[0])
-                    - (anti_reverse.group0()[1] * self.group1()[1])
-                    - (anti_reverse.group0()[2] * self.group1()[2])
-                    - (self.group0()[0] * anti_reverse.group1()[0])
-                    - (self.group0()[1] * anti_reverse.group1()[1])
-                    - (self.group0()[2] * anti_reverse.group1()[2])),
+                (anti_reverse[e412] * self[e315]) + (anti_reverse[e415] * self[e321]) + (anti_reverse[e321] * self[e415]) + (anti_reverse[e315] * self[e412])
+                    - (anti_reverse[e431] * self[e125])
+                    - (anti_reverse[e125] * self[e431]),
+                (anti_reverse[e423] * self[e125]) + (anti_reverse[e425] * self[e321]) + (anti_reverse[e321] * self[e425]) + (anti_reverse[e125] * self[e423])
+                    - (anti_reverse[e412] * self[e235])
+                    - (anti_reverse[e235] * self[e412]),
+                (anti_reverse[e431] * self[e235]) + (anti_reverse[e435] * self[e321]) + (anti_reverse[e321] * self[e435]) + (anti_reverse[e235] * self[e431])
+                    - (anti_reverse[e423] * self[e315])
+                    - (anti_reverse[e315] * self[e423]),
+                -(anti_reverse[e423] * self[e415])
+                    - (anti_reverse[e431] * self[e425])
+                    - (anti_reverse[e412] * self[e435])
+                    - (anti_reverse[e415] * self[e423])
+                    - (anti_reverse[e425] * self[e431])
+                    - (anti_reverse[e435] * self[e412]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2) + f32::powi(self.group2()[3], 2)
-                - 2.0 * (self.group0()[0] * self.group2()[0])
-                - 2.0 * (self.group0()[1] * self.group2()[1])
-                - 2.0 * (self.group0()[2] * self.group2()[2])),
+            f32::powi(self[e321], 2) + f32::powi(self[e12345], 2)
+                - f32::powi(self[e415], 2)
+                - f32::powi(self[e425], 2)
+                - f32::powi(self[e435], 2)
+                - 2.0 * (self[e423] * self[e235])
+                - 2.0 * (self[e431] * self[e315])
+                - 2.0 * (self[e412] * self[e125]),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for CircleRotorAligningOrigin {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for CircleRotorAligningOrigin {
@@ -1614,11 +1843,11 @@ impl AntiConstraintViolation for CircleRotorAligningOrigin {
         use crate::elements::*;
         let anti_reverse = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
             // e415, e425, e435
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e12345]]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -1626,16 +1855,16 @@ impl AntiConstraintViolation for CircleRotorAligningOrigin {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group2()[0])
-                    - (anti_reverse.group0()[1] * self.group2()[1])
-                    - (anti_reverse.group0()[2] * self.group2()[2])
-                    - (anti_reverse.group1()[0] * self.group1()[0])
-                    - (anti_reverse.group1()[1] * self.group1()[1])
-                    - (anti_reverse.group1()[2] * self.group1()[2])
-                    - (self.group0()[0] * anti_reverse.group2()[0])
-                    - (self.group0()[1] * anti_reverse.group2()[1])
-                    - (self.group0()[2] * anti_reverse.group2()[2])
-                    + (anti_reverse.group2()[3] * self.group2()[3])),
+                (anti_reverse[e12345] * self[e12345])
+                    - (anti_reverse[e423] * self[e235])
+                    - (anti_reverse[e431] * self[e315])
+                    - (anti_reverse[e412] * self[e125])
+                    - (anti_reverse[e415] * self[e415])
+                    - (anti_reverse[e425] * self[e425])
+                    - (anti_reverse[e435] * self[e435])
+                    - (anti_reverse[e235] * self[e423])
+                    - (anti_reverse[e315] * self[e431])
+                    - (anti_reverse[e125] * self[e412]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -1644,46 +1873,52 @@ impl AntiConstraintViolation for CircleRotorAligningOrigin {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group1()[0] * self.group2()[0])
-                    - (anti_reverse.group1()[1] * self.group2()[1])
-                    - (anti_reverse.group1()[2] * self.group2()[2])
-                    - (self.group1()[0] * anti_reverse.group2()[0])
-                    - (self.group1()[1] * anti_reverse.group2()[1])
-                    - (self.group1()[2] * anti_reverse.group2()[2])),
+                -(anti_reverse[e415] * self[e235])
+                    - (anti_reverse[e425] * self[e315])
+                    - (anti_reverse[e435] * self[e125])
+                    - (anti_reverse[e235] * self[e415])
+                    - (anti_reverse[e315] * self[e425])
+                    - (anti_reverse[e125] * self[e435]),
             ]),
             // e1, e2, e3, e4
             Simd32x4::from([
-                (-(anti_reverse.group0()[1] * self.group2()[2]) + (anti_reverse.group0()[2] * self.group2()[1]) - (self.group0()[1] * anti_reverse.group2()[2])
-                    + (self.group0()[2] * anti_reverse.group2()[1])),
-                ((anti_reverse.group0()[0] * self.group2()[2]) - (anti_reverse.group0()[2] * self.group2()[0]) + (self.group0()[0] * anti_reverse.group2()[2])
-                    - (self.group0()[2] * anti_reverse.group2()[0])),
-                (-(anti_reverse.group0()[0] * self.group2()[1]) + (anti_reverse.group0()[1] * self.group2()[0]) - (self.group0()[0] * anti_reverse.group2()[1])
-                    + (self.group0()[1] * anti_reverse.group2()[0])),
-                (-(anti_reverse.group0()[0] * self.group1()[0])
-                    - (anti_reverse.group0()[1] * self.group1()[1])
-                    - (anti_reverse.group0()[2] * self.group1()[2])
-                    - (anti_reverse.group1()[0] * self.group0()[0])
-                    - (anti_reverse.group1()[1] * self.group0()[1])
-                    - (anti_reverse.group1()[2] * self.group0()[2])),
+                (anti_reverse[e412] * self[e315]) + (anti_reverse[e315] * self[e412]) - (anti_reverse[e431] * self[e125]) - (anti_reverse[e125] * self[e431]),
+                (anti_reverse[e423] * self[e125]) + (anti_reverse[e125] * self[e423]) - (anti_reverse[e412] * self[e235]) - (anti_reverse[e235] * self[e412]),
+                (anti_reverse[e431] * self[e235]) + (anti_reverse[e235] * self[e431]) - (anti_reverse[e423] * self[e315]) - (anti_reverse[e315] * self[e423]),
+                -(anti_reverse[e423] * self[e415])
+                    - (anti_reverse[e431] * self[e425])
+                    - (anti_reverse[e412] * self[e435])
+                    - (anti_reverse[e415] * self[e423])
+                    - (anti_reverse[e425] * self[e431])
+                    - (anti_reverse[e435] * self[e412]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group2()[3], 2)
-                - 2.0 * (self.group0()[0] * self.group2()[0])
-                - 2.0 * (self.group0()[1] * self.group2()[1])
-                - 2.0 * (self.group0()[2] * self.group2()[2])),
+            f32::powi(self[e12345], 2)
+                - f32::powi(self[e415], 2)
+                - f32::powi(self[e425], 2)
+                - f32::powi(self[e435], 2)
+                - 2.0 * (self[e423] * self[e235])
+                - 2.0 * (self[e431] * self[e315])
+                - 2.0 * (self[e412] * self[e125]),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for CircleRotorAligningOriginAtInfinity {
+    type Output = Motor;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for CircleRotorAligningOriginAtInfinity {
@@ -1699,9 +1934,9 @@ impl AntiConstraintViolation for CircleRotorAligningOriginAtInfinity {
         use crate::elements::*;
         let anti_reverse = CircleRotorAligningOriginAtInfinity::from_groups(
             // e415, e425, e435
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e12345]]),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -1709,32 +1944,37 @@ impl AntiConstraintViolation for CircleRotorAligningOriginAtInfinity {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group0()[0]) - (anti_reverse.group0()[1] * self.group0()[1]) - (anti_reverse.group0()[2] * self.group0()[2])
-                    + (anti_reverse.group1()[3] * self.group1()[3])),
+                (anti_reverse[e12345] * self[e12345]) - (anti_reverse[e415] * self[e415]) - (anti_reverse[e425] * self[e425]) - (anti_reverse[e435] * self[e435]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group1()[0])
-                    - (anti_reverse.group0()[1] * self.group1()[1])
-                    - (anti_reverse.group0()[2] * self.group1()[2])
-                    - (self.group0()[0] * anti_reverse.group1()[0])
-                    - (self.group0()[1] * anti_reverse.group1()[1])
-                    - (self.group0()[2] * anti_reverse.group1()[2])),
+                -(anti_reverse[e415] * self[e235])
+                    - (anti_reverse[e425] * self[e315])
+                    - (anti_reverse[e435] * self[e125])
+                    - (anti_reverse[e235] * self[e415])
+                    - (anti_reverse[e315] * self[e425])
+                    - (anti_reverse[e125] * self[e435]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group1()[3], 2)),
+            f32::powi(self[e12345], 2) - f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for CircleRotorAtInfinity {
+    type Output = VersorEvenAtInfinity;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for CircleRotorAtInfinity {
@@ -1750,19 +1990,18 @@ impl AntiConstraintViolation for CircleRotorAtInfinity {
         use crate::elements::*;
         let anti_reverse = CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
-            (self.group0() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e12345]]),
         );
         let geometric_anti_product = VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                (-(anti_reverse.group0()[0] * self.group0()[0]) - (anti_reverse.group0()[1] * self.group0()[1]) - (anti_reverse.group0()[2] * self.group0()[2])
-                    + (anti_reverse.group1()[3] * self.group1()[3])),
-                (anti_reverse.group0()[3] * self.group0()[0]),
-                (anti_reverse.group0()[3] * self.group0()[1]),
-                (anti_reverse.group0()[3] * self.group0()[2]),
-            ]) + (Simd32x4::from(self.group0()[3]) * swizzle!(anti_reverse.group0(), 3, 0, 1, 2))),
+            Simd32x4::from([
+                (anti_reverse[e12345] * self[e12345]) - (anti_reverse[e415] * self[e415]) - (anti_reverse[e425] * self[e425]) - (anti_reverse[e435] * self[e435]),
+                anti_reverse[e321] * self[e415],
+                anti_reverse[e321] * self[e425],
+                anti_reverse[e321] * self[e435],
+            ]) + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -1770,31 +2009,37 @@ impl AntiConstraintViolation for CircleRotorAtInfinity {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group1()[0])
-                    - (anti_reverse.group0()[1] * self.group1()[1])
-                    - (anti_reverse.group0()[2] * self.group1()[2])
-                    - (anti_reverse.group1()[0] * self.group0()[0])
-                    - (anti_reverse.group1()[1] * self.group0()[1])
-                    - (anti_reverse.group1()[2] * self.group0()[2])),
+                -(anti_reverse[e415] * self[e235])
+                    - (anti_reverse[e425] * self[e315])
+                    - (anti_reverse[e435] * self[e125])
+                    - (anti_reverse[e235] * self[e415])
+                    - (anti_reverse[e315] * self[e425])
+                    - (anti_reverse[e125] * self[e435]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[3], 2)),
+            f32::powi(self[e321], 2) + f32::powi(self[e12345], 2) - f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2),
         );
         return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for CircleRotorOnOrigin {
+    type Output = DualNum;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for CircleRotorOnOrigin {
@@ -1811,48 +2056,54 @@ impl AntiConstraintViolation for CircleRotorOnOrigin {
         use crate::elements::*;
         let anti_reverse = CircleRotorOnOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self[e423] * -1.0, self[e431] * -1.0, self[e412] * -1.0, self[e12345]]),
             // e415, e425, e435
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
-            (Simd32x2::from([
-                (-(self.group1()[0] * anti_reverse.group0()[0]) - (self.group1()[1] * anti_reverse.group0()[1]) - (self.group1()[2] * anti_reverse.group0()[2])),
-                (anti_reverse.group0()[3] * self.group0()[3]),
-            ]) - (Simd32x2::from(anti_reverse.group1()[0]) * Simd32x2::from([self.group0()[0], self.group1()[0]]))
-                - (Simd32x2::from(anti_reverse.group1()[1]) * Simd32x2::from([self.group0()[1], self.group1()[1]]))
-                - (Simd32x2::from(anti_reverse.group1()[2]) * Simd32x2::from([self.group0()[2], self.group1()[2]]))),
+            Simd32x2::from([
+                -(anti_reverse[e415] * self[e423]) - (anti_reverse[e425] * self[e431]) - (anti_reverse[e435] * self[e412]),
+                anti_reverse[e12345] * self[e12345],
+            ]) - (Simd32x2::from(self[e415]) * Simd32x2::from([anti_reverse[e423], anti_reverse[e415]]))
+                - (Simd32x2::from(self[e425]) * Simd32x2::from([anti_reverse[e431], anti_reverse[e425]]))
+                - (Simd32x2::from(self[e435]) * Simd32x2::from([anti_reverse[e412], anti_reverse[e435]])),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group0()[3], 2)),
+            f32::powi(self[e12345], 2) - f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2),
         );
         return DualNum::from_groups(
             // e4, e12345
-            Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
+            Simd32x2::from([geometric_anti_product[e4], geometric_anti_product[e12345] - anti_dot_product[e12345]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for Dipole {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       38        0
+    //      f32       41       46        0
     //    simd3        0        2        0
-    //    simd4        2        3        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       35       43        0
+    // yes simd       41       49        0
     //  no simd       41       56        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = Dipole::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            (self.group2() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -1860,16 +2111,16 @@ impl AntiConstraintViolation for Dipole {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[0] * self.group2()[0])
-                    + (anti_reverse.group0()[1] * self.group2()[1])
-                    + (anti_reverse.group0()[2] * self.group2()[2])
-                    + (anti_reverse.group2()[0] * self.group0()[0])
-                    + (anti_reverse.group2()[1] * self.group0()[1])
-                    + (anti_reverse.group2()[2] * self.group0()[2])
-                    + (anti_reverse.group1()[0] * self.group1()[0])
-                    + (anti_reverse.group1()[1] * self.group1()[1])
-                    + (anti_reverse.group1()[2] * self.group1()[2])
-                    - (anti_reverse.group1()[3] * self.group1()[3])),
+                (anti_reverse[e41] * self[e15])
+                    + (anti_reverse[e42] * self[e25])
+                    + (anti_reverse[e43] * self[e35])
+                    + (anti_reverse[e23] * self[e23])
+                    + (anti_reverse[e31] * self[e31])
+                    + (anti_reverse[e12] * self[e12])
+                    + (anti_reverse[e15] * self[e41])
+                    + (anti_reverse[e25] * self[e42])
+                    + (anti_reverse[e35] * self[e43])
+                    - (anti_reverse[e45] * self[e45]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -1878,124 +2129,144 @@ impl AntiConstraintViolation for Dipole {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group2()[0] * self.group1()[0])
-                    + (anti_reverse.group2()[1] * self.group1()[1])
-                    + (anti_reverse.group2()[2] * self.group1()[2])
-                    + (self.group2()[0] * anti_reverse.group1()[0])
-                    + (self.group2()[1] * anti_reverse.group1()[1])
-                    + (self.group2()[2] * anti_reverse.group1()[2])),
+                (anti_reverse[e23] * self[e15])
+                    + (anti_reverse[e31] * self[e25])
+                    + (anti_reverse[e12] * self[e35])
+                    + (anti_reverse[e15] * self[e23])
+                    + (anti_reverse[e25] * self[e31])
+                    + (anti_reverse[e35] * self[e12]),
             ]),
             // e1, e2, e3, e4
-            (Simd32x4::from([
-                ((anti_reverse.group0()[1] * self.group2()[2]) - (anti_reverse.group0()[2] * self.group2()[1]) - (anti_reverse.group2()[1] * self.group0()[2])
-                    + (anti_reverse.group2()[2] * self.group0()[1])),
-                (-(anti_reverse.group0()[0] * self.group2()[2]) + (anti_reverse.group0()[2] * self.group2()[0]) + (anti_reverse.group2()[0] * self.group0()[2])
-                    - (anti_reverse.group2()[2] * self.group0()[0])),
-                ((anti_reverse.group0()[0] * self.group2()[1]) - (anti_reverse.group0()[1] * self.group2()[0]) - (anti_reverse.group2()[0] * self.group0()[1])
-                    + (anti_reverse.group2()[1] * self.group0()[0])),
-                ((anti_reverse.group0()[2] * self.group1()[2])
-                    + (self.group0()[0] * anti_reverse.group1()[0])
-                    + (self.group0()[1] * anti_reverse.group1()[1])
-                    + (self.group0()[2] * anti_reverse.group1()[2])),
-            ]) + (Simd32x4::from([anti_reverse.group1()[0], anti_reverse.group1()[1], anti_reverse.group1()[2], anti_reverse.group0()[0]]) * swizzle!(self.group1(), 3, 3, 3, 0))
-                + (Simd32x4::from([anti_reverse.group1()[3], anti_reverse.group1()[3], anti_reverse.group1()[3], anti_reverse.group0()[1]]) * swizzle!(self.group1(), 0, 1, 2, 1))),
+            Simd32x4::from([
+                (anti_reverse[e42] * self[e35]) + (anti_reverse[e23] * self[e45]) + (anti_reverse[e45] * self[e23]) + (anti_reverse[e35] * self[e42])
+                    - (anti_reverse[e43] * self[e25])
+                    - (anti_reverse[e25] * self[e43]),
+                (anti_reverse[e43] * self[e15]) + (anti_reverse[e31] * self[e45]) + (anti_reverse[e45] * self[e31]) + (anti_reverse[e15] * self[e43])
+                    - (anti_reverse[e41] * self[e35])
+                    - (anti_reverse[e35] * self[e41]),
+                (anti_reverse[e41] * self[e25]) + (anti_reverse[e12] * self[e45]) + (anti_reverse[e45] * self[e12]) + (anti_reverse[e25] * self[e41])
+                    - (anti_reverse[e42] * self[e15])
+                    - (anti_reverse[e15] * self[e42]),
+                (anti_reverse[e41] * self[e23])
+                    + (anti_reverse[e42] * self[e31])
+                    + (anti_reverse[e43] * self[e12])
+                    + (anti_reverse[e23] * self[e41])
+                    + (anti_reverse[e31] * self[e42])
+                    + (anti_reverse[e12] * self[e43]),
+            ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2)
-                + 2.0 * (self.group0()[0] * self.group2()[0])
-                + 2.0 * (self.group0()[1] * self.group2()[1])
-                + 2.0 * (self.group0()[2] * self.group2()[2])),
+            2.0 * (self[e41] * self[e15])
+                + 2.0 * (self[e42] * self[e25])
+                + 2.0 * (self[e43] * self[e35])
+                + f32::powi(self[e23], 2)
+                + f32::powi(self[e31], 2)
+                + f32::powi(self[e12], 2)
+                - f32::powi(self[e45], 2),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for DipoleAligningOrigin {
+    type Output = MysteryVersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for DipoleAligningOrigin {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       16        0
+    //      f32       19       25        0
     //    simd3        0        1        0
-    //    simd4        3        4        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       10       21        0
-    //  no simd       19       35        0
+    // yes simd       19       27        0
+    //  no simd       19       32        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = DipoleAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            (self.group0() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                ((anti_reverse.group1()[1] * self.group0()[1])
-                    + (anti_reverse.group1()[2] * self.group0()[2])
-                    + (self.group1()[1] * anti_reverse.group0()[1])
-                    + (self.group1()[2] * anti_reverse.group0()[2])),
-                ((self.group1()[1] * anti_reverse.group0()[2]) * -1.0),
-                ((self.group1()[2] * anti_reverse.group0()[0]) * -1.0),
-                ((self.group1()[0] * anti_reverse.group0()[1]) * -1.0),
-            ]) + (Simd32x4::from([anti_reverse.group1()[0], anti_reverse.group1()[2], anti_reverse.group1()[0], anti_reverse.group1()[1]]) * swizzle!(self.group0(), 0, 1, 2, 0))
-                + (Simd32x4::from([self.group1()[0], self.group1()[2], self.group1()[0], self.group1()[1]]) * swizzle!(anti_reverse.group0(), 0, 1, 2, 0))
-                - (Simd32x4::from([anti_reverse.group0()[3], anti_reverse.group1()[1], anti_reverse.group1()[2], anti_reverse.group1()[0]]) * swizzle!(self.group0(), 3, 2, 0, 1))),
+            Simd32x4::from([
+                (anti_reverse[e41] * self[e15])
+                    + (anti_reverse[e42] * self[e25])
+                    + (anti_reverse[e43] * self[e35])
+                    + (anti_reverse[e15] * self[e41])
+                    + (anti_reverse[e25] * self[e42])
+                    + (anti_reverse[e35] * self[e43])
+                    - (anti_reverse[e45] * self[e45]),
+                (anti_reverse[e42] * self[e35]) + (anti_reverse[e35] * self[e42]) - (anti_reverse[e43] * self[e25]) - (anti_reverse[e25] * self[e43]),
+                (anti_reverse[e43] * self[e15]) + (anti_reverse[e15] * self[e43]) - (anti_reverse[e41] * self[e35]) - (anti_reverse[e35] * self[e41]),
+                (anti_reverse[e41] * self[e25]) + (anti_reverse[e25] * self[e41]) - (anti_reverse[e42] * self[e15]) - (anti_reverse[e15] * self[e42]),
+            ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[3], 2)
-                + 2.0 * (self.group1()[0] * self.group0()[0])
-                + 2.0 * (self.group1()[1] * self.group0()[1])
-                + 2.0 * (self.group1()[2] * self.group0()[2])),
+            2.0 * (self[e41] * self[e15]) + 2.0 * (self[e42] * self[e25]) + 2.0 * (self[e43] * self[e35]) - f32::powi(self[e45], 2),
         );
         return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
     }
 }
+impl std::ops::Div<anti_constraint_violation> for DipoleAtInfinity {
+    type Output = VersorEvenAtInfinity;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for DipoleAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10        8        0
+    //      f32       15       16        0
     //    simd3        0        1        0
-    //    simd4        2        3        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       12       12        0
-    //  no simd       18       23        0
+    // yes simd       15       18        0
+    //  no simd       15       23        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
-            (self.group0() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([((anti_reverse.group0()[2] * self.group0()[2]) - (anti_reverse.group0()[3] * self.group0()[3])), 0.0, 0.0, 0.0])
-                + (swizzle!(anti_reverse.group0(), 0, 0, 1, 2) * swizzle!(self.group0(), 0, 3, 3, 3))
-                + (swizzle!(anti_reverse.group0(), 1, 3, 3, 3) * swizzle!(self.group0(), 1, 0, 1, 2))),
+            Simd32x4::from([
+                (anti_reverse[e23] * self[e23]) + (anti_reverse[e31] * self[e31]) + (anti_reverse[e12] * self[e12]) - (anti_reverse[e45] * self[e45]),
+                (anti_reverse[e23] * self[e45]) + (anti_reverse[e45] * self[e23]),
+                (anti_reverse[e31] * self[e45]) + (anti_reverse[e45] * self[e31]),
+                (anti_reverse[e12] * self[e45]) + (anti_reverse[e45] * self[e12]),
+            ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -2003,31 +2274,34 @@ impl AntiConstraintViolation for DipoleAtInfinity {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group1()[0] * self.group0()[0])
-                    + (anti_reverse.group1()[1] * self.group0()[1])
-                    + (anti_reverse.group1()[2] * self.group0()[2])
-                    + (self.group1()[0] * anti_reverse.group0()[0])
-                    + (self.group1()[1] * anti_reverse.group0()[1])
-                    + (self.group1()[2] * anti_reverse.group0()[2])),
+                (anti_reverse[e23] * self[e15])
+                    + (anti_reverse[e31] * self[e25])
+                    + (anti_reverse[e12] * self[e35])
+                    + (anti_reverse[e15] * self[e23])
+                    + (anti_reverse[e25] * self[e31])
+                    + (anti_reverse[e35] * self[e12]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
-            // e12345
-            (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2)),
-        );
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) - f32::powi(self[e45], 2));
         return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for DipoleAtOrigin {
+    type Output = MysteryVersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for DipoleAtOrigin {
@@ -2043,65 +2317,65 @@ impl AntiConstraintViolation for DipoleAtOrigin {
         use crate::elements::*;
         let anti_reverse = DipoleAtOrigin::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
             // e15, e25, e35
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                ((anti_reverse.group0()[0] * self.group1()[0])
-                    + (anti_reverse.group0()[1] * self.group1()[1])
-                    + (anti_reverse.group0()[2] * self.group1()[2])
-                    + (anti_reverse.group1()[0] * self.group0()[0])
-                    + (anti_reverse.group1()[1] * self.group0()[1])
-                    + (anti_reverse.group1()[2] * self.group0()[2])),
-                ((anti_reverse.group0()[1] * self.group1()[2]) - (anti_reverse.group0()[2] * self.group1()[1]) - (anti_reverse.group1()[1] * self.group0()[2])
-                    + (anti_reverse.group1()[2] * self.group0()[1])),
-                (-(anti_reverse.group0()[0] * self.group1()[2]) + (anti_reverse.group0()[2] * self.group1()[0]) + (anti_reverse.group1()[0] * self.group0()[2])
-                    - (anti_reverse.group1()[2] * self.group0()[0])),
-                ((anti_reverse.group0()[0] * self.group1()[1]) - (anti_reverse.group0()[1] * self.group1()[0]) - (anti_reverse.group1()[0] * self.group0()[1])
-                    + (anti_reverse.group1()[1] * self.group0()[0])),
+                (anti_reverse[e41] * self[e15])
+                    + (anti_reverse[e42] * self[e25])
+                    + (anti_reverse[e43] * self[e35])
+                    + (anti_reverse[e15] * self[e41])
+                    + (anti_reverse[e25] * self[e42])
+                    + (anti_reverse[e35] * self[e43]),
+                (anti_reverse[e42] * self[e35]) + (anti_reverse[e35] * self[e42]) - (anti_reverse[e43] * self[e25]) - (anti_reverse[e25] * self[e43]),
+                (anti_reverse[e43] * self[e15]) + (anti_reverse[e15] * self[e43]) - (anti_reverse[e41] * self[e35]) - (anti_reverse[e35] * self[e41]),
+                (anti_reverse[e41] * self[e25]) + (anti_reverse[e25] * self[e41]) - (anti_reverse[e42] * self[e15]) - (anti_reverse[e15] * self[e42]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
-            // e12345
-            (2.0 * (self.group0()[0] * self.group1()[0]) + 2.0 * (self.group0()[1] * self.group1()[1]) + 2.0 * (self.group0()[2] * self.group1()[2])),
-        );
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ 2.0 * (self[e41] * self[e15]) + 2.0 * (self[e42] * self[e25]) + 2.0 * (self[e43] * self[e35]));
         return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
     }
 }
+impl std::ops::Div<anti_constraint_violation> for DipoleInversion {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       62       68        0
+    //      f32       82       88        0
     //    simd3        0        1        0
-    //    simd4        7        8        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       69       77        0
+    // yes simd       84       92        0
     //  no simd       90      103        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = DipoleInversion::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
             // e4235, e4315, e4125, e3215
             self.group3(),
         );
@@ -2111,21 +2385,21 @@ impl AntiConstraintViolation for DipoleInversion {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[0] * self.group2()[0])
-                    + (anti_reverse.group0()[1] * self.group2()[1])
-                    + (anti_reverse.group0()[2] * self.group2()[2])
-                    + (self.group0()[0] * anti_reverse.group2()[0])
-                    + (self.group0()[1] * anti_reverse.group2()[1])
-                    + (self.group0()[2] * anti_reverse.group2()[2])
-                    + (anti_reverse.group1()[0] * self.group1()[0])
-                    + (anti_reverse.group1()[1] * self.group1()[1])
-                    + (anti_reverse.group1()[2] * self.group1()[2])
-                    - (anti_reverse.group1()[3] * self.group1()[3])
-                    - (anti_reverse.group2()[3] * self.group3()[3])
-                    + (anti_reverse.group3()[0] * self.group3()[0])
-                    + (anti_reverse.group3()[1] * self.group3()[1])
-                    + (anti_reverse.group3()[2] * self.group3()[2])
-                    - (anti_reverse.group3()[3] * self.group2()[3])),
+                (anti_reverse[e41] * self[e15])
+                    + (anti_reverse[e42] * self[e25])
+                    + (anti_reverse[e43] * self[e35])
+                    + (anti_reverse[e23] * self[e23])
+                    + (anti_reverse[e31] * self[e31])
+                    + (anti_reverse[e12] * self[e12])
+                    + (anti_reverse[e15] * self[e41])
+                    + (anti_reverse[e25] * self[e42])
+                    + (anti_reverse[e35] * self[e43])
+                    + (anti_reverse[e4235] * self[e4235])
+                    + (anti_reverse[e4315] * self[e4315])
+                    + (anti_reverse[e4125] * self[e4125])
+                    - (anti_reverse[e45] * self[e45])
+                    - (anti_reverse[e1234] * self[e3215])
+                    - (anti_reverse[e3215] * self[e1234]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -2134,93 +2408,122 @@ impl AntiConstraintViolation for DipoleInversion {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group1()[0] * self.group2()[0]) + (anti_reverse.group1()[1] * self.group2()[1]) + (anti_reverse.group1()[2] * self.group2()[2])
-                    - (anti_reverse.group1()[3] * self.group3()[3])
-                    + (anti_reverse.group2()[0] * self.group1()[0])
-                    - (anti_reverse.group2()[0] * self.group3()[0])
-                    + (anti_reverse.group2()[1] * self.group1()[1])
-                    - (anti_reverse.group2()[1] * self.group3()[1])
-                    + (anti_reverse.group2()[2] * self.group1()[2])
-                    - (anti_reverse.group2()[2] * self.group3()[2])
-                    + (anti_reverse.group3()[0] * self.group2()[0])
-                    + (anti_reverse.group3()[1] * self.group2()[1])
-                    + (anti_reverse.group3()[2] * self.group2()[2])
-                    + (anti_reverse.group3()[3] * self.group1()[3])),
+                (anti_reverse[e23] * self[e15])
+                    + (anti_reverse[e31] * self[e25])
+                    + (anti_reverse[e12] * self[e35])
+                    + (anti_reverse[e15] * self[e23])
+                    + (anti_reverse[e25] * self[e31])
+                    + (anti_reverse[e35] * self[e12])
+                    + (anti_reverse[e4235] * self[e15])
+                    + (anti_reverse[e4315] * self[e25])
+                    + (anti_reverse[e4125] * self[e35])
+                    + (anti_reverse[e3215] * self[e45])
+                    - (anti_reverse[e45] * self[e3215])
+                    - (anti_reverse[e15] * self[e4235])
+                    - (anti_reverse[e25] * self[e4315])
+                    - (anti_reverse[e35] * self[e4125]),
             ]),
             // e1, e2, e3, e4
-            (Simd32x4::from([
-                (-(anti_reverse.group0()[0] * self.group3()[3]) - (anti_reverse.group0()[2] * self.group2()[1])
-                    + (self.group0()[0] * anti_reverse.group3()[3])
-                    + (self.group0()[1] * anti_reverse.group2()[2])
-                    - (anti_reverse.group1()[1] * self.group3()[2])
-                    + (anti_reverse.group2()[0] * self.group2()[3])
-                    - (anti_reverse.group2()[3] * self.group2()[0])),
-                (-(anti_reverse.group0()[0] * self.group2()[2]) - (anti_reverse.group0()[1] * self.group3()[3])
-                    + (self.group0()[1] * anti_reverse.group3()[3])
-                    + (self.group0()[2] * anti_reverse.group2()[0])
-                    - (anti_reverse.group1()[2] * self.group3()[0])
-                    + (anti_reverse.group2()[1] * self.group2()[3])
-                    - (anti_reverse.group2()[3] * self.group2()[1])),
-                (-(anti_reverse.group0()[1] * self.group2()[0]) - (anti_reverse.group0()[2] * self.group3()[3])
-                    + (self.group0()[0] * anti_reverse.group2()[1])
-                    + (self.group0()[2] * anti_reverse.group3()[3])
-                    - (anti_reverse.group1()[0] * self.group3()[1])
-                    + (anti_reverse.group2()[2] * self.group2()[3])
-                    - (anti_reverse.group2()[3] * self.group2()[2])),
-                ((anti_reverse.group0()[0] * self.group3()[0])
-                    + (anti_reverse.group0()[1] * self.group3()[1])
-                    + (anti_reverse.group0()[2] * self.group1()[2])
-                    + (anti_reverse.group0()[2] * self.group3()[2])
-                    - (self.group0()[1] * anti_reverse.group3()[1])
-                    + (self.group0()[2] * anti_reverse.group1()[2])
-                    - (self.group0()[2] * anti_reverse.group3()[2])),
-            ]) + (Simd32x4::from([anti_reverse.group0()[1], anti_reverse.group0()[2], anti_reverse.group0()[0], anti_reverse.group1()[3]]) * swizzle!(self.group2(), 2, 0, 1, 3))
-                - (Simd32x4::from([self.group0()[2], self.group0()[0], self.group0()[1], self.group1()[3]]) * swizzle!(anti_reverse.group2(), 1, 2, 0, 3))
-                + (Simd32x4::from([anti_reverse.group1()[3], anti_reverse.group1()[3], anti_reverse.group1()[3], anti_reverse.group0()[0]]) * swizzle!(self.group1(), 0, 1, 2, 0))
-                + (Simd32x4::from([anti_reverse.group3()[2], anti_reverse.group3()[0], anti_reverse.group3()[1], anti_reverse.group0()[1]]) * swizzle!(self.group1(), 1, 2, 0, 1))
-                - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(anti_reverse.group3(), 1, 2, 0, 0))
-                + (Simd32x4::from([self.group1()[3], self.group3()[2], self.group3()[0], self.group0()[0]]) * swizzle!(anti_reverse.group1(), 0, 0, 1, 0))
-                + (Simd32x4::from([self.group3()[1], self.group1()[3], self.group1()[3], self.group0()[1]]) * swizzle!(anti_reverse.group1(), 2, 1, 2, 1))),
+            Simd32x4::from([
+                (anti_reverse[e42] * self[e35])
+                    + (anti_reverse[e23] * self[e45])
+                    + (anti_reverse[e12] * self[e4315])
+                    + (anti_reverse[e15] * self[e1234])
+                    + (anti_reverse[e35] * self[e42])
+                    + (anti_reverse[e4125] * self[e31])
+                    + (anti_reverse[e3215] * self[e41])
+                    - (anti_reverse[e41] * self[e3215])
+                    - (anti_reverse[e43] * self[e25])
+                    - (anti_reverse[e31] * self[e4125])
+                    - (anti_reverse[e25] * self[e43])
+                    - (anti_reverse[e4315] * self[e12]),
+                (anti_reverse[e43] * self[e15])
+                    + (anti_reverse[e23] * self[e4125])
+                    + (anti_reverse[e31] * self[e45])
+                    + (anti_reverse[e15] * self[e43])
+                    + (anti_reverse[e25] * self[e1234])
+                    + (anti_reverse[e4235] * self[e12])
+                    + (anti_reverse[e3215] * self[e42])
+                    - (anti_reverse[e41] * self[e35])
+                    - (anti_reverse[e42] * self[e3215])
+                    - (anti_reverse[e12] * self[e4235])
+                    - (anti_reverse[e35] * self[e41])
+                    - (anti_reverse[e4125] * self[e23]),
+                (anti_reverse[e41] * self[e25])
+                    + (anti_reverse[e31] * self[e4235])
+                    + (anti_reverse[e12] * self[e45])
+                    + (anti_reverse[e25] * self[e41])
+                    + (anti_reverse[e35] * self[e1234])
+                    + (anti_reverse[e4315] * self[e23])
+                    + (anti_reverse[e3215] * self[e43])
+                    - (anti_reverse[e42] * self[e15])
+                    - (anti_reverse[e43] * self[e3215])
+                    - (anti_reverse[e23] * self[e4315])
+                    - (anti_reverse[e15] * self[e42])
+                    - (anti_reverse[e4235] * self[e31]),
+                (anti_reverse[e41] * self[e23])
+                    + (anti_reverse[e41] * self[e4235])
+                    + (anti_reverse[e42] * self[e31])
+                    + (anti_reverse[e42] * self[e4315])
+                    + (anti_reverse[e43] * self[e12])
+                    + (anti_reverse[e43] * self[e4125])
+                    + (anti_reverse[e23] * self[e41])
+                    + (anti_reverse[e31] * self[e42])
+                    + (anti_reverse[e12] * self[e43])
+                    - (anti_reverse[e4235] * self[e41])
+                    - (anti_reverse[e4315] * self[e42])
+                    - (anti_reverse[e4125] * self[e43]),
+            ]) + (Simd32x4::from(anti_reverse[e45]) * Simd32x4::from([self[e23], self[e31], self[e12], self[e1234]]))
+                - (Simd32x4::from(anti_reverse[e1234]) * Simd32x4::from([self[e15], self[e25], self[e35], self[e45]])),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2)
-                + f32::powi(self.group3()[0], 2)
-                + f32::powi(self.group3()[1], 2)
-                + f32::powi(self.group3()[2], 2)
-                + 2.0 * (self.group0()[0] * self.group2()[0])
-                + 2.0 * (self.group0()[1] * self.group2()[1])
-                + 2.0 * (self.group0()[2] * self.group2()[2])
-                - 2.0 * (self.group2()[3] * self.group3()[3])),
+            2.0 * (self[e41] * self[e15])
+                + 2.0 * (self[e42] * self[e25])
+                + 2.0 * (self[e43] * self[e35])
+                + f32::powi(self[e23], 2)
+                + f32::powi(self[e31], 2)
+                + f32::powi(self[e12], 2)
+                + f32::powi(self[e4235], 2)
+                + f32::powi(self[e4315], 2)
+                + f32::powi(self[e4125], 2)
+                - f32::powi(self[e45], 2)
+                - 2.0 * (self[e1234] * self[e3215]),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for DipoleInversionAligningOrigin {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for DipoleInversionAligningOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       42       51        0
-    //    simd4        3        4        0
+    //      f32       46       55        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       45       55        0
+    // yes simd       48       58        0
     //  no simd       54       67        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            (self.group0() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -2230,16 +2533,18 @@ impl AntiConstraintViolation for DipoleInversionAligningOrigin {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[0] * self.group1()[0]) + (anti_reverse.group0()[1] * self.group1()[1]) + (anti_reverse.group0()[2] * self.group1()[2])
-                    - (anti_reverse.group0()[3] * self.group0()[3])
-                    + (anti_reverse.group1()[0] * self.group0()[0])
-                    + (anti_reverse.group1()[1] * self.group0()[1])
-                    + (anti_reverse.group1()[2] * self.group0()[2])
-                    - (anti_reverse.group1()[3] * self.group2()[3])
-                    + (anti_reverse.group2()[0] * self.group2()[0])
-                    + (anti_reverse.group2()[1] * self.group2()[1])
-                    + (anti_reverse.group2()[2] * self.group2()[2])
-                    - (anti_reverse.group2()[3] * self.group1()[3])),
+                (anti_reverse[e41] * self[e15])
+                    + (anti_reverse[e42] * self[e25])
+                    + (anti_reverse[e43] * self[e35])
+                    + (anti_reverse[e15] * self[e41])
+                    + (anti_reverse[e25] * self[e42])
+                    + (anti_reverse[e35] * self[e43])
+                    + (anti_reverse[e4235] * self[e4235])
+                    + (anti_reverse[e4315] * self[e4315])
+                    + (anti_reverse[e4125] * self[e4125])
+                    - (anti_reverse[e45] * self[e45])
+                    - (anti_reverse[e1234] * self[e3215])
+                    - (anti_reverse[e3215] * self[e1234]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -2248,89 +2553,102 @@ impl AntiConstraintViolation for DipoleInversionAligningOrigin {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[3] * self.group2()[3])
-                    - (anti_reverse.group1()[0] * self.group2()[0])
-                    - (anti_reverse.group1()[1] * self.group2()[1])
-                    - (anti_reverse.group1()[2] * self.group2()[2])
-                    + (anti_reverse.group2()[0] * self.group1()[0])
-                    + (anti_reverse.group2()[1] * self.group1()[1])
-                    + (anti_reverse.group2()[2] * self.group1()[2])
-                    + (anti_reverse.group2()[3] * self.group0()[3])),
+                (anti_reverse[e4235] * self[e15]) + (anti_reverse[e4315] * self[e25]) + (anti_reverse[e4125] * self[e35]) + (anti_reverse[e3215] * self[e45])
+                    - (anti_reverse[e45] * self[e3215])
+                    - (anti_reverse[e15] * self[e4235])
+                    - (anti_reverse[e25] * self[e4315])
+                    - (anti_reverse[e35] * self[e4125]),
             ]),
             // e1, e2, e3, e4
-            (Simd32x4::from([
-                (-(anti_reverse.group0()[0] * self.group2()[3]) - (anti_reverse.group0()[2] * self.group1()[1]) + (anti_reverse.group1()[2] * self.group0()[1])
-                    - (anti_reverse.group1()[3] * self.group1()[0])
-                    + (anti_reverse.group2()[3] * self.group0()[0])),
-                (-(anti_reverse.group0()[0] * self.group1()[2]) - (anti_reverse.group0()[1] * self.group2()[3]) + (anti_reverse.group1()[0] * self.group0()[2])
-                    - (anti_reverse.group1()[3] * self.group1()[1])
-                    + (anti_reverse.group2()[3] * self.group0()[1])),
-                (-(anti_reverse.group0()[1] * self.group1()[0]) - (anti_reverse.group0()[2] * self.group2()[3]) + (anti_reverse.group1()[1] * self.group0()[0])
-                    - (anti_reverse.group1()[3] * self.group1()[2])
-                    + (anti_reverse.group2()[3] * self.group0()[2])),
-                ((anti_reverse.group0()[1] * self.group2()[1]) + (anti_reverse.group0()[2] * self.group2()[2])
-                    - (anti_reverse.group2()[0] * self.group0()[0])
-                    - (anti_reverse.group2()[1] * self.group0()[1])
-                    - (anti_reverse.group2()[2] * self.group0()[2])),
-            ]) + (Simd32x4::from(self.group1()[3]) * Simd32x4::from([anti_reverse.group1()[0], anti_reverse.group1()[1], anti_reverse.group1()[2], anti_reverse.group0()[3]]))
-                + (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group2()[0]]) * swizzle!(anti_reverse.group0(), 1, 2, 0, 0))
-                - (swizzle!(anti_reverse.group1(), 1, 2, 0, 3) * swizzle!(self.group0(), 2, 0, 1, 3))),
+            Simd32x4::from([
+                (anti_reverse[e42] * self[e35]) + (anti_reverse[e35] * self[e42]) + (anti_reverse[e3215] * self[e41])
+                    - (anti_reverse[e41] * self[e3215])
+                    - (anti_reverse[e43] * self[e25])
+                    - (anti_reverse[e25] * self[e43]),
+                (anti_reverse[e43] * self[e15]) + (anti_reverse[e15] * self[e43]) + (anti_reverse[e3215] * self[e42])
+                    - (anti_reverse[e41] * self[e35])
+                    - (anti_reverse[e42] * self[e3215])
+                    - (anti_reverse[e35] * self[e41]),
+                (anti_reverse[e41] * self[e25]) + (anti_reverse[e25] * self[e41]) + (anti_reverse[e3215] * self[e43])
+                    - (anti_reverse[e42] * self[e15])
+                    - (anti_reverse[e43] * self[e3215])
+                    - (anti_reverse[e15] * self[e42]),
+                (anti_reverse[e41] * self[e4235]) + (anti_reverse[e42] * self[e4315]) + (anti_reverse[e43] * self[e4125])
+                    - (anti_reverse[e4235] * self[e41])
+                    - (anti_reverse[e4315] * self[e42])
+                    - (anti_reverse[e4125] * self[e43]),
+            ]) + (Simd32x4::from(self[e1234]) * Simd32x4::from([anti_reverse[e15], anti_reverse[e25], anti_reverse[e35], anti_reverse[e45]]))
+                - (Simd32x4::from(anti_reverse[e1234]) * Simd32x4::from([self[e15], self[e25], self[e35], self[e45]])),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[3], 2)
-                + f32::powi(self.group2()[0], 2)
-                + f32::powi(self.group2()[1], 2)
-                + f32::powi(self.group2()[2], 2)
-                + 2.0 * (self.group0()[0] * self.group1()[0])
-                + 2.0 * (self.group0()[1] * self.group1()[1])
-                + 2.0 * (self.group0()[2] * self.group1()[2])
-                - 2.0 * (self.group1()[3] * self.group2()[3])),
+            2.0 * (self[e41] * self[e15])
+                + 2.0 * (self[e42] * self[e25])
+                + 2.0 * (self[e43] * self[e35])
+                + f32::powi(self[e4235], 2)
+                + f32::powi(self[e4315], 2)
+                + f32::powi(self[e4125], 2)
+                - f32::powi(self[e45], 2)
+                - 2.0 * (self[e1234] * self[e3215]),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for DipoleInversionAtInfinity {
+    type Output = VersorEvenAtInfinity;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for DipoleInversionAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       22        0
+    //      f32       41       39        0
     //    simd3        0        1        0
-    //    simd4        5        6        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       26       29        0
-    //  no simd       41       49        0
+    // yes simd       41       41        0
+    //  no simd       41       46        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = DipoleInversionAtInfinity::from_groups(
             // e23, e31, e12, e45
-            (self.group0() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
         let geometric_anti_product = VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                ((anti_reverse.group2()[1] * self.group2()[1]) + (anti_reverse.group2()[2] * self.group2()[2])),
-                ((anti_reverse.group2()[1] * self.group0()[2]) * -1.0),
-                ((anti_reverse.group2()[2] * self.group0()[0]) * -1.0),
-                ((anti_reverse.group2()[0] * self.group0()[1]) * -1.0),
-            ]) + (Simd32x4::from([self.group0()[0], self.group0()[3], self.group2()[2], self.group2()[0]]) * swizzle!(anti_reverse.group0(), 0, 0, 0, 1))
-                + (Simd32x4::from([self.group0()[1], self.group2()[1], self.group0()[3], self.group0()[3]]) * swizzle!(anti_reverse.group0(), 1, 2, 1, 2))
-                - (Simd32x4::from([self.group0()[3], self.group2()[2], self.group2()[0], self.group2()[1]]) * swizzle!(anti_reverse.group0(), 3, 1, 2, 0))
-                + (Simd32x4::from([self.group2()[0], self.group0()[1], self.group0()[2], self.group0()[0]]) * swizzle!(anti_reverse.group2(), 0, 2, 0, 1))
-                + (swizzle!(anti_reverse.group0(), 2, 3, 3, 3) * swizzle!(self.group0(), 2, 0, 1, 2))),
+            Simd32x4::from([
+                (anti_reverse[e23] * self[e23])
+                    + (anti_reverse[e31] * self[e31])
+                    + (anti_reverse[e12] * self[e12])
+                    + (anti_reverse[e4235] * self[e4235])
+                    + (anti_reverse[e4315] * self[e4315])
+                    + (anti_reverse[e4125] * self[e4125])
+                    - (anti_reverse[e45] * self[e45]),
+                (anti_reverse[e23] * self[e45]) + (anti_reverse[e12] * self[e4315]) + (anti_reverse[e45] * self[e23]) + (anti_reverse[e4125] * self[e31])
+                    - (anti_reverse[e31] * self[e4125])
+                    - (anti_reverse[e4315] * self[e12]),
+                (anti_reverse[e23] * self[e4125]) + (anti_reverse[e31] * self[e45]) + (anti_reverse[e45] * self[e31]) + (anti_reverse[e4235] * self[e12])
+                    - (anti_reverse[e12] * self[e4235])
+                    - (anti_reverse[e4125] * self[e23]),
+                (anti_reverse[e31] * self[e4235]) + (anti_reverse[e12] * self[e45]) + (anti_reverse[e45] * self[e12]) + (anti_reverse[e4315] * self[e23])
+                    - (anti_reverse[e23] * self[e4315])
+                    - (anti_reverse[e4235] * self[e31]),
+            ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -2338,91 +2656,112 @@ impl AntiConstraintViolation for DipoleInversionAtInfinity {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group1()[0] * self.group0()[0]) - (anti_reverse.group1()[0] * self.group2()[0]) + (anti_reverse.group1()[1] * self.group0()[1])
-                    - (anti_reverse.group1()[1] * self.group2()[1])
-                    + (anti_reverse.group1()[2] * self.group0()[2])
-                    - (anti_reverse.group1()[2] * self.group2()[2])
-                    + (self.group1()[0] * anti_reverse.group0()[0])
-                    + (self.group1()[0] * anti_reverse.group2()[0])
-                    + (self.group1()[1] * anti_reverse.group0()[1])
-                    + (self.group1()[1] * anti_reverse.group2()[1])
-                    + (self.group1()[2] * anti_reverse.group0()[2])
-                    + (self.group1()[2] * anti_reverse.group2()[2])
-                    - (anti_reverse.group0()[3] * self.group2()[3])
-                    + (anti_reverse.group2()[3] * self.group0()[3])),
+                (anti_reverse[e23] * self[e15])
+                    + (anti_reverse[e31] * self[e25])
+                    + (anti_reverse[e12] * self[e35])
+                    + (anti_reverse[e15] * self[e23])
+                    + (anti_reverse[e25] * self[e31])
+                    + (anti_reverse[e35] * self[e12])
+                    + (anti_reverse[e4235] * self[e15])
+                    + (anti_reverse[e4315] * self[e25])
+                    + (anti_reverse[e4125] * self[e35])
+                    + (anti_reverse[e3215] * self[e45])
+                    - (anti_reverse[e45] * self[e3215])
+                    - (anti_reverse[e15] * self[e4235])
+                    - (anti_reverse[e25] * self[e4315])
+                    - (anti_reverse[e35] * self[e4125]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2)
-                + f32::powi(self.group2()[0], 2)
-                + f32::powi(self.group2()[1], 2)
-                + f32::powi(self.group2()[2], 2)),
+            f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) + f32::powi(self[e4235], 2) + f32::powi(self[e4315], 2) + f32::powi(self[e4125], 2)
+                - f32::powi(self[e45], 2),
         );
         return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for DipoleInversionAtOrigin {
+    type Output = MysteryVersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for DipoleInversionAtOrigin {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       22        0
-    //    simd4        6        6        0
+    //      f32       28       42        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       14       28        0
+    // yes simd       29       43        0
     //  no simd       32       46        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = DipoleInversionAtOrigin::from_groups(
             // e41, e42, e43, e3215
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self[e41] * -1.0, self[e42] * -1.0, self[e43] * -1.0, self[e3215]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
         );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                ((anti_reverse.group1()[1] * self.group0()[1]) + (anti_reverse.group1()[2] * self.group0()[2])),
-                (-(anti_reverse.group0()[2] * self.group1()[1]) - (anti_reverse.group1()[3] * self.group1()[0])),
-                (-(anti_reverse.group1()[2] * self.group0()[0]) - (anti_reverse.group1()[3] * self.group1()[1])),
-                (-(anti_reverse.group1()[0] * self.group0()[1]) - (anti_reverse.group1()[3] * self.group1()[2])),
-            ]) + (Simd32x4::from([anti_reverse.group0()[2], anti_reverse.group1()[0], anti_reverse.group1()[1], anti_reverse.group1()[2]]) * swizzle!(self.group1(), 2, 3, 3, 3))
-                - (Simd32x4::from([anti_reverse.group1()[3], anti_reverse.group1()[1], anti_reverse.group0()[1], anti_reverse.group0()[2]]) * swizzle!(self.group0(), 3, 2, 3, 3))
-                + (Simd32x4::from([self.group1()[1], self.group0()[0], self.group0()[1], self.group0()[2]]) * swizzle!(anti_reverse.group0(), 1, 3, 3, 3))
-                - (Simd32x4::from([self.group1()[3], self.group0()[3], self.group1()[2], self.group1()[0]]) * swizzle!(anti_reverse.group0(), 3, 0, 0, 1))
-                + (swizzle!(anti_reverse.group0(), 0, 1, 2, 0) * swizzle!(self.group1(), 0, 2, 0, 1))
-                + (swizzle!(anti_reverse.group1(), 0, 2, 0, 1) * swizzle!(self.group0(), 0, 1, 2, 0))),
+            Simd32x4::from([
+                (anti_reverse[e41] * self[e15])
+                    + (anti_reverse[e42] * self[e25])
+                    + (anti_reverse[e43] * self[e35])
+                    + (anti_reverse[e15] * self[e41])
+                    + (anti_reverse[e25] * self[e42])
+                    + (anti_reverse[e35] * self[e43])
+                    - (anti_reverse[e3215] * self[e1234]),
+                (anti_reverse[e42] * self[e35]) + (anti_reverse[e3215] * self[e41]) + (anti_reverse[e15] * self[e1234]) + (anti_reverse[e35] * self[e42])
+                    - (anti_reverse[e43] * self[e25])
+                    - (anti_reverse[e25] * self[e43])
+                    - (anti_reverse[e1234] * self[e15]),
+                (anti_reverse[e43] * self[e15]) + (anti_reverse[e3215] * self[e42]) + (anti_reverse[e15] * self[e43]) + (anti_reverse[e25] * self[e1234])
+                    - (anti_reverse[e41] * self[e35])
+                    - (anti_reverse[e35] * self[e41])
+                    - (anti_reverse[e1234] * self[e25]),
+                (anti_reverse[e41] * self[e25]) + (anti_reverse[e3215] * self[e43]) + (anti_reverse[e25] * self[e41]) + (anti_reverse[e35] * self[e1234])
+                    - (anti_reverse[e42] * self[e15])
+                    - (anti_reverse[e15] * self[e42])
+                    - (anti_reverse[e1234] * self[e35]),
+            ]) - (Simd32x4::from(self[e3215]) * Simd32x4::from([anti_reverse[e1234], anti_reverse[e41], anti_reverse[e42], anti_reverse[e43]])),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (2.0 * (self.group0()[0] * self.group1()[0]) + 2.0 * (self.group0()[1] * self.group1()[1]) + 2.0 * (self.group0()[2] * self.group1()[2])
-                - 2.0 * (self.group0()[3] * self.group1()[3])),
+            2.0 * (self[e41] * self[e15]) + 2.0 * (self[e42] * self[e25]) + 2.0 * (self[e43] * self[e35]) - 2.0 * (self[e3215] * self[e1234]),
         );
         return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for DipoleInversionOnOrigin {
+    type Output = DualNum;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for DipoleInversionOnOrigin {
@@ -2439,52 +2778,54 @@ impl AntiConstraintViolation for DipoleInversionOnOrigin {
         use crate::elements::*;
         let anti_reverse = DipoleInversionOnOrigin::from_groups(
             // e41, e42, e43, e45
-            (self.group0() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]) * Simd32x4::from(-1.0),
             // e1234, e4235, e4315, e4125
             self.group1(),
         );
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
-            (Simd32x2::from([
-                ((anti_reverse.group0()[3] * self.group1()[0])
-                    - (anti_reverse.group1()[1] * self.group0()[0])
-                    - (anti_reverse.group1()[2] * self.group0()[1])
-                    - (anti_reverse.group1()[3] * self.group0()[2])),
+            Simd32x2::from([
+                (anti_reverse[e45] * self[e1234]) - (anti_reverse[e4235] * self[e41]) - (anti_reverse[e4315] * self[e42]) - (anti_reverse[e4125] * self[e43]),
                 0.0,
-            ]) - (Simd32x2::from(self.group0()[3]) * Simd32x2::from([anti_reverse.group1()[0], anti_reverse.group0()[3]]))
-                + (Simd32x2::from(self.group1()[1]) * Simd32x2::from([anti_reverse.group0()[0], anti_reverse.group1()[1]]))
-                + (Simd32x2::from(self.group1()[2]) * Simd32x2::from([anti_reverse.group0()[1], anti_reverse.group1()[2]]))
-                + (Simd32x2::from(self.group1()[3]) * Simd32x2::from([anti_reverse.group0()[2], anti_reverse.group1()[3]]))),
+            ]) + (Simd32x2::from(self[e4235]) * Simd32x2::from([anti_reverse[e41], anti_reverse[e4235]]))
+                + (Simd32x2::from(self[e4315]) * Simd32x2::from([anti_reverse[e42], anti_reverse[e4315]]))
+                + (Simd32x2::from(self[e4125]) * Simd32x2::from([anti_reverse[e43], anti_reverse[e4125]]))
+                - (Simd32x2::from(self[e45]) * Simd32x2::from([anti_reverse[e1234], anti_reverse[e45]])),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2)),
+            f32::powi(self[e4235], 2) + f32::powi(self[e4315], 2) + f32::powi(self[e4125], 2) - f32::powi(self[e45], 2),
         );
         return DualNum::from_groups(
             // e4, e12345
-            Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
+            Simd32x2::from([geometric_anti_product[e4], geometric_anti_product[e12345] - anti_dot_product[e12345]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for DipoleInversionOrthogonalOrigin {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for DipoleInversionOrthogonalOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       36       49        0
+    //      f32       48       61        0
     //    simd3        0        1        0
-    //    simd4        3        3        0
     // Totals...
-    // yes simd       39       53        0
+    // yes simd       48       62        0
     //  no simd       48       64        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = DipoleInversionOrthogonalOrigin::from_groups(
             // e41, e42, e43, e3215
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self[e41] * -1.0, self[e42] * -1.0, self[e43] * -1.0, self[e3215]]),
             // e23, e31, e12
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2492,17 +2833,17 @@ impl AntiConstraintViolation for DipoleInversionOrthogonalOrigin {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group1()[0] * self.group1()[0])
-                    + (anti_reverse.group1()[1] * self.group1()[1])
-                    + (anti_reverse.group1()[2] * self.group1()[2])
-                    + (anti_reverse.group0()[0] * self.group2()[0])
-                    + (anti_reverse.group0()[1] * self.group2()[1])
-                    + (anti_reverse.group0()[2] * self.group2()[2])
-                    - (anti_reverse.group0()[3] * self.group2()[3])
-                    + (anti_reverse.group2()[0] * self.group0()[0])
-                    + (anti_reverse.group2()[1] * self.group0()[1])
-                    + (anti_reverse.group2()[2] * self.group0()[2])
-                    - (anti_reverse.group2()[3] * self.group0()[3])),
+                (anti_reverse[e41] * self[e15])
+                    + (anti_reverse[e42] * self[e25])
+                    + (anti_reverse[e43] * self[e35])
+                    + (anti_reverse[e23] * self[e23])
+                    + (anti_reverse[e31] * self[e31])
+                    + (anti_reverse[e12] * self[e12])
+                    + (anti_reverse[e15] * self[e41])
+                    + (anti_reverse[e25] * self[e42])
+                    + (anti_reverse[e35] * self[e43])
+                    - (anti_reverse[e3215] * self[e1234])
+                    - (anti_reverse[e1234] * self[e3215]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -2511,49 +2852,64 @@ impl AntiConstraintViolation for DipoleInversionOrthogonalOrigin {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group1()[0] * self.group2()[0])
-                    + (anti_reverse.group1()[1] * self.group2()[1])
-                    + (anti_reverse.group1()[2] * self.group2()[2])
-                    + (self.group1()[0] * anti_reverse.group2()[0])
-                    + (self.group1()[1] * anti_reverse.group2()[1])
-                    + (self.group1()[2] * anti_reverse.group2()[2])),
+                (anti_reverse[e23] * self[e15])
+                    + (anti_reverse[e31] * self[e25])
+                    + (anti_reverse[e12] * self[e35])
+                    + (anti_reverse[e15] * self[e23])
+                    + (anti_reverse[e25] * self[e31])
+                    + (anti_reverse[e35] * self[e12]),
             ]),
             // e1, e2, e3, e4
-            (Simd32x4::from([
-                (-(anti_reverse.group0()[0] * self.group0()[3]) - (anti_reverse.group0()[2] * self.group2()[1]) + (anti_reverse.group2()[0] * self.group2()[3])
-                    - (anti_reverse.group2()[1] * self.group0()[2])
-                    - (anti_reverse.group2()[3] * self.group2()[0])),
-                (-(anti_reverse.group0()[0] * self.group2()[2]) - (anti_reverse.group0()[1] * self.group0()[3]) + (anti_reverse.group2()[1] * self.group2()[3])
-                    - (anti_reverse.group2()[2] * self.group0()[0])
-                    - (anti_reverse.group2()[3] * self.group2()[1])),
-                (-(anti_reverse.group0()[1] * self.group2()[0]) - (anti_reverse.group0()[2] * self.group0()[3]) - (anti_reverse.group2()[0] * self.group0()[1])
-                    + (anti_reverse.group2()[2] * self.group2()[3])
-                    - (anti_reverse.group2()[3] * self.group2()[2])),
-                ((anti_reverse.group1()[2] * self.group0()[2]) + (self.group1()[1] * anti_reverse.group0()[1]) + (self.group1()[2] * anti_reverse.group0()[2])),
-            ]) + (Simd32x4::from([anti_reverse.group0()[3], anti_reverse.group0()[3], anti_reverse.group0()[3], anti_reverse.group1()[0]]) * swizzle!(self.group0(), 0, 1, 2, 0))
-                + (Simd32x4::from([anti_reverse.group2()[2], anti_reverse.group2()[0], anti_reverse.group2()[1], anti_reverse.group1()[1]]) * swizzle!(self.group0(), 1, 2, 0, 1))
-                + (Simd32x4::from([self.group2()[2], self.group2()[0], self.group2()[1], self.group1()[0]]) * swizzle!(anti_reverse.group0(), 1, 2, 0, 0))),
+            Simd32x4::from([
+                (anti_reverse[e42] * self[e35]) + (anti_reverse[e3215] * self[e41]) + (anti_reverse[e15] * self[e1234]) + (anti_reverse[e35] * self[e42])
+                    - (anti_reverse[e41] * self[e3215])
+                    - (anti_reverse[e43] * self[e25])
+                    - (anti_reverse[e25] * self[e43])
+                    - (anti_reverse[e1234] * self[e15]),
+                (anti_reverse[e43] * self[e15]) + (anti_reverse[e3215] * self[e42]) + (anti_reverse[e15] * self[e43]) + (anti_reverse[e25] * self[e1234])
+                    - (anti_reverse[e41] * self[e35])
+                    - (anti_reverse[e42] * self[e3215])
+                    - (anti_reverse[e35] * self[e41])
+                    - (anti_reverse[e1234] * self[e25]),
+                (anti_reverse[e41] * self[e25]) + (anti_reverse[e3215] * self[e43]) + (anti_reverse[e25] * self[e41]) + (anti_reverse[e35] * self[e1234])
+                    - (anti_reverse[e42] * self[e15])
+                    - (anti_reverse[e43] * self[e3215])
+                    - (anti_reverse[e15] * self[e42])
+                    - (anti_reverse[e1234] * self[e35]),
+                (anti_reverse[e41] * self[e23])
+                    + (anti_reverse[e42] * self[e31])
+                    + (anti_reverse[e43] * self[e12])
+                    + (anti_reverse[e23] * self[e41])
+                    + (anti_reverse[e31] * self[e42])
+                    + (anti_reverse[e12] * self[e43]),
+            ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group1()[0], 2)
-                + f32::powi(self.group1()[1], 2)
-                + f32::powi(self.group1()[2], 2)
-                + 2.0 * (self.group0()[0] * self.group2()[0])
-                + 2.0 * (self.group0()[1] * self.group2()[1])
-                + 2.0 * (self.group0()[2] * self.group2()[2])
-                - 2.0 * (self.group0()[3] * self.group2()[3])),
+            2.0 * (self[e41] * self[e15])
+                + 2.0 * (self[e42] * self[e25])
+                + 2.0 * (self[e43] * self[e35])
+                + f32::powi(self[e23], 2)
+                + f32::powi(self[e31], 2)
+                + f32::powi(self[e12], 2)
+                - 2.0 * (self[e3215] * self[e1234]),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for DipoleOnOrigin {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for DipoleOnOrigin {
@@ -2567,10 +2923,16 @@ impl AntiConstraintViolation for DipoleOnOrigin {
     //  no simd        1        7        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ (self.group0() * Simd32x4::from(-1.0)));
-        let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ (anti_reverse.group0()[3] * self.group0()[3] * -1.0));
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (f32::powi(self.group0()[3], 2) * -1.0));
-        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
+        let anti_reverse = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]) * Simd32x4::from(-1.0));
+        let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e45] * self[e45] * -1.0);
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e45], 2) * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for DipoleOrthogonalOrigin {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for DipoleOrthogonalOrigin {
@@ -2586,11 +2948,11 @@ impl AntiConstraintViolation for DipoleOrthogonalOrigin {
         use crate::elements::*;
         let anti_reverse = DipoleOrthogonalOrigin::from_groups(
             // e41, e42, e43
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
             // e15, e25, e35
-            (self.group2() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2598,15 +2960,15 @@ impl AntiConstraintViolation for DipoleOrthogonalOrigin {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[0] * self.group2()[0])
-                    + (anti_reverse.group0()[1] * self.group2()[1])
-                    + (anti_reverse.group0()[2] * self.group2()[2])
-                    + (anti_reverse.group1()[0] * self.group1()[0])
-                    + (anti_reverse.group1()[1] * self.group1()[1])
-                    + (anti_reverse.group1()[2] * self.group1()[2])
-                    + (anti_reverse.group2()[0] * self.group0()[0])
-                    + (anti_reverse.group2()[1] * self.group0()[1])
-                    + (anti_reverse.group2()[2] * self.group0()[2])),
+                (anti_reverse[e41] * self[e15])
+                    + (anti_reverse[e42] * self[e25])
+                    + (anti_reverse[e43] * self[e35])
+                    + (anti_reverse[e23] * self[e23])
+                    + (anti_reverse[e31] * self[e31])
+                    + (anti_reverse[e12] * self[e12])
+                    + (anti_reverse[e15] * self[e41])
+                    + (anti_reverse[e25] * self[e42])
+                    + (anti_reverse[e35] * self[e43]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -2615,48 +2977,51 @@ impl AntiConstraintViolation for DipoleOrthogonalOrigin {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group1()[0] * self.group2()[0])
-                    + (anti_reverse.group1()[1] * self.group2()[1])
-                    + (anti_reverse.group1()[2] * self.group2()[2])
-                    + (anti_reverse.group2()[0] * self.group1()[0])
-                    + (anti_reverse.group2()[1] * self.group1()[1])
-                    + (anti_reverse.group2()[2] * self.group1()[2])),
+                (anti_reverse[e23] * self[e15])
+                    + (anti_reverse[e31] * self[e25])
+                    + (anti_reverse[e12] * self[e35])
+                    + (anti_reverse[e15] * self[e23])
+                    + (anti_reverse[e25] * self[e31])
+                    + (anti_reverse[e35] * self[e12]),
             ]),
             // e1, e2, e3, e4
             Simd32x4::from([
-                ((anti_reverse.group0()[1] * self.group2()[2]) - (anti_reverse.group0()[2] * self.group2()[1]) - (anti_reverse.group2()[1] * self.group0()[2])
-                    + (anti_reverse.group2()[2] * self.group0()[1])),
-                (-(anti_reverse.group0()[0] * self.group2()[2]) + (anti_reverse.group0()[2] * self.group2()[0]) + (anti_reverse.group2()[0] * self.group0()[2])
-                    - (anti_reverse.group2()[2] * self.group0()[0])),
-                ((anti_reverse.group0()[0] * self.group2()[1]) - (anti_reverse.group0()[1] * self.group2()[0]) - (anti_reverse.group2()[0] * self.group0()[1])
-                    + (anti_reverse.group2()[1] * self.group0()[0])),
-                ((anti_reverse.group0()[0] * self.group1()[0])
-                    + (anti_reverse.group0()[1] * self.group1()[1])
-                    + (anti_reverse.group0()[2] * self.group1()[2])
-                    + (anti_reverse.group1()[0] * self.group0()[0])
-                    + (anti_reverse.group1()[1] * self.group0()[1])
-                    + (anti_reverse.group1()[2] * self.group0()[2])),
+                (anti_reverse[e42] * self[e35]) + (anti_reverse[e35] * self[e42]) - (anti_reverse[e43] * self[e25]) - (anti_reverse[e25] * self[e43]),
+                (anti_reverse[e43] * self[e15]) + (anti_reverse[e15] * self[e43]) - (anti_reverse[e41] * self[e35]) - (anti_reverse[e35] * self[e41]),
+                (anti_reverse[e41] * self[e25]) + (anti_reverse[e25] * self[e41]) - (anti_reverse[e42] * self[e15]) - (anti_reverse[e15] * self[e42]),
+                (anti_reverse[e41] * self[e23])
+                    + (anti_reverse[e42] * self[e31])
+                    + (anti_reverse[e43] * self[e12])
+                    + (anti_reverse[e23] * self[e41])
+                    + (anti_reverse[e31] * self[e42])
+                    + (anti_reverse[e12] * self[e43]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group1()[0], 2)
-                + f32::powi(self.group1()[1], 2)
-                + f32::powi(self.group1()[2], 2)
-                + 2.0 * (self.group0()[0] * self.group2()[0])
-                + 2.0 * (self.group0()[1] * self.group2()[1])
-                + 2.0 * (self.group0()[2] * self.group2()[2])),
+            2.0 * (self[e41] * self[e15])
+                + 2.0 * (self[e42] * self[e25])
+                + 2.0 * (self[e43] * self[e35])
+                + f32::powi(self[e23], 2)
+                + f32::powi(self[e31], 2)
+                + f32::powi(self[e12], 2),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for DualNum {
+    type Output = Origin;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for DualNum {
@@ -2669,11 +3034,15 @@ impl AntiConstraintViolation for DualNum {
     // yes simd        0        2        0
     //  no simd        0        3        0
     fn anti_constraint_violation(self) -> Self::Output {
-        let geometric_anti_product = DualNum::from_groups(
-            // e4, e12345
-            (Simd32x2::from([(self.group0()[0] * self.group0()[1]), f32::powi(self.group0()[1], 2)]) * Simd32x2::from([2.0, 1.0])),
-        );
-        return Origin::from_groups(/* e4 */ geometric_anti_product.group0()[0]);
+        use crate::elements::*;
+        let geometric_anti_product = DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self[e4] * self[e12345], f32::powi(self[e12345], 2)]) * Simd32x2::from([2.0, 1.0]));
+        return Origin::from_groups(/* e4 */ geometric_anti_product[e4]);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for FlatOrigin {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for FlatOrigin {
@@ -2683,10 +3052,16 @@ impl AntiConstraintViolation for FlatOrigin {
     // f32        1        4        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = FlatOrigin::from_groups(/* e45 */ (self[e45] * -1.0));
-        let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ (anti_reverse[e45] * self[e45] * -1.0));
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (f32::powi(self[e45], 2) * -1.0));
-        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
+        let anti_reverse = FlatOrigin::from_groups(/* e45 */ self[e45] * -1.0);
+        let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e45] * self[e45] * -1.0);
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e45], 2) * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for FlatPoint {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for FlatPoint {
@@ -2700,10 +3075,16 @@ impl AntiConstraintViolation for FlatPoint {
     //  no simd        1        7        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ (self.group0() * Simd32x4::from(-1.0)));
-        let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ (anti_reverse.group0()[3] * self.group0()[3] * -1.0));
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (f32::powi(self.group0()[3], 2) * -1.0));
-        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
+        let anti_reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]) * Simd32x4::from(-1.0));
+        let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e45] * self[e45] * -1.0);
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e45], 2) * -1.0);
+        return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for Flector {
+    type Output = Motor;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for Flector {
@@ -2719,7 +3100,7 @@ impl AntiConstraintViolation for Flector {
         use crate::elements::*;
         let anti_reverse = Flector::from_groups(
             // e15, e25, e35, e45
-            (self.group0() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]) * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group1(),
         );
@@ -2729,36 +3110,36 @@ impl AntiConstraintViolation for Flector {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[3] * self.group0()[3])
-                    + (anti_reverse.group1()[0] * self.group1()[0])
-                    + (anti_reverse.group1()[1] * self.group1()[1])
-                    + (anti_reverse.group1()[2] * self.group1()[2])),
+                (anti_reverse[e4235] * self[e4235]) + (anti_reverse[e4315] * self[e4315]) + (anti_reverse[e4125] * self[e4125]) - (anti_reverse[e45] * self[e45]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group1()[0])
-                    - (anti_reverse.group0()[1] * self.group1()[1])
-                    - (anti_reverse.group0()[2] * self.group1()[2])
-                    - (anti_reverse.group0()[3] * self.group1()[3])
-                    + (anti_reverse.group1()[0] * self.group0()[0])
-                    + (anti_reverse.group1()[1] * self.group0()[1])
-                    + (anti_reverse.group1()[2] * self.group0()[2])
-                    + (anti_reverse.group1()[3] * self.group0()[3])),
+                (anti_reverse[e4235] * self[e15]) + (anti_reverse[e4315] * self[e25]) + (anti_reverse[e4125] * self[e35]) + (anti_reverse[e3215] * self[e45])
+                    - (anti_reverse[e15] * self[e4235])
+                    - (anti_reverse[e25] * self[e4315])
+                    - (anti_reverse[e35] * self[e4125])
+                    - (anti_reverse[e45] * self[e3215]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2)),
+            f32::powi(self[e4235], 2) + f32::powi(self[e4315], 2) + f32::powi(self[e4125], 2) - f32::powi(self[e45], 2),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for FlectorOnOrigin {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for FlectorOnOrigin {
@@ -2768,22 +3149,22 @@ impl AntiConstraintViolation for FlectorOnOrigin {
     // f32        7        5        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = FlectorOnOrigin::from_groups(
-            // e45, e4235, e4315, e4125
-            Simd32x4::from([(self.group0()[0] * -1.0), self.group0()[1], self.group0()[2], self.group0()[3]]),
-        );
+        let anti_reverse = FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([self[e45] * -1.0, self[e4235], self[e4315], self[e4125]]));
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
-            (-(anti_reverse.group0()[0] * self.group0()[0])
-                + (anti_reverse.group0()[1] * self.group0()[1])
-                + (anti_reverse.group0()[2] * self.group0()[2])
-                + (anti_reverse.group0()[3] * self.group0()[3])),
+            (anti_reverse[e4235] * self[e4235]) + (anti_reverse[e4315] * self[e4315]) + (anti_reverse[e4125] * self[e4125]) - (anti_reverse[e45] * self[e45]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)),
+            f32::powi(self[e4235], 2) + f32::powi(self[e4315], 2) + f32::powi(self[e4125], 2) - f32::powi(self[e45], 2),
         );
-        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
+        return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for Line {
+    type Output = Motor;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for Line {
@@ -2799,9 +3180,9 @@ impl AntiConstraintViolation for Line {
         use crate::elements::*;
         let anti_reverse = Line::from_groups(
             // e415, e425, e435
-            (self.group0() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
             // e235, e315, e125
-            (self.group1() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -2809,28 +3190,34 @@ impl AntiConstraintViolation for Line {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group0()[0]) - (anti_reverse.group0()[1] * self.group0()[1]) - (anti_reverse.group0()[2] * self.group0()[2])),
+                -(anti_reverse[e415] * self[e415]) - (anti_reverse[e425] * self[e425]) - (anti_reverse[e435] * self[e435]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group1()[0])
-                    - (anti_reverse.group0()[1] * self.group1()[1])
-                    - (anti_reverse.group0()[2] * self.group1()[2])
-                    - (anti_reverse.group1()[0] * self.group0()[0])
-                    - (anti_reverse.group1()[1] * self.group0()[1])
-                    - (anti_reverse.group1()[2] * self.group0()[2])),
+                -(anti_reverse[e415] * self[e235])
+                    - (anti_reverse[e425] * self[e315])
+                    - (anti_reverse[e435] * self[e125])
+                    - (anti_reverse[e235] * self[e415])
+                    - (anti_reverse[e315] * self[e425])
+                    - (anti_reverse[e125] * self[e435]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2)));
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ -f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2));
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for LineOnOrigin {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for LineOnOrigin {
@@ -2844,13 +3231,24 @@ impl AntiConstraintViolation for LineOnOrigin {
     //  no simd        5        6        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = LineOnOrigin::from_groups(/* e415, e425, e435 */ (self.group0() * Simd32x3::from(-1.0)));
+        let anti_reverse = LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
-            (-(anti_reverse.group0()[0] * self.group0()[0]) - (anti_reverse.group0()[1] * self.group0()[1]) - (anti_reverse.group0()[2] * self.group0()[2])),
+            -(anti_reverse[e415] * self[e415]) - (anti_reverse[e425] * self[e425]) - (anti_reverse[e435] * self[e435]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(/* e12345 */ (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2)));
-        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ -f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2));
+        return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for Motor {
+    type Output = Motor;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
+impl std::ops::DivAssign<anti_constraint_violation> for Motor {
+    fn div_assign(&mut self, _rhs: anti_constraint_violation) {
+        *self = self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for Motor {
@@ -2862,9 +3260,9 @@ impl AntiConstraintViolation for Motor {
         use crate::elements::*;
         let anti_reverse = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e12345]]),
             // e235, e315, e125, e5
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e5]]),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -2872,32 +3270,38 @@ impl AntiConstraintViolation for Motor {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group0()[0]) - (anti_reverse.group0()[1] * self.group0()[1]) - (anti_reverse.group0()[2] * self.group0()[2])
-                    + (anti_reverse.group0()[3] * self.group0()[3])),
+                (anti_reverse[e12345] * self[e12345]) - (anti_reverse[e415] * self[e415]) - (anti_reverse[e425] * self[e425]) - (anti_reverse[e435] * self[e435]),
             ]),
             // e235, e315, e125, e5
             Simd32x4::from([
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group1()[0]) - (anti_reverse.group0()[1] * self.group1()[1]) - (anti_reverse.group0()[2] * self.group1()[2])
-                    + (anti_reverse.group0()[3] * self.group1()[3])
-                    - (anti_reverse.group1()[0] * self.group0()[0])
-                    - (anti_reverse.group1()[1] * self.group0()[1])
-                    - (anti_reverse.group1()[2] * self.group0()[2])
-                    + (anti_reverse.group1()[3] * self.group0()[3])),
+                (anti_reverse[e12345] * self[e5]) + (anti_reverse[e5] * self[e12345])
+                    - (anti_reverse[e415] * self[e235])
+                    - (anti_reverse[e425] * self[e315])
+                    - (anti_reverse[e435] * self[e125])
+                    - (anti_reverse[e235] * self[e415])
+                    - (anti_reverse[e315] * self[e425])
+                    - (anti_reverse[e125] * self[e435]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)),
+            f32::powi(self[e12345], 2) - f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2),
         );
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group1()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for MotorOnOrigin {
+    type Output = AntiScalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for MotorOnOrigin {
@@ -2909,30 +3313,40 @@ impl AntiConstraintViolation for MotorOnOrigin {
         use crate::elements::*;
         let anti_reverse = MotorOnOrigin::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e12345]]),
         );
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
-            (-(anti_reverse.group0()[0] * self.group0()[0]) - (anti_reverse.group0()[1] * self.group0()[1]) - (anti_reverse.group0()[2] * self.group0()[2])
-                + (anti_reverse.group0()[3] * self.group0()[3])),
+            (anti_reverse[e12345] * self[e12345]) - (anti_reverse[e415] * self[e415]) - (anti_reverse[e425] * self[e425]) - (anti_reverse[e435] * self[e435]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)),
+            f32::powi(self[e12345], 2) - f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2),
         );
-        return AntiScalar::from_groups(/* e12345 */ (-anti_scalar_product[e12345] + geometric_anti_product[e12345]));
+        return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for MultiVector {
+    type Output = MultiVector;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
+impl std::ops::DivAssign<anti_constraint_violation> for MultiVector {
+    fn div_assign(&mut self, _rhs: anti_constraint_violation) {
+        *self = self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      216      220        0
+    //      f32      320      324        0
     //    simd2       16       16        0
     //    simd3        0        4        0
-    //    simd4       37       39        0
+    //    simd4       11       13        0
     // Totals...
-    // yes simd      269      279        0
+    // yes simd      347      357        0
     //  no simd      396      420        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
@@ -2942,178 +3356,223 @@ impl AntiConstraintViolation for MultiVector {
             // e1, e2, e3, e4
             self.group1(),
             // e5
-            self[e1],
+            self[e5],
             // e41, e42, e43, e45
-            (self.group3() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            (self.group4() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (self.group5() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            (self.group6() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
             // e423, e431, e412
-            (self.group7() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
             // e235, e315, e125
-            (self.group8() * Simd32x3::from(-1.0)),
+            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
-            self[e45],
+            self[e3215],
         );
         let geometric_anti_product = MultiVector::from_groups(
             // scalar, e12345
-            (Simd32x2::from([
-                ((anti_reverse.group0()[1] * self.group0()[0])
-                    - (anti_reverse.group8()[0] * self.group3()[0])
-                    - (anti_reverse.group8()[1] * self.group3()[1])
-                    - (anti_reverse.group8()[2] * self.group3()[2])
-                    - (self.group5()[0] * anti_reverse.group6()[0])
-                    - (self.group5()[1] * anti_reverse.group6()[1])
-                    - (self.group5()[2] * anti_reverse.group6()[2])
-                    - (self.group8()[0] * anti_reverse.group3()[0])
-                    - (self.group8()[1] * anti_reverse.group3()[1])
-                    - (self.group8()[2] * anti_reverse.group3()[2])
-                    - (anti_reverse.group6()[3] * self.group3()[3])
-                    + (anti_reverse.group9()[0] * self[e1])
-                    + (anti_reverse.group9()[1] * self.group1()[0])
-                    + (anti_reverse.group9()[2] * self.group1()[1])
-                    + (anti_reverse.group9()[3] * self.group1()[2])
-                    + (self.group9()[0] * anti_reverse[e1])),
-                (-(anti_reverse.group0()[0] * self.group0()[0])
-                    + (anti_reverse.group4()[0] * self.group3()[0])
-                    + (anti_reverse.group4()[1] * self.group3()[1])
-                    + (anti_reverse.group4()[2] * self.group3()[2])
-                    + (anti_reverse.group5()[0] * self.group5()[0])
-                    + (anti_reverse.group5()[1] * self.group5()[1])
-                    + (anti_reverse.group5()[2] * self.group5()[2])
-                    + (self.group4()[0] * anti_reverse.group3()[0])
-                    + (self.group4()[1] * anti_reverse.group3()[1])
-                    + (self.group4()[2] * anti_reverse.group3()[2])
-                    - (anti_reverse.group1()[0] * self.group1()[0])
-                    - (anti_reverse.group1()[1] * self.group1()[1])
-                    - (anti_reverse.group1()[2] * self.group1()[2])
-                    + (anti_reverse.group6()[3] * self.group6()[3])
-                    - (anti_reverse.group9()[0] * self[e45])
-                    - (self.group9()[0] * anti_reverse[e45])),
-            ]) + (Simd32x2::from(self.group0()[1]) * anti_reverse.group0())
-                - (Simd32x2::from(anti_reverse.group7()[0]) * Simd32x2::from([self.group4()[0], self.group8()[0]]))
-                - (Simd32x2::from(anti_reverse.group7()[1]) * Simd32x2::from([self.group4()[1], self.group8()[1]]))
-                - (Simd32x2::from(anti_reverse.group7()[2]) * Simd32x2::from([self.group4()[2], self.group8()[2]]))
-                - (Simd32x2::from(self.group7()[0]) * Simd32x2::from([anti_reverse.group4()[0], anti_reverse.group8()[0]]))
-                - (Simd32x2::from(self.group7()[1]) * Simd32x2::from([anti_reverse.group4()[1], anti_reverse.group8()[1]]))
-                - (Simd32x2::from(self.group7()[2]) * Simd32x2::from([anti_reverse.group4()[2], anti_reverse.group8()[2]]))
-                + (Simd32x2::from(anti_reverse.group1()[3]) * Simd32x2::from([self[e45], self[e1]]))
-                - (Simd32x2::from(anti_reverse.group3()[3]) * Simd32x2::from([self.group6()[3], self.group3()[3]]))
-                + (Simd32x2::from(self.group1()[3]) * Simd32x2::from([anti_reverse[e45], anti_reverse[e1]]))
-                - (Simd32x2::from(self.group6()[0]) * Simd32x2::from([anti_reverse.group5()[0], anti_reverse.group6()[0]]))
-                - (Simd32x2::from(self.group6()[1]) * Simd32x2::from([anti_reverse.group5()[1], anti_reverse.group6()[1]]))
-                - (Simd32x2::from(self.group6()[2]) * Simd32x2::from([anti_reverse.group5()[2], anti_reverse.group6()[2]]))
-                + (Simd32x2::from(self.group9()[1]) * Simd32x2::from([anti_reverse.group1()[0], anti_reverse.group9()[1]]))
-                + (Simd32x2::from(self.group9()[2]) * Simd32x2::from([anti_reverse.group1()[1], anti_reverse.group9()[2]]))
-                + (Simd32x2::from(self.group9()[3]) * Simd32x2::from([anti_reverse.group1()[2], anti_reverse.group9()[3]]))),
+            Simd32x2::from([
+                (anti_reverse[e12345] * self[scalar])
+                    + (anti_reverse[e1234] * self[e5])
+                    + (anti_reverse[e4235] * self[e1])
+                    + (anti_reverse[e4315] * self[e2])
+                    + (anti_reverse[e4125] * self[e3])
+                    + (anti_reverse[e3215] * self[e4])
+                    - (anti_reverse[e415] * self[e23])
+                    - (anti_reverse[e425] * self[e31])
+                    - (anti_reverse[e435] * self[e12])
+                    - (anti_reverse[e321] * self[e45])
+                    - (anti_reverse[e423] * self[e15])
+                    - (anti_reverse[e431] * self[e25])
+                    - (anti_reverse[e412] * self[e35])
+                    - (anti_reverse[e235] * self[e41])
+                    - (anti_reverse[e315] * self[e42])
+                    - (anti_reverse[e125] * self[e43]),
+                (anti_reverse[e41] * self[e15])
+                    + (anti_reverse[e42] * self[e25])
+                    + (anti_reverse[e43] * self[e35])
+                    + (anti_reverse[e15] * self[e41])
+                    + (anti_reverse[e25] * self[e42])
+                    + (anti_reverse[e35] * self[e43])
+                    + (anti_reverse[e23] * self[e23])
+                    + (anti_reverse[e31] * self[e31])
+                    + (anti_reverse[e12] * self[e12])
+                    + (anti_reverse[e321] * self[e321])
+                    - (anti_reverse[scalar] * self[scalar])
+                    - (anti_reverse[e1] * self[e1])
+                    - (anti_reverse[e2] * self[e2])
+                    - (anti_reverse[e3] * self[e3])
+                    - (anti_reverse[e1234] * self[e3215])
+                    - (anti_reverse[e3215] * self[e1234]),
+            ]) + (Simd32x2::from(anti_reverse[e4]) * Simd32x2::from([self[e3215], self[e5]]))
+                + (Simd32x2::from(anti_reverse[e5]) * Simd32x2::from([self[e1234], self[e4]]))
+                + (Simd32x2::from(self[e12345]) * Simd32x2::from([anti_reverse[scalar], anti_reverse[e12345]]))
+                + (Simd32x2::from(self[e4235]) * Simd32x2::from([anti_reverse[e1], anti_reverse[e4235]]))
+                + (Simd32x2::from(self[e4315]) * Simd32x2::from([anti_reverse[e2], anti_reverse[e4315]]))
+                + (Simd32x2::from(self[e4125]) * Simd32x2::from([anti_reverse[e3], anti_reverse[e4125]]))
+                - (Simd32x2::from(anti_reverse[e45]) * Simd32x2::from([self[e321], self[e45]]))
+                - (Simd32x2::from(self[e415]) * Simd32x2::from([anti_reverse[e23], anti_reverse[e415]]))
+                - (Simd32x2::from(self[e425]) * Simd32x2::from([anti_reverse[e31], anti_reverse[e425]]))
+                - (Simd32x2::from(self[e435]) * Simd32x2::from([anti_reverse[e12], anti_reverse[e435]]))
+                - (Simd32x2::from(self[e423]) * Simd32x2::from([anti_reverse[e15], anti_reverse[e235]]))
+                - (Simd32x2::from(self[e431]) * Simd32x2::from([anti_reverse[e25], anti_reverse[e315]]))
+                - (Simd32x2::from(self[e412]) * Simd32x2::from([anti_reverse[e35], anti_reverse[e125]]))
+                - (Simd32x2::from(self[e235]) * Simd32x2::from([anti_reverse[e41], anti_reverse[e423]]))
+                - (Simd32x2::from(self[e315]) * Simd32x2::from([anti_reverse[e42], anti_reverse[e431]]))
+                - (Simd32x2::from(self[e125]) * Simd32x2::from([anti_reverse[e43], anti_reverse[e412]])),
             // e1, e2, e3, e4
-            (Simd32x4::from([
-                ((self.group0()[0] * anti_reverse.group9()[1]) + (anti_reverse.group7()[0] * self[e1]) - (anti_reverse.group7()[1] * self.group8()[2])
-                    + (anti_reverse.group7()[2] * self.group8()[1])
-                    - (anti_reverse.group8()[0] * self.group1()[3])
-                    + (anti_reverse.group8()[1] * self.group7()[2])
-                    - (anti_reverse.group8()[2] * self.group7()[1])
-                    - (self.group4()[1] * anti_reverse.group3()[2])
-                    + (self.group5()[1] * anti_reverse.group9()[3])
-                    - (self.group7()[0] * anti_reverse[e1])
-                    + (self.group8()[0] * anti_reverse.group1()[3])
-                    + (anti_reverse.group1()[2] * self.group6()[1])
-                    - (anti_reverse.group3()[0] * self[e45])
-                    + (anti_reverse.group6()[2] * self.group1()[1])
-                    + (anti_reverse.group6()[3] * self.group6()[0])),
-                ((self.group0()[0] * anti_reverse.group9()[2]) + (anti_reverse.group7()[0] * self.group8()[2]) + (anti_reverse.group7()[1] * self[e1])
-                    - (anti_reverse.group7()[2] * self.group8()[0])
-                    - (anti_reverse.group8()[0] * self.group7()[2])
-                    - (anti_reverse.group8()[1] * self.group1()[3])
-                    + (anti_reverse.group8()[2] * self.group7()[0])
-                    - (self.group4()[2] * anti_reverse.group3()[0])
-                    + (self.group5()[2] * anti_reverse.group9()[1])
-                    - (self.group7()[1] * anti_reverse[e1])
-                    + (self.group8()[1] * anti_reverse.group1()[3])
-                    + (anti_reverse.group1()[0] * self.group6()[2])
-                    - (anti_reverse.group3()[1] * self[e45])
-                    + (anti_reverse.group6()[1] * self.group6()[3])
-                    + (anti_reverse.group6()[3] * self.group6()[1])),
-                ((self.group0()[0] * anti_reverse.group9()[3]) - (anti_reverse.group7()[0] * self.group8()[1])
-                    + (anti_reverse.group7()[1] * self.group8()[0])
-                    + (anti_reverse.group7()[2] * self[e1])
-                    + (anti_reverse.group8()[0] * self.group7()[1])
-                    - (anti_reverse.group8()[1] * self.group7()[0])
-                    - (anti_reverse.group8()[2] * self.group1()[3])
-                    - (self.group4()[0] * anti_reverse.group3()[1])
-                    + (self.group5()[0] * anti_reverse.group9()[2])
-                    - (self.group7()[2] * anti_reverse[e1])
-                    + (self.group8()[2] * anti_reverse.group1()[3])
-                    + (anti_reverse.group1()[1] * self.group6()[0])
-                    - (anti_reverse.group3()[2] * self[e45])
-                    + (anti_reverse.group6()[2] * self.group6()[3])
-                    + (anti_reverse.group6()[3] * self.group6()[2])),
-                ((anti_reverse.group7()[0] * self.group1()[0]) + (anti_reverse.group7()[1] * self.group1()[1]) - (anti_reverse.group7()[1] * self.group6()[1])
-                    + (anti_reverse.group7()[2] * self.group1()[2])
-                    - (anti_reverse.group7()[2] * self.group6()[2])
-                    + (self.group5()[2] * anti_reverse.group3()[2])
-                    - (self.group7()[0] * anti_reverse.group1()[0])
-                    - (self.group7()[1] * anti_reverse.group1()[1])
-                    - (self.group7()[1] * anti_reverse.group6()[1])
-                    - (self.group7()[2] * anti_reverse.group1()[2])
-                    - (self.group7()[2] * anti_reverse.group6()[2])
-                    - (anti_reverse.group1()[3] * self.group6()[3])
-                    + (anti_reverse.group3()[3] * self.group9()[0])
-                    - (anti_reverse.group9()[2] * self.group3()[1])
-                    - (anti_reverse.group9()[3] * self.group3()[2])),
-            ]) + (Simd32x4::from(anti_reverse.group0()[1]) * self.group1())
-                + (Simd32x4::from(self.group0()[1]) * anti_reverse.group1())
-                - (Simd32x4::from(anti_reverse.group9()[0]) * Simd32x4::from([self.group4()[0], self.group4()[1], self.group4()[2], self.group0()[0]]))
-                + (Simd32x4::from([anti_reverse.group0()[0], anti_reverse.group0()[0], anti_reverse.group0()[0], anti_reverse.group3()[0]]) * swizzle!(self.group9(), 1, 2, 3, 1))
-                + (Simd32x4::from([anti_reverse.group4()[0], anti_reverse.group4()[1], anti_reverse.group4()[2], anti_reverse.group3()[1]]) * swizzle!(self.group9(), 0, 0, 0, 2))
-                - (Simd32x4::from([anti_reverse.group4()[1], anti_reverse.group4()[2], anti_reverse.group4()[0], anti_reverse.group9()[0]]) * swizzle!(self.group3(), 2, 0, 1, 3))
-                + (Simd32x4::from([anti_reverse.group4()[2], anti_reverse.group4()[0], anti_reverse.group4()[1], anti_reverse.group5()[0]]) * swizzle!(self.group3(), 1, 2, 0, 0))
-                + (Simd32x4::from([anti_reverse.group5()[0], anti_reverse.group5()[1], anti_reverse.group5()[2], anti_reverse.group5()[1]]) * swizzle!(self.group3(), 3, 3, 3, 1))
-                - (Simd32x4::from([anti_reverse.group5()[1], anti_reverse.group5()[2], anti_reverse.group5()[0], anti_reverse.group0()[0]]) * swizzle!(self.group9(), 3, 1, 2, 0))
-                + (Simd32x4::from([anti_reverse.group5()[2], anti_reverse.group5()[0], anti_reverse.group5()[1], anti_reverse.group3()[2]]) * swizzle!(self.group9(), 2, 3, 1, 3))
-                + (Simd32x4::from([self.group4()[2], self.group4()[0], self.group4()[1], self.group5()[0]]) * swizzle!(anti_reverse.group3(), 1, 2, 0, 0))
-                + (Simd32x4::from([self.group5()[0], self.group5()[1], self.group5()[2], self.group5()[1]]) * swizzle!(anti_reverse.group3(), 3, 3, 3, 1))
-                - (Simd32x4::from([self.group5()[2], self.group5()[0], self.group5()[1], self.group3()[0]]) * swizzle!(anti_reverse.group9(), 2, 3, 1, 1))
-                - (Simd32x4::from([anti_reverse.group1()[1], anti_reverse.group1()[2], anti_reverse.group1()[0], anti_reverse.group7()[0]]) * swizzle!(self.group6(), 2, 0, 1, 0))
-                - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group7()[0]]) * swizzle!(anti_reverse.group6(), 1, 2, 0, 0))
-                + (Simd32x4::from([self.group6()[3], self.group1()[2], self.group1()[0], self.group1()[3]]) * swizzle!(anti_reverse.group6(), 0, 0, 1, 3))
-                + (Simd32x4::from([anti_reverse[e45], anti_reverse[e45], anti_reverse[e45], anti_reverse.group5()[2]]) * swizzle!(self.group3(), 0, 1, 2, 2))),
+            Simd32x4::from([
+                (anti_reverse[scalar] * self[e4235])
+                    + (anti_reverse[e3] * self[e425])
+                    + (anti_reverse[e4] * self[e235])
+                    + (anti_reverse[e42] * self[e35])
+                    + (anti_reverse[e15] * self[e1234])
+                    + (anti_reverse[e35] * self[e42])
+                    + (anti_reverse[e23] * self[e45])
+                    + (anti_reverse[e12] * self[e4315])
+                    + (anti_reverse[e415] * self[e321])
+                    + (anti_reverse[e435] * self[e2])
+                    + (anti_reverse[e423] * self[e5])
+                    + (anti_reverse[e412] * self[e315])
+                    + (anti_reverse[e315] * self[e412])
+                    + (anti_reverse[e4235] * self[scalar])
+                    + (anti_reverse[e4125] * self[e31])
+                    + (anti_reverse[e3215] * self[e41])
+                    - (anti_reverse[e2] * self[e435])
+                    - (anti_reverse[e5] * self[e423])
+                    - (anti_reverse[e41] * self[e3215])
+                    - (anti_reverse[e43] * self[e25])
+                    - (anti_reverse[e25] * self[e43])
+                    - (anti_reverse[e31] * self[e4125])
+                    - (anti_reverse[e425] * self[e3])
+                    - (anti_reverse[e431] * self[e125])
+                    - (anti_reverse[e235] * self[e4])
+                    - (anti_reverse[e125] * self[e431])
+                    - (anti_reverse[e4315] * self[e12]),
+                (anti_reverse[scalar] * self[e4315])
+                    + (anti_reverse[e1] * self[e435])
+                    + (anti_reverse[e4] * self[e315])
+                    + (anti_reverse[e43] * self[e15])
+                    + (anti_reverse[e15] * self[e43])
+                    + (anti_reverse[e25] * self[e1234])
+                    + (anti_reverse[e23] * self[e4125])
+                    + (anti_reverse[e31] * self[e45])
+                    + (anti_reverse[e415] * self[e3])
+                    + (anti_reverse[e425] * self[e321])
+                    + (anti_reverse[e423] * self[e125])
+                    + (anti_reverse[e431] * self[e5])
+                    + (anti_reverse[e125] * self[e423])
+                    + (anti_reverse[e4235] * self[e12])
+                    + (anti_reverse[e4315] * self[scalar])
+                    + (anti_reverse[e3215] * self[e42])
+                    - (anti_reverse[e3] * self[e415])
+                    - (anti_reverse[e5] * self[e431])
+                    - (anti_reverse[e41] * self[e35])
+                    - (anti_reverse[e42] * self[e3215])
+                    - (anti_reverse[e35] * self[e41])
+                    - (anti_reverse[e12] * self[e4235])
+                    - (anti_reverse[e435] * self[e1])
+                    - (anti_reverse[e412] * self[e235])
+                    - (anti_reverse[e235] * self[e412])
+                    - (anti_reverse[e315] * self[e4])
+                    - (anti_reverse[e4125] * self[e23]),
+                (anti_reverse[scalar] * self[e4125])
+                    + (anti_reverse[e2] * self[e415])
+                    + (anti_reverse[e4] * self[e125])
+                    + (anti_reverse[e41] * self[e25])
+                    + (anti_reverse[e25] * self[e41])
+                    + (anti_reverse[e35] * self[e1234])
+                    + (anti_reverse[e31] * self[e4235])
+                    + (anti_reverse[e12] * self[e45])
+                    + (anti_reverse[e425] * self[e1])
+                    + (anti_reverse[e435] * self[e321])
+                    + (anti_reverse[e431] * self[e235])
+                    + (anti_reverse[e412] * self[e5])
+                    + (anti_reverse[e235] * self[e431])
+                    + (anti_reverse[e4315] * self[e23])
+                    + (anti_reverse[e4125] * self[scalar])
+                    + (anti_reverse[e3215] * self[e43])
+                    - (anti_reverse[e1] * self[e425])
+                    - (anti_reverse[e5] * self[e412])
+                    - (anti_reverse[e42] * self[e15])
+                    - (anti_reverse[e43] * self[e3215])
+                    - (anti_reverse[e15] * self[e42])
+                    - (anti_reverse[e23] * self[e4315])
+                    - (anti_reverse[e415] * self[e2])
+                    - (anti_reverse[e423] * self[e315])
+                    - (anti_reverse[e315] * self[e423])
+                    - (anti_reverse[e125] * self[e4])
+                    - (anti_reverse[e4235] * self[e31]),
+                (anti_reverse[e41] * self[e23])
+                    + (anti_reverse[e41] * self[e4235])
+                    + (anti_reverse[e42] * self[e31])
+                    + (anti_reverse[e42] * self[e4315])
+                    + (anti_reverse[e43] * self[e12])
+                    + (anti_reverse[e43] * self[e4125])
+                    + (anti_reverse[e23] * self[e41])
+                    + (anti_reverse[e31] * self[e42])
+                    + (anti_reverse[e12] * self[e43])
+                    + (anti_reverse[e423] * self[e1])
+                    + (anti_reverse[e431] * self[e2])
+                    + (anti_reverse[e412] * self[e3])
+                    - (anti_reverse[scalar] * self[e1234])
+                    - (anti_reverse[e1] * self[e423])
+                    - (anti_reverse[e2] * self[e431])
+                    - (anti_reverse[e3] * self[e412])
+                    - (anti_reverse[e4] * self[e321])
+                    - (anti_reverse[e415] * self[e423])
+                    - (anti_reverse[e425] * self[e431])
+                    - (anti_reverse[e435] * self[e412])
+                    - (anti_reverse[e423] * self[e415])
+                    - (anti_reverse[e431] * self[e425])
+                    - (anti_reverse[e412] * self[e435])
+                    - (anti_reverse[e1234] * self[e45])
+                    - (anti_reverse[e4235] * self[e41])
+                    - (anti_reverse[e4315] * self[e42])
+                    - (anti_reverse[e4125] * self[e43]),
+            ]) + (Simd32x4::from(anti_reverse[e12345]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]))
+                + (Simd32x4::from(anti_reverse[e45]) * Simd32x4::from([self[e23], self[e31], self[e12], self[e1234]]))
+                + (Simd32x4::from(anti_reverse[e321]) * Simd32x4::from([self[e415], self[e425], self[e435], self[e4]]))
+                + (Simd32x4::from(self[e12345]) * Simd32x4::from([anti_reverse[e1], anti_reverse[e2], anti_reverse[e3], anti_reverse[e4]]))
+                - (Simd32x4::from(anti_reverse[e1234]) * Simd32x4::from([self[e15], self[e25], self[e35], self[scalar]])),
             // e5
-            (-(anti_reverse.group0()[0] * self[e45]) + (anti_reverse.group0()[1] * self[e1]) - (self.group0()[0] * anti_reverse[e45])
-                + (self.group0()[1] * anti_reverse[e1])
-                + (anti_reverse.group4()[0] * self.group5()[0])
-                - (anti_reverse.group4()[0] * self.group9()[1])
-                + (anti_reverse.group4()[1] * self.group5()[1])
-                - (anti_reverse.group4()[1] * self.group9()[2])
-                + (anti_reverse.group4()[2] * self.group5()[2])
-                - (anti_reverse.group4()[2] * self.group9()[3])
-                + (anti_reverse.group5()[0] * self.group4()[0])
-                + (anti_reverse.group5()[1] * self.group4()[1])
-                + (anti_reverse.group5()[2] * self.group4()[2])
-                - (anti_reverse.group8()[0] * self.group1()[0])
-                - (anti_reverse.group8()[0] * self.group6()[0])
-                - (anti_reverse.group8()[1] * self.group1()[1])
-                - (anti_reverse.group8()[1] * self.group6()[1])
-                - (anti_reverse.group8()[2] * self.group1()[2])
-                - (anti_reverse.group8()[2] * self.group6()[2])
-                + (self.group4()[0] * anti_reverse.group9()[1])
-                + (self.group4()[1] * anti_reverse.group9()[2])
-                + (self.group4()[2] * anti_reverse.group9()[3])
-                + (self.group8()[0] * anti_reverse.group1()[0])
-                - (self.group8()[0] * anti_reverse.group6()[0])
-                + (self.group8()[1] * anti_reverse.group1()[1])
-                - (self.group8()[1] * anti_reverse.group6()[1])
-                + (self.group8()[2] * anti_reverse.group1()[2])
-                - (self.group8()[2] * anti_reverse.group6()[2])
-                - (anti_reverse.group3()[3] * self[e45])
-                - (anti_reverse.group6()[3] * self[e1])
-                + (self.group3()[3] * anti_reverse[e45])
-                + (self.group6()[3] * anti_reverse[e1])),
+            (anti_reverse[e12345] * self[e5])
+                + (anti_reverse[e1] * self[e235])
+                + (anti_reverse[e2] * self[e315])
+                + (anti_reverse[e3] * self[e125])
+                + (anti_reverse[e5] * self[e12345])
+                + (anti_reverse[e5] * self[e321])
+                + (anti_reverse[e15] * self[e23])
+                + (anti_reverse[e25] * self[e31])
+                + (anti_reverse[e35] * self[e12])
+                + (anti_reverse[e23] * self[e15])
+                + (anti_reverse[e31] * self[e25])
+                + (anti_reverse[e12] * self[e35])
+                + (anti_reverse[e4235] * self[e15])
+                + (anti_reverse[e4315] * self[e25])
+                + (anti_reverse[e4125] * self[e35])
+                + (anti_reverse[e3215] * self[e45])
+                - (anti_reverse[scalar] * self[e3215])
+                - (anti_reverse[e45] * self[e3215])
+                - (anti_reverse[e15] * self[e4235])
+                - (anti_reverse[e25] * self[e4315])
+                - (anti_reverse[e35] * self[e4125])
+                - (anti_reverse[e415] * self[e235])
+                - (anti_reverse[e425] * self[e315])
+                - (anti_reverse[e435] * self[e125])
+                - (anti_reverse[e321] * self[e5])
+                - (anti_reverse[e235] * self[e1])
+                - (anti_reverse[e235] * self[e415])
+                - (anti_reverse[e315] * self[e2])
+                - (anti_reverse[e315] * self[e425])
+                - (anti_reverse[e125] * self[e3])
+                - (anti_reverse[e125] * self[e435])
+                - (anti_reverse[e3215] * self[scalar]),
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
@@ -3127,133 +3586,185 @@ impl AntiConstraintViolation for MultiVector {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
-            (Simd32x4::from([
-                (-(anti_reverse.group5()[0] * self.group7()[0])
-                    - (anti_reverse.group5()[1] * self.group7()[1])
-                    - (anti_reverse.group5()[2] * self.group7()[2])
-                    - (anti_reverse.group7()[0] * self.group5()[0])
-                    - (anti_reverse.group7()[1] * self.group5()[1])
-                    - (anti_reverse.group7()[1] * self.group9()[2])
-                    - (anti_reverse.group7()[2] * self.group5()[2])
-                    - (anti_reverse.group7()[2] * self.group9()[3])
-                    + (self.group7()[1] * anti_reverse.group9()[2])
-                    + (self.group7()[2] * anti_reverse.group9()[3])
-                    - (anti_reverse.group6()[1] * self.group3()[1])
-                    - (anti_reverse.group6()[2] * self.group3()[2])),
-                (-(anti_reverse.group4()[1] * self.group7()[2]) + (anti_reverse.group4()[2] * self.group7()[1])
-                    - (anti_reverse.group5()[2] * self.group1()[1])
-                    - (anti_reverse.group7()[0] * self[e45])
-                    + (anti_reverse.group7()[1] * self.group4()[2])
-                    - (anti_reverse.group7()[2] * self.group4()[1])
-                    - (self.group5()[1] * anti_reverse.group1()[2])
-                    + (self.group7()[0] * anti_reverse[e45])
-                    + (anti_reverse.group6()[0] * self.group3()[3])
-                    + (anti_reverse.group6()[2] * self.group9()[2])
-                    - (anti_reverse.group9()[2] * self.group6()[2])
-                    + (self.group3()[0] * anti_reverse[e1])),
-                ((anti_reverse.group4()[0] * self.group7()[2])
-                    - (anti_reverse.group4()[2] * self.group7()[0])
-                    - (anti_reverse.group5()[0] * self.group1()[2])
-                    - (anti_reverse.group7()[0] * self.group4()[2])
-                    - (anti_reverse.group7()[1] * self[e45])
-                    + (anti_reverse.group7()[2] * self.group4()[0])
-                    - (self.group5()[2] * anti_reverse.group1()[0])
-                    + (self.group7()[1] * anti_reverse[e45])
-                    + (anti_reverse.group6()[0] * self.group9()[3])
-                    + (anti_reverse.group6()[1] * self.group3()[3])
-                    - (anti_reverse.group9()[3] * self.group6()[0])
-                    + (self.group3()[1] * anti_reverse[e1])),
-                (-(anti_reverse.group4()[0] * self.group7()[1]) + (anti_reverse.group4()[1] * self.group7()[0]) - (anti_reverse.group5()[1] * self.group1()[0])
-                    + (anti_reverse.group7()[0] * self.group4()[1])
-                    - (anti_reverse.group7()[1] * self.group4()[0])
-                    - (anti_reverse.group7()[2] * self[e45])
-                    - (self.group5()[0] * anti_reverse.group1()[1])
-                    + (self.group7()[2] * anti_reverse[e45])
-                    + (anti_reverse.group6()[1] * self.group9()[1])
-                    + (anti_reverse.group6()[2] * self.group3()[3])
-                    - (anti_reverse.group9()[1] * self.group6()[1])
-                    + (self.group3()[2] * anti_reverse[e1])),
-            ]) + (Simd32x4::from(anti_reverse.group0()[1]) * self.group9())
-                + (Simd32x4::from(self.group0()[1]) * anti_reverse.group9())
-                - (Simd32x4::from(anti_reverse.group9()[0]) * Simd32x4::from([self.group6()[3], self.group8()[0], self.group8()[1], self.group8()[2]]))
-                + (Simd32x4::from(self.group1()[3]) * Simd32x4::from([anti_reverse.group0()[0], anti_reverse.group4()[0], anti_reverse.group4()[1], anti_reverse.group4()[2]]))
-                + (Simd32x4::from(self.group9()[0]) * Simd32x4::from([anti_reverse.group6()[3], anti_reverse.group8()[0], anti_reverse.group8()[1], anti_reverse.group8()[2]]))
-                + (Simd32x4::from([self.group0()[0], self.group5()[2], self.group5()[0], self.group5()[1]]) * swizzle!(anti_reverse.group1(), 3, 1, 2, 0))
-                - (Simd32x4::from([anti_reverse.group7()[0], anti_reverse.group6()[1], anti_reverse.group6()[2], anti_reverse.group6()[0]]) * swizzle!(self.group9(), 1, 3, 1, 2))
-                + (Simd32x4::from([self.group7()[0], self.group6()[1], self.group6()[2], self.group6()[0]]) * swizzle!(anti_reverse.group9(), 1, 3, 1, 2))
-                - (Simd32x4::from([anti_reverse.group1()[1], anti_reverse.group8()[1], anti_reverse.group8()[2], anti_reverse.group8()[0]]) * swizzle!(self.group3(), 1, 2, 0, 1))
-                + (Simd32x4::from([anti_reverse.group1()[3], anti_reverse.group8()[2], anti_reverse.group8()[0], anti_reverse.group8()[1]]) * swizzle!(self.group3(), 3, 1, 2, 0))
-                - (Simd32x4::from([anti_reverse.group3()[0], anti_reverse.group5()[0], anti_reverse.group5()[1], anti_reverse.group5()[2]]) * swizzle!(self.group6(), 0, 3, 3, 3))
-                + (Simd32x4::from([anti_reverse.group3()[0], anti_reverse.group5()[1], anti_reverse.group5()[2], anti_reverse.group5()[0]]) * swizzle!(self.group1(), 0, 2, 0, 1))
-                - (Simd32x4::from([anti_reverse.group3()[3], anti_reverse.group0()[0], anti_reverse.group0()[0], anti_reverse.group0()[0]]) * swizzle!(self.group1(), 3, 0, 1, 2))
-                + (Simd32x4::from([self.group1()[1], self.group8()[2], self.group8()[0], self.group8()[1]]) * swizzle!(anti_reverse.group3(), 1, 1, 2, 0))
-                + (Simd32x4::from([self.group1()[2], self.group6()[0], self.group6()[1], self.group6()[2]]) * swizzle!(anti_reverse.group3(), 2, 3, 3, 3))
-                - (Simd32x4::from([self.group3()[0], self.group0()[0], self.group0()[0], self.group0()[0]]) * swizzle!(anti_reverse.group1(), 0, 0, 1, 2))
-                - (Simd32x4::from([self.group3()[0], self.group5()[0], self.group5()[1], self.group5()[2]]) * swizzle!(anti_reverse.group6(), 0, 3, 3, 3))
-                - (Simd32x4::from([self.group3()[2], self.group4()[0], self.group4()[1], self.group4()[2]]) * swizzle!(anti_reverse.group1(), 2, 3, 3, 3))
-                - (Simd32x4::from([self.group6()[1], self.group8()[1], self.group8()[2], self.group8()[0]]) * swizzle!(anti_reverse.group3(), 1, 2, 0, 1))
-                - (Simd32x4::from([self.group6()[2], self[e1], self[e1], self[e1]]) * swizzle!(anti_reverse.group3(), 2, 0, 1, 2))),
+            Simd32x4::from([
+                (anti_reverse[e4] * self[scalar])
+                    + (anti_reverse[e41] * self[e1])
+                    + (anti_reverse[e42] * self[e2])
+                    + (anti_reverse[e43] * self[e3])
+                    + (anti_reverse[e4235] * self[e423])
+                    + (anti_reverse[e4315] * self[e431])
+                    + (anti_reverse[e4125] * self[e412])
+                    - (anti_reverse[e1] * self[e41])
+                    - (anti_reverse[e2] * self[e42])
+                    - (anti_reverse[e3] * self[e43])
+                    - (anti_reverse[e41] * self[e415])
+                    - (anti_reverse[e42] * self[e425])
+                    - (anti_reverse[e43] * self[e435])
+                    - (anti_reverse[e45] * self[e4])
+                    - (anti_reverse[e23] * self[e423])
+                    - (anti_reverse[e31] * self[e431])
+                    - (anti_reverse[e12] * self[e412])
+                    - (anti_reverse[e415] * self[e41])
+                    - (anti_reverse[e425] * self[e42])
+                    - (anti_reverse[e435] * self[e43])
+                    - (anti_reverse[e423] * self[e23])
+                    - (anti_reverse[e423] * self[e4235])
+                    - (anti_reverse[e431] * self[e31])
+                    - (anti_reverse[e431] * self[e4315])
+                    - (anti_reverse[e412] * self[e12])
+                    - (anti_reverse[e412] * self[e4125]),
+                (anti_reverse[e2] * self[e12])
+                    + (anti_reverse[e5] * self[e41])
+                    + (anti_reverse[e42] * self[e125])
+                    + (anti_reverse[e45] * self[e415])
+                    + (anti_reverse[e35] * self[e431])
+                    + (anti_reverse[e31] * self[e3])
+                    + (anti_reverse[e435] * self[e4315])
+                    + (anti_reverse[e431] * self[e35])
+                    + (anti_reverse[e125] * self[e42])
+                    + (anti_reverse[e4125] * self[e425])
+                    + (anti_reverse[e3215] * self[e423])
+                    - (anti_reverse[scalar] * self[e1])
+                    - (anti_reverse[e1] * self[scalar])
+                    - (anti_reverse[e3] * self[e31])
+                    - (anti_reverse[e4] * self[e15])
+                    - (anti_reverse[e41] * self[e5])
+                    - (anti_reverse[e43] * self[e315])
+                    - (anti_reverse[e25] * self[e412])
+                    - (anti_reverse[e12] * self[e2])
+                    - (anti_reverse[e425] * self[e4125])
+                    - (anti_reverse[e321] * self[e23])
+                    - (anti_reverse[e423] * self[e3215])
+                    - (anti_reverse[e412] * self[e25])
+                    - (anti_reverse[e315] * self[e43])
+                    - (anti_reverse[e1234] * self[e235])
+                    - (anti_reverse[e4315] * self[e435]),
+                (anti_reverse[e3] * self[e23])
+                    + (anti_reverse[e5] * self[e42])
+                    + (anti_reverse[e43] * self[e235])
+                    + (anti_reverse[e45] * self[e425])
+                    + (anti_reverse[e15] * self[e412])
+                    + (anti_reverse[e12] * self[e1])
+                    + (anti_reverse[e415] * self[e4125])
+                    + (anti_reverse[e412] * self[e15])
+                    + (anti_reverse[e235] * self[e43])
+                    + (anti_reverse[e4235] * self[e435])
+                    + (anti_reverse[e3215] * self[e431])
+                    - (anti_reverse[scalar] * self[e2])
+                    - (anti_reverse[e1] * self[e12])
+                    - (anti_reverse[e2] * self[scalar])
+                    - (anti_reverse[e4] * self[e25])
+                    - (anti_reverse[e41] * self[e125])
+                    - (anti_reverse[e42] * self[e5])
+                    - (anti_reverse[e35] * self[e423])
+                    - (anti_reverse[e23] * self[e3])
+                    - (anti_reverse[e435] * self[e4235])
+                    - (anti_reverse[e321] * self[e31])
+                    - (anti_reverse[e423] * self[e35])
+                    - (anti_reverse[e431] * self[e3215])
+                    - (anti_reverse[e125] * self[e41])
+                    - (anti_reverse[e1234] * self[e315])
+                    - (anti_reverse[e4125] * self[e415]),
+                (anti_reverse[e1] * self[e31])
+                    + (anti_reverse[e5] * self[e43])
+                    + (anti_reverse[e41] * self[e315])
+                    + (anti_reverse[e45] * self[e435])
+                    + (anti_reverse[e25] * self[e423])
+                    + (anti_reverse[e23] * self[e2])
+                    + (anti_reverse[e425] * self[e4235])
+                    + (anti_reverse[e423] * self[e25])
+                    + (anti_reverse[e315] * self[e41])
+                    + (anti_reverse[e4315] * self[e415])
+                    + (anti_reverse[e3215] * self[e412])
+                    - (anti_reverse[scalar] * self[e3])
+                    - (anti_reverse[e2] * self[e23])
+                    - (anti_reverse[e3] * self[scalar])
+                    - (anti_reverse[e4] * self[e35])
+                    - (anti_reverse[e42] * self[e235])
+                    - (anti_reverse[e43] * self[e5])
+                    - (anti_reverse[e15] * self[e431])
+                    - (anti_reverse[e31] * self[e1])
+                    - (anti_reverse[e415] * self[e4315])
+                    - (anti_reverse[e321] * self[e12])
+                    - (anti_reverse[e431] * self[e15])
+                    - (anti_reverse[e412] * self[e3215])
+                    - (anti_reverse[e235] * self[e42])
+                    - (anti_reverse[e1234] * self[e125])
+                    - (anti_reverse[e4235] * self[e425]),
+            ]) + (Simd32x4::from(anti_reverse[e12345]) * Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]))
+                + (Simd32x4::from(self[e12345]) * Simd32x4::from([anti_reverse[e1234], anti_reverse[e4235], anti_reverse[e4315], anti_reverse[e4125]]))
+                + (Simd32x4::from(self[e4]) * Simd32x4::from([anti_reverse[scalar], anti_reverse[e15], anti_reverse[e25], anti_reverse[e35]]))
+                + (Simd32x4::from(self[e45]) * Simd32x4::from([anti_reverse[e4], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]]))
+                + (Simd32x4::from(self[e1234]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e235], anti_reverse[e315], anti_reverse[e125]]))
+                - (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e1234], anti_reverse[e23], anti_reverse[e31], anti_reverse[e12]])),
             // e3215
-            ((anti_reverse.group0()[0] * self[e1]) + (anti_reverse.group0()[1] * self[e45]) + (self.group0()[0] * anti_reverse[e1]) + (self.group0()[1] * anti_reverse[e45])
-                - (anti_reverse.group4()[0] * self.group1()[0])
-                - (anti_reverse.group4()[0] * self.group6()[0])
-                - (anti_reverse.group4()[1] * self.group1()[1])
-                - (anti_reverse.group4()[1] * self.group6()[1])
-                - (anti_reverse.group4()[2] * self.group1()[2])
-                - (anti_reverse.group4()[2] * self.group6()[2])
-                - (anti_reverse.group5()[0] * self.group8()[0])
-                - (anti_reverse.group5()[1] * self.group8()[1])
-                - (anti_reverse.group5()[2] * self.group8()[2])
-                - (anti_reverse.group8()[0] * self.group5()[0])
-                + (anti_reverse.group8()[0] * self.group9()[1])
-                - (anti_reverse.group8()[1] * self.group5()[1])
-                + (anti_reverse.group8()[1] * self.group9()[2])
-                - (anti_reverse.group8()[2] * self.group5()[2])
-                + (anti_reverse.group8()[2] * self.group9()[3])
-                + (self.group4()[0] * anti_reverse.group1()[0])
-                - (self.group4()[0] * anti_reverse.group6()[0])
-                + (self.group4()[1] * anti_reverse.group1()[1])
-                - (self.group4()[1] * anti_reverse.group6()[1])
-                + (self.group4()[2] * anti_reverse.group1()[2])
-                - (self.group4()[2] * anti_reverse.group6()[2])
-                - (self.group8()[0] * anti_reverse.group9()[1])
-                - (self.group8()[1] * anti_reverse.group9()[2])
-                - (self.group8()[2] * anti_reverse.group9()[3])
-                + (anti_reverse.group3()[3] * self[e1])
-                - (anti_reverse.group6()[3] * self[e45])
-                - (self.group3()[3] * anti_reverse[e1])
-                + (self.group6()[3] * anti_reverse[e45])),
+            (anti_reverse[scalar] * self[e5])
+                + (anti_reverse[e12345] * self[e3215])
+                + (anti_reverse[e1] * self[e15])
+                + (anti_reverse[e2] * self[e25])
+                + (anti_reverse[e3] * self[e35])
+                + (anti_reverse[e5] * self[scalar])
+                + (anti_reverse[e45] * self[e5])
+                + (anti_reverse[e235] * self[e4235])
+                + (anti_reverse[e315] * self[e4315])
+                + (anti_reverse[e125] * self[e4125])
+                + (anti_reverse[e3215] * self[e12345])
+                + (anti_reverse[e3215] * self[e321])
+                - (anti_reverse[e5] * self[e45])
+                - (anti_reverse[e15] * self[e1])
+                - (anti_reverse[e15] * self[e415])
+                - (anti_reverse[e25] * self[e2])
+                - (anti_reverse[e25] * self[e425])
+                - (anti_reverse[e35] * self[e3])
+                - (anti_reverse[e35] * self[e435])
+                - (anti_reverse[e23] * self[e235])
+                - (anti_reverse[e31] * self[e315])
+                - (anti_reverse[e12] * self[e125])
+                - (anti_reverse[e415] * self[e15])
+                - (anti_reverse[e425] * self[e25])
+                - (anti_reverse[e435] * self[e35])
+                - (anti_reverse[e321] * self[e3215])
+                - (anti_reverse[e235] * self[e23])
+                - (anti_reverse[e315] * self[e31])
+                - (anti_reverse[e125] * self[e12])
+                - (anti_reverse[e4235] * self[e235])
+                - (anti_reverse[e4315] * self[e315])
+                - (anti_reverse[e4125] * self[e125]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group5()[0], 2) + f32::powi(self.group5()[1], 2) + f32::powi(self.group5()[2], 2)
-                - f32::powi(self.group1()[0], 2)
-                - f32::powi(self.group1()[1], 2)
-                - f32::powi(self.group1()[2], 2)
-                - f32::powi(self.group3()[3], 2)
-                - f32::powi(self.group6()[0], 2)
-                - f32::powi(self.group6()[1], 2)
-                - f32::powi(self.group6()[2], 2)
-                + f32::powi(self.group6()[3], 2)
-                + f32::powi(self.group9()[1], 2)
-                + f32::powi(self.group9()[2], 2)
-                + f32::powi(self.group9()[3], 2)
-                + 2.0 * (self.group4()[0] * self.group3()[0])
-                + 2.0 * (self.group4()[1] * self.group3()[1])
-                + 2.0 * (self.group4()[2] * self.group3()[2])
-                - 2.0 * (self.group7()[0] * self.group8()[0])
-                - 2.0 * (self.group7()[1] * self.group8()[1])
-                - 2.0 * (self.group7()[2] * self.group8()[2])
-                + 2.0 * (self.group1()[3] * self[e1])
-                - 2.0 * (self.group9()[0] * self[e45])),
+            2.0 * (self[e4] * self[e5])
+                + 2.0 * (self[e41] * self[e15])
+                + 2.0 * (self[e42] * self[e25])
+                + 2.0 * (self[e43] * self[e35])
+                + f32::powi(self[e12345], 2)
+                + f32::powi(self[e23], 2)
+                + f32::powi(self[e31], 2)
+                + f32::powi(self[e12], 2)
+                + f32::powi(self[e321], 2)
+                + f32::powi(self[e4235], 2)
+                + f32::powi(self[e4315], 2)
+                + f32::powi(self[e4125], 2)
+                - f32::powi(self[scalar], 2)
+                - f32::powi(self[e1], 2)
+                - f32::powi(self[e2], 2)
+                - f32::powi(self[e3], 2)
+                - f32::powi(self[e45], 2)
+                - f32::powi(self[e415], 2)
+                - f32::powi(self[e425], 2)
+                - f32::powi(self[e435], 2)
+                - 2.0 * (self[e423] * self[e235])
+                - 2.0 * (self[e431] * self[e315])
+                - 2.0 * (self[e412] * self[e125])
+                - 2.0 * (self[e1234] * self[e3215]),
         );
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
+            Simd32x2::from([geometric_anti_product[scalar], geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e1, e2, e3, e4
             geometric_anti_product.group1(),
             // e5
-            geometric_anti_product[e1],
+            geometric_anti_product[e5],
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
@@ -3269,8 +3780,14 @@ impl AntiConstraintViolation for MultiVector {
             // e1234, e4235, e4315, e4125
             geometric_anti_product.group9(),
             // e3215
-            geometric_anti_product[e45],
+            geometric_anti_product[e3215],
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for MysteryCircle {
+    type Output = MysteryVersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for MysteryCircle {
@@ -3284,33 +3801,42 @@ impl AntiConstraintViolation for MysteryCircle {
     //  no simd       10       14        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = MysteryCircle::from_groups(/* e415, e425, e435, e321 */ (self.group0() * Simd32x4::from(-1.0)));
+        let anti_reverse = MysteryCircle::from_groups(
+            // e415, e425, e435, e321
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+        );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                (-(anti_reverse.group0()[0] * self.group0()[0]) - (anti_reverse.group0()[1] * self.group0()[1]) - (anti_reverse.group0()[2] * self.group0()[2])),
-                (anti_reverse.group0()[3] * self.group0()[0]),
-                (anti_reverse.group0()[3] * self.group0()[1]),
-                (anti_reverse.group0()[3] * self.group0()[2]),
-            ]) + (Simd32x4::from(self.group0()[3]) * swizzle!(anti_reverse.group0(), 3, 0, 1, 2))),
+            Simd32x4::from([
+                -(anti_reverse[e415] * self[e415]) - (anti_reverse[e425] * self[e425]) - (anti_reverse[e435] * self[e435]),
+                anti_reverse[e321] * self[e415],
+                anti_reverse[e321] * self[e425],
+                anti_reverse[e321] * self[e435],
+            ]) + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2)),
+            f32::powi(self[e321], 2) - f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2),
         );
         return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for MysteryCircleRotor {
+    type Output = MysteryVersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for MysteryCircleRotor {
@@ -3324,192 +3850,235 @@ impl AntiConstraintViolation for MysteryCircleRotor {
     //  no simd       12       15        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = MysteryCircleRotor::from_groups(/* e415, e425, e435, e321 */ (self.group0() * Simd32x4::from(-1.0)), /* e12345 */ self[e425]);
+        let anti_reverse = MysteryCircleRotor::from_groups(
+            // e415, e425, e435, e321
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            // e12345
+            self[e12345],
+        );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                (-(anti_reverse.group0()[0] * self.group0()[0]) - (anti_reverse.group0()[1] * self.group0()[1]) - (anti_reverse.group0()[2] * self.group0()[2])
-                    + (anti_reverse[e425] * self[e425])),
-                (anti_reverse.group0()[3] * self.group0()[0]),
-                (anti_reverse.group0()[3] * self.group0()[1]),
-                (anti_reverse.group0()[3] * self.group0()[2]),
-            ]) + (Simd32x4::from(self.group0()[3]) * swizzle!(anti_reverse.group0(), 3, 0, 1, 2))),
+            Simd32x4::from([
+                (anti_reverse[e12345] * self[e12345]) - (anti_reverse[e415] * self[e415]) - (anti_reverse[e425] * self[e425]) - (anti_reverse[e435] * self[e435]),
+                anti_reverse[e321] * self[e415],
+                anti_reverse[e321] * self[e425],
+                anti_reverse[e321] * self[e435],
+            ]) + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2) + f32::powi(self.group0()[3], 2) + f32::powi(self[e425], 2)),
+            f32::powi(self[e321], 2) + f32::powi(self[e12345], 2) - f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2),
         );
         return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for MysteryDipole {
+    type Output = MysteryVersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for MysteryDipole {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        2        0
-    //    simd4        2        3        0
+    //      f32       10       10        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        7        5        0
-    //  no simd       13       14        0
+    // yes simd       10       11        0
+    //  no simd       10       14        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = MysteryDipole::from_groups(/* e23, e31, e12, e45 */ (self.group0() * Simd32x4::from(-1.0)));
+        let anti_reverse = MysteryDipole::from_groups(/* e23, e31, e12, e45 */ Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0));
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([((anti_reverse.group0()[2] * self.group0()[2]) - (anti_reverse.group0()[3] * self.group0()[3])), 0.0, 0.0, 0.0])
-                + (swizzle!(anti_reverse.group0(), 0, 0, 1, 2) * swizzle!(self.group0(), 0, 3, 3, 3))
-                + (swizzle!(anti_reverse.group0(), 1, 3, 3, 3) * swizzle!(self.group0(), 1, 0, 1, 2))),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-        );
-        let anti_scalar_product = AntiScalar::from_groups(
-            // e12345
-            (f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group0()[3], 2)),
-        );
-        return MysteryVersorEven::from_groups(
-            // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                (anti_reverse[e23] * self[e23]) + (anti_reverse[e31] * self[e31]) + (anti_reverse[e12] * self[e12]) - (anti_reverse[e45] * self[e45]),
+                (anti_reverse[e23] * self[e45]) + (anti_reverse[e45] * self[e23]),
+                (anti_reverse[e31] * self[e45]) + (anti_reverse[e45] * self[e31]),
+                (anti_reverse[e12] * self[e45]) + (anti_reverse[e45] * self[e12]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
+        let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) - f32::powi(self[e45], 2));
+        return MysteryVersorEven::from_groups(
+            // e12345, e1, e2, e3
+            Simd32x4::from([
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for MysteryDipoleInversion {
+    type Output = MysteryVersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for MysteryDipoleInversion {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12        9        0
-    //    simd4        4        5        0
+    //      f32       28       25        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       16       14        0
+    // yes simd       28       26        0
     //  no simd       28       29        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = MysteryDipoleInversion::from_groups(/* e23, e31, e12, e45 */ (self.group0() * Simd32x4::from(-1.0)), /* e4235, e4315, e4125 */ self.group1());
+        let anti_reverse = MysteryDipoleInversion::from_groups(
+            // e23, e31, e12, e45
+            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
+            // e4235, e4315, e4125
+            self.group1(),
+        );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                ((anti_reverse.group1()[0] * self.group1()[0]) + (anti_reverse.group1()[1] * self.group1()[1]) + (anti_reverse.group1()[2] * self.group1()[2])),
-                (-(self.group1()[2] * anti_reverse.group0()[1]) + (anti_reverse.group0()[3] * self.group0()[0])),
-                (-(self.group1()[0] * anti_reverse.group0()[2]) + (anti_reverse.group0()[3] * self.group0()[1])),
-                (-(self.group1()[1] * anti_reverse.group0()[0]) + (anti_reverse.group0()[3] * self.group0()[2])),
-            ]) + (Simd32x4::from([anti_reverse.group0()[0], anti_reverse.group1()[2], anti_reverse.group1()[0], anti_reverse.group1()[1]]) * swizzle!(self.group0(), 0, 1, 2, 0))
-                - (Simd32x4::from([anti_reverse.group0()[3], anti_reverse.group1()[1], anti_reverse.group1()[2], anti_reverse.group1()[0]]) * swizzle!(self.group0(), 3, 2, 0, 1))
-                + (Simd32x4::from([self.group0()[1], self.group1()[1], self.group1()[2], self.group1()[0]]) * swizzle!(anti_reverse.group0(), 1, 2, 0, 1))
-                + (swizzle!(anti_reverse.group0(), 2, 0, 1, 2) * swizzle!(self.group0(), 2, 3, 3, 3))),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-        );
-        let anti_scalar_product = AntiScalar::from_groups(
-            // e12345
-            (f32::powi(self.group1()[0], 2)
-                + f32::powi(self.group1()[1], 2)
-                + f32::powi(self.group1()[2], 2)
-                + f32::powi(self.group0()[0], 2)
-                + f32::powi(self.group0()[1], 2)
-                + f32::powi(self.group0()[2], 2)
-                - f32::powi(self.group0()[3], 2)),
-        );
-        return MysteryVersorEven::from_groups(
-            // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                (anti_reverse[e23] * self[e23])
+                    + (anti_reverse[e31] * self[e31])
+                    + (anti_reverse[e12] * self[e12])
+                    + (anti_reverse[e4235] * self[e4235])
+                    + (anti_reverse[e4315] * self[e4315])
+                    + (anti_reverse[e4125] * self[e4125])
+                    - (anti_reverse[e45] * self[e45]),
+                (anti_reverse[e23] * self[e45]) + (anti_reverse[e12] * self[e4315]) + (anti_reverse[e45] * self[e23]) + (anti_reverse[e4125] * self[e31])
+                    - (anti_reverse[e31] * self[e4125])
+                    - (anti_reverse[e4315] * self[e12]),
+                (anti_reverse[e23] * self[e4125]) + (anti_reverse[e31] * self[e45]) + (anti_reverse[e45] * self[e31]) + (anti_reverse[e4235] * self[e12])
+                    - (anti_reverse[e12] * self[e4235])
+                    - (anti_reverse[e4125] * self[e23]),
+                (anti_reverse[e31] * self[e4235]) + (anti_reverse[e12] * self[e45]) + (anti_reverse[e45] * self[e12]) + (anti_reverse[e4315] * self[e23])
+                    - (anti_reverse[e23] * self[e4315])
+                    - (anti_reverse[e4235] * self[e31]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
+        let anti_dot_product = AntiScalar::from_groups(
+            // e12345
+            f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) + f32::powi(self[e4235], 2) + f32::powi(self[e4315], 2) + f32::powi(self[e4125], 2)
+                - f32::powi(self[e45], 2),
+        );
+        return MysteryVersorEven::from_groups(
+            // e12345, e1, e2, e3
+            Simd32x4::from([
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for MysteryVersorEven {
+    type Output = MysteryVersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
+impl std::ops::DivAssign<anti_constraint_violation> for MysteryVersorEven {
+    fn div_assign(&mut self, _rhs: anti_constraint_violation) {
+        *self = self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for MysteryVersorEven {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       16        0
-    //    simd4        4        5        0
+    //      f32       28       24        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       24       21        0
+    // yes simd       30       27        0
     //  no simd       36       36        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = MysteryVersorEven::from_groups(/* e12345, e1, e2, e3 */ self.group0(), /* e415, e425, e435, e321 */ (self.group1() * Simd32x4::from(-1.0)));
+        let anti_reverse = MysteryVersorEven::from_groups(
+            // e12345, e1, e2, e3
+            self.group0(),
+            // e415, e425, e435, e321
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+        );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                (-(anti_reverse.group0()[3] * self.group0()[3])
-                    - (anti_reverse.group1()[0] * self.group1()[0])
-                    - (anti_reverse.group1()[1] * self.group1()[1])
-                    - (anti_reverse.group1()[2] * self.group1()[2])),
-                ((anti_reverse.group0()[1] * self.group0()[0])
-                    + (anti_reverse.group1()[0] * self.group1()[3])
-                    + (anti_reverse.group1()[2] * self.group0()[2])
-                    + (anti_reverse.group1()[3] * self.group1()[0])),
-                ((anti_reverse.group0()[2] * self.group0()[0])
-                    + (anti_reverse.group1()[0] * self.group0()[3])
-                    + (anti_reverse.group1()[1] * self.group1()[3])
-                    + (anti_reverse.group1()[3] * self.group1()[1])),
-                ((anti_reverse.group0()[3] * self.group0()[0])
-                    + (anti_reverse.group1()[1] * self.group0()[1])
-                    + (anti_reverse.group1()[2] * self.group1()[3])
-                    + (anti_reverse.group1()[3] * self.group1()[2])),
-            ]) + (Simd32x4::from(anti_reverse.group0()[0]) * self.group0())
-                - (Simd32x4::from([anti_reverse.group0()[2], anti_reverse.group1()[1], anti_reverse.group1()[2], anti_reverse.group1()[0]]) * swizzle!(self.group0(), 2, 3, 1, 2))
-                + (Simd32x4::from([anti_reverse.group1()[3], anti_reverse.group0()[3], anti_reverse.group0()[1], anti_reverse.group0()[2]]) * swizzle!(self.group1(), 3, 1, 2, 0))
-                - (Simd32x4::from([self.group0()[1], self.group1()[2], self.group1()[0], self.group1()[1]]) * swizzle!(anti_reverse.group0(), 1, 2, 3, 1))),
+            Simd32x4::from([
+                -(anti_reverse[e1] * self[e1])
+                    - (anti_reverse[e2] * self[e2])
+                    - (anti_reverse[e3] * self[e3])
+                    - (anti_reverse[e415] * self[e415])
+                    - (anti_reverse[e425] * self[e425])
+                    - (anti_reverse[e435] * self[e435]),
+                (anti_reverse[e1] * self[e12345]) + (anti_reverse[e3] * self[e425]) + (anti_reverse[e435] * self[e2]) + (anti_reverse[e321] * self[e415])
+                    - (anti_reverse[e2] * self[e435])
+                    - (anti_reverse[e425] * self[e3]),
+                (anti_reverse[e1] * self[e435]) + (anti_reverse[e2] * self[e12345]) + (anti_reverse[e415] * self[e3]) + (anti_reverse[e321] * self[e425])
+                    - (anti_reverse[e3] * self[e415])
+                    - (anti_reverse[e435] * self[e1]),
+                (anti_reverse[e2] * self[e415]) + (anti_reverse[e3] * self[e12345]) + (anti_reverse[e425] * self[e1]) + (anti_reverse[e321] * self[e435])
+                    - (anti_reverse[e1] * self[e425])
+                    - (anti_reverse[e415] * self[e2]),
+            ]) + (Simd32x4::from(anti_reverse[e12345]) * Simd32x4::from([self[e12345], self[e1], self[e2], self[e3]]))
+                + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group0()[0], 2)
-                - f32::powi(self.group0()[1], 2)
-                - f32::powi(self.group0()[2], 2)
-                - f32::powi(self.group0()[3], 2)
-                - f32::powi(self.group1()[0], 2)
-                - f32::powi(self.group1()[1], 2)
-                - f32::powi(self.group1()[2], 2)
-                + f32::powi(self.group1()[3], 2)),
+            f32::powi(self[e12345], 2) + f32::powi(self[e321], 2)
+                - f32::powi(self[e1], 2)
+                - f32::powi(self[e2], 2)
+                - f32::powi(self[e3], 2)
+                - f32::powi(self[e415], 2)
+                - f32::powi(self[e425], 2)
+                - f32::powi(self[e435], 2),
         );
         return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
     }
 }
+impl std::ops::Div<anti_constraint_violation> for MysteryVersorOdd {
+    type Output = MysteryVersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for MysteryVersorOdd {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8        0        0
-    //    simd4        7        9        0
+    //      f32       36       32        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       15        9        0
+    // yes simd       36       33        0
     //  no simd       36       36        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
@@ -3517,43 +4086,70 @@ impl AntiConstraintViolation for MysteryVersorOdd {
             // scalar, e4235, e4315, e4125
             self.group0(),
             // e23, e31, e12, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
         );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
-            (-(Simd32x4::from([self.group0()[0], self.group1()[2], self.group1()[0], self.group1()[1]]) * swizzle!(anti_reverse.group0(), 0, 2, 3, 1))
-                + (Simd32x4::from([self.group0()[2], self.group0()[0], self.group1()[2], self.group1()[0]]) * swizzle!(anti_reverse.group0(), 2, 1, 1, 2))
-                + (Simd32x4::from([self.group0()[3], self.group1()[1], self.group0()[0], self.group0()[0]]) * swizzle!(anti_reverse.group0(), 3, 3, 2, 3))
-                + (Simd32x4::from([self.group1()[0], self.group1()[3], self.group0()[3], self.group0()[1]]) * swizzle!(anti_reverse.group1(), 0, 0, 0, 1))
-                + (Simd32x4::from([self.group1()[1], self.group0()[2], self.group1()[3], self.group1()[3]]) * swizzle!(anti_reverse.group1(), 1, 2, 1, 2))
-                - (Simd32x4::from([self.group1()[3], self.group0()[3], self.group0()[1], self.group0()[2]]) * swizzle!(anti_reverse.group1(), 3, 1, 2, 0))
-                + (swizzle!(anti_reverse.group0(), 1, 0, 0, 0) * swizzle!(self.group0(), 1, 1, 2, 3))
-                + (swizzle!(anti_reverse.group1(), 2, 3, 3, 3) * swizzle!(self.group1(), 2, 0, 1, 2))),
-            // e415, e425, e435, e321
-            Simd32x4::from(0.0),
-        );
-        let anti_scalar_product = AntiScalar::from_groups(
-            // e12345
-            (-f32::powi(self.group0()[0], 2)
-                + f32::powi(self.group0()[1], 2)
-                + f32::powi(self.group0()[2], 2)
-                + f32::powi(self.group0()[3], 2)
-                + f32::powi(self.group1()[0], 2)
-                + f32::powi(self.group1()[1], 2)
-                + f32::powi(self.group1()[2], 2)
-                - f32::powi(self.group1()[3], 2)),
-        );
-        return MysteryVersorEven::from_groups(
-            // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                (anti_reverse[e4235] * self[e4235])
+                    + (anti_reverse[e4315] * self[e4315])
+                    + (anti_reverse[e4125] * self[e4125])
+                    + (anti_reverse[e23] * self[e23])
+                    + (anti_reverse[e31] * self[e31])
+                    + (anti_reverse[e12] * self[e12])
+                    - (anti_reverse[scalar] * self[scalar])
+                    - (anti_reverse[e45] * self[e45]),
+                (anti_reverse[scalar] * self[e4235])
+                    + (anti_reverse[e4235] * self[scalar])
+                    + (anti_reverse[e4125] * self[e31])
+                    + (anti_reverse[e23] * self[e45])
+                    + (anti_reverse[e12] * self[e4315])
+                    + (anti_reverse[e45] * self[e23])
+                    - (anti_reverse[e4315] * self[e12])
+                    - (anti_reverse[e31] * self[e4125]),
+                (anti_reverse[scalar] * self[e4315])
+                    + (anti_reverse[e4235] * self[e12])
+                    + (anti_reverse[e4315] * self[scalar])
+                    + (anti_reverse[e23] * self[e4125])
+                    + (anti_reverse[e31] * self[e45])
+                    + (anti_reverse[e45] * self[e31])
+                    - (anti_reverse[e4125] * self[e23])
+                    - (anti_reverse[e12] * self[e4235]),
+                (anti_reverse[scalar] * self[e4125])
+                    + (anti_reverse[e4315] * self[e23])
+                    + (anti_reverse[e4125] * self[scalar])
+                    + (anti_reverse[e31] * self[e4235])
+                    + (anti_reverse[e12] * self[e45])
+                    + (anti_reverse[e45] * self[e12])
+                    - (anti_reverse[e4235] * self[e31])
+                    - (anti_reverse[e23] * self[e4315]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
+        let anti_dot_product = AntiScalar::from_groups(
+            // e12345
+            f32::powi(self[e4235], 2) + f32::powi(self[e4315], 2) + f32::powi(self[e4125], 2) + f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2)
+                - f32::powi(self[scalar], 2)
+                - f32::powi(self[e45], 2),
+        );
+        return MysteryVersorEven::from_groups(
+            // e12345, e1, e2, e3
+            Simd32x4::from([
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from(0.0),
+        );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for Plane {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for Plane {
@@ -3562,10 +4158,22 @@ impl AntiConstraintViolation for Plane {
         return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
+impl std::ops::Div<anti_constraint_violation> for PlaneOnOrigin {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for PlaneOnOrigin {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
         return Scalar::from_groups(/* scalar */ 0.0);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for RoundPoint {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for RoundPoint {
@@ -3574,10 +4182,27 @@ impl AntiConstraintViolation for RoundPoint {
         return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
+impl std::ops::Div<anti_constraint_violation> for RoundPointAtOrigin {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for RoundPointAtOrigin {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
         return Scalar::from_groups(/* scalar */ 0.0);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for Scalar {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
+impl std::ops::DivAssign<anti_constraint_violation> for Scalar {
+    fn div_assign(&mut self, _rhs: anti_constraint_violation) {
+        *self = self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for Scalar {
@@ -3586,10 +4211,22 @@ impl AntiConstraintViolation for Scalar {
         return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
+impl std::ops::Div<anti_constraint_violation> for Sphere {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for Sphere {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
         return Scalar::from_groups(/* scalar */ 0.0);
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for SphereAtOrigin {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for SphereAtOrigin {
@@ -3598,30 +4235,47 @@ impl AntiConstraintViolation for SphereAtOrigin {
         return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
+impl std::ops::Div<anti_constraint_violation> for SphereOnOrigin {
+    type Output = Scalar;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for SphereOnOrigin {
     type Output = Scalar;
     fn anti_constraint_violation(self) -> Self::Output {
         return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
+impl std::ops::Div<anti_constraint_violation> for VersorEven {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
+impl std::ops::DivAssign<anti_constraint_violation> for VersorEven {
+    fn div_assign(&mut self, _rhs: anti_constraint_violation) {
+        *self = self.anti_constraint_violation()
+    }
+}
 impl AntiConstraintViolation for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       62       70        0
-    //    simd4       10       11        0
+    //      f32       90       98        0
+    //    simd4        3        4        0
     // Totals...
-    // yes simd       72       81        0
+    // yes simd       93      102        0
     //  no simd      102      114        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self[e423] * -1.0, self[e431] * -1.0, self[e412] * -1.0, self[e12345]]),
             // e415, e425, e435, e321
-            (self.group1() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e5]]),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -3631,20 +4285,19 @@ impl AntiConstraintViolation for VersorEven {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group2()[0]) - (anti_reverse.group0()[1] * self.group2()[1]) - (anti_reverse.group0()[2] * self.group2()[2])
-                    + (anti_reverse.group0()[3] * self.group0()[3])
-                    - (anti_reverse.group1()[0] * self.group1()[0])
-                    - (anti_reverse.group1()[1] * self.group1()[1])
-                    - (anti_reverse.group1()[2] * self.group1()[2])
-                    + (anti_reverse.group1()[3] * self.group1()[3])
-                    - (anti_reverse.group2()[0] * self.group0()[0])
-                    - (anti_reverse.group2()[1] * self.group0()[1])
-                    - (anti_reverse.group2()[2] * self.group0()[2])
-                    + (anti_reverse.group2()[3] * self.group3()[3])
-                    - (anti_reverse.group3()[0] * self.group3()[0])
-                    - (anti_reverse.group3()[1] * self.group3()[1])
-                    - (anti_reverse.group3()[2] * self.group3()[2])
-                    + (anti_reverse.group3()[3] * self.group2()[3])),
+                (anti_reverse[e12345] * self[e12345]) + (anti_reverse[e321] * self[e321]) + (anti_reverse[e5] * self[e4]) + (anti_reverse[e4] * self[e5])
+                    - (anti_reverse[e423] * self[e235])
+                    - (anti_reverse[e431] * self[e315])
+                    - (anti_reverse[e412] * self[e125])
+                    - (anti_reverse[e415] * self[e415])
+                    - (anti_reverse[e425] * self[e425])
+                    - (anti_reverse[e435] * self[e435])
+                    - (anti_reverse[e235] * self[e423])
+                    - (anti_reverse[e315] * self[e431])
+                    - (anti_reverse[e125] * self[e412])
+                    - (anti_reverse[e1] * self[e1])
+                    - (anti_reverse[e2] * self[e2])
+                    - (anti_reverse[e3] * self[e3]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -3653,94 +4306,128 @@ impl AntiConstraintViolation for VersorEven {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[3] * self.group2()[3])
-                    - (anti_reverse.group1()[0] * self.group2()[0])
-                    - (anti_reverse.group1()[1] * self.group2()[1])
-                    - (anti_reverse.group1()[2] * self.group2()[2])
-                    - (anti_reverse.group1()[3] * self.group2()[3])
-                    - (anti_reverse.group2()[0] * self.group1()[0])
-                    - (anti_reverse.group2()[0] * self.group3()[0])
-                    - (anti_reverse.group2()[1] * self.group1()[1])
-                    - (anti_reverse.group2()[1] * self.group3()[1])
-                    - (anti_reverse.group2()[2] * self.group1()[2])
-                    - (anti_reverse.group2()[2] * self.group3()[2])
-                    + (anti_reverse.group2()[3] * self.group0()[3])
-                    + (anti_reverse.group2()[3] * self.group1()[3])
-                    + (anti_reverse.group3()[0] * self.group2()[0])
-                    + (anti_reverse.group3()[1] * self.group2()[1])
-                    + (anti_reverse.group3()[2] * self.group2()[2])),
+                (anti_reverse[e12345] * self[e5])
+                    + (anti_reverse[e5] * self[e12345])
+                    + (anti_reverse[e5] * self[e321])
+                    + (anti_reverse[e1] * self[e235])
+                    + (anti_reverse[e2] * self[e315])
+                    + (anti_reverse[e3] * self[e125])
+                    - (anti_reverse[e415] * self[e235])
+                    - (anti_reverse[e425] * self[e315])
+                    - (anti_reverse[e435] * self[e125])
+                    - (anti_reverse[e321] * self[e5])
+                    - (anti_reverse[e235] * self[e415])
+                    - (anti_reverse[e235] * self[e1])
+                    - (anti_reverse[e315] * self[e425])
+                    - (anti_reverse[e315] * self[e2])
+                    - (anti_reverse[e125] * self[e435])
+                    - (anti_reverse[e125] * self[e3]),
             ]),
             // e1, e2, e3, e4
-            (Simd32x4::from([
-                ((anti_reverse.group1()[2] * self.group3()[1]) + (anti_reverse.group1()[3] * self.group1()[0]) - (anti_reverse.group2()[0] * self.group3()[3])
-                    + (anti_reverse.group3()[0] * self.group0()[3])
-                    + (anti_reverse.group3()[2] * self.group1()[1])
-                    + (anti_reverse.group3()[3] * self.group2()[0])),
-                ((anti_reverse.group1()[1] * self.group1()[3]) + (anti_reverse.group1()[3] * self.group1()[1]) - (anti_reverse.group2()[1] * self.group3()[3])
-                    + (anti_reverse.group3()[0] * self.group1()[2])
-                    + (anti_reverse.group3()[1] * self.group0()[3])
-                    + (anti_reverse.group3()[3] * self.group2()[1])),
-                ((anti_reverse.group1()[2] * self.group1()[3]) + (anti_reverse.group1()[3] * self.group1()[2]) - (anti_reverse.group2()[2] * self.group3()[3])
-                    + (anti_reverse.group3()[1] * self.group1()[0])
-                    + (anti_reverse.group3()[2] * self.group0()[3])
-                    + (anti_reverse.group3()[3] * self.group2()[2])),
-                (-(anti_reverse.group0()[2] * self.group1()[2]) + (anti_reverse.group0()[3] * self.group3()[3])
-                    - (anti_reverse.group3()[0] * self.group0()[0])
-                    - (anti_reverse.group3()[1] * self.group0()[1])
-                    - (anti_reverse.group3()[2] * self.group0()[2])
-                    - (anti_reverse.group3()[3] * self.group1()[3])),
-            ]) + (Simd32x4::from([anti_reverse.group2()[1], anti_reverse.group2()[2], anti_reverse.group2()[0], anti_reverse.group3()[3]]) * swizzle!(self.group0(), 2, 0, 1, 3))
-                - (Simd32x4::from([anti_reverse.group2()[2], anti_reverse.group2()[0], anti_reverse.group2()[1], anti_reverse.group1()[1]]) * swizzle!(self.group0(), 1, 2, 0, 1))
-                - (Simd32x4::from([anti_reverse.group2()[3], anti_reverse.group2()[3], anti_reverse.group2()[3], anti_reverse.group1()[2]]) * swizzle!(self.group0(), 0, 1, 2, 2))
-                - (Simd32x4::from([anti_reverse.group3()[1], anti_reverse.group3()[2], anti_reverse.group3()[0], anti_reverse.group0()[1]]) * swizzle!(self.group1(), 2, 0, 1, 1))
-                + (Simd32x4::from([self.group1()[3], self.group3()[2], self.group3()[0], self.group3()[3]]) * swizzle!(anti_reverse.group1(), 0, 0, 1, 3))
-                + (Simd32x4::from([self.group2()[1], self.group2()[3], self.group2()[3], self.group3()[1]]) * swizzle!(anti_reverse.group0(), 2, 1, 2, 1))
-                - (Simd32x4::from([self.group2()[2], self.group2()[0], self.group2()[1], self.group1()[0]]) * swizzle!(anti_reverse.group0(), 1, 2, 0, 0))
-                + (Simd32x4::from([self.group2()[3], self.group2()[2], self.group2()[0], self.group3()[0]]) * swizzle!(anti_reverse.group0(), 0, 0, 1, 0))
-                - (Simd32x4::from([self.group3()[2], self.group3()[0], self.group3()[1], self.group0()[0]]) * swizzle!(anti_reverse.group1(), 1, 2, 0, 0))
-                + (swizzle!(anti_reverse.group0(), 3, 3, 3, 2) * swizzle!(self.group3(), 0, 1, 2, 2))),
+            Simd32x4::from([
+                (anti_reverse[e423] * self[e5])
+                    + (anti_reverse[e412] * self[e315])
+                    + (anti_reverse[e415] * self[e321])
+                    + (anti_reverse[e435] * self[e2])
+                    + (anti_reverse[e315] * self[e412])
+                    + (anti_reverse[e3] * self[e425])
+                    + (anti_reverse[e4] * self[e235])
+                    - (anti_reverse[e431] * self[e125])
+                    - (anti_reverse[e425] * self[e3])
+                    - (anti_reverse[e235] * self[e4])
+                    - (anti_reverse[e125] * self[e431])
+                    - (anti_reverse[e5] * self[e423])
+                    - (anti_reverse[e2] * self[e435]),
+                (anti_reverse[e423] * self[e125])
+                    + (anti_reverse[e431] * self[e5])
+                    + (anti_reverse[e415] * self[e3])
+                    + (anti_reverse[e425] * self[e321])
+                    + (anti_reverse[e125] * self[e423])
+                    + (anti_reverse[e1] * self[e435])
+                    + (anti_reverse[e4] * self[e315])
+                    - (anti_reverse[e412] * self[e235])
+                    - (anti_reverse[e435] * self[e1])
+                    - (anti_reverse[e235] * self[e412])
+                    - (anti_reverse[e315] * self[e4])
+                    - (anti_reverse[e5] * self[e431])
+                    - (anti_reverse[e3] * self[e415]),
+                (anti_reverse[e431] * self[e235])
+                    + (anti_reverse[e412] * self[e5])
+                    + (anti_reverse[e425] * self[e1])
+                    + (anti_reverse[e435] * self[e321])
+                    + (anti_reverse[e235] * self[e431])
+                    + (anti_reverse[e2] * self[e415])
+                    + (anti_reverse[e4] * self[e125])
+                    - (anti_reverse[e423] * self[e315])
+                    - (anti_reverse[e415] * self[e2])
+                    - (anti_reverse[e315] * self[e423])
+                    - (anti_reverse[e125] * self[e4])
+                    - (anti_reverse[e5] * self[e412])
+                    - (anti_reverse[e1] * self[e425]),
+                (anti_reverse[e423] * self[e1]) + (anti_reverse[e431] * self[e2]) + (anti_reverse[e412] * self[e3])
+                    - (anti_reverse[e423] * self[e415])
+                    - (anti_reverse[e431] * self[e425])
+                    - (anti_reverse[e412] * self[e435])
+                    - (anti_reverse[e415] * self[e423])
+                    - (anti_reverse[e425] * self[e431])
+                    - (anti_reverse[e435] * self[e412])
+                    - (anti_reverse[e1] * self[e423])
+                    - (anti_reverse[e2] * self[e431])
+                    - (anti_reverse[e3] * self[e412])
+                    - (anti_reverse[e4] * self[e321]),
+            ]) + (Simd32x4::from(anti_reverse[e12345]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]))
+                + (Simd32x4::from(anti_reverse[e321]) * Simd32x4::from([self[e415], self[e425], self[e435], self[e4]]))
+                + (Simd32x4::from(self[e12345]) * Simd32x4::from([anti_reverse[e1], anti_reverse[e2], anti_reverse[e3], anti_reverse[e4]])),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group0()[3], 2) - f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2) + f32::powi(self.group1()[3], 2)
-                - f32::powi(self.group3()[0], 2)
-                - f32::powi(self.group3()[1], 2)
-                - f32::powi(self.group3()[2], 2)
-                - 2.0 * (self.group0()[0] * self.group2()[0])
-                - 2.0 * (self.group0()[1] * self.group2()[1])
-                - 2.0 * (self.group0()[2] * self.group2()[2])
-                + 2.0 * (self.group2()[3] * self.group3()[3])),
+            2.0 * (self[e5] * self[e4]) + f32::powi(self[e12345], 2) + f32::powi(self[e321], 2)
+                - f32::powi(self[e415], 2)
+                - f32::powi(self[e425], 2)
+                - f32::powi(self[e435], 2)
+                - f32::powi(self[e1], 2)
+                - f32::powi(self[e2], 2)
+                - f32::powi(self[e3], 2)
+                - 2.0 * (self[e423] * self[e235])
+                - 2.0 * (self[e431] * self[e315])
+                - 2.0 * (self[e412] * self[e125]),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for VersorEvenAligningOrigin {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for VersorEvenAligningOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       30       45        0
-    //    simd4        6        6        0
+    //      f32       50       65        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       36       51        0
+    // yes simd       51       66        0
     //  no simd       54       69        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self[e423] * -1.0, self[e431] * -1.0, self[e412] * -1.0, self[e12345]]),
             // e415, e425, e435, e4
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e4]]),
             // e235, e315, e125, e5
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e5]]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -3748,16 +4435,16 @@ impl AntiConstraintViolation for VersorEvenAligningOrigin {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group2()[0]) - (anti_reverse.group0()[1] * self.group2()[1]) - (anti_reverse.group0()[2] * self.group2()[2])
-                    + (anti_reverse.group0()[3] * self.group0()[3])
-                    - (anti_reverse.group1()[0] * self.group1()[0])
-                    - (anti_reverse.group1()[1] * self.group1()[1])
-                    - (anti_reverse.group1()[2] * self.group1()[2])
-                    + (anti_reverse.group1()[3] * self.group2()[3])
-                    - (anti_reverse.group2()[0] * self.group0()[0])
-                    - (anti_reverse.group2()[1] * self.group0()[1])
-                    - (anti_reverse.group2()[2] * self.group0()[2])
-                    + (anti_reverse.group2()[3] * self.group1()[3])),
+                (anti_reverse[e12345] * self[e12345]) + (anti_reverse[e4] * self[e5]) + (anti_reverse[e5] * self[e4])
+                    - (anti_reverse[e423] * self[e235])
+                    - (anti_reverse[e431] * self[e315])
+                    - (anti_reverse[e412] * self[e125])
+                    - (anti_reverse[e415] * self[e415])
+                    - (anti_reverse[e425] * self[e425])
+                    - (anti_reverse[e435] * self[e435])
+                    - (anti_reverse[e235] * self[e423])
+                    - (anti_reverse[e315] * self[e431])
+                    - (anti_reverse[e125] * self[e412]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -3766,59 +4453,81 @@ impl AntiConstraintViolation for VersorEvenAligningOrigin {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[3] * self.group2()[3])
-                    - (anti_reverse.group1()[0] * self.group2()[0])
-                    - (anti_reverse.group1()[1] * self.group2()[1])
-                    - (anti_reverse.group1()[2] * self.group2()[2])
-                    - (anti_reverse.group2()[0] * self.group1()[0])
-                    - (anti_reverse.group2()[1] * self.group1()[1])
-                    - (anti_reverse.group2()[2] * self.group1()[2])
-                    + (anti_reverse.group2()[3] * self.group0()[3])),
+                (anti_reverse[e12345] * self[e5]) + (anti_reverse[e5] * self[e12345])
+                    - (anti_reverse[e415] * self[e235])
+                    - (anti_reverse[e425] * self[e315])
+                    - (anti_reverse[e435] * self[e125])
+                    - (anti_reverse[e235] * self[e415])
+                    - (anti_reverse[e315] * self[e425])
+                    - (anti_reverse[e125] * self[e435]),
             ]),
             // e1, e2, e3, e4
-            (Simd32x4::from([
-                ((anti_reverse.group0()[2] * self.group2()[1]) + (anti_reverse.group2()[1] * self.group0()[2])),
-                ((anti_reverse.group0()[1] * self.group2()[3]) + (anti_reverse.group2()[2] * self.group0()[0])),
-                ((anti_reverse.group0()[2] * self.group2()[3]) + (anti_reverse.group2()[0] * self.group0()[1])),
-                (-(anti_reverse.group0()[2] * self.group1()[2]) - (anti_reverse.group1()[2] * self.group0()[2])),
-            ]) + (Simd32x4::from(anti_reverse.group1()[3]) * Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group0()[3]]))
-                - (Simd32x4::from([anti_reverse.group2()[0], anti_reverse.group2()[1], anti_reverse.group2()[2], anti_reverse.group0()[1]]) * swizzle!(self.group1(), 3, 3, 3, 1))
-                - (Simd32x4::from([anti_reverse.group2()[2], anti_reverse.group2()[0], anti_reverse.group2()[1], anti_reverse.group1()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
-                - (Simd32x4::from([anti_reverse.group2()[3], anti_reverse.group2()[3], anti_reverse.group2()[3], anti_reverse.group1()[1]]) * swizzle!(self.group0(), 0, 1, 2, 1))
-                - (Simd32x4::from([self.group2()[2], self.group2()[0], self.group2()[1], self.group1()[0]]) * swizzle!(anti_reverse.group0(), 1, 2, 0, 0))
-                + (Simd32x4::from([self.group2()[3], self.group2()[2], self.group2()[0], self.group1()[3]]) * swizzle!(anti_reverse.group0(), 0, 0, 1, 3))),
+            Simd32x4::from([
+                (anti_reverse[e423] * self[e5]) + (anti_reverse[e412] * self[e315]) + (anti_reverse[e315] * self[e412])
+                    - (anti_reverse[e431] * self[e125])
+                    - (anti_reverse[e235] * self[e4])
+                    - (anti_reverse[e125] * self[e431])
+                    - (anti_reverse[e5] * self[e423]),
+                (anti_reverse[e423] * self[e125]) + (anti_reverse[e431] * self[e5]) + (anti_reverse[e125] * self[e423])
+                    - (anti_reverse[e412] * self[e235])
+                    - (anti_reverse[e235] * self[e412])
+                    - (anti_reverse[e315] * self[e4])
+                    - (anti_reverse[e5] * self[e431]),
+                (anti_reverse[e431] * self[e235]) + (anti_reverse[e412] * self[e5]) + (anti_reverse[e235] * self[e431])
+                    - (anti_reverse[e423] * self[e315])
+                    - (anti_reverse[e315] * self[e423])
+                    - (anti_reverse[e125] * self[e4])
+                    - (anti_reverse[e5] * self[e412]),
+                (anti_reverse[e12345] * self[e4])
+                    - (anti_reverse[e423] * self[e415])
+                    - (anti_reverse[e431] * self[e425])
+                    - (anti_reverse[e412] * self[e435])
+                    - (anti_reverse[e415] * self[e423])
+                    - (anti_reverse[e425] * self[e431])
+                    - (anti_reverse[e435] * self[e412]),
+            ]) + (Simd32x4::from(anti_reverse[e4]) * Simd32x4::from([self[e235], self[e315], self[e125], self[e12345]])),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group0()[3], 2)
-                - f32::powi(self.group1()[0], 2)
-                - f32::powi(self.group1()[1], 2)
-                - f32::powi(self.group1()[2], 2)
-                - 2.0 * (self.group0()[0] * self.group2()[0])
-                - 2.0 * (self.group0()[1] * self.group2()[1])
-                - 2.0 * (self.group0()[2] * self.group2()[2])
-                + 2.0 * (self.group1()[3] * self.group2()[3])),
+            2.0 * (self[e4] * self[e5]) + f32::powi(self[e12345], 2)
+                - f32::powi(self[e415], 2)
+                - f32::powi(self[e425], 2)
+                - f32::powi(self[e435], 2)
+                - 2.0 * (self[e423] * self[e235])
+                - 2.0 * (self[e431] * self[e315])
+                - 2.0 * (self[e412] * self[e125]),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for VersorEvenAtInfinity {
+    type Output = VersorEvenAtInfinity;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
+    }
+}
+impl std::ops::DivAssign<anti_constraint_violation> for VersorEvenAtInfinity {
+    fn div_assign(&mut self, _rhs: anti_constraint_violation) {
+        *self = self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for VersorEvenAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       35       35        0
-    //    simd4        4        5        0
+    //      f32       43       43        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       39       40        0
+    // yes simd       45       46        0
     //  no simd       51       55        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
@@ -3826,33 +4535,30 @@ impl AntiConstraintViolation for VersorEvenAtInfinity {
             // e12345, e1, e2, e3
             self.group0(),
             // e415, e425, e435, e321
-            (self.group1() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e5]]),
         );
         let geometric_anti_product = VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                (-(anti_reverse.group0()[3] * self.group0()[3])
-                    - (anti_reverse.group1()[0] * self.group1()[0])
-                    - (anti_reverse.group1()[1] * self.group1()[1])
-                    - (anti_reverse.group1()[2] * self.group1()[2])),
-                ((anti_reverse.group0()[1] * self.group0()[0])
-                    + (anti_reverse.group1()[0] * self.group1()[3])
-                    + (anti_reverse.group1()[2] * self.group0()[2])
-                    + (anti_reverse.group1()[3] * self.group1()[0])),
-                ((anti_reverse.group0()[2] * self.group0()[0])
-                    + (anti_reverse.group1()[0] * self.group0()[3])
-                    + (anti_reverse.group1()[1] * self.group1()[3])
-                    + (anti_reverse.group1()[3] * self.group1()[1])),
-                ((anti_reverse.group0()[3] * self.group0()[0])
-                    + (anti_reverse.group1()[1] * self.group0()[1])
-                    + (anti_reverse.group1()[2] * self.group1()[3])
-                    + (anti_reverse.group1()[3] * self.group1()[2])),
-            ]) + (Simd32x4::from(anti_reverse.group0()[0]) * self.group0())
-                - (Simd32x4::from([anti_reverse.group0()[2], anti_reverse.group1()[1], anti_reverse.group1()[2], anti_reverse.group1()[0]]) * swizzle!(self.group0(), 2, 3, 1, 2))
-                + (Simd32x4::from([anti_reverse.group1()[3], anti_reverse.group0()[3], anti_reverse.group0()[1], anti_reverse.group0()[2]]) * swizzle!(self.group1(), 3, 1, 2, 0))
-                - (Simd32x4::from([self.group0()[1], self.group1()[2], self.group1()[0], self.group1()[1]]) * swizzle!(anti_reverse.group0(), 1, 2, 3, 1))),
+            Simd32x4::from([
+                -(anti_reverse[e1] * self[e1])
+                    - (anti_reverse[e2] * self[e2])
+                    - (anti_reverse[e3] * self[e3])
+                    - (anti_reverse[e415] * self[e415])
+                    - (anti_reverse[e425] * self[e425])
+                    - (anti_reverse[e435] * self[e435]),
+                (anti_reverse[e1] * self[e12345]) + (anti_reverse[e3] * self[e425]) + (anti_reverse[e435] * self[e2]) + (anti_reverse[e321] * self[e415])
+                    - (anti_reverse[e2] * self[e435])
+                    - (anti_reverse[e425] * self[e3]),
+                (anti_reverse[e1] * self[e435]) + (anti_reverse[e2] * self[e12345]) + (anti_reverse[e415] * self[e3]) + (anti_reverse[e321] * self[e425])
+                    - (anti_reverse[e3] * self[e415])
+                    - (anti_reverse[e435] * self[e1]),
+                (anti_reverse[e2] * self[e415]) + (anti_reverse[e3] * self[e12345]) + (anti_reverse[e425] * self[e1]) + (anti_reverse[e321] * self[e435])
+                    - (anti_reverse[e1] * self[e425])
+                    - (anti_reverse[e415] * self[e2]),
+            ]) + (Simd32x4::from(anti_reverse[e12345]) * Simd32x4::from([self[e12345], self[e1], self[e2], self[e3]]))
+                + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -3860,99 +4566,122 @@ impl AntiConstraintViolation for VersorEvenAtInfinity {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[0] * self.group2()[3])
-                    + (anti_reverse.group0()[1] * self.group2()[0])
-                    + (anti_reverse.group0()[2] * self.group2()[1])
-                    + (anti_reverse.group0()[3] * self.group2()[2])
-                    - (anti_reverse.group1()[0] * self.group2()[0])
-                    - (anti_reverse.group1()[1] * self.group2()[1])
-                    - (anti_reverse.group1()[2] * self.group2()[2])
-                    - (anti_reverse.group1()[3] * self.group2()[3])
-                    - (anti_reverse.group2()[0] * self.group0()[1])
-                    - (anti_reverse.group2()[0] * self.group1()[0])
-                    - (anti_reverse.group2()[1] * self.group0()[2])
-                    - (anti_reverse.group2()[1] * self.group1()[1])
-                    - (anti_reverse.group2()[2] * self.group0()[3])
-                    - (anti_reverse.group2()[2] * self.group1()[2])
-                    + (anti_reverse.group2()[3] * self.group0()[0])
-                    + (anti_reverse.group2()[3] * self.group1()[3])),
+                (anti_reverse[e12345] * self[e5])
+                    + (anti_reverse[e1] * self[e235])
+                    + (anti_reverse[e2] * self[e315])
+                    + (anti_reverse[e3] * self[e125])
+                    + (anti_reverse[e5] * self[e12345])
+                    + (anti_reverse[e5] * self[e321])
+                    - (anti_reverse[e415] * self[e235])
+                    - (anti_reverse[e425] * self[e315])
+                    - (anti_reverse[e435] * self[e125])
+                    - (anti_reverse[e321] * self[e5])
+                    - (anti_reverse[e235] * self[e1])
+                    - (anti_reverse[e235] * self[e415])
+                    - (anti_reverse[e315] * self[e2])
+                    - (anti_reverse[e315] * self[e425])
+                    - (anti_reverse[e125] * self[e3])
+                    - (anti_reverse[e125] * self[e435]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group0()[0], 2)
-                - f32::powi(self.group0()[1], 2)
-                - f32::powi(self.group0()[2], 2)
-                - f32::powi(self.group0()[3], 2)
-                - f32::powi(self.group1()[0], 2)
-                - f32::powi(self.group1()[1], 2)
-                - f32::powi(self.group1()[2], 2)
-                + f32::powi(self.group1()[3], 2)),
+            f32::powi(self[e12345], 2) + f32::powi(self[e321], 2)
+                - f32::powi(self[e1], 2)
+                - f32::powi(self[e2], 2)
+                - f32::powi(self[e3], 2)
+                - f32::powi(self[e415], 2)
+                - f32::powi(self[e425], 2)
+                - f32::powi(self[e435], 2),
         );
         return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for VersorEvenAtOrigin {
+    type Output = MysteryVersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for VersorEvenAtOrigin {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       22        0
-    //    simd4        6        6        0
+    //      f32       28       42        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       14       28        0
+    // yes simd       29       43        0
     //  no simd       32       46        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self[e423] * -1.0, self[e431] * -1.0, self[e412] * -1.0, self[e4]]),
             // e235, e315, e125, e5
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e5]]),
         );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                (-(anti_reverse.group0()[1] * self.group1()[1]) - (anti_reverse.group0()[2] * self.group1()[2])),
-                ((anti_reverse.group0()[2] * self.group1()[1]) + (anti_reverse.group0()[3] * self.group1()[0])),
-                ((anti_reverse.group0()[1] * self.group1()[3]) + (anti_reverse.group0()[3] * self.group1()[1])),
-                ((anti_reverse.group0()[2] * self.group1()[3]) + (anti_reverse.group0()[3] * self.group1()[2])),
-            ]) - (swizzle!(anti_reverse.group0(), 0, 1, 2, 0) * swizzle!(self.group1(), 0, 2, 0, 1))
-                + (swizzle!(anti_reverse.group0(), 3, 0, 0, 1) * swizzle!(self.group1(), 3, 3, 2, 0))
-                - (swizzle!(anti_reverse.group1(), 0, 0, 0, 1) * swizzle!(self.group0(), 0, 3, 2, 0))
-                - (swizzle!(anti_reverse.group1(), 1, 2, 1, 2) * swizzle!(self.group0(), 1, 1, 3, 3))
-                - (swizzle!(anti_reverse.group1(), 2, 3, 3, 3) * swizzle!(self.group0(), 2, 0, 1, 2))
-                + (swizzle!(anti_reverse.group1(), 3, 1, 2, 0) * swizzle!(self.group0(), 3, 2, 0, 1))),
+            Simd32x4::from([
+                (anti_reverse[e5] * self[e4])
+                    - (anti_reverse[e423] * self[e235])
+                    - (anti_reverse[e431] * self[e315])
+                    - (anti_reverse[e412] * self[e125])
+                    - (anti_reverse[e235] * self[e423])
+                    - (anti_reverse[e315] * self[e431])
+                    - (anti_reverse[e125] * self[e412]),
+                (anti_reverse[e412] * self[e315]) + (anti_reverse[e4] * self[e235]) + (anti_reverse[e315] * self[e412])
+                    - (anti_reverse[e431] * self[e125])
+                    - (anti_reverse[e235] * self[e4])
+                    - (anti_reverse[e125] * self[e431])
+                    - (anti_reverse[e5] * self[e423]),
+                (anti_reverse[e423] * self[e125]) + (anti_reverse[e4] * self[e315]) + (anti_reverse[e125] * self[e423])
+                    - (anti_reverse[e412] * self[e235])
+                    - (anti_reverse[e235] * self[e412])
+                    - (anti_reverse[e315] * self[e4])
+                    - (anti_reverse[e5] * self[e431]),
+                (anti_reverse[e431] * self[e235]) + (anti_reverse[e4] * self[e125]) + (anti_reverse[e235] * self[e431])
+                    - (anti_reverse[e423] * self[e315])
+                    - (anti_reverse[e315] * self[e423])
+                    - (anti_reverse[e125] * self[e4])
+                    - (anti_reverse[e5] * self[e412]),
+            ]) + (Simd32x4::from(self[e5]) * Simd32x4::from([anti_reverse[e4], anti_reverse[e423], anti_reverse[e431], anti_reverse[e412]])),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-2.0 * (self.group0()[0] * self.group1()[0]) - 2.0 * (self.group0()[1] * self.group1()[1]) - 2.0 * (self.group0()[2] * self.group1()[2])
-                + 2.0 * (self.group0()[3] * self.group1()[3])),
+            2.0 * (self[e4] * self[e5]) - 2.0 * (self[e423] * self[e235]) - 2.0 * (self[e431] * self[e315]) - 2.0 * (self[e412] * self[e125]),
         );
         return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for VersorEvenOnOrigin {
+    type Output = DualNum;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for VersorEvenOnOrigin {
@@ -3968,47 +4697,52 @@ impl AntiConstraintViolation for VersorEvenOnOrigin {
         use crate::elements::*;
         let anti_reverse = VersorEvenOnOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self[e423] * -1.0, self[e431] * -1.0, self[e412] * -1.0, self[e12345]]),
             // e415, e425, e435, e4
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e4]]),
         );
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
-            (Simd32x2::from([
-                (-(anti_reverse.group1()[0] * self.group0()[0]) - (anti_reverse.group1()[1] * self.group0()[1]) - (anti_reverse.group1()[2] * self.group0()[2])
-                    + (anti_reverse.group1()[3] * self.group0()[3])),
+            Simd32x2::from([
+                (anti_reverse[e4] * self[e12345]) - (anti_reverse[e415] * self[e423]) - (anti_reverse[e425] * self[e431]) - (anti_reverse[e435] * self[e412]),
                 0.0,
-            ]) + (Simd32x2::from(anti_reverse.group0()[3]) * Simd32x2::from([self.group1()[3], self.group0()[3]]))
-                - (Simd32x2::from(self.group1()[0]) * Simd32x2::from([anti_reverse.group0()[0], anti_reverse.group1()[0]]))
-                - (Simd32x2::from(self.group1()[1]) * Simd32x2::from([anti_reverse.group0()[1], anti_reverse.group1()[1]]))
-                - (Simd32x2::from(self.group1()[2]) * Simd32x2::from([anti_reverse.group0()[2], anti_reverse.group1()[2]]))),
+            ]) + (Simd32x2::from(anti_reverse[e12345]) * Simd32x2::from([self[e4], self[e12345]]))
+                - (Simd32x2::from(self[e415]) * Simd32x2::from([anti_reverse[e423], anti_reverse[e415]]))
+                - (Simd32x2::from(self[e425]) * Simd32x2::from([anti_reverse[e431], anti_reverse[e425]]))
+                - (Simd32x2::from(self[e435]) * Simd32x2::from([anti_reverse[e412], anti_reverse[e435]])),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group0()[3], 2) - f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2)),
+            f32::powi(self[e12345], 2) - f32::powi(self[e415], 2) - f32::powi(self[e425], 2) - f32::powi(self[e435], 2),
         );
         return DualNum::from_groups(
             // e4, e12345
-            Simd32x2::from([geometric_anti_product.group0()[0], (geometric_anti_product.group0()[1] - anti_scalar_product[e12345])]),
+            Simd32x2::from([geometric_anti_product[e4], geometric_anti_product[e12345] - anti_dot_product[e12345]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for VersorEvenOrthogonalOrigin {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for VersorEvenOrthogonalOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       38       47        0
-    //    simd4        4        5        0
+    //      f32       54       63        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       42       52        0
+    // yes simd       54       64        0
     //  no simd       54       67        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
-            (self.group0() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e5]]),
             // e1, e2, e3, e4
             self.group2(),
         );
@@ -4018,16 +4752,16 @@ impl AntiConstraintViolation for VersorEvenOrthogonalOrigin {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group1()[0]) - (anti_reverse.group0()[1] * self.group1()[1]) - (anti_reverse.group0()[2] * self.group1()[2])
-                    + (anti_reverse.group0()[3] * self.group0()[3])
-                    - (anti_reverse.group1()[0] * self.group0()[0])
-                    - (anti_reverse.group1()[1] * self.group0()[1])
-                    - (anti_reverse.group1()[2] * self.group0()[2])
-                    + (anti_reverse.group1()[3] * self.group2()[3])
-                    - (anti_reverse.group2()[0] * self.group2()[0])
-                    - (anti_reverse.group2()[1] * self.group2()[1])
-                    - (anti_reverse.group2()[2] * self.group2()[2])
-                    + (anti_reverse.group2()[3] * self.group1()[3])),
+                (anti_reverse[e321] * self[e321]) + (anti_reverse[e5] * self[e4]) + (anti_reverse[e4] * self[e5])
+                    - (anti_reverse[e423] * self[e235])
+                    - (anti_reverse[e431] * self[e315])
+                    - (anti_reverse[e412] * self[e125])
+                    - (anti_reverse[e235] * self[e423])
+                    - (anti_reverse[e315] * self[e431])
+                    - (anti_reverse[e125] * self[e412])
+                    - (anti_reverse[e1] * self[e1])
+                    - (anti_reverse[e2] * self[e2])
+                    - (anti_reverse[e3] * self[e3]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -4036,74 +4770,82 @@ impl AntiConstraintViolation for VersorEvenOrthogonalOrigin {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[3] * self.group1()[3])
-                    - (anti_reverse.group1()[0] * self.group2()[0])
-                    - (anti_reverse.group1()[1] * self.group2()[1])
-                    - (anti_reverse.group1()[2] * self.group2()[2])
-                    + (anti_reverse.group1()[3] * self.group0()[3])
-                    + (anti_reverse.group2()[0] * self.group1()[0])
-                    + (anti_reverse.group2()[1] * self.group1()[1])
-                    + (anti_reverse.group2()[2] * self.group1()[2])),
+                (anti_reverse[e5] * self[e321]) + (anti_reverse[e1] * self[e235]) + (anti_reverse[e2] * self[e315]) + (anti_reverse[e3] * self[e125])
+                    - (anti_reverse[e321] * self[e5])
+                    - (anti_reverse[e235] * self[e1])
+                    - (anti_reverse[e315] * self[e2])
+                    - (anti_reverse[e125] * self[e3]),
             ]),
             // e1, e2, e3, e4
-            (Simd32x4::from([
-                (-(anti_reverse.group0()[1] * self.group1()[2]) - (anti_reverse.group1()[0] * self.group2()[3])
-                    + (anti_reverse.group1()[1] * self.group0()[2])
-                    + (anti_reverse.group2()[3] * self.group1()[0])),
-                (-(anti_reverse.group0()[2] * self.group1()[0]) - (anti_reverse.group1()[1] * self.group2()[3])
-                    + (anti_reverse.group1()[2] * self.group0()[0])
-                    + (anti_reverse.group2()[3] * self.group1()[1])),
-                (-(anti_reverse.group0()[0] * self.group1()[1]) + (anti_reverse.group1()[0] * self.group0()[1]) - (anti_reverse.group1()[2] * self.group2()[3])
-                    + (anti_reverse.group2()[3] * self.group1()[2])),
-                ((anti_reverse.group0()[2] * self.group2()[2]) + (anti_reverse.group0()[3] * self.group2()[3])
-                    - (anti_reverse.group2()[2] * self.group0()[2])
-                    - (anti_reverse.group2()[3] * self.group0()[3])),
-            ]) - (Simd32x4::from([anti_reverse.group1()[2], anti_reverse.group1()[0], anti_reverse.group1()[1], anti_reverse.group2()[0]]) * swizzle!(self.group0(), 1, 2, 0, 0))
-                - (Simd32x4::from([anti_reverse.group1()[3], anti_reverse.group1()[3], anti_reverse.group1()[3], anti_reverse.group2()[1]]) * swizzle!(self.group0(), 0, 1, 2, 1))
-                + (Simd32x4::from([self.group1()[1], self.group1()[3], self.group1()[3], self.group2()[1]]) * swizzle!(anti_reverse.group0(), 2, 1, 2, 1))
-                + (Simd32x4::from([self.group1()[3], self.group1()[2], self.group1()[0], self.group2()[0]]) * swizzle!(anti_reverse.group0(), 0, 0, 1, 0))),
+            Simd32x4::from([
+                (anti_reverse[e423] * self[e5]) + (anti_reverse[e412] * self[e315]) + (anti_reverse[e315] * self[e412]) + (anti_reverse[e4] * self[e235])
+                    - (anti_reverse[e431] * self[e125])
+                    - (anti_reverse[e235] * self[e4])
+                    - (anti_reverse[e125] * self[e431])
+                    - (anti_reverse[e5] * self[e423]),
+                (anti_reverse[e423] * self[e125]) + (anti_reverse[e431] * self[e5]) + (anti_reverse[e125] * self[e423]) + (anti_reverse[e4] * self[e315])
+                    - (anti_reverse[e412] * self[e235])
+                    - (anti_reverse[e235] * self[e412])
+                    - (anti_reverse[e315] * self[e4])
+                    - (anti_reverse[e5] * self[e431]),
+                (anti_reverse[e431] * self[e235]) + (anti_reverse[e412] * self[e5]) + (anti_reverse[e235] * self[e431]) + (anti_reverse[e4] * self[e125])
+                    - (anti_reverse[e423] * self[e315])
+                    - (anti_reverse[e315] * self[e423])
+                    - (anti_reverse[e125] * self[e4])
+                    - (anti_reverse[e5] * self[e412]),
+                (anti_reverse[e423] * self[e1]) + (anti_reverse[e431] * self[e2]) + (anti_reverse[e412] * self[e3]) + (anti_reverse[e321] * self[e4])
+                    - (anti_reverse[e1] * self[e423])
+                    - (anti_reverse[e2] * self[e431])
+                    - (anti_reverse[e3] * self[e412])
+                    - (anti_reverse[e4] * self[e321]),
+            ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (f32::powi(self.group0()[3], 2)
-                - f32::powi(self.group2()[0], 2)
-                - f32::powi(self.group2()[1], 2)
-                - f32::powi(self.group2()[2], 2)
-                - 2.0 * (self.group0()[0] * self.group1()[0])
-                - 2.0 * (self.group0()[1] * self.group1()[1])
-                - 2.0 * (self.group0()[2] * self.group1()[2])
-                + 2.0 * (self.group1()[3] * self.group2()[3])),
+            2.0 * (self[e5] * self[e4]) + f32::powi(self[e321], 2)
+                - f32::powi(self[e1], 2)
+                - f32::powi(self[e2], 2)
+                - f32::powi(self[e3], 2)
+                - 2.0 * (self[e423] * self[e235])
+                - 2.0 * (self[e431] * self[e315])
+                - 2.0 * (self[e412] * self[e125]),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for VersorOdd {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       54       62        0
-    //    simd4       12       13        0
+    //      f32       94      102        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       66       75        0
+    // yes simd       96      105        0
     //  no simd      102      114        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self[e41] * -1.0, self[e42] * -1.0, self[e43] * -1.0, self[scalar]]),
             // e23, e31, e12, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
             // e4235, e4315, e4125, e3215
             self.group3(),
         );
@@ -4113,20 +4855,22 @@ impl AntiConstraintViolation for VersorOdd {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[0] * self.group2()[0]) + (anti_reverse.group0()[1] * self.group2()[1]) + (anti_reverse.group0()[2] * self.group2()[2])
-                    - (anti_reverse.group0()[3] * self.group0()[3])
-                    + (anti_reverse.group1()[0] * self.group1()[0])
-                    + (anti_reverse.group1()[1] * self.group1()[1])
-                    + (anti_reverse.group1()[2] * self.group1()[2])
-                    - (anti_reverse.group1()[3] * self.group1()[3])
-                    + (anti_reverse.group2()[0] * self.group0()[0])
-                    + (anti_reverse.group2()[1] * self.group0()[1])
-                    + (anti_reverse.group2()[2] * self.group0()[2])
-                    - (anti_reverse.group2()[3] * self.group3()[3])
-                    + (anti_reverse.group3()[0] * self.group3()[0])
-                    + (anti_reverse.group3()[1] * self.group3()[1])
-                    + (anti_reverse.group3()[2] * self.group3()[2])
-                    - (anti_reverse.group3()[3] * self.group2()[3])),
+                (anti_reverse[e41] * self[e15])
+                    + (anti_reverse[e42] * self[e25])
+                    + (anti_reverse[e43] * self[e35])
+                    + (anti_reverse[e23] * self[e23])
+                    + (anti_reverse[e31] * self[e31])
+                    + (anti_reverse[e12] * self[e12])
+                    + (anti_reverse[e15] * self[e41])
+                    + (anti_reverse[e25] * self[e42])
+                    + (anti_reverse[e35] * self[e43])
+                    + (anti_reverse[e4235] * self[e4235])
+                    + (anti_reverse[e4315] * self[e4315])
+                    + (anti_reverse[e4125] * self[e4125])
+                    - (anti_reverse[scalar] * self[scalar])
+                    - (anti_reverse[e45] * self[e45])
+                    - (anti_reverse[e1234] * self[e3215])
+                    - (anti_reverse[e3215] * self[e1234]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -4135,106 +4879,172 @@ impl AntiConstraintViolation for VersorOdd {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[3] * self.group3()[3])
-                    + (anti_reverse.group1()[0] * self.group2()[0])
-                    + (anti_reverse.group1()[1] * self.group2()[1])
-                    + (anti_reverse.group1()[2] * self.group2()[2])
-                    - (anti_reverse.group1()[3] * self.group3()[3])
-                    + (anti_reverse.group2()[0] * self.group1()[0])
-                    - (anti_reverse.group2()[0] * self.group3()[0])
-                    + (anti_reverse.group2()[1] * self.group1()[1])
-                    - (anti_reverse.group2()[1] * self.group3()[1])
-                    + (anti_reverse.group2()[2] * self.group1()[2])
-                    - (anti_reverse.group2()[2] * self.group3()[2])
-                    + (anti_reverse.group3()[0] * self.group2()[0])
-                    + (anti_reverse.group3()[1] * self.group2()[1])
-                    + (anti_reverse.group3()[2] * self.group2()[2])
-                    - (anti_reverse.group3()[3] * self.group0()[3])
-                    + (anti_reverse.group3()[3] * self.group1()[3])),
+                (anti_reverse[e23] * self[e15])
+                    + (anti_reverse[e31] * self[e25])
+                    + (anti_reverse[e12] * self[e35])
+                    + (anti_reverse[e15] * self[e23])
+                    + (anti_reverse[e25] * self[e31])
+                    + (anti_reverse[e35] * self[e12])
+                    + (anti_reverse[e4235] * self[e15])
+                    + (anti_reverse[e4315] * self[e25])
+                    + (anti_reverse[e4125] * self[e35])
+                    + (anti_reverse[e3215] * self[e45])
+                    - (anti_reverse[scalar] * self[e3215])
+                    - (anti_reverse[e45] * self[e3215])
+                    - (anti_reverse[e15] * self[e4235])
+                    - (anti_reverse[e25] * self[e4315])
+                    - (anti_reverse[e35] * self[e4125])
+                    - (anti_reverse[e3215] * self[scalar]),
             ]),
             // e1, e2, e3, e4
-            (Simd32x4::from([
-                (-(anti_reverse.group0()[2] * self.group2()[1]) - (anti_reverse.group1()[1] * self.group3()[2])
-                    + (anti_reverse.group3()[0] * self.group0()[3])
-                    + (anti_reverse.group3()[3] * self.group0()[0])),
-                (-(anti_reverse.group0()[1] * self.group3()[3]) - (anti_reverse.group1()[2] * self.group3()[0])
-                    + (anti_reverse.group3()[1] * self.group0()[3])
-                    + (anti_reverse.group3()[3] * self.group0()[1])),
-                (-(anti_reverse.group0()[2] * self.group3()[3]) - (anti_reverse.group1()[0] * self.group3()[1])
-                    + (anti_reverse.group3()[2] * self.group0()[3])
-                    + (anti_reverse.group3()[3] * self.group0()[2])),
-                ((anti_reverse.group0()[1] * self.group3()[1]) + (anti_reverse.group0()[2] * self.group3()[2])
-                    - (anti_reverse.group3()[1] * self.group0()[1])
-                    - (anti_reverse.group3()[2] * self.group0()[2])),
-            ]) - (Simd32x4::from(anti_reverse.group2()[3]) * Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group1()[3]]))
-                + (Simd32x4::from(self.group2()[3]) * Simd32x4::from([anti_reverse.group2()[0], anti_reverse.group2()[1], anti_reverse.group2()[2], anti_reverse.group1()[3]]))
-                + (Simd32x4::from([anti_reverse.group1()[3], anti_reverse.group1()[3], anti_reverse.group1()[3], anti_reverse.group0()[1]]) * swizzle!(self.group1(), 0, 1, 2, 1))
-                + (Simd32x4::from([anti_reverse.group2()[2], anti_reverse.group2()[0], anti_reverse.group2()[1], anti_reverse.group1()[2]]) * swizzle!(self.group0(), 1, 2, 0, 2))
-                + (Simd32x4::from([anti_reverse.group3()[2], anti_reverse.group3()[0], anti_reverse.group3()[1], anti_reverse.group0()[2]]) * swizzle!(self.group1(), 1, 2, 0, 2))
-                - (Simd32x4::from([self.group1()[2], self.group1()[0], self.group1()[1], self.group0()[0]]) * swizzle!(anti_reverse.group3(), 1, 2, 0, 0))
-                + (Simd32x4::from([self.group1()[3], self.group3()[2], self.group3()[0], self.group0()[0]]) * swizzle!(anti_reverse.group1(), 0, 0, 1, 0))
-                + (Simd32x4::from([self.group2()[2], self.group2()[0], self.group2()[1], self.group1()[0]]) * swizzle!(anti_reverse.group0(), 1, 2, 0, 0))
-                + (Simd32x4::from([self.group3()[1], self.group1()[3], self.group1()[3], self.group0()[1]]) * swizzle!(anti_reverse.group1(), 2, 1, 2, 1))
-                - (Simd32x4::from([self.group3()[3], self.group2()[2], self.group2()[0], self.group2()[3]]) * swizzle!(anti_reverse.group0(), 0, 0, 1, 3))
-                + (swizzle!(anti_reverse.group0(), 3, 3, 3, 0) * swizzle!(self.group3(), 0, 1, 2, 0))
-                - (swizzle!(anti_reverse.group2(), 1, 2, 0, 3) * swizzle!(self.group0(), 2, 0, 1, 3))),
+            Simd32x4::from([
+                (anti_reverse[e42] * self[e35])
+                    + (anti_reverse[scalar] * self[e4235])
+                    + (anti_reverse[e23] * self[e45])
+                    + (anti_reverse[e12] * self[e4315])
+                    + (anti_reverse[e15] * self[e1234])
+                    + (anti_reverse[e35] * self[e42])
+                    + (anti_reverse[e4235] * self[scalar])
+                    + (anti_reverse[e4125] * self[e31])
+                    + (anti_reverse[e3215] * self[e41])
+                    - (anti_reverse[e41] * self[e3215])
+                    - (anti_reverse[e43] * self[e25])
+                    - (anti_reverse[e31] * self[e4125])
+                    - (anti_reverse[e25] * self[e43])
+                    - (anti_reverse[e4315] * self[e12]),
+                (anti_reverse[e43] * self[e15])
+                    + (anti_reverse[scalar] * self[e4315])
+                    + (anti_reverse[e23] * self[e4125])
+                    + (anti_reverse[e31] * self[e45])
+                    + (anti_reverse[e15] * self[e43])
+                    + (anti_reverse[e25] * self[e1234])
+                    + (anti_reverse[e4235] * self[e12])
+                    + (anti_reverse[e4315] * self[scalar])
+                    + (anti_reverse[e3215] * self[e42])
+                    - (anti_reverse[e41] * self[e35])
+                    - (anti_reverse[e42] * self[e3215])
+                    - (anti_reverse[e12] * self[e4235])
+                    - (anti_reverse[e35] * self[e41])
+                    - (anti_reverse[e4125] * self[e23]),
+                (anti_reverse[e41] * self[e25])
+                    + (anti_reverse[scalar] * self[e4125])
+                    + (anti_reverse[e31] * self[e4235])
+                    + (anti_reverse[e12] * self[e45])
+                    + (anti_reverse[e25] * self[e41])
+                    + (anti_reverse[e35] * self[e1234])
+                    + (anti_reverse[e4315] * self[e23])
+                    + (anti_reverse[e4125] * self[scalar])
+                    + (anti_reverse[e3215] * self[e43])
+                    - (anti_reverse[e42] * self[e15])
+                    - (anti_reverse[e43] * self[e3215])
+                    - (anti_reverse[e23] * self[e4315])
+                    - (anti_reverse[e15] * self[e42])
+                    - (anti_reverse[e4235] * self[e31]),
+                (anti_reverse[e41] * self[e23])
+                    + (anti_reverse[e41] * self[e4235])
+                    + (anti_reverse[e42] * self[e31])
+                    + (anti_reverse[e42] * self[e4315])
+                    + (anti_reverse[e43] * self[e12])
+                    + (anti_reverse[e43] * self[e4125])
+                    + (anti_reverse[e23] * self[e41])
+                    + (anti_reverse[e31] * self[e42])
+                    + (anti_reverse[e12] * self[e43])
+                    - (anti_reverse[scalar] * self[e1234])
+                    - (anti_reverse[e1234] * self[e45])
+                    - (anti_reverse[e4235] * self[e41])
+                    - (anti_reverse[e4315] * self[e42])
+                    - (anti_reverse[e4125] * self[e43]),
+            ]) + (Simd32x4::from(anti_reverse[e45]) * Simd32x4::from([self[e23], self[e31], self[e12], self[e1234]]))
+                - (Simd32x4::from(anti_reverse[e1234]) * Simd32x4::from([self[e15], self[e25], self[e35], self[scalar]])),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[3], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2)
-                + f32::powi(self.group3()[0], 2)
-                + f32::powi(self.group3()[1], 2)
-                + f32::powi(self.group3()[2], 2)
-                + 2.0 * (self.group0()[0] * self.group2()[0])
-                + 2.0 * (self.group0()[1] * self.group2()[1])
-                + 2.0 * (self.group0()[2] * self.group2()[2])
-                - 2.0 * (self.group2()[3] * self.group3()[3])),
+            2.0 * (self[e41] * self[e15])
+                + 2.0 * (self[e42] * self[e25])
+                + 2.0 * (self[e43] * self[e35])
+                + f32::powi(self[e23], 2)
+                + f32::powi(self[e31], 2)
+                + f32::powi(self[e12], 2)
+                + f32::powi(self[e4235], 2)
+                + f32::powi(self[e4315], 2)
+                + f32::powi(self[e4125], 2)
+                - f32::powi(self[scalar], 2)
+                - f32::powi(self[e45], 2)
+                - 2.0 * (self[e1234] * self[e3215]),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for VersorOddAtInfinity {
+    type Output = VersorEvenAtInfinity;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for VersorOddAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       23       27        0
-    //    simd4        7        8        0
+    //      f32       51       51        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       30       35        0
-    //  no simd       51       59        0
+    // yes simd       51       52        0
+    //  no simd       51       55        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            Simd32x4::from([self.group0()[0], (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), (self.group0()[3] * -1.0)]),
+            Simd32x4::from([self[scalar], self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0]),
             // e23, e31, e12, e45
-            (self.group1() * Simd32x4::from(-1.0)),
+            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
         let geometric_anti_product = VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
-            (Simd32x4::from([
-                ((anti_reverse.group0()[0] * self.group0()[0]) * -1.0),
-                ((anti_reverse.group2()[1] * self.group1()[2]) * -1.0),
-                ((anti_reverse.group2()[2] * self.group1()[0]) * -1.0),
-                ((anti_reverse.group2()[0] * self.group1()[1]) * -1.0),
-            ]) + (Simd32x4::from([anti_reverse.group2()[0], anti_reverse.group0()[0], anti_reverse.group0()[0], anti_reverse.group0()[0]]) * swizzle!(self.group2(), 0, 0, 1, 2))
-                + (Simd32x4::from([self.group1()[0], self.group1()[3], self.group2()[2], self.group2()[0]]) * swizzle!(anti_reverse.group1(), 0, 0, 0, 1))
-                + (Simd32x4::from([self.group1()[1], self.group2()[1], self.group1()[3], self.group1()[3]]) * swizzle!(anti_reverse.group1(), 1, 2, 1, 2))
-                - (Simd32x4::from([self.group1()[3], self.group2()[2], self.group2()[0], self.group2()[1]]) * swizzle!(anti_reverse.group1(), 3, 1, 2, 0))
-                + (Simd32x4::from([self.group2()[1], self.group0()[0], self.group1()[2], self.group1()[0]]) * swizzle!(anti_reverse.group2(), 1, 0, 0, 1))
-                + (Simd32x4::from([self.group2()[2], self.group1()[1], self.group0()[0], self.group0()[0]]) * swizzle!(anti_reverse.group2(), 2, 2, 1, 2))
-                + (swizzle!(anti_reverse.group1(), 2, 3, 3, 3) * swizzle!(self.group1(), 2, 0, 1, 2))),
+            Simd32x4::from([
+                (anti_reverse[e23] * self[e23])
+                    + (anti_reverse[e31] * self[e31])
+                    + (anti_reverse[e12] * self[e12])
+                    + (anti_reverse[e4235] * self[e4235])
+                    + (anti_reverse[e4315] * self[e4315])
+                    + (anti_reverse[e4125] * self[e4125])
+                    - (anti_reverse[scalar] * self[scalar])
+                    - (anti_reverse[e45] * self[e45]),
+                (anti_reverse[scalar] * self[e4235])
+                    + (anti_reverse[e23] * self[e45])
+                    + (anti_reverse[e12] * self[e4315])
+                    + (anti_reverse[e45] * self[e23])
+                    + (anti_reverse[e4235] * self[scalar])
+                    + (anti_reverse[e4125] * self[e31])
+                    - (anti_reverse[e31] * self[e4125])
+                    - (anti_reverse[e4315] * self[e12]),
+                (anti_reverse[scalar] * self[e4315])
+                    + (anti_reverse[e23] * self[e4125])
+                    + (anti_reverse[e31] * self[e45])
+                    + (anti_reverse[e45] * self[e31])
+                    + (anti_reverse[e4235] * self[e12])
+                    + (anti_reverse[e4315] * self[scalar])
+                    - (anti_reverse[e12] * self[e4235])
+                    - (anti_reverse[e4125] * self[e23]),
+                (anti_reverse[scalar] * self[e4125])
+                    + (anti_reverse[e31] * self[e4235])
+                    + (anti_reverse[e12] * self[e45])
+                    + (anti_reverse[e45] * self[e12])
+                    + (anti_reverse[e4315] * self[e23])
+                    + (anti_reverse[e4125] * self[scalar])
+                    - (anti_reverse[e23] * self[e4315])
+                    - (anti_reverse[e4235] * self[e31]),
+            ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -4242,62 +5052,69 @@ impl AntiConstraintViolation for VersorOddAtInfinity {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[0] * self.group2()[3]) + (anti_reverse.group0()[1] * self.group1()[0]) - (anti_reverse.group0()[1] * self.group2()[0])
-                    + (anti_reverse.group0()[2] * self.group1()[1])
-                    - (anti_reverse.group0()[2] * self.group2()[1])
-                    + (anti_reverse.group0()[3] * self.group1()[2])
-                    - (anti_reverse.group0()[3] * self.group2()[2])
-                    + (anti_reverse.group1()[0] * self.group0()[1])
-                    + (anti_reverse.group1()[1] * self.group0()[2])
-                    + (anti_reverse.group1()[2] * self.group0()[3])
-                    - (anti_reverse.group1()[3] * self.group2()[3])
-                    + (anti_reverse.group2()[0] * self.group0()[1])
-                    + (anti_reverse.group2()[1] * self.group0()[2])
-                    + (anti_reverse.group2()[2] * self.group0()[3])
-                    - (anti_reverse.group2()[3] * self.group0()[0])
-                    + (anti_reverse.group2()[3] * self.group1()[3])),
+                (anti_reverse[e15] * self[e23])
+                    + (anti_reverse[e25] * self[e31])
+                    + (anti_reverse[e35] * self[e12])
+                    + (anti_reverse[e23] * self[e15])
+                    + (anti_reverse[e31] * self[e25])
+                    + (anti_reverse[e12] * self[e35])
+                    + (anti_reverse[e4235] * self[e15])
+                    + (anti_reverse[e4315] * self[e25])
+                    + (anti_reverse[e4125] * self[e35])
+                    + (anti_reverse[e3215] * self[e45])
+                    - (anti_reverse[scalar] * self[e3215])
+                    - (anti_reverse[e15] * self[e4235])
+                    - (anti_reverse[e25] * self[e4315])
+                    - (anti_reverse[e35] * self[e4125])
+                    - (anti_reverse[e45] * self[e3215])
+                    - (anti_reverse[e3215] * self[scalar]),
             ]),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[0], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group1()[3], 2)
-                + f32::powi(self.group2()[0], 2)
-                + f32::powi(self.group2()[1], 2)
-                + f32::powi(self.group2()[2], 2)),
+            f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2) + f32::powi(self[e4235], 2) + f32::powi(self[e4315], 2) + f32::powi(self[e4125], 2)
+                - f32::powi(self[scalar], 2)
+                - f32::powi(self[e45], 2),
         );
         return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
-                (geometric_anti_product.group0()[0] - anti_scalar_product[e12345]),
-                geometric_anti_product.group0()[1],
-                geometric_anti_product.group0()[2],
-                geometric_anti_product.group0()[3],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+                geometric_anti_product[e1],
+                geometric_anti_product[e2],
+                geometric_anti_product[e3],
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
         );
+    }
+}
+impl std::ops::Div<anti_constraint_violation> for VersorOddOrthogonalOrigin {
+    type Output = VersorEven;
+    fn div(self, _rhs: anti_constraint_violation) -> Self::Output {
+        self.anti_constraint_violation()
     }
 }
 impl AntiConstraintViolation for VersorOddOrthogonalOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       34       49        0
-    //    simd4        5        5        0
+    //      f32       50       65        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       39       54        0
+    // yes simd       51       66        0
     //  no simd       54       69        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([(self.group0()[0] * -1.0), (self.group0()[1] * -1.0), (self.group0()[2] * -1.0), self.group0()[3]]),
+            Simd32x4::from([self[e41] * -1.0, self[e42] * -1.0, self[e43] * -1.0, self[scalar]]),
             // e23, e31, e12, e3215
-            Simd32x4::from([(self.group1()[0] * -1.0), (self.group1()[1] * -1.0), (self.group1()[2] * -1.0), self.group1()[3]]),
+            Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[e3215]]),
             // e15, e25, e35, e1234
-            Simd32x4::from([(self.group2()[0] * -1.0), (self.group2()[1] * -1.0), (self.group2()[2] * -1.0), self.group2()[3]]),
+            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4305,16 +5122,18 @@ impl AntiConstraintViolation for VersorOddOrthogonalOrigin {
                 0.0,
                 0.0,
                 0.0,
-                ((anti_reverse.group0()[0] * self.group2()[0]) + (anti_reverse.group0()[1] * self.group2()[1]) + (anti_reverse.group0()[2] * self.group2()[2])
-                    - (anti_reverse.group0()[3] * self.group0()[3])
-                    + (anti_reverse.group1()[0] * self.group1()[0])
-                    + (anti_reverse.group1()[1] * self.group1()[1])
-                    + (anti_reverse.group1()[2] * self.group1()[2])
-                    - (anti_reverse.group1()[3] * self.group2()[3])
-                    + (anti_reverse.group2()[0] * self.group0()[0])
-                    + (anti_reverse.group2()[1] * self.group0()[1])
-                    + (anti_reverse.group2()[2] * self.group0()[2])
-                    - (anti_reverse.group2()[3] * self.group1()[3])),
+                (anti_reverse[e41] * self[e15])
+                    + (anti_reverse[e42] * self[e25])
+                    + (anti_reverse[e43] * self[e35])
+                    + (anti_reverse[e23] * self[e23])
+                    + (anti_reverse[e31] * self[e31])
+                    + (anti_reverse[e12] * self[e12])
+                    + (anti_reverse[e15] * self[e41])
+                    + (anti_reverse[e25] * self[e42])
+                    + (anti_reverse[e35] * self[e43])
+                    - (anti_reverse[scalar] * self[scalar])
+                    - (anti_reverse[e3215] * self[e1234])
+                    - (anti_reverse[e1234] * self[e3215]),
             ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -4323,45 +5142,56 @@ impl AntiConstraintViolation for VersorOddOrthogonalOrigin {
                 0.0,
                 0.0,
                 0.0,
-                (-(anti_reverse.group0()[3] * self.group1()[3])
-                    + (anti_reverse.group1()[0] * self.group2()[0])
-                    + (anti_reverse.group1()[1] * self.group2()[1])
-                    + (anti_reverse.group1()[2] * self.group2()[2])
-                    - (anti_reverse.group1()[3] * self.group0()[3])
-                    + (anti_reverse.group2()[0] * self.group1()[0])
-                    + (anti_reverse.group2()[1] * self.group1()[1])
-                    + (anti_reverse.group2()[2] * self.group1()[2])),
+                (anti_reverse[e23] * self[e15])
+                    + (anti_reverse[e31] * self[e25])
+                    + (anti_reverse[e12] * self[e35])
+                    + (anti_reverse[e15] * self[e23])
+                    + (anti_reverse[e25] * self[e31])
+                    + (anti_reverse[e35] * self[e12])
+                    - (anti_reverse[scalar] * self[e3215])
+                    - (anti_reverse[e3215] * self[scalar]),
             ]),
             // e1, e2, e3, e4
-            (Simd32x4::from([
-                (-(anti_reverse.group0()[2] * self.group2()[1]) + (anti_reverse.group2()[0] * self.group2()[3]) - (anti_reverse.group2()[3] * self.group2()[0])),
-                (-(anti_reverse.group0()[1] * self.group1()[3]) + (anti_reverse.group2()[1] * self.group2()[3]) - (anti_reverse.group2()[3] * self.group2()[1])),
-                (-(anti_reverse.group0()[2] * self.group1()[3]) + (anti_reverse.group2()[2] * self.group2()[3]) - (anti_reverse.group2()[3] * self.group2()[2])),
-                ((anti_reverse.group0()[1] * self.group1()[1]) + (anti_reverse.group0()[2] * self.group1()[2]) + (anti_reverse.group1()[2] * self.group0()[2])),
-            ]) + (Simd32x4::from([anti_reverse.group2()[2], anti_reverse.group2()[0], anti_reverse.group2()[1], anti_reverse.group1()[1]]) * swizzle!(self.group0(), 1, 2, 0, 1))
-                - (Simd32x4::from([self.group1()[3], self.group2()[2], self.group2()[0], self.group2()[3]]) * swizzle!(anti_reverse.group0(), 0, 0, 1, 3))
-                + (Simd32x4::from([self.group2()[2], self.group2()[0], self.group2()[1], self.group1()[0]]) * swizzle!(anti_reverse.group0(), 1, 2, 0, 0))
-                + (swizzle!(anti_reverse.group1(), 3, 3, 3, 0) * swizzle!(self.group0(), 0, 1, 2, 0))
-                - (swizzle!(anti_reverse.group2(), 1, 2, 0, 3) * swizzle!(self.group0(), 2, 0, 1, 3))),
+            Simd32x4::from([
+                (anti_reverse[e42] * self[e35]) + (anti_reverse[e3215] * self[e41]) + (anti_reverse[e15] * self[e1234]) + (anti_reverse[e35] * self[e42])
+                    - (anti_reverse[e41] * self[e3215])
+                    - (anti_reverse[e43] * self[e25])
+                    - (anti_reverse[e25] * self[e43]),
+                (anti_reverse[e43] * self[e15]) + (anti_reverse[e3215] * self[e42]) + (anti_reverse[e15] * self[e43]) + (anti_reverse[e25] * self[e1234])
+                    - (anti_reverse[e41] * self[e35])
+                    - (anti_reverse[e42] * self[e3215])
+                    - (anti_reverse[e35] * self[e41]),
+                (anti_reverse[e41] * self[e25]) + (anti_reverse[e3215] * self[e43]) + (anti_reverse[e25] * self[e41]) + (anti_reverse[e35] * self[e1234])
+                    - (anti_reverse[e42] * self[e15])
+                    - (anti_reverse[e43] * self[e3215])
+                    - (anti_reverse[e15] * self[e42]),
+                (anti_reverse[e41] * self[e23])
+                    + (anti_reverse[e42] * self[e31])
+                    + (anti_reverse[e43] * self[e12])
+                    + (anti_reverse[e23] * self[e41])
+                    + (anti_reverse[e31] * self[e42])
+                    + (anti_reverse[e12] * self[e43])
+                    - (anti_reverse[scalar] * self[e1234]),
+            ]) - (Simd32x4::from(anti_reverse[e1234]) * Simd32x4::from([self[e15], self[e25], self[e35], self[scalar]])),
         );
-        let anti_scalar_product = AntiScalar::from_groups(
+        let anti_dot_product = AntiScalar::from_groups(
             // e12345
-            (-f32::powi(self.group0()[3], 2)
-                + f32::powi(self.group1()[0], 2)
-                + f32::powi(self.group1()[1], 2)
-                + f32::powi(self.group1()[2], 2)
-                + 2.0 * (self.group0()[0] * self.group2()[0])
-                + 2.0 * (self.group0()[1] * self.group2()[1])
-                + 2.0 * (self.group0()[2] * self.group2()[2])
-                - 2.0 * (self.group1()[3] * self.group2()[3])),
+            2.0 * (self[e41] * self[e15])
+                + 2.0 * (self[e42] * self[e25])
+                + 2.0 * (self[e43] * self[e35])
+                + f32::powi(self[e23], 2)
+                + f32::powi(self[e31], 2)
+                + f32::powi(self[e12], 2)
+                - f32::powi(self[scalar], 2)
+                - 2.0 * (self[e3215] * self[e1234]),
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, (geometric_anti_product.group0()[3] - anti_scalar_product[e12345])]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product.group2()[3]]),
+            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
