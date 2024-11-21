@@ -117,12 +117,12 @@ pub static AntiSandwich: Elaborated<AntiSandwichImpl> = AntiSandwichImpl
     .new_trait_named("AntiSandwich")
     .blurb("TODO");
 
-pub static ScalarProduct: Elaborated<ScalarProductImpl> = ScalarProductImpl
-    .new_trait_named("ScalarProduct")
+pub static DotProduct: Elaborated<DotProductImpl> = DotProductImpl
+    .new_trait_named("DotProduct")
     .blurb("TODO");
 
-pub static AntiScalarProduct: Elaborated<AntiScalarProductImpl> = AntiScalarProductImpl
-    .new_trait_named("AntiScalarProduct")
+pub static AntiDotProduct: Elaborated<AntiDotProductImpl> = AntiDotProductImpl
+    .new_trait_named("AntiDotProduct")
     .blurb("TODO");
 
 pub static ScalarNormSquared: Elaborated<ScalarNormSquaredImpl> = ScalarNormSquaredImpl
@@ -297,7 +297,7 @@ mod impls {
     use crate::ast2::expressions::{Expression, FloatExpr, IntExpr};
     use crate::ast2::traits::{HasNotReturned, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder};
     use crate::ast2::Variable;
-    use crate::build_scripts2::common_traits::{AntiInverse, AntiReverse, AntiScalarProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightDual, ScalarProduct, SquareRoot, Subtraction, Wedge};
+    use crate::build_scripts2::common_traits::{AntiInverse, AntiReverse, AntiDotProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightDual, DotProduct, SquareRoot, Subtraction, Wedge};
     use crate::elements::scalar;
 
     #[macro_export]
@@ -706,7 +706,7 @@ mod impls {
         builder.return_expr(result)
     });
 
-    trait_impl_2_types_2_args!(ScalarProductImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_2_args!(DotProductImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
         for (a, a_el) in slf.elements_by_groups() {
             for (b, b_el) in other.elements_by_groups() {
@@ -723,7 +723,7 @@ mod impls {
         builder.return_expr(mv)
     });
 
-    trait_impl_2_types_2_args!(AntiScalarProductImpl(builder, slf, other) -> MultiVector {
+    trait_impl_2_types_2_args!(AntiDotProductImpl(builder, slf, other) -> MultiVector {
         let mut dyn_mv = DynamicMultiVector::zero();
         for (a, a_el) in slf.elements_by_groups() {
             for (b, b_el) in other.elements_by_groups() {
@@ -741,23 +741,23 @@ mod impls {
     });
 
     trait_impl_1_type_1_arg!(ScalarNormSquaredImpl(builder, slf) -> MultiVector {
-        let result = ScalarProduct.invoke(&mut builder, slf.clone(), slf).await?;
+        let result = DotProduct.invoke(&mut builder, slf.clone(), slf).await?;
         builder.return_expr(result)
     });
 
     trait_impl_1_type_1_arg!(AntiScalarNormSquaredImpl(builder, slf) -> MultiVector {
-        let result = AntiScalarProduct.invoke(&mut builder, slf.clone(), slf).await?;
+        let result = AntiDotProduct.invoke(&mut builder, slf.clone(), slf).await?;
         builder.return_expr(result)
     });
 
     trait_impl_1_type_1_arg!(ScalarNormImpl(builder, slf) -> MultiVector {
-        let dot = ScalarProduct.invoke(&mut builder, slf.clone(), slf).await?;
+        let dot = DotProduct.invoke(&mut builder, slf.clone(), slf).await?;
         let result = SquareRoot.invoke(&mut builder, dot).await?;
         builder.return_expr(result)
     });
 
     trait_impl_1_type_1_arg!(AntiScalarNormImpl(builder, slf) -> MultiVector {
-        let dot = AntiScalarProduct.invoke(&mut builder, slf.clone(), slf).await?;
+        let dot = AntiDotProduct.invoke(&mut builder, slf.clone(), slf).await?;
         let result = AntiSquareRoot.invoke(&mut builder, dot).await?;
         builder.return_expr(result)
     });
@@ -780,14 +780,14 @@ mod impls {
     trait_impl_1_type_1_arg!(ConstraintViolationImpl(builder, slf) -> MultiVector {
         let r = Reverse.inline(&builder, slf.clone()).await?;
         let p = GeometricProduct.inline(&builder, slf.clone(), r).await?;
-        let d = ScalarProduct.inline(&builder, slf.clone(), slf.clone()).await?;
+        let d = DotProduct.inline(&builder, slf.clone(), slf.clone()).await?;
         let result = Subtraction.inline(&builder, p, d).await?;
         builder.return_expr(result)
     });
     trait_impl_1_type_1_arg!(AntiConstraintViolationImpl(builder, slf) -> MultiVector {
         let r = AntiReverse.inline(&builder, slf.clone()).await?;
         let p = GeometricAntiProduct.inline(&builder, slf.clone(), r).await?;
-        let d = AntiScalarProduct.inline(&builder, slf.clone(), slf.clone()).await?;
+        let d = AntiDotProduct.inline(&builder, slf.clone(), slf.clone()).await?;
         let result = Subtraction.inline(&builder, p, d).await?;
         builder.return_expr(result)
     });
@@ -795,7 +795,7 @@ mod impls {
     trait_impl_1_type_1_arg!(ConstraintValidImpl(builder, slf) -> MultiVector {
         let r = Reverse.inline(&builder, slf.clone()).await?;
         let p = GeometricProduct.inline(&builder, slf.clone(), r).await;
-        let d = ScalarProduct.inline(&builder, slf.clone(), slf.clone()).await;
+        let d = DotProduct.inline(&builder, slf.clone(), slf.clone()).await;
         let (p, d) = match (p, d) {
             (None, None) => return builder.return_expr(slf),
             (p, d) => (p?, d?),
@@ -808,7 +808,7 @@ mod impls {
     trait_impl_1_type_1_arg!(AntiConstraintValidImpl(builder, slf) -> MultiVector {
         let r = AntiReverse.inline(&builder, slf.clone()).await?;
         let p = GeometricAntiProduct.inline(&builder, slf.clone(), r).await;
-        let d = AntiScalarProduct.inline(&builder, slf.clone(), slf.clone()).await;
+        let d = AntiDotProduct.inline(&builder, slf.clone(), slf.clone()).await;
         let (p, d) = match (p, d) {
             (None, None) => return builder.return_expr(slf),
             (p, d) => (p?, d?),
@@ -840,7 +840,7 @@ mod impls {
 
     trait_impl_1_type_1_arg!(InverseImpl(builder, slf) -> MultiVector {
         let scalar_mv = MultiVector::from(builder.mvs.scalar());
-        let dot = ScalarProduct.inline(&builder, slf.clone(), slf).await?;
+        let dot = DotProduct.inline(&builder, slf.clone(), slf).await?;
         let raw_dot = FloatExpr::AccessMultiVecFlat(dot.into(), 0);
         let result = scalar_mv.construct_direct([(scalar, FloatExpr::Product(vec![(raw_dot, -1.0)], 1.0))]);
         builder.return_expr(result)
@@ -849,7 +849,7 @@ mod impls {
     trait_impl_1_type_1_arg!(AntiInverseImpl(builder, slf) -> MultiVector {
         let anti_scalar_mv = MultiVector::from(builder.mvs.anti_scalar());
         let anti_scalar = builder.ga.anti_scalar();
-        let dot = AntiScalarProduct.inline(&builder, slf.clone(), slf).await?;
+        let dot = AntiDotProduct.inline(&builder, slf.clone(), slf).await?;
         let raw_dot = FloatExpr::AccessMultiVecFlat(dot.into(), 0);
         let result = anti_scalar_mv.construct_direct([(anti_scalar, FloatExpr::Product(vec![(raw_dot, -1.0)], 1.0))]);
         builder.return_expr(result)

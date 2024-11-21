@@ -6,7 +6,7 @@ use crate::ast2::datatype::{Float, MultiVector};
 use crate::ast2::expressions::FloatExpr;
 use crate::ast2::traits::{TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImplBuilder};
 use crate::ast2::Variable;
-use crate::build_scripts2::common_traits::{AntiReverse, AntiScalarProduct, AntiWedge, GeometricProduct, Reverse, RightDual, Sandwich, ScalarProduct, Wedge};
+use crate::build_scripts2::common_traits::{AntiReverse, AntiDotProduct, AntiWedge, GeometricProduct, Reverse, RightDual, Sandwich, DotProduct, Wedge};
 use crate::{ga, multi_vecs};
 
 fn float_var(n: &str) -> Variable<Float> {
@@ -122,10 +122,10 @@ fn anti_product_argument() {
         let a_anti_wedge_b = AntiWedge.deep_inline(&builder, a.clone(), b.clone()).await;
         println!("A ∨ B = {a_anti_wedge_b:?}");
 
-        let a_dot_b = ScalarProduct.deep_inline(&builder, a.clone(), b.clone()).await?;
+        let a_dot_b = DotProduct.deep_inline(&builder, a.clone(), b.clone()).await?;
         println!("A • B = {a_dot_b}");
 
-        let a_anti_dot_b = AntiScalarProduct.deep_inline(&builder, a.clone(), b.clone()).await?;
+        let a_anti_dot_b = AntiDotProduct.deep_inline(&builder, a.clone(), b.clone()).await?;
         println!("A ∘ B = {a_anti_dot_b}");
 
         let r_wd_a_wd_r = Sandwich.deep_inline(&builder, rotor.clone(), a.clone()).await?;

@@ -5,7 +5,6 @@ members = [
     "codegen",
 
     "old_libraries/rga3d",
-    "old_libraries/cga3d",
     "old_libraries/cga3d_min",
 
     "libraries/rga3d",

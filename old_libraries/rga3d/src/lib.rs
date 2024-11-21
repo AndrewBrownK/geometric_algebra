@@ -7,23 +7,14 @@
 use projective_ga::{simd::*, *};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
-pub mod aspect_duals;
-pub mod aspects;
 pub mod characteristics;
-pub mod involutions;
 pub mod metrics;
-pub mod norms;
-pub mod shaders;
 pub mod unitize;
 pub mod products {
     pub mod contractions;
-    pub mod dot;
     pub mod expansions;
-    pub mod exterior;
-    pub mod geometric;
     pub mod isometries;
     pub mod projections;
-    pub mod quotients;
     pub mod rejections;
     pub mod supports;
 }

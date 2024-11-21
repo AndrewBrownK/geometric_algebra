@@ -396,17 +396,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cga3d_old"
-version = "0.3.0"
-dependencies = [
- "anyhow",
- "bytemuck",
- "naga",
- "naga_oil",
- "projective_ga",
-]
-
-[[package]]
 name = "codegen"
 version = "0.3.0"
 dependencies = [

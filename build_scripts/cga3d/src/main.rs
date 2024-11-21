@@ -70,13 +70,23 @@ fn main() {
         Grade AntiGrade Into TryInto
         RightDual RightAntiDual Reverse AntiReverse
         |
-        Wedge AntiWedge GeometricProduct GeometricAntiProduct Sandwich AntiSandwich
+        Wedge AntiWedge
+        GeometricProduct GeometricAntiProduct
+        Sandwich AntiSandwich
+        DotProduct AntiDotProduct
+        Inverse AntiInverse
+        GeometricQuotient GeometricAntiQuotient
+
         // TODO do CGA expansion/contraction, not naive flat ones
         // BulkExpansion BulkContraction WeightExpansion WeightContraction
         Fix AntiFix
         ConstraintViolation AntiConstraintViolation
         ConstraintValid AntiConstraintValid
+        AutoMorphism AntiAutoMorphism
+        Conjugation ConformalConjugate
 
+        // TODO rename complements according to this being an odd dimensional algebra
+        RightComplement DoubleComplement
 
         // TODO the way dependencies are handled, the following traits SHOULDN'T need to be
         //  broken into so many serial steps. It should all be able to work in parallel. The
@@ -190,14 +200,13 @@ fn base_documentation(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMult
 pub mod custom_traits {
     use async_trait::async_trait;
 
+    use codegen::algebra2::basis::BasisElement;
     use codegen::algebra2::multivector::DynamicMultiVector;
     use codegen::ast2::datatype::MultiVector;
     use codegen::ast2::impls::Elaborated;
-    use codegen::ast2::traits::{NameTrait, TraitDef_1_Type_1_Arg};
-    use codegen::{trait_impl_1_type_1_arg, trait_impl_2_types_2_args};
-    use codegen::algebra2::basis::BasisElement;
-    use codegen::build_scripts2::common_traits::{AntiScalarProduct, RightAntiDual};
-    use codegen::build_scripts2::common_traits::conformal::{CenterNorm, CenterNormImpl, CenterNormSquared, CenterNormSquaredImpl, FlatBulk, FlatBulkImpl, FlatBulkNorm, FlatBulkNormImpl, FlatBulkNormSquared, FlatBulkNormSquaredImpl, FlatNorm, FlatNormImpl, FlatNormSquared, FlatNormSquaredImpl, FlatWeight, FlatWeightImpl, FlatWeightNorm, FlatWeightNormImpl, FlatWeightNormSquared, FlatWeightNormSquaredImpl, RadiusNorm, RadiusNormImpl, RoundBulk, RoundBulkImpl, RoundBulkNorm, RoundBulkNormImpl, RoundBulkNormSquared, RoundBulkNormSquaredImpl, RoundNorm, RoundNormImpl, RoundNormSquared, RoundNormSquaredImpl, RoundWeight, RoundWeightImpl, RoundWeightNorm, RoundWeightNormImpl, RoundWeightNormSquared, RoundWeightNormSquaredImpl, UnitizedCenterNorm, UnitizedCenterNormImpl, UnitizedCenterNormSquared, UnitizedCenterNormSquaredImpl, UnitizedFlatNorm, UnitizedFlatNormImpl, UnitizedFlatNormSquared, UnitizedFlatNormSquaredImpl, UnitizedRadiusNorm, UnitizedRadiusNormImpl, UnitizedRadiusNormSquared, UnitizedRadiusNormSquaredImpl, UnitizedRoundNorm, UnitizedRoundNormImpl, UnitizedRoundNormSquared, UnitizedRoundNormSquaredImpl};
+    use codegen::ast2::traits::NameTrait;
+    use codegen::build_scripts2::common_traits::conformal::{CenterNorm, CenterNormImpl, CenterNormSquared, CenterNormSquaredImpl, FlatBulk, FlatBulkImpl, FlatBulkNorm, FlatBulkNormImpl, FlatBulkNormSquared, FlatBulkNormSquaredImpl, FlatNorm, FlatNormImpl, FlatNormSquared, FlatNormSquaredImpl, FlatWeight, FlatWeightImpl, FlatWeightNorm, FlatWeightNormImpl, FlatWeightNormSquared, FlatWeightNormSquaredImpl, RoundBulk, RoundBulkImpl, RoundBulkNorm, RoundBulkNormImpl, RoundBulkNormSquared, RoundBulkNormSquaredImpl, RoundNorm, RoundNormImpl, RoundNormSquared, RoundNormSquaredImpl, RoundWeight, RoundWeightImpl, RoundWeightNorm, RoundWeightNormImpl, RoundWeightNormSquared, RoundWeightNormSquaredImpl, UnitizedCenterNorm, UnitizedCenterNormImpl, UnitizedCenterNormSquared, UnitizedCenterNormSquaredImpl, UnitizedFlatNorm, UnitizedFlatNormImpl, UnitizedFlatNormSquared, UnitizedFlatNormSquaredImpl, UnitizedRadiusNorm, UnitizedRadiusNormImpl, UnitizedRadiusNormSquared, UnitizedRadiusNormSquaredImpl, UnitizedRoundNorm, UnitizedRoundNormImpl, UnitizedRoundNormSquared, UnitizedRoundNormSquaredImpl};
+    use codegen::trait_impl_1_type_1_arg;
 
     const origin: BasisElement = codegen::elements::e4;
     const infinity: BasisElement = codegen::elements::e5;

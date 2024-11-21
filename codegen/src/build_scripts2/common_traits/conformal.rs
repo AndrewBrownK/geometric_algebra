@@ -8,7 +8,7 @@ use crate::ast2::expressions::FloatExpr;
 use crate::ast2::impls::Elaborated;
 use crate::ast2::traits::{HasNotReturned, NameTrait, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_11, TraitImplBuilder};
 use crate::ast2::Variable;
-use crate::build_scripts2::common_traits::{Addition, AntiScalarProduct, AntiSquareRoot, RightAntiDual, ScalarProduct, SquareRoot, SubType, Wedge};
+use crate::build_scripts2::common_traits::{Addition, AntiDotProduct, AntiSquareRoot, RightAntiDual, DotProduct, SquareRoot, SubType, Wedge};
 use crate::trait_impl_1_type_1_arg;
 
 #[allow(non_snake_case)]
@@ -214,7 +214,7 @@ impl TraitImpl_11 for FlatBulkNormSquaredImpl {
         let flat_bulk = FlatBulk(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let wedge = Wedge.invoke(&mut builder, flat_bulk, origin).await?;
         let fbt = builder.variable("flat_bulk_thing", wedge);
-        let dot = ScalarProduct.invoke(&mut builder, fbt.clone(), fbt).await?;
+        let dot = DotProduct.invoke(&mut builder, fbt.clone(), fbt).await?;
         builder.return_expr(dot)
     }
 }
@@ -305,7 +305,7 @@ impl TraitImpl_11 for FlatWeightNormSquaredImpl {
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         let fw = FlatWeight(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let fw = builder.variable("flat_weight", fw);
-        let anti_dot = AntiScalarProduct.invoke(&mut builder, fw.clone(), fw).await?;
+        let anti_dot = AntiDotProduct.invoke(&mut builder, fw.clone(), fw).await?;
         builder.return_expr(anti_dot)
     }
 }
@@ -321,7 +321,7 @@ pub static RadiusNormSquared: Elaborated<RadiusNormSquaredImpl> = RadiusNormSqua
     .new_trait_named("RadiusNormSquared")
     .blurb("TODO");
 trait_impl_1_type_1_arg!(RadiusNormSquaredImpl(builder, slf) -> MultiVector {
-    let anti_dot = AntiScalarProduct.invoke(&mut builder, slf.clone(), slf.clone()).await?;
+    let anti_dot = AntiDotProduct.invoke(&mut builder, slf.clone(), slf.clone()).await?;
     let result = RightAntiDual.invoke(&mut builder, anti_dot).await?;
     builder.return_expr(result)
 });
@@ -366,7 +366,7 @@ impl TraitImpl_11 for RoundBulkNormSquaredImpl {
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         let rb = RoundBulk(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let rb = builder.variable("round_bulk", rb);
-        let dot = ScalarProduct.invoke(&mut builder, rb.clone(), rb).await?;
+        let dot = DotProduct.invoke(&mut builder, rb.clone(), rb).await?;
         builder.return_expr(dot)
     }
 }
@@ -461,7 +461,7 @@ impl TraitImpl_11 for RoundWeightNormSquaredImpl {
         let rw = RoundWeight(self.origin, self.infinity).invoke(&mut builder, slf).await?;
         let wedge = Wedge.invoke(&mut builder, rw, infinity).await?;
         let v = builder.variable("round_weight_carrier", wedge);
-        let anti_dot = AntiScalarProduct.invoke(&mut builder, v.clone(), v).await?;
+        let anti_dot = AntiDotProduct.invoke(&mut builder, v.clone(), v).await?;
         builder.return_expr(anti_dot)
     }
 }
