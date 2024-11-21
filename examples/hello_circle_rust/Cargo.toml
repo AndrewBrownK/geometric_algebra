@@ -7,4 +7,4 @@ license = "MIT"
 publish = false
 
 [dependencies]
-cga3d_min = { path = "../../old_libraries/cga3d_min" }
+cga3d = { path = "../../libraries/cga3d" }

@@ -312,7 +312,7 @@ name = "camera_and_instancing"
 version = "0.1.0"
 dependencies = [
  "bytemuck",
- "cga3d_min",
+ "cga3d",
  "naga",
  "naga_oil",
  "parking_lot",
@@ -382,17 +382,6 @@ dependencies = [
  "naga_oil",
  "nearly",
  "serde",
-]
-
-[[package]]
-name = "cga3d_min"
-version = "0.3.0"
-dependencies = [
- "anyhow",
- "bytemuck",
- "naga",
- "naga_oil",
- "projective_ga",
 ]
 
 [[package]]
@@ -589,7 +578,7 @@ name = "debug_glsl"
 version = "0.1.0"
 dependencies = [
  "bytemuck",
- "cga3d_min",
+ "cga3d",
  "naga",
  "naga_oil",
  "pollster",
@@ -863,7 +852,7 @@ name = "hello_circle_glsl"
 version = "0.1.0"
 dependencies = [
  "bytemuck",
- "cga3d_min",
+ "cga3d",
  "naga",
  "naga_oil",
  "pollster",
@@ -875,7 +864,7 @@ dependencies = [
 name = "hello_circle_rust"
 version = "0.1.0"
 dependencies = [
- "cga3d_min",
+ "cga3d",
 ]
 
 [[package]]
@@ -1574,10 +1563,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "43d84d1d7a6ac92673717f9f6d1518374ef257669c24ebc5ac25d5033828be58"
 
 [[package]]
-name = "projective_ga"
-version = "0.3.0"
-
-[[package]]
 name = "quick-xml"
 version = "0.31.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1718,17 +1703,6 @@ dependencies = [
  "naga_oil",
  "nearly",
  "serde",
-]
-
-[[package]]
-name = "rga3d_old"
-version = "0.3.0"
-dependencies = [
- "anyhow",
- "bytemuck",
- "naga",
- "naga_oil",
- "projective_ga",
 ]
 
 [[package]]
