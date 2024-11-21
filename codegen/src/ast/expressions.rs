@@ -131,16 +131,30 @@ impl TraitResultType for MultiVector {
         }
     }
     fn expr_12i(trait_name: TraitKey, owner: MultiVectorExpr, other: IntExpr, mv_out: Option<MultiVector>) -> Self::Expr {
-        todo!()
+        let mv_class = mv_out.expect("Confused Trait output: Expected MultiVector, but None provided.");
+        MultiVectorExpr {
+            mv_class,
+            expr: Box::new(MultiVectorVia::TraitInvoke12iToClass(trait_name, owner, other)),
+        }
     }
-    fn inlined_expr_12i(_var: Variable<Self>) -> Self::Expr {
-        todo!()
+    fn inlined_expr_12i(var: Variable<Self>) -> Self::Expr {
+        MultiVectorExpr {
+            mv_class: var.expr_type,
+            expr: Box::new(MultiVectorVia::Variable(RawVariableInvocation { decl: var.decl.clone() })),
+        }
     }
     fn expr_12f(trait_name: TraitKey, owner: MultiVectorExpr, other: FloatExpr, mv_out: Option<MultiVector>) -> Self::Expr {
-        todo!()
+        let mv_class = mv_out.expect("Confused Trait output: Expected MultiVector, but None provided.");
+        MultiVectorExpr {
+            mv_class,
+            expr: Box::new(MultiVectorVia::TraitInvoke12fToClass(trait_name, owner, other)),
+        }
     }
-    fn inlined_expr_12f(_var: Variable<Self>) -> Self::Expr {
-        todo!()
+    fn inlined_expr_12f(var: Variable<Self>) -> Self::Expr {
+        MultiVectorExpr {
+            mv_class: var.expr_type,
+            expr: Box::new(MultiVectorVia::Variable(RawVariableInvocation { decl: var.decl.clone() })),
+        }
     }
     fn expr_21(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVector, mv_out: Option<MultiVector>) -> MultiVectorExpr {
         let mv_class = mv_out.expect("Confused Trait output: Expected MultiVector, but None provided.");
@@ -1318,8 +1332,12 @@ impl Display for Vec2Expr {
             Vec2Expr::Gather2(f0, f1) => {
                 write!(f, "[{f0}, {f1}]")?;
             }
-            Vec2Expr::SwizzleVec2(_, _, _) => {
-                todo!()
+            Vec2Expr::SwizzleVec2(box v, x, y) => {
+                write!(f, "[")?;
+                v.display_indexed(f, *x as usize)?;
+                write!(f, ", ")?;
+                v.display_indexed(f, *y as usize)?;
+                write!(f, "]")?;
             }
             Vec2Expr::AccessMultiVecGroup(mv, i) => {
                 let BasisElementGroup::G2(be0, be1) = mv.mv_class.groups()[*i as usize] else {
@@ -1443,11 +1461,21 @@ impl Display for Vec3Expr {
             Vec3Expr::Gather3(f0, f1, f2) => {
                 write!(f, "[{f0}, {f1}, {f2}]")?;
             }
-            Vec3Expr::Extend2to3(v2, f1) => {
-                todo!()
+            Vec3Expr::Extend2to3(v, z) => {
+                write!(f, "[")?;
+                v.display_indexed(f, 0)?;
+                write!(f, ", ")?;
+                v.display_indexed(f, 1)?;
+                write!(f, ", {z}]")?;
             }
-            Vec3Expr::SwizzleVec3(_, _, _, _) => {
-                todo!()
+            Vec3Expr::SwizzleVec3(box v, x, y , z) => {
+                write!(f, "[")?;
+                v.display_indexed(f, *x as usize)?;
+                write!(f, ", ")?;
+                v.display_indexed(f, *y as usize)?;
+                write!(f, ", ")?;
+                v.display_indexed(f, *z as usize)?;
+                write!(f, "]")?;
             }
             Vec3Expr::AccessMultiVecGroup(mv, i) => {
                 let BasisElementGroup::G3(be0, be1, be2) = mv.mv_class.groups()[*i as usize] else {
@@ -1573,14 +1601,32 @@ impl Display for Vec4Expr {
             Vec4Expr::Gather4(f0, f1, f2, f3) => {
                 write!(f, "[{f0}, {f1}, {f2}, {f3}]")?;
             }
-            Vec4Expr::Extend2to4(v2, f1, f2) => {
-                todo!()
+            Vec4Expr::Extend2to4(v, z, w) => {
+                write!(f, "[")?;
+                v.display_indexed(f, 0)?;
+                write!(f, ", ")?;
+                v.display_indexed(f, 1)?;
+                write!(f, ", {z}, {w}]")?;
             }
-            Vec4Expr::Extend3to4(v2, f1) => {
-                todo!()
+            Vec4Expr::Extend3to4(v, w) => {
+                write!(f, "[")?;
+                v.display_indexed(f, 0)?;
+                write!(f, ", ")?;
+                v.display_indexed(f, 1)?;
+                write!(f, ", ")?;
+                v.display_indexed(f, 2)?;
+                write!(f, ", {w}]")?;
             }
-            Vec4Expr::SwizzleVec4(_, _, _, _, _) => {
-                todo!()
+            Vec4Expr::SwizzleVec4(box v, x, y, z, w) => {
+                write!(f, "[")?;
+                v.display_indexed(f, *x as usize)?;
+                write!(f, ", ")?;
+                v.display_indexed(f, *y as usize)?;
+                write!(f, ", ")?;
+                v.display_indexed(f, *z as usize)?;
+                write!(f, ", ")?;
+                v.display_indexed(f, *w as usize)?;
+                write!(f, "]")?;
             }
             Vec4Expr::AccessMultiVecGroup(mv, i) => {
                 let BasisElementGroup::G4(be0, be1, be2, be3) = mv.mv_class.groups()[*i as usize] else {
@@ -1885,7 +1931,12 @@ impl Vec3Expr {
                 }
             }
             Vec3Expr::Extend2to3(v2, f1) => {
-                todo!()
+                if idx < 2 {
+                    v2.display_indexed(f, idx)?;
+                }
+                if idx == 2 {
+                    write!(f, "{f1}")?;
+                }
             }
             Vec3Expr::SwizzleVec3(v, i0, i1, i2) => {
                 if idx == 0 {
@@ -2081,10 +2132,23 @@ impl Vec4Expr {
                 }
             }
             Vec4Expr::Extend2to4(v2, f1, f2) => {
-                todo!()
+                if idx < 2 {
+                    v2.display_indexed(f, idx)?;
+                }
+                if idx == 2 {
+                    write!(f, "{f1}")?;
+                }
+                if idx == 3 {
+                    write!(f, "{f2}")?;
+                }
             }
-            Vec4Expr::Extend3to4(v2, f1) => {
-                todo!()
+            Vec4Expr::Extend3to4(v3, f1) => {
+                if idx < 3 {
+                    v3.display_indexed(f, idx)?;
+                }
+                if idx == 3 {
+                    write!(f, "{f1}")?;
+                }
             }
             Vec4Expr::SwizzleVec4(v, i0, i1, i2, i3) => {
                 if idx == 0 {

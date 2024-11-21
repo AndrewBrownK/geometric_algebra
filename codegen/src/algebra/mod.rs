@@ -120,11 +120,6 @@ impl<const AntiScalar: BasisElement> GeometricAlgebra<AntiScalar> {
         self.name_out_sum(self.repo.anti_product(a, b))
     }
 
-    // TODO powf and anti_powf
-
-
-
-
     pub fn wedge(&self, a: BasisElement, b: BasisElement) -> (f32, BasisElement) {
         let a = self.name_in(a);
         let b = self.name_in(b);
