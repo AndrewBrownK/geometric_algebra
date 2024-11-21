@@ -1,4 +1,4 @@
 // todo integrate sql
-//  - pgx
+//  - pgrx (same as pgx, but rebranded)
 //  - sqlx
 
