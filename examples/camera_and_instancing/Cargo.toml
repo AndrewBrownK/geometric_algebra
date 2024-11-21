@@ -7,7 +7,7 @@ license = "MIT"
 publish = false
 
 [build-dependencies]
-cga3d_min = { path = "../../cga3d_min", features = ["wgsl-compose"] }
+cga3d_min = { path = "../../old_libraries/cga3d_min", features = ["wgsl-compose"] }
 naga_oil = { version = "0.13.0", features = ["prune"] }
 naga = { version = "0.19.2", features = ["spv-out"]}
 bytemuck = "1.16.0"

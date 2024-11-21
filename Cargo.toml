@@ -4,9 +4,9 @@ resolver = "2"
 members = [
     "codegen",
 
-    "rga3d",
-    "cga3d",
-    "cga3d_min",
+    "old_libraries/rga3d",
+    "old_libraries/cga3d",
+    "old_libraries/cga3d_min",
 
     "libraries/rga3d",
     "libraries/cga3d",
