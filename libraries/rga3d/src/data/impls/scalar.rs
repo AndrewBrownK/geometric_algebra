@@ -80,9 +80,9 @@ impl std::ops::Add<Line> for Scalar {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(0.0),
             // e23, e31, e12, scalar
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], self[scalar]]),
+            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(self[scalar]),
         );
     }
 }
@@ -433,7 +433,7 @@ impl std::ops::Neg for Scalar {
     }
 }
 impl std::ops::Not for Scalar {
-    type Output = Scalar;
+    type Output = AntiScalar;
     fn not(self) -> Self::Output {
         return self.right_dual();
     }

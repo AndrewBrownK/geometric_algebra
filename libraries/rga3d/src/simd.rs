@@ -56,6 +56,7 @@ pub union Simd32x3 {
 #[repr(C)]
 pub union Simd32x2 {
     pub v32x4: Simd32x4,
+    pub v32x3: Simd32x3,
 
     // Fallback
     pub f32x2: [f32; 2],
@@ -156,6 +157,17 @@ impl Simd32x2 {
     pub fn powf(self, exponent: f32) -> Self {
         todo!()
     }
+    pub fn extend_to_3(self, z: f32) -> Simd32x3 {
+        let mut s = unsafe { self.v32x3 };
+        s[2] = z;
+        return s;
+    }
+    pub fn extend_to_4(self, z: f32, w: f32) -> Simd32x4 {
+        let mut s = unsafe { self.v32x4 };
+        s[2] = z;
+        s[3] = w;
+        return s;
+    }
 }
 impl Simd32x3 {
     pub fn powi(self, exponent: i32) -> Self {
@@ -163,6 +175,11 @@ impl Simd32x3 {
     }
     pub fn powf(self, exponent: f32) -> Self {
         todo!()
+    }
+    pub fn extend_to_4(self, w: f32) -> Simd32x4 {
+        let mut s = unsafe { self.v32x4 };
+        s[3] = w;
+        return s;
     }
 }
 impl Simd32x4 {

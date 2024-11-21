@@ -88,9 +88,9 @@ impl std::ops::Add<Line> for AntiScalar {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], self[e1234]]),
+            crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(self[e1234]),
             // e23, e31, e12, scalar
-            Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
         );
     }
 }

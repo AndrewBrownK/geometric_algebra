@@ -180,19 +180,15 @@ impl RightAntiDual for Point {
     }
 }
 impl std::ops::Div<right_anti_dual> for Scalar {
-    type Output = Scalar;
+    type Output = AntiScalar;
     fn div(self, _rhs: right_anti_dual) -> Self::Output {
         self.right_anti_dual()
     }
 }
-impl std::ops::DivAssign<right_anti_dual> for Scalar {
-    fn div_assign(&mut self, _rhs: right_anti_dual) {
-        *self = self.right_anti_dual()
-    }
-}
 impl RightAntiDual for Scalar {
-    type Output = Scalar;
+    type Output = AntiScalar;
     fn right_anti_dual(self) -> Self::Output {
-        return self;
+        use crate::elements::*;
+        return AntiScalar::from_groups(/* e1234 */ self[scalar]);
     }
 }

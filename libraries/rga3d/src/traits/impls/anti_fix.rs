@@ -14,9 +14,9 @@
 //  Maximum:         2       4       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       1       1
+//  Minimum:         0       2       1
 //   Median:         0       4       1
-//  Average:         0       4       1
+//  Average:         0       5       1
 //  Maximum:         2      10       1
 impl std::ops::Div<anti_fix> for AntiScalar {
     type Output = AntiScalar;
@@ -32,10 +32,11 @@ impl std::ops::DivAssign<anti_fix> for AntiScalar {
 impl AntiFix for AntiScalar {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        1        1
+    // f32        0        2        1
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e1234], 2));
+        let anti_reverse = AntiScalar::from_groups(/* e1234 */ self[e1234]);
+        let geometric_anti_product = AntiScalar::from_groups(/* e1234 */ anti_reverse[e1234] * self[e1234]);
         let anti_square_root = AntiScalar::from_groups(/* e1234 */ f32::powf(geometric_anti_product[e1234], 0.5));
         let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(anti_square_root[e1234], 2));
         let anti_inverse = AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);

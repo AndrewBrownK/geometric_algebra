@@ -200,7 +200,7 @@ impl Wgsl {
         writeln!(w, "struct {ucc}Groups {{")?;
         for (i, g) in multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
-                write!(w, ",\n    ")?;
+                writeln!(w, ",")?;
             }
             write!(w, "    // ")?;
             let mut g = g.into_vec();
@@ -800,9 +800,13 @@ impl Wgsl {
                 }
             }
             Vec2Expr::Gather1(f) => {
-                write!(w, "vec4<f32>(vec2<f32>(")?;
-                self.write_float(w, f, true, false)?;
-                write!(w, "), 0.0, 0.0)")?;
+                if let FloatExpr::Literal(0.0) = f {
+                    write!(w, "vec4<f32>(0.0)")?;
+                } else {
+                    write!(w, "vec4<f32>(vec2<f32>(")?;
+                    self.write_float(w, f, true, false)?;
+                    write!(w, "), 0.0, 0.0)")?;
+                }
             }
             Vec2Expr::Gather2(f0, f1) => {
                 write!(w, "vec4<f32>(")?;
@@ -999,9 +1003,13 @@ impl Wgsl {
                 }
             }
             Vec3Expr::Gather1(f) => {
-                write!(w, "vec4<f32>(vec3<f32>(")?;
-                self.write_float(w, f, true, false)?;
-                write!(w, "), 0.0)")?;
+                if let FloatExpr::Literal(0.0) = f {
+                    write!(w, "vec4<f32>(0.0)")?;
+                } else {
+                    write!(w, "vec4<f32>(vec3<f32>(")?;
+                    self.write_float(w, f, true, false)?;
+                    write!(w, "), 0.0)")?;
+                }
             }
             Vec3Expr::Gather3(f0, f1, f2) => {
                 write!(w, "vec4<f32>(")?;
@@ -1011,6 +1019,13 @@ impl Wgsl {
                 write!(w, ", ")?;
                 self.write_float(w, f2, true, false)?;
                 write!(w, ", 0.0)")?;
+            }
+            Vec3Expr::Extend2to3(v2, f1) => {
+                write!(w, "vec4<f32>(")?;
+                self.write_vec2(w, v2, true)?;
+                write!(w, ".xy, ")?;
+                self.write_float(w, f1, true, false)?;
+                write!(w, ")")?;
             }
             Vec3Expr::AccessMultiVecGroup(mv, i) => {
                 self.write_multi_vec(w, mv, true)?;
@@ -1229,6 +1244,22 @@ impl Wgsl {
                 self.write_float(w, f3, true, false)?;
                 write!(w, ")")?;
             }
+            Vec4Expr::Extend2to4(v2, f1, f2) => {
+                write!(w, "vec4<f32>(")?;
+                self.write_vec2(w, v2, true)?;
+                write!(w, ".xy, ")?;
+                self.write_float(w, f1, true, false)?;
+                write!(w, ", ")?;
+                self.write_float(w, f2, true, false)?;
+                write!(w, ")")?;
+            }
+            Vec4Expr::Extend3to4(v2, f1) => {
+                write!(w, "vec4<f32>(")?;
+                self.write_vec3(w, v2, true)?;
+                write!(w, ".xyz, ")?;
+                self.write_float(w, f1, true, false)?;
+                write!(w, ")")?;
+            }
             Vec4Expr::AccessMultiVecGroup(mv, i) => {
                 self.write_multi_vec(w, mv, true)?;
                 write!(w, ".group{i}_")?;
@@ -1430,6 +1461,9 @@ impl Wgsl {
         Ok(())
     }
 
+    // TODO fn horizon_geometricQuotient_scalar
+    //  it'd be nice to skip constructing by groups, and construct flat instead. Sometimes.
+
     fn write_multi_vec<W: Write>(&self, w: &mut W, expr: &MultiVectorExpr, grouped: bool) -> anyhow::Result<()> {
         let mv = expr.mv_class;
         let n = mv.name();
@@ -1481,10 +1515,10 @@ impl Wgsl {
                         MultiVectorGroupExpr::Vec4(g) => self.write_vec4(w, g, true)?,
                     }
                 }
+                write!(w, "\n    )")?;
                 if !grouped {
-                    write!(w, "\n    )")?;
+                    write!(w, ")")?;
                 }
-                write!(w, ")")?;
             }
             MultiVectorVia::TraitInvoke11ToClass(t, arg) => {
                 let method = t.as_lower_camel();

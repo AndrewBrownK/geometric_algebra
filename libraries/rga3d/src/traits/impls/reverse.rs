@@ -31,7 +31,8 @@ impl std::ops::DivAssign<reverse> for AntiScalar {
 }
 impl Reverse for AntiScalar {
     fn reverse(self) -> Self {
-        return self;
+        use crate::elements::*;
+        return AntiScalar::from_groups(/* e1234 */ self[e1234]);
     }
 }
 impl std::ops::Div<reverse> for DualNum {
@@ -186,7 +187,8 @@ impl std::ops::DivAssign<reverse> for Origin {
 }
 impl Reverse for Origin {
     fn reverse(self) -> Self {
-        return self;
+        use crate::elements::*;
+        return Origin::from_groups(/* e4 */ self[e4]);
     }
 }
 impl std::ops::Div<reverse> for Plane {
@@ -238,6 +240,7 @@ impl std::ops::DivAssign<reverse> for Scalar {
 }
 impl Reverse for Scalar {
     fn reverse(self) -> Self {
-        return self;
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */ self[scalar]);
     }
 }

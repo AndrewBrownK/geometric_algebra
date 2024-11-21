@@ -14,9 +14,9 @@
 //  Maximum:         2       4       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       1       1
+//  Minimum:         0       2       1
 //   Median:         0       4       1
-//  Average:         0       4       1
+//  Average:         0       5       1
 //  Maximum:         2      10       1
 impl std::ops::Div<fix> for Horizon {
     type Output = Horizon;
@@ -114,10 +114,11 @@ impl std::ops::DivAssign<fix> for Scalar {
 impl Fix for Scalar {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        1        1
+    // f32        0        2        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let geometric_product = Scalar::from_groups(/* scalar */ f32::powi(self[scalar], 2));
+        let reverse = Scalar::from_groups(/* scalar */ self[scalar]);
+        let geometric_product = Scalar::from_groups(/* scalar */ reverse[scalar] * self[scalar]);
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);

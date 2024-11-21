@@ -31,7 +31,8 @@ impl std::ops::DivAssign<anti_reverse> for AntiScalar {
 }
 impl AntiReverse for AntiScalar {
     fn anti_reverse(self) -> Self {
-        return self;
+        use crate::elements::*;
+        return AntiScalar::from_groups(/* e1234 */ self[e1234]);
     }
 }
 impl std::ops::Div<anti_reverse> for DualNum {
@@ -83,7 +84,8 @@ impl std::ops::DivAssign<anti_reverse> for Horizon {
 }
 impl AntiReverse for Horizon {
     fn anti_reverse(self) -> Self {
-        return self;
+        use crate::elements::*;
+        return Horizon::from_groups(/* e321 */ self[e321]);
     }
 }
 impl std::ops::Div<anti_reverse> for Line {
@@ -238,6 +240,7 @@ impl std::ops::DivAssign<anti_reverse> for Scalar {
 }
 impl AntiReverse for Scalar {
     fn anti_reverse(self) -> Self {
-        return self;
+        use crate::elements::*;
+        return Scalar::from_groups(/* scalar */ self[scalar]);
     }
 }

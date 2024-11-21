@@ -72,6 +72,10 @@ pub struct VectoredOperationsTracker {
     pub simd2: OperationsTracker,
     pub simd3: OperationsTracker,
     pub simd4: OperationsTracker,
+    // TODO keep track of which variables have basis_element_struct_access
+    //  but also keep track of which have group access, so that in wgsl
+    //  you can look up the usages of each variable and decide whether you
+    //  want both the grouped type and ungrouped type, or just one.
     pub basis_element_struct_access: bool,
 }
 impl VectoredOperationsTracker {
