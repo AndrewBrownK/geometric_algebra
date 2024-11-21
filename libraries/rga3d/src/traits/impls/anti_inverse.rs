@@ -51,7 +51,7 @@ impl AntiInverse for DualNum {
     // f32        0        0        1
     fn anti_inverse(self) -> AntiScalar {
         use crate::elements::*;
-        let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self.group0()[1], 2));
+        let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e1234], 2));
         return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
     }
 }
@@ -67,10 +67,7 @@ impl AntiInverse for Flector {
     // f32        3        0        1
     fn anti_inverse(self) -> AntiScalar {
         use crate::elements::*;
-        let anti_scalar_product = AntiScalar::from_groups(
-            // e1234
-            f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2) - f32::powi(self.group0()[3], 2),
-        );
+        let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e423], 2) + f32::powi(self[e431], 2) + f32::powi(self[e412], 2) - f32::powi(self[e4], 2));
         return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
     }
 }
@@ -86,7 +83,7 @@ impl AntiInverse for Line {
     // f32        2        0        1
     fn anti_inverse(self) -> AntiScalar {
         use crate::elements::*;
-        let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ -f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2));
+        let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ -f32::powi(self[e41], 2) - f32::powi(self[e42], 2) - f32::powi(self[e43], 2));
         return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
     }
 }
@@ -102,10 +99,7 @@ impl AntiInverse for Motor {
     // f32        3        0        1
     fn anti_inverse(self) -> AntiScalar {
         use crate::elements::*;
-        let anti_scalar_product = AntiScalar::from_groups(
-            // e1234
-            f32::powi(self.group0()[3], 2) - f32::powi(self.group0()[0], 2) - f32::powi(self.group0()[1], 2) - f32::powi(self.group0()[2], 2),
-        );
+        let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e1234], 2) - f32::powi(self[e41], 2) - f32::powi(self[e42], 2) - f32::powi(self[e43], 2));
         return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
     }
 }
@@ -123,11 +117,11 @@ impl AntiInverse for MultiVector {
         use crate::elements::*;
         let anti_scalar_product = AntiScalar::from_groups(
             // e1234
-            f32::powi(self.group0()[1], 2) + f32::powi(self.group4()[0], 2) + f32::powi(self.group4()[1], 2) + f32::powi(self.group4()[2], 2)
-                - f32::powi(self.group2()[0], 2)
-                - f32::powi(self.group2()[1], 2)
-                - f32::powi(self.group2()[2], 2)
-                - f32::powi(self.group1()[3], 2),
+            f32::powi(self[e1234], 2) + f32::powi(self[e423], 2) + f32::powi(self[e431], 2) + f32::powi(self[e412], 2)
+                - f32::powi(self[e4], 2)
+                - f32::powi(self[e41], 2)
+                - f32::powi(self[e42], 2)
+                - f32::powi(self[e43], 2),
         );
         return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
     }
@@ -160,7 +154,7 @@ impl AntiInverse for Plane {
     // f32        2        0        1
     fn anti_inverse(self) -> AntiScalar {
         use crate::elements::*;
-        let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2));
+        let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e423], 2) + f32::powi(self[e431], 2) + f32::powi(self[e412], 2));
         return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
     }
 }
@@ -176,7 +170,7 @@ impl AntiInverse for Point {
     // f32        0        1        1
     fn anti_inverse(self) -> AntiScalar {
         use crate::elements::*;
-        let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self.group0()[3], 2) * -1.0);
+        let anti_scalar_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e4], 2) * -1.0);
         return AntiScalar::from_groups(/* e1234 */ 1.0 / anti_scalar_product[e1234]);
     }
 }

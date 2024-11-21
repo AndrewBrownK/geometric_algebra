@@ -31,8 +31,7 @@ impl std::ops::DivAssign<reverse> for AntiScalar {
 }
 impl Reverse for AntiScalar {
     fn reverse(self) -> Self {
-        use crate::elements::*;
-        return AntiScalar::from_groups(/* e1234 */ self[e1234]);
+        return self;
     }
 }
 impl std::ops::Div<reverse> for DualNum {
@@ -68,7 +67,13 @@ impl Reverse for Flector {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn reverse(self) -> Self {
-        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ self.group1() * Simd32x4::from(-1.0));
+        use crate::elements::*;
+        return Flector::from_groups(
+            // e1, e2, e3, e4
+            self.group0(),
+            // e423, e431, e412, e321
+            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
+        );
     }
 }
 impl std::ops::Div<reverse> for Horizon {
@@ -108,11 +113,12 @@ impl Reverse for Line {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn reverse(self) -> Self {
+        use crate::elements::*;
         return Line::from_groups(
             // e41, e42, e43
-            self.group0() * Simd32x3::from(-1.0),
+            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            self.group1() * Simd32x3::from(-1.0),
+            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
         );
     }
 }
@@ -132,11 +138,12 @@ impl Reverse for Motor {
     //      add/sub      mul      div
     // f32        0        6        0
     fn reverse(self) -> Self {
+        use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self.group0()[0] * -1.0, self.group0()[1] * -1.0, self.group0()[2] * -1.0, self.group0()[3]]),
+            Simd32x4::from([self[e41] * -1.0, self[e42] * -1.0, self[e43] * -1.0, self[e1234]]),
             // e23, e31, e12, scalar
-            Simd32x4::from([self.group1()[0] * -1.0, self.group1()[1] * -1.0, self.group1()[2] * -1.0, self.group1()[3]]),
+            Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[scalar]]),
         );
     }
 }
@@ -160,17 +167,18 @@ impl Reverse for MultiVector {
     // yes simd        0        3        0
     //  no simd        0       10        0
     fn reverse(self) -> Self {
+        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
             self.group0(),
             // e1, e2, e3, e4
             self.group1(),
             // e41, e42, e43
-            self.group2() * Simd32x3::from(-1.0),
+            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            self.group3() * Simd32x3::from(-1.0),
+            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
-            self.group4() * Simd32x4::from(-1.0),
+            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
         );
     }
 }
@@ -187,8 +195,7 @@ impl std::ops::DivAssign<reverse> for Origin {
 }
 impl Reverse for Origin {
     fn reverse(self) -> Self {
-        use crate::elements::*;
-        return Origin::from_groups(/* e4 */ self[e4]);
+        return self;
     }
 }
 impl std::ops::Div<reverse> for Plane {
@@ -208,7 +215,11 @@ impl Reverse for Plane {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn reverse(self) -> Self {
-        return Plane::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0));
+        use crate::elements::*;
+        return Plane::from_groups(
+            // e423, e431, e412, e321
+            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
+        );
     }
 }
 impl std::ops::Div<reverse> for Point {
@@ -240,7 +251,6 @@ impl std::ops::DivAssign<reverse> for Scalar {
 }
 impl Reverse for Scalar {
     fn reverse(self) -> Self {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ self[scalar]);
+        return self;
     }
 }

@@ -30,7 +30,7 @@ impl Inverse for DualNum {
     // f32        0        0        1
     fn inverse(self) -> Scalar {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self.group0()[0], 2));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self[scalar], 2));
         return Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
     }
 }
@@ -46,10 +46,7 @@ impl Inverse for Flector {
     // f32        3        0        1
     fn inverse(self) -> Scalar {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(
-            // scalar
-            f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2) - f32::powi(self.group1()[3], 2),
-        );
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self[e1], 2) + f32::powi(self[e2], 2) + f32::powi(self[e3], 2) - f32::powi(self[e321], 2));
         return Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
     }
 }
@@ -81,7 +78,7 @@ impl Inverse for Line {
     // f32        2        0        1
     fn inverse(self) -> Scalar {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ -f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2));
+        let scalar_product = Scalar::from_groups(/* scalar */ -f32::powi(self[e23], 2) - f32::powi(self[e31], 2) - f32::powi(self[e12], 2));
         return Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
     }
 }
@@ -99,7 +96,7 @@ impl Inverse for Motor {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            f32::powi(self.group1()[3], 2) - f32::powi(self.group1()[0], 2) - f32::powi(self.group1()[1], 2) - f32::powi(self.group1()[2], 2),
+            f32::powi(self[scalar], 2) - f32::powi(self[e23], 2) - f32::powi(self[e31], 2) - f32::powi(self[e12], 2),
         );
         return Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
     }
@@ -118,11 +115,11 @@ impl Inverse for MultiVector {
         use crate::elements::*;
         let scalar_product = Scalar::from_groups(
             // scalar
-            f32::powi(self.group0()[0], 2) + f32::powi(self.group1()[0], 2) + f32::powi(self.group1()[1], 2) + f32::powi(self.group1()[2], 2)
-                - f32::powi(self.group3()[0], 2)
-                - f32::powi(self.group3()[1], 2)
-                - f32::powi(self.group3()[2], 2)
-                - f32::powi(self.group4()[3], 2),
+            f32::powi(self[scalar], 2) + f32::powi(self[e1], 2) + f32::powi(self[e2], 2) + f32::powi(self[e3], 2)
+                - f32::powi(self[e23], 2)
+                - f32::powi(self[e31], 2)
+                - f32::powi(self[e12], 2)
+                - f32::powi(self[e321], 2),
         );
         return Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
     }
@@ -139,7 +136,7 @@ impl Inverse for Plane {
     // f32        0        1        1
     fn inverse(self) -> Scalar {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self.group0()[3], 2) * -1.0);
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self[e321], 2) * -1.0);
         return Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
     }
 }
@@ -155,7 +152,7 @@ impl Inverse for Point {
     // f32        2        0        1
     fn inverse(self) -> Scalar {
         use crate::elements::*;
-        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2));
+        let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(self[e1], 2) + f32::powi(self[e2], 2) + f32::powi(self[e3], 2));
         return Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
     }
 }

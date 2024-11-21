@@ -1,7 +1,8 @@
+use std::cell::{Cell, RefCell};
 use crate::ast2::datatype::MultiVector;
 use crate::ast2::traits::{RawTraitImplementation, TraitKey};
-use std::collections::HashMap;
-use std::ops::{Add, AddAssign, Mul, MulAssign};
+use std::collections::{BTreeSet, HashMap};
+use std::ops::{Add, AddAssign, Deref, Mul, MulAssign};
 use std::sync::Arc;
 
 #[derive(Clone, Copy)]
@@ -66,17 +67,15 @@ impl AddAssign<OperationsTracker> for OperationsTracker {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 pub struct VectoredOperationsTracker {
     pub floats: OperationsTracker,
     pub simd2: OperationsTracker,
     pub simd3: OperationsTracker,
     pub simd4: OperationsTracker,
-    // TODO keep track of which variables have basis_element_struct_access
-    //  but also keep track of which have group access, so that in wgsl
-    //  you can look up the usages of each variable and decide whether you
-    //  want both the grouped type and ungrouped type, or just one.
     pub basis_element_struct_access: bool,
+    pub mv_vars_access_flat: BTreeSet<(String, usize)>,
+    pub mv_vars_access_grouped: BTreeSet<(String, usize)>,
 }
 impl VectoredOperationsTracker {
     pub fn zero() -> Self {
@@ -86,10 +85,12 @@ impl VectoredOperationsTracker {
             simd3: OperationsTracker::zero(),
             simd4: OperationsTracker::zero(),
             basis_element_struct_access: false,
+            mv_vars_access_flat: BTreeSet::new(),
+            mv_vars_access_grouped: BTreeSet::new(),
         }
     }
 
-    pub fn without_simd(self) -> OperationsTracker {
+    pub fn without_simd(&self) -> OperationsTracker {
         let mut f = self.floats;
         f += self.simd2 * 2;
         f += self.simd3 * 3;
@@ -97,7 +98,7 @@ impl VectoredOperationsTracker {
         f
     }
 
-    pub fn with_simd(self) -> OperationsTracker {
+    pub fn with_simd(&self) -> OperationsTracker {
         let mut f = self.floats;
         f += self.simd2;
         f += self.simd3;
@@ -110,12 +111,22 @@ impl Add<VectoredOperationsTracker> for VectoredOperationsTracker {
     type Output = Self;
 
     fn add(self, rhs: VectoredOperationsTracker) -> Self::Output {
+        let mut mv_vars_access_flat = self.mv_vars_access_flat.clone();
+        for b in rhs.mv_vars_access_flat.iter() {
+            mv_vars_access_flat.insert(b.clone());
+        }
+        let mut mv_vars_access_grouped = self.mv_vars_access_grouped.clone();
+        for b in rhs.mv_vars_access_grouped.iter() {
+            mv_vars_access_grouped.insert(b.clone());
+        }
         Self {
             floats: self.floats + rhs.floats,
             simd2: self.simd2 + rhs.simd2,
             simd3: self.simd3 + rhs.simd3,
             simd4: self.simd4 + rhs.simd4,
             basis_element_struct_access: self.basis_element_struct_access || rhs.basis_element_struct_access,
+            mv_vars_access_flat,
+            mv_vars_access_grouped,
         }
     }
 }
@@ -126,6 +137,12 @@ impl AddAssign<VectoredOperationsTracker> for VectoredOperationsTracker {
         self.simd3 += rhs.simd3;
         self.simd4 += rhs.simd4;
         self.basis_element_struct_access |= rhs.basis_element_struct_access;
+        for b in rhs.mv_vars_access_flat.iter() {
+            self.mv_vars_access_flat.insert(b.clone());
+        }
+        for b in rhs.mv_vars_access_grouped.iter() {
+            self.mv_vars_access_grouped.insert(b.clone());
+        }
     }
 }
 
@@ -145,7 +162,7 @@ pub(crate) struct TraitOperationsLookup<'a> {
 impl<'a> TraitOperationsLookup<'a> {
     pub fn trait_10_ops(&self, k: &TraitKey, a: &MultiVector) -> VectoredOperationsTracker {
         if let Some(rti) = self.traits10.get(&(*k, *a)) {
-            return rti.statistics;
+            return rti.statistics.clone();
         }
         panic!(
             "Attempted to look up the VectorOperationsTracker of a trait_10 that was not \
@@ -154,7 +171,7 @@ impl<'a> TraitOperationsLookup<'a> {
     }
     pub fn trait_11_ops(&self, k: &TraitKey, a: &MultiVector) -> VectoredOperationsTracker {
         if let Some(rti) = self.traits11.get(&(*k, *a)) {
-            return rti.statistics;
+            return rti.statistics.clone();
         }
         panic!(
             "Attempted to look up the VectorOperationsTracker of a trait_11 that was not \
@@ -163,7 +180,7 @@ impl<'a> TraitOperationsLookup<'a> {
     }
     pub fn trait_21_ops(&self, k: &TraitKey, a: &MultiVector, b: &MultiVector) -> VectoredOperationsTracker {
         if let Some(rti) = self.traits21.get(&(*k, *a, *b)) {
-            return rti.statistics;
+            return rti.statistics.clone();
         }
         panic!(
             "Attempted to look up the VectorOperationsTracker of a trait_21 that was not \
@@ -172,7 +189,7 @@ impl<'a> TraitOperationsLookup<'a> {
     }
     pub fn trait_22_ops(&self, k: &TraitKey, a: &MultiVector, b: &MultiVector) -> VectoredOperationsTracker {
         if let Some(rti) = self.traits22.get(&(*k, *a, *b)) {
-            return rti.statistics;
+            return rti.statistics.clone();
         }
         panic!(
             "Attempted to look up the VectorOperationsTracker of a trait_22 that was not \
@@ -181,7 +198,7 @@ impl<'a> TraitOperationsLookup<'a> {
     }
     pub fn trait_12i_ops(&self, k: &TraitKey, a: &MultiVector) -> VectoredOperationsTracker {
         if let Some(rti) = self.traits12i.get(&(*k, *a)) {
-            return rti.statistics;
+            return rti.statistics.clone();
         }
         panic!(
             "Attempted to look up the VectorOperationsTracker of a trait_12i that was not \
@@ -190,7 +207,7 @@ impl<'a> TraitOperationsLookup<'a> {
     }
     pub fn trait_12f_ops(&self, k: &TraitKey, a: &MultiVector) -> VectoredOperationsTracker {
         if let Some(rti) = self.traits12f.get(&(*k, *a)) {
-            return rti.statistics;
+            return rti.statistics.clone();
         }
         panic!(
             "Attempted to look up the VectorOperationsTracker of a trait_12f that was not \

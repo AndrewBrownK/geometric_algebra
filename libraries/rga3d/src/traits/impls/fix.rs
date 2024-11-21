@@ -14,9 +14,9 @@
 //  Maximum:         2       4       1
 //
 //  No SIMD:   add/sub     mul     div
-//  Minimum:         0       2       1
+//  Minimum:         0       1       1
 //   Median:         0       4       1
-//  Average:         0       5       1
+//  Average:         0       4       1
 //  Maximum:         2      10       1
 impl std::ops::Div<fix> for Horizon {
     type Output = Horizon;
@@ -64,12 +64,18 @@ impl Fix for Plane {
     //  no simd        0       10        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = Plane::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0));
-        let geometric_product = Scalar::from_groups(/* scalar */ reverse.group0()[3] * self.group0()[3] * -1.0);
+        let reverse = Plane::from_groups(
+            // e423, e431, e412, e321
+            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
+        );
+        let geometric_product = Scalar::from_groups(/* scalar */ reverse[e321] * self[e321] * -1.0);
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(inverse[scalar]) * self.group0());
+        return Plane::from_groups(
+            // e423, e431, e412, e321
+            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]),
+        );
     }
 }
 impl std::ops::Div<fix> for Point {
@@ -93,11 +99,11 @@ impl Fix for Point {
     //  no simd        2        4        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let geometric_product = Scalar::from_groups(/* scalar */ f32::powi(self.group0()[0], 2) + f32::powi(self.group0()[1], 2) + f32::powi(self.group0()[2], 2));
+        let geometric_product = Scalar::from_groups(/* scalar */ f32::powi(self[e1], 2) + f32::powi(self[e2], 2) + f32::powi(self[e3], 2));
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * self.group0());
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]));
     }
 }
 impl std::ops::Div<fix> for Scalar {
@@ -114,11 +120,10 @@ impl std::ops::DivAssign<fix> for Scalar {
 impl Fix for Scalar {
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
-    // f32        0        2        1
+    // f32        0        1        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = Scalar::from_groups(/* scalar */ self[scalar]);
-        let geometric_product = Scalar::from_groups(/* scalar */ reverse[scalar] * self[scalar]);
+        let geometric_product = Scalar::from_groups(/* scalar */ f32::powi(self[scalar], 2));
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let scalar_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / scalar_product[scalar]);

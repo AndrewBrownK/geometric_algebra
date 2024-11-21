@@ -349,17 +349,26 @@ impl Wgsl {
         match (def.arity, var_param) {
             (TraitArity::Zero, _) => {}
             (TraitArity::One, _) => {
-                write!(w, "    let self_groups = ")?;
-                self.write_type(w, *owner_ty, false, false)?;
-                write!(w, "_grouped(self_);")?;
+                let needs_group_var = impls.statistics.mv_vars_access_grouped.contains(&("self".to_string(), 0));
+                if needs_group_var {
+                    write!(w, "    let self_groups = ")?;
+                    self.write_type(w, *owner_ty, false, false)?;
+                    write!(w, "_grouped(self_);")?;
+                }
             },
             (TraitArity::Two, Some(other_ty)) => {
-                write!(w, "    let self_groups = ")?;
-                self.write_type(w, *owner_ty, false, false)?;
-                writeln!(w, "_grouped(self_);")?;
-                write!(w, "    let other_groups = ")?;
-                self.write_type(w, *other_ty, false, false)?;
-                writeln!(w, "_grouped(other);")?;
+                let needs_group_var = impls.statistics.mv_vars_access_grouped.contains(&("self".to_string(), 0));
+                if needs_group_var {
+                    write!(w, "    let self_groups = ")?;
+                    self.write_type(w, *owner_ty, false, false)?;
+                    writeln!(w, "_grouped(self_);")?;
+                }
+                let needs_group_var = impls.statistics.mv_vars_access_grouped.contains(&("other".to_string(), 0));
+                if needs_group_var {
+                    write!(w, "    let other_groups = ")?;
+                    self.write_type(w, *other_ty, false, false)?;
+                    writeln!(w, "_grouped(other);")?;
+                }
             }
             _ => panic!("Arity 2 should always have other type"),
         }
@@ -381,43 +390,63 @@ impl Wgsl {
                     let x_ty = x.expression_type();
 
                     let mut is_multivector_var = false;
-                    let mut is_multivector_var_grouped = false;
+                    let mut is_multivector_expr_grouped = false;
                     if let AnyExpression::Class(mve) = &x {
                         is_multivector_var = true;
                         if let box MultiVectorVia::Construct(_) = &mve.expr {
-                            is_multivector_var_grouped = true;
+                            is_multivector_expr_grouped = true;
                         }
                     }
 
-                    let g = if is_multivector_var_grouped { "_groups" } else { "" };
+                    let needs_flat_var = impls.statistics.mv_vars_access_flat.contains(&(name.clone(), no));
+                    let needs_group_var = impls.statistics.mv_vars_access_grouped.contains(&(name.clone(), no));
+                    let needs_second_var = needs_group_var && needs_flat_var;
+
+
+                    let g = if is_multivector_expr_grouped && needs_group_var { "_groups" } else { "" };
                     if no == 0 {
                         write!(w, "    let {name}{g}: ")?;
                     } else {
                         let no = no + 1;
                         write!(w, "    let {name}{g}_{no}: ")?;
                     }
-                    self.write_type(w, x_ty, true, is_multivector_var_grouped)?;
+                    if needs_second_var {
+                        self.write_type(w, x_ty, true, is_multivector_expr_grouped)?;
+                    } else {
+                        self.write_type(w, x_ty, true, needs_group_var)?;
+                    }
                     write!(w, " = ")?;
-                    self.write_expression(w, x, false, is_multivector_var_grouped)?;
+                    if needs_second_var || (needs_group_var == is_multivector_expr_grouped) {
+                        self.write_expression(w, x, false, is_multivector_expr_grouped)?;
+                    } else {
+                        self.write_type(w, x_ty, false, false)?;
+                        if needs_flat_var {
+                            write!(w, "_degroup(")?;
+                        } else {
+                            write!(w, "_grouped(")?;
+                        }
+                        self.write_expression(w, x, false, is_multivector_expr_grouped)?;
+                        write!(w, ")")?;
+                    }
                     writeln!(w, ";")?;
 
-                    if is_multivector_var {
-                        let g = if !is_multivector_var_grouped { "_groups" } else { "" };
+                    if is_multivector_var && needs_second_var {
+                        let g = if !is_multivector_expr_grouped { "_groups" } else { "" };
                         if no == 0 {
                             write!(w, "    let {name}{g}: ")?;
                         } else {
                             let no = no + 1;
                             write!(w, "    let {name}{g}_{no}: ")?;
                         }
-                        self.write_type(w, x_ty, true, !is_multivector_var_grouped)?;
+                        self.write_type(w, x_ty, true, !is_multivector_expr_grouped)?;
                         write!(w, " = ")?;
                         self.write_type(w, x_ty, false, false)?;
-                        if is_multivector_var_grouped {
+                        if is_multivector_expr_grouped {
                             write!(w, "_degroup(")?;
                         } else {
                             write!(w, "_grouped(")?;
                         }
-                        let g = if is_multivector_var_grouped { "_groups" } else { "" };
+                        let g = if is_multivector_expr_grouped { "_groups" } else { "" };
                         if no == 0 {
                             write!(w, "{name}{g}")?;
                         } else {
@@ -504,7 +533,7 @@ impl Wgsl {
         match expr {
             IntExpr::Variable(v) => {
                 let name = &v.decl.name.0;
-                let mut no = v.decl.name.1;
+                let no = v.decl.name.1;
                 if no == 0 {
                     if name.as_str() == "self" {
                         write!(w, "self_")?;
@@ -512,7 +541,7 @@ impl Wgsl {
                         write!(w, "{name}")?;
                     }
                 } else {
-                    no += 1;
+                    let no = no + 1;
                     write!(w, "{name}_{no}")?;
                 }
             }
@@ -545,7 +574,7 @@ impl Wgsl {
         match expr {
             FloatExpr::Variable(v) => {
                 let name = &v.decl.name.0;
-                let mut no = v.decl.name.1;
+                let no = v.decl.name.1;
                 if no == 0 {
                     if name.as_str() == "self" {
                         write!(w, "self_")?;
@@ -553,7 +582,7 @@ impl Wgsl {
                         write!(w, "{name}")?;
                     }
                 } else {
-                    no += 1;
+                    let no = no + 1;
                     write!(w, "{name}_{no}")?;
                 }
             }
@@ -787,7 +816,7 @@ impl Wgsl {
         match expr {
             Vec2Expr::Variable(v) => {
                 let name = &v.decl.name.0;
-                let mut no = v.decl.name.1;
+                let no = v.decl.name.1;
                 if no == 0 {
                     if name.as_str() == "self" {
                         write!(w, "self_")?;
@@ -795,7 +824,7 @@ impl Wgsl {
                         write!(w, "{name}")?;
                     }
                 } else {
-                    no += 1;
+                    let no = no + 1;
                     write!(w, "{name}_{no}")?;
                 }
             }
@@ -990,7 +1019,7 @@ impl Wgsl {
         match expr {
             Vec3Expr::Variable(v) => {
                 let name = &v.decl.name.0;
-                let mut no = v.decl.name.1;
+                let no = v.decl.name.1;
                 if no == 0 {
                     if name.as_str() == "self" {
                         write!(w, "self_")?;
@@ -998,7 +1027,7 @@ impl Wgsl {
                         write!(w, "{name}")?;
                     }
                 } else {
-                    no += 1;
+                    let no = no + 1;
                     write!(w, "{name}_{no}")?;
                 }
             }
@@ -1216,7 +1245,7 @@ impl Wgsl {
         match expr {
             Vec4Expr::Variable(v) => {
                 let name = &v.decl.name.0;
-                let mut no = v.decl.name.1;
+                let no = v.decl.name.1;
                 if no == 0 {
                     if name.as_str() == "self" {
                         write!(w, "self_")?;
@@ -1224,7 +1253,7 @@ impl Wgsl {
                         write!(w, "{name}")?;
                     }
                 } else {
-                    no += 1;
+                    let no = no + 1;
                     write!(w, "{name}_{no}")?;
                 }
             }
@@ -1473,20 +1502,20 @@ impl Wgsl {
         match &*expr.expr {
             MultiVectorVia::Variable(v) => {
                 let name = &v.decl.name.0;
-                let mut no = v.decl.name.1;
+                let no = v.decl.name.1;
                 let g = if grouped { "_groups" } else { "" };
                 if no == 0 {
                     if name.as_str() == "self" {
                         if grouped {
-                            write!(w, "self_")?;
-                        } else {
                             write!(w, "self{g}")?;
+                        } else {
+                            write!(w, "self_")?;
                         }
                     } else {
                         write!(w, "{name}{g}")?;
                     }
                 } else {
-                    no += 1;
+                    let no = no + 1;
                     write!(w, "{name}{g}_{no}")?;
                 }
             }

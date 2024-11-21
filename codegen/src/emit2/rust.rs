@@ -884,11 +884,11 @@ postgres-types = "0.2.7""#
         match expr {
             IntExpr::Variable(v) => {
                 let name = &v.decl.name.0;
-                let mut no = v.decl.name.1;
+                let no = v.decl.name.1;
                 if no == 0 {
                     write!(w, "{name}")?;
                 } else {
-                    no += 1;
+                    let no = no + 1;
                     write!(w, "{name}_{no}")?;
                 }
             }
@@ -917,11 +917,11 @@ postgres-types = "0.2.7""#
         match expr {
             FloatExpr::Variable(v) => {
                 let name = &v.decl.name.0;
-                let mut no = v.decl.name.1;
+                let no = v.decl.name.1;
                 if no == 0 {
                     write!(w, "{name}")?;
                 } else {
-                    no += 1;
+                    let no = no + 1;
                     write!(w, "{name}_{no}")?;
                 }
             }
@@ -1138,11 +1138,11 @@ postgres-types = "0.2.7""#
         match expr {
             Vec2Expr::Variable(v) => {
                 let name = &v.decl.name.0;
-                let mut no = v.decl.name.1;
+                let no = v.decl.name.1;
                 if no == 0 {
                     write!(w, "{name}")?;
                 } else {
-                    no += 1;
+                    let no = no + 1;
                     write!(w, "{name}_{no}")?;
                 }
             }
@@ -1324,11 +1324,11 @@ postgres-types = "0.2.7""#
         match expr {
             Vec3Expr::Variable(v) => {
                 let name = &v.decl.name.0;
-                let mut no = v.decl.name.1;
+                let no = v.decl.name.1;
                 if no == 0 {
                     write!(w, "{name}")?;
                 } else {
-                    no += 1;
+                    let no = no + 1;
                     write!(w, "{name}_{no}")?;
                 }
             }
@@ -1524,11 +1524,11 @@ postgres-types = "0.2.7""#
         match expr {
             Vec4Expr::Variable(v) => {
                 let name = &v.decl.name.0;
-                let mut no = v.decl.name.1;
+                let no = v.decl.name.1;
                 if no == 0 {
                     write!(w, "{name}")?;
                 } else {
-                    no += 1;
+                    let no = no + 1;
                     write!(w, "{name}_{no}")?;
                 }
             }
@@ -1741,11 +1741,11 @@ postgres-types = "0.2.7""#
         match &*expr.expr {
             MultiVectorVia::Variable(v) => {
                 let name = &v.decl.name.0;
-                let mut no = v.decl.name.1;
+                let no = v.decl.name.1;
                 if no == 0 {
                     write!(w, "{name}")?;
                 } else {
-                    no += 1;
+                    let no = no + 1;
                     write!(w, "{name}_{no}")?;
                 }
             }
@@ -2704,7 +2704,7 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
         }
 
         {
-            let stats = impls.statistics;
+            let stats = &impls.statistics;
             let ws = stats.with_simd();
             let wos = stats.without_simd();
             let mut qty_types = 0;
@@ -2886,7 +2886,7 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
                     if no == 0 {
                         write!(w, "let {name} = ")?;
                     } else {
-                        no += 1;
+                        let no = no + 1;
                         write!(w, "let {name}_{no} = ")?;
                     }
                     self.write_expression(w, expr.read().deref())?;
