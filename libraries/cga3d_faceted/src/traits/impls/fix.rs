@@ -11,13 +11,13 @@
 //  Minimum:         0       1       1
 //   Median:         2       3       1
 //  Average:         1       3       1
-//  Maximum:         3       8       1
+//  Maximum:         3       6       1
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       1       1
 //   Median:         2       7       1
 //  Average:         1       6       1
-//  Maximum:         3      11       1
+//  Maximum:         3      12       1
 impl std::ops::Div<fix> for AntiDipoleOnOrigin {
     type Output = AntiDipoleOnOrigin;
     fn div(self, _rhs: fix) -> Self::Output {
@@ -39,18 +39,12 @@ impl Fix for AntiDipoleOnOrigin {
     //  no simd        0       10        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = AntiDipoleOnOrigin::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
-        );
+        let reverse = AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_product = Scalar::from_groups(/* scalar */ reverse[e321] * self[e321] * -1.0);
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return AntiDipoleOnOrigin::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]),
-        );
+        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for AntiFlatOrigin {
@@ -99,18 +93,12 @@ impl Fix for AntiFlatPoint {
     //  no simd        0       10        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = AntiFlatPoint::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e321]]) * Simd32x4::from(-1.0),
-        );
+        let reverse = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_product = Scalar::from_groups(/* scalar */ reverse[e321] * self[e321] * -1.0);
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return AntiFlatPoint::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e235], self[e315], self[e125], self[e321]]),
-        );
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for AntiFlectorOnOrigin {
@@ -127,14 +115,14 @@ impl std::ops::DivAssign<fix> for AntiFlectorOnOrigin {
 impl Fix for AntiFlectorOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        5        1
-    //    simd4        0        1        0
+    //      f32        3        4        1
+    //    simd4        0        2        0
     // Totals...
     // yes simd        3        6        1
-    //  no simd        3        9        1
+    //  no simd        3       12        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from([self[e321] * -1.0, self[e1], self[e2], self[e3]]));
+        let reverse = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ self.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]));
         let geometric_product = Scalar::from_groups(
             // scalar
             (reverse[e1] * self[e1]) + (reverse[e2] * self[e2]) + (reverse[e3] * self[e3]) - (reverse[e321] * self[e321]),
@@ -142,7 +130,7 @@ impl Fix for AntiFlectorOnOrigin {
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e321], self[e1], self[e2], self[e3]]));
+        return AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for AntiLineOnOrigin {
@@ -166,12 +154,12 @@ impl Fix for AntiLineOnOrigin {
     //  no simd        2        9        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0));
+        let reverse = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ self.group0() * Simd32x3::from(-1.0));
         let geometric_product = Scalar::from_groups(/* scalar */ -(reverse[e23] * self[e23]) - (reverse[e31] * self[e31]) - (reverse[e12] * self[e12]));
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ Simd32x3::from(inverse[scalar]) * Simd32x3::from([self[e23], self[e31], self[e12]]));
+        return AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ Simd32x3::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for AntiMotorOnOrigin {
@@ -188,14 +176,14 @@ impl std::ops::DivAssign<fix> for AntiMotorOnOrigin {
 impl Fix for AntiMotorOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        1
-    //    simd4        0        1        0
+    //      f32        3        4        1
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        3        8        1
-    //  no simd        3       11        1
+    // yes simd        3        6        1
+    //  no simd        3       12        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[scalar]]));
+        let reverse = AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         let geometric_product = Scalar::from_groups(
             // scalar
             (reverse[scalar] * self[scalar]) - (reverse[e23] * self[e23]) - (reverse[e31] * self[e31]) - (reverse[e12] * self[e12]),
@@ -203,10 +191,7 @@ impl Fix for AntiMotorOnOrigin {
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return AntiMotorOnOrigin::from_groups(
-            // e23, e31, e12, scalar
-            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e23], self[e31], self[e12], self[scalar]]),
-        );
+        return AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for AntiPlane {
@@ -234,7 +219,7 @@ impl Fix for AntiPlane {
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e5]]));
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for AntiPlaneOnOrigin {
@@ -262,7 +247,7 @@ impl Fix for AntiPlaneOnOrigin {
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ Simd32x3::from(inverse[scalar]) * Simd32x3::from([self[e1], self[e2], self[e3]]));
+        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ Simd32x3::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for AntiScalar {
@@ -314,7 +299,7 @@ impl Fix for AntiSphereOnOrigin {
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return AntiSphereOnOrigin::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]));
+        return AntiSphereOnOrigin::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for DipoleOnOrigin {
@@ -338,15 +323,12 @@ impl Fix for DipoleOnOrigin {
     //  no simd        0        9        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]) * Simd32x4::from(-1.0));
+        let reverse = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_product = Scalar::from_groups(/* scalar */ reverse[e45] * self[e45]);
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return DipoleOnOrigin::from_groups(
-            // e41, e42, e43, e45
-            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]),
-        );
+        return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for FlatOrigin {
@@ -395,15 +377,12 @@ impl Fix for FlatPoint {
     //  no simd        0        9        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]) * Simd32x4::from(-1.0));
+        let reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_product = Scalar::from_groups(/* scalar */ reverse[e45] * self[e45]);
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return FlatPoint::from_groups(
-            // e15, e25, e35, e45
-            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]),
-        );
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for FlectorOnOrigin {
@@ -420,14 +399,14 @@ impl std::ops::DivAssign<fix> for FlectorOnOrigin {
 impl Fix for FlectorOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        5        1
-    //    simd4        0        1        0
+    //      f32        3        4        1
+    //    simd4        0        2        0
     // Totals...
     // yes simd        3        6        1
-    //  no simd        3        9        1
+    //  no simd        3       12        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([self[e45] * -1.0, self[e4235], self[e4315], self[e4125]]));
+        let reverse = FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ self.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]));
         let geometric_product = Scalar::from_groups(
             // scalar
             (reverse[e45] * self[e45]) - (reverse[e4235] * self[e4235]) - (reverse[e4315] * self[e4315]) - (reverse[e4125] * self[e4125]),
@@ -435,10 +414,7 @@ impl Fix for FlectorOnOrigin {
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return FlectorOnOrigin::from_groups(
-            // e45, e4235, e4315, e4125
-            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e45], self[e4235], self[e4315], self[e4125]]),
-        );
+        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for LineOnOrigin {
@@ -462,12 +438,12 @@ impl Fix for LineOnOrigin {
     //  no simd        2        9        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0));
+        let reverse = LineOnOrigin::from_groups(/* e415, e425, e435 */ self.group0() * Simd32x3::from(-1.0));
         let geometric_product = Scalar::from_groups(/* scalar */ (reverse[e415] * self[e415]) + (reverse[e425] * self[e425]) + (reverse[e435] * self[e435]));
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from(inverse[scalar]) * Simd32x3::from([self[e415], self[e425], self[e435]]));
+        return LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for MotorOnOrigin {
@@ -484,17 +460,14 @@ impl std::ops::DivAssign<fix> for MotorOnOrigin {
 impl Fix for MotorOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        1
-    //    simd4        0        1        0
+    //      f32        3        4        1
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        3        8        1
-    //  no simd        3       11        1
+    // yes simd        3        6        1
+    //  no simd        3       12        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = MotorOnOrigin::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e12345]]),
-        );
+        let reverse = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         let geometric_product = Scalar::from_groups(
             // scalar
             (reverse[e415] * self[e415]) + (reverse[e425] * self[e425]) + (reverse[e435] * self[e435]) - (reverse[e12345] * self[e12345]),
@@ -502,10 +475,7 @@ impl Fix for MotorOnOrigin {
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return MotorOnOrigin::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e415], self[e425], self[e435], self[e12345]]),
-        );
+        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for Plane {
@@ -533,10 +503,7 @@ impl Fix for Plane {
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return Plane::from_groups(
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]),
-        );
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for PlaneOnOrigin {
@@ -564,7 +531,7 @@ impl Fix for PlaneOnOrigin {
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ Simd32x3::from(inverse[scalar]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]));
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ Simd32x3::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for RoundPoint {
@@ -592,12 +559,7 @@ impl Fix for RoundPoint {
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return RoundPoint::from_groups(
-            // e1, e2, e3, e4
-            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]),
-            // e5
-            self[e5] * inverse[scalar],
-        );
+        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * self.group0(), /* e5 */ self[e5] * inverse[scalar]);
     }
 }
 impl std::ops::Div<fix> for RoundPointAtOrigin {
@@ -625,7 +587,7 @@ impl Fix for RoundPointAtOrigin {
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return RoundPointAtOrigin::from_groups(/* e4, e5 */ Simd32x2::from(inverse[scalar]) * Simd32x2::from([self[e4], self[e5]]));
+        return RoundPointAtOrigin::from_groups(/* e4, e5 */ Simd32x2::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for Scalar {
@@ -682,7 +644,7 @@ impl Fix for Sphere {
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]),
+            Simd32x4::from(inverse[scalar]) * self.group0(),
             // e1234
             inverse[scalar] * self[e1234],
         );
@@ -713,7 +675,7 @@ impl Fix for SphereAtOrigin {
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return SphereAtOrigin::from_groups(/* e3215, e1234 */ Simd32x2::from(inverse[scalar]) * Simd32x2::from([self[e3215], self[e1234]]));
+        return SphereAtOrigin::from_groups(/* e3215, e1234 */ Simd32x2::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for SphereOnOrigin {
@@ -741,9 +703,6 @@ impl Fix for SphereOnOrigin {
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return SphereOnOrigin::from_groups(
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e1234]]),
-        );
+        return SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }

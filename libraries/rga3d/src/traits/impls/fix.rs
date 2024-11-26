@@ -64,18 +64,12 @@ impl Fix for Plane {
     //  no simd        0       10        1
     fn fix(self) -> Self {
         use crate::elements::*;
-        let reverse = Plane::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
-        );
+        let reverse = Plane::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_product = Scalar::from_groups(/* scalar */ reverse[e321] * self[e321] * -1.0);
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return Plane::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]),
-        );
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for Point {
@@ -103,7 +97,7 @@ impl Fix for Point {
         let square_root = Scalar::from_groups(/* scalar */ f32::powf(geometric_product[scalar], 0.5));
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(square_root[scalar], 2));
         let inverse = Scalar::from_groups(/* scalar */ 1.0 / dot_product[scalar]);
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(inverse[scalar]) * self.group0());
     }
 }
 impl std::ops::Div<fix> for Scalar {

@@ -17,7 +17,7 @@
 //  Minimum:         0       0       0
 //   Median:         0       1       0
 //  Average:         0       4       0
-//  Maximum:         0      16       0
+//  Maximum:         0      17       0
 impl std::ops::Div<anti_auto_morphism> for AntiCircleRotor {
     type Output = AntiCircleRotor;
     fn div(self, _rhs: anti_auto_morphism) -> Self::Output {
@@ -38,14 +38,13 @@ impl AntiAutoMorphism for AntiCircleRotor {
     // yes simd        0        3        0
     //  no simd        0       11        0
     fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15], self[e25], self[e35], self[scalar]]) * Simd32x4::from(-1.0),
+            self.group2() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -82,8 +81,7 @@ impl AntiAutoMorphism for AntiDualNum {
     //   simd2        0        1        0
     // no simd        0        2        0
     fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([self[e3215], self[scalar]]) * Simd32x2::from(-1.0));
+        return AntiDualNum::from_groups(/* e3215, scalar */ self.group0() * Simd32x2::from(-1.0));
     }
 }
 impl std::ops::Div<anti_auto_morphism> for AntiFlatPoint {
@@ -135,12 +133,11 @@ impl AntiAutoMorphism for AntiLine {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
         return AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -161,12 +158,11 @@ impl AntiAutoMorphism for AntiMotor {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([self[e23], self[e31], self[e12], self[scalar]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35, e3215
-            Simd32x4::from([self[e15], self[e25], self[e35], self[e3215]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -254,14 +250,13 @@ impl AntiAutoMorphism for Dipole {
     // yes simd        0        3        0
     //  no simd        0       10        0
     fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
         return Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group2() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -285,16 +280,15 @@ impl AntiAutoMorphism for DipoleInversion {
     // yes simd        0        4        0
     //  no simd        0       15        0
     fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], self[e1234]]) * Simd32x4::from(-1.0),
+            self.group2() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]) * Simd32x4::from(-1.0),
+            self.group3() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -331,8 +325,7 @@ impl AntiAutoMorphism for FlatPoint {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]) * Simd32x4::from(-1.0));
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Div<anti_auto_morphism> for Flector {
@@ -352,12 +345,11 @@ impl AntiAutoMorphism for Flector {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -407,27 +399,28 @@ impl std::ops::DivAssign<anti_auto_morphism> for MultiVector {
 impl AntiAutoMorphism for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        0
+    //    simd2        0        1        0
     //    simd3        0        2        0
     //    simd4        0        2        0
     // Totals...
     // yes simd        0        6        0
-    //  no simd        0       16        0
+    //  no simd        0       17        0
     fn anti_auto_morphism(self) -> Self {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self[scalar] * -1.0, self[e12345]]),
+            self.group0() * Simd32x2::from([-1.0, 1.0]),
             // e1, e2, e3, e4
             self.group1(),
             // e5
             self[e5],
             // e15, e25, e35, e45
-            Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]) * Simd32x4::from(-1.0),
+            self.group3() * Simd32x4::from(-1.0),
             // e41, e42, e43
-            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
+            self.group4() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
+            self.group5() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group6(),
             // e423, e431, e412
@@ -435,7 +428,7 @@ impl AntiAutoMorphism for MultiVector {
             // e235, e315, e125
             self.group8(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]) * Simd32x4::from(-1.0),
+            self.group9() * Simd32x4::from(-1.0),
             // e1234
             self[e1234] * -1.0,
         );
@@ -458,11 +451,7 @@ impl AntiAutoMorphism for Plane {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
-        return Plane::from_groups(
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]) * Simd32x4::from(-1.0),
-        );
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Div<anti_auto_morphism> for RoundPoint {
@@ -522,12 +511,7 @@ impl AntiAutoMorphism for Sphere {
     //  no simd        0        5        0
     fn anti_auto_morphism(self) -> Self {
         use crate::elements::*;
-        return Sphere::from_groups(
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]) * Simd32x4::from(-1.0),
-            // e1234
-            self[e1234] * -1.0,
-        );
+        return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0() * Simd32x4::from(-1.0), /* e1234 */ self[e1234] * -1.0);
     }
 }
 impl std::ops::Div<anti_auto_morphism> for VersorEven {
@@ -563,16 +547,15 @@ impl AntiAutoMorphism for VersorOdd {
     //   simd4        0        4        0
     // no simd        0       16        0
     fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], self[scalar]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15], self[e25], self[e35], self[e1234]]) * Simd32x4::from(-1.0),
+            self.group2() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]) * Simd32x4::from(-1.0),
+            self.group3() * Simd32x4::from(-1.0),
         );
     }
 }

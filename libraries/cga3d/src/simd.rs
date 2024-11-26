@@ -12,7 +12,6 @@ pub use std::arch::x86::*;
 #[cfg(all(target_arch = "x86_64", target_feature = "sse2"))]
 pub use std::arch::x86_64::*;
 use std::num::NonZeroU64;
-// TODO add cargo feature driven support for f64 (and maybe f16, if that is a thing?)
 
 #[derive(Clone, Copy)]
 #[repr(C)]
@@ -100,6 +99,12 @@ macro_rules! match_architecture {
 
 #[macro_export]
 macro_rules! swizzle {
+    ($self:expr, $x:literal, $y:literal, _, _) => {
+        unsafe { Simd32x2 { v32x4: $crate::swizzle!($self.v32x4, $x, $y, 2, 3) } }
+    };
+    ($self:expr, $x:literal, $y:literal, $z:literal, _) => {
+        unsafe { Simd32x3 { v32x4: $crate::swizzle!($self.v32x4, $x, $y, $z, 3) } }
+    };
     ($self:expr, $x:literal, $y:literal, $z:literal, $w:literal) => {
         $crate::match_architecture!(
             Simd32x4,
@@ -123,11 +128,14 @@ macro_rules! swizzle {
             ] },
         )
     };
+    ($self:expr, $x:literal, $y:literal, _) => {
+        unsafe { Simd32x2 { $crate::swizzle!($self.v32x4, $x, $y, 2, 3) } }
+    };
     ($self:expr, $x:literal, $y:literal, $z:literal) => {
         $crate::match_architecture!(
             Simd32x3,
             // native
-            { v32x4: $crate::swizzle!($self.v32x4, $x, $y, $z, 0) },
+            { v32x4: $crate::swizzle!($self.v32x4, $x, $y, $z, 3) },
             // fallback
             { f32x3: [
                 $self.f32x3[$x],
@@ -140,7 +148,7 @@ macro_rules! swizzle {
         $crate::match_architecture!(
             Simd32x2,
             // native
-            { v32x4: $crate::swizzle!($self.v32x4, $x, $y, 0, 0) },
+            { v32x4: $crate::swizzle!($self.v32x4, $x, $y, 2, 3) },
             // fallback
             { f32x2: [
                 $self.f32x2[$x],
@@ -151,11 +159,17 @@ macro_rules! swizzle {
 }
 
 impl Simd32x2 {
-    pub fn powi(self, exponent: i32) -> Self {
-        todo!()
+    pub fn powi(mut self, exponent: i32) -> Self {
+        // TODO simd-ify
+        self[0] = f32::powi(self[0], exponent);
+        self[1] = f32::powi(self[1], exponent);
+        self
     }
-    pub fn powf(self, exponent: f32) -> Self {
-        todo!()
+    pub fn powf(mut self, exponent: f32) -> Self {
+        // TODO simd-ify
+        self[0] = f32::powf(self[0], exponent);
+        self[1] = f32::powf(self[1], exponent);
+        self
     }
     pub fn extend_to_3(self, z: f32) -> Simd32x3 {
         let mut s = unsafe { self.v32x3 };
@@ -170,24 +184,51 @@ impl Simd32x2 {
     }
 }
 impl Simd32x3 {
-    pub fn powi(self, exponent: i32) -> Self {
-        todo!()
+    pub fn powi(mut self, exponent: i32) -> Self {
+        // TODO simd-ify
+        self[0] = f32::powi(self[0], exponent);
+        self[1] = f32::powi(self[1], exponent);
+        self[2] = f32::powi(self[2], exponent);
+        self
     }
-    pub fn powf(self, exponent: f32) -> Self {
-        todo!()
+    pub fn powf(mut self, exponent: f32) -> Self {
+        // TODO simd-ify
+        self[0] = f32::powf(self[0], exponent);
+        self[1] = f32::powf(self[1], exponent);
+        self[2] = f32::powf(self[2], exponent);
+        self
     }
     pub fn extend_to_4(self, w: f32) -> Simd32x4 {
         let mut s = unsafe { self.v32x4 };
         s[3] = w;
         return s;
     }
+    pub fn truncate_to_2(self) -> Simd32x2 {
+        unsafe { Simd32x2 { v32x4: self.v32x4 } }
+    }
 }
 impl Simd32x4 {
-    pub fn powi(self, exponent: i32) -> Self {
-        todo!()
+    pub fn powi(mut self, exponent: i32) -> Self {
+        // TODO simd-ify
+        self[0] = f32::powi(self[0], exponent);
+        self[1] = f32::powi(self[1], exponent);
+        self[2] = f32::powi(self[2], exponent);
+        self[3] = f32::powi(self[3], exponent);
+        self
     }
-    pub fn powf(self, exponent: f32) -> Self {
-        todo!()
+    pub fn powf(mut self, exponent: f32) -> Self {
+        // TODO simd-ify
+        self[0] = f32::powf(self[0], exponent);
+        self[1] = f32::powf(self[1], exponent);
+        self[2] = f32::powf(self[2], exponent);
+        self[3] = f32::powf(self[3], exponent);
+        self
+    }
+    pub fn truncate_to_3(self) -> Simd32x3 {
+        unsafe { Simd32x3 { v32x4: self } }
+    }
+    pub fn truncate_to_2(self) -> Simd32x2 {
+        unsafe { Simd32x2 { v32x4: self } }
     }
 }
 

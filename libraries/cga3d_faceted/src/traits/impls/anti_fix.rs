@@ -11,13 +11,13 @@
 //  Minimum:         0       1       1
 //   Median:         2       3       1
 //  Average:         1       3       1
-//  Maximum:         3       8       1
+//  Maximum:         3       6       1
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       1       1
 //   Median:         2       7       1
 //  Average:         1       6       1
-//  Maximum:         3      11       1
+//  Maximum:         3      12       1
 impl std::ops::Div<anti_fix> for AntiDipoleOnOrigin {
     type Output = AntiDipoleOnOrigin;
     fn div(self, _rhs: anti_fix) -> Self::Output {
@@ -39,18 +39,12 @@ impl AntiFix for AntiDipoleOnOrigin {
     //  no simd        0        9        1
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let anti_reverse = AntiDipoleOnOrigin::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
-        );
+        let anti_reverse = AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e321] * self[e321]);
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return AntiDipoleOnOrigin::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]),
-        );
+        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for AntiFlatOrigin {
@@ -99,18 +93,12 @@ impl AntiFix for AntiFlatPoint {
     //  no simd        0        9        1
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let anti_reverse = AntiFlatPoint::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e321]]) * Simd32x4::from(-1.0),
-        );
+        let anti_reverse = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e321] * self[e321]);
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return AntiFlatPoint::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e235], self[e315], self[e125], self[e321]]),
-        );
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for AntiFlectorOnOrigin {
@@ -127,14 +115,14 @@ impl std::ops::DivAssign<anti_fix> for AntiFlectorOnOrigin {
 impl AntiFix for AntiFlectorOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        5        1
-    //    simd4        0        1        0
+    //      f32        3        4        1
+    //    simd4        0        2        0
     // Totals...
     // yes simd        3        6        1
-    //  no simd        3        9        1
+    //  no simd        3       12        1
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let anti_reverse = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from([self[e321] * -1.0, self[e1], self[e2], self[e3]]));
+        let anti_reverse = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ self.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]));
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
             (anti_reverse[e321] * self[e321]) - (anti_reverse[e1] * self[e1]) - (anti_reverse[e2] * self[e2]) - (anti_reverse[e3] * self[e3]),
@@ -142,10 +130,7 @@ impl AntiFix for AntiFlectorOnOrigin {
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return AntiFlectorOnOrigin::from_groups(
-            // e321, e1, e2, e3
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e321], self[e1], self[e2], self[e3]]),
-        );
+        return AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for AntiLineOnOrigin {
@@ -169,12 +154,12 @@ impl AntiFix for AntiLineOnOrigin {
     //  no simd        2        9        1
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let anti_reverse = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0));
+        let anti_reverse = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ self.group0() * Simd32x3::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ (anti_reverse[e23] * self[e23]) + (anti_reverse[e31] * self[e31]) + (anti_reverse[e12] * self[e12]));
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ Simd32x3::from(anti_inverse[e12345]) * Simd32x3::from([self[e23], self[e31], self[e12]]));
+        return AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ Simd32x3::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for AntiMotorOnOrigin {
@@ -191,14 +176,14 @@ impl std::ops::DivAssign<anti_fix> for AntiMotorOnOrigin {
 impl AntiFix for AntiMotorOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        1
-    //    simd4        0        1        0
+    //      f32        3        4        1
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        3        8        1
-    //  no simd        3       11        1
+    // yes simd        3        6        1
+    //  no simd        3       12        1
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let anti_reverse = AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[scalar]]));
+        let anti_reverse = AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
             (anti_reverse[e23] * self[e23]) + (anti_reverse[e31] * self[e31]) + (anti_reverse[e12] * self[e12]) - (anti_reverse[scalar] * self[scalar]),
@@ -206,10 +191,7 @@ impl AntiFix for AntiMotorOnOrigin {
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return AntiMotorOnOrigin::from_groups(
-            // e23, e31, e12, scalar
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e23], self[e31], self[e12], self[scalar]]),
-        );
+        return AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for AntiPlane {
@@ -237,10 +219,7 @@ impl AntiFix for AntiPlane {
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return AntiPlane::from_groups(
-            // e1, e2, e3, e5
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e5]]),
-        );
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for AntiPlaneOnOrigin {
@@ -268,7 +247,7 @@ impl AntiFix for AntiPlaneOnOrigin {
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ Simd32x3::from(anti_inverse[e12345]) * Simd32x3::from([self[e1], self[e2], self[e3]]));
+        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ Simd32x3::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for AntiScalar {
@@ -320,10 +299,7 @@ impl AntiFix for AntiSphereOnOrigin {
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return AntiSphereOnOrigin::from_groups(
-            // e1, e2, e3, e4
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]),
-        );
+        return AntiSphereOnOrigin::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for DipoleOnOrigin {
@@ -347,15 +323,12 @@ impl AntiFix for DipoleOnOrigin {
     //  no simd        0       10        1
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let anti_reverse = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]) * Simd32x4::from(-1.0));
+        let anti_reverse = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e45] * self[e45] * -1.0);
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return DipoleOnOrigin::from_groups(
-            // e41, e42, e43, e45
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]),
-        );
+        return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for FlatOrigin {
@@ -404,15 +377,12 @@ impl AntiFix for FlatPoint {
     //  no simd        0       10        1
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let anti_reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]) * Simd32x4::from(-1.0));
+        let anti_reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e45] * self[e45] * -1.0);
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return FlatPoint::from_groups(
-            // e15, e25, e35, e45
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]),
-        );
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for FlectorOnOrigin {
@@ -429,14 +399,14 @@ impl std::ops::DivAssign<anti_fix> for FlectorOnOrigin {
 impl AntiFix for FlectorOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        5        1
-    //    simd4        0        1        0
+    //      f32        3        4        1
+    //    simd4        0        2        0
     // Totals...
     // yes simd        3        6        1
-    //  no simd        3        9        1
+    //  no simd        3       12        1
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let anti_reverse = FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([self[e45] * -1.0, self[e4235], self[e4315], self[e4125]]));
+        let anti_reverse = FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ self.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]));
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
             (anti_reverse[e4235] * self[e4235]) + (anti_reverse[e4315] * self[e4315]) + (anti_reverse[e4125] * self[e4125]) - (anti_reverse[e45] * self[e45]),
@@ -444,10 +414,7 @@ impl AntiFix for FlectorOnOrigin {
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return FlectorOnOrigin::from_groups(
-            // e45, e4235, e4315, e4125
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e45], self[e4235], self[e4315], self[e4125]]),
-        );
+        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for LineOnOrigin {
@@ -471,7 +438,7 @@ impl AntiFix for LineOnOrigin {
     //  no simd        2        9        1
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let anti_reverse = LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0));
+        let anti_reverse = LineOnOrigin::from_groups(/* e415, e425, e435 */ self.group0() * Simd32x3::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
             -(anti_reverse[e415] * self[e415]) - (anti_reverse[e425] * self[e425]) - (anti_reverse[e435] * self[e435]),
@@ -479,7 +446,7 @@ impl AntiFix for LineOnOrigin {
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from(anti_inverse[e12345]) * Simd32x3::from([self[e415], self[e425], self[e435]]));
+        return LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for MotorOnOrigin {
@@ -496,17 +463,14 @@ impl std::ops::DivAssign<anti_fix> for MotorOnOrigin {
 impl AntiFix for MotorOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        1
-    //    simd4        0        1        0
+    //      f32        3        4        1
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        3        8        1
-    //  no simd        3       11        1
+    // yes simd        3        6        1
+    //  no simd        3       12        1
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let anti_reverse = MotorOnOrigin::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e12345]]),
-        );
+        let anti_reverse = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
             (anti_reverse[e12345] * self[e12345]) - (anti_reverse[e415] * self[e415]) - (anti_reverse[e425] * self[e425]) - (anti_reverse[e435] * self[e435]),
@@ -514,10 +478,7 @@ impl AntiFix for MotorOnOrigin {
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return MotorOnOrigin::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e415], self[e425], self[e435], self[e12345]]),
-        );
+        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for Plane {
@@ -545,10 +506,7 @@ impl AntiFix for Plane {
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return Plane::from_groups(
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]),
-        );
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for PlaneOnOrigin {
@@ -576,10 +534,7 @@ impl AntiFix for PlaneOnOrigin {
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return PlaneOnOrigin::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from(anti_inverse[e12345]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]),
-        );
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ Simd32x3::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for RoundPoint {
@@ -610,7 +565,7 @@ impl AntiFix for RoundPoint {
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
         return RoundPoint::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]),
+            Simd32x4::from(anti_inverse[e12345]) * self.group0(),
             // e5
             anti_inverse[e12345] * self[e5],
         );
@@ -641,7 +596,7 @@ impl AntiFix for RoundPointAtOrigin {
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return RoundPointAtOrigin::from_groups(/* e4, e5 */ Simd32x2::from(anti_inverse[e12345]) * Simd32x2::from([self[e4], self[e5]]));
+        return RoundPointAtOrigin::from_groups(/* e4, e5 */ Simd32x2::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for Scalar {
@@ -698,7 +653,7 @@ impl AntiFix for Sphere {
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]),
+            Simd32x4::from(anti_inverse[e12345]) * self.group0(),
             // e1234
             anti_inverse[e12345] * self[e1234],
         );
@@ -729,7 +684,7 @@ impl AntiFix for SphereAtOrigin {
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return SphereAtOrigin::from_groups(/* e3215, e1234 */ Simd32x2::from(anti_inverse[e12345]) * Simd32x2::from([self[e3215], self[e1234]]));
+        return SphereAtOrigin::from_groups(/* e3215, e1234 */ Simd32x2::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for SphereOnOrigin {
@@ -757,9 +712,6 @@ impl AntiFix for SphereOnOrigin {
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return SphereOnOrigin::from_groups(
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e1234]]),
-        );
+        return SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }

@@ -67,12 +67,11 @@ impl AntiAutoMorphism for Flector {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -145,18 +144,17 @@ impl AntiAutoMorphism for MultiVector {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
             self.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e41, e42, e43
             self.group2(),
             // e23, e31, e12
             self.group3(),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
+            self.group4() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -197,11 +195,7 @@ impl AntiAutoMorphism for Plane {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
-        return Plane::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
-        );
+        return Plane::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Div<anti_auto_morphism> for Point {
@@ -221,8 +215,7 @@ impl AntiAutoMorphism for Point {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn anti_auto_morphism(self) -> Self {
-        use crate::elements::*;
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]) * Simd32x4::from(-1.0));
+        return Point::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Div<anti_auto_morphism> for Scalar {

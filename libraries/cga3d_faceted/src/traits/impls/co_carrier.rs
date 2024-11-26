@@ -6,33 +6,33 @@ use crate::traits::RightAntiDual;
 // real measurements on real work-loads on real hardware.
 // Disclaimer aside, enjoy the fun information =)
 //
-// Total Implementations: 76
+// Total Implementations: 77
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         0       4       0
-//  Average:         0      11       0
-//  Maximum:         0     168       0
+//   Median:         0       3       0
+//  Average:         0       6       0
+//  Maximum:         0     112       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         0       6       0
-//  Average:         0      13       0
-//  Maximum:         0     224       0
+//   Median:         0      12       0
+//  Average:         0      24       0
+//  Maximum:         0     308       0
 impl std::ops::Div<co_carrier> for AntiCircleOnOrigin {
-    type Output = CircleOnOrigin;
+    type Output = PlaneOnOrigin;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for AntiCircleOnOrigin {
-    type Output = CircleOnOrigin;
+    type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd3        0        2        0
     // no simd        0        6        0
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ self.right_anti_dual().group0());
     }
 }
 impl std::ops::Div<co_carrier> for AntiCircleRotor {
@@ -45,11 +45,11 @@ impl CoCarrier for AntiCircleRotor {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       12        0
     //    simd3        0        2        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0       14        0
-    //  no simd        0       18        0
+    // yes simd        0        6        0
+    //  no simd        0       22        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Plane::from_groups(
@@ -59,22 +59,22 @@ impl CoCarrier for AntiCircleRotor {
     }
 }
 impl std::ops::Div<co_carrier> for AntiCircleRotorAligningOrigin {
-    type Output = CircleRotorAligningOrigin;
+    type Output = PlaneOnOrigin;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for AntiCircleRotorAligningOrigin {
-    type Output = CircleRotorAligningOrigin;
+    type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        0
     //    simd3        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        9        0
+    // yes simd        0        3        0
+    //  no simd        0       10        0
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ self.right_anti_dual().group0());
     }
 }
 impl std::ops::Div<co_carrier> for AntiCircleRotorAtInfinity {
@@ -86,8 +86,9 @@ impl std::ops::Div<co_carrier> for AntiCircleRotorAtInfinity {
 impl CoCarrier for AntiCircleRotorAtInfinity {
     type Output = Horizon;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        6        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Horizon::from_groups(/* e3215 */ self.right_anti_dual()[e321]);
@@ -103,11 +104,11 @@ impl CoCarrier for AntiCircleRotorOnOrigin {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        9        0
     //    simd3        0        3        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        0       12        0
-    //  no simd        0       18        0
+    // yes simd        0        6        0
+    //  no simd        0       21        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return PlaneOnOrigin::from_groups(
@@ -125,8 +126,9 @@ impl std::ops::Div<co_carrier> for AntiDipoleInversion {
 impl CoCarrier for AntiDipoleInversion {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       15        0
+    //          add/sub      mul      div
+    //   simd4        0       15        0
+    // no simd        0       60        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return CircleRotorAligningOriginAtInfinity::from_groups(
@@ -146,8 +148,9 @@ impl std::ops::Div<co_carrier> for AntiDipoleInversionAtInfinity {
 impl CoCarrier for AntiDipoleInversionAtInfinity {
     type Output = LineAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        6        0
+    //          add/sub      mul      div
+    //   simd4        0        6        0
+    // no simd        0       24        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return LineAtInfinity::from_groups(
@@ -165,8 +168,9 @@ impl std::ops::Div<co_carrier> for AntiDipoleInversionOnOrigin {
 impl CoCarrier for AntiDipoleInversionOnOrigin {
     type Output = MotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
@@ -186,8 +190,9 @@ impl std::ops::Div<co_carrier> for AntiDipoleInversionOrthogonalOrigin {
 impl CoCarrier for AntiDipoleInversionOrthogonalOrigin {
     type Output = CircleRotorAligningOriginAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       10        0
+    //          add/sub      mul      div
+    //   simd4        0       10        0
+    // no simd        0       40        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return CircleRotorAligningOriginAtInfinity::from_groups(
@@ -207,8 +212,9 @@ impl std::ops::Div<co_carrier> for AntiDipoleOnOrigin {
 impl CoCarrier for AntiDipoleOnOrigin {
     type Output = LineOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return LineOnOrigin::from_groups(
@@ -218,21 +224,16 @@ impl CoCarrier for AntiDipoleOnOrigin {
     }
 }
 impl std::ops::Div<co_carrier> for AntiDualNum {
-    type Output = Motor;
+    type Output = FlatOrigin;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for AntiDualNum {
-    type Output = Motor;
+    type Output = FlatOrigin;
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
-        return Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, self.right_anti_dual()[e1234]]),
-            // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self.right_anti_dual()[scalar]]),
-        );
+        return FlatOrigin::from_groups(/* e45 */ self.right_anti_dual()[e4]);
     }
 }
 impl std::ops::Div<co_carrier> for AntiMysteryCircleRotor {
@@ -244,8 +245,9 @@ impl std::ops::Div<co_carrier> for AntiMysteryCircleRotor {
 impl CoCarrier for AntiMysteryCircleRotor {
     type Output = Horizon;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Horizon::from_groups(/* e3215 */ self.right_anti_dual()[e321]);
@@ -260,8 +262,9 @@ impl std::ops::Div<co_carrier> for AntiMysteryDipoleInversion {
 impl CoCarrier for AntiMysteryDipoleInversion {
     type Output = LineAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return LineAtInfinity::from_groups(
@@ -270,36 +273,20 @@ impl CoCarrier for AntiMysteryDipoleInversion {
         );
     }
 }
-impl std::ops::Div<co_carrier> for AntiPlaneOnOrigin {
-    type Output = AntiPlaneOnOrigin;
-    fn div(self, _rhs: co_carrier) -> Self::Output {
-        self.co_carrier()
-    }
-}
-impl std::ops::DivAssign<co_carrier> for AntiPlaneOnOrigin {
-    fn div_assign(&mut self, _rhs: co_carrier) {
-        *self = self.co_carrier()
-    }
-}
-impl CoCarrier for AntiPlaneOnOrigin {
-    type Output = AntiPlaneOnOrigin;
-    fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
-    }
-}
 impl std::ops::Div<co_carrier> for AntiScalar {
-    type Output = Scalar;
+    type Output = Infinity;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for AntiScalar {
-    type Output = Scalar;
+    type Output = Infinity;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        use crate::elements::*;
+        return Infinity::from_groups(/* e5 */ self.right_anti_dual()[scalar]);
     }
 }
 impl std::ops::Div<co_carrier> for AntiSphereOnOrigin {
@@ -311,8 +298,9 @@ impl std::ops::Div<co_carrier> for AntiSphereOnOrigin {
 impl CoCarrier for AntiSphereOnOrigin {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return AntiScalar::from_groups(/* e12345 */ self.right_anti_dual()[e1234]);
@@ -327,8 +315,9 @@ impl std::ops::Div<co_carrier> for AntiVersorEvenOnOrigin {
 impl CoCarrier for AntiVersorEvenOnOrigin {
     type Output = FlectorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       24        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([
@@ -348,8 +337,9 @@ impl std::ops::Div<co_carrier> for Circle {
 impl CoCarrier for Circle {
     type Output = Line;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Line::from_groups(
@@ -361,20 +351,15 @@ impl CoCarrier for Circle {
     }
 }
 impl std::ops::Div<co_carrier> for CircleAligningOrigin {
-    type Output = CircleAligningOrigin;
+    type Output = Line;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
-impl std::ops::DivAssign<co_carrier> for CircleAligningOrigin {
-    fn div_assign(&mut self, _rhs: co_carrier) {
-        *self = self.co_carrier()
-    }
-}
 impl CoCarrier for CircleAligningOrigin {
-    type Output = CircleAligningOrigin;
+    type Output = Line;
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return Line::from_groups(/* e415, e425, e435 */ self.right_anti_dual().group0(), /* e235, e315, e125 */ self.right_anti_dual().group1());
     }
 }
 impl std::ops::Div<co_carrier> for CircleAtInfinity {
@@ -386,8 +371,9 @@ impl std::ops::Div<co_carrier> for CircleAtInfinity {
 impl CoCarrier for CircleAtInfinity {
     type Output = LineAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return LineAtInfinity::from_groups(
@@ -397,37 +383,27 @@ impl CoCarrier for CircleAtInfinity {
     }
 }
 impl std::ops::Div<co_carrier> for CircleAtOrigin {
-    type Output = CircleAtOrigin;
+    type Output = LineOnOrigin;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
-    }
-}
-impl std::ops::DivAssign<co_carrier> for CircleAtOrigin {
-    fn div_assign(&mut self, _rhs: co_carrier) {
-        *self = self.co_carrier()
     }
 }
 impl CoCarrier for CircleAtOrigin {
-    type Output = CircleAtOrigin;
+    type Output = LineOnOrigin;
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return LineOnOrigin::from_groups(/* e415, e425, e435 */ self.right_anti_dual().group0());
     }
 }
 impl std::ops::Div<co_carrier> for CircleOnOrigin {
-    type Output = CircleOnOrigin;
+    type Output = Line;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
-impl std::ops::DivAssign<co_carrier> for CircleOnOrigin {
-    fn div_assign(&mut self, _rhs: co_carrier) {
-        *self = self.co_carrier()
-    }
-}
 impl CoCarrier for CircleOnOrigin {
-    type Output = CircleOnOrigin;
+    type Output = Line;
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return Line::from_groups(/* e415, e425, e435 */ self.right_anti_dual().group0(), /* e235, e315, e125 */ self.right_anti_dual().group1());
     }
 }
 impl std::ops::Div<co_carrier> for CircleOrthogonalOrigin {
@@ -439,8 +415,9 @@ impl std::ops::Div<co_carrier> for CircleOrthogonalOrigin {
 impl CoCarrier for CircleOrthogonalOrigin {
     type Output = LineOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return LineOnOrigin::from_groups(
@@ -458,8 +435,9 @@ impl std::ops::Div<co_carrier> for CircleRotor {
 impl CoCarrier for CircleRotor {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       10        0
+    //          add/sub      mul      div
+    //   simd4        0       10        0
+    // no simd        0       40        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
@@ -479,8 +457,9 @@ impl std::ops::Div<co_carrier> for CircleRotorAligningOrigin {
 impl CoCarrier for CircleRotorAligningOrigin {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
@@ -500,8 +479,9 @@ impl std::ops::Div<co_carrier> for CircleRotorAligningOriginAtInfinity {
 impl CoCarrier for CircleRotorAligningOriginAtInfinity {
     type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return MotorAtInfinity::from_groups(
@@ -519,8 +499,9 @@ impl std::ops::Div<co_carrier> for CircleRotorAtInfinity {
 impl CoCarrier for CircleRotorAtInfinity {
     type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ Simd32x4::from([
@@ -540,8 +521,9 @@ impl std::ops::Div<co_carrier> for CircleRotorOnOrigin {
 impl CoCarrier for CircleRotorOnOrigin {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        5        0
+    //          add/sub      mul      div
+    //   simd4        0        5        0
+    // no simd        0       20        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
@@ -562,11 +544,11 @@ impl CoCarrier for Dipole {
     type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        6        0
     //    simd3        0        4        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       18        0
+    // yes simd        0        6        0
+    //  no simd        0       20        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Plane::from_groups(
@@ -576,22 +558,22 @@ impl CoCarrier for Dipole {
     }
 }
 impl std::ops::Div<co_carrier> for DipoleAligningOrigin {
-    type Output = CircleOrthogonalOrigin;
+    type Output = Plane;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for DipoleAligningOrigin {
-    type Output = CircleOrthogonalOrigin;
+    type Output = Plane;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        0
     //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        6        0
+    // yes simd        0        2        0
+    //  no simd        0        7        0
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self.right_anti_dual().group0());
     }
 }
 impl std::ops::Div<co_carrier> for DipoleAtInfinity {
@@ -604,30 +586,30 @@ impl CoCarrier for DipoleAtInfinity {
     type Output = Horizon;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        0
     //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        6        0
+    // yes simd        0        2        0
+    //  no simd        0        7        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Horizon::from_groups(/* e3215 */ self.right_anti_dual()[e321]);
     }
 }
 impl std::ops::Div<co_carrier> for DipoleAtOrigin {
-    type Output = CircleAtOrigin;
+    type Output = PlaneOnOrigin;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for DipoleAtOrigin {
-    type Output = CircleAtOrigin;
+    type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd3        0        2        0
     // no simd        0        6        0
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ self.right_anti_dual().group0());
     }
 }
 impl std::ops::Div<co_carrier> for DipoleInversion {
@@ -640,11 +622,11 @@ impl CoCarrier for DipoleInversion {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       54        0
     //    simd3        0        6        0
+    //    simd4        0       18        0
     // Totals...
-    // yes simd        0       60        0
-    //  no simd        0       72        0
+    // yes simd        0       24        0
+    //  no simd        0       90        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
@@ -664,8 +646,9 @@ impl std::ops::Div<co_carrier> for DipoleInversionAligningOrigin {
 impl CoCarrier for DipoleInversionAligningOrigin {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       18        0
+    //          add/sub      mul      div
+    //   simd4        0        6        0
+    // no simd        0       24        0
     fn co_carrier(self) -> Self::Output {
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -685,11 +668,11 @@ impl CoCarrier for DipoleInversionAtInfinity {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       24        0
     //    simd3        0        4        0
+    //    simd4        0        8        0
     // Totals...
-    // yes simd        0       28        0
-    //  no simd        0       36        0
+    // yes simd        0       12        0
+    //  no simd        0       44        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
@@ -709,8 +692,9 @@ impl std::ops::Div<co_carrier> for DipoleInversionAtOrigin {
 impl CoCarrier for DipoleInversionAtOrigin {
     type Output = FlectorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       24        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([
@@ -730,8 +714,9 @@ impl std::ops::Div<co_carrier> for DipoleInversionOnOrigin {
 impl CoCarrier for DipoleInversionOnOrigin {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       30        0
+    //          add/sub      mul      div
+    //   simd4        0       10        0
+    // no simd        0       40        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
@@ -752,11 +737,11 @@ impl CoCarrier for DipoleInversionOrthogonalOrigin {
     type Output = FlectorOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       24        0
     //    simd3        0        4        0
+    //    simd4        0        8        0
     // Totals...
-    // yes simd        0       28        0
-    //  no simd        0       36        0
+    // yes simd        0       12        0
+    //  no simd        0       44        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([
@@ -768,34 +753,35 @@ impl CoCarrier for DipoleInversionOrthogonalOrigin {
     }
 }
 impl std::ops::Div<co_carrier> for DipoleOnOrigin {
-    type Output = AntiDipoleOnOrigin;
+    type Output = Plane;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for DipoleOnOrigin {
-    type Output = AntiDipoleOnOrigin;
+    type Output = Plane;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self.right_anti_dual().group0());
     }
 }
 impl std::ops::Div<co_carrier> for DipoleOrthogonalOrigin {
-    type Output = CircleAligningOrigin;
+    type Output = PlaneOnOrigin;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for DipoleOrthogonalOrigin {
-    type Output = CircleAligningOrigin;
+    type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd3        0        3        0
     // no simd        0        9        0
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ self.right_anti_dual().group0());
     }
 }
 impl std::ops::Div<co_carrier> for DualNum {
@@ -820,6 +806,19 @@ impl CoCarrier for DualNum {
         );
     }
 }
+impl std::ops::Div<co_carrier> for FlatOrigin {
+    type Output = Horizon;
+    fn div(self, _rhs: co_carrier) -> Self::Output {
+        self.co_carrier()
+    }
+}
+impl CoCarrier for FlatOrigin {
+    type Output = Horizon;
+    fn co_carrier(self) -> Self::Output {
+        use crate::elements::*;
+        return Horizon::from_groups(/* e3215 */ self.right_anti_dual()[e321]);
+    }
+}
 impl std::ops::Div<co_carrier> for FlatPoint {
     type Output = Horizon;
     fn div(self, _rhs: co_carrier) -> Self::Output {
@@ -829,8 +828,9 @@ impl std::ops::Div<co_carrier> for FlatPoint {
 impl CoCarrier for FlatPoint {
     type Output = Horizon;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Horizon::from_groups(/* e3215 */ self.right_anti_dual()[e321]);
@@ -845,8 +845,9 @@ impl std::ops::Div<co_carrier> for Flector {
 impl CoCarrier for Flector {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       24        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
@@ -866,8 +867,9 @@ impl std::ops::Div<co_carrier> for FlectorOnOrigin {
 impl CoCarrier for FlectorOnOrigin {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       12        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
@@ -878,34 +880,60 @@ impl CoCarrier for FlectorOnOrigin {
         ]));
     }
 }
+impl std::ops::Div<co_carrier> for Line {
+    type Output = LineAtInfinity;
+    fn div(self, _rhs: co_carrier) -> Self::Output {
+        self.co_carrier()
+    }
+}
+impl CoCarrier for Line {
+    type Output = LineAtInfinity;
+    fn co_carrier(self) -> Self::Output {
+        return LineAtInfinity::from_groups(/* e235, e315, e125 */ self.right_anti_dual().group0());
+    }
+}
+impl std::ops::Div<co_carrier> for LineOnOrigin {
+    type Output = LineAtInfinity;
+    fn div(self, _rhs: co_carrier) -> Self::Output {
+        self.co_carrier()
+    }
+}
+impl CoCarrier for LineOnOrigin {
+    type Output = LineAtInfinity;
+    fn co_carrier(self) -> Self::Output {
+        return LineAtInfinity::from_groups(/* e235, e315, e125 */ self.right_anti_dual().group0());
+    }
+}
 impl std::ops::Div<co_carrier> for Motor {
-    type Output = AntiMotor;
+    type Output = MotorAtInfinity;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for Motor {
-    type Output = AntiMotor;
+    type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ self.right_anti_dual().group0());
     }
 }
 impl std::ops::Div<co_carrier> for MotorOnOrigin {
-    type Output = AntiMotorOnOrigin;
+    type Output = MotorAtInfinity;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for MotorOnOrigin {
-    type Output = AntiMotorOnOrigin;
+    type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ self.right_anti_dual().group0());
     }
 }
 impl std::ops::Div<co_carrier> for MultiVector {
@@ -923,11 +951,13 @@ impl CoCarrier for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0      140        0
+    //      f32        0       28        0
+    //    simd2        0       14        0
     //    simd3        0       28        0
+    //    simd4        0       42        0
     // Totals...
-    // yes simd        0      168        0
-    //  no simd        0      224        0
+    // yes simd        0      112        0
+    //  no simd        0      308        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -965,8 +995,9 @@ impl std::ops::Div<co_carrier> for MysteryCircle {
 impl CoCarrier for MysteryCircle {
     type Output = LineAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return LineAtInfinity::from_groups(
@@ -984,8 +1015,12 @@ impl std::ops::Div<co_carrier> for MysteryCircleRotor {
 impl CoCarrier for MysteryCircleRotor {
     type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        4        0
+    // Totals...
+    // yes simd        0        8        0
+    //  no simd        0       20        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ Simd32x4::from([
@@ -1005,8 +1040,9 @@ impl std::ops::Div<co_carrier> for MysteryDipole {
 impl CoCarrier for MysteryDipole {
     type Output = Horizon;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Horizon::from_groups(/* e3215 */ self.right_anti_dual()[e321]);
@@ -1022,11 +1058,11 @@ impl CoCarrier for MysteryDipoleInversion {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        6        0
     //    simd3        0        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        8        0
-    //  no simd        0       12        0
+    // yes simd        0        4        0
+    //  no simd        0       14        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return FlectorAtInfinity::from_groups(
@@ -1044,8 +1080,9 @@ impl std::ops::Div<co_carrier> for MysteryVersorEven {
 impl CoCarrier for MysteryVersorEven {
     type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ Simd32x4::from([
@@ -1065,8 +1102,9 @@ impl std::ops::Div<co_carrier> for MysteryVersorOdd {
 impl CoCarrier for MysteryVersorOdd {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       24        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
@@ -1078,36 +1116,31 @@ impl CoCarrier for MysteryVersorOdd {
     }
 }
 impl std::ops::Div<co_carrier> for NullCircleAtOrigin {
-    type Output = NullCircleAtOrigin;
+    type Output = LineOnOrigin;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
-impl std::ops::DivAssign<co_carrier> for NullCircleAtOrigin {
-    fn div_assign(&mut self, _rhs: co_carrier) {
-        *self = self.co_carrier()
-    }
-}
 impl CoCarrier for NullCircleAtOrigin {
-    type Output = NullCircleAtOrigin;
+    type Output = LineOnOrigin;
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return LineOnOrigin::from_groups(/* e415, e425, e435 */ self.right_anti_dual().group0());
     }
 }
 impl std::ops::Div<co_carrier> for NullDipoleAtOrigin {
-    type Output = NullCircleAtOrigin;
+    type Output = PlaneOnOrigin;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for NullDipoleAtOrigin {
-    type Output = NullCircleAtOrigin;
+    type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd3        0        1        0
     // no simd        0        3        0
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ self.right_anti_dual().group0());
     }
 }
 impl std::ops::Div<co_carrier> for NullDipoleInversionAtOrigin {
@@ -1119,8 +1152,9 @@ impl std::ops::Div<co_carrier> for NullDipoleInversionAtOrigin {
 impl CoCarrier for NullDipoleInversionAtOrigin {
     type Output = FlectorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       12        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([
@@ -1132,50 +1166,48 @@ impl CoCarrier for NullDipoleInversionAtOrigin {
     }
 }
 impl std::ops::Div<co_carrier> for NullSphereAtOrigin {
-    type Output = NullSphereAtOrigin;
+    type Output = FlatOrigin;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
-impl std::ops::DivAssign<co_carrier> for NullSphereAtOrigin {
-    fn div_assign(&mut self, _rhs: co_carrier) {
-        *self = self.co_carrier()
-    }
-}
 impl CoCarrier for NullSphereAtOrigin {
-    type Output = NullSphereAtOrigin;
+    type Output = FlatOrigin;
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        use crate::elements::*;
+        return FlatOrigin::from_groups(/* e45 */ self.right_anti_dual()[e4]);
     }
 }
 impl std::ops::Div<co_carrier> for NullVersorEvenAtOrigin {
-    type Output = NullDipoleInversionAtOrigin;
+    type Output = MotorOnOrigin;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for NullVersorEvenAtOrigin {
-    type Output = NullDipoleInversionAtOrigin;
+    type Output = MotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ self.right_anti_dual().group0());
     }
 }
 impl std::ops::Div<co_carrier> for Origin {
-    type Output = NullSphereAtOrigin;
+    type Output = AntiScalar;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for Origin {
-    type Output = NullSphereAtOrigin;
+    type Output = AntiScalar;
     // Operative Statistics for this implementation:
     //      add/sub      mul      div
     // f32        0        1        0
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        use crate::elements::*;
+        return AntiScalar::from_groups(/* e12345 */ self.right_anti_dual()[e1234]);
     }
 }
 impl std::ops::Div<co_carrier> for Plane {
@@ -1187,8 +1219,9 @@ impl std::ops::Div<co_carrier> for Plane {
 impl CoCarrier for Plane {
     type Output = FlatPointAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        9        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return FlatPointAtInfinity::from_groups(
@@ -1198,19 +1231,19 @@ impl CoCarrier for Plane {
     }
 }
 impl std::ops::Div<co_carrier> for PlaneOnOrigin {
-    type Output = AntiPlaneOnOrigin;
+    type Output = FlatPointAtInfinity;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for PlaneOnOrigin {
-    type Output = AntiPlaneOnOrigin;
+    type Output = FlatPointAtInfinity;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
     //   simd3        0        1        0
     // no simd        0        3        0
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ self.right_anti_dual().group0());
     }
 }
 impl std::ops::Div<co_carrier> for RoundPoint {
@@ -1222,8 +1255,12 @@ impl std::ops::Div<co_carrier> for RoundPoint {
 impl CoCarrier for RoundPoint {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return AntiScalar::from_groups(/* e12345 */ self.right_anti_dual()[e1234]);
@@ -1246,36 +1283,20 @@ impl CoCarrier for RoundPointAtOrigin {
         return AntiScalar::from_groups(/* e12345 */ self.right_anti_dual()[e1234]);
     }
 }
-impl std::ops::Div<co_carrier> for Scalar {
-    type Output = Scalar;
-    fn div(self, _rhs: co_carrier) -> Self::Output {
-        self.co_carrier()
-    }
-}
-impl std::ops::DivAssign<co_carrier> for Scalar {
-    fn div_assign(&mut self, _rhs: co_carrier) {
-        *self = self.co_carrier()
-    }
-}
-impl CoCarrier for Scalar {
-    type Output = Scalar;
-    fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
-    }
-}
 impl std::ops::Div<co_carrier> for Sphere {
-    type Output = RoundPoint;
+    type Output = FlatPoint;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for Sphere {
-    type Output = RoundPoint;
+    type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.right_anti_dual().group0());
     }
 }
 impl std::ops::Div<co_carrier> for SphereAtOrigin {
@@ -1292,18 +1313,19 @@ impl CoCarrier for SphereAtOrigin {
     }
 }
 impl std::ops::Div<co_carrier> for SphereOnOrigin {
-    type Output = AntiSphereOnOrigin;
+    type Output = FlatPoint;
     fn div(self, _rhs: co_carrier) -> Self::Output {
         self.co_carrier()
     }
 }
 impl CoCarrier for SphereOnOrigin {
-    type Output = AntiSphereOnOrigin;
+    type Output = FlatPoint;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn co_carrier(self) -> Self::Output {
-        return self.right_anti_dual();
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.right_anti_dual().group0());
     }
 }
 impl std::ops::Div<co_carrier> for VersorEven {
@@ -1315,8 +1337,9 @@ impl std::ops::Div<co_carrier> for VersorEven {
 impl CoCarrier for VersorEven {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       32        0
+    //          add/sub      mul      div
+    //   simd4        0       32        0
+    // no simd        0      128        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
@@ -1336,8 +1359,9 @@ impl std::ops::Div<co_carrier> for VersorEvenAligningOrigin {
 impl CoCarrier for VersorEvenAligningOrigin {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       24        0
+    //          add/sub      mul      div
+    //   simd4        0       24        0
+    // no simd        0       96        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
@@ -1357,8 +1381,9 @@ impl std::ops::Div<co_carrier> for VersorEvenAtInfinity {
 impl CoCarrier for VersorEvenAtInfinity {
     type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       12        0
+    //          add/sub      mul      div
+    //   simd4        0       12        0
+    // no simd        0       48        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ Simd32x4::from([
@@ -1378,8 +1403,9 @@ impl std::ops::Div<co_carrier> for VersorEvenAtOrigin {
 impl CoCarrier for VersorEvenAtOrigin {
     type Output = MotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        8        0
+    // no simd        0       32        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
@@ -1399,8 +1425,9 @@ impl std::ops::Div<co_carrier> for VersorEvenOnOrigin {
 impl CoCarrier for VersorEvenOnOrigin {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       16        0
+    //          add/sub      mul      div
+    //   simd4        0       16        0
+    // no simd        0       64        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
@@ -1420,8 +1447,9 @@ impl std::ops::Div<co_carrier> for VersorEvenOrthogonalOrigin {
 impl CoCarrier for VersorEvenOrthogonalOrigin {
     type Output = MotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       12        0
+    //          add/sub      mul      div
+    //   simd4        0       12        0
+    // no simd        0       48        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([
@@ -1441,8 +1469,9 @@ impl std::ops::Div<co_carrier> for VersorOdd {
 impl CoCarrier for VersorOdd {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       60        0
+    //          add/sub      mul      div
+    //   simd4        0       20        0
+    // no simd        0       80        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
@@ -1462,8 +1491,9 @@ impl std::ops::Div<co_carrier> for VersorOddAtInfinity {
 impl CoCarrier for VersorOddAtInfinity {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       36        0
+    //          add/sub      mul      div
+    //   simd4        0       12        0
+    // no simd        0       48        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
@@ -1483,8 +1513,9 @@ impl std::ops::Div<co_carrier> for VersorOddOrthogonalOrigin {
 impl CoCarrier for VersorOddOrthogonalOrigin {
     type Output = FlectorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0       36        0
+    //          add/sub      mul      div
+    //   simd4        0       12        0
+    // no simd        0       48        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
         return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([

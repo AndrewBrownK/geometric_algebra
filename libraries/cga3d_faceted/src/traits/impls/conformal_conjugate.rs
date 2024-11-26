@@ -10,14 +10,14 @@
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       1       0
-//  Average:         0       2       0
-//  Maximum:         0      12       0
+//  Average:         0       1       0
+//  Maximum:         0       8       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       4       0
-//  Average:         0       3       0
-//  Maximum:         0      16       0
+//  Average:         0       4       0
+//  Maximum:         0      22       0
 impl std::ops::Div<conformal_conjugate> for AntiCircleOnOrigin {
     type Output = AntiCircleOnOrigin;
     fn div(self, _rhs: conformal_conjugate) -> Self::Output {
@@ -47,17 +47,17 @@ impl std::ops::DivAssign<conformal_conjugate> for AntiCircleRotor {
 }
 impl ConformalConjugate for AntiCircleRotor {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45] * -1.0]),
+            self.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[scalar]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -74,17 +74,17 @@ impl std::ops::DivAssign<conformal_conjugate> for AntiCircleRotorAligningOrigin 
 }
 impl ConformalConjugate for AntiCircleRotorAligningOrigin {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return AntiCircleRotorAligningOrigin::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12
             self.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[scalar]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -101,15 +101,15 @@ impl std::ops::DivAssign<conformal_conjugate> for AntiCircleRotorAligningOriginA
 }
 impl ConformalConjugate for AntiCircleRotorAligningOriginAtInfinity {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return AntiCircleRotorAligningOriginAtInfinity::from_groups(
             // e23, e31, e12
             self.group0(),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[scalar]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -126,15 +126,15 @@ impl std::ops::DivAssign<conformal_conjugate> for AntiCircleRotorAtInfinity {
 }
 impl ConformalConjugate for AntiCircleRotorAtInfinity {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return AntiCircleRotorAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[scalar]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -167,19 +167,19 @@ impl std::ops::DivAssign<conformal_conjugate> for AntiDipoleInversion {
 }
 impl ConformalConjugate for AntiDipoleInversion {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        7        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e321]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e4
-            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e4]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e1, e2, e3, e5
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e5] * -1.0]),
+            self.group3() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -197,20 +197,19 @@ impl std::ops::DivAssign<conformal_conjugate> for AntiDipoleInversionAtInfinity 
 impl ConformalConjugate for AntiDipoleInversionAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        4        0
     //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        7        0
+    // yes simd        0        3        0
+    //  no simd        0       11        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e321]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
             // e1, e2, e3, e5
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e5] * -1.0]),
+            self.group2() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -244,20 +243,19 @@ impl std::ops::DivAssign<conformal_conjugate> for AntiDipoleInversionOrthogonalO
 impl ConformalConjugate for AntiDipoleInversionOrthogonalOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        4        0
     //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        7        0
+    // yes simd        0        3        0
+    //  no simd        0       11        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e5] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
             // e235, e315, e125, e4
-            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e4]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -322,11 +320,11 @@ impl std::ops::DivAssign<conformal_conjugate> for AntiFlatPoint {
 }
 impl ConformalConjugate for AntiFlatPoint {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e321]]));
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
 impl std::ops::Div<conformal_conjugate> for AntiFlector {
@@ -342,15 +340,15 @@ impl std::ops::DivAssign<conformal_conjugate> for AntiFlector {
 }
 impl ConformalConjugate for AntiFlector {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e321]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e1, e2, e3, e5
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e5] * -1.0]),
+            self.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -387,13 +385,7 @@ impl ConformalConjugate for AntiLine {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return AntiLine::from_groups(
-            // e23, e31, e12
-            self.group0(),
-            // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
-        );
+        return AntiLine::from_groups(/* e23, e31, e12 */ self.group0(), /* e15, e25, e35 */ self.group1() * Simd32x3::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for AntiLineOnOrigin {
@@ -429,13 +421,7 @@ impl ConformalConjugate for AntiMotor {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            self.group0(),
-            // e15, e25, e35, e3215
-            Simd32x4::from([self[e15], self[e25], self[e35], self[e3215]]) * Simd32x4::from(-1.0),
-        );
+        return AntiMotor::from_groups(/* e23, e31, e12, scalar */ self.group0(), /* e15, e25, e35, e3215 */ self.group1() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for AntiMotorOnOrigin {
@@ -467,16 +453,12 @@ impl std::ops::DivAssign<conformal_conjugate> for AntiMysteryCircleRotor {
 }
 impl ConformalConjugate for AntiMysteryCircleRotor {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
         use crate::elements::*;
-        return AntiMysteryCircleRotor::from_groups(
-            // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45] * -1.0]),
-            // scalar
-            self[scalar],
-        );
+        return AntiMysteryCircleRotor::from_groups(/* e23, e31, e12, e45 */ self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]), /* scalar */ self[scalar]);
     }
 }
 impl std::ops::Div<conformal_conjugate> for AntiMysteryDipoleInversion {
@@ -492,13 +474,13 @@ impl std::ops::DivAssign<conformal_conjugate> for AntiMysteryDipoleInversion {
 }
 impl ConformalConjugate for AntiMysteryDipoleInversion {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return AntiMysteryDipoleInversion::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e321]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e1, e2, e3
             self.group1(),
         );
@@ -517,11 +499,11 @@ impl std::ops::DivAssign<conformal_conjugate> for AntiPlane {
 }
 impl ConformalConjugate for AntiPlane {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([self[e1], self[e2], self[e3], self[e5] * -1.0]));
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
     }
 }
 impl std::ops::Div<conformal_conjugate> for AntiPlaneOnOrigin {
@@ -606,20 +588,19 @@ impl std::ops::DivAssign<conformal_conjugate> for Circle {
 impl ConformalConjugate for Circle {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        0
     //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        6        0
+    // yes simd        0        2        0
+    //  no simd        0        7        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e321]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group2() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -640,14 +621,13 @@ impl ConformalConjugate for CircleAligningOrigin {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return CircleAligningOrigin::from_groups(
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group2() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -665,18 +645,17 @@ impl std::ops::DivAssign<conformal_conjugate> for CircleAtInfinity {
 impl ConformalConjugate for CircleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        3        0
     //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        6        0
+    // yes simd        0        2        0
+    //  no simd        0        7        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e321]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -697,13 +676,7 @@ impl ConformalConjugate for CircleAtOrigin {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return CircleAtOrigin::from_groups(
-            // e423, e431, e412
-            self.group0(),
-            // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
-        );
+        return CircleAtOrigin::from_groups(/* e423, e431, e412 */ self.group0(), /* e235, e315, e125 */ self.group1() * Simd32x3::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for CircleOnOrigin {
@@ -723,13 +696,7 @@ impl ConformalConjugate for CircleOnOrigin {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return CircleOnOrigin::from_groups(
-            // e423, e431, e412
-            self.group0(),
-            // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
-        );
+        return CircleOnOrigin::from_groups(/* e423, e431, e412 */ self.group0(), /* e415, e425, e435 */ self.group1() * Simd32x3::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for CircleOrthogonalOrigin {
@@ -749,13 +716,7 @@ impl ConformalConjugate for CircleOrthogonalOrigin {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return CircleOrthogonalOrigin::from_groups(
-            // e423, e431, e412, e321
-            self.group0(),
-            // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
-        );
+        return CircleOrthogonalOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0(), /* e235, e315, e125 */ self.group1() * Simd32x3::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for CircleRotor {
@@ -771,21 +732,17 @@ impl std::ops::DivAssign<conformal_conjugate> for CircleRotor {
 }
 impl ConformalConjugate for CircleRotor {
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e321]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e12345]]) * Simd32x4::from(-1.0),
+            self.group2() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -809,14 +766,13 @@ impl ConformalConjugate for CircleRotorAligningOrigin {
     // yes simd        0        2        0
     //  no simd        0        7        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e12345]]) * Simd32x4::from(-1.0),
+            self.group2() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -840,12 +796,11 @@ impl ConformalConjugate for CircleRotorAligningOriginAtInfinity {
     // yes simd        0        2        0
     //  no simd        0        7        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return CircleRotorAligningOriginAtInfinity::from_groups(
             // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e12345]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -862,19 +817,15 @@ impl std::ops::DivAssign<conformal_conjugate> for CircleRotorAtInfinity {
 }
 impl ConformalConjugate for CircleRotorAtInfinity {
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e321]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e12345]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -892,18 +843,17 @@ impl std::ops::DivAssign<conformal_conjugate> for CircleRotorOnOrigin {
 impl ConformalConjugate for CircleRotorOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
     //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        4        0
+    //  no simd        0        7        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return CircleRotorOnOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e12345] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -921,20 +871,19 @@ impl std::ops::DivAssign<conformal_conjugate> for Dipole {
 impl ConformalConjugate for Dipole {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
     //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        4        0
+    //  no simd        0        7        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return Dipole::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45] * -1.0]),
+            self.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group2() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -952,18 +901,17 @@ impl std::ops::DivAssign<conformal_conjugate> for DipoleAligningOrigin {
 impl ConformalConjugate for DipoleAligningOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
     //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        4        0
+    //  no simd        0        7        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return DipoleAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e45] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -981,18 +929,17 @@ impl std::ops::DivAssign<conformal_conjugate> for DipoleAtInfinity {
 impl ConformalConjugate for DipoleAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
     //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        4        0
+    //  no simd        0        7        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -1013,13 +960,7 @@ impl ConformalConjugate for DipoleAtOrigin {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return DipoleAtOrigin::from_groups(
-            // e41, e42, e43
-            self.group0(),
-            // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
-        );
+        return DipoleAtOrigin::from_groups(/* e41, e42, e43 */ self.group0(), /* e15, e25, e35 */ self.group1() * Simd32x3::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for DipoleInversion {
@@ -1035,23 +976,19 @@ impl std::ops::DivAssign<conformal_conjugate> for DipoleInversion {
 }
 impl ConformalConjugate for DipoleInversion {
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45] * -1.0]),
+            self.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]) * Simd32x4::from(-1.0),
+            self.group3() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1068,21 +1005,17 @@ impl std::ops::DivAssign<conformal_conjugate> for DipoleInversionAligningOrigin 
 }
 impl ConformalConjugate for DipoleInversionAligningOrigin {
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e45] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]) * Simd32x4::from(-1.0),
+            self.group2() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1100,21 +1033,19 @@ impl std::ops::DivAssign<conformal_conjugate> for DipoleInversionAtInfinity {
 impl ConformalConjugate for DipoleInversionAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
     //    simd3        0        1        0
-    //    simd4        0        1        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        0        3        0
-    //  no simd        0        8        0
+    //  no simd        0       11        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return DipoleInversionAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]) * Simd32x4::from(-1.0),
+            self.group2() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1131,15 +1062,15 @@ impl std::ops::DivAssign<conformal_conjugate> for DipoleInversionAtOrigin {
 }
 impl ConformalConjugate for DipoleInversionAtOrigin {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return DipoleInversionAtOrigin::from_groups(
             // e41, e42, e43, e3215
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e3215] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -1156,15 +1087,15 @@ impl std::ops::DivAssign<conformal_conjugate> for DipoleInversionOnOrigin {
 }
 impl ConformalConjugate for DipoleInversionOnOrigin {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return DipoleInversionOnOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e45] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([self[e1234], self[e4235] * -1.0, self[e4315] * -1.0, self[e4125] * -1.0]),
+            self.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]),
         );
     }
 }
@@ -1181,17 +1112,17 @@ impl std::ops::DivAssign<conformal_conjugate> for DipoleInversionOrthogonalOrigi
 }
 impl ConformalConjugate for DipoleInversionOrthogonalOrigin {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return DipoleInversionOrthogonalOrigin::from_groups(
             // e41, e42, e43, e3215
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e3215] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12
             self.group1(),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -1208,11 +1139,11 @@ impl std::ops::DivAssign<conformal_conjugate> for DipoleOnOrigin {
 }
 impl ConformalConjugate for DipoleOnOrigin {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ Simd32x4::from([self[e41], self[e42], self[e43], self[e45] * -1.0]));
+        return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
     }
 }
 impl std::ops::Div<conformal_conjugate> for DipoleOrthogonalOrigin {
@@ -1232,14 +1163,13 @@ impl ConformalConjugate for DipoleOrthogonalOrigin {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return DipoleOrthogonalOrigin::from_groups(
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12
             self.group1(),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group2() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -1256,11 +1186,11 @@ impl std::ops::DivAssign<conformal_conjugate> for DualNum {
 }
 impl ConformalConjugate for DualNum {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return DualNum::from_groups(/* e4, e12345 */ Simd32x2::from([self[e4], self[e12345] * -1.0]));
+        return DualNum::from_groups(/* e4, e12345 */ self.group0() * Simd32x2::from([1.0, -1.0]));
     }
 }
 impl std::ops::Div<conformal_conjugate> for FlatOrigin {
@@ -1300,8 +1230,7 @@ impl ConformalConjugate for FlatPoint {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]) * Simd32x4::from(-1.0));
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for FlatPointAtInfinity {
@@ -1321,8 +1250,7 @@ impl ConformalConjugate for FlatPointAtInfinity {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0));
+        return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ self.group0() * Simd32x3::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for Flector {
@@ -1342,12 +1270,11 @@ impl ConformalConjugate for Flector {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1368,8 +1295,7 @@ impl ConformalConjugate for FlectorAtInfinity {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([self[e15], self[e25], self[e35], self[e3215]]) * Simd32x4::from(-1.0));
+        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for FlectorOnOrigin {
@@ -1389,11 +1315,7 @@ impl ConformalConjugate for FlectorOnOrigin {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return FlectorOnOrigin::from_groups(
-            // e45, e4235, e4315, e4125
-            Simd32x4::from([self[e45], self[e4235], self[e4315], self[e4125]]) * Simd32x4::from(-1.0),
-        );
+        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for Horizon {
@@ -1453,12 +1375,11 @@ impl ConformalConjugate for Line {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -1479,8 +1400,7 @@ impl ConformalConjugate for LineAtInfinity {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return LineAtInfinity::from_groups(/* e235, e315, e125 */ Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0));
+        return LineAtInfinity::from_groups(/* e235, e315, e125 */ self.group0() * Simd32x3::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for LineOnOrigin {
@@ -1500,8 +1420,7 @@ impl ConformalConjugate for LineOnOrigin {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0));
+        return LineOnOrigin::from_groups(/* e415, e425, e435 */ self.group0() * Simd32x3::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for Motor {
@@ -1521,12 +1440,11 @@ impl ConformalConjugate for Motor {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e12345]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1547,8 +1465,7 @@ impl ConformalConjugate for MotorAtInfinity {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ Simd32x4::from([self[e235], self[e315], self[e125], self[e5]]) * Simd32x4::from(-1.0));
+        return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for MotorOnOrigin {
@@ -1568,11 +1485,7 @@ impl ConformalConjugate for MotorOnOrigin {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return MotorOnOrigin::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e12345]]) * Simd32x4::from(-1.0),
-        );
+        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for MultiVector {
@@ -1589,34 +1502,36 @@ impl std::ops::DivAssign<conformal_conjugate> for MultiVector {
 impl ConformalConjugate for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0       10        0
+    //      f32        0        2        0
+    //    simd2        0        1        0
     //    simd3        0        2        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        0       12        0
-    //  no simd        0       16        0
+    // yes simd        0        8        0
+    //  no simd        0       22        0
     fn conformal_conjugate(self) -> Self {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self[scalar], self[e12345] * -1.0]),
+            self.group0() * Simd32x2::from([1.0, -1.0]),
             // e1, e2, e3, e4
             self.group1(),
             // e5
             self[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e45] * -1.0]),
+            self.group3() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group4() * Simd32x3::from(-1.0),
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e321]]),
+            self.group6() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e423, e431, e412
             self.group7(),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group8() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([self[e1234], self[e4235] * -1.0, self[e4315] * -1.0, self[e4125] * -1.0]),
+            self.group9() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]),
             // e3215
             self[e3215] * -1.0,
         );
@@ -1635,11 +1550,11 @@ impl std::ops::DivAssign<conformal_conjugate> for MysteryCircle {
 }
 impl ConformalConjugate for MysteryCircle {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return MysteryCircle::from_groups(/* e415, e425, e435, e321 */ Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e321]]));
+        return MysteryCircle::from_groups(/* e415, e425, e435, e321 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
 impl std::ops::Div<conformal_conjugate> for MysteryCircleRotor {
@@ -1655,13 +1570,17 @@ impl std::ops::DivAssign<conformal_conjugate> for MysteryCircleRotor {
 }
 impl ConformalConjugate for MysteryCircleRotor {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn conformal_conjugate(self) -> Self {
         use crate::elements::*;
         return MysteryCircleRotor::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e321]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e12345
             self[e12345] * -1.0,
         );
@@ -1680,11 +1599,11 @@ impl std::ops::DivAssign<conformal_conjugate> for MysteryDipole {
 }
 impl ConformalConjugate for MysteryDipole {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return MysteryDipole::from_groups(/* e23, e31, e12, e45 */ Simd32x4::from([self[e23], self[e31], self[e12], self[e45] * -1.0]));
+        return MysteryDipole::from_groups(/* e23, e31, e12, e45 */ self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]));
     }
 }
 impl std::ops::Div<conformal_conjugate> for MysteryDipoleInversion {
@@ -1701,18 +1620,17 @@ impl std::ops::DivAssign<conformal_conjugate> for MysteryDipoleInversion {
 impl ConformalConjugate for MysteryDipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
     //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        4        0
+    //  no simd        0        7        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return MysteryDipoleInversion::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125
-            Simd32x3::from([self[e4235], self[e4315], self[e4125]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -1729,15 +1647,15 @@ impl std::ops::DivAssign<conformal_conjugate> for MysteryVersorEven {
 }
 impl ConformalConjugate for MysteryVersorEven {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
-            Simd32x4::from([self[e12345] * -1.0, self[e1], self[e2], self[e3]]),
+            self.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e321]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -1754,15 +1672,15 @@ impl std::ops::DivAssign<conformal_conjugate> for MysteryVersorOdd {
 }
 impl ConformalConjugate for MysteryVersorOdd {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return MysteryVersorOdd::from_groups(
             // scalar, e4235, e4315, e4125
-            Simd32x4::from([self[scalar], self[e4235] * -1.0, self[e4315] * -1.0, self[e4125] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45] * -1.0]),
+            self.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -1879,11 +1797,7 @@ impl ConformalConjugate for Plane {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return Plane::from_groups(
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]) * Simd32x4::from(-1.0),
-        );
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for PlaneOnOrigin {
@@ -1903,8 +1817,7 @@ impl ConformalConjugate for PlaneOnOrigin {
     //   simd3        0        1        0
     // no simd        0        3        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ Simd32x3::from([self[e4235], self[e4315], self[e4125]]) * Simd32x3::from(-1.0));
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ self.group0() * Simd32x3::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for RoundPoint {
@@ -1940,11 +1853,11 @@ impl std::ops::DivAssign<conformal_conjugate> for RoundPointAtOrigin {
 }
 impl ConformalConjugate for RoundPointAtOrigin {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return RoundPointAtOrigin::from_groups(/* e4, e5 */ Simd32x2::from([self[e4], self[e5] * -1.0]));
+        return RoundPointAtOrigin::from_groups(/* e4, e5 */ self.group0() * Simd32x2::from([1.0, -1.0]));
     }
 }
 impl std::ops::Div<conformal_conjugate> for Scalar {
@@ -1981,12 +1894,7 @@ impl ConformalConjugate for Sphere {
     // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
         use crate::elements::*;
-        return Sphere::from_groups(
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]) * Simd32x4::from(-1.0),
-            // e1234
-            self[e1234],
-        );
+        return Sphere::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0() * Simd32x4::from(-1.0), /* e1234 */ self[e1234]);
     }
 }
 impl std::ops::Div<conformal_conjugate> for SphereAtOrigin {
@@ -2002,11 +1910,11 @@ impl std::ops::DivAssign<conformal_conjugate> for SphereAtOrigin {
 }
 impl ConformalConjugate for SphereAtOrigin {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return SphereAtOrigin::from_groups(/* e3215, e1234 */ Simd32x2::from([self[e3215] * -1.0, self[e1234]]));
+        return SphereAtOrigin::from_groups(/* e3215, e1234 */ self.group0() * Simd32x2::from([-1.0, 1.0]));
     }
 }
 impl std::ops::Div<conformal_conjugate> for SphereOnOrigin {
@@ -2022,14 +1930,11 @@ impl std::ops::DivAssign<conformal_conjugate> for SphereOnOrigin {
 }
 impl ConformalConjugate for SphereOnOrigin {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return SphereOnOrigin::from_groups(
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from([self[e4235] * -1.0, self[e4315] * -1.0, self[e4125] * -1.0, self[e1234]]),
-        );
+        return SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
     }
 }
 impl std::ops::Div<conformal_conjugate> for VersorEven {
@@ -2045,21 +1950,17 @@ impl std::ops::DivAssign<conformal_conjugate> for VersorEven {
 }
 impl ConformalConjugate for VersorEven {
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e12345] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e321]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5]]) * Simd32x4::from(-1.0),
+            self.group2() * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -2078,21 +1979,17 @@ impl std::ops::DivAssign<conformal_conjugate> for VersorEvenAligningOrigin {
 }
 impl ConformalConjugate for VersorEvenAligningOrigin {
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e12345] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e415, e425, e435, e4
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e4]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5]]) * Simd32x4::from(-1.0),
+            self.group2() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -2109,21 +2006,17 @@ impl std::ops::DivAssign<conformal_conjugate> for VersorEvenAtInfinity {
 }
 impl ConformalConjugate for VersorEvenAtInfinity {
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
-            Simd32x4::from([self[e12345] * -1.0, self[e1], self[e2], self[e3]]),
+            self.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e321]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5]]) * Simd32x4::from(-1.0),
+            self.group2() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -2144,13 +2037,7 @@ impl ConformalConjugate for VersorEvenAtOrigin {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
-        return VersorEvenAtOrigin::from_groups(
-            // e423, e431, e412, e4
-            self.group0(),
-            // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5]]) * Simd32x4::from(-1.0),
-        );
+        return VersorEvenAtOrigin::from_groups(/* e423, e431, e412, e4 */ self.group0(), /* e235, e315, e125, e5 */ self.group1() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Div<conformal_conjugate> for VersorEvenOnOrigin {
@@ -2166,15 +2053,15 @@ impl std::ops::DivAssign<conformal_conjugate> for VersorEvenOnOrigin {
 }
 impl ConformalConjugate for VersorEvenOnOrigin {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return VersorEvenOnOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e12345] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e415, e425, e435, e4
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e4]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -2195,12 +2082,11 @@ impl ConformalConjugate for VersorEvenOrthogonalOrigin {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
             self.group0(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
             self.group2(),
         );
@@ -2219,23 +2105,19 @@ impl std::ops::DivAssign<conformal_conjugate> for VersorOdd {
 }
 impl ConformalConjugate for VersorOdd {
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45] * -1.0]),
+            self.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]) * Simd32x4::from(-1.0),
+            self.group3() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -2252,21 +2134,17 @@ impl std::ops::DivAssign<conformal_conjugate> for VersorOddAtInfinity {
 }
 impl ConformalConjugate for VersorOddAtInfinity {
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0        8        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            Simd32x4::from([self[scalar], self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45] * -1.0]),
+            self.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]) * Simd32x4::from(-1.0),
+            self.group2() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -2283,17 +2161,17 @@ impl std::ops::DivAssign<conformal_conjugate> for VersorOddOrthogonalOrigin {
 }
 impl ConformalConjugate for VersorOddOrthogonalOrigin {
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        4        0
+    //          add/sub      mul      div
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn conformal_conjugate(self) -> Self {
-        use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
             self.group0(),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e3215] * -1.0]),
+            self.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }

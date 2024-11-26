@@ -12,13 +12,13 @@ use crate::traits::UnitizedRadiusNormSquared;
 //  Minimum:         4       8       1
 //   Median:        12      17       1
 //  Average:        17      22       1
-//  Maximum:        63      74       1
+//  Maximum:        63      75       1
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         4       8       1
 //   Median:        12      21       1
-//  Average:        17      26       1
-//  Maximum:        63      82       1
+//  Average:        17      27       1
+//  Maximum:        63      86       1
 impl std::ops::Div<unitized_radius_norm> for AntiCircleRotor {
     type Output = f32;
     fn div(self, _rhs: unitized_radius_norm) -> Self::Output {
@@ -119,10 +119,10 @@ impl UnitizedRadiusNorm for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       17       23        1
-    //    simd4        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       17       24        1
-    //  no simd       17       27        1
+    // yes simd       17       25        1
+    //  no simd       17       31        1
     fn unitized_radius_norm(self) -> f32 {
         return f32::powf(self.unitized_radius_norm_squared(), 0.5);
     }
@@ -138,10 +138,10 @@ impl UnitizedRadiusNorm for MultiVector {
     //           add/sub      mul      div
     //      f32       63       71        1
     //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd       63       74        1
-    //  no simd       63       82        1
+    // yes simd       63       75        1
+    //  no simd       63       86        1
     fn unitized_radius_norm(self) -> f32 {
         return f32::powf(self.unitized_radius_norm_squared(), 0.5);
     }
@@ -206,10 +206,10 @@ impl UnitizedRadiusNorm for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       18       24        1
-    //    simd4        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       18       25        1
-    //  no simd       18       28        1
+    // yes simd       18       26        1
+    //  no simd       18       32        1
     fn unitized_radius_norm(self) -> f32 {
         return f32::powf(self.unitized_radius_norm_squared(), 0.5);
     }

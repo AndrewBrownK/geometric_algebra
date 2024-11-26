@@ -39,18 +39,12 @@ impl AntiFix for AntiFlatPoint {
     //  no simd        0        9        1
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let anti_reverse = AntiFlatPoint::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e321]]) * Simd32x4::from(-1.0),
-        );
+        let anti_reverse = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e321] * self[e321]);
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return AntiFlatPoint::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e235], self[e315], self[e125], self[e321]]),
-        );
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for AntiPlane {
@@ -78,10 +72,7 @@ impl AntiFix for AntiPlane {
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return AntiPlane::from_groups(
-            // e1, e2, e3, e5
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e5]]),
-        );
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for AntiScalar {
@@ -129,15 +120,12 @@ impl AntiFix for FlatPoint {
     //  no simd        0       10        1
     fn anti_fix(self) -> Self {
         use crate::elements::*;
-        let anti_reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]) * Simd32x4::from(-1.0));
+        let anti_reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e45] * self[e45] * -1.0);
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return FlatPoint::from_groups(
-            // e15, e25, e35, e45
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]),
-        );
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for Plane {
@@ -165,10 +153,7 @@ impl AntiFix for Plane {
         let anti_square_root = AntiScalar::from_groups(/* e12345 */ f32::powf(geometric_anti_product[e12345], 0.5));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(anti_square_root[e12345], 2));
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
-        return Plane::from_groups(
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]),
-        );
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ Simd32x4::from(anti_inverse[e12345]) * self.group0());
     }
 }
 impl std::ops::Div<anti_fix> for RoundPoint {
@@ -199,7 +184,7 @@ impl AntiFix for RoundPoint {
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
         return RoundPoint::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]),
+            Simd32x4::from(anti_inverse[e12345]) * self.group0(),
             // e5
             anti_inverse[e12345] * self[e5],
         );
@@ -259,7 +244,7 @@ impl AntiFix for Sphere {
         let anti_inverse = AntiScalar::from_groups(/* e12345 */ 1.0 / anti_dot_product[e12345]);
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from(anti_inverse[e12345]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e3215]]),
+            Simd32x4::from(anti_inverse[e12345]) * self.group0(),
             // e1234
             anti_inverse[e12345] * self[e1234],
         );

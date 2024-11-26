@@ -19,7 +19,7 @@ use crate::traits::Wedge;
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         1       0       0
-//  Average:        12      16       0
+//  Average:        12      17       0
 //  Maximum:       177     192       0
 impl std::ops::Add<AntiScalar> for MultiVector {
     type Output = MultiVector;
@@ -489,8 +489,13 @@ impl std::ops::BitXorAssign<Flector> for MultiVector {
 impl std::ops::BitXor<Horizon> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        2        0
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd2        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        8        0
     fn bitxor(self, other: Horizon) -> Self::Output {
         return self.wedge(other);
     }
@@ -560,11 +565,13 @@ impl std::ops::BitXor<Origin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        6        0
+    //      f32        0        5        0
+    //    simd2        0        1        0
     //    simd3        0        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        8        0
-    //  no simd        0       12        0
+    // yes simd        0       10        0
+    //  no simd        0       21        0
     fn bitxor(self, other: Origin) -> Self::Output {
         return self.wedge(other);
     }
@@ -651,10 +658,9 @@ impl From<AntiScalar> for MultiVector {
 
 impl From<DualNum> for MultiVector {
     fn from(from_dual_num: DualNum) -> Self {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([from_dual_num[scalar], from_dual_num[e1234]]),
+            from_dual_num.group0(),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -669,18 +675,17 @@ impl From<DualNum> for MultiVector {
 
 impl From<Flector> for MultiVector {
     fn from(from_flector: Flector) -> Self {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([from_flector[e1], from_flector[e2], from_flector[e3], from_flector[e4]]),
+            from_flector.group0(),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([from_flector[e423], from_flector[e431], from_flector[e412], from_flector[e321]]),
+            from_flector.group1(),
         );
     }
 }
@@ -705,16 +710,15 @@ impl From<Horizon> for MultiVector {
 
 impl From<Line> for MultiVector {
     fn from(from_line: Line) -> Self {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
-            Simd32x3::from([from_line[e41], from_line[e42], from_line[e43]]),
+            from_line.group0(),
             // e23, e31, e12
-            Simd32x3::from([from_line[e23], from_line[e31], from_line[e12]]),
+            from_line.group1(),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -759,7 +763,6 @@ impl From<Origin> for MultiVector {
 
 impl From<Plane> for MultiVector {
     fn from(from_plane: Plane) -> Self {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(0.0),
@@ -770,19 +773,18 @@ impl From<Plane> for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([from_plane[e423], from_plane[e431], from_plane[e412], from_plane[e321]]),
+            from_plane.group0(),
         );
     }
 }
 
 impl From<Point> for MultiVector {
     fn from(from_point: Point) -> Self {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([from_point[e1], from_point[e2], from_point[e3], from_point[e4]]),
+            from_point.group0(),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -815,10 +817,12 @@ impl std::ops::Mul<AntiScalar> for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        5        0
+    //    simd2        0        1        0
     //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        6        0
-    //  no simd        0        8        0
+    // yes simd        0        9        0
+    //  no simd        0       18        0
     fn mul(self, other: AntiScalar) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -948,11 +952,13 @@ impl std::ops::Mul<Origin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        6        0
+    //      f32        0        5        0
+    //    simd2        0        1        0
     //    simd3        0        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        8        0
-    //  no simd        0       12        0
+    // yes simd        0       10        0
+    //  no simd        0       21        0
     fn mul(self, other: Origin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -966,11 +972,12 @@ impl std::ops::Mul<Plane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       32        0
+    //      f32       18       31        0
+    //    simd2        0        1        0
     //    simd3        2        4        0
     // Totals...
     // yes simd       20       36        0
-    //  no simd       24       44        0
+    //  no simd       24       45        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1029,18 +1036,17 @@ impl std::ops::Neg for MultiVector {
     // yes simd        0        5        0
     //  no simd        0       16        0
     fn neg(self) -> Self::Output {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([self[scalar], self[e1234]]) * Simd32x2::from(-1.0),
+            self.group0() * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e41, e42, e43
-            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
+            self.group2() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
+            self.group3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
+            self.group4() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1048,11 +1054,11 @@ impl std::ops::Not for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
     //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        4        0
+    //  no simd        0        7        0
     fn not(self) -> Self::Output {
         return self.right_dual();
     }

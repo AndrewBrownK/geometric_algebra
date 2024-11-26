@@ -17,7 +17,7 @@
 //  Minimum:         0       0       0
 //   Median:         0       1       0
 //  Average:         0       4       0
-//  Maximum:         0      16       0
+//  Maximum:         0      17       0
 impl std::ops::Div<auto_morphism> for AntiCircleRotor {
     type Output = AntiCircleRotor;
     fn div(self, _rhs: auto_morphism) -> Self::Output {
@@ -54,16 +54,15 @@ impl AutoMorphism for AntiDipoleInversion {
     // yes simd        0        4        0
     //  no simd        0       15        0
     fn auto_morphism(self) -> Self {
-        use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e4
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e4]]) * Simd32x4::from(-1.0),
+            self.group2() * Simd32x4::from(-1.0),
             // e1, e2, e3, e5
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e5]]) * Simd32x4::from(-1.0),
+            self.group3() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -100,11 +99,7 @@ impl AutoMorphism for AntiFlatPoint {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn auto_morphism(self) -> Self {
-        use crate::elements::*;
-        return AntiFlatPoint::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e321]]) * Simd32x4::from(-1.0),
-        );
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Div<auto_morphism> for AntiFlector {
@@ -124,12 +119,11 @@ impl AutoMorphism for AntiFlector {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn auto_morphism(self) -> Self {
-        use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e321]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e1, e2, e3, e5
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e5]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -182,8 +176,7 @@ impl AutoMorphism for AntiPlane {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn auto_morphism(self) -> Self {
-        use crate::elements::*;
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([self[e1], self[e2], self[e3], self[e5]]) * Simd32x4::from(-1.0));
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Div<auto_morphism> for AntiScalar {
@@ -226,14 +219,13 @@ impl AutoMorphism for Circle {
     // yes simd        0        3        0
     //  no simd        0       10        0
     fn auto_morphism(self) -> Self {
-        use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group2() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -257,14 +249,13 @@ impl AutoMorphism for CircleRotor {
     // yes simd        0        3        0
     //  no simd        0       11        0
     fn auto_morphism(self) -> Self {
-        use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e12345]]) * Simd32x4::from(-1.0),
+            self.group2() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -317,8 +308,7 @@ impl AutoMorphism for DualNum {
     //   simd2        0        1        0
     // no simd        0        2        0
     fn auto_morphism(self) -> Self {
-        use crate::elements::*;
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([self[e5], self[e12345]]) * Simd32x2::from(-1.0));
+        return DualNum::from_groups(/* e5, e12345 */ self.group0() * Simd32x2::from(-1.0));
     }
 }
 impl std::ops::Div<auto_morphism> for FlatPoint {
@@ -370,12 +360,11 @@ impl AutoMorphism for Line {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn auto_morphism(self) -> Self {
-        use crate::elements::*;
         return Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -396,12 +385,11 @@ impl AutoMorphism for Motor {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn auto_morphism(self) -> Self {
-        use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e12345]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -419,19 +407,20 @@ impl std::ops::DivAssign<auto_morphism> for MultiVector {
 impl AutoMorphism for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        2        0
+    //      f32        0        1        0
+    //    simd2        0        1        0
     //    simd3        0        2        0
     //    simd4        0        2        0
     // Totals...
     // yes simd        0        6        0
-    //  no simd        0       16        0
+    //  no simd        0       17        0
     fn auto_morphism(self) -> Self {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self[scalar], self[e12345] * -1.0]),
+            self.group0() * Simd32x2::from([1.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e5
             self[e5] * -1.0,
             // e15, e25, e35, e45
@@ -441,11 +430,11 @@ impl AutoMorphism for MultiVector {
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            self.group6() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
+            self.group7() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group8() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group9(),
             // e1234
@@ -490,12 +479,7 @@ impl AutoMorphism for RoundPoint {
     //  no simd        0        5        0
     fn auto_morphism(self) -> Self {
         use crate::elements::*;
-        return RoundPoint::from_groups(
-            // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]) * Simd32x4::from(-1.0),
-            // e5
-            self[e5] * -1.0,
-        );
+        return RoundPoint::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0), /* e5 */ self[e5] * -1.0);
     }
 }
 impl std::ops::Div<auto_morphism> for Scalar {
@@ -547,16 +531,15 @@ impl AutoMorphism for VersorEven {
     //   simd4        0        4        0
     // no simd        0       16        0
     fn auto_morphism(self) -> Self {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e12345]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5]]) * Simd32x4::from(-1.0),
+            self.group2() * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]) * Simd32x4::from(-1.0),
+            self.group3() * Simd32x4::from(-1.0),
         );
     }
 }

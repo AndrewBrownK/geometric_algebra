@@ -19,20 +19,15 @@
 //  Average:         0       0       0
 //  Maximum:         0       0       0
 impl std::ops::Div<carrier> for AntiCircleOnOrigin {
-    type Output = AntiCircleOnOrigin;
+    type Output = Line;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
     }
 }
-impl std::ops::DivAssign<carrier> for AntiCircleOnOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
-    }
-}
 impl Carrier for AntiCircleOnOrigin {
-    type Output = AntiCircleOnOrigin;
+    type Output = Line;
     fn carrier(self) -> Self::Output {
-        return self;
+        return Line::from_groups(/* e415, e425, e435 */ self.group0(), /* e235, e315, e125 */ self.group1());
     }
 }
 impl std::ops::Div<carrier> for AntiCircleRotor {
@@ -178,20 +173,15 @@ impl Carrier for AntiDipoleInversionOrthogonalOrigin {
     }
 }
 impl std::ops::Div<carrier> for AntiDipoleOnOrigin {
-    type Output = AntiDipoleOnOrigin;
+    type Output = Plane;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
     }
 }
-impl std::ops::DivAssign<carrier> for AntiDipoleOnOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
-    }
-}
 impl Carrier for AntiDipoleOnOrigin {
-    type Output = AntiDipoleOnOrigin;
+    type Output = Plane;
     fn carrier(self) -> Self::Output {
-        return self;
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for AntiDualNum {
@@ -213,20 +203,16 @@ impl Carrier for AntiDualNum {
     }
 }
 impl std::ops::Div<carrier> for AntiFlatOrigin {
-    type Output = AntiFlatOrigin;
+    type Output = Horizon;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
     }
 }
-impl std::ops::DivAssign<carrier> for AntiFlatOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
-    }
-}
 impl Carrier for AntiFlatOrigin {
-    type Output = AntiFlatOrigin;
+    type Output = Horizon;
     fn carrier(self) -> Self::Output {
-        return self;
+        use crate::elements::*;
+        return Horizon::from_groups(/* e3215 */ self[e321]);
     }
 }
 impl std::ops::Div<carrier> for AntiFlatPoint {
@@ -269,71 +255,51 @@ impl Carrier for AntiFlectorOnOrigin {
     }
 }
 impl std::ops::Div<carrier> for AntiLine {
-    type Output = AntiLine;
+    type Output = LineAtInfinity;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
-    }
-}
-impl std::ops::DivAssign<carrier> for AntiLine {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
     }
 }
 impl Carrier for AntiLine {
-    type Output = AntiLine;
+    type Output = LineAtInfinity;
     fn carrier(self) -> Self::Output {
-        return self;
+        return LineAtInfinity::from_groups(/* e235, e315, e125 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for AntiLineOnOrigin {
-    type Output = AntiLineOnOrigin;
+    type Output = LineAtInfinity;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
-    }
-}
-impl std::ops::DivAssign<carrier> for AntiLineOnOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
     }
 }
 impl Carrier for AntiLineOnOrigin {
-    type Output = AntiLineOnOrigin;
+    type Output = LineAtInfinity;
     fn carrier(self) -> Self::Output {
-        return self;
+        return LineAtInfinity::from_groups(/* e235, e315, e125 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for AntiMotor {
-    type Output = AntiMotor;
+    type Output = MotorAtInfinity;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
-    }
-}
-impl std::ops::DivAssign<carrier> for AntiMotor {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
     }
 }
 impl Carrier for AntiMotor {
-    type Output = AntiMotor;
+    type Output = MotorAtInfinity;
     fn carrier(self) -> Self::Output {
-        return self;
+        return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for AntiMotorOnOrigin {
-    type Output = AntiMotorOnOrigin;
+    type Output = MotorAtInfinity;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
     }
 }
-impl std::ops::DivAssign<carrier> for AntiMotorOnOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
-    }
-}
 impl Carrier for AntiMotorOnOrigin {
-    type Output = AntiMotorOnOrigin;
+    type Output = MotorAtInfinity;
     fn carrier(self) -> Self::Output {
-        return self;
+        return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for AntiMysteryCircleRotor {
@@ -376,37 +342,27 @@ impl Carrier for AntiPlane {
     }
 }
 impl std::ops::Div<carrier> for AntiPlaneOnOrigin {
-    type Output = AntiPlaneOnOrigin;
+    type Output = FlatPointAtInfinity;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
-    }
-}
-impl std::ops::DivAssign<carrier> for AntiPlaneOnOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
     }
 }
 impl Carrier for AntiPlaneOnOrigin {
-    type Output = AntiPlaneOnOrigin;
+    type Output = FlatPointAtInfinity;
     fn carrier(self) -> Self::Output {
-        return self;
+        return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for AntiSphereOnOrigin {
-    type Output = AntiSphereOnOrigin;
+    type Output = FlatPoint;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
     }
 }
-impl std::ops::DivAssign<carrier> for AntiSphereOnOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
-    }
-}
 impl Carrier for AntiSphereOnOrigin {
-    type Output = AntiSphereOnOrigin;
+    type Output = FlatPoint;
     fn carrier(self) -> Self::Output {
-        return self;
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for AntiVersorEvenOnOrigin {
@@ -441,20 +397,15 @@ impl Carrier for Circle {
     }
 }
 impl std::ops::Div<carrier> for CircleAligningOrigin {
-    type Output = CircleAligningOrigin;
+    type Output = PlaneOnOrigin;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
     }
 }
-impl std::ops::DivAssign<carrier> for CircleAligningOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
-    }
-}
 impl Carrier for CircleAligningOrigin {
-    type Output = CircleAligningOrigin;
+    type Output = PlaneOnOrigin;
     fn carrier(self) -> Self::Output {
-        return self;
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for CircleAtInfinity {
@@ -471,54 +422,39 @@ impl Carrier for CircleAtInfinity {
     }
 }
 impl std::ops::Div<carrier> for CircleAtOrigin {
-    type Output = CircleAtOrigin;
+    type Output = PlaneOnOrigin;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
-    }
-}
-impl std::ops::DivAssign<carrier> for CircleAtOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
     }
 }
 impl Carrier for CircleAtOrigin {
-    type Output = CircleAtOrigin;
+    type Output = PlaneOnOrigin;
     fn carrier(self) -> Self::Output {
-        return self;
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for CircleOnOrigin {
-    type Output = CircleOnOrigin;
+    type Output = PlaneOnOrigin;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
-    }
-}
-impl std::ops::DivAssign<carrier> for CircleOnOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
     }
 }
 impl Carrier for CircleOnOrigin {
-    type Output = CircleOnOrigin;
+    type Output = PlaneOnOrigin;
     fn carrier(self) -> Self::Output {
-        return self;
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for CircleOrthogonalOrigin {
-    type Output = CircleOrthogonalOrigin;
+    type Output = Plane;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
     }
 }
-impl std::ops::DivAssign<carrier> for CircleOrthogonalOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
-    }
-}
 impl Carrier for CircleOrthogonalOrigin {
-    type Output = CircleOrthogonalOrigin;
+    type Output = Plane;
     fn carrier(self) -> Self::Output {
-        return self;
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for CircleRotor {
@@ -535,20 +471,15 @@ impl Carrier for CircleRotor {
     }
 }
 impl std::ops::Div<carrier> for CircleRotorAligningOrigin {
-    type Output = CircleRotorAligningOrigin;
+    type Output = PlaneOnOrigin;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
     }
 }
-impl std::ops::DivAssign<carrier> for CircleRotorAligningOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
-    }
-}
 impl Carrier for CircleRotorAligningOrigin {
-    type Output = CircleRotorAligningOrigin;
+    type Output = PlaneOnOrigin;
     fn carrier(self) -> Self::Output {
-        return self;
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for CircleRotorAtInfinity {
@@ -617,20 +548,15 @@ impl Carrier for DipoleAtInfinity {
     }
 }
 impl std::ops::Div<carrier> for DipoleAtOrigin {
-    type Output = DipoleAtOrigin;
+    type Output = LineOnOrigin;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
     }
 }
-impl std::ops::DivAssign<carrier> for DipoleAtOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
-    }
-}
 impl Carrier for DipoleAtOrigin {
-    type Output = DipoleAtOrigin;
+    type Output = LineOnOrigin;
     fn carrier(self) -> Self::Output {
-        return self;
+        return LineOnOrigin::from_groups(/* e415, e425, e435 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for DipoleInversion {
@@ -735,20 +661,15 @@ impl Carrier for DipoleOnOrigin {
     }
 }
 impl std::ops::Div<carrier> for DipoleOrthogonalOrigin {
-    type Output = DipoleOrthogonalOrigin;
+    type Output = Line;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
     }
 }
-impl std::ops::DivAssign<carrier> for DipoleOrthogonalOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
-    }
-}
 impl Carrier for DipoleOrthogonalOrigin {
-    type Output = DipoleOrthogonalOrigin;
+    type Output = Line;
     fn carrier(self) -> Self::Output {
-        return self;
+        return Line::from_groups(/* e415, e425, e435 */ self.group0(), /* e235, e315, e125 */ self.group1());
     }
 }
 impl std::ops::Div<carrier> for DualNum {
@@ -884,71 +805,52 @@ impl Carrier for MysteryVersorOdd {
     }
 }
 impl std::ops::Div<carrier> for NullCircleAtOrigin {
-    type Output = NullCircleAtOrigin;
+    type Output = PlaneOnOrigin;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
-    }
-}
-impl std::ops::DivAssign<carrier> for NullCircleAtOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
     }
 }
 impl Carrier for NullCircleAtOrigin {
-    type Output = NullCircleAtOrigin;
+    type Output = PlaneOnOrigin;
     fn carrier(self) -> Self::Output {
-        return self;
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for NullDipoleAtOrigin {
-    type Output = NullDipoleAtOrigin;
+    type Output = LineOnOrigin;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
-    }
-}
-impl std::ops::DivAssign<carrier> for NullDipoleAtOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
     }
 }
 impl Carrier for NullDipoleAtOrigin {
-    type Output = NullDipoleAtOrigin;
+    type Output = LineOnOrigin;
     fn carrier(self) -> Self::Output {
-        return self;
+        return LineOnOrigin::from_groups(/* e415, e425, e435 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for NullDipoleInversionAtOrigin {
-    type Output = NullDipoleInversionAtOrigin;
+    type Output = MotorOnOrigin;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
-    }
-}
-impl std::ops::DivAssign<carrier> for NullDipoleInversionAtOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
     }
 }
 impl Carrier for NullDipoleInversionAtOrigin {
-    type Output = NullDipoleInversionAtOrigin;
+    type Output = MotorOnOrigin;
     fn carrier(self) -> Self::Output {
-        return self;
+        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for NullSphereAtOrigin {
-    type Output = NullSphereAtOrigin;
+    type Output = AntiScalar;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
     }
 }
-impl std::ops::DivAssign<carrier> for NullSphereAtOrigin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
-    }
-}
 impl Carrier for NullSphereAtOrigin {
-    type Output = NullSphereAtOrigin;
+    type Output = AntiScalar;
     fn carrier(self) -> Self::Output {
-        return self;
+        use crate::elements::*;
+        return AntiScalar::from_groups(/* e12345 */ self[e1234]);
     }
 }
 impl std::ops::Div<carrier> for NullVersorEvenAtOrigin {
@@ -965,37 +867,28 @@ impl Carrier for NullVersorEvenAtOrigin {
     }
 }
 impl std::ops::Div<carrier> for Origin {
-    type Output = Origin;
+    type Output = FlatOrigin;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
-    }
-}
-impl std::ops::DivAssign<carrier> for Origin {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
     }
 }
 impl Carrier for Origin {
-    type Output = Origin;
+    type Output = FlatOrigin;
     fn carrier(self) -> Self::Output {
-        return self;
+        use crate::elements::*;
+        return FlatOrigin::from_groups(/* e45 */ self[e4]);
     }
 }
 impl std::ops::Div<carrier> for RoundPoint {
-    type Output = RoundPoint;
+    type Output = FlatPoint;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
     }
 }
-impl std::ops::DivAssign<carrier> for RoundPoint {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
-    }
-}
 impl Carrier for RoundPoint {
-    type Output = RoundPoint;
+    type Output = FlatPoint;
     fn carrier(self) -> Self::Output {
-        return self;
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for RoundPointAtOrigin {
@@ -1012,20 +905,16 @@ impl Carrier for RoundPointAtOrigin {
     }
 }
 impl std::ops::Div<carrier> for Scalar {
-    type Output = Scalar;
+    type Output = Infinity;
     fn div(self, _rhs: carrier) -> Self::Output {
         self.carrier()
     }
 }
-impl std::ops::DivAssign<carrier> for Scalar {
-    fn div_assign(&mut self, _rhs: carrier) {
-        *self = self.carrier()
-    }
-}
 impl Carrier for Scalar {
-    type Output = Scalar;
+    type Output = Infinity;
     fn carrier(self) -> Self::Output {
-        return self;
+        use crate::elements::*;
+        return Infinity::from_groups(/* e5 */ self[scalar]);
     }
 }
 impl std::ops::Div<carrier> for Sphere {

@@ -13,13 +13,13 @@ use crate::traits::RoundWeightNorm;
 //  Minimum:         2       6       0
 //   Median:         5      10       0
 //  Average:        10      15       0
-//  Maximum:        63      73       0
+//  Maximum:        63      74       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         2       9       0
-//   Median:         5      14       0
-//  Average:        10      19       0
-//  Maximum:        63      81       0
+//   Median:         5      16       0
+//  Average:        10      20       0
+//  Maximum:        63      85       0
 impl std::ops::Div<round_norm> for AntiCircleRotor {
     type Output = MultiVector;
     fn div(self, _rhs: round_norm) -> Self::Output {
@@ -250,10 +250,10 @@ impl RoundNorm for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        5       10        0
-    //    simd4        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        5       11        0
-    //  no simd        5       14        0
+    // yes simd        5       12        0
+    //  no simd        5       18        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
         let self_2 = self.round_bulk_norm();
@@ -300,10 +300,10 @@ impl RoundNorm for MultiVector {
     //           add/sub      mul      div
     //      f32       63       70        0
     //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd       63       73        0
-    //  no simd       63       81        0
+    // yes simd       63       74        0
+    //  no simd       63       85        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
         let self_2 = self.round_bulk_norm();
@@ -432,10 +432,10 @@ impl RoundNorm for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        6       11        0
-    //    simd4        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        6       12        0
-    //  no simd        6       15        0
+    // yes simd        6       13        0
+    //  no simd        6       19        0
     fn round_norm(self) -> MultiVector {
         use crate::elements::*;
         let self_2 = self.round_bulk_norm();

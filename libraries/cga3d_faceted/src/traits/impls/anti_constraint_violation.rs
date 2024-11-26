@@ -9,14 +9,14 @@
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:        12      14       0
-//  Average:        24      28       0
+//   Median:        12      12       0
+//  Average:        24      27       0
 //  Maximum:       347     357       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:        14      17       0
-//  Average:        26      32       0
+//   Median:        14      18       0
+//  Average:        26      33       0
 //  Maximum:       396     420       0
 impl std::ops::Div<anti_constraint_violation> for AntiCircleOnOrigin {
     type Output = DualNum;
@@ -38,9 +38,9 @@ impl AntiConstraintViolation for AntiCircleOnOrigin {
         use crate::elements::*;
         let anti_reverse = AntiCircleOnOrigin::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
@@ -66,21 +66,21 @@ impl AntiConstraintViolation for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       43       50        0
+    //      f32       43       47        0
     //    simd3        0        1        0
-    //    simd4        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       43       52        0
-    //  no simd       43       57        0
+    // yes simd       43       50        0
+    //  no simd       43       58        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[scalar]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -166,20 +166,21 @@ impl AntiConstraintViolation for AntiCircleRotorAligningOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       35       43        0
+    //      f32       35       40        0
     //    simd3        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       35       45        0
-    //  no simd       35       49        0
+    // yes simd       35       43        0
+    //  no simd       35       50        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiCircleRotorAligningOrigin::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[scalar]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -257,18 +258,19 @@ impl AntiConstraintViolation for AntiCircleRotorAligningOriginAtInfinity {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       13        0
+    //      f32       12       10        0
     //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       12       14        0
-    //  no simd       12       16        0
+    // yes simd       12       12        0
+    //  no simd       12       17        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiCircleRotorAligningOriginAtInfinity::from_groups(
             // e23, e31, e12
-            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[scalar]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -313,18 +315,18 @@ impl AntiConstraintViolation for AntiCircleRotorAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       20        0
-    //    simd4        0        1        0
+    //      f32       17       17        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       17       21        0
-    //  no simd       17       24        0
+    // yes simd       17       19        0
+    //  no simd       17       25        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiCircleRotorAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[scalar]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
@@ -380,19 +382,20 @@ impl AntiConstraintViolation for AntiCircleRotorOnOrigin {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6        8        0
+    //      f32        6        5        0
     //    simd2        3        3        0
     //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        9       12        0
-    //  no simd       12       17        0
+    // yes simd        9       10        0
+    //  no simd       12       18        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiCircleRotorOnOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41] * -1.0, self[e42] * -1.0, self[e43] * -1.0, self[scalar]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12
-            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
@@ -423,21 +426,21 @@ impl AntiConstraintViolation for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       86       92        0
+    //      f32       86       89        0
     //    simd3        0        1        0
-    //    simd4        1        2        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       87       95        0
-    //  no simd       90      103        0
+    // yes simd       87       93        0
+    //  no simd       90      104        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e4
-            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e4]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e1, e2, e3, e5
             self.group3(),
         );
@@ -579,9 +582,9 @@ impl AntiConstraintViolation for AntiDipoleInversionAtInfinity {
         use crate::elements::*;
         let anti_reverse = AntiDipoleInversionAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
             // e1, e2, e3, e5
             self.group2(),
         );
@@ -667,12 +670,8 @@ impl AntiConstraintViolation for AntiDipoleInversionOnOrigin {
     //  no simd       15       16        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiDipoleInversionOnOrigin::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
-            // e4, e1, e2, e3
-            self.group1(),
-        );
+        let anti_reverse =
+            AntiDipoleInversionOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0), /* e4, e1, e2, e3 */ self.group1());
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
             Simd32x2::from([
@@ -700,20 +699,21 @@ impl AntiConstraintViolation for AntiDipoleInversionOrthogonalOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       61        0
+    //      f32       48       55        0
     //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       48       62        0
-    //  no simd       48       64        0
+    // yes simd       48       58        0
+    //  no simd       48       66        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiDipoleInversionOrthogonalOrigin::from_groups(
             // e423, e431, e412, e5
-            Simd32x4::from([self[e423] * -1.0, self[e431] * -1.0, self[e412] * -1.0, self[e5]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
             // e235, e315, e125, e4
-            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e4]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -810,10 +810,7 @@ impl AntiConstraintViolation for AntiDipoleOnOrigin {
     //  no simd        1        5        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiDipoleOnOrigin::from_groups(
-            // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
-        );
+        let anti_reverse = AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e321] * self[e321]);
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e321], 2));
         return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
@@ -879,10 +876,7 @@ impl AntiConstraintViolation for AntiFlatPoint {
     //  no simd        1        5        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiFlatPoint::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e321]]) * Simd32x4::from(-1.0),
-        );
+        let anti_reverse = AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e321] * self[e321]);
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e321], 2));
         return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
@@ -905,12 +899,7 @@ impl AntiConstraintViolation for AntiFlector {
     //  no simd       14       16        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiFlector::from_groups(
-            // e235, e315, e125, e321
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e321]]) * Simd32x4::from(-1.0),
-            // e1, e2, e3, e5
-            self.group1(),
-        );
+        let anti_reverse = AntiFlector::from_groups(/* e235, e315, e125, e321 */ self.group0() * Simd32x4::from(-1.0), /* e1, e2, e3, e5 */ self.group1());
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([
@@ -949,11 +938,15 @@ impl std::ops::Div<anti_constraint_violation> for AntiFlectorOnOrigin {
 impl AntiConstraintViolation for AntiFlectorOnOrigin {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        7        5        0
+    //           add/sub      mul      div
+    //      f32        7        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        7        5        0
+    //  no simd        7        8        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from([self[e321] * -1.0, self[e1], self[e2], self[e3]]));
+        let anti_reverse = AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ self.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]));
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
             (anti_reverse[e321] * self[e321]) - (anti_reverse[e1] * self[e1]) - (anti_reverse[e2] * self[e2]) - (anti_reverse[e3] * self[e3]),
@@ -981,9 +974,9 @@ impl AntiConstraintViolation for AntiLine {
         use crate::elements::*;
         let anti_reverse = AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -1027,7 +1020,7 @@ impl AntiConstraintViolation for AntiLineOnOrigin {
     //  no simd        5        6        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0));
+        let anti_reverse = AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ self.group0() * Simd32x3::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ (anti_reverse[e23] * self[e23]) + (anti_reverse[e31] * self[e31]) + (anti_reverse[e12] * self[e12]));
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e23], 2) + f32::powi(self[e31], 2) + f32::powi(self[e12], 2));
         return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
@@ -1042,15 +1035,19 @@ impl std::ops::Div<anti_constraint_violation> for AntiMotor {
 impl AntiConstraintViolation for AntiMotor {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       18        0
+    //           add/sub      mul      div
+    //      f32       14       12        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd       14       14        0
+    //  no simd       14       20        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiMotor::from_groups(
             // e23, e31, e12, scalar
-            Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[scalar]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e3215
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e3215]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -1096,11 +1093,15 @@ impl std::ops::Div<anti_constraint_violation> for AntiMotorOnOrigin {
 impl AntiConstraintViolation for AntiMotorOnOrigin {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        7        7        0
+    //           add/sub      mul      div
+    //      f32        7        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        7        5        0
+    //  no simd        7        8        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[scalar]]));
+        let anti_reverse = AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
             (anti_reverse[e23] * self[e23]) + (anti_reverse[e31] * self[e31]) + (anti_reverse[e12] * self[e12]) - (anti_reverse[scalar] * self[scalar]),
@@ -1129,12 +1130,7 @@ impl AntiConstraintViolation for AntiMysteryCircleRotor {
     //  no simd       12       15        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiMysteryCircleRotor::from_groups(
-            // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
-            // scalar
-            self[scalar],
-        );
+        let anti_reverse = AntiMysteryCircleRotor::from_groups(/* e23, e31, e12, e45 */ self.group0() * Simd32x4::from(-1.0), /* scalar */ self[scalar]);
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
@@ -1182,12 +1178,7 @@ impl AntiConstraintViolation for AntiMysteryDipoleInversion {
     //  no simd       28       29        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = AntiMysteryDipoleInversion::from_groups(
-            // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
-            // e1, e2, e3
-            self.group1(),
-        );
+        let anti_reverse = AntiMysteryDipoleInversion::from_groups(/* e415, e425, e435, e321 */ self.group0() * Simd32x4::from(-1.0), /* e1, e2, e3 */ self.group1());
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
@@ -1291,18 +1282,19 @@ impl AntiConstraintViolation for AntiVersorEvenOnOrigin {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       10        0
+    //      f32        7        4        0
     //    simd2        4        4        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       11       14        0
-    //  no simd       15       18        0
+    // yes simd       11       10        0
+    //  no simd       15       20        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = AntiVersorEvenOnOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41] * -1.0, self[e42] * -1.0, self[e43] * -1.0, self[scalar]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e1234
-            Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[e1234]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
@@ -1344,11 +1336,11 @@ impl AntiConstraintViolation for Circle {
         use crate::elements::*;
         let anti_reverse = Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group2() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -1441,11 +1433,11 @@ impl AntiConstraintViolation for CircleAligningOrigin {
         use crate::elements::*;
         let anti_reverse = CircleAligningOrigin::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group2() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -1531,9 +1523,9 @@ impl AntiConstraintViolation for CircleAtInfinity {
         use crate::elements::*;
         let anti_reverse = CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
@@ -1596,9 +1588,9 @@ impl AntiConstraintViolation for CircleAtOrigin {
         use crate::elements::*;
         let anti_reverse = CircleAtOrigin::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
@@ -1650,9 +1642,9 @@ impl AntiConstraintViolation for CircleOnOrigin {
         use crate::elements::*;
         let anti_reverse = CircleOnOrigin::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
@@ -1688,9 +1680,9 @@ impl AntiConstraintViolation for CircleOrthogonalOrigin {
         use crate::elements::*;
         let anti_reverse = CircleOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
@@ -1736,21 +1728,21 @@ impl AntiConstraintViolation for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       43       50        0
+    //      f32       43       47        0
     //    simd3        0        1        0
-    //    simd4        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       43       52        0
-    //  no simd       43       57        0
+    // yes simd       43       50        0
+    //  no simd       43       58        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e12345]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -1834,20 +1826,21 @@ impl AntiConstraintViolation for CircleRotorAligningOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       35       43        0
+    //      f32       35       40        0
     //    simd3        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       35       45        0
-    //  no simd       35       49        0
+    // yes simd       35       43        0
+    //  no simd       35       50        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = CircleRotorAligningOrigin::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e12345]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -1925,18 +1918,19 @@ impl AntiConstraintViolation for CircleRotorAligningOriginAtInfinity {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       13        0
+    //      f32       12       10        0
     //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       12       14        0
-    //  no simd       12       16        0
+    // yes simd       12       12        0
+    //  no simd       12       17        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = CircleRotorAligningOriginAtInfinity::from_groups(
             // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e12345]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -1981,18 +1975,18 @@ impl AntiConstraintViolation for CircleRotorAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       16        0
-    //    simd4        1        2        0
+    //      f32       13       13        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       14       18        0
-    //  no simd       17       24        0
+    // yes simd       14       16        0
+    //  no simd       17       25        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = CircleRotorAtInfinity::from_groups(
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e12345]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
@@ -2046,19 +2040,20 @@ impl AntiConstraintViolation for CircleRotorOnOrigin {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6        7        0
+    //      f32        6        4        0
     //    simd2        3        3        0
     //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        9       11        0
-    //  no simd       12       16        0
+    // yes simd        9        9        0
+    //  no simd       12       17        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = CircleRotorOnOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423] * -1.0, self[e431] * -1.0, self[e412] * -1.0, self[e12345]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
@@ -2099,11 +2094,11 @@ impl AntiConstraintViolation for Dipole {
         use crate::elements::*;
         let anti_reverse = Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group2() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2197,9 +2192,9 @@ impl AntiConstraintViolation for DipoleAligningOrigin {
         use crate::elements::*;
         let anti_reverse = DipoleAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
@@ -2255,9 +2250,9 @@ impl AntiConstraintViolation for DipoleAtInfinity {
         use crate::elements::*;
         let anti_reverse = DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
@@ -2317,9 +2312,9 @@ impl AntiConstraintViolation for DipoleAtOrigin {
         use crate::elements::*;
         let anti_reverse = DipoleAtOrigin::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
@@ -2361,21 +2356,21 @@ impl AntiConstraintViolation for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       82       88        0
+    //      f32       82       85        0
     //    simd3        0        1        0
-    //    simd4        2        3        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       84       92        0
-    //  no simd       90      103        0
+    // yes simd       84       90        0
+    //  no simd       90      104        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125, e3215
             self.group3(),
         );
@@ -2512,18 +2507,18 @@ impl AntiConstraintViolation for DipoleInversionAligningOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       46       55        0
-    //    simd4        2        3        0
+    //      f32       46       52        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       48       58        0
-    //  no simd       54       67        0
+    // yes simd       48       56        0
+    //  no simd       54       68        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -2623,9 +2618,9 @@ impl AntiConstraintViolation for DipoleInversionAtInfinity {
         use crate::elements::*;
         let anti_reverse = DipoleInversionAtInfinity::from_groups(
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -2702,18 +2697,18 @@ impl AntiConstraintViolation for DipoleInversionAtOrigin {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       42        0
-    //    simd4        1        1        0
+    //      f32       28       36        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       29       43        0
-    //  no simd       32       46        0
+    // yes simd       29       39        0
+    //  no simd       32       48        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = DipoleInversionAtOrigin::from_groups(
             // e41, e42, e43, e3215
-            Simd32x4::from([self[e41] * -1.0, self[e42] * -1.0, self[e43] * -1.0, self[e3215]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
@@ -2776,12 +2771,8 @@ impl AntiConstraintViolation for DipoleInversionOnOrigin {
     //  no simd       15       16        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = DipoleInversionOnOrigin::from_groups(
-            // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]) * Simd32x4::from(-1.0),
-            // e1234, e4235, e4315, e4125
-            self.group1(),
-        );
+        let anti_reverse =
+            DipoleInversionOnOrigin::from_groups(/* e41, e42, e43, e45 */ self.group0() * Simd32x4::from(-1.0), /* e1234, e4235, e4315, e4125 */ self.group1());
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
             Simd32x2::from([
@@ -2812,20 +2803,21 @@ impl AntiConstraintViolation for DipoleInversionOrthogonalOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       61        0
+    //      f32       48       55        0
     //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       48       62        0
-    //  no simd       48       64        0
+    // yes simd       48       58        0
+    //  no simd       48       66        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = DipoleInversionOrthogonalOrigin::from_groups(
             // e41, e42, e43, e3215
-            Simd32x4::from([self[e41] * -1.0, self[e42] * -1.0, self[e43] * -1.0, self[e3215]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12
-            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -2923,7 +2915,7 @@ impl AntiConstraintViolation for DipoleOnOrigin {
     //  no simd        1        7        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]) * Simd32x4::from(-1.0));
+        let anti_reverse = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e45] * self[e45] * -1.0);
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e45], 2) * -1.0);
         return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
@@ -2948,11 +2940,11 @@ impl AntiConstraintViolation for DipoleOrthogonalOrigin {
         use crate::elements::*;
         let anti_reverse = DipoleOrthogonalOrigin::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41], self[e42], self[e43]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group2() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -3075,7 +3067,7 @@ impl AntiConstraintViolation for FlatPoint {
     //  no simd        1        7        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]) * Simd32x4::from(-1.0));
+        let anti_reverse = FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(/* e12345 */ anti_reverse[e45] * self[e45] * -1.0);
         let anti_dot_product = AntiScalar::from_groups(/* e12345 */ f32::powi(self[e45], 2) * -1.0);
         return AntiScalar::from_groups(/* e12345 */ geometric_anti_product[e12345] - anti_dot_product[e12345]);
@@ -3098,12 +3090,7 @@ impl AntiConstraintViolation for Flector {
     //  no simd       14       16        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = Flector::from_groups(
-            // e15, e25, e35, e45
-            Simd32x4::from([self[e15], self[e25], self[e35], self[e45]]) * Simd32x4::from(-1.0),
-            // e4235, e4315, e4125, e3215
-            self.group1(),
-        );
+        let anti_reverse = Flector::from_groups(/* e15, e25, e35, e45 */ self.group0() * Simd32x4::from(-1.0), /* e4235, e4315, e4125, e3215 */ self.group1());
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([
@@ -3145,11 +3132,15 @@ impl std::ops::Div<anti_constraint_violation> for FlectorOnOrigin {
 impl AntiConstraintViolation for FlectorOnOrigin {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        7        5        0
+    //           add/sub      mul      div
+    //      f32        7        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        7        5        0
+    //  no simd        7        8        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([self[e45] * -1.0, self[e4235], self[e4315], self[e4125]]));
+        let anti_reverse = FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ self.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]));
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
             (anti_reverse[e4235] * self[e4235]) + (anti_reverse[e4315] * self[e4315]) + (anti_reverse[e4125] * self[e4125]) - (anti_reverse[e45] * self[e45]),
@@ -3180,9 +3171,9 @@ impl AntiConstraintViolation for Line {
         use crate::elements::*;
         let anti_reverse = Line::from_groups(
             // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            self.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group1() * Simd32x3::from(-1.0),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -3231,7 +3222,7 @@ impl AntiConstraintViolation for LineOnOrigin {
     //  no simd        5        6        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0));
+        let anti_reverse = LineOnOrigin::from_groups(/* e415, e425, e435 */ self.group0() * Simd32x3::from(-1.0));
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
             -(anti_reverse[e415] * self[e415]) - (anti_reverse[e425] * self[e425]) - (anti_reverse[e435] * self[e435]),
@@ -3254,15 +3245,19 @@ impl std::ops::DivAssign<anti_constraint_violation> for Motor {
 impl AntiConstraintViolation for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       18        0
+    //           add/sub      mul      div
+    //      f32       14       12        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd       14       14        0
+    //  no simd       14       20        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e12345]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e5]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = Motor::from_groups(
             // e415, e425, e435, e12345
@@ -3307,14 +3302,15 @@ impl std::ops::Div<anti_constraint_violation> for MotorOnOrigin {
 impl AntiConstraintViolation for MotorOnOrigin {
     type Output = AntiScalar;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        7        7        0
+    //           add/sub      mul      div
+    //      f32        7        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        7        5        0
+    //  no simd        7        8        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = MotorOnOrigin::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e12345]]),
-        );
+        let anti_reverse = MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]));
         let geometric_anti_product = AntiScalar::from_groups(
             // e12345
             (anti_reverse[e12345] * self[e12345]) - (anti_reverse[e415] * self[e415]) - (anti_reverse[e425] * self[e425]) - (anti_reverse[e435] * self[e435]),
@@ -3358,17 +3354,17 @@ impl AntiConstraintViolation for MultiVector {
             // e5
             self[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]) * Simd32x4::from(-1.0),
+            self.group3() * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group4() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([self[e23], self[e31], self[e12]]) * Simd32x3::from(-1.0),
+            self.group5() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            self.group6() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            Simd32x3::from([self[e423], self[e431], self[e412]]) * Simd32x3::from(-1.0),
+            self.group7() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group8() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             self.group9(),
             // e3215
@@ -3411,7 +3407,7 @@ impl AntiConstraintViolation for MultiVector {
                     - (anti_reverse[e3215] * self[e1234]),
             ]) + (Simd32x2::from(anti_reverse[e4]) * Simd32x2::from([self[e3215], self[e5]]))
                 + (Simd32x2::from(anti_reverse[e5]) * Simd32x2::from([self[e1234], self[e4]]))
-                + (Simd32x2::from(self[e12345]) * Simd32x2::from([anti_reverse[scalar], anti_reverse[e12345]]))
+                + (Simd32x2::from(self[e12345]) * anti_reverse.group0())
                 + (Simd32x2::from(self[e4235]) * Simd32x2::from([anti_reverse[e1], anti_reverse[e4235]]))
                 + (Simd32x2::from(self[e4315]) * Simd32x2::from([anti_reverse[e2], anti_reverse[e4315]]))
                 + (Simd32x2::from(self[e4125]) * Simd32x2::from([anti_reverse[e3], anti_reverse[e4125]]))
@@ -3535,10 +3531,10 @@ impl AntiConstraintViolation for MultiVector {
                     - (anti_reverse[e4235] * self[e41])
                     - (anti_reverse[e4315] * self[e42])
                     - (anti_reverse[e4125] * self[e43]),
-            ]) + (Simd32x4::from(anti_reverse[e12345]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]))
+            ]) + (Simd32x4::from(anti_reverse[e12345]) * self.group1())
                 + (Simd32x4::from(anti_reverse[e45]) * Simd32x4::from([self[e23], self[e31], self[e12], self[e1234]]))
                 + (Simd32x4::from(anti_reverse[e321]) * Simd32x4::from([self[e415], self[e425], self[e435], self[e4]]))
-                + (Simd32x4::from(self[e12345]) * Simd32x4::from([anti_reverse[e1], anti_reverse[e2], anti_reverse[e3], anti_reverse[e4]]))
+                + (Simd32x4::from(self[e12345]) * anti_reverse.group1())
                 - (Simd32x4::from(anti_reverse[e1234]) * Simd32x4::from([self[e15], self[e25], self[e35], self[scalar]])),
             // e5
             (anti_reverse[e12345] * self[e5])
@@ -3691,8 +3687,8 @@ impl AntiConstraintViolation for MultiVector {
                     - (anti_reverse[e235] * self[e42])
                     - (anti_reverse[e1234] * self[e125])
                     - (anti_reverse[e4235] * self[e425]),
-            ]) + (Simd32x4::from(anti_reverse[e12345]) * Simd32x4::from([self[e1234], self[e4235], self[e4315], self[e4125]]))
-                + (Simd32x4::from(self[e12345]) * Simd32x4::from([anti_reverse[e1234], anti_reverse[e4235], anti_reverse[e4315], anti_reverse[e4125]]))
+            ]) + (Simd32x4::from(anti_reverse[e12345]) * self.group9())
+                + (Simd32x4::from(self[e12345]) * anti_reverse.group9())
                 + (Simd32x4::from(self[e4]) * Simd32x4::from([anti_reverse[scalar], anti_reverse[e15], anti_reverse[e25], anti_reverse[e35]]))
                 + (Simd32x4::from(self[e45]) * Simd32x4::from([anti_reverse[e4], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]]))
                 + (Simd32x4::from(self[e1234]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e235], anti_reverse[e315], anti_reverse[e125]]))
@@ -3801,10 +3797,7 @@ impl AntiConstraintViolation for MysteryCircle {
     //  no simd       10       14        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = MysteryCircle::from_groups(
-            // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
-        );
+        let anti_reverse = MysteryCircle::from_groups(/* e415, e425, e435, e321 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
@@ -3850,12 +3843,7 @@ impl AntiConstraintViolation for MysteryCircleRotor {
     //  no simd       12       15        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = MysteryCircleRotor::from_groups(
-            // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
-            // e12345
-            self[e12345],
-        );
+        let anti_reverse = MysteryCircleRotor::from_groups(/* e415, e425, e435, e321 */ self.group0() * Simd32x4::from(-1.0), /* e12345 */ self[e12345]);
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
@@ -3901,7 +3889,7 @@ impl AntiConstraintViolation for MysteryDipole {
     //  no simd       10       14        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = MysteryDipole::from_groups(/* e23, e31, e12, e45 */ Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0));
+        let anti_reverse = MysteryDipole::from_groups(/* e23, e31, e12, e45 */ self.group0() * Simd32x4::from(-1.0));
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
@@ -3944,12 +3932,7 @@ impl AntiConstraintViolation for MysteryDipoleInversion {
     //  no simd       28       29        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = MysteryDipoleInversion::from_groups(
-            // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
-            // e4235, e4315, e4125
-            self.group1(),
-        );
+        let anti_reverse = MysteryDipoleInversion::from_groups(/* e23, e31, e12, e45 */ self.group0() * Simd32x4::from(-1.0), /* e4235, e4315, e4125 */ self.group1());
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
@@ -4013,12 +3996,7 @@ impl AntiConstraintViolation for MysteryVersorEven {
     //  no simd       36       36        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = MysteryVersorEven::from_groups(
-            // e12345, e1, e2, e3
-            self.group0(),
-            // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
-        );
+        let anti_reverse = MysteryVersorEven::from_groups(/* e12345, e1, e2, e3 */ self.group0(), /* e415, e425, e435, e321 */ self.group1() * Simd32x4::from(-1.0));
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
@@ -4037,7 +4015,7 @@ impl AntiConstraintViolation for MysteryVersorEven {
                 (anti_reverse[e2] * self[e415]) + (anti_reverse[e3] * self[e12345]) + (anti_reverse[e425] * self[e1]) + (anti_reverse[e321] * self[e435])
                     - (anti_reverse[e1] * self[e425])
                     - (anti_reverse[e415] * self[e2]),
-            ]) + (Simd32x4::from(anti_reverse[e12345]) * Simd32x4::from([self[e12345], self[e1], self[e2], self[e3]]))
+            ]) + (Simd32x4::from(anti_reverse[e12345]) * self.group0())
                 + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -4082,12 +4060,7 @@ impl AntiConstraintViolation for MysteryVersorOdd {
     //  no simd       36       36        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
-        let anti_reverse = MysteryVersorOdd::from_groups(
-            // scalar, e4235, e4315, e4125
-            self.group0(),
-            // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
-        );
+        let anti_reverse = MysteryVersorOdd::from_groups(/* scalar, e4235, e4315, e4125 */ self.group0(), /* e23, e31, e12, e45 */ self.group1() * Simd32x4::from(-1.0));
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
             Simd32x4::from([
@@ -4262,20 +4235,20 @@ impl AntiConstraintViolation for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       90       98        0
-    //    simd4        3        4        0
+    //      f32       90       92        0
+    //    simd4        3        6        0
     // Totals...
-    // yes simd       93      102        0
-    //  no simd      102      114        0
+    // yes simd       93       98        0
+    //  no simd      102      116        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423] * -1.0, self[e431] * -1.0, self[e412] * -1.0, self[e12345]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e5]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -4375,9 +4348,9 @@ impl AntiConstraintViolation for VersorEven {
                     - (anti_reverse[e2] * self[e431])
                     - (anti_reverse[e3] * self[e412])
                     - (anti_reverse[e4] * self[e321]),
-            ]) + (Simd32x4::from(anti_reverse[e12345]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]))
+            ]) + (Simd32x4::from(anti_reverse[e12345]) * self.group3())
                 + (Simd32x4::from(anti_reverse[e321]) * Simd32x4::from([self[e415], self[e425], self[e435], self[e4]]))
-                + (Simd32x4::from(self[e12345]) * Simd32x4::from([anti_reverse[e1], anti_reverse[e2], anti_reverse[e3], anti_reverse[e4]])),
+                + (Simd32x4::from(self[e12345]) * anti_reverse.group3()),
         );
         let anti_dot_product = AntiScalar::from_groups(
             // e12345
@@ -4414,20 +4387,20 @@ impl AntiConstraintViolation for VersorEvenAligningOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       50       65        0
-    //    simd4        1        1        0
+    //      f32       50       56        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       51       66        0
-    //  no simd       54       69        0
+    // yes simd       51       60        0
+    //  no simd       54       72        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423] * -1.0, self[e431] * -1.0, self[e412] * -1.0, self[e12345]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e415, e425, e435, e4
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e4]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e5]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -4524,20 +4497,20 @@ impl AntiConstraintViolation for VersorEvenAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       43       43        0
-    //    simd4        2        3        0
+    //      f32       43       40        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       45       46        0
-    //  no simd       51       55        0
+    // yes simd       45       44        0
+    //  no simd       51       56        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e5]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
@@ -4557,7 +4530,7 @@ impl AntiConstraintViolation for VersorEvenAtInfinity {
                 (anti_reverse[e2] * self[e415]) + (anti_reverse[e3] * self[e12345]) + (anti_reverse[e425] * self[e1]) + (anti_reverse[e321] * self[e435])
                     - (anti_reverse[e1] * self[e425])
                     - (anti_reverse[e415] * self[e2]),
-            ]) + (Simd32x4::from(anti_reverse[e12345]) * Simd32x4::from([self[e12345], self[e1], self[e2], self[e3]]))
+            ]) + (Simd32x4::from(anti_reverse[e12345]) * self.group0())
                 + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
@@ -4619,18 +4592,18 @@ impl AntiConstraintViolation for VersorEvenAtOrigin {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       42        0
-    //    simd4        1        1        0
+    //      f32       28       36        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       29       43        0
-    //  no simd       32       46        0
+    // yes simd       29       39        0
+    //  no simd       32       48        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
-            Simd32x4::from([self[e423] * -1.0, self[e431] * -1.0, self[e412] * -1.0, self[e4]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e5]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = MysteryVersorEven::from_groups(
             // e12345, e1, e2, e3
@@ -4688,18 +4661,19 @@ impl AntiConstraintViolation for VersorEvenOnOrigin {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       10        0
+    //      f32        7        4        0
     //    simd2        4        4        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       11       14        0
-    //  no simd       15       18        0
+    // yes simd       11       10        0
+    //  no simd       15       20        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorEvenOnOrigin::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423] * -1.0, self[e431] * -1.0, self[e412] * -1.0, self[e12345]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e415, e425, e435, e4
-            Simd32x4::from([self[e415] * -1.0, self[e425] * -1.0, self[e435] * -1.0, self[e4]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = DualNum::from_groups(
             // e4, e12345
@@ -4731,18 +4705,18 @@ impl AntiConstraintViolation for VersorEvenOrthogonalOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       54       63        0
-    //    simd4        0        1        0
+    //      f32       54       60        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       54       64        0
-    //  no simd       54       67        0
+    // yes simd       54       62        0
+    //  no simd       54       68        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
+            self.group0() * Simd32x4::from(-1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] * -1.0, self[e315] * -1.0, self[e125] * -1.0, self[e5]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e1, e2, e3, e4
             self.group2(),
         );
@@ -4832,20 +4806,20 @@ impl AntiConstraintViolation for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       94      102        0
-    //    simd4        2        3        0
+    //      f32       94       96        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       96      105        0
-    //  no simd      102      114        0
+    // yes simd       96      101        0
+    //  no simd      102      116        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41] * -1.0, self[e42] * -1.0, self[e43] * -1.0, self[scalar]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125, e3215
             self.group3(),
         );
@@ -4994,18 +4968,18 @@ impl AntiConstraintViolation for VersorOddAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       51       51        0
-    //    simd4        0        1        0
+    //      f32       51       48        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       51       52        0
-    //  no simd       51       55        0
+    // yes simd       51       50        0
+    //  no simd       51       56        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            Simd32x4::from([self[scalar], self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0]),
+            self.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
+            self.group1() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
             self.group2(),
         );
@@ -5101,20 +5075,20 @@ impl AntiConstraintViolation for VersorOddOrthogonalOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       50       65        0
-    //    simd4        1        1        0
+    //      f32       50       56        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       51       66        0
-    //  no simd       54       69        0
+    // yes simd       51       60        0
+    //  no simd       54       72        0
     fn anti_constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let anti_reverse = VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41] * -1.0, self[e42] * -1.0, self[e43] * -1.0, self[scalar]]),
+            self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e3215
-            Simd32x4::from([self[e23] * -1.0, self[e31] * -1.0, self[e12] * -1.0, self[e3215]]),
+            self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e15] * -1.0, self[e25] * -1.0, self[e35] * -1.0, self[e1234]]),
+            self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345

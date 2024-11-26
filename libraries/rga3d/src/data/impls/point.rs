@@ -326,8 +326,12 @@ impl From<Origin> for Point {
 impl std::ops::Mul<AntiScalar> for Point {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        3        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        7        0
     fn mul(self, other: AntiScalar) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -337,10 +341,10 @@ impl std::ops::Mul<DualNum> for Point {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        3        0
-    //    simd4        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        7        0
+    // yes simd        0        5        0
+    //  no simd        0       11        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -361,8 +365,12 @@ impl std::ops::Mul<Flector> for Point {
 impl std::ops::Mul<Horizon> for Point {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        7        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd        0        6        0
+    //  no simd        0       12        0
     fn mul(self, other: Horizon) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -417,8 +425,12 @@ impl std::ops::Mul<Origin> for Point {
 impl std::ops::Mul<Plane> for Point {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       16        0
+    //           add/sub      mul      div
+    //      f32        6       13        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        6       14        0
+    //  no simd        6       17        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -454,8 +466,7 @@ impl std::ops::Neg for Point {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn neg(self) -> Self::Output {
-        use crate::elements::*;
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]) * Simd32x4::from(-1.0));
+        return Point::from_groups(/* e1, e2, e3, e4 */ self.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Not for Point {
@@ -467,13 +478,14 @@ impl std::ops::Not for Point {
 impl std::ops::Sub<AntiScalar> for Point {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn sub(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([0.0, other[e1234] * -1.0]),
+            Simd32x2::from([1.0, other[e1234]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
@@ -492,10 +504,9 @@ impl std::ops::Sub<DualNum> for Point {
     //   simd2        0        1        0
     // no simd        0        2        0
     fn sub(self, other: DualNum) -> Self::Output {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([other[scalar], other[e1234]]) * Simd32x2::from(-1.0),
+            other.group0() * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
@@ -522,22 +533,23 @@ impl std::ops::Sub<Flector> for Point {
             // e1, e2, e3, e4
             Simd32x4::from([self[e1] - other[e1], self[e2] - other[e2], self[e3] - other[e3], self[e4] - other[e4]]),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e423], other[e431], other[e412], other[e321]]) * Simd32x4::from(-1.0),
+            other.group1() * Simd32x4::from(-1.0),
         );
     }
 }
 impl std::ops::Sub<Horizon> for Point {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
+    //          add/sub      mul      div
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn sub(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
             self.group0(),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other[e321] * -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
         );
     }
 }
@@ -548,16 +560,15 @@ impl std::ops::Sub<Line> for Point {
     //   simd3        0        2        0
     // no simd        0        6        0
     fn sub(self, other: Line) -> Self::Output {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]) * Simd32x3::from(-1.0),
+            other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -603,15 +614,15 @@ impl std::ops::Sub<MultiVector> for Point {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([other[scalar], other[e1234]]) * Simd32x2::from(-1.0),
+            other.group0() * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
             Simd32x4::from([self[e1] - other[e1], self[e2] - other[e2], self[e3] - other[e3], self[e4] - other[e4]]),
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]) * Simd32x3::from(-1.0),
+            other.group2() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e423], other[e431], other[e412], other[e321]]) * Simd32x4::from(-1.0),
+            other.group4() * Simd32x4::from(-1.0),
         );
     }
 }
@@ -638,13 +649,7 @@ impl std::ops::Sub<Plane> for Point {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn sub(self, other: Plane) -> Self::Output {
-        use crate::elements::*;
-        return Flector::from_groups(
-            // e1, e2, e3, e4
-            self.group0(),
-            // e423, e431, e412, e321
-            Simd32x4::from([other[e423], other[e431], other[e412], other[e321]]) * Simd32x4::from(-1.0),
-        );
+        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ other.group0() * Simd32x4::from(-1.0));
     }
 }
 impl std::ops::Sub<Point> for Point {
@@ -672,13 +677,14 @@ impl std::ops::SubAssign<Point> for Point {
 impl std::ops::Sub<Scalar> for Point {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        0        1        0
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn sub(self, other: Scalar) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([other[scalar] * -1.0, 0.0]),
+            Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
@@ -694,7 +700,6 @@ impl std::ops::Sub<Scalar> for Point {
 impl TryFrom<Flector> for Point {
     type Error = String;
     fn try_from(flector: Flector) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = flector[4];
@@ -731,14 +736,13 @@ impl TryFrom<Flector> for Point {
             error.push('}');
             return Err(error);
         }
-        return Ok(Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([flector[e1], flector[e2], flector[e3], flector[e4]])));
+        return Ok(Point::from_groups(/* e1, e2, e3, e4 */ flector.group0()));
     }
 }
 
 impl TryFrom<MultiVector> for Point {
     type Error = String;
     fn try_from(multi_vector: MultiVector) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = multi_vector[0];
@@ -831,9 +835,6 @@ impl TryFrom<MultiVector> for Point {
             error.push('}');
             return Err(error);
         }
-        return Ok(Point::from_groups(
-            // e1, e2, e3, e4
-            Simd32x4::from([multi_vector[e1], multi_vector[e2], multi_vector[e3], multi_vector[e4]]),
-        ));
+        return Ok(Point::from_groups(/* e1, e2, e3, e4 */ multi_vector.group1()));
     }
 }
