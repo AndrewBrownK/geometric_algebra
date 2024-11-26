@@ -230,6 +230,8 @@ pub enum Vec2Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
     Gather2(FloatExpr, FloatExpr),
+    Truncate3to2(Box<Vec3Expr>),
+    Truncate4to2(Box<Vec4Expr>),
     SwizzleVec2(Box<Vec2Expr>, u8, u8),
     AccessMultiVecGroup(MultiVectorExpr, u16),
     Product(Vec<(Vec2Expr, f32)>, [f32; 2]),
@@ -241,6 +243,7 @@ pub enum Vec3Expr {
     Gather1(FloatExpr),
     Gather3(FloatExpr, FloatExpr, FloatExpr),
     Extend2to3(Vec2Expr, FloatExpr),
+    Truncate4to3(Box<Vec4Expr>),
     SwizzleVec3(Box<Vec3Expr>, u8, u8, u8),
     AccessMultiVecGroup(MultiVectorExpr, u16),
     Product(Vec<(Vec3Expr, f32)>, [f32; 3]),
@@ -533,6 +536,8 @@ impl Expression<Vec2> for Vec2Expr {
                 }
             }
             Vec2Expr::SwizzleVec2(v, _, _) => v.substitute_variable(old.clone(), new.clone()),
+            Vec2Expr::Truncate3to2(v) => v.substitute_variable(old.clone(), new.clone()),
+            Vec2Expr::Truncate4to2(v) => v.substitute_variable(old.clone(), new.clone()),
         }
     }
 }
@@ -598,6 +603,7 @@ impl Expression<Vec3> for Vec3Expr {
                 }
             }
             Vec3Expr::SwizzleVec3(v, _, _, _) => v.substitute_variable(old.clone(), new.clone()),
+            Vec3Expr::Truncate4to3(v) => v.substitute_variable(old.clone(), new.clone()),
         }
     }
 }
@@ -1332,6 +1338,20 @@ impl Display for Vec2Expr {
             Vec2Expr::Gather2(f0, f1) => {
                 write!(f, "[{f0}, {f1}]")?;
             }
+            Vec2Expr::Truncate3to2(box v3) => {
+                write!(f, "[")?;
+                v3.display_indexed(f, 0)?;
+                write!(f, ", ")?;
+                v3.display_indexed(f, 1)?;
+                write!(f, "]")?;
+            }
+            Vec2Expr::Truncate4to2(box v4) => {
+                write!(f, "[")?;
+                v4.display_indexed(f, 0)?;
+                write!(f, ", ")?;
+                v4.display_indexed(f, 1)?;
+                write!(f, "]")?;
+            }
             Vec2Expr::SwizzleVec2(box v, x, y) => {
                 write!(f, "[")?;
                 v.display_indexed(f, *x as usize)?;
@@ -1467,6 +1487,15 @@ impl Display for Vec3Expr {
                 write!(f, ", ")?;
                 v.display_indexed(f, 1)?;
                 write!(f, ", {z}]")?;
+            }
+            Vec3Expr::Truncate4to3(v4) => {
+                write!(f, "[")?;
+                v4.display_indexed(f, 0)?;
+                write!(f, ", ")?;
+                v4.display_indexed(f, 1)?;
+                write!(f, ", ")?;
+                v4.display_indexed(f, 2)?;
+                write!(f, "]")?;
             }
             Vec3Expr::SwizzleVec3(box v, x, y , z) => {
                 write!(f, "[")?;
@@ -1761,6 +1790,12 @@ impl Vec2Expr {
                     write!(f, "{f1}")?;
                 }
             }
+            Vec2Expr::Truncate3to2(v) => {
+                v.display_indexed(f, idx)?;
+            }
+            Vec2Expr::Truncate4to2(v) => {
+                v.display_indexed(f, idx)?;
+            }
             Vec2Expr::SwizzleVec2(v, i0, i1) => {
                 if idx == 0 {
                     v.display_indexed(f, *i0 as usize)?;
@@ -1937,6 +1972,9 @@ impl Vec3Expr {
                 if idx == 2 {
                     write!(f, "{f1}")?;
                 }
+            }
+            Vec3Expr::Truncate4to3(v) => {
+                v.display_indexed(f, idx)?;
             }
             Vec3Expr::SwizzleVec3(v, i0, i1, i2) => {
                 if idx == 0 {
@@ -2524,6 +2562,8 @@ impl Vec2Expr {
                 result |= e1.deep_inline_variables();
                 result
             }
+            Vec2Expr::Truncate3to2(box v) => v.deep_inline_variables(),
+            Vec2Expr::Truncate4to2(box v) => v.deep_inline_variables(),
             Vec2Expr::SwizzleVec2(v, _, _) => v.deep_inline_variables(),
             Vec2Expr::AccessMultiVecGroup(mv, _) => mv.deep_inline_variables(),
             Vec2Expr::Product(v, _) => {
@@ -2580,6 +2620,7 @@ impl Vec3Expr {
                 result |= f1.deep_inline_variables();
                 result
             }
+            Vec3Expr::Truncate4to3(box v) => v.deep_inline_variables(),
             Vec3Expr::SwizzleVec3(v, _, _, _) => v.deep_inline_variables(),
             Vec3Expr::AccessMultiVecGroup(mv, _) => mv.deep_inline_variables(),
             Vec3Expr::Product(v, _) => {
@@ -2761,6 +2802,7 @@ impl<T> TakeAsOwned for Vec<T> {
 //    another vec3 extend to vec4 situation
 //  - impl GeometricAntiProduct<Line> for Flector
 //  - impl GeometricAntiProduct<MultiVector> for MultiVector
+//  - impl Dual for Circle
 
 // TODO scanning for good places to simplify... where I left off:
 //  impl Wedge<AntiCircleOnOrigin> for AntiFlectorAtInfinity
@@ -3327,21 +3369,49 @@ impl Vec2Expr {
                         *self = v2_a.take_as_owned();
                         return;
                     }
-                    (
-                        Product(ref mut float_product_0, lits_0),
-                        Product(ref mut float_product_1, lits_1)
-                    ) if transpose_simd => {
-                        let lits = [*lits_0, *lits_1];
-                        if let Some(transposed) = transpose_vec2_product(float_product_0, float_product_1, lits) {
+                    // (
+                    //     AccessMultiVecFlat(x_mve, x_idx),
+                    //     AccessMultiVecFlat(y_mve, y_idx),
+                    // ) if x_mve == y_mve && (*y_idx - *x_idx == 1) => {
+                    //     let target_idx = *x_idx;
+                    //     let mut group_idx = 0;
+                    //     let mut flat_idx = 0;
+                    //     for group in x_mve.mv_class.groups().into_iter() {
+                    //         if flat_idx > target_idx {
+                    //             return
+                    //         }
+                    //         if target_idx == flat_idx && group.simd_width() == 2 {
+                    //             *self = Vec2Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
+                    //             return
+                    //         }
+                    //         group_idx = group_idx + 1;
+                    //         flat_idx = flat_idx + group.simd_width() as u16;
+                    //     }
+                    // }
+                    // TODO other gather-sum branches, similar to how there are many gather-product branches
+                    (Sum(ref mut x_sum, x_lit), Sum(ref mut y_sum, y_lit)) if transpose_simd => {
+                        let lits = [*x_lit, *y_lit];
+                        if let Some(transposed) = transpose_vec2_sum(x_sum, y_sum, lits) {
                             *self = transposed;
                         }
                     }
-                    (
-                        Sum(ref mut float_sum_0, lits_0),
-                        Sum(ref mut float_sum_1, lits_1)
-                    ) if transpose_simd => {
-                        let lits = [*lits_0, *lits_1];
-                        if let Some(transposed) = transpose_vec2_sum(float_sum_0, float_sum_1, lits) {
+                    (Product(ref mut x_product, x_lit), Product(ref mut y_product, y_lit)) if transpose_simd => {
+                        let lits = [*x_lit, *y_lit];
+                        if let Some(transposed) = transpose_vec2_product(x_product, y_product, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (x, Product(ref mut y_product, y_lit)) if transpose_simd => {
+                        let lits = [1.0, *y_lit];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec2_product(&mut x, y_product, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (Product(ref mut x_product, x_lit), y) if transpose_simd => {
+                        let lits = [*x_lit, 1.0];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec2_product(x_product, &mut y, lits) {
                             *self = transposed;
                         }
                     }
@@ -3572,6 +3642,28 @@ impl Vec2Expr {
                     _ => {}
                 }
             }
+            Vec2Expr::Truncate3to2(box v3) => {
+                if !insides_already_done {
+                    v3.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access);
+                }
+                match v3 {
+                    Vec3Expr::SwizzleVec3(box inner_v3, i0, i1, _) if *i0 < 2 && *i1 < 2 => {
+                        *self = Vec2Expr::SwizzleVec2(Box::new(Vec2Expr::Truncate3to2(Box::new(inner_v3.take_as_owned()))), *i0, *i1);
+                    }
+                    _ => {}
+                }
+            }
+            Vec2Expr::Truncate4to2(box v4) => {
+                if !insides_already_done {
+                    v4.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access);
+                }
+                match v4 {
+                    Vec4Expr::SwizzleVec4(box inner_v4, i0, i1, _, _) if *i0 < 2 && *i1 < 2 => {
+                        *self = Vec2Expr::SwizzleVec2(Box::new(Vec2Expr::Truncate4to2(Box::new(inner_v4.take_as_owned()))), *i0, *i1);
+                    }
+                    _ => {}
+                }
+            }
         }
     }
 }
@@ -3614,23 +3706,105 @@ impl Vec3Expr {
                             return;
                         }
                     }
+                    // (
+                    //     AccessMultiVecFlat(x_mve, x_idx),
+                    //     AccessMultiVecFlat(y_mve, y_idx),
+                    //     AccessMultiVecFlat(z_mve, z_idx),
+                    // ) if x_mve == y_mve && y_mve == z_mve && (*z_idx - *x_idx == 2) && (*z_idx - *y_idx == 1) => {
+                    //     let target_idx = *x_idx;
+                    //     let mut group_idx = 0;
+                    //     let mut flat_idx = 0;
+                    //     for group in x_mve.mv_class.groups().into_iter() {
+                    //         if flat_idx > target_idx {
+                    //             return
+                    //         }
+                    //         if target_idx == flat_idx && group.simd_width() == 3 {
+                    //             *self = Vec3Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
+                    //             return
+                    //         }
+                    //         group_idx = group_idx + 1;
+                    //         flat_idx = flat_idx + group.simd_width() as u16;
+                    //     }
+                    // }
+                    // TODO other gather-sum branches, similar to how there are many gather-product branches
                     (
-                        Product(ref mut float_product_0, lits_0),
-                        Product(ref mut float_product_1, lits_1),
-                        Product(ref mut float_product_2, lits_2)
+                        Sum(ref mut x_sum, x_lit),
+                        Sum(ref mut y_sum, y_lit),
+                        Sum(ref mut z_sum, z_lit)
                     ) if transpose_simd => {
-                        let lits = [*lits_0, *lits_1, *lits_2];
-                        if let Some(transposed) = transpose_vec3_product(float_product_0, float_product_1, float_product_2, lits) {
+                        let lits = [*x_lit, *y_lit, *z_lit];
+                        if let Some(transposed) = transpose_vec3_sum(x_sum, y_sum, z_sum, lits) {
                             *self = transposed;
                         }
                     }
                     (
-                        Sum(ref mut float_sum_0, lits_0),
-                        Sum(ref mut float_sum_1, lits_1),
-                        Sum(ref mut float_sum_2, lits_2)
+                        Product(ref mut x_product, x_lit),
+                        Product(ref mut y_product, y_lit),
+                        Product(ref mut z_product, z_lit)
                     ) if transpose_simd => {
-                        let lits = [*lits_0, *lits_1, *lits_2];
-                        if let Some(transposed) = transpose_vec3_sum(float_sum_0, float_sum_1, float_sum_2, lits) {
+                        let lits = [*x_lit, *y_lit, *z_lit];
+                        if let Some(transposed) = transpose_vec3_product(x_product, y_product, z_product, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        x,
+                        Product(ref mut y_product, y_lit),
+                        Product(ref mut z_product, z_lit)
+                    ) if transpose_simd => {
+                        let lits = [1.0, *y_lit, *z_lit];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec3_product(&mut x, y_product, z_product, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Product(ref mut x_product, x_lit),
+                        y,
+                        Product(ref mut z_product, z_lit)
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, 1.0, *z_lit];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec3_product(x_product, &mut y, z_product, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Product(ref mut x_product, x_lit),
+                        Product(ref mut y_product, y_lit),
+                        z
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, *y_lit, 1.0];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec3_product(x_product, y_product, &mut z, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (x, y, Product(ref mut z_product, z_lit)) if transpose_simd => {
+                        let lits = [1.0, 1.0, *z_lit];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec3_product(&mut x, &mut y, z_product, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (x, Product(ref mut y_product, y_lit), z) if transpose_simd => {
+                        let lits = [1.0, *y_lit, 1.0];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec3_product(&mut x, y_product, &mut z, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Product(ref mut x_product, x_lit),
+                        y,
+                        z
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, 1.0, 1.0];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec3_product(x_product, &mut y, &mut z, lits) {
                             *self = transposed;
                         }
                     }
@@ -3889,6 +4063,23 @@ impl Vec3Expr {
                         let fs = [f0, f1, f2];
                         *self = Vec3Expr::Gather3(fs[*i0 as usize].clone(), fs[*i1 as usize].clone(), fs[*i2 as usize].clone());
                     }
+                    box Vec3Expr::Extend2to3(v, z) if *i0 == 0 && *i1 == 1 => {
+                        *self = Vec3Expr::Extend2to3(v.take_as_owned(), z.take_as_owned());
+                    }
+                    box Vec3Expr::Extend2to3(v, z) if *i0 < 2 && *i1 < 2 => {
+                        *self = Vec3Expr::Extend2to3(Vec2Expr::SwizzleVec2(Box::new(v.take_as_owned()), *i0, *i1), z.take_as_owned());
+                    }
+                    _ => {}
+                }
+            }
+            Vec3Expr::Truncate4to3(box v4) => {
+                if !insides_already_done {
+                    v4.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access);
+                }
+                match v4 {
+                    Vec4Expr::SwizzleVec4(box inner_v4, i0, i1, i2, _) if *i0 < 3 && *i1 < 3 && *i2 < 3 => {
+                        *self = Vec3Expr::SwizzleVec3(Box::new(Vec3Expr::Truncate4to3(Box::new(inner_v4.take_as_owned()))), *i0, *i1, *i2);
+                    }
                     _ => {}
                 }
             }
@@ -3900,7 +4091,6 @@ impl Vec4Expr {
         self.simplify_nuanced(false, false, false);
     }
 
-    // TODO see impl Dual for Circle
     fn simplify_nuanced(&mut self, insides_already_done: bool, transpose_simd: bool, prefer_flat_access: bool) {
         match self {
             Vec4Expr::Variable(_) => {}
@@ -3945,25 +4135,209 @@ impl Vec4Expr {
                             return;
                         }
                     }
+                    // (
+                    //     AccessMultiVecFlat(x_mve, x_idx),
+                    //     AccessMultiVecFlat(y_mve, y_idx),
+                    //     AccessMultiVecFlat(z_mve, z_idx),
+                    //     AccessMultiVecFlat(w_mve, w_idx),
+                    // ) if x_mve == y_mve && y_mve == z_mve && z_mve == w_mve && (*w_idx - *x_idx == 3) && (*w_idx - *y_idx == 2) && (*w_idx - *z_idx == 1) => {
+                    //     let target_idx = *x_idx;
+                    //     let mut group_idx = 0;
+                    //     let mut flat_idx = 0;
+                    //     for group in x_mve.mv_class.groups().into_iter() {
+                    //         if flat_idx > target_idx {
+                    //             return
+                    //         }
+                    //         if target_idx == flat_idx && group.simd_width() == 4 {
+                    //             *self = Vec4Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
+                    //             return
+                    //         }
+                    //         group_idx = group_idx + 1;
+                    //         flat_idx = flat_idx + group.simd_width() as u16;
+                    //     }
+                    // }
+                    // TODO other gather-sum branches, similar to how there are many gather-product branches
                     (
-                        Product(ref mut float_product_0, lits_0),
-                        Product(ref mut float_product_1, lits_1),
-                        Product(ref mut float_product_2, lits_2),
-                        Product(ref mut float_product_3, lits_3),
+                        Sum(ref mut x_sum, x_lit),
+                        Sum(ref mut y_sum, y_lit),
+                        Sum(ref mut z_sum, z_lit),
+                        Sum(ref mut w_sum, w_lit)
                     ) if transpose_simd => {
-                        let lits = [*lits_0, *lits_1, *lits_2, *lits_3];
-                        if let Some(transposed) = transpose_vec4_product(float_product_0, float_product_1, float_product_2, float_product_3, lits) {
+                        let lits = [*x_lit, *y_lit, *z_lit, *w_lit];
+                        if let Some(transposed) = transpose_vec4_sum(x_sum, y_sum, z_sum, w_sum, lits) {
                             *self = transposed;
                         }
                     }
                     (
-                        Sum(ref mut float_sum_0, lits_0),
-                        Sum(ref mut float_sum_1, lits_1),
-                        Sum(ref mut float_sum_2, lits_2),
-                        Sum(ref mut float_sum_3, lits_3)
+                        Product(ref mut x_product, x_lit),
+                        Product(ref mut y_product, y_lit),
+                        Product(ref mut z_product, z_lit),
+                        Product(ref mut w_product, w_lit),
                     ) if transpose_simd => {
-                        let lits = [*lits_0, *lits_1, *lits_2, *lits_3];
-                        if let Some(transposed) = transpose_vec4_sum(float_sum_0, float_sum_1, float_sum_2, float_sum_3, lits) {
+                        let lits = [*x_lit, *y_lit, *z_lit, *w_lit];
+                        if let Some(transposed) = transpose_vec4_product(x_product, y_product, z_product, w_product, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        x,
+                        Product(ref mut x_product, y_lit),
+                        Product(ref mut y_product, z_lit),
+                        Product(ref mut w_product, w_lit),
+                    ) if transpose_simd => {
+                        let lits = [1.0, *y_lit, *z_lit, *w_lit];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(&mut x, x_product, y_product, w_product, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Product(ref mut x_product, x_lit),
+                        y,
+                        Product(ref mut z_product, z_lit),
+                        Product(ref mut w_product, w_lit),
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, 1.0, *z_lit, *w_lit];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(x_product, &mut y, z_product, w_product, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Product(ref mut x_product, x_lit),
+                        Product(ref mut y_product, y_lit),
+                        z,
+                        Product(ref mut w_product, w_lit),
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, *y_lit, 1.0, *w_lit];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(x_product, y_product, &mut z, w_product, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Product(ref mut x_product, x_lit),
+                        Product(ref mut y_product, y_lit),
+                        Product(ref mut z_product, z_lit),
+                        w,
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, *y_lit, *z_lit, 1.0];
+                        let mut w = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(x_product, y_product, z_product, &mut w, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        x,
+                        y,
+                        Product(ref mut z_product, z_lit),
+                        Product(ref mut w_product, w_lit),
+                    ) if transpose_simd => {
+                        let lits = [1.0, 1.0, *z_lit, *w_lit];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(&mut x, &mut y, z_product, w_product, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Product(ref mut x_product, x_lit),
+                        Product(ref mut y_product, y_lit),
+                        z,
+                        w,
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, *y_lit, 1.0, 1.0];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        let mut w = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(x_product, y_product, &mut z, &mut w, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        x,
+                        Product(ref mut y_product, y_lit),
+                        Product(ref mut z_product, z_lit),
+                        w,
+                    ) if transpose_simd => {
+                        let lits = [1.0, *y_lit, *z_lit, 1.0];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut w = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(&mut x, y_product, z_product, &mut w, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Product(ref mut x_product, x_lit),
+                        y,
+                        z,
+                        Product(ref mut w_product, w_lit),
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, 1.0, 1.0, *w_lit];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(x_product, &mut y, &mut z, w_product, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Product(ref mut x_product, x_lit),
+                        y,
+                        Product(ref mut z_product, z_lit),
+                        w,
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, 1.0, *z_lit, 1.0];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        let mut w = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(x_product, &mut y, z_product, &mut w, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        x,
+                        Product(ref mut y_product, y_lit),
+                        z,
+                        Product(ref mut w_product, w_lit),
+                    ) if transpose_simd => {
+                        let lits = [1.0, *y_lit, 1.0, *w_lit];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(&mut x, y_product, &mut z, w_product, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (x, y, z, Product(ref mut w_product, w_lit)) if transpose_simd => {
+                        let lits = [1.0, 1.0, 1.0, *w_lit];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(&mut x, &mut y, &mut z, w_product, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (x, y, Product(ref mut z_product, z_lit), w) if transpose_simd => {
+                        let lits = [1.0, 1.0, *z_lit, 1.0];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        let mut w = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(&mut x, &mut y, z_product, &mut w, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (x, Product(ref mut y_product, y_lit), z, w) if transpose_simd => {
+                        let lits = [1.0, *y_lit, 1.0, 1.0];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        let mut w = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(&mut x, y_product, &mut z, &mut w, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (Product(ref mut x_product, x_lit), y, z, w) if transpose_simd => {
+                        let lits = [*x_lit, 1.0, 1.0, 1.0];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        let mut w = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(x_product, &mut y, &mut z, &mut w, lits) {
                             *self = transposed;
                         }
                     }
@@ -4263,6 +4637,18 @@ impl Vec4Expr {
                     box Vec4Expr::Gather4(f0, f1, f2, f3) => {
                         let fs = [f0, f1, f2, f3];
                         *self = Vec4Expr::Gather4(fs[*i0 as usize].clone(), fs[*i1 as usize].clone(), fs[*i2 as usize].clone(), fs[*i3 as usize].clone());
+                    }
+                    box Vec4Expr::Extend2to4(v, z, w) if *i0 == 0 && *i1 == 1 => {
+                        *self = Vec4Expr::Extend2to4(v.take_as_owned(), z.take_as_owned(), w.take_as_owned());
+                    }
+                    box Vec4Expr::Extend2to4(v, z, w) if *i0 < 2 && *i1 < 2 => {
+                        *self = Vec4Expr::Extend2to4(Vec2Expr::SwizzleVec2(Box::new(v.take_as_owned()), *i0, *i1), z.take_as_owned(), w.take_as_owned());
+                    }
+                    box Vec4Expr::Extend3to4(v, w) if *i0 == 0 && *i1 == 1 && *i2 == 2 => {
+                        *self = Vec4Expr::Extend3to4(v.take_as_owned(), w.take_as_owned());
+                    }
+                    box Vec4Expr::Extend3to4(v, w) if *i0 < 3 && *i1 < 3 && *i2 < 3 => {
+                        *self = Vec4Expr::Extend3to4(Vec3Expr::SwizzleVec3(Box::new(v.take_as_owned()), *i0, *i1, *i2), w.take_as_owned());
                     }
                     _ => {}
                 }
@@ -4600,6 +4986,12 @@ impl Ord for Vec2Expr {
                 if c != Ordering::Equal { return c }
                 return a1.cmp(b1)
             },
+            (Truncate3to2(box a), Truncate3to2(box b)) => {
+                return a.cmp(b)
+            }
+            (Truncate4to2(box a), Truncate4to2(box b)) => {
+                return a.cmp(b)
+            }
             (SwizzleVec2(av, a0, a1), SwizzleVec2(bv, b0, b1)) => {
                 let c = av.cmp(bv);
                 if c != Ordering::Equal { return c }
@@ -4648,6 +5040,10 @@ impl Ord for Vec2Expr {
             (_, Gather1(_)) => Ordering::Greater,
             (Gather2(_, _), _) => Ordering::Less,
             (_, Gather2(_, _)) => Ordering::Greater,
+            (Truncate3to2(_), _) => Ordering::Less,
+            (_, Truncate3to2(_)) => Ordering::Greater,
+            (Truncate4to2(_), _) => Ordering::Less,
+            (_, Truncate4to2(_)) => Ordering::Greater,
             (SwizzleVec2(_, _, _), _) => Ordering::Less,
             (_, SwizzleVec2(_, _, _)) => Ordering::Greater,
             (AccessMultiVecGroup(_, _), _) => Ordering::Less,
@@ -4744,6 +5140,9 @@ impl Ord for Vec3Expr {
                 if c != Ordering::Equal { return c }
                 return a_z.cmp(b_z)
             }
+            (Truncate4to3(box a), Truncate4to3(box b)) => {
+                return a.cmp(b);
+            }
             (SwizzleVec3(av, a0, a1, a2), SwizzleVec3(bv, b0, b1, b2)) => {
                 let c = av.cmp(bv);
                 if c != Ordering::Equal { return c }
@@ -4800,6 +5199,8 @@ impl Ord for Vec3Expr {
             (_, Gather3(_, _, _)) => Ordering::Greater,
             (Extend2to3(_, _), _) => Ordering::Less,
             (_, Extend2to3(_, _)) => Ordering::Greater,
+            (Truncate4to3(_), _) => Ordering::Less,
+            (_, Truncate4to3(_)) => Ordering::Greater,
             (SwizzleVec3(_, _, _, _), _) => Ordering::Less,
             (_, SwizzleVec3(_, _, _, _)) => Ordering::Greater,
             (AccessMultiVecGroup(_, _), _) => Ordering::Less,
@@ -5394,7 +5795,9 @@ impl TrackOperations for Vec2Expr {
                 }
                 result
             }
-            Vec2Expr::SwizzleVec2(v, _, _) => v.count_operations(lookup),
+            Vec2Expr::SwizzleVec2(box v, _, _) => v.count_operations(lookup),
+            Vec2Expr::Truncate3to2(box v) => v.count_operations(lookup),
+            Vec2Expr::Truncate4to2(box v) => v.count_operations(lookup),
         }
     }
 }
@@ -5455,6 +5858,7 @@ impl TrackOperations for Vec3Expr {
                 result
             }
             Vec3Expr::SwizzleVec3(v, _, _, _) => v.count_operations(lookup),
+            Vec3Expr::Truncate4to3(v) => v.count_operations(lookup),
         }
     }
 }
@@ -5579,6 +5983,8 @@ impl TrackOperations for MultiVectorExpr {
     }
 }
 
+
+
 fn transpose_vec2_product(float_product_0: &mut Vec<(FloatExpr, f32)>, float_product_1: &mut Vec<(FloatExpr, f32)>, mut coalesce_product_literal: [f32; 2]) -> Option<Vec2Expr> {
     use crate::ast::expressions::FloatExpr::*;
     // See if we can pull out a Vec2Expr::Product
@@ -5662,6 +6068,14 @@ fn vec2_product_extract(
         }
         (AccessVec2(box v0, i0), AccessVec2(box v1, i1)) if v0 == v1 && f0 == f1 => {
             vec2_product.push((Vec2Expr::SwizzleVec2(Box::new(v0.clone()), *i0, *i1), *f0));
+            true
+        }
+        (AccessVec3(box v0, i0), AccessVec3(box v1, i1)) if v0 == v1 && f0 == f1 => {
+            vec2_product.push((Vec2Expr::SwizzleVec2(Box::new(Vec2Expr::Truncate3to2(Box::new(v0.clone()))), *i0, *i1), *f0));
+            true
+        }
+        (AccessVec4(box v0, i0), AccessVec4(box v1, i1)) if v0 == v1 && f0 == f1 => {
+            vec2_product.push((Vec2Expr::SwizzleVec2(Box::new(Vec2Expr::Truncate4to2(Box::new(v0.clone()))), *i0, *i1), *f0));
             true
         }
         (Sum(v0, a0), Sum(v1, a1)) if f0 == f1 => {
@@ -5752,6 +6166,14 @@ fn vec2_sum_extract(vec2_sum: &mut Vec<(Vec2Expr, f32)>, coalesce_sum_literals: 
             vec2_sum.push((Vec2Expr::SwizzleVec2(Box::new(v0.clone()), *i0, *i1), *f0));
             true
         }
+        (AccessVec3(box v0, i0), AccessVec3(box v1, i1)) if v0 == v1 && f0 == f1 => {
+            vec2_sum.push((Vec2Expr::SwizzleVec2(Box::new(Vec2Expr::Truncate3to2(Box::new(v0.clone()))), *i0, *i1), *f0));
+            true
+        }
+        (AccessVec4(box v0, i0), AccessVec4(box v1, i1)) if v0 == v1 && f0 == f1 => {
+            vec2_sum.push((Vec2Expr::SwizzleVec2(Box::new(Vec2Expr::Truncate4to2(Box::new(v0.clone()))), *i0, *i1), *f0));
+            true
+        }
         (Product(v0, a0), Product(v1, a1)) if f0 == f1 => {
             let a = [*a0, *a1];
             let Some(transposed) = transpose_vec2_product(v0, v1, a) else { return false };
@@ -5761,6 +6183,8 @@ fn vec2_sum_extract(vec2_sum: &mut Vec<(Vec2Expr, f32)>, coalesce_sum_literals: 
         _ => false,
     };
 }
+
+
 
 fn transpose_vec3_product(
     float_product_0: &mut Vec<(FloatExpr, f32)>,
@@ -5872,6 +6296,14 @@ fn vec3_product_extract(
         }
         (AccessVec3(box v0, i0), AccessVec3(box v1, i1), AccessVec3(box v2, i2)) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 => {
             vec3_product.push((Vec3Expr::SwizzleVec3(Box::new(v0.clone()), *i0, *i1, *i2), *f0));
+            true
+        }
+        (AccessVec2(box v0, i0), AccessVec2(box v1, i1), z) if v0 == v1 && f0 == f1 && f1 == f2 => {
+            vec3_product.push((Vec3Expr::Extend2to3(Vec2Expr::SwizzleVec2(Box::new(v0.clone()), *i0, *i1), z.clone()), *f0));
+            true
+        }
+        (AccessVec4(box v0, i0), AccessVec4(box v1, i1), AccessVec4(box v2, i2)) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 => {
+            vec3_product.push((Vec3Expr::SwizzleVec3(Box::new(Vec3Expr::Truncate4to3(Box::new(v0.clone()))), *i0, *i1, *i2), *f0));
             true
         }
         (Sum(v0, a0), Sum(v1, a1), Sum(v2, a2)) if f0 == f1 && f1 == f2 => {
@@ -5996,6 +6428,14 @@ fn vec3_sum_extract(
             vec3_sum.push((Vec3Expr::SwizzleVec3(Box::new(v0.clone()), *i0, *i1, *i2), *f0));
             true
         }
+        (AccessVec2(box v0, i0), AccessVec2(box v1, i1), z) if v0 == v1 && f0 == f1 && f1 == f2 => {
+            vec3_sum.push((Vec3Expr::Extend2to3(Vec2Expr::SwizzleVec2(Box::new(v0.clone()), *i0, *i1), z.clone()), *f0));
+            true
+        }
+        (AccessVec4(box v0, i0), AccessVec4(box v1, i1), AccessVec4(box v2, i2)) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 => {
+            vec3_sum.push((Vec3Expr::SwizzleVec3(Box::new(Vec3Expr::Truncate4to3(Box::new(v0.clone()))), *i0, *i1, *i2), *f0));
+            true
+        }
         (Product(v0, a0), Product(v1, a1), Product(v2, a2)) if f0 == f1 && f1 == f2 => {
             let a = [*a0, *a1, *a2];
             let Some(transposed) = transpose_vec3_product(v0, v1, v2, a) else { return false };
@@ -6005,6 +6445,8 @@ fn vec3_sum_extract(
         _ => false,
     };
 }
+
+
 
 fn transpose_vec4_product(
     float_product_0: &mut Vec<(FloatExpr, f32)>,
@@ -6141,6 +6583,14 @@ fn vec4_product_extract(
             if v0 == v1 && v1 == v2 && v2 == v3 && f0 == f1 && f1 == f2 && f2 == f3 =>
         {
             vec4_product.push((Vec4Expr::SwizzleVec4(Box::new(v0.clone()), *i0, *i1, *i2, *i3), *f0));
+            true
+        }
+        (AccessVec2(box v0, i0), AccessVec2(box v1, i1), z, w) if v0 == v1 && f0 == f1 && f1 == f2 && f2 == f3 => {
+            vec4_product.push((Vec4Expr::Extend2to4(Vec2Expr::SwizzleVec2(Box::new(v0.clone()), *i0, *i1), z.clone(), w.clone()), *f0));
+            true
+        }
+        (AccessVec3(box v0, i0), AccessVec3(box v1, i1), AccessVec3(box v2, i2), w) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 && f2 == f3 => {
+            vec4_product.push((Vec4Expr::Extend3to4(Vec3Expr::SwizzleVec3(Box::new(v0.clone()), *i0, *i1, *i2), w.clone()), *f0));
             true
         }
         (Sum(v0, a0), Sum(v1, a1), Sum(v2, a2), Sum(v3, a3)) if f0 == f1 && f1 == f2 && f2 == f3 => {
@@ -6288,6 +6738,14 @@ fn vec4_sum_extract(
             if v0 == v1 && v1 == v2 && v2 == v3 && f0 == f1 && f1 == f2 && f2 == f3 =>
         {
             vec4_sum.push((Vec4Expr::SwizzleVec4(Box::new(v0.clone()), *i0, *i1, *i2, *i3), *f0));
+            true
+        }
+        (AccessVec2(box v0, i0), AccessVec2(box v1, i1), z, w) if v0 == v1 && f0 == f1 && f1 == f2 && f2 == f3 => {
+            vec4_sum.push((Vec4Expr::Extend2to4(Vec2Expr::SwizzleVec2(Box::new(v0.clone()), *i0, *i1), z.clone(), w.clone()), *f0));
+            true
+        }
+        (AccessVec3(box v0, i0), AccessVec3(box v1, i1), AccessVec3(box v2, i2), w) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 && f2 == f3 => {
+            vec4_sum.push((Vec4Expr::Extend3to4(Vec3Expr::SwizzleVec3(Box::new(v0.clone()), *i0, *i1, *i2), w.clone()), *f0));
             true
         }
         (Product(v0, a0), Product(v1, a1), Product(v2, a2), Product(v3, a3)) if f0 == f1 && f1 == f2 && f2 == f3 => {

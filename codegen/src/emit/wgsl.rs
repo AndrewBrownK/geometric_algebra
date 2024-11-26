@@ -1083,7 +1083,11 @@ impl Wgsl {
                 }
             }
             Vec2Expr::SwizzleVec2(box v, i0, i1) => {
-                self.write_vec2(w, v, false)?;
+                match v {
+                    Vec2Expr::Truncate3to2(box v3) => self.write_vec3(w, v3, false)?,
+                    Vec2Expr::Truncate4to2(box v4) => self.write_vec4(w, v4, false)?,
+                    _ => self.write_vec2(w, v, false)?,
+                }
                 let x = match *i0 {
                     0 => "x",
                     1 => "y",
@@ -1095,6 +1099,14 @@ impl Wgsl {
                     _ => bail!("swizzle index out of bounds")
                 };
                 write!(w, ".{x}{y}")?;
+            }
+            Vec2Expr::Truncate3to2(box v3) => {
+                self.write_vec3(w, v3, false)?;
+                write!(w, ".xy")?;
+            }
+            Vec2Expr::Truncate4to2(box v4) => {
+                self.write_vec4(w, v4, false)?;
+                write!(w, ".xy")?;
             }
         }
         Ok(())
@@ -1310,7 +1322,10 @@ impl Wgsl {
                 }
             }
             Vec3Expr::SwizzleVec3(box v, i0, i1, i2) => {
-                self.write_vec3(w, v, false)?;
+                match v {
+                    Vec3Expr::Truncate4to3(box v4) => self.write_vec4(w, v4, false)?,
+                    _ => self.write_vec3(w, v, false)?,
+                }
                 let x = match *i0 {
                     0 => "x",
                     1 => "y",
@@ -1330,6 +1345,10 @@ impl Wgsl {
                     _ => bail!("swizzle index out of bounds")
                 };
                 write!(w, ".{x}{y}{z}")?;
+            }
+            Vec3Expr::Truncate4to3(box v4) => {
+                self.write_vec4(w, v4, false)?;
+                write!(w, ".xyz")?;
             }
         }
         Ok(())

@@ -1311,10 +1311,30 @@ postgres-types = "0.2.7""#
                     write!(w, ")")?;
                 }
             }
-            Vec2Expr::SwizzleVec2(box v, i0, i1) => {
-                write!(w, "crate::swizzle!(")?;
-                self.write_vec2(w, v, true)?;
-                write!(w, ", {i0}, {i1})")?;
+            Vec2Expr::SwizzleVec2(box v, i0, i1) => match v {
+                Vec2Expr::Truncate4to2(box v4) => {
+                    write!(w, "crate::swizzle!(")?;
+                    self.write_vec4(w, v4, true)?;
+                    write!(w, ", {i0}, {i1}, _, _)")?;
+                }
+                Vec2Expr::Truncate3to2(box v3) => {
+                    write!(w, "crate::swizzle!(")?;
+                    self.write_vec3(w, v3, true)?;
+                    write!(w, ", {i0}, {i1}, _)")?;
+                }
+                _ => {
+                    write!(w, "crate::swizzle!(")?;
+                    self.write_vec2(w, v, true)?;
+                    write!(w, ", {i0}, {i1})")?;
+                }
+            },
+            Vec2Expr::Truncate3to2(box v3) => {
+                self.write_vec3(w, v3, true)?;
+                write!(w, ".truncate_to_2()")?;
+            }
+            Vec2Expr::Truncate4to2(box v4) => {
+                self.write_vec4(w, v4, true)?;
+                write!(w, ".truncate_to_2()")?;
             }
         }
         Ok(())
@@ -1511,10 +1531,21 @@ postgres-types = "0.2.7""#
                     write!(w, ")")?;
                 }
             }
-            Vec3Expr::SwizzleVec3(box v, i0, i1, i2) => {
-                write!(w, "crate::swizzle!(")?;
-                self.write_vec3(w, v, true)?;
-                write!(w, ", {i0}, {i1}, {i2})")?;
+            Vec3Expr::SwizzleVec3(box v, i0, i1, i2) => match v {
+                Vec3Expr::Truncate4to3(box v4) => {
+                    write!(w, "crate::swizzle!(")?;
+                    self.write_vec4(w, v4, true)?;
+                    write!(w, ", {i0}, {i1}, {i2}, _)")?;
+                }
+                _ => {
+                    write!(w, "crate::swizzle!(")?;
+                    self.write_vec3(w, v, true)?;
+                    write!(w, ", {i0}, {i1}, {i2})")?;
+                }
+            },
+            Vec3Expr::Truncate4to3(box v4) => {
+                self.write_vec4(w, v4, true)?;
+                write!(w, ".truncate_to_3()")?;
             }
         }
         Ok(())
@@ -2198,6 +2229,7 @@ impl {ucc} {{
 }}"#
         )?;
         if self.nearly_eq_ord {
+            // todo simplify return expression on comparison traits
             writeln!(
                 w,
                 r#"
