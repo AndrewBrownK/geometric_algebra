@@ -175,7 +175,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for FlatOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1858,7 +1858,7 @@ impl std::ops::Add<SphereOnOrigin> for FlatOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, self[e45]]),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]),
+            crate::swizzle!(other.group0(), 3, 0, 1, 2),
         );
     }
 }
@@ -3901,7 +3901,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for FlatOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0) * Simd32x4::from(-1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6017,7 +6017,7 @@ impl std::ops::Sub<SphereOnOrigin> for FlatOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, self[e45]]),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group0(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
         );
     }
 }

@@ -1298,7 +1298,7 @@ impl RightAntiDual for MultiVector {
             // scalar, e12345
             Simd32x2::from([self[e12345], self[scalar]]) * Simd32x2::from([-1.0, 1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e1234]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            crate::swizzle!(self.group9(), 1, 2, 3, 0) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e5
             self[e3215],
             // e41, e42, e43, e45
@@ -1314,7 +1314,7 @@ impl RightAntiDual for MultiVector {
             // e235, e315, e125
             self.group4() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([self[e4], self[e1], self[e2], self[e3]]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]),
+            crate::swizzle!(self.group1(), 3, 0, 1, 2) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]),
             // e3215
             self[e5] * -1.0,
         );
@@ -1650,8 +1650,7 @@ impl std::ops::Div<right_anti_dual> for SphereAtOrigin {
 impl RightAntiDual for SphereAtOrigin {
     type Output = RoundPointAtOrigin;
     fn right_anti_dual(self) -> Self::Output {
-        use crate::elements::*;
-        return RoundPointAtOrigin::from_groups(/* e4, e5 */ Simd32x2::from([self[e1234], self[e3215]]));
+        return RoundPointAtOrigin::from_groups(/* e4, e5 */ crate::swizzle!(self.group0(), 1, 0));
     }
 }
 impl std::ops::Div<right_anti_dual> for SphereOnOrigin {

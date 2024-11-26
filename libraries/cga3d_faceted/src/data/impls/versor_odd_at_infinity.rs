@@ -225,7 +225,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for VersorOddAtInfinity {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -3821,12 +3821,7 @@ impl From<AntiCircleRotorAligningOriginAtInfinity> for VersorOddAtInfinity {
         use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            Simd32x4::from([
-                from_anti_circle_rotor_aligning_origin_at_infinity[scalar],
-                from_anti_circle_rotor_aligning_origin_at_infinity[e15],
-                from_anti_circle_rotor_aligning_origin_at_infinity[e25],
-                from_anti_circle_rotor_aligning_origin_at_infinity[e35],
-            ]),
+            crate::swizzle!(from_anti_circle_rotor_aligning_origin_at_infinity.group1(), 3, 0, 1, 2),
             // e23, e31, e12, e45
             Simd32x4::from([
                 from_anti_circle_rotor_aligning_origin_at_infinity[e23],
@@ -3842,15 +3837,9 @@ impl From<AntiCircleRotorAligningOriginAtInfinity> for VersorOddAtInfinity {
 
 impl From<AntiCircleRotorAtInfinity> for VersorOddAtInfinity {
     fn from(from_anti_circle_rotor_at_infinity: AntiCircleRotorAtInfinity) -> Self {
-        use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            Simd32x4::from([
-                from_anti_circle_rotor_at_infinity[scalar],
-                from_anti_circle_rotor_at_infinity[e15],
-                from_anti_circle_rotor_at_infinity[e25],
-                from_anti_circle_rotor_at_infinity[e35],
-            ]),
+            crate::swizzle!(from_anti_circle_rotor_at_infinity.group1(), 3, 0, 1, 2),
             // e23, e31, e12, e45
             from_anti_circle_rotor_at_infinity.group0(),
             // e4235, e4315, e4125, e3215
@@ -5698,7 +5687,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for VersorOddAtInfinity {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0) * Simd32x4::from(-1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -8494,7 +8483,6 @@ impl TryFrom<AntiCircleOnOrigin> for VersorOddAtInfinity {
 impl TryFrom<AntiCircleRotor> for VersorOddAtInfinity {
     type Error = String;
     fn try_from(anti_circle_rotor: AntiCircleRotor) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_circle_rotor[0];
@@ -8526,7 +8514,7 @@ impl TryFrom<AntiCircleRotor> for VersorOddAtInfinity {
         }
         return Ok(VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            Simd32x4::from([anti_circle_rotor[scalar], anti_circle_rotor[e15], anti_circle_rotor[e25], anti_circle_rotor[e35]]),
+            crate::swizzle!(anti_circle_rotor.group2(), 3, 0, 1, 2),
             // e23, e31, e12, e45
             anti_circle_rotor.group1(),
             // e4235, e4315, e4125, e3215
@@ -8570,12 +8558,7 @@ impl TryFrom<AntiCircleRotorAligningOrigin> for VersorOddAtInfinity {
         }
         return Ok(VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            Simd32x4::from([
-                anti_circle_rotor_aligning_origin[scalar],
-                anti_circle_rotor_aligning_origin[e15],
-                anti_circle_rotor_aligning_origin[e25],
-                anti_circle_rotor_aligning_origin[e35],
-            ]),
+            crate::swizzle!(anti_circle_rotor_aligning_origin.group2(), 3, 0, 1, 2),
             // e23, e31, e12, e45
             Simd32x4::from([
                 anti_circle_rotor_aligning_origin[e23],

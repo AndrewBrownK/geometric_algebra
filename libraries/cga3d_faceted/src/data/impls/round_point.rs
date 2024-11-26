@@ -2086,7 +2086,7 @@ impl std::ops::Add<SphereOnOrigin> for RoundPoint {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]),
+            crate::swizzle!(other.group0(), 3, 0, 1, 2),
             // e3215
             0.0,
         );
@@ -7267,7 +7267,7 @@ impl std::ops::Sub<SphereOnOrigin> for RoundPoint {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group0(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
             // e3215
             0.0,
         );
@@ -7689,7 +7689,6 @@ impl TryFrom<AntiDipoleInversionAtInfinity> for RoundPoint {
 impl TryFrom<AntiDipoleInversionOnOrigin> for RoundPoint {
     type Error = String;
     fn try_from(anti_dipole_inversion_on_origin: AntiDipoleInversionOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_dipole_inversion_on_origin[0];
@@ -7728,12 +7727,7 @@ impl TryFrom<AntiDipoleInversionOnOrigin> for RoundPoint {
         }
         return Ok(RoundPoint::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([
-                anti_dipole_inversion_on_origin[e1],
-                anti_dipole_inversion_on_origin[e2],
-                anti_dipole_inversion_on_origin[e3],
-                anti_dipole_inversion_on_origin[e4],
-            ]),
+            crate::swizzle!(anti_dipole_inversion_on_origin.group1(), 1, 2, 3, 0),
             // e5
             0.0,
         ));

@@ -7970,12 +7970,7 @@ impl From<AntiDipoleInversionOnOrigin> for MultiVector {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                from_anti_dipole_inversion_on_origin[e1],
-                from_anti_dipole_inversion_on_origin[e2],
-                from_anti_dipole_inversion_on_origin[e3],
-                from_anti_dipole_inversion_on_origin[e4],
-            ]),
+            crate::swizzle!(from_anti_dipole_inversion_on_origin.group1(), 1, 2, 3, 0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -10305,7 +10300,6 @@ impl From<SphereAtOrigin> for MultiVector {
 
 impl From<SphereOnOrigin> for MultiVector {
     fn from(from_sphere_on_origin: SphereOnOrigin) -> Self {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
@@ -10326,7 +10320,7 @@ impl From<SphereOnOrigin> for MultiVector {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([from_sphere_on_origin[e1234], from_sphere_on_origin[e4235], from_sphere_on_origin[e4315], from_sphere_on_origin[e4125]]),
+            crate::swizzle!(from_sphere_on_origin.group0(), 3, 0, 1, 2),
             // e3215
             0.0,
         );

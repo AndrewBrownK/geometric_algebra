@@ -45,8 +45,7 @@ impl std::ops::DivAssign<left_complement> for DualNum {
 impl LeftComplement for DualNum {
     type Output = DualNum;
     fn left_complement(self) -> Self::Output {
-        use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self[e1234], self[scalar]]));
+        return DualNum::from_groups(/* scalar, e1234 */ crate::swizzle!(self.group0(), 1, 0));
     }
 }
 impl std::ops::Div<left_complement> for Flector {
@@ -156,10 +155,9 @@ impl LeftComplement for MultiVector {
     // yes simd        0        3        0
     //  no simd        0       10        0
     fn left_complement(self) -> Self::Output {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([self[e1234], self[scalar]]),
+            crate::swizzle!(self.group0(), 1, 0),
             // e1, e2, e3, e4
             self.group4(),
             // e41, e42, e43

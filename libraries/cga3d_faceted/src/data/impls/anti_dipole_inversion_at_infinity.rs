@@ -2282,7 +2282,7 @@ impl std::ops::Add<SphereOnOrigin> for AntiDipoleInversionAtInfinity {
             // e235, e315, e125
             self.group1(),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]),
+            crate::swizzle!(other.group0(), 3, 0, 1, 2),
             // e3215
             0.0,
         );
@@ -7631,7 +7631,7 @@ impl std::ops::Sub<SphereOnOrigin> for AntiDipoleInversionAtInfinity {
             // e235, e315, e125
             self.group1(),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group0(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
             // e3215
             0.0,
         );

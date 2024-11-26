@@ -191,7 +191,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for DipoleAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -4645,7 +4645,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for DipoleAligningOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0) * Simd32x4::from(-1.0),
             // e5
             0.0,
             // e41, e42, e43, e45

@@ -45,8 +45,7 @@ impl std::ops::DivAssign<right_complement> for DualNum {
 impl RightComplement for DualNum {
     type Output = DualNum;
     fn right_complement(self) -> Self::Output {
-        use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([self[e1234], self[scalar]]));
+        return DualNum::from_groups(/* scalar, e1234 */ crate::swizzle!(self.group0(), 1, 0));
     }
 }
 impl std::ops::Div<right_complement> for Flector {
@@ -159,10 +158,9 @@ impl RightComplement for MultiVector {
     // yes simd        0        3        0
     //  no simd        0       10        0
     fn right_complement(self) -> Self::Output {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([self[e1234], self[scalar]]),
+            crate::swizzle!(self.group0(), 1, 0),
             // e1, e2, e3, e4
             self.group4() * Simd32x4::from(-1.0),
             // e41, e42, e43

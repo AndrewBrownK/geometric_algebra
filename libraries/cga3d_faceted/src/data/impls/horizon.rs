@@ -83,7 +83,7 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for Horizon {
         use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            Simd32x4::from([other[scalar], other[e15], other[e25], other[e35]]),
+            crate::swizzle!(other.group1(), 3, 0, 1, 2),
             // e23, e31, e12, e45
             other.group0(),
             // e4235, e4315, e4125, e3215
@@ -173,7 +173,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for Horizon {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -3578,7 +3578,7 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for Horizon {
         use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            Simd32x4::from([other[scalar], other[e15], other[e25], other[e35]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group1(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
             // e23, e31, e12, e45
             other.group0() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
@@ -3695,7 +3695,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for Horizon {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0) * Simd32x4::from(-1.0),
             // e5
             0.0,
             // e41, e42, e43, e45

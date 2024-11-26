@@ -87,7 +87,7 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for MysteryDipoleInv
         use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            Simd32x4::from([other[scalar], other[e15], other[e25], other[e35]]),
+            crate::swizzle!(other.group1(), 3, 0, 1, 2),
             // e23, e31, e12, e45
             Simd32x4::from([other[e23] + self[e23], other[e31] + self[e31], other[e12] + self[e12], self[e45]]),
             // e4235, e4315, e4125, e3215
@@ -104,7 +104,7 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for MysteryDipoleInversion {
         use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            Simd32x4::from([other[scalar], other[e15], other[e25], other[e35]]),
+            crate::swizzle!(other.group1(), 3, 0, 1, 2),
             // e23, e31, e12, e45
             Simd32x4::from([other[e23] + self[e23], other[e31] + self[e31], other[e12] + self[e12], other[e45] + self[e45]]),
             // e4235, e4315, e4125, e3215
@@ -199,7 +199,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for MysteryDipoleInversion {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -4552,7 +4552,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for MysteryDipoleInv
         use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            Simd32x4::from([other[scalar], other[e15], other[e25], other[e35]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group1(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
             // e23, e31, e12, e45
             Simd32x4::from([self[e23] - other[e23], self[e31] - other[e31], self[e12] - other[e12], self[e45]]),
             // e4235, e4315, e4125, e3215
@@ -4573,7 +4573,7 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for MysteryDipoleInversion {
         use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            Simd32x4::from([other[scalar], other[e15], other[e25], other[e35]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group1(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
             // e23, e31, e12, e45
             Simd32x4::from([self[e23] - other[e23], self[e31] - other[e31], self[e12] - other[e12], self[e45] - other[e45]]),
             // e4235, e4315, e4125, e3215
@@ -4695,7 +4695,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for MysteryDipoleInversion {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0) * Simd32x4::from(-1.0),
             // e5
             0.0,
             // e41, e42, e43, e45

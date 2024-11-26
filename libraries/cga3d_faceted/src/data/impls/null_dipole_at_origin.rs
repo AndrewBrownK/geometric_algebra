@@ -179,7 +179,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for NullDipoleAtOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1849,12 +1849,11 @@ impl std::ops::Add<SphereAtOrigin> for NullDipoleAtOrigin {
 impl std::ops::Add<SphereOnOrigin> for NullDipoleAtOrigin {
     type Output = DipoleInversionOnOrigin;
     fn add(self, other: SphereOnOrigin) -> Self::Output {
-        use crate::elements::*;
         return DipoleInversionOnOrigin::from_groups(
             // e41, e42, e43, e45
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]),
+            crate::swizzle!(other.group0(), 3, 0, 1, 2),
         );
     }
 }
@@ -3913,7 +3912,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for NullDipoleAtOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0) * Simd32x4::from(-1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6016,12 +6015,11 @@ impl std::ops::Sub<SphereOnOrigin> for NullDipoleAtOrigin {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn sub(self, other: SphereOnOrigin) -> Self::Output {
-        use crate::elements::*;
         return DipoleInversionOnOrigin::from_groups(
             // e41, e42, e43, e45
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group0(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
         );
     }
 }

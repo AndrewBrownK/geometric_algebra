@@ -2085,7 +2085,6 @@ impl std::ops::Add<SphereAtOrigin> for AntiMysteryDipoleInversion {
 impl std::ops::Add<SphereOnOrigin> for AntiMysteryDipoleInversion {
     type Output = MultiVector;
     fn add(self, other: SphereOnOrigin) -> Self::Output {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
@@ -2106,7 +2105,7 @@ impl std::ops::Add<SphereOnOrigin> for AntiMysteryDipoleInversion {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]),
+            crate::swizzle!(other.group0(), 3, 0, 1, 2),
             // e3215
             0.0,
         );
@@ -7029,7 +7028,6 @@ impl std::ops::Sub<SphereOnOrigin> for AntiMysteryDipoleInversion {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn sub(self, other: SphereOnOrigin) -> Self::Output {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
@@ -7050,7 +7048,7 @@ impl std::ops::Sub<SphereOnOrigin> for AntiMysteryDipoleInversion {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group0(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
             // e3215
             0.0,
         );

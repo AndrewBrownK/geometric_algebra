@@ -17,7 +17,7 @@ use crate::traits::RightAntiDual;
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0      12       0
-//  Average:         0      24       0
+//  Average:         0      23       0
 //  Maximum:         0     308       0
 impl std::ops::Div<co_carrier> for AntiCircleOnOrigin {
     type Output = PlaneOnOrigin;
@@ -693,16 +693,10 @@ impl CoCarrier for DipoleInversionAtOrigin {
     type Output = FlectorOnOrigin;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        8        0
-    // no simd        0       32        0
+    //   simd4        0        2        0
+    // no simd        0        8        0
     fn co_carrier(self) -> Self::Output {
-        use crate::elements::*;
-        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([
-            self.right_anti_dual()[e4],
-            self.right_anti_dual()[e423],
-            self.right_anti_dual()[e431],
-            self.right_anti_dual()[e412],
-        ]));
+        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ crate::swizzle!(self.right_anti_dual().group0(), 3, 0, 1, 2));
     }
 }
 impl std::ops::Div<co_carrier> for DipoleInversionOnOrigin {
@@ -715,13 +709,12 @@ impl CoCarrier for DipoleInversionOnOrigin {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0       10        0
-    // no simd        0       40        0
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn co_carrier(self) -> Self::Output {
-        use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([self.right_anti_dual()[e1], self.right_anti_dual()[e2], self.right_anti_dual()[e3], self.right_anti_dual()[e4]]),
+            crate::swizzle!(self.right_anti_dual().group1(), 1, 2, 3, 0),
             // e4235, e4315, e4125, e3215
             self.right_anti_dual().group0(),
         );
@@ -868,16 +861,10 @@ impl CoCarrier for FlectorOnOrigin {
     type Output = FlectorAtInfinity;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        4        0
-    // no simd        0       16        0
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn co_carrier(self) -> Self::Output {
-        use crate::elements::*;
-        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
-            self.right_anti_dual()[e1],
-            self.right_anti_dual()[e2],
-            self.right_anti_dual()[e3],
-            self.right_anti_dual()[e321],
-        ]));
+        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ crate::swizzle!(self.right_anti_dual().group0(), 1, 2, 3, 0));
     }
 }
 impl std::ops::Div<co_carrier> for Line {
@@ -1153,16 +1140,10 @@ impl CoCarrier for NullDipoleInversionAtOrigin {
     type Output = FlectorOnOrigin;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        4        0
-    // no simd        0       16        0
+    //   simd4        0        1        0
+    // no simd        0        4        0
     fn co_carrier(self) -> Self::Output {
-        use crate::elements::*;
-        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([
-            self.right_anti_dual()[e4],
-            self.right_anti_dual()[e423],
-            self.right_anti_dual()[e431],
-            self.right_anti_dual()[e412],
-        ]));
+        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ crate::swizzle!(self.right_anti_dual().group0(), 3, 0, 1, 2));
     }
 }
 impl std::ops::Div<co_carrier> for NullSphereAtOrigin {

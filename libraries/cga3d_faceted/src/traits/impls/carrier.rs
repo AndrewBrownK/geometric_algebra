@@ -150,10 +150,9 @@ impl std::ops::Div<carrier> for AntiDipoleInversionOnOrigin {
 impl Carrier for AntiDipoleInversionOnOrigin {
     type Output = Flector;
     fn carrier(self) -> Self::Output {
-        use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]),
+            crate::swizzle!(self.group1(), 1, 2, 3, 0),
             // e4235, e4315, e4125, e3215
             self.group0(),
         );
@@ -250,8 +249,7 @@ impl std::ops::Div<carrier> for AntiFlectorOnOrigin {
 impl Carrier for AntiFlectorOnOrigin {
     type Output = FlectorAtInfinity;
     fn carrier(self) -> Self::Output {
-        use crate::elements::*;
-        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([self[e1], self[e2], self[e3], self[e321]]));
+        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ crate::swizzle!(self.group0(), 1, 2, 3, 0));
     }
 }
 impl std::ops::Div<carrier> for AntiLine {
@@ -862,8 +860,7 @@ impl std::ops::Div<carrier> for NullVersorEvenAtOrigin {
 impl Carrier for NullVersorEvenAtOrigin {
     type Output = FlectorOnOrigin;
     fn carrier(self) -> Self::Output {
-        use crate::elements::*;
-        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([self[e4], self[e423], self[e431], self[e412]]));
+        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ crate::swizzle!(self.group0(), 3, 0, 1, 2));
     }
 }
 impl std::ops::Div<carrier> for Origin {
@@ -1009,8 +1006,7 @@ impl std::ops::Div<carrier> for VersorEvenAtOrigin {
 impl Carrier for VersorEvenAtOrigin {
     type Output = FlectorOnOrigin;
     fn carrier(self) -> Self::Output {
-        use crate::elements::*;
-        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from([self[e4], self[e423], self[e431], self[e412]]));
+        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ crate::swizzle!(self.group0(), 3, 0, 1, 2));
     }
 }
 impl std::ops::Div<carrier> for VersorEvenOnOrigin {

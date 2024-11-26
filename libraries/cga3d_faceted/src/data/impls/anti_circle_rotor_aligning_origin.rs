@@ -243,7 +243,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for AntiCircleRotorAligningOrigi
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5173,7 +5173,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for AntiCircleRotorAligningOrigi
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0) * Simd32x4::from(-1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -8967,7 +8967,7 @@ impl TryFrom<VersorOddAtInfinity> for AntiCircleRotorAligningOrigin {
             // e23, e31, e12
             Simd32x3::from([versor_odd_at_infinity[e23], versor_odd_at_infinity[e31], versor_odd_at_infinity[e12]]),
             // e15, e25, e35, scalar
-            Simd32x4::from([versor_odd_at_infinity[e15], versor_odd_at_infinity[e25], versor_odd_at_infinity[e35], versor_odd_at_infinity[scalar]]),
+            crate::swizzle!(versor_odd_at_infinity.group0(), 1, 2, 3, 0),
         ));
     }
 }

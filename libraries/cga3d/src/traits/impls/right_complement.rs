@@ -494,7 +494,7 @@ impl RightComplement for MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self[e12345], self[scalar]]),
+            crate::swizzle!(self.group0(), 1, 0),
             // e1, e2, e3, e4
             self.group9(),
             // e5

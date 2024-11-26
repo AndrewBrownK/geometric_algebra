@@ -606,7 +606,7 @@ impl AntiConstraintViolation for AntiDipoleInversionAtInfinity {
                 (anti_reverse[e425] * self[e1]) + (anti_reverse[e321] * self[e435]) + (anti_reverse[e2] * self[e415])
                     - (anti_reverse[e415] * self[e2])
                     - (anti_reverse[e1] * self[e425]),
-            ]) + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
+            ]) + (Simd32x4::from(self[e321]) * crate::swizzle!(anti_reverse.group0(), 3, 0, 1, 2)),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -1197,7 +1197,7 @@ impl AntiConstraintViolation for AntiMysteryDipoleInversion {
                 (anti_reverse[e425] * self[e1]) + (anti_reverse[e321] * self[e435]) + (anti_reverse[e2] * self[e415])
                     - (anti_reverse[e415] * self[e2])
                     - (anti_reverse[e1] * self[e425]),
-            ]) + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
+            ]) + (Simd32x4::from(self[e321]) * crate::swizzle!(anti_reverse.group0(), 3, 0, 1, 2)),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
@@ -1534,7 +1534,7 @@ impl AntiConstraintViolation for CircleAtInfinity {
                 anti_reverse[e321] * self[e415],
                 anti_reverse[e321] * self[e425],
                 anti_reverse[e321] * self[e435],
-            ]) + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
+            ]) + (Simd32x4::from(self[e321]) * crate::swizzle!(anti_reverse.group0(), 3, 0, 1, 2)),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -1995,7 +1995,7 @@ impl AntiConstraintViolation for CircleRotorAtInfinity {
                 anti_reverse[e321] * self[e415],
                 anti_reverse[e321] * self[e425],
                 anti_reverse[e321] * self[e435],
-            ]) + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
+            ]) + (Simd32x4::from(self[e321]) * crate::swizzle!(anti_reverse.group0(), 3, 0, 1, 2)),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -3805,7 +3805,7 @@ impl AntiConstraintViolation for MysteryCircle {
                 anti_reverse[e321] * self[e415],
                 anti_reverse[e321] * self[e425],
                 anti_reverse[e321] * self[e435],
-            ]) + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
+            ]) + (Simd32x4::from(self[e321]) * crate::swizzle!(anti_reverse.group0(), 3, 0, 1, 2)),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
@@ -3851,7 +3851,7 @@ impl AntiConstraintViolation for MysteryCircleRotor {
                 anti_reverse[e321] * self[e415],
                 anti_reverse[e321] * self[e425],
                 anti_reverse[e321] * self[e435],
-            ]) + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
+            ]) + (Simd32x4::from(self[e321]) * crate::swizzle!(anti_reverse.group0(), 3, 0, 1, 2)),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
@@ -4016,7 +4016,7 @@ impl AntiConstraintViolation for MysteryVersorEven {
                     - (anti_reverse[e1] * self[e425])
                     - (anti_reverse[e415] * self[e2]),
             ]) + (Simd32x4::from(anti_reverse[e12345]) * self.group0())
-                + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
+                + (Simd32x4::from(self[e321]) * crate::swizzle!(anti_reverse.group1(), 3, 0, 1, 2)),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );
@@ -4531,7 +4531,7 @@ impl AntiConstraintViolation for VersorEvenAtInfinity {
                     - (anti_reverse[e1] * self[e425])
                     - (anti_reverse[e415] * self[e2]),
             ]) + (Simd32x4::from(anti_reverse[e12345]) * self.group0())
-                + (Simd32x4::from(self[e321]) * Simd32x4::from([anti_reverse[e321], anti_reverse[e415], anti_reverse[e425], anti_reverse[e435]])),
+                + (Simd32x4::from(self[e321]) * crate::swizzle!(anti_reverse.group1(), 3, 0, 1, 2)),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
@@ -4630,7 +4630,7 @@ impl AntiConstraintViolation for VersorEvenAtOrigin {
                     - (anti_reverse[e315] * self[e423])
                     - (anti_reverse[e125] * self[e4])
                     - (anti_reverse[e5] * self[e412]),
-            ]) + (Simd32x4::from(self[e5]) * Simd32x4::from([anti_reverse[e4], anti_reverse[e423], anti_reverse[e431], anti_reverse[e412]])),
+            ]) + (Simd32x4::from(self[e5]) * crate::swizzle!(anti_reverse.group0(), 3, 0, 1, 2)),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
         );

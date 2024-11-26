@@ -249,7 +249,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for Motor {
             // e235, e315, e125, e5
             self.group1(),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0),
         );
     }
 }
@@ -2135,7 +2135,7 @@ impl std::ops::Add<SphereOnOrigin> for Motor {
             // e235, e315, e125
             Simd32x3::from([self[e235], self[e315], self[e125]]),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]),
+            crate::swizzle!(other.group0(), 3, 0, 1, 2),
             // e3215
             0.0,
         );
@@ -4795,7 +4795,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for Motor {
             // e235, e315, e125, e5
             self.group1(),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group1(), 1, 2, 3, 0) * Simd32x4::from(-1.0),
         );
     }
 }
@@ -7036,7 +7036,7 @@ impl std::ops::Sub<SphereOnOrigin> for Motor {
             // e235, e315, e125
             Simd32x3::from([self[e235], self[e315], self[e125]]),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]) * Simd32x4::from(-1.0),
+            crate::swizzle!(other.group0(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
             // e3215
             0.0,
         );

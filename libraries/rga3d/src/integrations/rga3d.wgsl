@@ -5870,8 +5870,8 @@ fn antiScalar_leftComplement(self_: AntiScalar) -> Scalar {
     return Scalar(self_.e1234_);
 }
 fn dualNum_leftComplement(self_: DualNum) -> DualNum {
-    return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(self_.e1234_, self_.scalar, 0.0, 0.0)
+    let self_groups = dualNum_grouped(self_);    return dualNum_degroup(DualNumGroups(
+        /* scalar, e1234 */ self_groups.group0_.yx
     ));
 }
 fn flector_leftComplement(self_: Flector) -> Flector {
@@ -5897,7 +5897,7 @@ fn motor_leftComplement(self_: Motor) -> Motor {
 }
 fn multiVector_leftComplement(self_: MultiVector) -> MultiVector {
     let self_groups = multiVector_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
-        /* scalar, e1234 */ vec4<f32>(self_.e1234_, self_.scalar, 0.0, 0.0), 
+        /* scalar, e1234 */ self_groups.group0_.yx, 
         /* e1, e2, e3, e4 */ self_groups.group4_, 
         /* e41, e42, e43 */ self_groups.group3_ * vec3<f32>(-1.0), 
         /* e23, e31, e12 */ self_groups.group2_ * vec3<f32>(-1.0), 
@@ -6491,8 +6491,8 @@ fn antiScalar_rightComplement(self_: AntiScalar) -> Scalar {
     return Scalar(self_.e1234_);
 }
 fn dualNum_rightComplement(self_: DualNum) -> DualNum {
-    return dualNum_degroup(DualNumGroups(
-        /* scalar, e1234 */ vec4<f32>(self_.e1234_, self_.scalar, 0.0, 0.0)
+    let self_groups = dualNum_grouped(self_);    return dualNum_degroup(DualNumGroups(
+        /* scalar, e1234 */ self_groups.group0_.yx
     ));
 }
 fn flector_rightComplement(self_: Flector) -> Flector {
@@ -6518,7 +6518,7 @@ fn motor_rightComplement(self_: Motor) -> Motor {
 }
 fn multiVector_rightComplement(self_: MultiVector) -> MultiVector {
     let self_groups = multiVector_grouped(self_);    return multiVector_degroup(MultiVectorGroups(
-        /* scalar, e1234 */ vec4<f32>(self_.e1234_, self_.scalar, 0.0, 0.0), 
+        /* scalar, e1234 */ self_groups.group0_.yx, 
         /* e1, e2, e3, e4 */ self_groups.group4_ * vec4<f32>(-1.0), 
         /* e41, e42, e43 */ self_groups.group3_ * vec3<f32>(-1.0), 
         /* e23, e31, e12 */ self_groups.group2_ * vec3<f32>(-1.0), 
