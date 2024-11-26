@@ -2803,6 +2803,7 @@ impl<T> TakeAsOwned for Vec<T> {
 //  - impl GeometricAntiProduct<Line> for Flector
 //  - impl GeometricAntiProduct<MultiVector> for MultiVector
 //  - impl Dual for Circle
+//  - impl AntiWedge<CircleRotorAligningOrigin> for AntiCircleOnOrigin
 
 // TODO scanning for good places to simplify... where I left off:
 //  impl Wedge<AntiCircleOnOrigin> for AntiFlectorAtInfinity
@@ -3369,25 +3370,25 @@ impl Vec2Expr {
                         *self = v2_a.take_as_owned();
                         return;
                     }
-                    // (
-                    //     AccessMultiVecFlat(x_mve, x_idx),
-                    //     AccessMultiVecFlat(y_mve, y_idx),
-                    // ) if x_mve == y_mve && (*y_idx - *x_idx == 1) => {
-                    //     let target_idx = *x_idx;
-                    //     let mut group_idx = 0;
-                    //     let mut flat_idx = 0;
-                    //     for group in x_mve.mv_class.groups().into_iter() {
-                    //         if flat_idx > target_idx {
-                    //             return
-                    //         }
-                    //         if target_idx == flat_idx && group.simd_width() == 2 {
-                    //             *self = Vec2Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
-                    //             return
-                    //         }
-                    //         group_idx = group_idx + 1;
-                    //         flat_idx = flat_idx + group.simd_width() as u16;
-                    //     }
-                    // }
+                    (
+                        AccessMultiVecFlat(x_mve, x_idx),
+                        AccessMultiVecFlat(y_mve, y_idx),
+                    ) if x_mve == y_mve && (*x_idx + 1 == *y_idx) => {
+                        let target_idx = *x_idx;
+                        let mut group_idx = 0;
+                        let mut flat_idx = 0;
+                        for group in x_mve.mv_class.groups().into_iter() {
+                            if flat_idx > target_idx {
+                                return
+                            }
+                            if target_idx == flat_idx && group.simd_width() == 2 {
+                                *self = Vec2Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
+                                return
+                            }
+                            group_idx = group_idx + 1;
+                            flat_idx = flat_idx + group.simd_width() as u16;
+                        }
+                    }
                     // TODO other gather-sum branches, similar to how there are many gather-product branches
                     (Sum(ref mut x_sum, x_lit), Sum(ref mut y_sum, y_lit)) if transpose_simd => {
                         let lits = [*x_lit, *y_lit];
@@ -3706,26 +3707,26 @@ impl Vec3Expr {
                             return;
                         }
                     }
-                    // (
-                    //     AccessMultiVecFlat(x_mve, x_idx),
-                    //     AccessMultiVecFlat(y_mve, y_idx),
-                    //     AccessMultiVecFlat(z_mve, z_idx),
-                    // ) if x_mve == y_mve && y_mve == z_mve && (*z_idx - *x_idx == 2) && (*z_idx - *y_idx == 1) => {
-                    //     let target_idx = *x_idx;
-                    //     let mut group_idx = 0;
-                    //     let mut flat_idx = 0;
-                    //     for group in x_mve.mv_class.groups().into_iter() {
-                    //         if flat_idx > target_idx {
-                    //             return
-                    //         }
-                    //         if target_idx == flat_idx && group.simd_width() == 3 {
-                    //             *self = Vec3Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
-                    //             return
-                    //         }
-                    //         group_idx = group_idx + 1;
-                    //         flat_idx = flat_idx + group.simd_width() as u16;
-                    //     }
-                    // }
+                    (
+                        AccessMultiVecFlat(x_mve, x_idx),
+                        AccessMultiVecFlat(y_mve, y_idx),
+                        AccessMultiVecFlat(z_mve, z_idx),
+                    ) if x_mve == y_mve && y_mve == z_mve && (*x_idx + 1 == *y_idx) && (*x_idx + 2 == *z_idx) => {
+                        let target_idx = *x_idx;
+                        let mut group_idx = 0;
+                        let mut flat_idx = 0;
+                        for group in x_mve.mv_class.groups().into_iter() {
+                            if flat_idx > target_idx {
+                                return
+                            }
+                            if target_idx == flat_idx && group.simd_width() == 3 {
+                                *self = Vec3Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
+                                return
+                            }
+                            group_idx = group_idx + 1;
+                            flat_idx = flat_idx + group.simd_width() as u16;
+                        }
+                    }
                     // TODO other gather-sum branches, similar to how there are many gather-product branches
                     (
                         Sum(ref mut x_sum, x_lit),
@@ -4135,27 +4136,27 @@ impl Vec4Expr {
                             return;
                         }
                     }
-                    // (
-                    //     AccessMultiVecFlat(x_mve, x_idx),
-                    //     AccessMultiVecFlat(y_mve, y_idx),
-                    //     AccessMultiVecFlat(z_mve, z_idx),
-                    //     AccessMultiVecFlat(w_mve, w_idx),
-                    // ) if x_mve == y_mve && y_mve == z_mve && z_mve == w_mve && (*w_idx - *x_idx == 3) && (*w_idx - *y_idx == 2) && (*w_idx - *z_idx == 1) => {
-                    //     let target_idx = *x_idx;
-                    //     let mut group_idx = 0;
-                    //     let mut flat_idx = 0;
-                    //     for group in x_mve.mv_class.groups().into_iter() {
-                    //         if flat_idx > target_idx {
-                    //             return
-                    //         }
-                    //         if target_idx == flat_idx && group.simd_width() == 4 {
-                    //             *self = Vec4Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
-                    //             return
-                    //         }
-                    //         group_idx = group_idx + 1;
-                    //         flat_idx = flat_idx + group.simd_width() as u16;
-                    //     }
-                    // }
+                    (
+                        AccessMultiVecFlat(x_mve, x_idx),
+                        AccessMultiVecFlat(y_mve, y_idx),
+                        AccessMultiVecFlat(z_mve, z_idx),
+                        AccessMultiVecFlat(w_mve, w_idx),
+                    ) if x_mve == y_mve && y_mve == z_mve && z_mve == w_mve && (*x_idx + 1 == *y_idx) && (*x_idx + 2 == *z_idx) && (*x_idx + 3 == *w_idx) => {
+                        let target_idx = *x_idx;
+                        let mut group_idx = 0;
+                        let mut flat_idx = 0;
+                        for group in x_mve.mv_class.groups().into_iter() {
+                            if flat_idx > target_idx {
+                                return
+                            }
+                            if target_idx == flat_idx && group.simd_width() == 4 {
+                                *self = Vec4Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
+                                return
+                            }
+                            group_idx = group_idx + 1;
+                            flat_idx = flat_idx + group.simd_width() as u16;
+                        }
+                    }
                     // TODO other gather-sum branches, similar to how there are many gather-product branches
                     (
                         Sum(ref mut x_sum, x_lit),
@@ -4748,17 +4749,21 @@ impl MultiVectorExpr {
         match &mut *self.expr {
             MultiVectorVia::Variable(_) => {}
             MultiVectorVia::Construct(groups) => {
-                for group in groups.iter_mut() {
-                    if !insides_already_done {
+                if !insides_already_done {
+                    for group in groups.iter_mut() {
                         group.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access);
                     }
                 }
                 let result = groups.iter_mut().enumerate().fold(None, |a, (b_idx, b)| {
                     let mv_b = match b {
-                        MultiVectorGroupExpr::JustFloat(FloatExpr::AccessMultiVecGroup(mv, idx)) if *idx as usize == b_idx => Some(mv),
-                        MultiVectorGroupExpr::Vec2(Vec2Expr::AccessMultiVecGroup(mv, idx)) if *idx as usize == b_idx => Some(mv),
-                        MultiVectorGroupExpr::Vec3(Vec3Expr::AccessMultiVecGroup(mv, idx)) if *idx as usize == b_idx => Some(mv),
-                        MultiVectorGroupExpr::Vec4(Vec4Expr::AccessMultiVecGroup(mv, idx)) if *idx as usize == b_idx => Some(mv),
+                        MultiVectorGroupExpr::JustFloat(FloatExpr::AccessMultiVecGroup(mv, idx))
+                        if *idx as usize == b_idx && mv.mv_class == self.mv_class => Some(mv),
+                        MultiVectorGroupExpr::Vec2(Vec2Expr::AccessMultiVecGroup(mv, idx))
+                        if *idx as usize == b_idx && mv.mv_class == self.mv_class => Some(mv),
+                        MultiVectorGroupExpr::Vec3(Vec3Expr::AccessMultiVecGroup(mv, idx))
+                        if *idx as usize == b_idx && mv.mv_class == self.mv_class => Some(mv),
+                        MultiVectorGroupExpr::Vec4(Vec4Expr::AccessMultiVecGroup(mv, idx))
+                        if *idx as usize == b_idx && mv.mv_class == self.mv_class => Some(mv),
                         _ => None,
                     };
                     if b_idx == 0 {

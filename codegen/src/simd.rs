@@ -135,7 +135,7 @@ macro_rules! swizzle {
         $crate::match_architecture!(
             Simd32x3,
             // native
-            { v32x4: $crate::swizzle!($self.v32x4, $x, $y, $z, _) },
+            { v32x4: $crate::swizzle!($self.v32x4, $x, $y, $z, 3) },
             // fallback
             { f32x3: [
                 $self.f32x3[$x],
@@ -148,7 +148,7 @@ macro_rules! swizzle {
         $crate::match_architecture!(
             Simd32x2,
             // native
-            { v32x4: $crate::swizzle!($self.v32x4, $x, $y, _, _) },
+            { v32x4: $crate::swizzle!($self.v32x4, $x, $y, 2, 3) },
             // fallback
             { f32x2: [
                 $self.f32x2[$x],
