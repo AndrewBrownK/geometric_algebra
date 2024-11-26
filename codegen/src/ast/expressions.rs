@@ -3378,16 +3378,28 @@ impl Vec2Expr {
                         AccessMultiVecFlat(x_mve, x_idx),
                         AccessMultiVecFlat(y_mve, y_idx),
                     ) if x_mve == y_mve && (*x_idx + 1 == *y_idx) => {
-                        // TODO be more generous in the above condition, and allow pulling out swizzles
-                        let target_idx = *x_idx;
+                        let max_idx = u16::max(*x_idx, *y_idx);
+                        let min_idx = u16::min(*x_idx, *y_idx);
+                        if (min_idx + 1) < max_idx {
+                            // indexes are too far apart
+                            return
+                        }
+                        let no_swizzle = (*x_idx + 1 == *y_idx);
                         let mut group_idx = 0;
                         let mut flat_idx = 0;
                         for group in x_mve.mv_class.groups().into_iter() {
-                            if flat_idx > target_idx {
+                            if flat_idx > min_idx {
                                 return
                             }
-                            if target_idx == flat_idx && group.simd_width() == 2 {
-                                *self = Vec2Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
+                            if min_idx == flat_idx && group.simd_width() == 2 {
+                                let mv_group = Vec2Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
+                                *self = if no_swizzle {
+                                    mv_group
+                                } else {
+                                    let x = (*x_idx - min_idx) as u8;
+                                    let y = (*y_idx - min_idx) as u8;
+                                    Vec2Expr::SwizzleVec2(Box::new(mv_group), x, y)
+                                };
                                 return
                             }
                             group_idx = group_idx + 1;
@@ -3733,17 +3745,30 @@ impl Vec3Expr {
                         AccessMultiVecFlat(x_mve, x_idx),
                         AccessMultiVecFlat(y_mve, y_idx),
                         AccessMultiVecFlat(z_mve, z_idx),
-                    ) if x_mve == y_mve && y_mve == z_mve && (*x_idx + 1 == *y_idx) && (*x_idx + 2 == *z_idx) => {
-                        // TODO be more generous in the above condition, and allow pulling out swizzles
-                        let target_idx = *x_idx;
+                    ) if x_mve == y_mve && y_mve == z_mve => {
+                        let max_idx = u16::max(*x_idx, u16::max(*y_idx, *z_idx));
+                        let min_idx = u16::min(*x_idx, u16::min(*y_idx, *z_idx));
+                        if (min_idx + 2) < max_idx {
+                            // indexes are too far apart
+                            return
+                        }
+                        let no_swizzle = (*x_idx + 1 == *y_idx) && (*x_idx + 2 == *z_idx);
                         let mut group_idx = 0;
                         let mut flat_idx = 0;
                         for group in x_mve.mv_class.groups().into_iter() {
-                            if flat_idx > target_idx {
+                            if flat_idx > min_idx {
                                 return
                             }
-                            if target_idx == flat_idx && group.simd_width() == 3 {
-                                *self = Vec3Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
+                            if min_idx == flat_idx && group.simd_width() == 3 {
+                                let mv_group = Vec3Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
+                                *self = if no_swizzle {
+                                    mv_group
+                                } else {
+                                    let x = (*x_idx - min_idx) as u8;
+                                    let y = (*y_idx - min_idx) as u8;
+                                    let z = (*z_idx - min_idx) as u8;
+                                    Vec3Expr::SwizzleVec3(Box::new(mv_group), x, y, z)
+                                };
                                 return
                             }
                             group_idx = group_idx + 1;
@@ -4220,17 +4245,31 @@ impl Vec4Expr {
                         AccessMultiVecFlat(y_mve, y_idx),
                         AccessMultiVecFlat(z_mve, z_idx),
                         AccessMultiVecFlat(w_mve, w_idx),
-                    ) if x_mve == y_mve && y_mve == z_mve && z_mve == w_mve && (*x_idx + 1 == *y_idx) && (*x_idx + 2 == *z_idx) && (*x_idx + 3 == *w_idx) => {
-                        // TODO be more generous in the above condition, and allow pulling out swizzles
-                        let target_idx = *x_idx;
+                    ) if x_mve == y_mve && y_mve == z_mve && z_mve == w_mve => {
+                        let max_idx = u16::max(*x_idx, u16::max(*y_idx, u16::max(*z_idx, *w_idx)));
+                        let min_idx = u16::min(*x_idx, u16::min(*y_idx, u16::min(*z_idx, *w_idx)));
+                        if (min_idx + 3) < max_idx {
+                            // indexes are too far apart
+                            return
+                        }
+                        let no_swizzle = (*x_idx + 1 == *y_idx) && (*x_idx + 2 == *z_idx) && (*x_idx + 3 == *w_idx);
                         let mut group_idx = 0;
                         let mut flat_idx = 0;
                         for group in x_mve.mv_class.groups().into_iter() {
-                            if flat_idx > target_idx {
+                            if flat_idx > min_idx {
                                 return
                             }
-                            if target_idx == flat_idx && group.simd_width() == 4 {
-                                *self = Vec4Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
+                            if min_idx == flat_idx && group.simd_width() == 4 {
+                                let mv_group = Vec4Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
+                                *self = if no_swizzle {
+                                    mv_group
+                                } else {
+                                    let x = (*x_idx - min_idx) as u8;
+                                    let y = (*y_idx - min_idx) as u8;
+                                    let z = (*z_idx - min_idx) as u8;
+                                    let w = (*w_idx - min_idx) as u8;
+                                    Vec4Expr::SwizzleVec4(Box::new(mv_group), x, y, z, w)
+                                };
                                 return
                             }
                             group_idx = group_idx + 1;
@@ -7250,7 +7289,7 @@ impl Wedge<AntiFlectorOnOrigin> for AntiPlane {
                 0.0,
             ]),
             // e15, e25, e35, e3215
-            Simd32x4::from(self[e5]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e321]]) * Simd32x4::from(-1.0),
+            Simd32x4::from(self[e5]) * crate::swizzle!(other.group0(), 1, 2, 3, 0) * Simd32x4::from(-1.0),
         );
     }
 }
