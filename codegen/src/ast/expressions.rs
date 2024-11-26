@@ -3389,13 +3389,6 @@ impl Vec2Expr {
                             flat_idx = flat_idx + group.simd_width() as u16;
                         }
                     }
-                    // TODO other gather-sum branches, similar to how there are many gather-product branches
-                    (Sum(ref mut x_sum, x_lit), Sum(ref mut y_sum, y_lit)) if transpose_simd => {
-                        let lits = [*x_lit, *y_lit];
-                        if let Some(transposed) = transpose_vec2_sum(x_sum, y_sum, lits) {
-                            *self = transposed;
-                        }
-                    }
                     (Product(ref mut x_product, x_lit), Product(ref mut y_product, y_lit)) if transpose_simd => {
                         let lits = [*x_lit, *y_lit];
                         if let Some(transposed) = transpose_vec2_product(x_product, y_product, lits) {
@@ -3413,6 +3406,26 @@ impl Vec2Expr {
                         let lits = [*x_lit, 1.0];
                         let mut y = vec![(y.clone(), 1.0)];
                         if let Some(transposed) = transpose_vec2_product(x_product, &mut y, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (Sum(ref mut x_sum, x_lit), Sum(ref mut y_sum, y_lit)) if transpose_simd => {
+                        let lits = [*x_lit, *y_lit];
+                        if let Some(transposed) = transpose_vec2_sum(x_sum, y_sum, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (x, Sum(ref mut y_sum, y_lit)) if transpose_simd => {
+                        let lits = [0.0, *y_lit];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec2_sum(&mut x, y_sum, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (Sum(ref mut x_sum, x_lit), y) if transpose_simd => {
+                        let lits = [*x_lit, 0.0];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec2_sum(x_sum, &mut y, lits) {
                             *self = transposed;
                         }
                     }
@@ -3727,17 +3740,6 @@ impl Vec3Expr {
                             flat_idx = flat_idx + group.simd_width() as u16;
                         }
                     }
-                    // TODO other gather-sum branches, similar to how there are many gather-product branches
-                    (
-                        Sum(ref mut x_sum, x_lit),
-                        Sum(ref mut y_sum, y_lit),
-                        Sum(ref mut z_sum, z_lit)
-                    ) if transpose_simd => {
-                        let lits = [*x_lit, *y_lit, *z_lit];
-                        if let Some(transposed) = transpose_vec3_sum(x_sum, y_sum, z_sum, lits) {
-                            *self = transposed;
-                        }
-                    }
                     (
                         Product(ref mut x_product, x_lit),
                         Product(ref mut y_product, y_lit),
@@ -3797,15 +3799,78 @@ impl Vec3Expr {
                             *self = transposed;
                         }
                     }
-                    (
-                        Product(ref mut x_product, x_lit),
-                        y,
-                        z
-                    ) if transpose_simd => {
+                    (Product(ref mut x_product, x_lit), y, z) if transpose_simd => {
                         let lits = [*x_lit, 1.0, 1.0];
                         let mut y = vec![(y.clone(), 1.0)];
                         let mut z = vec![(z.clone(), 1.0)];
                         if let Some(transposed) = transpose_vec3_product(x_product, &mut y, &mut z, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Sum(ref mut x_sum, x_lit),
+                        Sum(ref mut y_sum, y_lit),
+                        Sum(ref mut z_sum, z_lit)
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, *y_lit, *z_lit];
+                        if let Some(transposed) = transpose_vec3_sum(x_sum, y_sum, z_sum, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        x,
+                        Sum(ref mut y_sum, y_lit),
+                        Sum(ref mut z_sum, z_lit)
+                    ) if transpose_simd => {
+                        let lits = [0.0, *y_lit, *z_lit];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec3_sum(&mut x, y_sum, z_sum, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Sum(ref mut x_sum, x_lit),
+                        y,
+                        Sum(ref mut z_sum, z_lit)
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, 0.0, *z_lit];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec3_sum(x_sum, &mut y, z_sum, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Sum(ref mut x_sum, x_lit),
+                        Sum(ref mut y_sum, y_lit),
+                        z
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, *y_lit, 0.0];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec3_sum(x_sum, y_sum, &mut z, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (x, y, Sum(ref mut z_sum, z_lit)) if transpose_simd => {
+                        let lits = [0.0, 0.0, *z_lit];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec3_sum(&mut x, &mut y, z_sum, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (x, Sum(ref mut y_sum, y_lit), z) if transpose_simd => {
+                        let lits = [0.0, *y_lit, 0.0];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec3_sum(&mut x, y_sum, &mut z, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (Sum(ref mut x_sum, x_lit), y, z) if transpose_simd => {
+                        let lits = [*x_lit, 0.0, 0.0];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec3_sum(x_sum, &mut y, &mut z, lits) {
                             *self = transposed;
                         }
                     }
@@ -4157,18 +4222,6 @@ impl Vec4Expr {
                             flat_idx = flat_idx + group.simd_width() as u16;
                         }
                     }
-                    // TODO other gather-sum branches, similar to how there are many gather-product branches
-                    (
-                        Sum(ref mut x_sum, x_lit),
-                        Sum(ref mut y_sum, y_lit),
-                        Sum(ref mut z_sum, z_lit),
-                        Sum(ref mut w_sum, w_lit)
-                    ) if transpose_simd => {
-                        let lits = [*x_lit, *y_lit, *z_lit, *w_lit];
-                        if let Some(transposed) = transpose_vec4_sum(x_sum, y_sum, z_sum, w_sum, lits) {
-                            *self = transposed;
-                        }
-                    }
                     (
                         Product(ref mut x_product, x_lit),
                         Product(ref mut y_product, y_lit),
@@ -4339,6 +4392,179 @@ impl Vec4Expr {
                         let mut z = vec![(z.clone(), 1.0)];
                         let mut w = vec![(w.clone(), 1.0)];
                         if let Some(transposed) = transpose_vec4_product(x_product, &mut y, &mut z, &mut w, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Sum(ref mut x_sum, x_lit),
+                        Sum(ref mut y_sum, y_lit),
+                        Sum(ref mut z_sum, z_lit),
+                        Sum(ref mut w_sum, w_lit)
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, *y_lit, *z_lit, *w_lit];
+                        if let Some(transposed) = transpose_vec4_sum(x_sum, y_sum, z_sum, w_sum, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        x,
+                        Sum(ref mut x_sum, y_lit),
+                        Sum(ref mut y_sum, z_lit),
+                        Sum(ref mut w_sum, w_lit),
+                    ) if transpose_simd => {
+                        let lits = [0.0, *y_lit, *z_lit, *w_lit];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(&mut x, x_sum, y_sum, w_sum, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Sum(ref mut x_sum, x_lit),
+                        y,
+                        Sum(ref mut z_sum, z_lit),
+                        Sum(ref mut w_sum, w_lit),
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, 0.0, *z_lit, *w_lit];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(x_sum, &mut y, z_sum, w_sum, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Sum(ref mut x_sum, x_lit),
+                        Sum(ref mut y_sum, y_lit),
+                        z,
+                        Sum(ref mut w_sum, w_lit),
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, *y_lit, 0.0, *w_lit];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(x_sum, y_sum, &mut z, w_sum, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Sum(ref mut x_sum, x_lit),
+                        Sum(ref mut y_sum, y_lit),
+                        Sum(ref mut z_sum, z_lit),
+                        w,
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, *y_lit, *z_lit, 0.0];
+                        let mut w = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(x_sum, y_sum, z_sum, &mut w, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        x,
+                        y,
+                        Sum(ref mut z_sum, z_lit),
+                        Sum(ref mut w_sum, w_lit),
+                    ) if transpose_simd => {
+                        let lits = [0.0, 0.0, *z_lit, *w_lit];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(&mut x, &mut y, z_sum, w_sum, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Sum(ref mut x_sum, x_lit),
+                        Sum(ref mut y_sum, y_lit),
+                        z,
+                        w,
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, *y_lit, 0.0, 0.0];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        let mut w = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(x_sum, y_sum, &mut z, &mut w, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        x,
+                        Sum(ref mut y_sum, y_lit),
+                        Sum(ref mut z_sum, z_lit),
+                        w,
+                    ) if transpose_simd => {
+                        let lits = [0.0, *y_lit, *z_lit, 0.0];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut w = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(&mut x, y_sum, z_sum, &mut w, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Sum(ref mut x_sum, x_lit),
+                        y,
+                        z,
+                        Sum(ref mut w_sum, w_lit),
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, 0.0, 0.0, *w_lit];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(x_sum, &mut y, &mut z, w_sum, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        Sum(ref mut x_sum, x_lit),
+                        y,
+                        Sum(ref mut z_sum, z_lit),
+                        w,
+                    ) if transpose_simd => {
+                        let lits = [*x_lit, 0.0, *z_lit, 0.0];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        let mut w = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(x_sum, &mut y, z_sum, &mut w, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (
+                        x,
+                        Sum(ref mut y_sum, y_lit),
+                        z,
+                        Sum(ref mut w_sum, w_lit),
+                    ) if transpose_simd => {
+                        let lits = [0.0, *y_lit, 0.0, *w_lit];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(&mut x, y_sum, &mut z, w_sum, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (x, y, z, Sum(ref mut w_sum, w_lit)) if transpose_simd => {
+                        let lits = [0.0, 0.0, 0.0, *w_lit];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(&mut x, &mut y, &mut z, w_sum, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (x, y, Sum(ref mut z_sum, z_lit), w) if transpose_simd => {
+                        let lits = [0.0, 0.0, *z_lit, 0.0];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        let mut w = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(&mut x, &mut y, z_sum, &mut w, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (x, Sum(ref mut y_sum, y_lit), z, w) if transpose_simd => {
+                        let lits = [0.0, *y_lit, 0.0, 0.0];
+                        let mut x = vec![(x.clone(), 1.0)];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        let mut w = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(&mut x, y_sum, &mut z, &mut w, lits) {
+                            *self = transposed;
+                        }
+                    }
+                    (Sum(ref mut x_sum, x_lit), y, z, w) if transpose_simd => {
+                        let lits = [*x_lit, 0.0, 0.0, 0.0];
+                        let mut y = vec![(y.clone(), 1.0)];
+                        let mut z = vec![(z.clone(), 1.0)];
+                        let mut w = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(x_sum, &mut y, &mut z, &mut w, lits) {
                             *self = transposed;
                         }
                     }
