@@ -684,7 +684,6 @@ impl std::ops::Sub<Scalar> for Line {
 impl TryFrom<Motor> for Line {
     type Error = String;
     fn try_from(motor: Motor) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = motor[3];
@@ -709,9 +708,9 @@ impl TryFrom<Motor> for Line {
         }
         return Ok(Line::from_groups(
             // e41, e42, e43
-            Simd32x3::from([motor[e41], motor[e42], motor[e43]]),
+            motor.group0().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([motor[e23], motor[e31], motor[e12]]),
+            motor.group1().truncate_to_3(),
         ));
     }
 }

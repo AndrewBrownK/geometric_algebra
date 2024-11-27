@@ -134,7 +134,7 @@ impl std::ops::Add<AntiDipoleInversion> for Scalar {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -192,7 +192,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -222,9 +222,9 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for Scalar {
             // e415, e425, e435, e321
             crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -252,7 +252,7 @@ impl std::ops::Add<AntiDipoleOnOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -324,7 +324,7 @@ impl std::ops::Add<AntiFlatPoint> for Scalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -354,7 +354,7 @@ impl std::ops::Add<AntiFlector> for Scalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -781,7 +781,7 @@ impl std::ops::Add<CircleOrthogonalOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
             other.group1(),
             // e1234, e4235, e4315, e4125
@@ -813,7 +813,7 @@ impl std::ops::Add<CircleRotor> for Scalar {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -843,7 +843,7 @@ impl std::ops::Add<CircleRotorAligningOrigin> for Scalar {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -873,7 +873,7 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for Scalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group1().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -903,7 +903,7 @@ impl std::ops::Add<CircleRotorAtInfinity> for Scalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group1().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -931,7 +931,7 @@ impl std::ops::Add<CircleRotorOnOrigin> for Scalar {
             // e415, e425, e435, e321
             crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -961,7 +961,7 @@ impl std::ops::Add<DipoleAligningOrigin> for Scalar {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12, e45
             Simd32x4::from([0.0, 0.0, 0.0, other[e45]]),
             // e15, e25, e35, scalar
@@ -1091,7 +1091,7 @@ impl std::ops::Add<DipoleOnOrigin> for Scalar {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12, e45
             Simd32x4::from([0.0, 0.0, 0.0, other[e45]]),
             // e15, e25, e35, scalar
@@ -1366,7 +1366,7 @@ impl std::ops::Add<Motor> for Scalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group1().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1396,7 +1396,7 @@ impl std::ops::Add<MotorAtInfinity> for Scalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1672,7 +1672,7 @@ impl std::ops::Add<NullVersorEvenAtOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1880,9 +1880,9 @@ impl std::ops::Add<VersorEven> for Scalar {
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1910,9 +1910,9 @@ impl std::ops::Add<VersorEvenAligningOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1942,7 +1942,7 @@ impl std::ops::Add<VersorEvenAtInfinity> for Scalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1970,9 +1970,9 @@ impl std::ops::Add<VersorEvenAtOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group1().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -2000,7 +2000,7 @@ impl std::ops::Add<VersorEvenOnOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -2030,9 +2030,9 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group1().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -4321,7 +4321,7 @@ impl std::ops::Sub<AntiDipoleInversion> for Scalar {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -4394,7 +4394,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4432,9 +4432,9 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -4469,7 +4469,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4556,7 +4556,7 @@ impl std::ops::Sub<AntiFlatPoint> for Scalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -4594,7 +4594,7 @@ impl std::ops::Sub<AntiFlector> for Scalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5120,7 +5120,7 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
             other.group1() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
@@ -5160,7 +5160,7 @@ impl std::ops::Sub<CircleRotor> for Scalar {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5198,7 +5198,7 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for Scalar {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5236,7 +5236,7 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for Scalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5274,7 +5274,7 @@ impl std::ops::Sub<CircleRotorAtInfinity> for Scalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5310,7 +5310,7 @@ impl std::ops::Sub<CircleRotorOnOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5354,7 +5354,7 @@ impl std::ops::Sub<DipoleAligningOrigin> for Scalar {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
             Simd32x4::from([1.0, 1.0, 1.0, other[e45]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e15, e25, e35, scalar
@@ -5526,7 +5526,7 @@ impl std::ops::Sub<DipoleOnOrigin> for Scalar {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
             Simd32x4::from([1.0, 1.0, 1.0, other[e45]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e15, e25, e35, scalar
@@ -5875,7 +5875,7 @@ impl std::ops::Sub<Motor> for Scalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5912,7 +5912,7 @@ impl std::ops::Sub<MotorAtInfinity> for Scalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6254,7 +6254,7 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6509,9 +6509,9 @@ impl std::ops::Sub<VersorEven> for Scalar {
             // e415, e425, e435, e321
             other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6548,9 +6548,9 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6589,7 +6589,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for Scalar {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6625,9 +6625,9 @@ impl std::ops::Sub<VersorEvenAtOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6663,7 +6663,7 @@ impl std::ops::Sub<VersorEvenOnOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6701,9 +6701,9 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for Scalar {
             // e415, e425, e435, e321
             Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215

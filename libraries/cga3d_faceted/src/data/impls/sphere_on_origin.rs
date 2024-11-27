@@ -139,7 +139,7 @@ impl std::ops::Add<AntiDipoleInversion> for SphereOnOrigin {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -197,7 +197,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -227,9 +227,9 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -257,7 +257,7 @@ impl std::ops::Add<AntiDipoleOnOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -338,7 +338,7 @@ impl std::ops::Add<AntiFlatPoint> for SphereOnOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -368,7 +368,7 @@ impl std::ops::Add<AntiFlector> for SphereOnOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -817,7 +817,7 @@ impl std::ops::Add<CircleOrthogonalOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
             other.group1(),
             // e1234, e4235, e4315, e4125
@@ -849,7 +849,7 @@ impl std::ops::Add<CircleRotor> for SphereOnOrigin {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -879,7 +879,7 @@ impl std::ops::Add<CircleRotorAligningOrigin> for SphereOnOrigin {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -909,7 +909,7 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for SphereOnOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group1().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -939,7 +939,7 @@ impl std::ops::Add<CircleRotorAtInfinity> for SphereOnOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group1().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -967,7 +967,7 @@ impl std::ops::Add<CircleRotorOnOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -1133,7 +1133,7 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for SphereOnOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12, e45
             crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
             // e15, e25, e35, e1234
@@ -1437,7 +1437,7 @@ impl std::ops::Add<Motor> for SphereOnOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group1().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -1467,7 +1467,7 @@ impl std::ops::Add<MotorAtInfinity> for SphereOnOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -1778,7 +1778,7 @@ impl std::ops::Add<NullVersorEvenAtOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -2007,9 +2007,9 @@ impl std::ops::Add<VersorEven> for SphereOnOrigin {
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -2037,9 +2037,9 @@ impl std::ops::Add<VersorEvenAligningOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -2069,7 +2069,7 @@ impl std::ops::Add<VersorEvenAtInfinity> for SphereOnOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -2097,9 +2097,9 @@ impl std::ops::Add<VersorEvenAtOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group1().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -2127,7 +2127,7 @@ impl std::ops::Add<VersorEvenOnOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -2157,9 +2157,9 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group1().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -2759,11 +2759,12 @@ impl std::ops::Mul<AntiDipoleInversionAtInfinity> for SphereOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       43        0
-    //    simd4        2        3        0
+    //      f32       21       39        0
+    //    simd3        1        1        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       26       46        0
-    //  no simd       32       55        0
+    // yes simd       24       44        0
+    //  no simd       32       58        0
     fn mul(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2784,8 +2785,13 @@ impl std::ops::Mul<AntiDipoleInversionOnOrigin> for SphereOnOrigin {
 impl std::ops::Mul<AntiDipoleInversionOrthogonalOrigin> for SphereOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       44        0
+    //           add/sub      mul      div
+    //      f32       22       37        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       24       40        0
+    //  no simd       28       47        0
     fn mul(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2830,11 +2836,12 @@ impl std::ops::Mul<AntiFlatPoint> for SphereOnOrigin {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       19        0
-    //    simd4        0        1        0
+    //      f32        5       19        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        8       20        0
-    //  no simd        8       23        0
+    // yes simd        6       21        0
+    //  no simd        9       26        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2843,11 +2850,12 @@ impl std::ops::Mul<AntiFlector> for SphereOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        0        3        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd       20       35        0
-    //  no simd       20       44        0
+    // yes simd       16       31        0
+    //  no simd       20       47        0
     fn mul(self, other: AntiFlector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2856,11 +2864,12 @@ impl std::ops::Mul<AntiFlectorOnOrigin> for SphereOnOrigin {
     type Output = VersorEvenOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       16        0
-    //    simd4        0        2        0
+    //      f32        5       12        0
+    //    simd3        1        1        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        8       18        0
-    //  no simd        8       24        0
+    // yes simd        6       16        0
+    //  no simd        8       27        0
     fn mul(self, other: AntiFlectorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2891,11 +2900,12 @@ impl std::ops::Mul<AntiMotor> for SphereOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        0        1        0
+    //      f32       17       28        0
+    //    simd3        1        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       20       33        0
-    //  no simd       20       36        0
+    // yes simd       18       31        0
+    //  no simd       20       39        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2913,11 +2923,12 @@ impl std::ops::Mul<AntiMysteryCircleRotor> for SphereOnOrigin {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       17        0
-    //    simd3        0        1        0
+    //      f32        6       14        0
+    //    simd3        0        2        0
+    //    simd4        1        0        0
     // Totals...
-    // yes simd        9       18        0
-    //  no simd        9       20        0
+    // yes simd        7       16        0
+    //  no simd       10       20        0
     fn mul(self, other: AntiMysteryCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3058,8 +3069,13 @@ impl std::ops::Mul<CircleOnOrigin> for SphereOnOrigin {
 impl std::ops::Mul<CircleOrthogonalOrigin> for SphereOnOrigin {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       14       28        0
+    //           add/sub      mul      div
+    //      f32       11       28        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd       12       29        0
+    //  no simd       15       31        0
     fn mul(self, other: CircleOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3142,11 +3158,12 @@ impl std::ops::Mul<DipoleAligningOrigin> for SphereOnOrigin {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       28        0
-    //    simd4        0        1        0
+    //      f32       11       25        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       14       29        0
-    //  no simd       14       32        0
+    // yes simd       12       27        0
+    //  no simd       15       32        0
     fn mul(self, other: DipoleAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3194,11 +3211,12 @@ impl std::ops::Mul<DipoleInversionAligningOrigin> for SphereOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        1        3        0
+    //      f32       22       37        0
+    //    simd3        2        2        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       29       47        0
-    //  no simd       32       56        0
+    // yes simd       25       43        0
+    //  no simd       32       59        0
     fn mul(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3207,11 +3225,12 @@ impl std::ops::Mul<DipoleInversionAtInfinity> for SphereOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        1        1        0
+    //      f32       25       40        0
+    //    simd3        1        1        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       29       45        0
-    //  no simd       32       48        0
+    // yes simd       27       43        0
+    //  no simd       32       51        0
     fn mul(self, other: DipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3220,11 +3239,12 @@ impl std::ops::Mul<DipoleInversionAtOrigin> for SphereOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       28        0
-    //    simd4        0        3        0
+    //      f32       13       24        0
+    //    simd3        1        1        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd       16       31        0
-    //  no simd       16       40        0
+    // yes simd       14       29        0
+    //  no simd       16       43        0
     fn mul(self, other: DipoleInversionAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3245,8 +3265,13 @@ impl std::ops::Mul<DipoleInversionOnOrigin> for SphereOnOrigin {
 impl std::ops::Mul<DipoleInversionOrthogonalOrigin> for SphereOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       28       44        0
+    //           add/sub      mul      div
+    //      f32       22       37        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       24       40        0
+    //  no simd       28       47        0
     fn mul(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3300,11 +3325,12 @@ impl std::ops::Mul<FlatPoint> for SphereOnOrigin {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       19        0
-    //    simd4        0        1        0
+    //      f32        5       16        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        8       20        0
-    //  no simd        8       23        0
+    // yes simd        6       18        0
+    //  no simd        9       23        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3326,11 +3352,12 @@ impl std::ops::Mul<Flector> for SphereOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       36        0
-    //    simd4        0        2        0
+    //      f32       11       25        0
+    //    simd3        3        3        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd       20       38        0
-    //  no simd       20       44        0
+    // yes simd       14       32        0
+    //  no simd       20       50        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3351,8 +3378,13 @@ impl std::ops::Mul<FlectorAtInfinity> for SphereOnOrigin {
 impl std::ops::Mul<FlectorOnOrigin> for SphereOnOrigin {
     type Output = AntiVersorEvenOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       16        0
+    //           add/sub      mul      div
+    //      f32        5       12        0
+    //    simd3        1        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        6       14        0
+    //  no simd        8       19        0
     fn mul(self, other: FlectorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3422,11 +3454,12 @@ impl std::ops::Mul<Motor> for SphereOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        0        1        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       20       33        0
-    //  no simd       20       36        0
+    // yes simd       16       29        0
+    //  no simd       20       39        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3535,8 +3568,13 @@ impl std::ops::Mul<MysteryVersorEven> for SphereOnOrigin {
 impl std::ops::Mul<MysteryVersorOdd> for SphereOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       20       32        0
+    //           add/sub      mul      div
+    //      f32       17       29        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd       18       30        0
+    //  no simd       21       32        0
     fn mul(self, other: MysteryVersorOdd) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3716,11 +3754,12 @@ impl std::ops::Mul<VersorEvenAligningOrigin> for SphereOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        1        1        0
+    //      f32       22       37        0
+    //    simd3        2        2        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       29       45        0
-    //  no simd       32       48        0
+    // yes simd       25       41        0
+    //  no simd       32       51        0
     fn mul(self, other: VersorEvenAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3742,11 +3781,12 @@ impl std::ops::Mul<VersorEvenAtOrigin> for SphereOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       28        0
-    //    simd4        0        1        0
+    //      f32       13       24        0
+    //    simd3        1        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       16       29        0
-    //  no simd       16       32        0
+    // yes simd       14       27        0
+    //  no simd       16       35        0
     fn mul(self, other: VersorEvenAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3763,8 +3803,13 @@ impl std::ops::Mul<VersorEvenOnOrigin> for SphereOnOrigin {
 impl std::ops::Mul<VersorEvenOrthogonalOrigin> for SphereOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       32       48        0
+    //           add/sub      mul      div
+    //      f32       26       41        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       28       44        0
+    //  no simd       32       51        0
     fn mul(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3798,8 +3843,13 @@ impl std::ops::Mul<VersorOddAtInfinity> for SphereOnOrigin {
 impl std::ops::Mul<VersorOddOrthogonalOrigin> for SphereOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       32       48        0
+    //           add/sub      mul      div
+    //      f32       26       41        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       28       44        0
+    //  no simd       32       51        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3977,7 +4027,7 @@ impl std::ops::Sub<AntiDipoleInversion> for SphereOnOrigin {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -4050,7 +4100,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4088,9 +4138,9 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -4125,7 +4175,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -4221,7 +4271,7 @@ impl std::ops::Sub<AntiFlatPoint> for SphereOnOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -4259,7 +4309,7 @@ impl std::ops::Sub<AntiFlector> for SphereOnOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -4802,7 +4852,7 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
             other.group1() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
@@ -4842,7 +4892,7 @@ impl std::ops::Sub<CircleRotor> for SphereOnOrigin {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -4880,7 +4930,7 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for SphereOnOrigin {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -4918,7 +4968,7 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for SphereOnOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -4956,7 +5006,7 @@ impl std::ops::Sub<CircleRotorAtInfinity> for SphereOnOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -4992,7 +5042,7 @@ impl std::ops::Sub<CircleRotorOnOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -5203,7 +5253,7 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for SphereOnOrigin {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
             Simd32x4::from([other[e23], other[e31], other[e12], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e15, e25, e35, e1234
@@ -5582,7 +5632,7 @@ impl std::ops::Sub<Motor> for SphereOnOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -5619,7 +5669,7 @@ impl std::ops::Sub<MotorAtInfinity> for SphereOnOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -5993,7 +6043,7 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6265,9 +6315,9 @@ impl std::ops::Sub<VersorEven> for SphereOnOrigin {
             // e415, e425, e435, e321
             other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -6304,9 +6354,9 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -6345,7 +6395,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for SphereOnOrigin {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -6381,9 +6431,9 @@ impl std::ops::Sub<VersorEvenAtOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215
@@ -6419,7 +6469,7 @@ impl std::ops::Sub<VersorEvenOnOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -6457,9 +6507,9 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for SphereOnOrigin {
             // e415, e425, e435, e321
             Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(self.group0(), 3, 0, 1, 2),
             // e3215

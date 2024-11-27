@@ -12,15 +12,15 @@ use crate::traits::Wedge;
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         3       2       0
-//  Average:         5       9       0
-//  Maximum:        66      98       0
+//   Median:         2       2       0
+//  Average:         5       8       0
+//  Maximum:        62      94       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         3       7       0
-//  Average:         6      12       0
-//  Maximum:        97     140       0
+//  Average:         6      13       0
+//  Maximum:        97     143       0
 impl std::ops::Add<AntiCircleRotor> for FlatPoint {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
@@ -60,7 +60,7 @@ impl std::ops::Add<AntiDipoleInversion> for FlatPoint {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -106,7 +106,7 @@ impl std::ops::Add<AntiFlatPoint> for FlatPoint {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group0().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -136,7 +136,7 @@ impl std::ops::Add<AntiFlector> for FlatPoint {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group0().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -291,7 +291,7 @@ impl std::ops::Add<CircleRotor> for FlatPoint {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -453,7 +453,7 @@ impl std::ops::Add<Motor> for FlatPoint {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -580,9 +580,9 @@ impl std::ops::Add<VersorEven> for FlatPoint {
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -747,11 +747,12 @@ impl std::ops::BitXor<MultiVector> for FlatPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       28        0
-    //    simd4        0        1        0
+    //      f32       14       28        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       17       29        0
-    //  no simd       17       32        0
+    // yes simd       15       30        0
+    //  no simd       18       35        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
         return self.wedge(other);
     }
@@ -814,11 +815,12 @@ impl std::ops::Mul<AntiCircleRotor> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       29       44        0
-    //    simd4        0        1        0
+    //      f32       26       41        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       29       45        0
-    //  no simd       29       48        0
+    // yes simd       27       43        0
+    //  no simd       30       48        0
     fn mul(self, other: AntiCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -827,11 +829,12 @@ impl std::ops::Mul<AntiDipoleInversion> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       56        0
-    //    simd4        1        3        0
+    //      f32       34       49        0
+    //    simd3        2        2        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       41       59        0
-    //  no simd       44       68        0
+    // yes simd       37       55        0
+    //  no simd       44       71        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -853,11 +856,12 @@ impl std::ops::Mul<AntiFlatPoint> for FlatPoint {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        0
-    //    simd4        0        1        0
+    //      f32        0        4        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        3        8        0
-    //  no simd        3       11        0
+    // yes simd        1        6        0
+    //  no simd        4       11        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -878,8 +882,13 @@ impl std::ops::Mul<AntiFlector> for FlatPoint {
 impl std::ops::Mul<AntiLine> for FlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       15        0
+    //           add/sub      mul      div
+    //      f32        5       12        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        6       13        0
+    //  no simd        9       15        0
     fn mul(self, other: AntiLine) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -887,8 +896,13 @@ impl std::ops::Mul<AntiLine> for FlatPoint {
 impl std::ops::Mul<AntiMotor> for FlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        6       13        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        8       16        0
+    //  no simd       12       23        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -946,11 +960,12 @@ impl std::ops::Mul<Dipole> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       40        0
-    //    simd4        0        1        0
+    //      f32       22       37        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       25       41        0
-    //  no simd       25       44        0
+    // yes simd       23       39        0
+    //  no simd       26       44        0
     fn mul(self, other: Dipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -959,11 +974,12 @@ impl std::ops::Mul<DipoleInversion> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       56        0
-    //    simd4        1        3        0
+    //      f32       28       43        0
+    //    simd3        4        4        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       41       59        0
-    //  no simd       44       68        0
+    // yes simd       33       51        0
+    //  no simd       44       71        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -985,11 +1001,12 @@ impl std::ops::Mul<FlatPoint> for FlatPoint {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        0
-    //    simd4        0        1        0
+    //      f32        0        7        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        3        8        0
-    //  no simd        3       11        0
+    // yes simd        1        9        0
+    //  no simd        4       14        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1011,11 +1028,12 @@ impl std::ops::Mul<Line> for FlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       15        0
-    //    simd4        0        1        0
+    //      f32        5       12        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        8       16        0
-    //  no simd        8       19        0
+    // yes simd        6       14        0
+    //  no simd        9       19        0
     fn mul(self, other: Line) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1024,11 +1042,12 @@ impl std::ops::Mul<Motor> for FlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       20        0
-    //    simd4        0        2        0
+    //      f32        6       13        0
+    //    simd3        2        2        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd       12       22        0
-    //  no simd       12       28        0
+    // yes simd        8       18        0
+    //  no simd       12       31        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1037,13 +1056,13 @@ impl std::ops::Mul<MultiVector> for FlatPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       79        0
+    //      f32       46       72        0
     //    simd2        3        3        0
-    //    simd3        5        9        0
-    //    simd4        6        7        0
+    //    simd3        7       11        0
+    //    simd4        6        8        0
     // Totals...
-    // yes simd       66       98        0
-    //  no simd       97      140        0
+    // yes simd       62       94        0
+    //  no simd       97      143        0
     fn mul(self, other: MultiVector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1065,11 +1084,12 @@ impl std::ops::Mul<RoundPoint> for FlatPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       20        0
-    //    simd4        0        2        0
+    //      f32        6       20        0
+    //    simd3        0        1        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        9       22        0
-    //  no simd        9       28        0
+    // yes simd        7       23        0
+    //  no simd       10       31        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1093,11 +1113,12 @@ impl std::ops::Mul<Sphere> for FlatPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       20        0
-    //    simd4        0        1        0
+    //      f32        6       17        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        9       21        0
-    //  no simd        9       24        0
+    // yes simd        7       19        0
+    //  no simd       10       24        0
     fn mul(self, other: Sphere) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1106,11 +1127,12 @@ impl std::ops::Mul<VersorEven> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       56        0
-    //    simd4        2        4        0
+    //      f32       34       49        0
+    //    simd3        2        2        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       42       60        0
-    //  no simd       48       72        0
+    // yes simd       38       56        0
+    //  no simd       48       75        0
     fn mul(self, other: VersorEven) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1119,11 +1141,12 @@ impl std::ops::Mul<VersorOdd> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       56        0
-    //    simd4        2        4        0
+    //      f32       22       34        0
+    //    simd3        6        7        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       42       60        0
-    //  no simd       48       72        0
+    // yes simd       30       46        0
+    //  no simd       48       75        0
     fn mul(self, other: VersorOdd) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1200,7 +1223,7 @@ impl std::ops::Sub<AntiDipoleInversion> for FlatPoint {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1257,7 +1280,7 @@ impl std::ops::Sub<AntiFlatPoint> for FlatPoint {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1295,7 +1318,7 @@ impl std::ops::Sub<AntiFlector> for FlatPoint {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1484,7 +1507,7 @@ impl std::ops::Sub<CircleRotor> for FlatPoint {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1684,7 +1707,7 @@ impl std::ops::Sub<Motor> for FlatPoint {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1845,9 +1868,9 @@ impl std::ops::Sub<VersorEven> for FlatPoint {
             // e415, e425, e435, e321
             other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234

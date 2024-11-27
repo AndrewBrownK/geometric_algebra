@@ -135,9 +135,9 @@ impl std::ops::Add<Motor> for Flector {
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e423, e431, e412, e321
             self.group1(),
         );
@@ -442,8 +442,13 @@ impl std::ops::MulAssign<AntiScalar> for Flector {
 impl std::ops::Mul<DualNum> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       12        0
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd3        1        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        8        0
+    //  no simd        4       15        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -732,9 +737,9 @@ impl std::ops::Sub<Motor> for Flector {
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             self.group1(),
         );

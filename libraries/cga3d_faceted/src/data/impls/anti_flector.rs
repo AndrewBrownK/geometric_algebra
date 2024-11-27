@@ -43,7 +43,7 @@ impl std::ops::Add<AntiCircleOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -65,15 +65,15 @@ impl std::ops::Add<AntiCircleRotor> for AntiFlector {
             // e41, e42, e43, e45
             crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(other[e45]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -95,7 +95,7 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for AntiFlector {
             // e41, e42, e43, e45
             crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
             other.group1(),
             // e415, e425, e435, e321
@@ -103,7 +103,7 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -125,7 +125,7 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group1().truncate_to_3(),
             // e23, e31, e12
             other.group0(),
             // e415, e425, e435, e321
@@ -133,7 +133,7 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -155,15 +155,15 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, other[e45]]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group1().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -193,7 +193,7 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -263,7 +263,7 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for AntiFlector {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(self[e321]),
             // e235, e315, e125, e4
@@ -312,7 +312,7 @@ impl std::ops::Add<AntiDualNum> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 0.0, 0.0, 0.0]),
             // e3215
@@ -446,7 +446,7 @@ impl std::ops::Add<AntiLine> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -476,7 +476,7 @@ impl std::ops::Add<AntiLineOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -498,15 +498,15 @@ impl std::ops::Add<AntiMotor> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group1().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -530,13 +530,13 @@ impl std::ops::Add<AntiMotorOnOrigin> for AntiFlector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -560,13 +560,13 @@ impl std::ops::Add<AntiMysteryCircleRotor> for AntiFlector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -585,7 +585,7 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], self[e321] + other[e321]]),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1, e2, e3, e5
             Simd32x4::from([self[e1] + other[e1], self[e2] + other[e2], self[e3] + other[e3], self[e5]]),
         );
@@ -690,13 +690,13 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for AntiFlector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 0.0, 0.0, 0.0]),
             // e3215
@@ -913,13 +913,13 @@ impl std::ops::Add<Dipole> for AntiFlector {
             // e15, e25, e35
             other.group2(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -949,7 +949,7 @@ impl std::ops::Add<DipoleAligningOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -973,13 +973,13 @@ impl std::ops::Add<DipoleAtInfinity> for AntiFlector {
             // e15, e25, e35
             other.group1(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1009,7 +1009,7 @@ impl std::ops::Add<DipoleAtOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1031,15 +1031,15 @@ impl std::ops::Add<DipoleInversion> for AntiFlector {
             // e41, e42, e43, e45
             crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(other[e45]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]),
             // e3215
@@ -1061,7 +1061,7 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for AntiFlector {
             // e41, e42, e43, e45
             other.group0(),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group1().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1069,7 +1069,7 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]),
             // e3215
@@ -1093,13 +1093,13 @@ impl std::ops::Add<DipoleInversionAtInfinity> for AntiFlector {
             // e15, e25, e35
             other.group1(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([0.0, other[e4235], other[e4315], other[e4125]]),
             // e3215
@@ -1121,7 +1121,7 @@ impl std::ops::Add<DipoleInversionAtOrigin> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group1().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1129,7 +1129,7 @@ impl std::ops::Add<DipoleInversionAtOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 0.0, 0.0, 0.0]),
             // e3215
@@ -1159,7 +1159,7 @@ impl std::ops::Add<DipoleInversionOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             other.group1(),
             // e3215
@@ -1181,7 +1181,7 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
             other.group1(),
             // e415, e425, e435, e321
@@ -1189,7 +1189,7 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 0.0, 0.0, 0.0]),
             // e3215
@@ -1219,7 +1219,7 @@ impl std::ops::Add<DipoleOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1249,7 +1249,7 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1295,7 +1295,7 @@ impl std::ops::Add<FlatOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1317,7 +1317,7 @@ impl std::ops::Add<FlatPoint> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, other[e45]]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1325,7 +1325,7 @@ impl std::ops::Add<FlatPoint> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1355,7 +1355,7 @@ impl std::ops::Add<FlatPointAtInfinity> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1377,7 +1377,7 @@ impl std::ops::Add<Flector> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, other[e45]]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1385,7 +1385,7 @@ impl std::ops::Add<Flector> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([0.0, other[e4235], other[e4315], other[e4125]]),
             // e3215
@@ -1407,7 +1407,7 @@ impl std::ops::Add<FlectorAtInfinity> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1415,7 +1415,7 @@ impl std::ops::Add<FlectorAtInfinity> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1445,7 +1445,7 @@ impl std::ops::Add<FlectorOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([0.0, other[e4235], other[e4315], other[e4125]]),
             // e3215
@@ -1475,7 +1475,7 @@ impl std::ops::Add<Horizon> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1560,7 +1560,7 @@ impl std::ops::Add<LineOnOrigin> for AntiFlector {
             // e415, e425, e435, e321
             crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(self[e321]),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1, e2, e3, e5
             self.group1(),
         );
@@ -1667,7 +1667,7 @@ impl std::ops::Add<MysteryCircle> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], self[e321] + other[e321]]),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1, e2, e3, e5
             self.group1(),
         );
@@ -1706,13 +1706,13 @@ impl std::ops::Add<MysteryDipole> for AntiFlector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1736,13 +1736,13 @@ impl std::ops::Add<MysteryDipoleInversion> for AntiFlector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([0.0, other[e4235], other[e4315], other[e4125]]),
             // e3215
@@ -1783,13 +1783,13 @@ impl std::ops::Add<MysteryVersorOdd> for AntiFlector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([0.0, other[e4235], other[e4315], other[e4125]]),
             // e3215
@@ -1833,7 +1833,7 @@ impl std::ops::Add<NullDipoleAtOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -1863,7 +1863,7 @@ impl std::ops::Add<NullDipoleInversionAtOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 0.0, 0.0, 0.0]),
             // e3215
@@ -1893,7 +1893,7 @@ impl std::ops::Add<NullSphereAtOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 0.0, 0.0, 0.0]),
             // e3215
@@ -1951,7 +1951,7 @@ impl std::ops::Add<Plane> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([0.0, other[e4235], other[e4315], other[e4125]]),
             // e3215
@@ -1981,7 +1981,7 @@ impl std::ops::Add<PlaneOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([0.0, other[e4235], other[e4315], other[e4125]]),
             // e3215
@@ -2045,7 +2045,7 @@ impl std::ops::Add<Scalar> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -2075,7 +2075,7 @@ impl std::ops::Add<Sphere> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]),
             // e3215
@@ -2105,7 +2105,7 @@ impl std::ops::Add<SphereAtOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 0.0, 0.0, 0.0]),
             // e3215
@@ -2135,7 +2135,7 @@ impl std::ops::Add<SphereOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(other.group0(), 3, 0, 1, 2),
             // e3215
@@ -2262,15 +2262,15 @@ impl std::ops::Add<VersorOdd> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], other[e45]]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]),
             // e3215
@@ -2292,15 +2292,15 @@ impl std::ops::Add<VersorOddAtInfinity> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, other[e45]]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            crate::swizzle!(other.group0(), 1, 2, 3, _),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([0.0, other[e4235], other[e4315], other[e4125]]),
             // e3215
@@ -2322,15 +2322,15 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 0.0, 0.0, 0.0]),
             // e3215
@@ -2351,11 +2351,12 @@ impl std::ops::BitXor<AntiCircleRotor> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       36        0
-    //    simd4        0        1        0
+    //      f32       15       29        0
+    //    simd3        2        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       21       37        0
-    //  no simd       21       40        0
+    // yes simd       17       33        0
+    //  no simd       21       43        0
     fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -2364,11 +2365,12 @@ impl std::ops::BitXor<AntiCircleRotorAligningOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       32        0
-    //    simd4        0        1        0
+    //      f32       11       25        0
+    //    simd3        2        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       17       33        0
-    //  no simd       17       36        0
+    // yes simd       13       29        0
+    //  no simd       17       39        0
     fn bitxor(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2395,11 +2397,12 @@ impl std::ops::BitXor<AntiCircleRotorAtInfinity> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       24        0
-    //    simd4        0        2        0
+    //      f32        6       17        0
+    //    simd3        2        2        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd       12       26        0
-    //  no simd       12       32        0
+    // yes simd        8       22        0
+    //  no simd       12       35        0
     fn bitxor(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2408,11 +2411,12 @@ impl std::ops::BitXor<AntiCircleRotorOnOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       26        0
-    //    simd4        0        1        0
+    //      f32        8       19        0
+    //    simd3        1        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       11       27        0
-    //  no simd       11       30        0
+    // yes simd        9       23        0
+    //  no simd       11       33        0
     fn bitxor(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2599,11 +2603,12 @@ impl std::ops::BitXor<AntiMysteryCircleRotor> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       18        0
-    //    simd4        0        2        0
+    //      f32        3       11        0
+    //    simd3        1        2        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        6       20        0
-    //  no simd        6       26        0
+    // yes simd        4       16        0
+    //  no simd        6       29        0
     fn bitxor(self, other: AntiMysteryCircleRotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -2665,11 +2670,12 @@ impl std::ops::BitXor<AntiVersorEvenOnOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       27        0
-    //    simd4        0        1        0
+    //      f32        9       20        0
+    //    simd3        1        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       12       28        0
-    //  no simd       12       31        0
+    // yes simd       10       24        0
+    //  no simd       12       34        0
     fn bitxor(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2815,11 +2821,12 @@ impl std::ops::BitXor<DipoleAtInfinity> for AntiFlector {
     type Output = CircleRotorAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       16        0
-    //    simd4        0        2        0
+    //      f32        5       12        0
+    //    simd3        1        1        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        8       18        0
-    //  no simd        8       24        0
+    // yes simd        6       16        0
+    //  no simd        8       27        0
     fn bitxor(self, other: DipoleAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3166,11 +3173,12 @@ impl std::ops::BitXor<MysteryVersorOdd> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       21        0
-    //    simd4        0        1        0
+    //      f32        6       14        0
+    //    simd3        1        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        9       22        0
-    //  no simd        9       25        0
+    // yes simd        7       18        0
+    //  no simd        9       28        0
     fn bitxor(self, other: MysteryVersorOdd) -> Self::Output {
         return self.wedge(other);
     }
@@ -3268,12 +3276,12 @@ impl std::ops::BitXor<RoundPoint> for AntiFlector {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       21        0
-    //    simd3        0        2        0
-    //    simd4        0        3        0
+    //      f32        6       14        0
+    //    simd3        1        4        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        9       26        0
-    //  no simd        9       39        0
+    // yes simd        7       22        0
+    //  no simd        9       42        0
     fn bitxor(self, other: RoundPoint) -> Self::Output {
         return self.wedge(other);
     }
@@ -3417,11 +3425,12 @@ impl std::ops::BitXor<VersorOdd> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       40        0
-    //    simd4        0        1        0
+    //      f32       19       33        0
+    //    simd3        2        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       25       41        0
-    //  no simd       25       44        0
+    // yes simd       21       37        0
+    //  no simd       25       47        0
     fn bitxor(self, other: VersorOdd) -> Self::Output {
         return self.wedge(other);
     }
@@ -3430,11 +3439,12 @@ impl std::ops::BitXor<VersorOddAtInfinity> for AntiFlector {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       15       27        0
-    //    simd4        0        1        0
+    //      f32        9       20        0
+    //    simd3        2        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       15       28        0
-    //  no simd       15       31        0
+    // yes simd       11       24        0
+    //  no simd       15       34        0
     fn bitxor(self, other: VersorOddAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3443,11 +3453,12 @@ impl std::ops::BitXor<VersorOddOrthogonalOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       33        0
-    //    simd4        0        1        0
+    //      f32       12       26        0
+    //    simd3        2        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       18       34        0
-    //  no simd       18       37        0
+    // yes simd       14       30        0
+    //  no simd       18       40        0
     fn bitxor(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3671,11 +3682,12 @@ impl std::ops::Mul<AntiDipoleOnOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       40        0
-    //    simd4        1        3        0
+    //      f32       21       36        0
+    //    simd3        1        1        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       25       43        0
-    //  no simd       28       52        0
+    // yes simd       23       41        0
+    //  no simd       28       55        0
     fn mul(self, other: AntiDipoleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3684,11 +3696,12 @@ impl std::ops::Mul<AntiDualNum> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4       12        0
-    //    simd4        0        2        0
+    //      f32        1        5        0
+    //    simd3        1        2        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        4       14        0
-    //  no simd        4       20        0
+    // yes simd        2       10        0
+    //  no simd        4       23        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3868,11 +3881,12 @@ impl std::ops::Mul<AntiSphereOnOrigin> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       36        0
-    //    simd4        0        4        0
+    //      f32       11       25        0
+    //    simd3        3        3        0
+    //    simd4        0        6        0
     // Totals...
-    // yes simd       20       40        0
-    //  no simd       20       52        0
+    // yes simd       14       34        0
+    //  no simd       20       58        0
     fn mul(self, other: AntiSphereOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4173,11 +4187,12 @@ impl std::ops::Mul<DualNum> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4       16        0
-    //    simd4        0        5        0
+    //      f32        1        9        0
+    //    simd3        1        2        0
+    //    simd4        0        6        0
     // Totals...
-    // yes simd        4       21        0
-    //  no simd        4       36        0
+    // yes simd        2       17        0
+    //  no simd        4       39        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4521,11 +4536,12 @@ impl std::ops::Mul<RoundPoint> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       40        0
-    //    simd4        0        4        0
+    //      f32       12       26        0
+    //    simd3        4        4        0
+    //    simd4        0        6        0
     // Totals...
-    // yes simd       24       44        0
-    //  no simd       24       56        0
+    // yes simd       16       36        0
+    //  no simd       24       62        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4562,11 +4578,12 @@ impl std::ops::Mul<Sphere> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        1        4        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        1        5        0
     // Totals...
-    // yes simd       21       36        0
-    //  no simd       24       48        0
+    // yes simd       17       32        0
+    //  no simd       24       51        0
     fn mul(self, other: Sphere) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4585,11 +4602,12 @@ impl std::ops::Mul<SphereOnOrigin> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        0        3        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd       20       35        0
-    //  no simd       20       44        0
+    // yes simd       16       31        0
+    //  no simd       20       47        0
     fn mul(self, other: SphereOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4765,7 +4783,7 @@ impl std::ops::Sub<AntiCircleOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -4795,15 +4813,15 @@ impl std::ops::Sub<AntiCircleRotor> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], other[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -4833,7 +4851,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
@@ -4841,7 +4859,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -4870,7 +4888,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
@@ -4878,7 +4896,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -4908,15 +4926,15 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([1.0, 1.0, 1.0, other[e45]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -4954,7 +4972,7 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5042,7 +5060,7 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for AntiFlector {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], self[e321]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e4
@@ -5102,7 +5120,7 @@ impl std::ops::Sub<AntiDualNum> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 1.0, 1.0, 1.0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]),
             // e3215
@@ -5240,7 +5258,7 @@ impl std::ops::Sub<AntiLine> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5274,7 +5292,7 @@ impl std::ops::Sub<AntiLineOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5304,15 +5322,15 @@ impl std::ops::Sub<AntiMotor> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5343,13 +5361,13 @@ impl std::ops::Sub<AntiMotorOnOrigin> for AntiFlector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5381,13 +5399,13 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for AntiFlector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5410,7 +5428,7 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], self[e321] - other[e321]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1, e2, e3, e5
             Simd32x4::from([self[e1] - other[e1], self[e2] - other[e2], self[e3] - other[e3], self[e5]]),
         );
@@ -5531,13 +5549,13 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for AntiFlector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 1.0, 1.0, 1.0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]),
             // e3215
@@ -5810,13 +5828,13 @@ impl std::ops::Sub<Dipole> for AntiFlector {
             // e15, e25, e35
             other.group2() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5853,7 +5871,7 @@ impl std::ops::Sub<DipoleAligningOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5884,13 +5902,13 @@ impl std::ops::Sub<DipoleAtInfinity> for AntiFlector {
             // e15, e25, e35
             other.group1() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5927,7 +5945,7 @@ impl std::ops::Sub<DipoleAtOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -5957,15 +5975,15 @@ impl std::ops::Sub<DipoleInversion> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], other[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]) * Simd32x4::from(-1.0),
             // e3215
@@ -5995,7 +6013,7 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for AntiFlector {
             // e41, e42, e43, e45
             other.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6003,7 +6021,7 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]) * Simd32x4::from(-1.0),
             // e3215
@@ -6035,13 +6053,13 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for AntiFlector {
             // e15, e25, e35
             other.group1() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([1.0, other[e4235], other[e4315], other[e4125]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]),
             // e3215
@@ -6071,7 +6089,7 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6079,7 +6097,7 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 1.0, 1.0, 1.0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]),
             // e3215
@@ -6113,7 +6131,7 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             other.group1() * Simd32x4::from(-1.0),
             // e3215
@@ -6143,7 +6161,7 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
@@ -6151,7 +6169,7 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 1.0, 1.0, 1.0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]),
             // e3215
@@ -6185,7 +6203,7 @@ impl std::ops::Sub<DipoleOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6222,7 +6240,7 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6276,7 +6294,7 @@ impl std::ops::Sub<FlatOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6305,7 +6323,7 @@ impl std::ops::Sub<FlatPoint> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([1.0, 1.0, 1.0, other[e45]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6313,7 +6331,7 @@ impl std::ops::Sub<FlatPoint> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6347,7 +6365,7 @@ impl std::ops::Sub<FlatPointAtInfinity> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6377,7 +6395,7 @@ impl std::ops::Sub<Flector> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([1.0, 1.0, 1.0, other[e45]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6385,7 +6403,7 @@ impl std::ops::Sub<Flector> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([1.0, other[e4235], other[e4315], other[e4125]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]),
             // e3215
@@ -6414,7 +6432,7 @@ impl std::ops::Sub<FlectorAtInfinity> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6422,7 +6440,7 @@ impl std::ops::Sub<FlectorAtInfinity> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6456,7 +6474,7 @@ impl std::ops::Sub<FlectorOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([1.0, other[e4235], other[e4315], other[e4125]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]),
             // e3215
@@ -6489,7 +6507,7 @@ impl std::ops::Sub<Horizon> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6582,7 +6600,7 @@ impl std::ops::Sub<LineOnOrigin> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], self[e321]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1, e2, e3, e5
             self.group1(),
         );
@@ -6707,7 +6725,7 @@ impl std::ops::Sub<MysteryCircle> for AntiFlector {
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], self[e321] - other[e321]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1, e2, e3, e5
             self.group1(),
         );
@@ -6757,13 +6775,13 @@ impl std::ops::Sub<MysteryDipole> for AntiFlector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6794,13 +6812,13 @@ impl std::ops::Sub<MysteryDipoleInversion> for AntiFlector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([1.0, other[e4235], other[e4315], other[e4125]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]),
             // e3215
@@ -6853,13 +6871,13 @@ impl std::ops::Sub<MysteryVersorOdd> for AntiFlector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([1.0, other[e4235], other[e4315], other[e4125]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]),
             // e3215
@@ -6911,7 +6929,7 @@ impl std::ops::Sub<NullDipoleAtOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -6945,7 +6963,7 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 1.0, 1.0, 1.0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]),
             // e3215
@@ -6979,7 +6997,7 @@ impl std::ops::Sub<NullSphereAtOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 1.0, 1.0, 1.0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]),
             // e3215
@@ -7052,7 +7070,7 @@ impl std::ops::Sub<Plane> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([1.0, other[e4235], other[e4315], other[e4125]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]),
             // e3215
@@ -7086,7 +7104,7 @@ impl std::ops::Sub<PlaneOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([1.0, other[e4235], other[e4315], other[e4125]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]),
             // e3215
@@ -7162,7 +7180,7 @@ impl std::ops::Sub<Scalar> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -7199,7 +7217,7 @@ impl std::ops::Sub<Sphere> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]) * Simd32x4::from(-1.0),
             // e3215
@@ -7236,7 +7254,7 @@ impl std::ops::Sub<SphereAtOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 1.0, 1.0, 1.0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]),
             // e3215
@@ -7270,7 +7288,7 @@ impl std::ops::Sub<SphereOnOrigin> for AntiFlector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             crate::swizzle!(other.group0(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
             // e3215
@@ -7430,15 +7448,15 @@ impl std::ops::Sub<VersorOdd> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], other[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], other[e4235], other[e4315], other[e4125]]) * Simd32x4::from(-1.0),
             // e3215
@@ -7471,13 +7489,13 @@ impl std::ops::Sub<VersorOddAtInfinity> for AntiFlector {
             // e15, e25, e35
             Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([1.0, other[e4235], other[e4315], other[e4125]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]),
             // e3215
@@ -7508,15 +7526,15 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for AntiFlector {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 1.0, 1.0, 1.0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]),
             // e3215

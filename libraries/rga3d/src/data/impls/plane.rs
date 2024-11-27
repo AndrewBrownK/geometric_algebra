@@ -13,14 +13,14 @@ use crate::traits::Wedge;
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       1       0
-//  Average:         2       3       0
-//  Maximum:        20      36       0
+//  Average:         1       3       0
+//  Maximum:        16      32       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       2       0
 //  Average:         2       5       0
-//  Maximum:        24      45       0
+//  Maximum:        24      48       0
 impl std::ops::Add<AntiScalar> for Plane {
     type Output = MultiVector;
     fn add(self, other: AntiScalar) -> Self::Output {
@@ -114,9 +114,9 @@ impl std::ops::Add<Motor> for Plane {
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e423, e431, e412, e321
             self.group0(),
         );
@@ -339,8 +339,13 @@ impl std::ops::Mul<Horizon> for Plane {
 impl std::ops::Mul<Line> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       15        0
+    //           add/sub      mul      div
+    //      f32        5       12        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        6       13        0
+    //  no simd        9       15        0
     fn mul(self, other: Line) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -348,8 +353,13 @@ impl std::ops::Mul<Line> for Plane {
 impl std::ops::Mul<Motor> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        6       13        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        8       16        0
+    //  no simd       12       23        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -358,12 +368,13 @@ impl std::ops::Mul<MultiVector> for Plane {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       31        0
+    //      f32       12       24        0
     //    simd2        0        1        0
-    //    simd3        2        4        0
+    //    simd3        4        6        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       20       36        0
-    //  no simd       24       45        0
+    // yes simd       16       32        0
+    //  no simd       24       48        0
     fn mul(self, other: MultiVector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -381,11 +392,12 @@ impl std::ops::Mul<Plane> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        0
-    //    simd4        0        1        0
+    //      f32        0        7        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        3        8        0
-    //  no simd        3       11        0
+    // yes simd        1        9        0
+    //  no simd        4       14        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -553,9 +565,9 @@ impl std::ops::Sub<Motor> for Plane {
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             self.group0(),
         );

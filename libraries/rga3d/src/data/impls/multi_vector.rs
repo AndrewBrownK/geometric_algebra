@@ -734,9 +734,9 @@ impl From<Motor> for MultiVector {
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
-            Simd32x3::from([from_motor[e41], from_motor[e42], from_motor[e43]]),
+            from_motor.group0().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([from_motor[e23], from_motor[e31], from_motor[e12]]),
+            from_motor.group1().truncate_to_3(),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -836,11 +836,12 @@ impl std::ops::Mul<DualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       15        0
-    //    simd3        1        3        0
+    //      f32        2        8        0
+    //    simd3        2        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        6       18        0
-    //  no simd        8       24        0
+    // yes simd        4       14        0
+    //  no simd        8       27        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -972,12 +973,13 @@ impl std::ops::Mul<Plane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       31        0
+    //      f32       12       24        0
     //    simd2        0        1        0
-    //    simd3        2        4        0
+    //    simd3        4        6        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd       20       36        0
-    //  no simd       24       45        0
+    // yes simd       16       32        0
+    //  no simd       24       48        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }

@@ -13,7 +13,7 @@ use crate::traits::Wedge;
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         1       2       0
-//  Average:        12      15       0
+//  Average:        12      14       0
 //  Maximum:       182     214       0
 //
 //  No SIMD:   add/sub     mul     div
@@ -37,13 +37,13 @@ impl std::ops::Add<AntiCircleRotor> for Motor {
             // e41, e42, e43
             other.group0(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([self[e415], self[e425], self[e435], 0.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -92,7 +92,7 @@ impl std::ops::Add<AntiDualNum> for Motor {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
             // e1234
@@ -160,7 +160,7 @@ impl std::ops::Add<AntiLine> for Motor {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -184,13 +184,13 @@ impl std::ops::Add<AntiMotor> for Motor {
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([self[e415], self[e425], self[e435], 0.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
             // e1234
@@ -297,13 +297,13 @@ impl std::ops::Add<Dipole> for Motor {
             // e41, e42, e43
             other.group0(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([self[e415], self[e425], self[e435], 0.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -327,13 +327,13 @@ impl std::ops::Add<DipoleInversion> for Motor {
             // e41, e42, e43
             other.group0(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([self[e415], self[e425], self[e435], 0.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             other.group3(),
             // e1234
@@ -389,7 +389,7 @@ impl std::ops::Add<FlatPoint> for Motor {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -419,7 +419,7 @@ impl std::ops::Add<Flector> for Motor {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             other.group1(),
             // e1234
@@ -534,7 +534,7 @@ impl std::ops::Add<Plane> for Motor {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             other.group0(),
             // e1234
@@ -583,7 +583,7 @@ impl std::ops::Add<Scalar> for Motor {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -613,7 +613,7 @@ impl std::ops::Add<Sphere> for Motor {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             other.group0(),
             // e1234
@@ -654,15 +654,15 @@ impl std::ops::Add<VersorOdd> for Motor {
             // e15, e25, e35, e45
             Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]),
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([self[e415], self[e425], self[e435], 0.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             other.group3(),
             // e1234
@@ -674,11 +674,12 @@ impl std::ops::BitXor<AntiCircleRotor> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       16        0
-    //    simd4        1        1        0
+    //      f32        5        9        0
+    //    simd3        1        2        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        9       17        0
-    //  no simd       12       20        0
+    // yes simd        7       13        0
+    //  no simd       12       23        0
     fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -763,8 +764,13 @@ impl std::ops::BitXorAssign<AntiLine> for Motor {
 impl std::ops::BitXor<AntiMotor> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       14        0
+    //           add/sub      mul      div
+    //      f32        3        7        0
+    //    simd3        1        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        4       10        0
+    //  no simd        6       17        0
     fn bitxor(self, other: AntiMotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -847,12 +853,12 @@ impl std::ops::BitXor<MultiVector> for Motor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       27        0
-    //    simd3        1        2        0
-    //    simd4        1        3        0
+    //      f32       15       24        0
+    //    simd3        1        3        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       20       32        0
-    //  no simd       25       45        0
+    // yes simd       18       30        0
+    //  no simd       26       45        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
         return self.wedge(other);
     }
@@ -911,11 +917,12 @@ impl std::ops::BitXor<VersorOdd> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       13        0
-    //    simd4        2        2        0
+    //      f32        5        6        0
+    //    simd3        1        2        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       10       15        0
-    //  no simd       16       21        0
+    // yes simd        8       11        0
+    //  no simd       16       24        0
     fn bitxor(self, other: VersorOdd) -> Self::Output {
         return self.wedge(other);
     }
@@ -1005,8 +1012,13 @@ impl std::ops::MulAssign<AntiDualNum> for Motor {
 impl std::ops::Mul<AntiFlatPoint> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        6       13        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        8       16        0
+    //  no simd       12       23        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1137,11 +1149,12 @@ impl std::ops::Mul<FlatPoint> for Motor {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       20        0
-    //    simd4        0        2        0
+    //      f32        6       13        0
+    //    simd3        2        2        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd       12       22        0
-    //  no simd       12       28        0
+    // yes simd        8       18        0
+    //  no simd       12       31        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1208,11 +1221,12 @@ impl std::ops::Mul<RoundPoint> for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       36        0
-    //    simd4        0        4        0
+    //      f32       18       29        0
+    //    simd3        2        2        0
+    //    simd4        0        5        0
     // Totals...
-    // yes simd       24       40        0
-    //  no simd       24       52        0
+    // yes simd       20       36        0
+    //  no simd       24       55        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1236,11 +1250,12 @@ impl std::ops::Mul<Sphere> for Motor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        1        2        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       21       34        0
-    //  no simd       24       40        0
+    // yes simd       17       30        0
+    //  no simd       24       43        0
     fn mul(self, other: Sphere) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1320,13 +1335,13 @@ impl std::ops::Sub<AntiCircleRotor> for Motor {
             // e41, e42, e43
             other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self[e415], self[e425], self[e435], 0.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1386,7 +1401,7 @@ impl std::ops::Sub<AntiDualNum> for Motor {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([1.0, 1.0, 1.0, other[e3215]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e1234
@@ -1469,7 +1484,7 @@ impl std::ops::Sub<AntiLine> for Motor {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1501,13 +1516,13 @@ impl std::ops::Sub<AntiMotor> for Motor {
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self[e415], self[e425], self[e435], 0.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([1.0, 1.0, 1.0, other[e3215]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e1234
@@ -1633,13 +1648,13 @@ impl std::ops::Sub<Dipole> for Motor {
             // e41, e42, e43
             other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self[e415], self[e425], self[e435], 0.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1671,13 +1686,13 @@ impl std::ops::Sub<DipoleInversion> for Motor {
             // e41, e42, e43
             other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self[e415], self[e425], self[e435], 0.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             other.group3() * Simd32x4::from(-1.0),
             // e1234
@@ -1737,7 +1752,7 @@ impl std::ops::Sub<FlatPoint> for Motor {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1771,7 +1786,7 @@ impl std::ops::Sub<Flector> for Motor {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             other.group1() * Simd32x4::from(-1.0),
             // e1234
@@ -1896,7 +1911,7 @@ impl std::ops::Sub<Plane> for Motor {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             other.group0() * Simd32x4::from(-1.0),
             // e1234
@@ -1953,7 +1968,7 @@ impl std::ops::Sub<Scalar> for Motor {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1990,7 +2005,7 @@ impl std::ops::Sub<Sphere> for Motor {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             other.group0() * Simd32x4::from(-1.0),
             // e1234
@@ -2044,15 +2059,15 @@ impl std::ops::Sub<VersorOdd> for Motor {
             // e15, e25, e35, e45
             Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self[e415], self[e425], self[e435], 0.0]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([self[e235], self[e315], self[e125]]),
+            self.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             other.group3() * Simd32x4::from(-1.0),
             // e1234

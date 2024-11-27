@@ -404,7 +404,7 @@ impl RightAntiDual for MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([self[e12345], self[scalar]]) * Simd32x2::from([-1.0, 1.0]),
+            crate::swizzle!(self.group0(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
             // e1, e2, e3, e4
             Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e1234]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e5
@@ -414,13 +414,13 @@ impl RightAntiDual for MultiVector {
             // e41, e42, e43
             self.group7(),
             // e23, e31, e12
-            Simd32x3::from([self[e415], self[e425], self[e435]]),
+            self.group6().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e423, e431, e412
             self.group4() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group3().truncate_to_3() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self[e1], self[e2], self[e3], self[e5]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1234

@@ -335,8 +335,7 @@ impl std::ops::Div<carrier> for AntiPlane {
 impl Carrier for AntiPlane {
     type Output = FlatPointAtInfinity;
     fn carrier(self) -> Self::Output {
-        use crate::elements::*;
-        return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ Simd32x3::from([self[e1], self[e2], self[e3]]));
+        return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ self.group0().truncate_to_3());
     }
 }
 impl std::ops::Div<carrier> for AntiPlaneOnOrigin {
@@ -502,8 +501,7 @@ impl std::ops::Div<carrier> for CircleRotorOnOrigin {
 impl Carrier for CircleRotorOnOrigin {
     type Output = PlaneOnOrigin;
     fn carrier(self) -> Self::Output {
-        use crate::elements::*;
-        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ Simd32x3::from([self[e423], self[e431], self[e412]]));
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ self.group0().truncate_to_3());
     }
 }
 impl std::ops::Div<carrier> for Dipole {
@@ -515,8 +513,7 @@ impl std::ops::Div<carrier> for Dipole {
 impl Carrier for Dipole {
     type Output = Line;
     fn carrier(self) -> Self::Output {
-        use crate::elements::*;
-        return Line::from_groups(/* e415, e425, e435 */ self.group0(), /* e235, e315, e125 */ Simd32x3::from([self[e23], self[e31], self[e12]]));
+        return Line::from_groups(/* e415, e425, e435 */ self.group0(), /* e235, e315, e125 */ self.group1().truncate_to_3());
     }
 }
 impl std::ops::Div<carrier> for DipoleAligningOrigin {
@@ -528,8 +525,7 @@ impl std::ops::Div<carrier> for DipoleAligningOrigin {
 impl Carrier for DipoleAligningOrigin {
     type Output = LineOnOrigin;
     fn carrier(self) -> Self::Output {
-        use crate::elements::*;
-        return LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([self[e41], self[e42], self[e43]]));
+        return LineOnOrigin::from_groups(/* e415, e425, e435 */ self.group0().truncate_to_3());
     }
 }
 impl std::ops::Div<carrier> for DipoleAtInfinity {
@@ -541,8 +537,7 @@ impl std::ops::Div<carrier> for DipoleAtInfinity {
 impl Carrier for DipoleAtInfinity {
     type Output = LineAtInfinity;
     fn carrier(self) -> Self::Output {
-        use crate::elements::*;
-        return LineAtInfinity::from_groups(/* e235, e315, e125 */ Simd32x3::from([self[e23], self[e31], self[e12]]));
+        return LineAtInfinity::from_groups(/* e235, e315, e125 */ self.group0().truncate_to_3());
     }
 }
 impl std::ops::Div<carrier> for DipoleAtOrigin {
@@ -597,8 +592,7 @@ impl std::ops::Div<carrier> for DipoleInversionAtInfinity {
 impl Carrier for DipoleInversionAtInfinity {
     type Output = LineAtInfinity;
     fn carrier(self) -> Self::Output {
-        use crate::elements::*;
-        return LineAtInfinity::from_groups(/* e235, e315, e125 */ Simd32x3::from([self[e23], self[e31], self[e12]]));
+        return LineAtInfinity::from_groups(/* e235, e315, e125 */ self.group0().truncate_to_3());
     }
 }
 impl std::ops::Div<carrier> for DipoleInversionAtOrigin {
@@ -639,7 +633,7 @@ impl Carrier for DipoleInversionOrthogonalOrigin {
         use crate::elements::*;
         return CircleRotorAligningOriginAtInfinity::from_groups(
             // e415, e425, e435
-            Simd32x3::from([self[e41], self[e42], self[e43]]),
+            self.group0().truncate_to_3(),
             // e235, e315, e125, e12345
             crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(self[e1234]),
         );
@@ -654,8 +648,7 @@ impl std::ops::Div<carrier> for DipoleOnOrigin {
 impl Carrier for DipoleOnOrigin {
     type Output = LineOnOrigin;
     fn carrier(self) -> Self::Output {
-        use crate::elements::*;
-        return LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([self[e41], self[e42], self[e43]]));
+        return LineOnOrigin::from_groups(/* e415, e425, e435 */ self.group0().truncate_to_3());
     }
 }
 impl std::ops::Div<carrier> for DipoleOrthogonalOrigin {
@@ -708,7 +701,7 @@ impl Carrier for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, self[e4]]),
             // e15, e25, e35
-            Simd32x3::from([self[e1], self[e2], self[e3]]),
+            self.group1().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -759,8 +752,7 @@ impl std::ops::Div<carrier> for MysteryDipole {
 impl Carrier for MysteryDipole {
     type Output = LineAtInfinity;
     fn carrier(self) -> Self::Output {
-        use crate::elements::*;
-        return LineAtInfinity::from_groups(/* e235, e315, e125 */ Simd32x3::from([self[e23], self[e31], self[e12]]));
+        return LineAtInfinity::from_groups(/* e235, e315, e125 */ self.group0().truncate_to_3());
     }
 }
 impl std::ops::Div<carrier> for MysteryDipoleInversion {
@@ -772,8 +764,7 @@ impl std::ops::Div<carrier> for MysteryDipoleInversion {
 impl Carrier for MysteryDipoleInversion {
     type Output = LineAtInfinity;
     fn carrier(self) -> Self::Output {
-        use crate::elements::*;
-        return LineAtInfinity::from_groups(/* e235, e315, e125 */ Simd32x3::from([self[e23], self[e31], self[e12]]));
+        return LineAtInfinity::from_groups(/* e235, e315, e125 */ self.group0().truncate_to_3());
     }
 }
 impl std::ops::Div<carrier> for MysteryVersorEven {

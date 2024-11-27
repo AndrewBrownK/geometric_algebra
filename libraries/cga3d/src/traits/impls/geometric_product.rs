@@ -9,8 +9,8 @@
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       1       0
-//   Median:        25      39       0
-//  Average:        47      59       0
+//   Median:        25      37       0
+//  Average:        46      59       0
 //  Maximum:       729     761       0
 //
 //  No SIMD:   add/sub     mul     div
@@ -199,30 +199,23 @@ impl GeometricProduct<AntiDualNum> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       18        0
-    //    simd4        0        2        0
+    //      f32        1        8        0
+    //    simd3        1        3        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        7       20        0
-    //  no simd        7       26        0
+    // yes simd        3       14        0
+    //  no simd        8       29        0
     fn geometric_product(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(other[scalar]) * Simd32x4::from([self[e41], self[e42], self[e43], self[scalar]]),
             // e23, e31, e12, e45
-            Simd32x4::from([
-                (self[e41] * other[e3215]) + (self[e23] * other[scalar]),
-                (self[e42] * other[e3215]) + (self[e31] * other[scalar]),
-                (self[e43] * other[e3215]) + (self[e12] * other[scalar]),
-                self[e45] * other[scalar],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[scalar]])
+                * ((Simd32x3::from(other[e3215]) * self.group0()) + (Simd32x3::from(other[scalar]) * self.group1().truncate_to_3())).extend_to_4(self[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (self[e23] * other[e3215]) + (self[e15] * other[scalar]),
-                (self[e31] * other[e3215]) + (self[e25] * other[scalar]),
-                (self[e12] * other[e3215]) + (self[e35] * other[scalar]),
-                0.0,
-            ]),
+            Simd32x4::from([self[e15] * other[scalar], self[e25] * other[scalar], self[e35] * other[scalar], 0.0])
+                + (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 self[e41] * other[e3215],
@@ -237,11 +230,12 @@ impl GeometricProduct<AntiFlatPoint> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       29       44        0
-    //    simd4        0        1        0
+    //      f32       26       41        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       29       45        0
-    //  no simd       29       48        0
+    // yes simd       27       43        0
+    //  no simd       30       48        0
     fn geometric_product(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -268,11 +262,11 @@ impl GeometricProduct<AntiFlatPoint> for AntiCircleRotor {
             ]),
             // e1, e2, e3, e4
             Simd32x4::from([
-                (self[e43] * other[e315]) + (self[e23] * other[e321]) - (self[e42] * other[e125]),
-                (self[e41] * other[e125]) + (self[e31] * other[e321]) - (self[e43] * other[e235]),
-                (self[e42] * other[e235]) + (self[e12] * other[e321]) - (self[e41] * other[e315]),
+                (self[e43] * other[e315]) - (self[e42] * other[e125]),
+                (self[e41] * other[e125]) - (self[e43] * other[e235]),
+                (self[e42] * other[e235]) - (self[e41] * other[e315]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(other[e321]) * self.group1().truncate_to_3()).extend_to_4(0.0),
         );
     }
 }
@@ -919,23 +913,21 @@ impl GeometricProduct<DualNum> for AntiCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       14        0
-    //    simd4        1        4        0
+    //      f32        0        7        0
+    //    simd3        1        2        0
+    //    simd4        1        5        0
     // Totals...
-    // yes simd        4       18        0
-    //  no simd        7       30        0
+    // yes simd        2       14        0
+    //  no simd        7       33        0
     fn geometric_product(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(other[e12345]) * Simd32x4::from([self[e41], self[e42], self[e43], self[scalar]]),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (self[e41] * other[e5]) + (self[e23] * other[e12345]),
-                (self[e42] * other[e5]) + (self[e31] * other[e12345]),
-                (self[e43] * other[e5]) + (self[e12] * other[e12345]),
-                self[e45] * other[e12345],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e12345]])
+                * ((Simd32x3::from(other[e5]) * self.group0()) + (Simd32x3::from(other[e12345]) * self.group1().truncate_to_3())).extend_to_4(self[e45])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e235, e315, e125, e5
             Simd32x4::from([self[e15] * other[e12345], self[e25] * other[e12345], self[e35] * other[e12345], self[scalar] * other[e5]])
                 + (Simd32x4::from(other[e5]) * self.group1()),
@@ -947,8 +939,13 @@ impl GeometricProduct<DualNum> for AntiCircleRotor {
 impl GeometricProduct<FlatPoint> for AntiCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       29       44        0
+    //           add/sub      mul      div
+    //      f32       26       41        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd       27       42        0
+    //  no simd       30       44        0
     fn geometric_product(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -968,11 +965,11 @@ impl GeometricProduct<FlatPoint> for AntiCircleRotor {
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (self[e12] * other[e25]) + (self[e45] * other[e15]) + (self[scalar] * other[e15]) - (self[e31] * other[e35]) - (self[e15] * other[e45]),
-                (self[e23] * other[e35]) + (self[e45] * other[e25]) + (self[scalar] * other[e25]) - (self[e12] * other[e15]) - (self[e25] * other[e45]),
-                (self[e31] * other[e15]) + (self[e45] * other[e35]) + (self[scalar] * other[e35]) - (self[e23] * other[e25]) - (self[e35] * other[e45]),
+                (self[e12] * other[e25]) + (self[scalar] * other[e15]) - (self[e31] * other[e35]) - (self[e15] * other[e45]),
+                (self[e23] * other[e35]) + (self[scalar] * other[e25]) - (self[e12] * other[e15]) - (self[e25] * other[e45]),
+                (self[e31] * other[e15]) + (self[scalar] * other[e35]) - (self[e23] * other[e25]) - (self[e35] * other[e45]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e45]) * other.group0().truncate_to_3()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e42] * other[e35]) + (self[e23] * other[e45]) - (self[e43] * other[e25]),
@@ -1258,18 +1255,18 @@ impl GeometricProduct<MultiVector> for AntiCircleRotor {
             ]) + (Simd32x3::from(self[scalar]) * other.group4())
                 + (Simd32x3::from(other[scalar]) * self.group0())
                 + (Simd32x3::from(other[e45]) * self.group0())
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
+                + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3())
                 - (Simd32x3::from(self[e45]) * other.group4()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e43] * other[e25]) + (self[e12] * other[e31]) + (self[e35] * other[e42]) - (self[e42] * other[e35]) - (self[e31] * other[e12]) - (self[e25] * other[e43]),
                 (self[e41] * other[e35]) + (self[e23] * other[e12]) + (self[e15] * other[e43]) - (self[e43] * other[e15]) - (self[e12] * other[e23]) - (self[e35] * other[e41]),
                 (self[e42] * other[e15]) + (self[e31] * other[e23]) + (self[e25] * other[e41]) - (self[e41] * other[e25]) - (self[e23] * other[e31]) - (self[e15] * other[e42]),
-            ]) + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+            ]) + (Simd32x3::from(self[e45]) * other.group9().truncate_to_3())
                 + (Simd32x3::from(self[scalar]) * other.group5())
-                + (Simd32x3::from(other[scalar]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
+                + (Simd32x3::from(other[scalar]) * self.group1().truncate_to_3())
                 + (Simd32x3::from(other[e3215]) * self.group0())
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e15], self[e25], self[e35]])),
+                + (Simd32x3::from(other[e1234]) * self.group2().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e41] * other[e5]) + (self[e43] * other[e315]) + (self[e23] * other[e12345]) + (self[e12] * other[e425]) + (self[e15] * other[e4]) + (self[e35] * other[e431])
@@ -1302,7 +1299,7 @@ impl GeometricProduct<MultiVector> for AntiCircleRotor {
                 + (Simd32x3::from(self[e42]) * Simd32x3::from([other[e3], other[e12345], other[e415]]))
                 + (Simd32x3::from(self[e43]) * Simd32x3::from([other[e425], other[e1], other[e12345]]))
                 + (Simd32x3::from(self[scalar]) * other.group7())
-                + (Simd32x3::from(other[e4]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
+                + (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())
                 - (Simd32x3::from(self[e41]) * Simd32x3::from([other[e321], other[e3], other[e425]]))
                 - (Simd32x3::from(self[e42]) * Simd32x3::from([other[e435], other[e321], other[e1]]))
                 - (Simd32x3::from(self[e43]) * Simd32x3::from([other[e2], other[e415], other[e321]]))
@@ -1314,9 +1311,9 @@ impl GeometricProduct<MultiVector> for AntiCircleRotor {
                 (self[e31] * other[e235]) + (self[e25] * other[e1]) + (self[e25] * other[e415]) - (self[e23] * other[e315]) - (self[e15] * other[e2]) - (self[e15] * other[e425]),
             ]) + (Simd32x3::from(self[e45]) * other.group8())
                 + (Simd32x3::from(self[scalar]) * other.group8())
-                + (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
-                + (Simd32x3::from(other[e321]) * Simd32x3::from([self[e15], self[e25], self[e35]])),
+                + (Simd32x3::from(other[e12345]) * self.group2().truncate_to_3())
+                + (Simd32x3::from(other[e5]) * self.group1().truncate_to_3())
+                + (Simd32x3::from(other[e321]) * self.group2().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e42] * other[e35]) + (self[e23] * other[e45]) + (self[e12] * other[e4315]) + (self[e15] * other[e1234]) + (self[e35] * other[e42])
@@ -1418,7 +1415,7 @@ impl GeometricProduct<RoundPoint> for AntiCircleRotor {
                 (self[e42] * other[e3]) - (self[e43] * other[e2]),
                 (self[e43] * other[e1]) - (self[e41] * other[e3]),
                 (self[e41] * other[e2]) - (self[e42] * other[e1]),
-            ]) + (Simd32x3::from(other[e4]) * Simd32x3::from([self[e23], self[e31], self[e12]])),
+            ]) + (Simd32x3::from(other[e4]) * self.group1().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e41] * other[e5]) + (self[e15] * other[e4]) - (self[e45] * other[e1]),
@@ -1483,7 +1480,7 @@ impl GeometricProduct<Sphere> for AntiCircleRotor {
                 (self[e43] * other[e4315]) - (self[e42] * other[e4125]),
                 (self[e41] * other[e4125]) - (self[e43] * other[e4235]),
                 (self[e42] * other[e4235]) - (self[e41] * other[e4315]),
-            ]) + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e23], self[e31], self[e12]])),
+            ]) + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3()),
             // e23, e31, e12, e45
             Simd32x4::from([
                 (self[e41] * other[e3215]) + (self[e45] * other[e4235]) + (self[e15] * other[e1234]),
@@ -2105,11 +2102,12 @@ impl GeometricProduct<AntiDualNum> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       14        0
-    //    simd4        3        4        0
+    //      f32        0        7        0
+    //    simd3        1        2        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd        6       18        0
-    //  no simd       15       30        0
+    // yes simd        4       14        0
+    //  no simd       15       33        0
     fn geometric_product(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -2122,20 +2120,21 @@ impl GeometricProduct<AntiDualNum> for AntiDipoleInversion {
                 + (Simd32x4::from(other[scalar]) * Simd32x4::from([self[e235], self[e315], self[e125], self[e5]]))
                 - (Simd32x4::from(other[e3215]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e321]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (self[e423] * other[e3215]) + (self[e1] * other[scalar]),
-                (self[e431] * other[e3215]) + (self[e2] * other[scalar]),
-                (self[e412] * other[e3215]) + (self[e3] * other[scalar]),
-                self[e4] * other[scalar],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[scalar]])
+                * ((Simd32x3::from(other[e3215]) * self.group0()) + (Simd32x3::from(other[scalar]) * self.group3().truncate_to_3())).extend_to_4(self[e4]),
         );
     }
 }
 impl GeometricProduct<AntiFlatPoint> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       44       60        0
+    //           add/sub      mul      div
+    //      f32       32       47        0
+    //    simd3        4        4        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       36       52        0
+    //  no simd       44       63        0
     fn geometric_product(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -2154,21 +2153,16 @@ impl GeometricProduct<AntiFlatPoint> for AntiDipoleInversion {
                 -(self[e423] * other[e235]) - (self[e431] * other[e315]) - (self[e412] * other[e125]),
             ]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (self[e425] * other[e125]) + (self[e321] * other[e235]) + (self[e3] * other[e315])
-                    - (self[e435] * other[e315])
-                    - (self[e235] * other[e321])
-                    - (self[e2] * other[e125]),
-                (self[e435] * other[e235]) + (self[e321] * other[e315]) + (self[e1] * other[e125])
-                    - (self[e415] * other[e125])
-                    - (self[e315] * other[e321])
-                    - (self[e3] * other[e235]),
-                (self[e415] * other[e315]) + (self[e321] * other[e125]) + (self[e2] * other[e235])
-                    - (self[e425] * other[e235])
-                    - (self[e125] * other[e321])
-                    - (self[e1] * other[e315]),
-                self[e4] * other[e321],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e321]])
+                * (Simd32x3::from([
+                    -(self[e435] * other[e315]) - (self[e2] * other[e125]),
+                    -(self[e415] * other[e125]) - (self[e3] * other[e235]),
+                    -(self[e425] * other[e235]) - (self[e1] * other[e315]),
+                ]) + (Simd32x3::from(other[e235]) * Simd32x3::from([self[e321], self[e435], self[e2]]))
+                    + (Simd32x3::from(other[e315]) * Simd32x3::from([self[e3], self[e321], self[e415]]))
+                    + (Simd32x3::from(other[e125]) * Simd32x3::from([self[e425], self[e1], self[e321]]))
+                    - (Simd32x3::from(other[e321]) * self.group2().truncate_to_3()))
+                .extend_to_4(self[e4]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e412] * other[e315]) + (self[e415] * other[e321]) + (self[e4] * other[e235]) - (self[e431] * other[e125]),
@@ -3060,11 +3054,12 @@ impl GeometricProduct<DualNum> for AntiDipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       27        0
-    //    simd4        1        3        0
+    //      f32        4       17        0
+    //    simd3        2        3        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       11       30        0
-    //  no simd       14       39        0
+    // yes simd        7       24        0
+    //  no simd       14       42        0
     fn geometric_product(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -3078,12 +3073,12 @@ impl GeometricProduct<DualNum> for AntiDipoleInversion {
                 (self[e321] * other[e12345]) + (self[e4] * other[e5]),
             ]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (self[e1] * other[e5]) - (self[e415] * other[e5]) - (self[e235] * other[e12345]),
-                (self[e2] * other[e5]) - (self[e425] * other[e5]) - (self[e315] * other[e12345]),
-                (self[e3] * other[e5]) - (self[e435] * other[e5]) - (self[e125] * other[e12345]),
-                self[e4] * other[e12345],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e12345]])
+                * ((Simd32x3::from(other[e5]) * self.group3().truncate_to_3())
+                    - (Simd32x3::from(other[e5]) * self.group1().truncate_to_3())
+                    - (Simd32x3::from(other[e12345]) * self.group2().truncate_to_3()))
+                .extend_to_4(self[e4])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self[e1] * other[e12345], self[e2] * other[e12345], self[e3] * other[e12345], (self[e5] * other[e12345]) * -1.0])
                 + (Simd32x4::from(other[e5]) * Simd32x4::from([self[e423], self[e431], self[e412], self[e321]])),
@@ -3094,11 +3089,12 @@ impl GeometricProduct<FlatPoint> for AntiDipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        4        4        0
+    //      f32       22       37        0
+    //    simd3        2        2        0
+    //    simd4        4        5        0
     // Totals...
-    // yes simd       32       48        0
-    //  no simd       44       60        0
+    // yes simd       28       44        0
+    //  no simd       44       63        0
     fn geometric_product(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -3127,12 +3123,14 @@ impl GeometricProduct<FlatPoint> for AntiDipoleInversion {
                 - (Simd32x4::from(other[e35]) * Simd32x4::from([self[e425], self[e1], self[e321], self[e435]]))
                 - (Simd32x4::from(other[e45]) * Simd32x4::from([self[e235], self[e315], self[e125], self[e5]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (self[e412] * other[e25]) + (self[e4] * other[e15]) - (self[e431] * other[e35]) - (self[e415] * other[e45]),
-                (self[e423] * other[e35]) + (self[e4] * other[e25]) - (self[e412] * other[e15]) - (self[e425] * other[e45]),
-                (self[e431] * other[e15]) + (self[e4] * other[e35]) - (self[e423] * other[e25]) - (self[e435] * other[e45]),
-                self[e4] * other[e45],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e45]])
+                * (Simd32x3::from([
+                    (self[e412] * other[e25]) - (self[e431] * other[e35]),
+                    (self[e423] * other[e35]) - (self[e412] * other[e15]),
+                    (self[e431] * other[e15]) - (self[e423] * other[e25]),
+                ]) + (Simd32x3::from(self[e4]) * other.group0().truncate_to_3())
+                    - (Simd32x3::from(other[e45]) * self.group1().truncate_to_3()))
+                .extend_to_4(self[e4]),
         );
     }
 }
@@ -3559,14 +3557,14 @@ impl GeometricProduct<MultiVector> for AntiDipoleInversion {
             ]) + (Simd32x3::from(self[e423]) * Simd32x3::from([other[e321], other[e3], other[e425]]))
                 + (Simd32x3::from(self[e431]) * Simd32x3::from([other[e435], other[e321], other[e1]]))
                 + (Simd32x3::from(self[e412]) * Simd32x3::from([other[e2], other[e415], other[e321]]))
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
+                + (Simd32x3::from(self[e4]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(self[e423]) * Simd32x3::from([other[e12345], other[e435], other[e2]]))
                 - (Simd32x3::from(self[e431]) * Simd32x3::from([other[e3], other[e12345], other[e415]]))
                 - (Simd32x3::from(self[e412]) * Simd32x3::from([other[e425], other[e1], other[e12345]]))
                 - (Simd32x3::from(self[e321]) * other.group7())
-                - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+                - (Simd32x3::from(self[e4]) * other.group6().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group3().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e431] * other[e125]) + (self[e425] * other[e435]) + (self[e315] * other[e412]) + (self[e2] * other[e3])
@@ -3584,13 +3582,13 @@ impl GeometricProduct<MultiVector> for AntiDipoleInversion {
                     - (self[e425] * other[e415])
                     - (self[e315] * other[e423])
                     - (self[e2] * other[e1]),
-            ]) - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
+            ]) - (Simd32x3::from(self[e321]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(self[e4]) * other.group8())
                 - (Simd32x3::from(self[e5]) * other.group7())
-                - (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e235], self[e315], self[e125]]))
+                - (Simd32x3::from(other[e12345]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group2().truncate_to_3())
                 - (Simd32x3::from(other[e5]) * self.group0())
-                - (Simd32x3::from(other[e321]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+                - (Simd32x3::from(other[e321]) * self.group3().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e412] * other[e25])
@@ -3665,12 +3663,12 @@ impl GeometricProduct<MultiVector> for AntiDipoleInversion {
                     - (self[e415] * other[e42])
                     - (self[e1] * other[e42]),
             ]) + (Simd32x3::from(self[e321]) * other.group4())
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+                + (Simd32x3::from(self[e4]) * other.group9().truncate_to_3())
                 + (Simd32x3::from(self[e4]) * other.group5())
                 + (Simd32x3::from(other[scalar]) * self.group0())
                 + (Simd32x3::from(other[e45]) * self.group0())
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+                + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3())
+                + (Simd32x3::from(other[e1234]) * self.group3().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (self[e435] * other[e25]) + (self[e2] * other[e35]),
@@ -3680,15 +3678,15 @@ impl GeometricProduct<MultiVector> for AntiDipoleInversion {
                 + (Simd32x3::from(self[e315]) * Simd32x3::from([other[e4125], other[scalar], other[e23]]))
                 + (Simd32x3::from(self[e125]) * Simd32x3::from([other[e31], other[e4235], other[scalar]]))
                 + (Simd32x3::from(self[e5]) * other.group5())
-                + (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
+                + (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3())
                 - (Simd32x3::from(self[e235]) * Simd32x3::from([other[e45], other[e4125], other[e31]]))
                 - (Simd32x3::from(self[e315]) * Simd32x3::from([other[e12], other[e45], other[e4235]]))
                 - (Simd32x3::from(self[e125]) * Simd32x3::from([other[e4315], other[e23], other[e45]]))
-                - (Simd32x3::from(self[e5]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+                - (Simd32x3::from(self[e5]) * other.group9().truncate_to_3())
                 - (Simd32x3::from(other[e15]) * Simd32x3::from([self[e321], self[e435], self[e2]]))
                 - (Simd32x3::from(other[e25]) * Simd32x3::from([self[e3], self[e321], self[e415]]))
                 - (Simd32x3::from(other[e35]) * Simd32x3::from([self[e425], self[e1], self[e321]]))
-                - (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+                - (Simd32x3::from(other[e3215]) * self.group3().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e412] * other[e315])
@@ -4325,30 +4323,23 @@ impl GeometricProduct<AntiCircleRotor> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       18        0
-    //    simd4        0        1        0
+    //      f32        1        8        0
+    //    simd3        1        3        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        7       19        0
-    //  no simd        7       22        0
+    // yes simd        3       13        0
+    //  no simd        8       25        0
     fn geometric_product(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(self[scalar]) * Simd32x4::from([other[e41], other[e42], other[e43], other[scalar]]),
             // e23, e31, e12, e45
-            Simd32x4::from([
-                (other[e41] * self[e3215]) + (other[e23] * self[scalar]),
-                (other[e42] * self[e3215]) + (other[e31] * self[scalar]),
-                (other[e43] * self[e3215]) + (other[e12] * self[scalar]),
-                other[e45] * self[scalar],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[scalar]])
+                * ((Simd32x3::from(self[e3215]) * other.group0()) + (Simd32x3::from(self[scalar]) * other.group1().truncate_to_3())).extend_to_4(other[e45]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (other[e23] * self[e3215]) + (other[e15] * self[scalar]),
-                (other[e31] * self[e3215]) + (other[e25] * self[scalar]),
-                (other[e12] * self[e3215]) + (other[e35] * self[scalar]),
-                0.0,
-            ]),
+            Simd32x4::from([other[e15] * self[scalar], other[e25] * self[scalar], other[e35] * self[scalar], 0.0])
+                + (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 other[e41] * self[e3215],
@@ -4363,11 +4354,12 @@ impl GeometricProduct<AntiDipoleInversion> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       19        0
-    //    simd4        3        3        0
+    //      f32        0       12        0
+    //    simd3        1        2        0
+    //    simd4        3        4        0
     // Totals...
-    // yes simd        6       22        0
-    //  no simd       15       31        0
+    // yes simd        4       18        0
+    //  no simd       15       34        0
     fn geometric_product(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -4381,12 +4373,8 @@ impl GeometricProduct<AntiDipoleInversion> for AntiDualNum {
                 + (Simd32x4::from(self[e3215]) * other.group1())
                 + (Simd32x4::from(self[scalar]) * Simd32x4::from([other[e235], other[e315], other[e125], other[e5]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (other[e1] * self[scalar]) - (other[e423] * self[e3215]),
-                (other[e2] * self[scalar]) - (other[e431] * self[e3215]),
-                (other[e3] * self[scalar]) - (other[e412] * self[e3215]),
-                other[e4] * self[scalar],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[scalar]])
+                * ((Simd32x3::from(self[scalar]) * other.group3().truncate_to_3()) - (Simd32x3::from(self[e3215]) * other.group0())).extend_to_4(other[e4]),
         );
     }
 }
@@ -4425,18 +4413,19 @@ impl GeometricProduct<AntiFlatPoint> for AntiDualNum {
 impl GeometricProduct<AntiFlector> for AntiDualNum {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       12        0
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd3        1        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        8        0
+    //  no simd        4       15        0
     fn geometric_product(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([
-                (self[e3215] * other[e1]) + (self[scalar] * other[e235]),
-                (self[e3215] * other[e2]) + (self[scalar] * other[e315]),
-                (self[e3215] * other[e3]) + (self[scalar] * other[e125]),
-                self[scalar] * other[e321],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e321]])
+                * ((Simd32x3::from(self[e3215]) * other.group1().truncate_to_3()) + (Simd32x3::from(self[scalar]) * other.group0().truncate_to_3())).extend_to_4(self[scalar]),
             // e1, e2, e3, e5
             Simd32x4::from([
                 self[scalar] * other[e1],
@@ -4513,31 +4502,23 @@ impl GeometricProduct<Circle> for AntiDualNum {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       13        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd3        1        4        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        6       16        0
-    //  no simd        6       24        0
+    // yes simd        2       10        0
+    //  no simd        7       27        0
     fn geometric_product(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(self[scalar]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (self[e3215] * other[e423]) + (self[scalar] * other[e415]),
-                (self[e3215] * other[e431]) + (self[scalar] * other[e425]),
-                (self[e3215] * other[e412]) + (self[scalar] * other[e435]),
-                self[scalar] * other[e321],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e321]])
+                * ((Simd32x3::from(self[e3215]) * other.group0()) + (Simd32x3::from(self[scalar]) * other.group1().truncate_to_3())).extend_to_4(self[scalar]),
             // e235, e315, e125, e4
-            Simd32x4::from([
-                (self[e3215] * other[e415]) + (self[scalar] * other[e235]),
-                (self[e3215] * other[e425]) + (self[scalar] * other[e315]),
-                (self[e3215] * other[e435]) + (self[scalar] * other[e125]),
-                0.0,
-            ]),
+            Simd32x4::from([self[scalar] * other[e235], self[scalar] * other[e315], self[scalar] * other[e125], 0.0])
+                + (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3()).extend_to_4(0.0),
             // e1, e2, e3, e5
             Simd32x4::from(self[e3215]) * Simd32x4::from([other[e423], other[e431], other[e412], other[e321]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
@@ -4547,23 +4528,20 @@ impl GeometricProduct<CircleRotor> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       14        0
-    //    simd4        1        3        0
+    //      f32        0        7        0
+    //    simd3        1        2        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd        4       17        0
-    //  no simd        7       26        0
+    // yes simd        2       13        0
+    //  no simd        7       29        0
     fn geometric_product(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(self[scalar]) * Simd32x4::from([other[e423], other[e431], other[e412], other[e12345]]),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (self[e3215] * other[e423]) + (self[scalar] * other[e415]),
-                (self[e3215] * other[e431]) + (self[scalar] * other[e425]),
-                (self[e3215] * other[e412]) + (self[scalar] * other[e435]),
-                self[scalar] * other[e321],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e321]])
+                * ((Simd32x3::from(self[e3215]) * other.group0()) + (Simd32x3::from(self[scalar]) * other.group1().truncate_to_3())).extend_to_4(self[scalar]),
             // e235, e315, e125, e5
             Simd32x4::from([self[scalar] * other[e235], self[scalar] * other[e315], self[scalar] * other[e125], self[e3215] * other[e12345]])
                 + (Simd32x4::from(self[e3215]) * other.group1()),
@@ -4576,31 +4554,23 @@ impl GeometricProduct<Dipole> for AntiDualNum {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       13        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd3        1        4        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        6       16        0
-    //  no simd        6       24        0
+    // yes simd        2       10        0
+    //  no simd        7       27        0
     fn geometric_product(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             Simd32x3::from(self[scalar]) * other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([
-                (self[e3215] * other[e41]) + (self[scalar] * other[e23]),
-                (self[e3215] * other[e42]) + (self[scalar] * other[e31]),
-                (self[e3215] * other[e43]) + (self[scalar] * other[e12]),
-                self[scalar] * other[e45],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e45]])
+                * ((Simd32x3::from(self[e3215]) * other.group0()) + (Simd32x3::from(self[scalar]) * other.group1().truncate_to_3())).extend_to_4(self[scalar]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (self[e3215] * other[e23]) + (self[scalar] * other[e15]),
-                (self[e3215] * other[e31]) + (self[scalar] * other[e25]),
-                (self[e3215] * other[e12]) + (self[scalar] * other[e35]),
-                0.0,
-            ]),
+            Simd32x4::from([self[scalar] * other[e15], self[scalar] * other[e25], self[scalar] * other[e35], 0.0])
+                + (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(self[e3215]) * Simd32x4::from([other[e41], other[e42], other[e43], other[e45]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
@@ -4610,11 +4580,12 @@ impl GeometricProduct<DipoleInversion> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       19        0
-    //    simd4        2        3        0
+    //      f32        0        9        0
+    //    simd3        2        3        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd        8       22        0
-    //  no simd       14       31        0
+    // yes simd        4       16        0
+    //  no simd       14       34        0
     fn geometric_product(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -4623,12 +4594,10 @@ impl GeometricProduct<DipoleInversion> for AntiDualNum {
             // e23, e31, e12, e45
             (Simd32x4::from(self[e3215]) * Simd32x4::from([other[e41], other[e42], other[e43], other[e1234]])) + (Simd32x4::from(self[scalar]) * other.group1()),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (self[e3215] * other[e23]) + (self[scalar] * other[e15]) - (self[e3215] * other[e4235]),
-                (self[e3215] * other[e31]) + (self[scalar] * other[e25]) - (self[e3215] * other[e4315]),
-                (self[e3215] * other[e12]) + (self[scalar] * other[e35]) - (self[e3215] * other[e4125]),
-                self[scalar] * other[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e1234]])
+                * ((Simd32x3::from(self[e3215]) * other.group1().truncate_to_3()) + (Simd32x3::from(self[scalar]) * other.group2().truncate_to_3())
+                    - (Simd32x3::from(self[e3215]) * other.group3().truncate_to_3()))
+                .extend_to_4(self[scalar]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self[e3215] * other[e41], self[e3215] * other[e42], self[e3215] * other[e43], (self[e3215] * other[e45]) * -1.0])
                 + (Simd32x4::from(self[scalar]) * other.group3()),
@@ -4670,18 +4639,19 @@ impl GeometricProduct<FlatPoint> for AntiDualNum {
 impl GeometricProduct<Flector> for AntiDualNum {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       12        0
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd3        1        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        8        0
+    //  no simd        4       15        0
     fn geometric_product(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([
-                (self[scalar] * other[e15]) - (self[e3215] * other[e4235]),
-                (self[scalar] * other[e25]) - (self[e3215] * other[e4315]),
-                (self[scalar] * other[e35]) - (self[e3215] * other[e4125]),
-                self[scalar] * other[e45],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e45]])
+                * ((Simd32x3::from(self[scalar]) * other.group0().truncate_to_3()) - (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3())).extend_to_4(self[scalar]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 self[scalar] * other[e4235],
@@ -4728,25 +4698,21 @@ impl GeometricProduct<MultiVector> for AntiDualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       24        0
+    //      f32        2       17        0
     //    simd2        1        2        0
-    //    simd3        3        7        0
-    //    simd4        5        5        0
+    //    simd3        4        9        0
+    //    simd4        5        6        0
     // Totals...
-    // yes simd       14       38        0
-    //  no simd       36       69        0
+    // yes simd       12       34        0
+    //  no simd       36       72        0
     fn geometric_product(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             (Simd32x2::from(self[e3215]) * Simd32x2::from([other[e1234], other[e4]])) + (Simd32x2::from(self[scalar]) * other.group0()),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (self[scalar] * other[e1]) - (self[e3215] * other[e423]),
-                (self[scalar] * other[e2]) - (self[e3215] * other[e431]),
-                (self[scalar] * other[e3]) - (self[e3215] * other[e412]),
-                self[scalar] * other[e4],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e4]])
+                * ((Simd32x3::from(self[scalar]) * other.group1().truncate_to_3()) - (Simd32x3::from(self[e3215]) * other.group7())).extend_to_4(self[scalar]),
             // e5
             (self[e3215] * other[e12345]) + (self[e3215] * other[e321]) + (self[scalar] * other[e5]),
             // e15, e25, e35, e45
@@ -4763,8 +4729,8 @@ impl GeometricProduct<MultiVector> for AntiDualNum {
             // e423, e431, e412
             Simd32x3::from(self[scalar]) * other.group7(),
             // e235, e315, e125
-            (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
+            (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group6().truncate_to_3())
                 + (Simd32x3::from(self[scalar]) * other.group8()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, (self[e3215] * other[e45]) * -1.0])
@@ -4856,11 +4822,12 @@ impl GeometricProduct<VersorEven> for AntiDualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4       17        0
-    //    simd4        3        4        0
+    //      f32        1       10        0
+    //    simd3        1        2        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd        7       21        0
-    //  no simd       16       33        0
+    // yes simd        5       17        0
+    //  no simd       16       36        0
     fn geometric_product(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -4879,12 +4846,8 @@ impl GeometricProduct<VersorEven> for AntiDualNum {
                 + (Simd32x4::from(self[e3215]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e321]]))
                 + (Simd32x4::from(self[scalar]) * other.group2()),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (self[scalar] * other[e1]) - (self[e3215] * other[e423]),
-                (self[scalar] * other[e2]) - (self[e3215] * other[e431]),
-                (self[scalar] * other[e3]) - (self[e3215] * other[e412]),
-                self[scalar] * other[e4],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e4]])
+                * ((Simd32x3::from(self[scalar]) * other.group3().truncate_to_3()) - (Simd32x3::from(self[e3215]) * other.group0().truncate_to_3())).extend_to_4(self[scalar]),
         );
     }
 }
@@ -4892,11 +4855,12 @@ impl GeometricProduct<VersorOdd> for AntiDualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       17        0
-    //    simd4        3        4        0
+    //      f32        1        7        0
+    //    simd3        2        3        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd       10       21        0
-    //  no simd       19       33        0
+    // yes simd        6       15        0
+    //  no simd       19       36        0
     fn geometric_product(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -4910,12 +4874,10 @@ impl GeometricProduct<VersorOdd> for AntiDualNum {
             // e23, e31, e12, e45
             (Simd32x4::from(self[e3215]) * Simd32x4::from([other[e41], other[e42], other[e43], other[e1234]])) + (Simd32x4::from(self[scalar]) * other.group1()),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (self[e3215] * other[e23]) + (self[scalar] * other[e15]) - (self[e3215] * other[e4235]),
-                (self[e3215] * other[e31]) + (self[scalar] * other[e25]) - (self[e3215] * other[e4315]),
-                (self[e3215] * other[e12]) + (self[scalar] * other[e35]) - (self[e3215] * other[e4125]),
-                self[scalar] * other[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e1234]])
+                * ((Simd32x3::from(self[e3215]) * other.group1().truncate_to_3()) + (Simd32x3::from(self[scalar]) * other.group2().truncate_to_3())
+                    - (Simd32x3::from(self[e3215]) * other.group3().truncate_to_3()))
+                .extend_to_4(self[scalar]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([0.0, 0.0, 0.0, (self[e3215] * other[e45]) * -1.0]) + (Simd32x4::from(self[e3215]) * other.group0()) + (Simd32x4::from(self[scalar]) * other.group3()),
         );
@@ -4930,8 +4892,13 @@ impl std::ops::Div<geometric_product> for AntiFlatPoint {
 impl GeometricProduct<AntiCircleRotor> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       29       44        0
+    //           add/sub      mul      div
+    //      f32       26       41        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd       27       42        0
+    //  no simd       30       44        0
     fn geometric_product(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -4958,11 +4925,11 @@ impl GeometricProduct<AntiCircleRotor> for AntiFlatPoint {
             ]),
             // e1, e2, e3, e4
             Simd32x4::from([
-                (other[e43] * self[e315]) + (other[e23] * self[e321]) - (other[e42] * self[e125]),
-                (other[e41] * self[e125]) + (other[e31] * self[e321]) - (other[e43] * self[e235]),
-                (other[e42] * self[e235]) + (other[e12] * self[e321]) - (other[e41] * self[e315]),
+                (other[e43] * self[e315]) - (other[e42] * self[e125]),
+                (other[e41] * self[e125]) - (other[e43] * self[e235]),
+                (other[e42] * self[e235]) - (other[e41] * self[e315]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e321]) * other.group1().truncate_to_3()).extend_to_4(0.0),
         );
     }
 }
@@ -4970,11 +4937,12 @@ impl GeometricProduct<AntiDipoleInversion> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       56        0
-    //    simd4        1        3        0
+    //      f32       34       49        0
+    //    simd3        2        2        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       41       59        0
-    //  no simd       44       68        0
+    // yes simd       37       55        0
+    //  no simd       44       71        0
     fn geometric_product(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -4993,21 +4961,15 @@ impl GeometricProduct<AntiDipoleInversion> for AntiFlatPoint {
                 (other[e423] * self[e235]) + (other[e431] * self[e315]) + (other[e412] * self[e125]),
             ]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (other[e435] * self[e315]) + (other[e235] * self[e321]) + (other[e3] * self[e315])
-                    - (other[e425] * self[e125])
-                    - (other[e321] * self[e235])
-                    - (other[e2] * self[e125]),
-                (other[e415] * self[e125]) + (other[e315] * self[e321]) + (other[e1] * self[e125])
-                    - (other[e435] * self[e235])
-                    - (other[e321] * self[e315])
-                    - (other[e3] * self[e235]),
-                (other[e425] * self[e235]) + (other[e125] * self[e321]) + (other[e2] * self[e235])
-                    - (other[e415] * self[e315])
-                    - (other[e321] * self[e125])
-                    - (other[e1] * self[e315]),
-                other[e4] * self[e321],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e321]])
+                * (Simd32x3::from([
+                    (other[e435] * self[e315]) + (other[e3] * self[e315]) - (other[e425] * self[e125]) - (other[e2] * self[e125]),
+                    (other[e415] * self[e125]) + (other[e1] * self[e125]) - (other[e435] * self[e235]) - (other[e3] * self[e235]),
+                    (other[e425] * self[e235]) + (other[e2] * self[e235]) - (other[e415] * self[e315]) - (other[e1] * self[e315]),
+                ]) + (Simd32x3::from(self[e321]) * other.group2().truncate_to_3())
+                    - (Simd32x3::from(other[e321]) * self.group0().truncate_to_3()))
+                .extend_to_4(other[e4])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e412] * self[e315]) - (other[e431] * self[e125]) - (other[e4] * self[e235]),
@@ -5046,23 +5008,20 @@ impl GeometricProduct<AntiFlatPoint> for AntiFlatPoint {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        0
-    //    simd4        0        1        0
+    //      f32        0        7        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        3        8        0
-    //  no simd        3       11        0
+    // yes simd        1        9        0
+    //  no simd        4       14        0
     fn geometric_product(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
             Simd32x4::from([1.0, 1.0, 1.0, other[e321] * self[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e15, e25, e35, e3215
-            Simd32x4::from([
-                (other[e235] * self[e321]) - (other[e321] * self[e235]),
-                (other[e315] * self[e321]) - (other[e321] * self[e315]),
-                (other[e125] * self[e321]) - (other[e321] * self[e125]),
-                0.0,
-            ]),
+            Simd32x4::from([(other[e321] * self[e235]) * -1.0, (other[e321] * self[e315]) * -1.0, (other[e321] * self[e125]) * -1.0, 0.0])
+                + (Simd32x3::from(self[e321]) * other.group0().truncate_to_3()).extend_to_4(0.0),
         );
     }
 }
@@ -5118,18 +5077,25 @@ impl GeometricProduct<AntiLine> for AntiFlatPoint {
 impl GeometricProduct<AntiMotor> for AntiFlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        6       13        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        8       16        0
+    //  no simd       12       23        0
     fn geometric_product(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([
-                (self[e235] * other[scalar]) + (self[e125] * other[e31]) - (self[e315] * other[e12]) - (self[e321] * other[e15]),
-                (self[e235] * other[e12]) + (self[e315] * other[scalar]) - (self[e125] * other[e23]) - (self[e321] * other[e25]),
-                (self[e315] * other[e23]) + (self[e125] * other[scalar]) - (self[e235] * other[e31]) - (self[e321] * other[e35]),
-                self[e321] * other[scalar],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[scalar]])
+                * (Simd32x3::from([
+                    (self[e125] * other[e31]) - (self[e315] * other[e12]),
+                    (self[e235] * other[e12]) - (self[e125] * other[e23]),
+                    (self[e315] * other[e23]) - (self[e235] * other[e31]),
+                ]) + (Simd32x3::from(other[scalar]) * self.group0().truncate_to_3())
+                    - (Simd32x3::from(self[e321]) * other.group1().truncate_to_3()))
+                .extend_to_4(self[e321]),
             // e1, e2, e3, e5
             Simd32x4::from([
                 self[e321] * other[e23],
@@ -5179,11 +5145,12 @@ impl GeometricProduct<Circle> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       40        0
-    //    simd4        0        1        0
+    //      f32       22       37        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       25       41        0
-    //  no simd       25       44        0
+    // yes simd       23       39        0
+    //  no simd       26       44        0
     fn geometric_product(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -5203,11 +5170,11 @@ impl GeometricProduct<Circle> for AntiFlatPoint {
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (self[e315] * other[e435]) + (self[e321] * other[e235]) - (self[e235] * other[e321]) - (self[e125] * other[e425]),
-                (self[e125] * other[e415]) + (self[e321] * other[e315]) - (self[e235] * other[e435]) - (self[e315] * other[e321]),
-                (self[e235] * other[e425]) + (self[e321] * other[e125]) - (self[e315] * other[e415]) - (self[e125] * other[e321]),
+                (self[e315] * other[e435]) - (self[e235] * other[e321]) - (self[e125] * other[e425]),
+                (self[e125] * other[e415]) - (self[e235] * other[e435]) - (self[e315] * other[e321]),
+                (self[e235] * other[e425]) - (self[e315] * other[e415]) - (self[e125] * other[e321]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e321]) * other.group2()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e315] * other[e412]) + (self[e321] * other[e415]) - (self[e125] * other[e431]),
@@ -5222,11 +5189,12 @@ impl GeometricProduct<CircleRotor> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       29       44        0
-    //    simd4        0        1        0
+    //      f32       26       41        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       29       45        0
-    //  no simd       29       48        0
+    // yes simd       27       43        0
+    //  no simd       30       48        0
     fn geometric_product(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -5246,11 +5214,11 @@ impl GeometricProduct<CircleRotor> for AntiFlatPoint {
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (self[e315] * other[e435]) + (self[e321] * other[e235]) - (self[e235] * other[e321]) - (self[e235] * other[e12345]) - (self[e125] * other[e425]),
-                (self[e125] * other[e415]) + (self[e321] * other[e315]) - (self[e235] * other[e435]) - (self[e315] * other[e321]) - (self[e315] * other[e12345]),
-                (self[e235] * other[e425]) + (self[e321] * other[e125]) - (self[e315] * other[e415]) - (self[e125] * other[e321]) - (self[e125] * other[e12345]),
+                (self[e315] * other[e435]) - (self[e235] * other[e321]) - (self[e235] * other[e12345]) - (self[e125] * other[e425]),
+                (self[e125] * other[e415]) - (self[e235] * other[e435]) - (self[e315] * other[e321]) - (self[e315] * other[e12345]),
+                (self[e235] * other[e425]) - (self[e315] * other[e415]) - (self[e125] * other[e321]) - (self[e125] * other[e12345]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e321]) * other.group2().truncate_to_3()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e315] * other[e412]) + (self[e321] * other[e415]) - (self[e125] * other[e431]),
@@ -5264,8 +5232,13 @@ impl GeometricProduct<CircleRotor> for AntiFlatPoint {
 impl GeometricProduct<Dipole> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       25       40        0
+    //           add/sub      mul      div
+    //      f32       22       37        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd       23       38        0
+    //  no simd       26       40        0
     fn geometric_product(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -5292,11 +5265,11 @@ impl GeometricProduct<Dipole> for AntiFlatPoint {
             ]),
             // e1, e2, e3, e4
             Simd32x4::from([
-                (self[e315] * other[e43]) + (self[e321] * other[e23]) - (self[e125] * other[e42]),
-                (self[e125] * other[e41]) + (self[e321] * other[e31]) - (self[e235] * other[e43]),
-                (self[e235] * other[e42]) + (self[e321] * other[e12]) - (self[e315] * other[e41]),
+                (self[e315] * other[e43]) - (self[e125] * other[e42]),
+                (self[e125] * other[e41]) - (self[e235] * other[e43]),
+                (self[e235] * other[e42]) - (self[e315] * other[e41]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e321]) * other.group1().truncate_to_3()).extend_to_4(0.0),
         );
     }
 }
@@ -5304,11 +5277,12 @@ impl GeometricProduct<DipoleInversion> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       44        0
-    //    simd4        4        4        0
+    //      f32       22       37        0
+    //    simd3        2        2        0
+    //    simd4        4        5        0
     // Totals...
-    // yes simd       32       48        0
-    //  no simd       44       60        0
+    // yes simd       28       44        0
+    //  no simd       44       63        0
     fn geometric_product(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -5337,12 +5311,14 @@ impl GeometricProduct<DipoleInversion> for AntiFlatPoint {
                 - (Simd32x4::from(self[e125]) * Simd32x4::from([other[e4315], other[e23], other[e45], other[e12]]))
                 - (Simd32x4::from(self[e321]) * Simd32x4::from([other[e15], other[e25], other[e35], other[e3215]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (self[e315] * other[e43]) + (self[e321] * other[e23]) - (self[e235] * other[e1234]) - (self[e125] * other[e42]),
-                (self[e125] * other[e41]) + (self[e321] * other[e31]) - (self[e235] * other[e43]) - (self[e315] * other[e1234]),
-                (self[e235] * other[e42]) + (self[e321] * other[e12]) - (self[e315] * other[e41]) - (self[e125] * other[e1234]),
-                self[e321] * other[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e1234]])
+                * (Simd32x3::from([
+                    (self[e315] * other[e43]) - (self[e125] * other[e42]),
+                    (self[e125] * other[e41]) - (self[e235] * other[e43]),
+                    (self[e235] * other[e42]) - (self[e315] * other[e41]),
+                ]) + (Simd32x3::from(self[e321]) * other.group1().truncate_to_3())
+                    - (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()))
+                .extend_to_4(self[e321]),
         );
     }
 }
@@ -5416,18 +5392,23 @@ impl GeometricProduct<Flector> for AntiFlatPoint {
 impl GeometricProduct<Line> for AntiFlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       15        0
+    //           add/sub      mul      div
+    //      f32        5       12        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        6       13        0
+    //  no simd        9       15        0
     fn geometric_product(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
             Simd32x4::from([
-                (self[e315] * other[e435]) + (self[e321] * other[e235]) - (self[e125] * other[e425]),
-                (self[e125] * other[e415]) + (self[e321] * other[e315]) - (self[e235] * other[e435]),
-                (self[e235] * other[e425]) + (self[e321] * other[e125]) - (self[e315] * other[e415]),
+                (self[e315] * other[e435]) - (self[e125] * other[e425]),
+                (self[e125] * other[e415]) - (self[e235] * other[e435]),
+                (self[e235] * other[e425]) - (self[e315] * other[e415]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e321]) * other.group1()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 self[e321] * other[e415],
@@ -5441,18 +5422,25 @@ impl GeometricProduct<Line> for AntiFlatPoint {
 impl GeometricProduct<Motor> for AntiFlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        6       13        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        8       16        0
+    //  no simd       12       23        0
     fn geometric_product(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([
-                (self[e315] * other[e435]) + (self[e321] * other[e235]) - (self[e235] * other[e12345]) - (self[e125] * other[e425]),
-                (self[e125] * other[e415]) + (self[e321] * other[e315]) - (self[e235] * other[e435]) - (self[e315] * other[e12345]),
-                (self[e235] * other[e425]) + (self[e321] * other[e125]) - (self[e315] * other[e415]) - (self[e125] * other[e12345]),
-                self[e321] * other[e12345],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e12345]])
+                * (Simd32x3::from([
+                    (self[e315] * other[e435]) - (self[e125] * other[e425]),
+                    (self[e125] * other[e415]) - (self[e235] * other[e435]),
+                    (self[e235] * other[e425]) - (self[e315] * other[e415]),
+                ]) + (Simd32x3::from(self[e321]) * other.group1().truncate_to_3())
+                    - (Simd32x3::from(other[e12345]) * self.group0().truncate_to_3()))
+                .extend_to_4(self[e321]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 self[e321] * other[e415],
@@ -5467,13 +5455,13 @@ impl GeometricProduct<MultiVector> for AntiFlatPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       62       86        0
+    //      f32       56       79        0
     //    simd2        1        1        0
-    //    simd3        8       12        0
-    //    simd4        2        2        0
+    //    simd3       10       14        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       73      101        0
-    //  no simd       96      132        0
+    // yes simd       69       97        0
+    //  no simd       96      135        0
     fn geometric_product(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -5483,12 +5471,14 @@ impl GeometricProduct<MultiVector> for AntiFlatPoint {
                 -(self[e235] * other[e41]) - (self[e315] * other[e42]) - (self[e125] * other[e43]),
             ]) - (Simd32x2::from(self[e321]) * Simd32x2::from([other[e321], other[e45]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (self[e315] * other[e43]) + (self[e321] * other[e23]) - (self[e235] * other[e1234]) - (self[e125] * other[e42]),
-                (self[e125] * other[e41]) + (self[e321] * other[e31]) - (self[e235] * other[e43]) - (self[e315] * other[e1234]),
-                (self[e235] * other[e42]) + (self[e321] * other[e12]) - (self[e315] * other[e41]) - (self[e125] * other[e1234]),
-                self[e321] * other[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e1234]])
+                * (Simd32x3::from([
+                    (self[e315] * other[e43]) - (self[e125] * other[e42]),
+                    (self[e125] * other[e41]) - (self[e235] * other[e43]),
+                    (self[e235] * other[e42]) - (self[e315] * other[e41]),
+                ]) + (Simd32x3::from(self[e321]) * other.group5())
+                    - (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()))
+                .extend_to_4(self[e321]),
             // e5
             (self[e235] * other[e4235]) + (self[e315] * other[e4315]) + (self[e125] * other[e4125])
                 - (self[e235] * other[e23])
@@ -5521,8 +5511,8 @@ impl GeometricProduct<MultiVector> for AntiFlatPoint {
                 (self[e315] * other[e412]) - (self[e125] * other[e431]),
                 (self[e125] * other[e423]) - (self[e235] * other[e412]),
                 (self[e235] * other[e431]) - (self[e315] * other[e423]),
-            ]) - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e235], self[e315], self[e125]])),
+            ]) - (Simd32x3::from(self[e321]) * other.group1().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e235] * other[e1234]) + (self[e125] * other[e42]) - (self[e315] * other[e43]) - (self[e321] * other[e4235]),
@@ -5539,7 +5529,7 @@ impl GeometricProduct<MultiVector> for AntiFlatPoint {
                 - (Simd32x3::from(self[e235]) * Simd32x3::from([other[e45], other[e4125], other[e31]]))
                 - (Simd32x3::from(self[e315]) * Simd32x3::from([other[e12], other[e45], other[e4235]]))
                 - (Simd32x3::from(self[e125]) * Simd32x3::from([other[e4315], other[e23], other[e45]]))
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e15], other[e25], other[e35]])),
+                - (Simd32x3::from(self[e321]) * other.group3().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e315] * other[e412]) - (self[e235] * other[e4]) - (self[e125] * other[e431]),
@@ -5634,23 +5624,20 @@ impl GeometricProduct<Sphere> for AntiFlatPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       20        0
-    //    simd4        0        1        0
+    //      f32        6       20        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        9       21        0
-    //  no simd        9       24        0
+    // yes simd        7       22        0
+    //  no simd       10       27        0
     fn geometric_product(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (self[e235] * other[e1234]) - (self[e321] * other[e4235]),
-                (self[e315] * other[e1234]) - (self[e321] * other[e4315]),
-                (self[e125] * other[e1234]) - (self[e321] * other[e4125]),
-                0.0,
-            ]),
+            Simd32x4::from([(self[e321] * other[e4235]) * -1.0, (self[e321] * other[e4315]) * -1.0, (self[e321] * other[e4125]) * -1.0, 0.0])
+                + (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()).extend_to_4(0.0),
             // e235, e315, e125, e4
             Simd32x4::from([
                 (self[e315] * other[e4125]) - (self[e125] * other[e4315]),
@@ -5672,11 +5659,12 @@ impl GeometricProduct<VersorEven> for AntiFlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       60        0
-    //    simd4        1        3        0
+    //      f32       35       50        0
+    //    simd3        3        3        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       45       63        0
-    //  no simd       48       72        0
+    // yes simd       39       57        0
+    //  no simd       48       75        0
     fn geometric_product(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -5695,24 +5683,16 @@ impl GeometricProduct<VersorEven> for AntiFlatPoint {
                 (self[e235] * other[e423]) + (self[e315] * other[e431]) + (self[e125] * other[e412]) + (self[e321] * other[e12345]),
             ]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (self[e315] * other[e435]) + (self[e315] * other[e3]) + (self[e321] * other[e235])
-                    - (self[e235] * other[e12345])
-                    - (self[e235] * other[e321])
-                    - (self[e125] * other[e425])
-                    - (self[e125] * other[e2]),
-                (self[e125] * other[e415]) + (self[e125] * other[e1]) + (self[e321] * other[e315])
-                    - (self[e235] * other[e435])
-                    - (self[e235] * other[e3])
-                    - (self[e315] * other[e12345])
-                    - (self[e315] * other[e321]),
-                (self[e235] * other[e425]) + (self[e235] * other[e2]) + (self[e321] * other[e125])
-                    - (self[e315] * other[e415])
-                    - (self[e315] * other[e1])
-                    - (self[e125] * other[e12345])
-                    - (self[e125] * other[e321]),
-                self[e321] * other[e4],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e4]])
+                * (Simd32x3::from([
+                    (self[e315] * other[e435]) + (self[e315] * other[e3]) - (self[e125] * other[e425]) - (self[e125] * other[e2]),
+                    (self[e125] * other[e415]) + (self[e125] * other[e1]) - (self[e235] * other[e435]) - (self[e235] * other[e3]),
+                    (self[e235] * other[e425]) + (self[e235] * other[e2]) - (self[e315] * other[e415]) - (self[e315] * other[e1]),
+                ]) + (Simd32x3::from(self[e321]) * other.group2().truncate_to_3())
+                    - (Simd32x3::from(other[e12345]) * self.group0().truncate_to_3())
+                    - (Simd32x3::from(other[e321]) * self.group0().truncate_to_3()))
+                .extend_to_4(self[e321])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e315] * other[e412]) - (self[e235] * other[e4]) - (self[e125] * other[e431]),
@@ -5732,11 +5712,12 @@ impl GeometricProduct<VersorOdd> for AntiFlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       36        0
-    //    simd4        6        7        0
+    //      f32       18       29        0
+    //    simd3        2        2        0
+    //    simd4        6        8        0
     // Totals...
-    // yes simd       30       43        0
-    //  no simd       48       64        0
+    // yes simd       26       39        0
+    //  no simd       48       67        0
     fn geometric_product(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -5763,12 +5744,14 @@ impl GeometricProduct<VersorOdd> for AntiFlatPoint {
                 - (Simd32x4::from(self[e125]) * Simd32x4::from([other[e4315], other[e23], other[e45], other[e12]]))
                 - (Simd32x4::from(self[e321]) * Simd32x4::from([other[e15], other[e25], other[e35], other[e3215]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (self[e315] * other[e43]) + (self[e321] * other[e23]) - (self[e235] * other[e1234]) - (self[e125] * other[e42]),
-                (self[e125] * other[e41]) + (self[e321] * other[e31]) - (self[e235] * other[e43]) - (self[e315] * other[e1234]),
-                (self[e235] * other[e42]) + (self[e321] * other[e12]) - (self[e315] * other[e41]) - (self[e125] * other[e1234]),
-                self[e321] * other[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e1234]])
+                * (Simd32x3::from([
+                    (self[e315] * other[e43]) - (self[e125] * other[e42]),
+                    (self[e125] * other[e41]) - (self[e235] * other[e43]),
+                    (self[e235] * other[e42]) - (self[e315] * other[e41]),
+                ]) + (Simd32x3::from(self[e321]) * other.group1().truncate_to_3())
+                    - (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()))
+                .extend_to_4(self[e321]),
         );
     }
 }
@@ -5935,18 +5918,19 @@ impl GeometricProduct<AntiDipoleInversion> for AntiFlector {
 impl GeometricProduct<AntiDualNum> for AntiFlector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       12        0
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd3        1        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        8        0
+    //  no simd        4       15        0
     fn geometric_product(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([
-                (other[scalar] * self[e235]) - (other[e3215] * self[e1]),
-                (other[scalar] * self[e315]) - (other[e3215] * self[e2]),
-                (other[scalar] * self[e125]) - (other[e3215] * self[e3]),
-                other[scalar] * self[e321],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e321]])
+                * ((Simd32x3::from(other[scalar]) * self.group0().truncate_to_3()) - (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3())).extend_to_4(other[scalar]),
             // e1, e2, e3, e5
             Simd32x4::from([
                 other[scalar] * self[e1],
@@ -6376,18 +6360,19 @@ impl GeometricProduct<DipoleInversion> for AntiFlector {
 impl GeometricProduct<DualNum> for AntiFlector {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       12        0
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd3        1        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        8        0
+    //  no simd        4       15        0
     fn geometric_product(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([
-                (self[e1] * other[e5]) - (self[e235] * other[e12345]),
-                (self[e2] * other[e5]) - (self[e315] * other[e12345]),
-                (self[e3] * other[e5]) - (self[e125] * other[e12345]),
-                self[e321] * other[e12345],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e12345]])
+                * ((Simd32x3::from(other[e5]) * self.group1().truncate_to_3()) - (Simd32x3::from(other[e12345]) * self.group0().truncate_to_3())).extend_to_4(self[e321]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 self[e1] * other[e12345],
@@ -6640,16 +6625,16 @@ impl GeometricProduct<MultiVector> for AntiFlector {
                 (self[e3] * other[e423]) - (self[e1] * other[e412]),
                 (self[e1] * other[e431]) - (self[e2] * other[e423]),
             ]) - (Simd32x3::from(self[e321]) * other.group7())
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+                - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e315] * other[e412]) + (self[e2] * other[e3]) - (self[e125] * other[e431]) - (self[e3] * other[e2]),
                 (self[e125] * other[e423]) + (self[e3] * other[e1]) - (self[e235] * other[e412]) - (self[e1] * other[e3]),
                 (self[e235] * other[e431]) + (self[e1] * other[e2]) - (self[e315] * other[e423]) - (self[e2] * other[e1]),
-            ]) - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
+            ]) - (Simd32x3::from(self[e321]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(self[e5]) * other.group7())
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e235], self[e315], self[e125]]))
-                - (Simd32x3::from(other[e321]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+                - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3())
+                - (Simd32x3::from(other[e321]) * self.group1().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e235] * other[e1234]) + (self[e125] * other[e42]) + (self[e2] * other[e4125]) + (self[e5] * other[e41])
@@ -6679,7 +6664,7 @@ impl GeometricProduct<MultiVector> for AntiFlector {
                 (self[e1] * other[e43]) - (self[e3] * other[e41]),
                 (self[e2] * other[e41]) - (self[e1] * other[e42]),
             ]) + (Simd32x3::from(self[e321]) * other.group4())
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+                + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (self[e2] * other[e35]) - (self[e3] * other[e25]),
@@ -6692,9 +6677,9 @@ impl GeometricProduct<MultiVector> for AntiFlector {
                 - (Simd32x3::from(self[e235]) * Simd32x3::from([other[e45], other[e4125], other[e31]]))
                 - (Simd32x3::from(self[e315]) * Simd32x3::from([other[e12], other[e45], other[e4235]]))
                 - (Simd32x3::from(self[e125]) * Simd32x3::from([other[e4315], other[e23], other[e45]]))
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e15], other[e25], other[e35]]))
-                - (Simd32x3::from(self[e5]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
-                - (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+                - (Simd32x3::from(self[e321]) * other.group3().truncate_to_3())
+                - (Simd32x3::from(self[e5]) * other.group9().truncate_to_3())
+                - (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e315] * other[e412]) + (self[e1] * other[e12345]) + (self[e3] * other[e425])
@@ -6759,11 +6744,12 @@ impl GeometricProduct<RoundPoint> for AntiFlector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       40        0
-    //    simd4        0        4        0
+    //      f32       12       26        0
+    //    simd3        4        4        0
+    //    simd4        0        6        0
     // Totals...
-    // yes simd       24       44        0
-    //  no simd       24       56        0
+    // yes simd       16       36        0
+    //  no simd       24       62        0
     fn geometric_product(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -6775,19 +6761,25 @@ impl GeometricProduct<RoundPoint> for AntiFlector {
                 (self[e1] * other[e1]) + (self[e2] * other[e2]) + (self[e3] * other[e3]) - (self[e5] * other[e4]),
             ]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([
-                (self[e2] * other[e3]) - (self[e235] * other[e4]) - (self[e321] * other[e1]) - (self[e3] * other[e2]),
-                (self[e3] * other[e1]) - (self[e315] * other[e4]) - (self[e321] * other[e2]) - (self[e1] * other[e3]),
-                (self[e1] * other[e2]) - (self[e125] * other[e4]) - (self[e321] * other[e3]) - (self[e2] * other[e1]),
-                self[e5] * other[e4],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e4]])
+                * (Simd32x3::from([
+                    (self[e2] * other[e3]) - (self[e3] * other[e2]),
+                    (self[e3] * other[e1]) - (self[e1] * other[e3]),
+                    (self[e1] * other[e2]) - (self[e2] * other[e1]),
+                ]) - (Simd32x3::from(self[e321]) * other.group0().truncate_to_3())
+                    - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3()))
+                .extend_to_4(self[e5])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (self[e315] * other[e3]) + (self[e1] * other[e5]) - (self[e125] * other[e2]) - (self[e5] * other[e1]),
-                (self[e125] * other[e1]) + (self[e2] * other[e5]) - (self[e235] * other[e3]) - (self[e5] * other[e2]),
-                (self[e235] * other[e2]) + (self[e3] * other[e5]) - (self[e315] * other[e1]) - (self[e5] * other[e3]),
-                self[e321] * other[e4],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e4]])
+                * (Simd32x3::from([
+                    (self[e315] * other[e3]) - (self[e125] * other[e2]),
+                    (self[e125] * other[e1]) - (self[e235] * other[e3]),
+                    (self[e235] * other[e2]) - (self[e315] * other[e1]),
+                ]) + (Simd32x3::from(other[e5]) * self.group1().truncate_to_3())
+                    - (Simd32x3::from(self[e5]) * other.group0().truncate_to_3()))
+                .extend_to_4(self[e321])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 self[e235] * other[e4],
@@ -6818,11 +6810,12 @@ impl GeometricProduct<Sphere> for AntiFlector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        1        4        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        1        5        0
     // Totals...
-    // yes simd       21       36        0
-    //  no simd       24       48        0
+    // yes simd       17       32        0
+    //  no simd       24       51        0
     fn geometric_product(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -6834,12 +6827,15 @@ impl GeometricProduct<Sphere> for AntiFlector {
                 (self[e1] * other[e4235]) + (self[e2] * other[e4315]) + (self[e3] * other[e4125]) + (self[e5] * other[e1234]),
             ]),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (self[e235] * other[e1234]) + (self[e2] * other[e4125]) - (self[e321] * other[e4235]) - (self[e3] * other[e4315]),
-                (self[e315] * other[e1234]) + (self[e3] * other[e4235]) - (self[e321] * other[e4315]) - (self[e1] * other[e4125]),
-                (self[e125] * other[e1234]) + (self[e1] * other[e4315]) - (self[e321] * other[e4125]) - (self[e2] * other[e4235]),
-                self[e5] * other[e1234],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e1234]])
+                * (Simd32x3::from([
+                    (self[e2] * other[e4125]) - (self[e3] * other[e4315]),
+                    (self[e3] * other[e4235]) - (self[e1] * other[e4125]),
+                    (self[e1] * other[e4315]) - (self[e2] * other[e4235]),
+                ]) + (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3())
+                    - (Simd32x3::from(self[e321]) * other.group0().truncate_to_3()))
+                .extend_to_4(self[e5])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e235, e315, e125, e5
             Simd32x4::from([
                 (self[e315] * other[e4125]) - (self[e125] * other[e4315]) - (self[e5] * other[e4235]),
@@ -7162,18 +7158,23 @@ impl GeometricProduct<AntiDualNum> for AntiLine {
 impl GeometricProduct<AntiFlatPoint> for AntiLine {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       15        0
+    //           add/sub      mul      div
+    //      f32        5       12        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        6       13        0
+    //  no simd        9       15        0
     fn geometric_product(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([
-                (other[e315] * self[e12]) + (other[e321] * self[e15]) - (other[e125] * self[e31]),
-                (other[e125] * self[e23]) + (other[e321] * self[e25]) - (other[e235] * self[e12]),
-                (other[e235] * self[e31]) + (other[e321] * self[e35]) - (other[e315] * self[e23]),
+                (other[e315] * self[e12]) - (other[e125] * self[e31]),
+                (other[e125] * self[e23]) - (other[e235] * self[e12]),
+                (other[e235] * self[e31]) - (other[e315] * self[e23]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(other[e321]) * self.group1()).extend_to_4(0.0),
             // e1, e2, e3, e5
             Simd32x4::from([
                 other[e321] * self[e23],
@@ -7804,11 +7805,12 @@ impl GeometricProduct<RoundPoint> for AntiLine {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       27        0
-    //    simd3        0        1        0
+    //      f32       13       24        0
+    //    simd3        0        2        0
+    //    simd4        1        0        0
     // Totals...
-    // yes simd       16       28        0
-    //  no simd       16       30        0
+    // yes simd       14       26        0
+    //  no simd       17       30        0
     fn geometric_product(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
@@ -7823,11 +7825,11 @@ impl GeometricProduct<RoundPoint> for AntiLine {
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self[e23] * other[e5]) + (self[e35] * other[e2]) - (self[e25] * other[e3]),
-                (self[e31] * other[e5]) + (self[e15] * other[e3]) - (self[e35] * other[e1]),
-                (self[e12] * other[e5]) + (self[e25] * other[e1]) - (self[e15] * other[e2]),
+                (self[e35] * other[e2]) - (self[e25] * other[e3]),
+                (self[e15] * other[e3]) - (self[e35] * other[e1]),
+                (self[e25] * other[e1]) - (self[e15] * other[e2]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(other[e5]) * self.group0()).extend_to_4(0.0),
             // e1, e2, e3, e5
             Simd32x4::from([
                 (self[e12] * other[e2]) - (self[e31] * other[e3]) - (self[e15] * other[e4]),
@@ -7858,11 +7860,12 @@ impl GeometricProduct<Sphere> for AntiLine {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       27        0
-    //    simd3        0        1        0
+    //      f32       13       24        0
+    //    simd3        0        2        0
+    //    simd4        1        0        0
     // Totals...
-    // yes simd       16       28        0
-    //  no simd       16       30        0
+    // yes simd       14       26        0
+    //  no simd       17       30        0
     fn geometric_product(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
@@ -7877,11 +7880,11 @@ impl GeometricProduct<Sphere> for AntiLine {
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (self[e23] * other[e3215]) + (self[e25] * other[e4125]) - (self[e35] * other[e4315]),
-                (self[e31] * other[e3215]) + (self[e35] * other[e4235]) - (self[e15] * other[e4125]),
-                (self[e12] * other[e3215]) + (self[e15] * other[e4315]) - (self[e25] * other[e4235]),
+                (self[e25] * other[e4125]) - (self[e35] * other[e4315]),
+                (self[e35] * other[e4235]) - (self[e15] * other[e4125]),
+                (self[e15] * other[e4315]) - (self[e25] * other[e4235]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(other[e3215]) * self.group0()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e12] * other[e4315]) + (self[e15] * other[e1234]) - (self[e31] * other[e4125]),
@@ -8210,18 +8213,25 @@ impl GeometricProduct<AntiDualNum> for AntiMotor {
 impl GeometricProduct<AntiFlatPoint> for AntiMotor {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        6       13        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        8       16        0
+    //  no simd       12       23        0
     fn geometric_product(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([
-                (other[e235] * self[scalar]) + (other[e315] * self[e12]) + (other[e321] * self[e15]) - (other[e125] * self[e31]),
-                (other[e315] * self[scalar]) + (other[e125] * self[e23]) + (other[e321] * self[e25]) - (other[e235] * self[e12]),
-                (other[e235] * self[e31]) + (other[e125] * self[scalar]) + (other[e321] * self[e35]) - (other[e315] * self[e23]),
-                other[e321] * self[scalar],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[scalar]])
+                * (Simd32x3::from([
+                    (other[e315] * self[e12]) - (other[e125] * self[e31]),
+                    (other[e125] * self[e23]) - (other[e235] * self[e12]),
+                    (other[e235] * self[e31]) - (other[e315] * self[e23]),
+                ]) + (Simd32x3::from(other[e321]) * self.group1().truncate_to_3())
+                    + (Simd32x3::from(self[scalar]) * other.group0().truncate_to_3()))
+                .extend_to_4(other[e321]),
             // e1, e2, e3, e5
             Simd32x4::from([
                 other[e321] * self[e23],
@@ -8659,18 +8669,25 @@ impl GeometricProduct<DualNum> for AntiMotor {
 impl GeometricProduct<FlatPoint> for AntiMotor {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        6       13        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        8       16        0
+    //  no simd       12       23        0
     fn geometric_product(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([
-                (self[e12] * other[e25]) + (self[scalar] * other[e15]) - (self[e31] * other[e35]) - (self[e15] * other[e45]),
-                (self[e23] * other[e35]) + (self[scalar] * other[e25]) - (self[e12] * other[e15]) - (self[e25] * other[e45]),
-                (self[e31] * other[e15]) + (self[scalar] * other[e35]) - (self[e23] * other[e25]) - (self[e35] * other[e45]),
-                self[scalar] * other[e45],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e45]])
+                * (Simd32x3::from([
+                    (self[e12] * other[e25]) - (self[e31] * other[e35]),
+                    (self[e23] * other[e35]) - (self[e12] * other[e15]),
+                    (self[e31] * other[e15]) - (self[e23] * other[e25]),
+                ]) + (Simd32x3::from(self[scalar]) * other.group0().truncate_to_3())
+                    - (Simd32x3::from(other[e45]) * self.group1().truncate_to_3()))
+                .extend_to_4(self[scalar]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 self[e23] * other[e45],
@@ -8878,7 +8895,7 @@ impl GeometricProduct<MultiVector> for AntiMotor {
                 (self[e23] * other[e43]) - (self[e12] * other[e41]),
                 (self[e31] * other[e41]) - (self[e23] * other[e42]),
             ]) + (Simd32x3::from(self[scalar]) * other.group4())
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e23], self[e31], self[e12]])),
+                + (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e12] * other[e31]) + (self[e35] * other[e42]) - (self[e31] * other[e12]) - (self[e25] * other[e43]),
@@ -8886,8 +8903,8 @@ impl GeometricProduct<MultiVector> for AntiMotor {
                 (self[e31] * other[e23]) + (self[e25] * other[e41]) - (self[e23] * other[e31]) - (self[e15] * other[e42]),
             ]) + (Simd32x3::from(self[scalar]) * other.group5())
                 + (Simd32x3::from(self[e3215]) * other.group4())
-                + (Simd32x3::from(other[scalar]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e15], self[e25], self[e35]])),
+                + (Simd32x3::from(other[scalar]) * self.group0().truncate_to_3())
+                + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e23] * other[e12345]) + (self[e12] * other[e425]) + (self[e15] * other[e4]) + (self[e35] * other[e431]) + (self[e3215] * other[e423])
@@ -8911,18 +8928,18 @@ impl GeometricProduct<MultiVector> for AntiMotor {
                 (self[e23] * other[e412]) - (self[e12] * other[e423]),
                 (self[e31] * other[e423]) - (self[e23] * other[e431]),
             ]) + (Simd32x3::from(self[scalar]) * other.group7())
-                + (Simd32x3::from(other[e4]) * Simd32x3::from([self[e23], self[e31], self[e12]])),
+                + (Simd32x3::from(other[e4]) * self.group0().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (self[e12] * other[e315]) + (self[e35] * other[e2]) + (self[e35] * other[e425]) - (self[e31] * other[e125]) - (self[e25] * other[e3]) - (self[e25] * other[e435]),
                 (self[e23] * other[e125]) + (self[e15] * other[e3]) + (self[e15] * other[e435]) - (self[e12] * other[e235]) - (self[e35] * other[e1]) - (self[e35] * other[e415]),
                 (self[e31] * other[e235]) + (self[e25] * other[e1]) + (self[e25] * other[e415]) - (self[e23] * other[e315]) - (self[e15] * other[e2]) - (self[e15] * other[e425]),
             ]) + (Simd32x3::from(self[scalar]) * other.group8())
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                + (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
-                + (Simd32x3::from(other[e321]) * Simd32x3::from([self[e15], self[e25], self[e35]])),
+                + (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group6().truncate_to_3())
+                + (Simd32x3::from(other[e12345]) * self.group1().truncate_to_3())
+                + (Simd32x3::from(other[e5]) * self.group0().truncate_to_3())
+                + (Simd32x3::from(other[e321]) * self.group1().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e23] * other[e45]) + (self[e12] * other[e4315]) + (self[e15] * other[e1234]) + (self[e35] * other[e42])
@@ -8982,11 +8999,12 @@ impl GeometricProduct<RoundPoint> for AntiMotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        1        2        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       21       34        0
-    //  no simd       24       40        0
+    // yes simd       17       30        0
+    //  no simd       24       43        0
     fn geometric_product(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -9007,12 +9025,14 @@ impl GeometricProduct<RoundPoint> for AntiMotor {
                 -(self[e15] * other[e1]) - (self[e25] * other[e2]) - (self[e35] * other[e3]),
             ]) + (Simd32x4::from(other[e5]) * self.group0()),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (self[e12] * other[e2]) + (self[scalar] * other[e1]) - (self[e31] * other[e3]) - (self[e15] * other[e4]),
-                (self[e23] * other[e3]) + (self[scalar] * other[e2]) - (self[e12] * other[e1]) - (self[e25] * other[e4]),
-                (self[e31] * other[e1]) + (self[scalar] * other[e3]) - (self[e23] * other[e2]) - (self[e35] * other[e4]),
-                self[scalar] * other[e4],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e4]])
+                * (Simd32x3::from([
+                    (self[e12] * other[e2]) - (self[e31] * other[e3]),
+                    (self[e23] * other[e3]) - (self[e12] * other[e1]),
+                    (self[e31] * other[e1]) - (self[e23] * other[e2]),
+                ]) + (Simd32x3::from(self[scalar]) * other.group0().truncate_to_3())
+                    - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3()))
+                .extend_to_4(self[scalar]),
         );
     }
 }
@@ -9036,11 +9056,12 @@ impl GeometricProduct<Sphere> for AntiMotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        1        2        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       21       34        0
-    //  no simd       24       40        0
+    // yes simd       17       30        0
+    //  no simd       24       43        0
     fn geometric_product(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -9054,12 +9075,14 @@ impl GeometricProduct<Sphere> for AntiMotor {
                 (self[e3215] * other[e1234]) - (self[e23] * other[e4235]) - (self[e31] * other[e4315]) - (self[e12] * other[e4125]),
             ]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (self[e23] * other[e3215]) + (self[e25] * other[e4125]) - (self[e35] * other[e4315]) - (self[e3215] * other[e4235]),
-                (self[e31] * other[e3215]) + (self[e35] * other[e4235]) - (self[e15] * other[e4125]) - (self[e3215] * other[e4315]),
-                (self[e12] * other[e3215]) + (self[e15] * other[e4315]) - (self[e25] * other[e4235]) - (self[e3215] * other[e4125]),
-                self[scalar] * other[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e1234]])
+                * (Simd32x3::from([
+                    (self[e25] * other[e4125]) - (self[e35] * other[e4315]),
+                    (self[e35] * other[e4235]) - (self[e15] * other[e4125]),
+                    (self[e15] * other[e4315]) - (self[e25] * other[e4235]),
+                ]) + (Simd32x3::from(other[e3215]) * self.group0().truncate_to_3())
+                    - (Simd32x3::from(self[e3215]) * other.group0().truncate_to_3()))
+                .extend_to_4(self[scalar]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e12] * other[e4315]) + (self[e15] * other[e1234]) - (self[e31] * other[e4125]),
@@ -9496,8 +9519,13 @@ impl GeometricProduct<AntiMotor> for AntiPlane {
 impl GeometricProduct<AntiPlane> for AntiPlane {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       15        0
+    //           add/sub      mul      div
+    //      f32        5       15        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        6       16        0
+    //  no simd        9       18        0
     fn geometric_product(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         return AntiMotor::from_groups(
@@ -9509,12 +9537,8 @@ impl GeometricProduct<AntiPlane> for AntiPlane {
                 (other[e1] * self[e1]) + (other[e2] * self[e2]) + (other[e3] * self[e3]),
             ]),
             // e15, e25, e35, e3215
-            Simd32x4::from([
-                (other[e5] * self[e1]) - (other[e1] * self[e5]),
-                (other[e5] * self[e2]) - (other[e2] * self[e5]),
-                (other[e5] * self[e3]) - (other[e3] * self[e5]),
-                0.0,
-            ]),
+            Simd32x4::from([(other[e1] * self[e5]) * -1.0, (other[e2] * self[e5]) * -1.0, (other[e3] * self[e5]) * -1.0, 0.0])
+                + (Simd32x3::from(other[e5]) * self.group0().truncate_to_3()).extend_to_4(0.0),
         );
     }
 }
@@ -9863,14 +9887,14 @@ impl GeometricProduct<MultiVector> for AntiPlane {
                 (self[e2] * other[e412]) - (self[e3] * other[e431]),
                 (self[e3] * other[e423]) - (self[e1] * other[e412]),
                 (self[e1] * other[e431]) - (self[e2] * other[e423]),
-            ]) - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+            ]) - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e2] * other[e3]) - (self[e3] * other[e2]),
                 (self[e3] * other[e1]) - (self[e1] * other[e3]),
                 (self[e1] * other[e2]) - (self[e2] * other[e1]),
             ]) - (Simd32x3::from(self[e5]) * other.group7())
-                - (Simd32x3::from(other[e321]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+                - (Simd32x3::from(other[e321]) * self.group0().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e2] * other[e4125]) + (self[e5] * other[e41]) - (self[e1] * other[e45]) - (self[e3] * other[e4315]),
@@ -9883,15 +9907,15 @@ impl GeometricProduct<MultiVector> for AntiPlane {
                 (self[e3] * other[e42]) - (self[e2] * other[e43]),
                 (self[e1] * other[e43]) - (self[e3] * other[e41]),
                 (self[e2] * other[e41]) - (self[e1] * other[e42]),
-            ]) + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+            ]) + (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (self[e2] * other[e35]) - (self[e3] * other[e25]),
                 (self[e3] * other[e15]) - (self[e1] * other[e35]),
                 (self[e1] * other[e25]) - (self[e2] * other[e15]),
             ]) + (Simd32x3::from(self[e5]) * other.group5())
-                - (Simd32x3::from(self[e5]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
-                - (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+                - (Simd32x3::from(self[e5]) * other.group9().truncate_to_3())
+                - (Simd32x3::from(other[e3215]) * self.group0().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e1] * other[e12345]) + (self[e3] * other[e425]) - (self[e2] * other[e435]),
@@ -9943,7 +9967,7 @@ impl GeometricProduct<RoundPoint> for AntiPlane {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e4]) * Simd32x3::from([self[e1], self[e2], self[e3]]) * Simd32x3::from(-1.0),
+            Simd32x3::from(other[e4]) * self.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
             Simd32x4::from([
                 (self[e2] * other[e3]) - (self[e3] * other[e2]),
@@ -9986,7 +10010,7 @@ impl GeometricProduct<Sphere> for AntiPlane {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e1234]) * Simd32x3::from([self[e1], self[e2], self[e3]]),
+            Simd32x3::from(other[e1234]) * self.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e2] * other[e4125]) - (self[e3] * other[e4315]),
@@ -10406,7 +10430,7 @@ impl GeometricProduct<MultiVector> for AntiScalar {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(self[e12345]) * Simd32x2::from([other[e12345], other[scalar]]) * Simd32x2::from([-1.0, 1.0]),
+            Simd32x2::from(self[e12345]) * crate::swizzle!(other.group0(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
             // e1, e2, e3, e4
             Simd32x4::from(self[e12345]) * Simd32x4::from([other[e4235], other[e4315], other[e4125], other[e1234]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e5
@@ -10416,13 +10440,13 @@ impl GeometricProduct<MultiVector> for AntiScalar {
             // e41, e42, e43
             Simd32x3::from(self[e12345]) * other.group7() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from(self[e12345]) * Simd32x3::from([other[e415], other[e425], other[e435]]) * Simd32x3::from(-1.0),
+            Simd32x3::from(self[e12345]) * other.group6().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from(self[e12345]) * Simd32x4::from([other[e23], other[e31], other[e12], other[e45]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e423, e431, e412
             Simd32x3::from(self[e12345]) * other.group4(),
             // e235, e315, e125
-            Simd32x3::from(self[e12345]) * Simd32x3::from([other[e15], other[e25], other[e35]]),
+            Simd32x3::from(self[e12345]) * other.group3().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(self[e12345]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e5]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1234
@@ -10759,31 +10783,23 @@ impl GeometricProduct<AntiDualNum> for Circle {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       13        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd3        1        4        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        6       16        0
-    //  no simd        6       24        0
+    // yes simd        2       10        0
+    //  no simd        7       27        0
     fn geometric_product(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(other[scalar]) * self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (other[e3215] * self[e423]) + (other[scalar] * self[e415]),
-                (other[e3215] * self[e431]) + (other[scalar] * self[e425]),
-                (other[e3215] * self[e412]) + (other[scalar] * self[e435]),
-                other[scalar] * self[e321],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e321]])
+                * ((Simd32x3::from(other[e3215]) * self.group0()) + (Simd32x3::from(other[scalar]) * self.group1().truncate_to_3())).extend_to_4(other[scalar]),
             // e235, e315, e125, e4
-            Simd32x4::from([
-                (other[e3215] * self[e415]) + (other[scalar] * self[e235]),
-                (other[e3215] * self[e425]) + (other[scalar] * self[e315]),
-                (other[e3215] * self[e435]) + (other[scalar] * self[e125]),
-                0.0,
-            ]),
+            Simd32x4::from([other[scalar] * self[e235], other[scalar] * self[e315], other[scalar] * self[e125], 0.0])
+                + (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3()).extend_to_4(0.0),
             // e1, e2, e3, e5
             Simd32x4::from(other[e3215]) * Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
@@ -10792,8 +10808,13 @@ impl GeometricProduct<AntiDualNum> for Circle {
 impl GeometricProduct<AntiFlatPoint> for Circle {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       25       40        0
+    //           add/sub      mul      div
+    //      f32       22       37        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd       23       38        0
+    //  no simd       26       40        0
     fn geometric_product(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -10813,11 +10834,11 @@ impl GeometricProduct<AntiFlatPoint> for Circle {
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other[e235] * self[e321]) + (other[e125] * self[e425]) - (other[e315] * self[e435]) - (other[e321] * self[e235]),
-                (other[e235] * self[e435]) + (other[e315] * self[e321]) - (other[e125] * self[e415]) - (other[e321] * self[e315]),
-                (other[e315] * self[e415]) + (other[e125] * self[e321]) - (other[e235] * self[e425]) - (other[e321] * self[e125]),
+                (other[e125] * self[e425]) - (other[e315] * self[e435]) - (other[e321] * self[e235]),
+                (other[e235] * self[e435]) - (other[e125] * self[e415]) - (other[e321] * self[e315]),
+                (other[e315] * self[e415]) - (other[e235] * self[e425]) - (other[e321] * self[e125]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e321]) * other.group0().truncate_to_3()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e315] * self[e412]) + (other[e321] * self[e415]) - (other[e125] * self[e431]),
@@ -11481,24 +11502,20 @@ impl GeometricProduct<DualNum> for Circle {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       13        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //      f32        3        6        0
+    //    simd3        1        4        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        6       16        0
-    //  no simd        6       23        0
+    // yes simd        4       12        0
+    //  no simd        6       26        0
     fn geometric_product(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[e12345]) * self.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([
-                -(self[e423] * other[e5]) - (self[e415] * other[e12345]),
-                -(self[e431] * other[e5]) - (self[e425] * other[e12345]),
-                -(self[e412] * other[e5]) - (self[e435] * other[e12345]),
-                self[e321] * other[e12345],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e12345]])
+                * (-(Simd32x3::from(other[e5]) * self.group0()) - (Simd32x3::from(other[e12345]) * self.group1().truncate_to_3())).extend_to_4(self[e321]),
             // e15, e25, e35, e1234
             Simd32x4::from([
                 -(self[e415] * other[e5]) - (self[e235] * other[e12345]),
@@ -11860,7 +11877,7 @@ impl GeometricProduct<MultiVector> for Circle {
                 - (Simd32x3::from(self[e431]) * Simd32x3::from([other[e3], other[e12345], other[e415]]))
                 - (Simd32x3::from(self[e412]) * Simd32x3::from([other[e425], other[e1], other[e12345]]))
                 - (Simd32x3::from(self[e321]) * other.group7())
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e415], self[e425], self[e435]])),
+                - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e431] * other[e125]) + (self[e425] * other[e435]) + (self[e315] * other[e412])
@@ -11875,8 +11892,8 @@ impl GeometricProduct<MultiVector> for Circle {
                     - (self[e431] * other[e235])
                     - (self[e425] * other[e415])
                     - (self[e315] * other[e423]),
-            ]) - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                - (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
+            ]) - (Simd32x3::from(self[e321]) * other.group1().truncate_to_3())
+                - (Simd32x3::from(other[e12345]) * self.group1().truncate_to_3())
                 - (Simd32x3::from(other[e4]) * self.group2())
                 - (Simd32x3::from(other[e5]) * self.group0()),
             // e415, e425, e435, e321
@@ -11923,7 +11940,7 @@ impl GeometricProduct<MultiVector> for Circle {
             ]) + (Simd32x3::from(self[e321]) * other.group4())
                 + (Simd32x3::from(other[scalar]) * self.group0())
                 + (Simd32x3::from(other[e45]) * self.group0())
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e415], self[e425], self[e435]])),
+                + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (self[e435] * other[e25]) - (self[e425] * other[e35]),
@@ -11932,8 +11949,8 @@ impl GeometricProduct<MultiVector> for Circle {
             ]) + (Simd32x3::from(self[e235]) * Simd32x3::from([other[scalar], other[e12], other[e4315]]))
                 + (Simd32x3::from(self[e315]) * Simd32x3::from([other[e4125], other[scalar], other[e23]]))
                 + (Simd32x3::from(self[e125]) * Simd32x3::from([other[e31], other[e4235], other[scalar]]))
-                + (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e15], other[e25], other[e35]]))
+                + (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(self[e321]) * other.group3().truncate_to_3())
                 - (Simd32x3::from(self[e235]) * Simd32x3::from([other[e45], other[e4125], other[e31]]))
                 - (Simd32x3::from(self[e315]) * Simd32x3::from([other[e12], other[e45], other[e4235]]))
                 - (Simd32x3::from(self[e125]) * Simd32x3::from([other[e4315], other[e23], other[e45]])),
@@ -12034,7 +12051,7 @@ impl GeometricProduct<RoundPoint> for Circle {
                 (self[e412] * other[e2]) - (self[e431] * other[e3]),
                 (self[e423] * other[e3]) - (self[e412] * other[e1]),
                 (self[e431] * other[e1]) - (self[e423] * other[e2]),
-            ]) - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e415], self[e425], self[e435]])),
+            ]) - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3()),
             // e23, e31, e12, e45
             Simd32x4::from([
                 -(self[e423] * other[e5]) - (self[e321] * other[e1]) - (self[e235] * other[e4]),
@@ -12097,7 +12114,7 @@ impl GeometricProduct<Sphere> for Circle {
                 (self[e412] * other[e4315]) - (self[e431] * other[e4125]),
                 (self[e423] * other[e4125]) - (self[e412] * other[e4235]),
                 (self[e431] * other[e4235]) - (self[e423] * other[e4315]),
-            ]) + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e415], self[e425], self[e435]])),
+            ]) + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e423] * other[e3215]) + (self[e235] * other[e1234]) - (self[e321] * other[e4235]),
@@ -12655,23 +12672,20 @@ impl GeometricProduct<AntiDualNum> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       15        0
-    //    simd4        1        3        0
+    //      f32        0        8        0
+    //    simd3        1        2        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd        4       18        0
-    //  no simd        7       27        0
+    // yes simd        2       14        0
+    //  no simd        7       30        0
     fn geometric_product(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(other[scalar]) * Simd32x4::from([self[e423], self[e431], self[e412], self[e12345]]),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (other[e3215] * self[e423]) + (other[scalar] * self[e415]),
-                (other[e3215] * self[e431]) + (other[scalar] * self[e425]),
-                (other[e3215] * self[e412]) + (other[scalar] * self[e435]),
-                other[scalar] * self[e321],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e321]])
+                * ((Simd32x3::from(other[e3215]) * self.group0()) + (Simd32x3::from(other[scalar]) * self.group1().truncate_to_3())).extend_to_4(other[scalar]),
             // e235, e315, e125, e5
             Simd32x4::from([other[scalar] * self[e235], other[scalar] * self[e315], other[scalar] * self[e125], (other[e3215] * self[e321]) * -1.0])
                 + (Simd32x4::from(other[e3215]) * Simd32x4::from([self[e415], self[e425], self[e435], self[e12345]])),
@@ -12683,8 +12697,13 @@ impl GeometricProduct<AntiDualNum> for CircleRotor {
 impl GeometricProduct<AntiFlatPoint> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       29       44        0
+    //           add/sub      mul      div
+    //      f32       26       41        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd       27       42        0
+    //  no simd       30       44        0
     fn geometric_product(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -12704,11 +12723,11 @@ impl GeometricProduct<AntiFlatPoint> for CircleRotor {
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other[e235] * self[e321]) + (other[e125] * self[e425]) - (other[e235] * self[e12345]) - (other[e315] * self[e435]) - (other[e321] * self[e235]),
-                (other[e235] * self[e435]) + (other[e315] * self[e321]) - (other[e315] * self[e12345]) - (other[e125] * self[e415]) - (other[e321] * self[e315]),
-                (other[e315] * self[e415]) + (other[e125] * self[e321]) - (other[e235] * self[e425]) - (other[e125] * self[e12345]) - (other[e321] * self[e125]),
+                (other[e125] * self[e425]) - (other[e235] * self[e12345]) - (other[e315] * self[e435]) - (other[e321] * self[e235]),
+                (other[e235] * self[e435]) - (other[e315] * self[e12345]) - (other[e125] * self[e415]) - (other[e321] * self[e315]),
+                (other[e315] * self[e415]) - (other[e235] * self[e425]) - (other[e125] * self[e12345]) - (other[e321] * self[e125]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e321]) * other.group0().truncate_to_3()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e315] * self[e412]) + (other[e321] * self[e415]) - (other[e125] * self[e431]),
@@ -13446,23 +13465,20 @@ impl GeometricProduct<DualNum> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       18        0
-    //    simd4        0        2        0
+    //      f32        4       11        0
+    //    simd3        1        2        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        7       20        0
-    //  no simd        7       26        0
+    // yes simd        5       16        0
+    //  no simd        7       29        0
     fn geometric_product(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(other[e12345]) * Simd32x4::from([self[e423], self[e431], self[e412], self[e12345]]) * Simd32x4::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([
-                -(self[e423] * other[e5]) - (self[e415] * other[e12345]),
-                -(self[e431] * other[e5]) - (self[e425] * other[e12345]),
-                -(self[e412] * other[e5]) - (self[e435] * other[e12345]),
-                self[e321] * other[e12345],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e12345]])
+                * (-(Simd32x3::from(other[e5]) * self.group0()) - (Simd32x3::from(other[e12345]) * self.group1().truncate_to_3())).extend_to_4(self[e321]),
             // e15, e25, e35, e1234
             Simd32x4::from([
                 -(self[e415] * other[e5]) - (self[e235] * other[e12345]),
@@ -13860,7 +13876,7 @@ impl GeometricProduct<MultiVector> for CircleRotor {
                 - (Simd32x3::from(self[e412]) * Simd32x3::from([other[e425], other[e1], other[e12345]]))
                 - (Simd32x3::from(self[e321]) * other.group7())
                 - (Simd32x3::from(self[e12345]) * other.group7())
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e415], self[e425], self[e435]])),
+                - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e431] * other[e125]) + (self[e425] * other[e435]) + (self[e315] * other[e412])
@@ -13875,10 +13891,10 @@ impl GeometricProduct<MultiVector> for CircleRotor {
                     - (self[e431] * other[e235])
                     - (self[e425] * other[e415])
                     - (self[e315] * other[e423]),
-            ]) - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                - (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                - (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e235], self[e315], self[e125]]))
+            ]) - (Simd32x3::from(self[e321]) * other.group1().truncate_to_3())
+                - (Simd32x3::from(self[e12345]) * other.group6().truncate_to_3())
+                - (Simd32x3::from(other[e12345]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group2().truncate_to_3())
                 - (Simd32x3::from(other[e5]) * self.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
@@ -13941,7 +13957,7 @@ impl GeometricProduct<MultiVector> for CircleRotor {
                 + (Simd32x3::from(self[e12345]) * other.group4())
                 + (Simd32x3::from(other[scalar]) * self.group0())
                 + (Simd32x3::from(other[e45]) * self.group0())
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e415], self[e425], self[e435]])),
+                + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (self[e435] * other[e25]) - (self[e425] * other[e35]),
@@ -13950,9 +13966,9 @@ impl GeometricProduct<MultiVector> for CircleRotor {
             ]) + (Simd32x3::from(self[e235]) * Simd32x3::from([other[scalar], other[e12], other[e4315]]))
                 + (Simd32x3::from(self[e315]) * Simd32x3::from([other[e4125], other[scalar], other[e23]]))
                 + (Simd32x3::from(self[e125]) * Simd32x3::from([other[e31], other[e4235], other[scalar]]))
-                + (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e15], other[e25], other[e35]]))
-                + (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e15], other[e25], other[e35]]))
+                + (Simd32x3::from(self[e12345]) * other.group3().truncate_to_3())
+                + (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(self[e321]) * other.group3().truncate_to_3())
                 - (Simd32x3::from(self[e235]) * Simd32x3::from([other[e45], other[e4125], other[e31]]))
                 - (Simd32x3::from(self[e315]) * Simd32x3::from([other[e12], other[e45], other[e4235]]))
                 - (Simd32x3::from(self[e125]) * Simd32x3::from([other[e4315], other[e23], other[e45]])),
@@ -14074,7 +14090,7 @@ impl GeometricProduct<RoundPoint> for CircleRotor {
                 (self[e412] * other[e2]) - (self[e431] * other[e3]),
                 (self[e423] * other[e3]) - (self[e412] * other[e1]),
                 (self[e431] * other[e1]) - (self[e423] * other[e2]),
-            ]) - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e415], self[e425], self[e435]])),
+            ]) - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3()),
             // e23, e31, e12, e45
             Simd32x4::from([
                 -(self[e423] * other[e5]) - (self[e321] * other[e1]) - (self[e235] * other[e4]),
@@ -14138,7 +14154,7 @@ impl GeometricProduct<Sphere> for CircleRotor {
                 (self[e412] * other[e4315]) - (self[e431] * other[e4125]),
                 (self[e423] * other[e4125]) - (self[e412] * other[e4235]),
                 (self[e431] * other[e4235]) - (self[e423] * other[e4315]),
-            ]) + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e415], self[e425], self[e435]])),
+            ]) + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e423] * other[e3215]) + (self[e235] * other[e1234]) - (self[e321] * other[e4235]),
@@ -14646,31 +14662,23 @@ impl GeometricProduct<AntiDualNum> for Dipole {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       13        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd3        1        4        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        6       16        0
-    //  no simd        6       24        0
+    // yes simd        2       10        0
+    //  no simd        7       27        0
     fn geometric_product(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             Simd32x3::from(other[scalar]) * self.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([
-                (other[e3215] * self[e41]) + (other[scalar] * self[e23]),
-                (other[e3215] * self[e42]) + (other[scalar] * self[e31]),
-                (other[e3215] * self[e43]) + (other[scalar] * self[e12]),
-                other[scalar] * self[e45],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e45]])
+                * ((Simd32x3::from(other[e3215]) * self.group0()) + (Simd32x3::from(other[scalar]) * self.group1().truncate_to_3())).extend_to_4(other[scalar]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (other[e3215] * self[e23]) + (other[scalar] * self[e15]),
-                (other[e3215] * self[e31]) + (other[scalar] * self[e25]),
-                (other[e3215] * self[e12]) + (other[scalar] * self[e35]),
-                0.0,
-            ]),
+            Simd32x4::from([other[scalar] * self[e15], other[scalar] * self[e25], other[scalar] * self[e35], 0.0])
+                + (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(other[e3215]) * Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
@@ -14680,11 +14688,12 @@ impl GeometricProduct<AntiFlatPoint> for Dipole {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       40        0
-    //    simd4        0        1        0
+    //      f32       22       37        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       25       41        0
-    //  no simd       25       44        0
+    // yes simd       23       39        0
+    //  no simd       26       44        0
     fn geometric_product(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -14711,11 +14720,11 @@ impl GeometricProduct<AntiFlatPoint> for Dipole {
             ]),
             // e1, e2, e3, e4
             Simd32x4::from([
-                (other[e315] * self[e43]) + (other[e321] * self[e23]) - (other[e125] * self[e42]),
-                (other[e125] * self[e41]) + (other[e321] * self[e31]) - (other[e235] * self[e43]),
-                (other[e235] * self[e42]) + (other[e321] * self[e12]) - (other[e315] * self[e41]),
+                (other[e315] * self[e43]) - (other[e125] * self[e42]),
+                (other[e125] * self[e41]) - (other[e235] * self[e43]),
+                (other[e235] * self[e42]) - (other[e315] * self[e41]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(other[e321]) * self.group1().truncate_to_3()).extend_to_4(0.0),
         );
     }
 }
@@ -15286,31 +15295,24 @@ impl GeometricProduct<DualNum> for Dipole {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       13        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd3        1        4        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        6       16        0
-    //  no simd        6       24        0
+    // yes simd        2       10        0
+    //  no simd        7       27        0
     fn geometric_product(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(other[e12345]) * self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (self[e41] * other[e5]) + (self[e23] * other[e12345]),
-                (self[e42] * other[e5]) + (self[e31] * other[e12345]),
-                (self[e43] * other[e5]) + (self[e12] * other[e12345]),
-                self[e45] * other[e12345],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e12345]])
+                * ((Simd32x3::from(other[e5]) * self.group0()) + (Simd32x3::from(other[e12345]) * self.group1().truncate_to_3())).extend_to_4(self[e45])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e235, e315, e125, e4
-            Simd32x4::from([
-                (self[e23] * other[e5]) + (self[e15] * other[e12345]),
-                (self[e31] * other[e5]) + (self[e25] * other[e12345]),
-                (self[e12] * other[e5]) + (self[e35] * other[e12345]),
-                0.0,
-            ]),
+            Simd32x4::from([self[e15] * other[e12345], self[e25] * other[e12345], self[e35] * other[e12345], 0.0])
+                + (Simd32x3::from(other[e5]) * self.group1().truncate_to_3()).extend_to_4(0.0),
             // e1, e2, e3, e5
             Simd32x4::from(other[e5]) * Simd32x4::from([self[e41], self[e42], self[e43], self[e45]]),
         );
@@ -15319,8 +15321,13 @@ impl GeometricProduct<DualNum> for Dipole {
 impl GeometricProduct<FlatPoint> for Dipole {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       25       40        0
+    //           add/sub      mul      div
+    //      f32       22       37        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd       23       38        0
+    //  no simd       26       40        0
     fn geometric_product(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -15340,11 +15347,11 @@ impl GeometricProduct<FlatPoint> for Dipole {
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (self[e12] * other[e25]) + (self[e45] * other[e15]) - (self[e31] * other[e35]) - (self[e15] * other[e45]),
-                (self[e23] * other[e35]) + (self[e45] * other[e25]) - (self[e12] * other[e15]) - (self[e25] * other[e45]),
-                (self[e31] * other[e15]) + (self[e45] * other[e35]) - (self[e23] * other[e25]) - (self[e35] * other[e45]),
+                (self[e12] * other[e25]) - (self[e31] * other[e35]) - (self[e15] * other[e45]),
+                (self[e23] * other[e35]) - (self[e12] * other[e15]) - (self[e25] * other[e45]),
+                (self[e31] * other[e15]) - (self[e23] * other[e25]) - (self[e35] * other[e45]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e45]) * other.group0().truncate_to_3()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e42] * other[e35]) + (self[e23] * other[e45]) - (self[e43] * other[e25]),
@@ -15620,15 +15627,15 @@ impl GeometricProduct<MultiVector> for Dipole {
                 (self[e42] * other[e23]) + (self[e42] * other[e4235]) + (self[e31] * other[e41]) - (self[e41] * other[e31]) - (self[e41] * other[e4315]) - (self[e23] * other[e42]),
             ]) + (Simd32x3::from(other[scalar]) * self.group0())
                 + (Simd32x3::from(other[e45]) * self.group0())
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
+                + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3())
                 - (Simd32x3::from(self[e45]) * other.group4()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e43] * other[e25]) + (self[e12] * other[e31]) + (self[e35] * other[e42]) - (self[e42] * other[e35]) - (self[e31] * other[e12]) - (self[e25] * other[e43]),
                 (self[e41] * other[e35]) + (self[e23] * other[e12]) + (self[e15] * other[e43]) - (self[e43] * other[e15]) - (self[e12] * other[e23]) - (self[e35] * other[e41]),
                 (self[e42] * other[e15]) + (self[e31] * other[e23]) + (self[e25] * other[e41]) - (self[e41] * other[e25]) - (self[e23] * other[e31]) - (self[e15] * other[e42]),
-            ]) + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
-                + (Simd32x3::from(other[scalar]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
+            ]) + (Simd32x3::from(self[e45]) * other.group9().truncate_to_3())
+                + (Simd32x3::from(other[scalar]) * self.group1().truncate_to_3())
                 + (Simd32x3::from(other[e3215]) * self.group0())
                 + (Simd32x3::from(other[e1234]) * self.group2()),
             // e415, e425, e435, e321
@@ -15661,7 +15668,7 @@ impl GeometricProduct<MultiVector> for Dipole {
             ]) + (Simd32x3::from(self[e41]) * Simd32x3::from([other[e12345], other[e435], other[e2]]))
                 + (Simd32x3::from(self[e42]) * Simd32x3::from([other[e3], other[e12345], other[e415]]))
                 + (Simd32x3::from(self[e43]) * Simd32x3::from([other[e425], other[e1], other[e12345]]))
-                + (Simd32x3::from(other[e4]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
+                + (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())
                 - (Simd32x3::from(self[e41]) * Simd32x3::from([other[e321], other[e3], other[e425]]))
                 - (Simd32x3::from(self[e42]) * Simd32x3::from([other[e435], other[e321], other[e1]]))
                 - (Simd32x3::from(self[e43]) * Simd32x3::from([other[e2], other[e415], other[e321]]))
@@ -15673,7 +15680,7 @@ impl GeometricProduct<MultiVector> for Dipole {
                 (self[e31] * other[e235]) + (self[e25] * other[e1]) + (self[e25] * other[e415]) - (self[e23] * other[e315]) - (self[e15] * other[e2]) - (self[e15] * other[e425]),
             ]) + (Simd32x3::from(self[e45]) * other.group8())
                 + (Simd32x3::from(other[e12345]) * self.group2())
-                + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
+                + (Simd32x3::from(other[e5]) * self.group1().truncate_to_3())
                 + (Simd32x3::from(other[e321]) * self.group2()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
@@ -15770,7 +15777,7 @@ impl GeometricProduct<RoundPoint> for Dipole {
                 (self[e42] * other[e3]) - (self[e43] * other[e2]),
                 (self[e43] * other[e1]) - (self[e41] * other[e3]),
                 (self[e41] * other[e2]) - (self[e42] * other[e1]),
-            ]) + (Simd32x3::from(other[e4]) * Simd32x3::from([self[e23], self[e31], self[e12]])),
+            ]) + (Simd32x3::from(other[e4]) * self.group1().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e41] * other[e5]) + (self[e15] * other[e4]) - (self[e45] * other[e1]),
@@ -15833,7 +15840,7 @@ impl GeometricProduct<Sphere> for Dipole {
                 (self[e43] * other[e4315]) - (self[e42] * other[e4125]),
                 (self[e41] * other[e4125]) - (self[e43] * other[e4235]),
                 (self[e42] * other[e4235]) - (self[e41] * other[e4315]),
-            ]) + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e23], self[e31], self[e12]])),
+            ]) + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3()),
             // e23, e31, e12, e45
             Simd32x4::from([
                 (self[e41] * other[e3215]) + (self[e45] * other[e4235]) + (self[e15] * other[e1234]),
@@ -16465,11 +16472,12 @@ impl GeometricProduct<AntiDualNum> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       26        0
-    //    simd4        2        2        0
+    //      f32        0       16        0
+    //    simd3        2        3        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd        8       28        0
-    //  no simd       14       34        0
+    // yes simd        4       22        0
+    //  no simd       14       37        0
     fn geometric_product(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -16479,12 +16487,11 @@ impl GeometricProduct<AntiDualNum> for DipoleInversion {
             Simd32x4::from([other[e3215] * self[e41], other[e3215] * self[e42], other[e3215] * self[e43], (other[e3215] * self[e1234]) * -1.0])
                 + (Simd32x4::from(other[scalar]) * self.group1()),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (other[e3215] * self[e23]) + (other[e3215] * self[e4235]) + (other[scalar] * self[e15]),
-                (other[e3215] * self[e31]) + (other[e3215] * self[e4315]) + (other[scalar] * self[e25]),
-                (other[e3215] * self[e12]) + (other[e3215] * self[e4125]) + (other[scalar] * self[e35]),
-                other[scalar] * self[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e1234]])
+                * ((Simd32x3::from(other[e3215]) * self.group1().truncate_to_3())
+                    + (Simd32x3::from(other[e3215]) * self.group3().truncate_to_3())
+                    + (Simd32x3::from(other[scalar]) * self.group2().truncate_to_3()))
+                .extend_to_4(other[scalar]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e3215] * self[e41]) * -1.0,
@@ -16499,11 +16506,12 @@ impl GeometricProduct<AntiFlatPoint> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       56        0
-    //    simd4        1        3        0
+    //      f32       34       49        0
+    //    simd3        2        2        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       41       59        0
-    //  no simd       44       68        0
+    // yes simd       37       55        0
+    //  no simd       44       71        0
     fn geometric_product(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -16534,12 +16542,15 @@ impl GeometricProduct<AntiFlatPoint> for DipoleInversion {
                     - (other[e125] * self[e4125]),
             ]) + (Simd32x4::from(other[e321]) * Simd32x4::from([self[e15], self[e25], self[e35], self[e3215]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (other[e235] * self[e1234]) + (other[e315] * self[e43]) + (other[e321] * self[e23]) - (other[e125] * self[e42]),
-                (other[e315] * self[e1234]) + (other[e125] * self[e41]) + (other[e321] * self[e31]) - (other[e235] * self[e43]),
-                (other[e235] * self[e42]) + (other[e125] * self[e1234]) + (other[e321] * self[e12]) - (other[e315] * self[e41]),
-                other[e321] * self[e1234],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e1234]])
+                * (Simd32x3::from([
+                    (other[e315] * self[e43]) - (other[e125] * self[e42]),
+                    (other[e125] * self[e41]) - (other[e235] * self[e43]),
+                    (other[e235] * self[e42]) - (other[e315] * self[e41]),
+                ]) + (Simd32x3::from(other[e321]) * self.group1().truncate_to_3())
+                    + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()))
+                .extend_to_4(other[e321])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -17422,11 +17433,12 @@ impl GeometricProduct<DualNum> for DipoleInversion {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       19        0
-    //    simd4        3        3        0
+    //      f32        0       12        0
+    //    simd3        1        2        0
+    //    simd4        3        4        0
     // Totals...
-    // yes simd        6       22        0
-    //  no simd       15       31        0
+    // yes simd        4       18        0
+    //  no simd       15       34        0
     fn geometric_product(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -17440,20 +17452,21 @@ impl GeometricProduct<DualNum> for DipoleInversion {
                 + (Simd32x4::from(other[e5]) * self.group1())
                 + (Simd32x4::from(other[e12345]) * Simd32x4::from([self[e15], self[e25], self[e35], self[e3215]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (self[e41] * other[e5]) - (self[e4235] * other[e12345]),
-                (self[e42] * other[e5]) - (self[e4315] * other[e12345]),
-                (self[e43] * other[e5]) - (self[e4125] * other[e12345]),
-                self[e1234] * other[e12345],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e12345]])
+                * ((Simd32x3::from(other[e5]) * self.group0()) - (Simd32x3::from(other[e12345]) * self.group3().truncate_to_3())).extend_to_4(self[e1234]),
         );
     }
 }
 impl GeometricProduct<FlatPoint> for DipoleInversion {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       44       60        0
+    //           add/sub      mul      div
+    //      f32       38       53        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       40       56        0
+    //  no simd       44       63        0
     fn geometric_product(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -17472,12 +17485,14 @@ impl GeometricProduct<FlatPoint> for DipoleInversion {
                 (self[e41] * other[e15]) + (self[e42] * other[e25]) + (self[e43] * other[e35]),
             ]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (self[e12] * other[e25]) + (self[e45] * other[e15]) + (self[e4125] * other[e25]) - (self[e31] * other[e35]) - (self[e15] * other[e45]) - (self[e4315] * other[e35]),
-                (self[e23] * other[e35]) + (self[e45] * other[e25]) + (self[e4235] * other[e35]) - (self[e12] * other[e15]) - (self[e25] * other[e45]) - (self[e4125] * other[e15]),
-                (self[e31] * other[e15]) + (self[e45] * other[e35]) + (self[e4315] * other[e15]) - (self[e23] * other[e25]) - (self[e35] * other[e45]) - (self[e4235] * other[e25]),
-                self[e1234] * other[e45],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e45]])
+                * (Simd32x3::from([
+                    (self[e12] * other[e25]) + (self[e4125] * other[e25]) - (self[e31] * other[e35]) - (self[e4315] * other[e35]),
+                    (self[e23] * other[e35]) + (self[e4235] * other[e35]) - (self[e12] * other[e15]) - (self[e4125] * other[e15]),
+                    (self[e31] * other[e15]) + (self[e4315] * other[e15]) - (self[e23] * other[e25]) - (self[e4235] * other[e25]),
+                ]) + (Simd32x3::from(self[e45]) * other.group0().truncate_to_3())
+                    - (Simd32x3::from(other[e45]) * self.group2().truncate_to_3()))
+                .extend_to_4(self[e1234]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e42] * other[e35]) + (self[e23] * other[e45]) - (self[e43] * other[e25]) - (self[e1234] * other[e15]),
@@ -17933,15 +17948,15 @@ impl GeometricProduct<MultiVector> for DipoleInversion {
                 (self[e42] * other[e23]) + (self[e42] * other[e4235]) + (self[e31] * other[e41]) + (self[e4235] * other[e42])
                     - (self[e41] * other[e31])
                     - (self[e41] * other[e4315]),
-            ]) + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+            ]) + (Simd32x3::from(self[e1234]) * other.group9().truncate_to_3())
                 + (Simd32x3::from(self[e1234]) * other.group5())
                 + (Simd32x3::from(other[scalar]) * self.group0())
                 + (Simd32x3::from(other[e45]) * self.group0())
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
+                + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3())
                 - (Simd32x3::from(other[e41]) * Simd32x3::from([self[e45], self[e12], self[e4315]]))
                 - (Simd32x3::from(other[e42]) * Simd32x3::from([self[e4125], self[e45], self[e23]]))
                 - (Simd32x3::from(other[e43]) * Simd32x3::from([self[e31], self[e4235], self[e45]]))
-                - (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]])),
+                - (Simd32x3::from(other[e1234]) * self.group3().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e43] * other[e25]) + (self[e12] * other[e31]) + (self[e35] * other[e42]) + (self[e4125] * other[e4315])
@@ -17959,13 +17974,13 @@ impl GeometricProduct<MultiVector> for DipoleInversion {
                     - (self[e23] * other[e31])
                     - (self[e15] * other[e42])
                     - (self[e4235] * other[e4315]),
-            ]) + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e15], other[e25], other[e35]]))
+            ]) + (Simd32x3::from(self[e45]) * other.group9().truncate_to_3())
+                + (Simd32x3::from(self[e1234]) * other.group3().truncate_to_3())
                 + (Simd32x3::from(self[e3215]) * other.group4())
-                + (Simd32x3::from(other[scalar]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
-                + (Simd32x3::from(other[e45]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+                + (Simd32x3::from(other[scalar]) * self.group1().truncate_to_3())
+                + (Simd32x3::from(other[e45]) * self.group3().truncate_to_3())
                 + (Simd32x3::from(other[e3215]) * self.group0())
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e15], self[e25], self[e35]])),
+                + (Simd32x3::from(other[e1234]) * self.group2().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e43] * other[e315])
@@ -18030,13 +18045,13 @@ impl GeometricProduct<MultiVector> for DipoleInversion {
             ]) + (Simd32x3::from(self[e41]) * Simd32x3::from([other[e12345], other[e435], other[e2]]))
                 + (Simd32x3::from(self[e42]) * Simd32x3::from([other[e3], other[e12345], other[e415]]))
                 + (Simd32x3::from(self[e43]) * Simd32x3::from([other[e425], other[e1], other[e12345]]))
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                + (Simd32x3::from(other[e4]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
+                + (Simd32x3::from(self[e1234]) * other.group6().truncate_to_3())
+                + (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())
                 - (Simd32x3::from(self[e41]) * Simd32x3::from([other[e321], other[e3], other[e425]]))
                 - (Simd32x3::from(self[e42]) * Simd32x3::from([other[e435], other[e321], other[e1]]))
                 - (Simd32x3::from(self[e43]) * Simd32x3::from([other[e2], other[e415], other[e321]]))
-                - (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+                - (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group3().truncate_to_3())
                 - (Simd32x3::from(other[e423]) * Simd32x3::from([self[e45], self[e12], self[e4315]]))
                 - (Simd32x3::from(other[e431]) * Simd32x3::from([self[e4125], self[e45], self[e23]]))
                 - (Simd32x3::from(other[e412]) * Simd32x3::from([self[e31], self[e4235], self[e45]])),
@@ -18058,12 +18073,12 @@ impl GeometricProduct<MultiVector> for DipoleInversion {
                     - (self[e15] * other[e425])
                     - (self[e4235] * other[e315]),
             ]) + (Simd32x3::from(self[e45]) * other.group8())
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                + (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
-                + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
-                + (Simd32x3::from(other[e321]) * Simd32x3::from([self[e15], self[e25], self[e35]])),
+                + (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group6().truncate_to_3())
+                + (Simd32x3::from(other[e12345]) * self.group2().truncate_to_3())
+                + (Simd32x3::from(other[e5]) * self.group1().truncate_to_3())
+                + (Simd32x3::from(other[e5]) * self.group3().truncate_to_3())
+                + (Simd32x3::from(other[e321]) * self.group2().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e42] * other[e35])
@@ -18708,23 +18723,21 @@ impl GeometricProduct<AntiCircleRotor> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3       15        0
-    //    simd4        1        4        0
+    //      f32        0        8        0
+    //    simd3        1        2        0
+    //    simd4        1        5        0
     // Totals...
-    // yes simd        4       19        0
-    //  no simd        7       31        0
+    // yes simd        2       15        0
+    //  no simd        7       34        0
     fn geometric_product(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             Simd32x4::from(self[e12345]) * Simd32x4::from([other[e41], other[e42], other[e43], other[scalar]]),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (other[e41] * self[e5]) + (other[e23] * self[e12345]),
-                (other[e42] * self[e5]) + (other[e31] * self[e12345]),
-                (other[e43] * self[e5]) + (other[e12] * self[e12345]),
-                other[e45] * self[e12345],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e12345]])
+                * ((Simd32x3::from(self[e5]) * other.group0()) + (Simd32x3::from(self[e12345]) * other.group1().truncate_to_3())).extend_to_4(other[e45])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e235, e315, e125, e5
             Simd32x4::from([other[e15] * self[e12345], other[e25] * self[e12345], other[e35] * self[e12345], (other[e45] * self[e5]) * -1.0])
                 + (Simd32x4::from(self[e5]) * Simd32x4::from([other[e23], other[e31], other[e12], other[scalar]])),
@@ -18737,11 +18750,12 @@ impl GeometricProduct<AntiDipoleInversion> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       26        0
-    //    simd4        2        4        0
+    //      f32        0       16        0
+    //    simd3        2        3        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd        8       30        0
-    //  no simd       14       42        0
+    // yes simd        4       24        0
+    //  no simd       14       45        0
     fn geometric_product(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -18755,12 +18769,12 @@ impl GeometricProduct<AntiDipoleInversion> for DualNum {
                 other[e321] * self[e12345],
             ]) - (Simd32x4::from(self[e5]) * Simd32x4::from([other[e423], other[e431], other[e412], other[e4]])),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                -(other[e415] * self[e5]) - (other[e235] * self[e12345]) - (other[e1] * self[e5]),
-                -(other[e425] * self[e5]) - (other[e315] * self[e12345]) - (other[e2] * self[e5]),
-                -(other[e435] * self[e5]) - (other[e125] * self[e12345]) - (other[e3] * self[e5]),
-                other[e4] * self[e12345],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e12345]])
+                * (-(Simd32x3::from(self[e5]) * other.group1().truncate_to_3())
+                    - (Simd32x3::from(self[e5]) * other.group3().truncate_to_3())
+                    - (Simd32x3::from(self[e12345]) * other.group2().truncate_to_3()))
+                .extend_to_4(other[e4])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[e1] * self[e12345], other[e2] * self[e12345], other[e3] * self[e12345], (other[e5] * self[e12345]) * -1.0])
                 - (Simd32x4::from(self[e5]) * Simd32x4::from([other[e423], other[e431], other[e412], other[e321]])),
@@ -18802,18 +18816,19 @@ impl GeometricProduct<AntiFlatPoint> for DualNum {
 impl GeometricProduct<AntiFlector> for DualNum {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       12        0
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd3        1        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        8        0
+    //  no simd        4       15        0
     fn geometric_product(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([
-                -(other[e235] * self[e12345]) - (other[e1] * self[e5]),
-                -(other[e315] * self[e12345]) - (other[e2] * self[e5]),
-                -(other[e125] * self[e12345]) - (other[e3] * self[e5]),
-                other[e321] * self[e12345],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e12345]])
+                * (-(Simd32x3::from(self[e5]) * other.group1().truncate_to_3()) - (Simd32x3::from(self[e12345]) * other.group0().truncate_to_3())).extend_to_4(other[e321]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 other[e1] * self[e12345],
@@ -18890,24 +18905,20 @@ impl GeometricProduct<Circle> for DualNum {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       13        0
-    //    simd3        0        2        0
-    //    simd4        0        2        0
+    //      f32        3        6        0
+    //    simd3        1        4        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        6       17        0
-    //  no simd        6       27        0
+    // yes simd        4       13        0
+    //  no simd        6       30        0
     fn geometric_product(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             Simd32x3::from(self[e12345]) * other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([
-                -(other[e423] * self[e5]) - (other[e415] * self[e12345]),
-                -(other[e431] * self[e5]) - (other[e425] * self[e12345]),
-                -(other[e412] * self[e5]) - (other[e435] * self[e12345]),
-                other[e321] * self[e12345],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e12345]])
+                * (-(Simd32x3::from(self[e5]) * other.group0()) - (Simd32x3::from(self[e12345]) * other.group1().truncate_to_3())).extend_to_4(other[e321]),
             // e15, e25, e35, e1234
             Simd32x4::from([
                 -(other[e415] * self[e5]) - (other[e235] * self[e12345]),
@@ -18924,23 +18935,20 @@ impl GeometricProduct<CircleRotor> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       18        0
-    //    simd4        0        3        0
+    //      f32        4       11        0
+    //    simd3        1        2        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        7       21        0
-    //  no simd        7       30        0
+    // yes simd        5       17        0
+    //  no simd        7       33        0
     fn geometric_product(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
             Simd32x4::from(self[e12345]) * Simd32x4::from([other[e423], other[e431], other[e412], other[e12345]]) * Simd32x4::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([
-                -(other[e423] * self[e5]) - (other[e415] * self[e12345]),
-                -(other[e431] * self[e5]) - (other[e425] * self[e12345]),
-                -(other[e412] * self[e5]) - (other[e435] * self[e12345]),
-                other[e321] * self[e12345],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e12345]])
+                * (-(Simd32x3::from(self[e5]) * other.group0()) - (Simd32x3::from(self[e12345]) * other.group1().truncate_to_3())).extend_to_4(other[e321]),
             // e15, e25, e35, e1234
             Simd32x4::from([
                 -(other[e415] * self[e5]) - (other[e235] * self[e12345]),
@@ -18962,31 +18970,24 @@ impl GeometricProduct<Dipole> for DualNum {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       13        0
-    //    simd3        0        1        0
-    //    simd4        0        3        0
+    //      f32        0        3        0
+    //    simd3        1        4        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd        6       17        0
-    //  no simd        6       28        0
+    // yes simd        2       11        0
+    //  no simd        7       31        0
     fn geometric_product(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(self[e12345]) * other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (other[e41] * self[e5]) + (other[e23] * self[e12345]),
-                (other[e42] * self[e5]) + (other[e31] * self[e12345]),
-                (other[e43] * self[e5]) + (other[e12] * self[e12345]),
-                other[e45] * self[e12345],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e12345]])
+                * ((Simd32x3::from(self[e5]) * other.group0()) + (Simd32x3::from(self[e12345]) * other.group1().truncate_to_3())).extend_to_4(other[e45])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e235, e315, e125, e4
-            Simd32x4::from([
-                (other[e23] * self[e5]) + (other[e15] * self[e12345]),
-                (other[e31] * self[e5]) + (other[e25] * self[e12345]),
-                (other[e12] * self[e5]) + (other[e35] * self[e12345]),
-                0.0,
-            ]),
+            Simd32x4::from([other[e15] * self[e12345], other[e25] * self[e12345], other[e35] * self[e12345], 0.0])
+                + (Simd32x3::from(self[e5]) * other.group1().truncate_to_3()).extend_to_4(0.0),
             // e1, e2, e3, e5
             Simd32x4::from(self[e5]) * Simd32x4::from([other[e41], other[e42], other[e43], other[e45]]) * Simd32x4::from(-1.0),
         );
@@ -18996,11 +18997,12 @@ impl GeometricProduct<DipoleInversion> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       22        0
-    //    simd4        2        2        0
+    //      f32        4       15        0
+    //    simd3        1        2        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd        9       24        0
-    //  no simd       15       30        0
+    // yes simd        7       20        0
+    //  no simd       15       33        0
     fn geometric_product(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -19018,12 +19020,8 @@ impl GeometricProduct<DipoleInversion> for DualNum {
                 + (Simd32x4::from(self[e12345]) * Simd32x4::from([other[e15], other[e25], other[e35], other[e3215]]))
                 - (Simd32x4::from(self[e5]) * Simd32x4::from([other[e4235], other[e4315], other[e4125], other[e45]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                -(other[e41] * self[e5]) - (other[e4235] * self[e12345]),
-                -(other[e42] * self[e5]) - (other[e4315] * self[e12345]),
-                -(other[e43] * self[e5]) - (other[e4125] * self[e12345]),
-                other[e1234] * self[e12345],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e12345]])
+                * (-(Simd32x3::from(self[e5]) * other.group0()) - (Simd32x3::from(self[e12345]) * other.group3().truncate_to_3())).extend_to_4(other[e1234]),
         );
     }
 }
@@ -19067,21 +19065,19 @@ impl GeometricProduct<Flector> for DualNum {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4       12        0
-    //    simd4        0        2        0
+    //      f32        1        5        0
+    //    simd3        1        2        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        4       14        0
-    //  no simd        4       20        0
+    // yes simd        2       10        0
+    //  no simd        4       23        0
     fn geometric_product(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([
-                (self[e12345] * other[e15]) - (self[e5] * other[e4235]),
-                (self[e12345] * other[e25]) - (self[e5] * other[e4315]),
-                (self[e12345] * other[e35]) - (self[e5] * other[e4125]),
-                self[e12345] * other[e45],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e45]])
+                * ((Simd32x3::from(self[e12345]) * other.group0().truncate_to_3()) - (Simd32x3::from(self[e5]) * other.group1().truncate_to_3())).extend_to_4(self[e12345])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1, e2, e3, e5
             Simd32x4::from([
                 self[e12345] * other[e4235],
@@ -19128,24 +19124,20 @@ impl GeometricProduct<MultiVector> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       15       36        0
-    //    simd3        3        8        0
-    //    simd4        2        2        0
+    //      f32       12       29        0
+    //    simd3        4       10        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       20       46        0
-    //  no simd       32       68        0
+    // yes simd       18       42        0
+    //  no simd       32       71        0
     fn geometric_product(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([-(self[e5] * other[e4]) - (self[e12345] * other[e12345]), (self[e5] * other[e1234]) + (self[e12345] * other[scalar])]),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                -(self[e5] * other[e41]) - (self[e12345] * other[e4235]),
-                -(self[e5] * other[e42]) - (self[e12345] * other[e4315]),
-                -(self[e5] * other[e43]) - (self[e12345] * other[e4125]),
-                self[e12345] * other[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e1234]])
+                * (-(Simd32x3::from(self[e5]) * other.group4()) - (Simd32x3::from(self[e12345]) * other.group9().truncate_to_3())).extend_to_4(self[e12345]),
             // e5
             (self[e5] * other[scalar]) + (self[e12345] * other[e3215]) - (self[e5] * other[e45]),
             // e15, e25, e35, e45
@@ -19158,7 +19150,7 @@ impl GeometricProduct<MultiVector> for DualNum {
             // e41, e42, e43
             Simd32x3::from(self[e12345]) * other.group7() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            -(Simd32x3::from(self[e5]) * other.group7()) - (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e415], other[e425], other[e435]])),
+            -(Simd32x3::from(self[e5]) * other.group7()) - (Simd32x3::from(self[e12345]) * other.group6().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e5] * other[e41]) + (self[e12345] * other[e23]),
@@ -19169,8 +19161,8 @@ impl GeometricProduct<MultiVector> for DualNum {
             // e423, e431, e412
             Simd32x3::from(self[e12345]) * other.group4(),
             // e235, e315, e125
-            (Simd32x3::from(self[e5]) * other.group5()) + (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e15], other[e25], other[e35]]))
-                - (Simd32x3::from(self[e5]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]])),
+            (Simd32x3::from(self[e5]) * other.group5()) + (Simd32x3::from(self[e12345]) * other.group3().truncate_to_3())
+                - (Simd32x3::from(self[e5]) * other.group9().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 self[e12345] * other[e1],
@@ -19263,11 +19255,12 @@ impl GeometricProduct<VersorEven> for DualNum {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       27        0
-    //    simd4        2        4        0
+    //      f32        2       17        0
+    //    simd3        2        3        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       10       31        0
-    //  no simd       16       43        0
+    // yes simd        6       25        0
+    //  no simd       16       46        0
     fn geometric_product(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -19286,12 +19279,12 @@ impl GeometricProduct<VersorEven> for DualNum {
                 self[e12345] * other[e321],
             ]) - (Simd32x4::from(self[e5]) * Simd32x4::from([other[e423], other[e431], other[e412], other[e4]])),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                -(self[e5] * other[e415]) - (self[e5] * other[e1]) - (self[e12345] * other[e235]),
-                -(self[e5] * other[e425]) - (self[e5] * other[e2]) - (self[e12345] * other[e315]),
-                -(self[e5] * other[e435]) - (self[e5] * other[e3]) - (self[e12345] * other[e125]),
-                self[e12345] * other[e4],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e4]])
+                * (-(Simd32x3::from(self[e5]) * other.group1().truncate_to_3())
+                    - (Simd32x3::from(self[e5]) * other.group3().truncate_to_3())
+                    - (Simd32x3::from(self[e12345]) * other.group2().truncate_to_3()))
+                .extend_to_4(self[e12345])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 self[e12345] * other[e1],
@@ -19306,11 +19299,12 @@ impl GeometricProduct<VersorOdd> for DualNum {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       20        0
-    //    simd4        2        3        0
+    //      f32        5       13        0
+    //    simd3        1        2        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       10       23        0
-    //  no simd       16       32        0
+    // yes simd        8       19        0
+    //  no simd       16       35        0
     fn geometric_product(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -19333,12 +19327,8 @@ impl GeometricProduct<VersorOdd> for DualNum {
                 + (Simd32x4::from(self[e12345]) * Simd32x4::from([other[e15], other[e25], other[e35], other[e3215]]))
                 - (Simd32x4::from(self[e5]) * Simd32x4::from([other[e4235], other[e4315], other[e4125], other[e45]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                -(self[e5] * other[e41]) - (self[e12345] * other[e4235]),
-                -(self[e5] * other[e42]) - (self[e12345] * other[e4315]),
-                -(self[e5] * other[e43]) - (self[e12345] * other[e4125]),
-                self[e12345] * other[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e1234]])
+                * (-(Simd32x3::from(self[e5]) * other.group0().truncate_to_3()) - (Simd32x3::from(self[e12345]) * other.group3().truncate_to_3())).extend_to_4(self[e12345]),
         );
     }
 }
@@ -19352,11 +19342,12 @@ impl GeometricProduct<AntiCircleRotor> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       29       44        0
-    //    simd4        0        1        0
+    //      f32       26       41        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       29       45        0
-    //  no simd       29       48        0
+    // yes simd       27       43        0
+    //  no simd       30       48        0
     fn geometric_product(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -19376,11 +19367,11 @@ impl GeometricProduct<AntiCircleRotor> for FlatPoint {
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other[e31] * self[e35]) + (other[e15] * self[e45]) + (other[scalar] * self[e15]) - (other[e12] * self[e25]) - (other[e45] * self[e15]),
-                (other[e12] * self[e15]) + (other[e25] * self[e45]) + (other[scalar] * self[e25]) - (other[e23] * self[e35]) - (other[e45] * self[e25]),
-                (other[e23] * self[e25]) + (other[e35] * self[e45]) + (other[scalar] * self[e35]) - (other[e31] * self[e15]) - (other[e45] * self[e35]),
+                (other[e31] * self[e35]) + (other[scalar] * self[e15]) - (other[e12] * self[e25]) - (other[e45] * self[e15]),
+                (other[e12] * self[e15]) + (other[scalar] * self[e25]) - (other[e23] * self[e35]) - (other[e45] * self[e25]),
+                (other[e23] * self[e25]) + (other[scalar] * self[e35]) - (other[e31] * self[e15]) - (other[e45] * self[e35]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e45]) * other.group2().truncate_to_3()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e42] * self[e35]) + (other[e23] * self[e45]) - (other[e43] * self[e25]),
@@ -19395,11 +19386,12 @@ impl GeometricProduct<AntiDipoleInversion> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       56        0
-    //    simd4        1        3        0
+    //      f32       34       49        0
+    //    simd3        2        2        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       41       59        0
-    //  no simd       44       68        0
+    // yes simd       37       55        0
+    //  no simd       44       71        0
     fn geometric_product(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -19425,12 +19417,15 @@ impl GeometricProduct<AntiDipoleInversion> for FlatPoint {
                 -(other[e415] * self[e15]) - (other[e425] * self[e25]) - (other[e435] * self[e35]) - (other[e1] * self[e15]) - (other[e2] * self[e25]) - (other[e3] * self[e35]),
             ]) + (Simd32x4::from(self[e45]) * Simd32x4::from([other[e235], other[e315], other[e125], other[e5]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (other[e412] * self[e25]) - (other[e431] * self[e35]) - (other[e415] * self[e45]) - (other[e4] * self[e15]),
-                (other[e423] * self[e35]) - (other[e412] * self[e15]) - (other[e425] * self[e45]) - (other[e4] * self[e25]),
-                (other[e431] * self[e15]) - (other[e423] * self[e25]) - (other[e435] * self[e45]) - (other[e4] * self[e35]),
-                other[e4] * self[e45],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e45]])
+                * (Simd32x3::from([
+                    (other[e412] * self[e25]) - (other[e431] * self[e35]),
+                    (other[e423] * self[e35]) - (other[e412] * self[e15]),
+                    (other[e431] * self[e15]) - (other[e423] * self[e25]),
+                ]) - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3())
+                    - (Simd32x3::from(self[e45]) * other.group1().truncate_to_3()))
+                .extend_to_4(other[e4])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -19457,23 +19452,20 @@ impl GeometricProduct<AntiFlatPoint> for FlatPoint {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        0
-    //    simd4        0        1        0
+    //      f32        0        4        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        3        8        0
-    //  no simd        3       11        0
+    // yes simd        1        6        0
+    //  no simd        4       11        0
     fn geometric_product(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
             Simd32x4::from([1.0, 1.0, 1.0, other[e321] * self[e45]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                (other[e235] * self[e45]) + (other[e321] * self[e15]),
-                (other[e315] * self[e45]) + (other[e321] * self[e25]),
-                (other[e125] * self[e45]) + (other[e321] * self[e35]),
-                0.0,
-            ]),
+            Simd32x4::from([other[e321] * self[e15], other[e321] * self[e25], other[e321] * self[e35], 0.0])
+                + (Simd32x3::from(self[e45]) * other.group0().truncate_to_3()).extend_to_4(0.0),
         );
     }
 }
@@ -19504,18 +19496,23 @@ impl GeometricProduct<AntiFlector> for FlatPoint {
 impl GeometricProduct<AntiLine> for FlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       15        0
+    //           add/sub      mul      div
+    //      f32        5       12        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        6       13        0
+    //  no simd        9       15        0
     fn geometric_product(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
             Simd32x4::from([
-                (other[e31] * self[e35]) + (other[e15] * self[e45]) - (other[e12] * self[e25]),
-                (other[e12] * self[e15]) + (other[e25] * self[e45]) - (other[e23] * self[e35]),
-                (other[e23] * self[e25]) + (other[e35] * self[e45]) - (other[e31] * self[e15]),
+                (other[e31] * self[e35]) - (other[e12] * self[e25]),
+                (other[e12] * self[e15]) - (other[e23] * self[e35]),
+                (other[e23] * self[e25]) - (other[e31] * self[e15]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e45]) * other.group1()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 other[e23] * self[e45],
@@ -19529,18 +19526,25 @@ impl GeometricProduct<AntiLine> for FlatPoint {
 impl GeometricProduct<AntiMotor> for FlatPoint {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        6       13        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        8       16        0
+    //  no simd       12       23        0
     fn geometric_product(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([
-                (other[e31] * self[e35]) + (other[scalar] * self[e15]) + (other[e15] * self[e45]) - (other[e12] * self[e25]),
-                (other[e12] * self[e15]) + (other[scalar] * self[e25]) + (other[e25] * self[e45]) - (other[e23] * self[e35]),
-                (other[e23] * self[e25]) + (other[scalar] * self[e35]) + (other[e35] * self[e45]) - (other[e31] * self[e15]),
-                other[scalar] * self[e45],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e45]])
+                * (Simd32x3::from([
+                    (other[e31] * self[e35]) - (other[e12] * self[e25]),
+                    (other[e12] * self[e15]) - (other[e23] * self[e35]),
+                    (other[e23] * self[e25]) - (other[e31] * self[e15]),
+                ]) + (Simd32x3::from(other[scalar]) * self.group0().truncate_to_3())
+                    + (Simd32x3::from(self[e45]) * other.group1().truncate_to_3()))
+                .extend_to_4(other[scalar]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 other[e23] * self[e45],
@@ -19676,11 +19680,12 @@ impl GeometricProduct<Dipole> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       40        0
-    //    simd4        0        1        0
+    //      f32       22       37        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       25       41        0
-    //  no simd       25       44        0
+    // yes simd       23       39        0
+    //  no simd       26       44        0
     fn geometric_product(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -19700,11 +19705,11 @@ impl GeometricProduct<Dipole> for FlatPoint {
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other[e31] * self[e35]) + (other[e15] * self[e45]) - (other[e12] * self[e25]) - (other[e45] * self[e15]),
-                (other[e12] * self[e15]) + (other[e25] * self[e45]) - (other[e23] * self[e35]) - (other[e45] * self[e25]),
-                (other[e23] * self[e25]) + (other[e35] * self[e45]) - (other[e31] * self[e15]) - (other[e45] * self[e35]),
+                (other[e31] * self[e35]) - (other[e12] * self[e25]) - (other[e45] * self[e15]),
+                (other[e12] * self[e15]) - (other[e23] * self[e35]) - (other[e45] * self[e25]),
+                (other[e23] * self[e25]) - (other[e31] * self[e15]) - (other[e45] * self[e35]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e45]) * other.group2()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e42] * self[e35]) + (other[e23] * self[e45]) - (other[e43] * self[e25]),
@@ -19719,11 +19724,12 @@ impl GeometricProduct<DipoleInversion> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       56        0
-    //    simd4        1        3        0
+    //      f32       28       43        0
+    //    simd3        4        4        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       41       59        0
-    //  no simd       44       68        0
+    // yes simd       33       51        0
+    //  no simd       44       71        0
     fn geometric_product(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -19742,12 +19748,17 @@ impl GeometricProduct<DipoleInversion> for FlatPoint {
                 -(other[e41] * self[e15]) - (other[e42] * self[e25]) - (other[e43] * self[e35]),
             ]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (other[e31] * self[e35]) + (other[e15] * self[e45]) + (other[e4125] * self[e25]) - (other[e12] * self[e25]) - (other[e45] * self[e15]) - (other[e4315] * self[e35]),
-                (other[e12] * self[e15]) + (other[e25] * self[e45]) + (other[e4235] * self[e35]) - (other[e23] * self[e35]) - (other[e45] * self[e25]) - (other[e4125] * self[e15]),
-                (other[e23] * self[e25]) + (other[e35] * self[e45]) + (other[e4315] * self[e15]) - (other[e31] * self[e15]) - (other[e45] * self[e35]) - (other[e4235] * self[e25]),
-                other[e1234] * self[e45],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e45]])
+                * (Simd32x3::from([
+                    (other[e31] * self[e35]) + (other[e4125] * self[e25]),
+                    (other[e12] * self[e15]) + (other[e4235] * self[e35]),
+                    (other[e23] * self[e25]) + (other[e4315] * self[e15]),
+                ]) + (Simd32x3::from(self[e45]) * other.group2().truncate_to_3())
+                    - (Simd32x3::from(self[e15]) * Simd32x3::from([other[e45], other[e4125], other[e31]]))
+                    - (Simd32x3::from(self[e25]) * Simd32x3::from([other[e12], other[e45], other[e4235]]))
+                    - (Simd32x3::from(self[e35]) * Simd32x3::from([other[e4315], other[e23], other[e45]])))
+                .extend_to_4(other[e1234])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e42] * self[e35]) + (other[e1234] * self[e15]) - (other[e43] * self[e25]),
@@ -19784,23 +19795,20 @@ impl GeometricProduct<FlatPoint> for FlatPoint {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        0
-    //    simd4        0        1        0
+    //      f32        0        7        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        3        8        0
-    //  no simd        3       11        0
+    // yes simd        1        9        0
+    //  no simd        4       14        0
     fn geometric_product(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
             Simd32x4::from([1.0, 1.0, 1.0, other[e45] * self[e45]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
             // e15, e25, e35, e3215
-            Simd32x4::from([
-                (other[e15] * self[e45]) - (other[e45] * self[e15]),
-                (other[e25] * self[e45]) - (other[e45] * self[e25]),
-                (other[e35] * self[e45]) - (other[e45] * self[e35]),
-                0.0,
-            ]),
+            Simd32x4::from([(other[e45] * self[e15]) * -1.0, (other[e45] * self[e25]) * -1.0, (other[e45] * self[e35]) * -1.0, 0.0])
+                + (Simd32x3::from(self[e45]) * other.group0().truncate_to_3()).extend_to_4(0.0),
         );
     }
 }
@@ -19832,21 +19840,22 @@ impl GeometricProduct<Line> for FlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       15        0
-    //    simd4        0        1        0
+    //      f32        5       12        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        8       16        0
-    //  no simd        8       19        0
+    // yes simd        6       14        0
+    //  no simd        9       19        0
     fn geometric_product(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
             Simd32x4::from([
-                (self[e35] * other[e425]) + (self[e45] * other[e235]) - (self[e25] * other[e435]),
-                (self[e15] * other[e435]) + (self[e45] * other[e315]) - (self[e35] * other[e415]),
-                (self[e25] * other[e415]) + (self[e45] * other[e125]) - (self[e15] * other[e425]),
+                (self[e35] * other[e425]) - (self[e25] * other[e435]),
+                (self[e15] * other[e435]) - (self[e35] * other[e415]),
+                (self[e25] * other[e415]) - (self[e15] * other[e425]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e45]) * other.group1()).extend_to_4(0.0),
             // e1, e2, e3, e5
             Simd32x4::from([
                 self[e45] * other[e415],
@@ -19861,21 +19870,25 @@ impl GeometricProduct<Motor> for FlatPoint {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       20        0
-    //    simd4        0        2        0
+    //      f32        6       13        0
+    //    simd3        2        2        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd       12       22        0
-    //  no simd       12       28        0
+    // yes simd        8       18        0
+    //  no simd       12       31        0
     fn geometric_product(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([
-                (self[e15] * other[e12345]) + (self[e35] * other[e425]) + (self[e45] * other[e235]) - (self[e25] * other[e435]),
-                (self[e15] * other[e435]) + (self[e25] * other[e12345]) + (self[e45] * other[e315]) - (self[e35] * other[e415]),
-                (self[e25] * other[e415]) + (self[e35] * other[e12345]) + (self[e45] * other[e125]) - (self[e15] * other[e425]),
-                self[e45] * other[e12345],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e12345]])
+                * (Simd32x3::from([
+                    (self[e35] * other[e425]) - (self[e25] * other[e435]),
+                    (self[e15] * other[e435]) - (self[e35] * other[e415]),
+                    (self[e25] * other[e415]) - (self[e15] * other[e425]),
+                ]) + (Simd32x3::from(self[e45]) * other.group1().truncate_to_3())
+                    + (Simd32x3::from(other[e12345]) * self.group0().truncate_to_3()))
+                .extend_to_4(self[e45])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1, e2, e3, e5
             Simd32x4::from([
                 self[e45] * other[e415],
@@ -19890,13 +19903,13 @@ impl GeometricProduct<MultiVector> for FlatPoint {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       79        0
+    //      f32       46       72        0
     //    simd2        3        3        0
-    //    simd3        5        9        0
-    //    simd4        6        7        0
+    //    simd3        7       11        0
+    //    simd4        6        8        0
     // Totals...
-    // yes simd       66       98        0
-    //  no simd       97      140        0
+    // yes simd       62       94        0
+    //  no simd       97      143        0
     fn geometric_product(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -19906,12 +19919,15 @@ impl GeometricProduct<MultiVector> for FlatPoint {
                 - (Simd32x2::from(self[e25]) * Simd32x2::from([other[e42], other[e431]]))
                 - (Simd32x2::from(self[e35]) * Simd32x2::from([other[e43], other[e412]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (self[e25] * other[e412]) - (self[e15] * other[e4]) - (self[e35] * other[e431]) - (self[e45] * other[e415]),
-                (self[e35] * other[e423]) - (self[e15] * other[e412]) - (self[e25] * other[e4]) - (self[e45] * other[e425]),
-                (self[e15] * other[e431]) - (self[e25] * other[e423]) - (self[e35] * other[e4]) - (self[e45] * other[e435]),
-                self[e45] * other[e4],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e4]])
+                * (Simd32x3::from([
+                    (self[e25] * other[e412]) - (self[e35] * other[e431]),
+                    (self[e35] * other[e423]) - (self[e15] * other[e412]),
+                    (self[e15] * other[e431]) - (self[e25] * other[e423]),
+                ]) - (Simd32x3::from(self[e45]) * other.group6().truncate_to_3())
+                    - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3()))
+                .extend_to_4(self[e45])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e5
             (self[e45] * other[e5])
                 - (self[e15] * other[e1])
@@ -19937,8 +19953,8 @@ impl GeometricProduct<MultiVector> for FlatPoint {
                 (self[e35] * other[e42]) - (self[e25] * other[e43]),
                 (self[e15] * other[e43]) - (self[e35] * other[e41]),
                 (self[e25] * other[e41]) - (self[e15] * other[e42]),
-            ]) + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e15], self[e25], self[e35]])),
+            ]) + (Simd32x3::from(self[e45]) * other.group9().truncate_to_3())
+                + (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e15] * other[e4]) + (self[e35] * other[e431]) - (self[e25] * other[e412]),
@@ -19954,8 +19970,8 @@ impl GeometricProduct<MultiVector> for FlatPoint {
                 (self[e15] * other[e3]) + (self[e15] * other[e435]) - (self[e35] * other[e1]) - (self[e35] * other[e415]),
                 (self[e25] * other[e1]) + (self[e25] * other[e415]) - (self[e15] * other[e2]) - (self[e15] * other[e425]),
             ]) + (Simd32x3::from(self[e45]) * other.group8())
-                + (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(other[e321]) * Simd32x3::from([self[e15], self[e25], self[e35]])),
+                + (Simd32x3::from(other[e12345]) * self.group0().truncate_to_3())
+                + (Simd32x3::from(other[e321]) * self.group0().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e15] * other[e1234]) + (self[e35] * other[e42]) - (self[e25] * other[e43]),
@@ -19999,23 +20015,20 @@ impl GeometricProduct<RoundPoint> for FlatPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       20        0
-    //    simd4        0        2        0
+    //      f32        6       20        0
+    //    simd3        0        1        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        9       22        0
-    //  no simd        9       28        0
+    // yes simd        7       23        0
+    //  no simd       10       31        0
     fn geometric_product(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (self[e15] * other[e4]) - (self[e45] * other[e1]),
-                (self[e25] * other[e4]) - (self[e45] * other[e2]),
-                (self[e35] * other[e4]) - (self[e45] * other[e3]),
-                0.0,
-            ]),
+            Simd32x4::from([(self[e45] * other[e1]) * -1.0, (self[e45] * other[e2]) * -1.0, (self[e45] * other[e3]) * -1.0, 0.0])
+                + (Simd32x3::from(other[e4]) * self.group0().truncate_to_3()).extend_to_4(0.0),
             // e235, e315, e125, e4
             Simd32x4::from([
                 (self[e35] * other[e2]) - (self[e25] * other[e3]),
@@ -20048,23 +20061,20 @@ impl GeometricProduct<Sphere> for FlatPoint {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       20        0
-    //    simd4        0        1        0
+    //      f32        6       17        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        9       21        0
-    //  no simd        9       24        0
+    // yes simd        7       19        0
+    //  no simd       10       24        0
     fn geometric_product(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12, e45
-            Simd32x4::from([
-                (self[e15] * other[e1234]) + (self[e45] * other[e4235]),
-                (self[e25] * other[e1234]) + (self[e45] * other[e4315]),
-                (self[e35] * other[e1234]) + (self[e45] * other[e4125]),
-                0.0,
-            ]),
+            Simd32x4::from([self[e45] * other[e4235], self[e45] * other[e4315], self[e45] * other[e4125], 0.0])
+                + (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()).extend_to_4(0.0),
             // e15, e25, e35, e1234
             Simd32x4::from([
                 (self[e25] * other[e4125]) - (self[e35] * other[e4315]),
@@ -20086,11 +20096,12 @@ impl GeometricProduct<VersorEven> for FlatPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       56        0
-    //    simd4        2        4        0
+    //      f32       34       49        0
+    //    simd3        2        2        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       42       60        0
-    //  no simd       48       72        0
+    // yes simd       38       56        0
+    //  no simd       48       75        0
     fn geometric_product(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -20116,12 +20127,15 @@ impl GeometricProduct<VersorEven> for FlatPoint {
                 -(self[e15] * other[e415]) - (self[e15] * other[e1]) - (self[e25] * other[e425]) - (self[e25] * other[e2]) - (self[e35] * other[e435]) - (self[e35] * other[e3]),
             ]) + (Simd32x4::from(self[e45]) * other.group2()),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (self[e25] * other[e412]) - (self[e15] * other[e4]) - (self[e35] * other[e431]) - (self[e45] * other[e415]),
-                (self[e35] * other[e423]) - (self[e15] * other[e412]) - (self[e25] * other[e4]) - (self[e45] * other[e425]),
-                (self[e15] * other[e431]) - (self[e25] * other[e423]) - (self[e35] * other[e4]) - (self[e45] * other[e435]),
-                self[e45] * other[e4],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e4]])
+                * (Simd32x3::from([
+                    (self[e25] * other[e412]) - (self[e35] * other[e431]),
+                    (self[e35] * other[e423]) - (self[e15] * other[e412]),
+                    (self[e15] * other[e431]) - (self[e25] * other[e423]),
+                ]) - (Simd32x3::from(self[e45]) * other.group1().truncate_to_3())
+                    - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3()))
+                .extend_to_4(self[e45])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -20129,11 +20143,12 @@ impl GeometricProduct<VersorOdd> for FlatPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       56        0
-    //    simd4        2        4        0
+    //      f32       22       34        0
+    //    simd3        6        7        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       42       60        0
-    //  no simd       48       72        0
+    // yes simd       30       46        0
+    //  no simd       48       75        0
     fn geometric_product(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -20152,21 +20167,16 @@ impl GeometricProduct<VersorOdd> for FlatPoint {
                 -(self[e15] * other[e41]) - (self[e25] * other[e42]) - (self[e35] * other[e43]),
             ]) + (Simd32x4::from(self[e45]) * Simd32x4::from([other[e4235], other[e4315], other[e4125], other[scalar]])),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (self[e15] * other[scalar]) + (self[e25] * other[e4125]) + (self[e35] * other[e31]) + (self[e45] * other[e15])
-                    - (self[e15] * other[e45])
-                    - (self[e25] * other[e12])
-                    - (self[e35] * other[e4315]),
-                (self[e15] * other[e12]) + (self[e25] * other[scalar]) + (self[e35] * other[e4235]) + (self[e45] * other[e25])
-                    - (self[e15] * other[e4125])
-                    - (self[e25] * other[e45])
-                    - (self[e35] * other[e23]),
-                (self[e15] * other[e4315]) + (self[e25] * other[e23]) + (self[e35] * other[scalar]) + (self[e45] * other[e35])
-                    - (self[e15] * other[e31])
-                    - (self[e25] * other[e4235])
-                    - (self[e35] * other[e45]),
-                self[e45] * other[e1234],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e1234]])
+                * ((Simd32x3::from(self[e15]) * Simd32x3::from([other[scalar], other[e12], other[e4315]]))
+                    + (Simd32x3::from(self[e25]) * Simd32x3::from([other[e4125], other[scalar], other[e23]]))
+                    + (Simd32x3::from(self[e35]) * Simd32x3::from([other[e31], other[e4235], other[scalar]]))
+                    + (Simd32x3::from(self[e45]) * other.group2().truncate_to_3())
+                    - (Simd32x3::from(self[e15]) * Simd32x3::from([other[e45], other[e4125], other[e31]]))
+                    - (Simd32x3::from(self[e25]) * Simd32x3::from([other[e12], other[e45], other[e4235]]))
+                    - (Simd32x3::from(self[e35]) * Simd32x3::from([other[e4315], other[e23], other[e45]])))
+                .extend_to_4(self[e45])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e15] * other[e1234]) + (self[e35] * other[e42]) - (self[e25] * other[e43]),
@@ -20368,18 +20378,19 @@ impl GeometricProduct<AntiDipoleInversion> for Flector {
 impl GeometricProduct<AntiDualNum> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       12        0
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd3        1        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        8        0
+    //  no simd        4       15        0
     fn geometric_product(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([
-                (other[e3215] * self[e4235]) + (other[scalar] * self[e15]),
-                (other[e3215] * self[e4315]) + (other[scalar] * self[e25]),
-                (other[e3215] * self[e4125]) + (other[scalar] * self[e35]),
-                other[scalar] * self[e45],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e45]])
+                * ((Simd32x3::from(other[e3215]) * self.group1().truncate_to_3()) + (Simd32x3::from(other[scalar]) * self.group0().truncate_to_3())).extend_to_4(other[scalar]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 other[scalar] * self[e4235],
@@ -20896,21 +20907,19 @@ impl GeometricProduct<DualNum> for Flector {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4       12        0
-    //    simd4        0        2        0
+    //      f32        1        5        0
+    //    simd3        1        2        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        4       14        0
-    //  no simd        4       20        0
+    // yes simd        2       10        0
+    //  no simd        4       23        0
     fn geometric_product(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([
-                (other[e5] * self[e4235]) + (other[e12345] * self[e15]),
-                (other[e5] * self[e4315]) + (other[e12345] * self[e25]),
-                (other[e5] * self[e4125]) + (other[e12345] * self[e35]),
-                other[e12345] * self[e45],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e45]])
+                * ((Simd32x3::from(other[e5]) * self.group1().truncate_to_3()) + (Simd32x3::from(other[e12345]) * self.group0().truncate_to_3())).extend_to_4(other[e12345])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1, e2, e3, e5
             Simd32x4::from([
                 other[e12345] * self[e4235],
@@ -21153,16 +21162,16 @@ impl GeometricProduct<MultiVector> for Flector {
                 (self[e4125] * other[e41]) - (self[e4235] * other[e43]),
                 (self[e4235] * other[e42]) - (self[e4315] * other[e41]),
             ]) - (Simd32x3::from(self[e45]) * other.group4())
-                - (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]])),
+                - (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e35] * other[e42]) + (self[e4125] * other[e4315]) - (self[e25] * other[e43]) - (self[e4315] * other[e4125]),
                 (self[e15] * other[e43]) + (self[e4235] * other[e4125]) - (self[e35] * other[e41]) - (self[e4125] * other[e4235]),
                 (self[e25] * other[e41]) + (self[e4315] * other[e4235]) - (self[e15] * other[e42]) - (self[e4235] * other[e4315]),
-            ]) + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+            ]) + (Simd32x3::from(self[e45]) * other.group9().truncate_to_3())
                 + (Simd32x3::from(self[e3215]) * other.group4())
-                + (Simd32x3::from(other[e45]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e15], self[e25], self[e35]])),
+                + (Simd32x3::from(other[e45]) * self.group1().truncate_to_3())
+                + (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e15] * other[e4]) + (self[e35] * other[e431]) + (self[e4315] * other[e3]) + (self[e3215] * other[e423])
@@ -21191,7 +21200,7 @@ impl GeometricProduct<MultiVector> for Flector {
                 (self[e4125] * other[e423]) - (self[e4235] * other[e412]),
                 (self[e4235] * other[e431]) - (self[e4315] * other[e423]),
             ]) - (Simd32x3::from(self[e45]) * other.group7())
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]])),
+                - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (self[e35] * other[e2]) + (self[e35] * other[e425]) + (self[e4125] * other[e315])
@@ -21207,11 +21216,11 @@ impl GeometricProduct<MultiVector> for Flector {
                     - (self[e15] * other[e425])
                     - (self[e4235] * other[e315]),
             ]) + (Simd32x3::from(self[e45]) * other.group8())
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                + (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
-                + (Simd32x3::from(other[e321]) * Simd32x3::from([self[e15], self[e25], self[e35]])),
+                + (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group6().truncate_to_3())
+                + (Simd32x3::from(other[e12345]) * self.group0().truncate_to_3())
+                + (Simd32x3::from(other[e5]) * self.group1().truncate_to_3())
+                + (Simd32x3::from(other[e321]) * self.group0().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e15] * other[e1234]) + (self[e35] * other[e42]) + (self[e4125] * other[e31]) + (self[e3215] * other[e41])
@@ -21271,11 +21280,12 @@ impl GeometricProduct<RoundPoint> for Flector {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        1        5        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        1        6        0
     // Totals...
-    // yes simd       21       37        0
-    //  no simd       24       52        0
+    // yes simd       17       33        0
+    //  no simd       24       55        0
     fn geometric_product(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -21287,12 +21297,15 @@ impl GeometricProduct<RoundPoint> for Flector {
                 (self[e4235] * other[e1]) + (self[e4315] * other[e2]) + (self[e4125] * other[e3]) + (self[e3215] * other[e4]),
             ]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (self[e15] * other[e4]) + (self[e4315] * other[e3]) - (self[e45] * other[e1]) - (self[e4125] * other[e2]),
-                (self[e25] * other[e4]) + (self[e4125] * other[e1]) - (self[e45] * other[e2]) - (self[e4235] * other[e3]),
-                (self[e35] * other[e4]) + (self[e4235] * other[e2]) - (self[e45] * other[e3]) - (self[e4315] * other[e1]),
-                self[e3215] * other[e4],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e4]])
+                * (Simd32x3::from([
+                    (self[e4315] * other[e3]) - (self[e4125] * other[e2]),
+                    (self[e4125] * other[e1]) - (self[e4235] * other[e3]),
+                    (self[e4235] * other[e2]) - (self[e4315] * other[e1]),
+                ]) + (Simd32x3::from(other[e4]) * self.group0().truncate_to_3())
+                    - (Simd32x3::from(self[e45]) * other.group0().truncate_to_3()))
+                .extend_to_4(self[e3215])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e235, e315, e125, e5
             Simd32x4::from([
                 (self[e35] * other[e2]) + (self[e3215] * other[e1]) - (self[e25] * other[e3]),
@@ -21325,11 +21338,12 @@ impl GeometricProduct<Sphere> for Flector {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       40        0
-    //    simd4        0        2        0
+    //      f32       12       26        0
+    //    simd3        4        4        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd       24       42        0
-    //  no simd       24       48        0
+    // yes simd       16       34        0
+    //  no simd       24       54        0
     fn geometric_product(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -21341,19 +21355,24 @@ impl GeometricProduct<Sphere> for Flector {
                 (self[e3215] * other[e1234]) - (self[e4235] * other[e4235]) - (self[e4315] * other[e4315]) - (self[e4125] * other[e4125]),
             ]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([
-                (self[e15] * other[e1234]) + (self[e45] * other[e4235]) + (self[e4125] * other[e4315]) - (self[e4315] * other[e4125]),
-                (self[e25] * other[e1234]) + (self[e45] * other[e4315]) + (self[e4235] * other[e4125]) - (self[e4125] * other[e4235]),
-                (self[e35] * other[e1234]) + (self[e45] * other[e4125]) + (self[e4315] * other[e4235]) - (self[e4235] * other[e4315]),
-                self[e3215] * other[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e1234]])
+                * (Simd32x3::from([
+                    (self[e4125] * other[e4315]) - (self[e4315] * other[e4125]),
+                    (self[e4235] * other[e4125]) - (self[e4125] * other[e4235]),
+                    (self[e4315] * other[e4235]) - (self[e4235] * other[e4315]),
+                ]) + (Simd32x3::from(self[e45]) * other.group0().truncate_to_3())
+                    + (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()))
+                .extend_to_4(self[e3215]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (self[e25] * other[e4125]) + (self[e4235] * other[e3215]) - (self[e35] * other[e4315]) - (self[e3215] * other[e4235]),
-                (self[e35] * other[e4235]) + (self[e4315] * other[e3215]) - (self[e15] * other[e4125]) - (self[e3215] * other[e4315]),
-                (self[e15] * other[e4315]) + (self[e4125] * other[e3215]) - (self[e25] * other[e4235]) - (self[e3215] * other[e4125]),
-                self[e45] * other[e1234],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e1234]])
+                * (Simd32x3::from([
+                    (self[e25] * other[e4125]) - (self[e35] * other[e4315]),
+                    (self[e35] * other[e4235]) - (self[e15] * other[e4125]),
+                    (self[e15] * other[e4315]) - (self[e25] * other[e4235]),
+                ]) + (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3())
+                    - (Simd32x3::from(self[e3215]) * other.group0().truncate_to_3()))
+                .extend_to_4(self[e45])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 self[e15] * other[e1234],
@@ -22542,11 +22561,12 @@ impl GeometricProduct<Sphere> for Line {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       27        0
-    //    simd3        0        1        0
+    //      f32       13       24        0
+    //    simd3        0        2        0
+    //    simd4        1        0        0
     // Totals...
-    // yes simd       16       28        0
-    //  no simd       16       30        0
+    // yes simd       14       26        0
+    //  no simd       17       30        0
     fn geometric_product(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
@@ -22561,11 +22581,11 @@ impl GeometricProduct<Sphere> for Line {
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (self[e415] * other[e3215]) + (self[e315] * other[e4125]) - (self[e125] * other[e4315]),
-                (self[e425] * other[e3215]) + (self[e125] * other[e4235]) - (self[e235] * other[e4125]),
-                (self[e435] * other[e3215]) + (self[e235] * other[e4315]) - (self[e315] * other[e4235]),
+                (self[e315] * other[e4125]) - (self[e125] * other[e4315]),
+                (self[e125] * other[e4235]) - (self[e235] * other[e4125]),
+                (self[e235] * other[e4315]) - (self[e315] * other[e4235]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(other[e3215]) * self.group0()).extend_to_4(0.0),
             // e1, e2, e3, e5
             Simd32x4::from([
                 (self[e425] * other[e4125]) - (self[e435] * other[e4315]) - (self[e235] * other[e1234]),
@@ -22939,18 +22959,25 @@ impl GeometricProduct<AntiDualNum> for Motor {
 impl GeometricProduct<AntiFlatPoint> for Motor {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        6       13        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        8       16        0
+    //  no simd       12       23        0
     fn geometric_product(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e15, e25, e35, e45
-            Simd32x4::from([
-                (other[e125] * self[e425]) - (other[e235] * self[e12345]) - (other[e315] * self[e435]) - (other[e321] * self[e235]),
-                (other[e235] * self[e435]) - (other[e315] * self[e12345]) - (other[e125] * self[e415]) - (other[e321] * self[e315]),
-                (other[e315] * self[e415]) - (other[e235] * self[e425]) - (other[e125] * self[e12345]) - (other[e321] * self[e125]),
-                other[e321] * self[e12345],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e12345]])
+                * (Simd32x3::from([
+                    (other[e125] * self[e425]) - (other[e315] * self[e435]),
+                    (other[e235] * self[e435]) - (other[e125] * self[e415]),
+                    (other[e315] * self[e415]) - (other[e235] * self[e425]),
+                ]) - (Simd32x3::from(other[e321]) * self.group1().truncate_to_3())
+                    - (Simd32x3::from(self[e12345]) * other.group0().truncate_to_3()))
+                .extend_to_4(other[e321]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 other[e321] * self[e415],
@@ -23470,21 +23497,25 @@ impl GeometricProduct<FlatPoint> for Motor {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       20        0
-    //    simd4        0        2        0
+    //      f32        6       13        0
+    //    simd3        2        2        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd       12       22        0
-    //  no simd       12       28        0
+    // yes simd        8       18        0
+    //  no simd       12       31        0
     fn geometric_product(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([
-                (other[e15] * self[e12345]) + (other[e25] * self[e435]) - (other[e35] * self[e425]) - (other[e45] * self[e235]),
-                (other[e25] * self[e12345]) + (other[e35] * self[e415]) - (other[e15] * self[e435]) - (other[e45] * self[e315]),
-                (other[e15] * self[e425]) + (other[e35] * self[e12345]) - (other[e25] * self[e415]) - (other[e45] * self[e125]),
-                other[e45] * self[e12345],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e12345]])
+                * (Simd32x3::from([
+                    (other[e25] * self[e435]) - (other[e35] * self[e425]),
+                    (other[e35] * self[e415]) - (other[e15] * self[e435]),
+                    (other[e15] * self[e425]) - (other[e25] * self[e415]),
+                ]) + (Simd32x3::from(self[e12345]) * other.group0().truncate_to_3())
+                    - (Simd32x3::from(other[e45]) * self.group1().truncate_to_3()))
+                .extend_to_4(other[e45])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1, e2, e3, e5
             Simd32x4::from([
                 other[e45] * self[e415],
@@ -23730,16 +23761,16 @@ impl GeometricProduct<MultiVector> for Motor {
                 (self[e435] * other[e423]) - (self[e415] * other[e412]),
                 (self[e415] * other[e431]) - (self[e425] * other[e423]),
             ]) - (Simd32x3::from(self[e12345]) * other.group7())
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e415], self[e425], self[e435]])),
+                - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e425] * other[e435]) + (self[e315] * other[e412]) - (self[e435] * other[e425]) - (self[e125] * other[e431]),
                 (self[e435] * other[e415]) + (self[e125] * other[e423]) - (self[e415] * other[e435]) - (self[e235] * other[e412]),
                 (self[e415] * other[e425]) + (self[e235] * other[e431]) - (self[e425] * other[e415]) - (self[e315] * other[e423]),
-            ]) - (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
+            ]) - (Simd32x3::from(self[e12345]) * other.group6().truncate_to_3())
                 - (Simd32x3::from(self[e5]) * other.group7())
-                - (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e235], self[e315], self[e125]])),
+                - (Simd32x3::from(other[e12345]) * self.group0().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e415] * other[scalar])
@@ -23781,22 +23812,22 @@ impl GeometricProduct<MultiVector> for Motor {
                 (self[e415] * other[e43]) - (self[e435] * other[e41]),
                 (self[e425] * other[e41]) - (self[e415] * other[e42]),
             ]) + (Simd32x3::from(self[e12345]) * other.group4())
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e415], self[e425], self[e435]])),
+                + (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (self[e435] * other[e25]) - (self[e425] * other[e35]),
                 (self[e415] * other[e35]) - (self[e435] * other[e15]),
                 (self[e425] * other[e15]) - (self[e415] * other[e25]),
-            ]) + (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e15], other[e25], other[e35]]))
+            ]) + (Simd32x3::from(self[e12345]) * other.group3().truncate_to_3())
                 + (Simd32x3::from(self[e235]) * Simd32x3::from([other[scalar], other[e12], other[e4315]]))
                 + (Simd32x3::from(self[e315]) * Simd32x3::from([other[e4125], other[scalar], other[e23]]))
                 + (Simd32x3::from(self[e125]) * Simd32x3::from([other[e31], other[e4235], other[scalar]]))
                 + (Simd32x3::from(self[e5]) * other.group5())
-                + (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
+                + (Simd32x3::from(other[e3215]) * self.group0().truncate_to_3())
                 - (Simd32x3::from(self[e235]) * Simd32x3::from([other[e45], other[e4125], other[e31]]))
                 - (Simd32x3::from(self[e315]) * Simd32x3::from([other[e12], other[e45], other[e4235]]))
                 - (Simd32x3::from(self[e125]) * Simd32x3::from([other[e4315], other[e23], other[e45]]))
-                - (Simd32x3::from(self[e5]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]])),
+                - (Simd32x3::from(self[e5]) * other.group9().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e415] * other[e321]) + (self[e435] * other[e2]) + (self[e12345] * other[e1]) + (self[e315] * other[e412])
@@ -23857,11 +23888,12 @@ impl GeometricProduct<RoundPoint> for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       36        0
-    //    simd4        0        4        0
+    //      f32       18       29        0
+    //    simd3        2        2        0
+    //    simd4        0        5        0
     // Totals...
-    // yes simd       24       40        0
-    //  no simd       24       52        0
+    // yes simd       20       36        0
+    //  no simd       24       55        0
     fn geometric_product(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -23875,12 +23907,15 @@ impl GeometricProduct<RoundPoint> for Motor {
                 -(self[e415] * other[e1]) - (self[e425] * other[e2]) - (self[e435] * other[e3]) - (self[e5] * other[e4]),
             ]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (self[e315] * other[e3]) - (self[e415] * other[e5]) - (self[e125] * other[e2]) - (self[e5] * other[e1]),
-                (self[e125] * other[e1]) - (self[e425] * other[e5]) - (self[e235] * other[e3]) - (self[e5] * other[e2]),
-                (self[e235] * other[e2]) - (self[e435] * other[e5]) - (self[e315] * other[e1]) - (self[e5] * other[e3]),
-                self[e12345] * other[e4],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e4]])
+                * (Simd32x3::from([
+                    (self[e315] * other[e3]) - (self[e125] * other[e2]),
+                    (self[e125] * other[e1]) - (self[e235] * other[e3]),
+                    (self[e235] * other[e2]) - (self[e315] * other[e1]),
+                ]) - (Simd32x3::from(self[e5]) * other.group0().truncate_to_3())
+                    - (Simd32x3::from(other[e5]) * self.group0().truncate_to_3()))
+                .extend_to_4(self[e12345])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e435] * other[e2]) + (self[e12345] * other[e1]) - (self[e425] * other[e3]) - (self[e235] * other[e4]),
@@ -23911,11 +23946,12 @@ impl GeometricProduct<Sphere> for Motor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        1        2        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       21       34        0
-    //  no simd       24       40        0
+    // yes simd       17       30        0
+    //  no simd       24       43        0
     fn geometric_product(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -23936,12 +23972,14 @@ impl GeometricProduct<Sphere> for Motor {
                 (self[e235] * other[e4235]) + (self[e315] * other[e4315]) + (self[e125] * other[e4125]),
             ]) + (Simd32x4::from(other[e3215]) * self.group0()),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (self[e425] * other[e4125]) - (self[e435] * other[e4315]) - (self[e12345] * other[e4235]) - (self[e235] * other[e1234]),
-                (self[e435] * other[e4235]) - (self[e415] * other[e4125]) - (self[e12345] * other[e4315]) - (self[e315] * other[e1234]),
-                (self[e415] * other[e4315]) - (self[e425] * other[e4235]) - (self[e12345] * other[e4125]) - (self[e125] * other[e1234]),
-                self[e12345] * other[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, other[e1234]])
+                * (Simd32x3::from([
+                    (self[e425] * other[e4125]) - (self[e435] * other[e4315]),
+                    (self[e435] * other[e4235]) - (self[e415] * other[e4125]),
+                    (self[e415] * other[e4315]) - (self[e425] * other[e4235]),
+                ]) - (Simd32x3::from(self[e12345]) * other.group0().truncate_to_3())
+                    - (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3()))
+                .extend_to_4(self[e12345]),
         );
     }
 }
@@ -24265,7 +24303,7 @@ impl GeometricProduct<AntiCircleRotor> for MultiVector {
                 + (Simd32x3::from(other[e43]) * Simd32x3::from([self[e4315], self[e23], self[scalar]]))
                 + (Simd32x3::from(other[e45]) * self.group4())
                 + (Simd32x3::from(other[scalar]) * self.group4())
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
+                + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(other[e41]) * Simd32x3::from([self[e45], self[e12], self[e4315]]))
                 - (Simd32x3::from(other[e42]) * Simd32x3::from([self[e4125], self[e45], self[e23]]))
                 - (Simd32x3::from(other[e43]) * Simd32x3::from([self[e31], self[e4235], self[e45]])),
@@ -24274,11 +24312,11 @@ impl GeometricProduct<AntiCircleRotor> for MultiVector {
                 (other[e42] * self[e35]) + (other[e31] * self[e12]) + (other[e25] * self[e43]) - (other[e43] * self[e25]) - (other[e12] * self[e31]) - (other[e35] * self[e42]),
                 (other[e43] * self[e15]) + (other[e12] * self[e23]) + (other[e35] * self[e41]) - (other[e41] * self[e35]) - (other[e23] * self[e12]) - (other[e15] * self[e43]),
                 (other[e41] * self[e25]) + (other[e23] * self[e31]) + (other[e15] * self[e42]) - (other[e42] * self[e15]) - (other[e31] * self[e23]) - (other[e25] * self[e41]),
-            ]) + (Simd32x3::from(other[e45]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+            ]) + (Simd32x3::from(other[e45]) * self.group9().truncate_to_3())
                 + (Simd32x3::from(other[scalar]) * self.group5())
-                + (Simd32x3::from(self[scalar]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
+                + (Simd32x3::from(self[scalar]) * other.group1().truncate_to_3())
                 + (Simd32x3::from(self[e3215]) * other.group0())
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e15], other[e25], other[e35]])),
+                + (Simd32x3::from(self[e1234]) * other.group2().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e41] * self[e5]) + (other[e42] * self[e125]) + (other[e23] * self[e12345]) + (other[e31] * self[e435]) + (other[e15] * self[e4]) + (other[e25] * self[e412])
@@ -24310,7 +24348,7 @@ impl GeometricProduct<AntiCircleRotor> for MultiVector {
             ]) + (Simd32x3::from(other[e45]) * self.group7())
                 + (Simd32x3::from(other[scalar]) * self.group7())
                 + (Simd32x3::from(self[e12345]) * other.group0())
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
+                + (Simd32x3::from(self[e4]) * other.group1().truncate_to_3())
                 + (Simd32x3::from(self[e321]) * other.group0()),
             // e235, e315, e125
             Simd32x3::from([
@@ -24321,7 +24359,7 @@ impl GeometricProduct<AntiCircleRotor> for MultiVector {
                 + (Simd32x3::from(other[e25]) * Simd32x3::from([self[e435], self[e12345], self[e1]]))
                 + (Simd32x3::from(other[e35]) * Simd32x3::from([self[e2], self[e415], self[e12345]]))
                 + (Simd32x3::from(other[scalar]) * self.group8())
-                + (Simd32x3::from(self[e5]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
+                + (Simd32x3::from(self[e5]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(other[e45]) * self.group8())
                 - (Simd32x3::from(other[e15]) * Simd32x3::from([self[e321], self[e435], self[e2]]))
                 - (Simd32x3::from(other[e25]) * Simd32x3::from([self[e3], self[e321], self[e415]]))
@@ -24540,14 +24578,14 @@ impl GeometricProduct<AntiDipoleInversion> for MultiVector {
                     - (other[e423] * self[e425])
                     - (other[e415] * self[e431])
                     - (other[e2] * self[e423]),
-            ]) + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
+            ]) + (Simd32x3::from(self[e4]) * other.group3().truncate_to_3())
                 + (Simd32x3::from(self[e423]) * Simd32x3::from([other[e321], other[e3], other[e425]]))
                 + (Simd32x3::from(self[e431]) * Simd32x3::from([other[e435], other[e321], other[e1]]))
                 + (Simd32x3::from(self[e412]) * Simd32x3::from([other[e2], other[e415], other[e321]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
+                - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group6().truncate_to_3())
                 - (Simd32x3::from(self[e12345]) * other.group0())
-                - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
+                - (Simd32x3::from(self[e4]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(self[e321]) * other.group0()),
             // e23, e31, e12
             Simd32x3::from([
@@ -24566,13 +24604,13 @@ impl GeometricProduct<AntiDipoleInversion> for MultiVector {
                     - (other[e415] * self[e425])
                     - (other[e235] * self[e431])
                     - (other[e1] * self[e2]),
-            ]) - (Simd32x3::from(other[e321]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
+            ]) - (Simd32x3::from(other[e321]) * self.group1().truncate_to_3())
                 - (Simd32x3::from(other[e4]) * self.group8())
                 - (Simd32x3::from(other[e5]) * self.group7())
-                - (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e235], other[e315], other[e125]]))
+                - (Simd32x3::from(self[e12345]) * other.group1().truncate_to_3())
+                - (Simd32x3::from(self[e4]) * other.group2().truncate_to_3())
                 - (Simd32x3::from(self[e5]) * other.group0())
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+                - (Simd32x3::from(self[e321]) * other.group3().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e423] * self[e3215])
@@ -24638,15 +24676,15 @@ impl GeometricProduct<AntiDipoleInversion> for MultiVector {
                 + (Simd32x3::from(other[e431]) * Simd32x3::from([self[e12], self[scalar], self[e4235]]))
                 + (Simd32x3::from(other[e412]) * Simd32x3::from([self[e4315], self[e23], self[scalar]]))
                 + (Simd32x3::from(other[e4]) * self.group5())
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
+                + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(other[e423]) * Simd32x3::from([self[e45], self[e12], self[e4315]]))
                 - (Simd32x3::from(other[e431]) * Simd32x3::from([self[e4125], self[e45], self[e23]]))
                 - (Simd32x3::from(other[e412]) * Simd32x3::from([self[e31], self[e4235], self[e45]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+                - (Simd32x3::from(other[e4]) * self.group9().truncate_to_3())
                 - (Simd32x3::from(self[e41]) * Simd32x3::from([other[e321], other[e3], other[e425]]))
                 - (Simd32x3::from(self[e42]) * Simd32x3::from([other[e435], other[e321], other[e1]]))
                 - (Simd32x3::from(self[e43]) * Simd32x3::from([other[e2], other[e415], other[e321]]))
-                - (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+                - (Simd32x3::from(self[e1234]) * other.group3().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (other[e425] * self[e35]) + (other[e315] * self[e12]) + (other[e315] * self[e4125]) + (other[e2] * self[e35])
@@ -24664,13 +24702,13 @@ impl GeometricProduct<AntiDipoleInversion> for MultiVector {
                     - (other[e315] * self[e23])
                     - (other[e315] * self[e4235])
                     - (other[e2] * self[e15]),
-            ]) + (Simd32x3::from(other[e321]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+            ]) + (Simd32x3::from(other[e321]) * self.group3().truncate_to_3())
+                + (Simd32x3::from(other[e5]) * self.group9().truncate_to_3())
                 + (Simd32x3::from(other[e5]) * self.group5())
-                + (Simd32x3::from(self[scalar]) * Simd32x3::from([other[e235], other[e315], other[e125]]))
-                + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e235], other[e315], other[e125]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+                + (Simd32x3::from(self[scalar]) * other.group2().truncate_to_3())
+                + (Simd32x3::from(self[e45]) * other.group2().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group3().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e412] * self[e315])
@@ -24750,25 +24788,21 @@ impl GeometricProduct<AntiDualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       27        0
+    //      f32        6       20        0
     //    simd2        1        2        0
-    //    simd3        3        7        0
-    //    simd4        3        4        0
+    //    simd3        4        9        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd       16       40        0
-    //  no simd       32       68        0
+    // yes simd       14       36        0
+    //  no simd       32       71        0
     fn geometric_product(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             (Simd32x2::from(other[e3215]) * Simd32x2::from([self[e1234], self[e4]])) + (Simd32x2::from(other[scalar]) * self.group0()),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (other[e3215] * self[e423]) + (other[scalar] * self[e1]),
-                (other[e3215] * self[e431]) + (other[scalar] * self[e2]),
-                (other[e3215] * self[e412]) + (other[scalar] * self[e3]),
-                other[scalar] * self[e4],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e4]])
+                * ((Simd32x3::from(other[e3215]) * self.group7()) + (Simd32x3::from(other[scalar]) * self.group1().truncate_to_3())).extend_to_4(other[scalar]),
             // e5
             (other[e3215] * self[e12345]) + (other[scalar] * self[e5]) - (other[e3215] * self[e321]),
             // e15, e25, e35, e45
@@ -24787,8 +24821,8 @@ impl GeometricProduct<AntiDualNum> for MultiVector {
             // e423, e431, e412
             Simd32x3::from(other[scalar]) * self.group7(),
             // e235, e315, e125
-            (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e415], self[e425], self[e435]])) + (Simd32x3::from(other[scalar]) * self.group8())
-                - (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+            (Simd32x3::from(other[e3215]) * self.group6().truncate_to_3()) + (Simd32x3::from(other[scalar]) * self.group8())
+                - (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e3215] * self[e41]) * -1.0,
@@ -24805,13 +24839,13 @@ impl GeometricProduct<AntiFlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       67       93        0
+    //      f32       61       86        0
     //    simd2        1        1        0
-    //    simd3        5        8        0
-    //    simd4        3        4        0
+    //    simd3        7       10        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd       76      106        0
-    //  no simd       96      135        0
+    // yes simd       72      102        0
+    //  no simd       96      138        0
     fn geometric_product(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -24821,12 +24855,15 @@ impl GeometricProduct<AntiFlatPoint> for MultiVector {
                 -(other[e235] * self[e41]) - (other[e315] * self[e42]) - (other[e125] * self[e43]),
             ]) - (Simd32x2::from(other[e321]) * Simd32x2::from([self[e321], self[e45]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (other[e235] * self[e1234]) + (other[e315] * self[e43]) + (other[e321] * self[e23]) - (other[e125] * self[e42]),
-                (other[e315] * self[e1234]) + (other[e125] * self[e41]) + (other[e321] * self[e31]) - (other[e235] * self[e43]),
-                (other[e235] * self[e42]) + (other[e125] * self[e1234]) + (other[e321] * self[e12]) - (other[e315] * self[e41]),
-                other[e321] * self[e1234],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e1234]])
+                * (Simd32x3::from([
+                    (other[e315] * self[e43]) - (other[e125] * self[e42]),
+                    (other[e125] * self[e41]) - (other[e235] * self[e43]),
+                    (other[e235] * self[e42]) - (other[e315] * self[e41]),
+                ]) + (Simd32x3::from(other[e321]) * self.group5())
+                    + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()))
+                .extend_to_4(other[e321])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e5
             (other[e321] * self[e3215])
                 - (other[e235] * self[e23])
@@ -24851,8 +24888,8 @@ impl GeometricProduct<AntiFlatPoint> for MultiVector {
                 (other[e125] * self[e431]) - (other[e315] * self[e412]),
                 (other[e235] * self[e412]) - (other[e125] * self[e423]),
                 (other[e315] * self[e423]) - (other[e235] * self[e431]),
-            ]) - (Simd32x3::from(other[e321]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e235], other[e315], other[e125]])),
+            ]) - (Simd32x3::from(other[e321]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(self[e4]) * other.group0().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e235] * self[e1234]) + (other[e315] * self[e43]) - (other[e125] * self[e42]) - (other[e321] * self[e4235]),
@@ -24867,9 +24904,9 @@ impl GeometricProduct<AntiFlatPoint> for MultiVector {
                 (other[e315] * self[e12]) + (other[e315] * self[e4125]) - (other[e125] * self[e31]) - (other[e125] * self[e4315]),
                 (other[e125] * self[e23]) + (other[e125] * self[e4235]) - (other[e235] * self[e12]) - (other[e235] * self[e4125]),
                 (other[e235] * self[e31]) + (other[e235] * self[e4315]) - (other[e315] * self[e23]) - (other[e315] * self[e4235]),
-            ]) + (Simd32x3::from(other[e321]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(self[scalar]) * Simd32x3::from([other[e235], other[e315], other[e125]]))
-                + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e235], other[e315], other[e125]])),
+            ]) + (Simd32x3::from(other[e321]) * self.group3().truncate_to_3())
+                + (Simd32x3::from(self[scalar]) * other.group0().truncate_to_3())
+                + (Simd32x3::from(self[e45]) * other.group0().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e235] * self[e4]) + (other[e315] * self[e412]) + (other[e321] * self[e415]) - (other[e125] * self[e431]),
@@ -24975,16 +25012,16 @@ impl GeometricProduct<AntiFlector> for MultiVector {
                 (other[e3] * self[e423]) - (other[e1] * self[e412]),
                 (other[e1] * self[e431]) - (other[e2] * self[e423]),
             ]) + (Simd32x3::from(other[e321]) * self.group7())
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+                + (Simd32x3::from(self[e4]) * other.group1().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (other[e125] * self[e431]) + (other[e3] * self[e2]) - (other[e315] * self[e412]) - (other[e2] * self[e3]),
                 (other[e235] * self[e412]) + (other[e1] * self[e3]) - (other[e125] * self[e423]) - (other[e3] * self[e1]),
                 (other[e315] * self[e423]) + (other[e2] * self[e1]) - (other[e235] * self[e431]) - (other[e1] * self[e2]),
-            ]) - (Simd32x3::from(other[e321]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
+            ]) - (Simd32x3::from(other[e321]) * self.group1().truncate_to_3())
                 - (Simd32x3::from(other[e5]) * self.group7())
-                - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e235], other[e315], other[e125]]))
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+                - (Simd32x3::from(self[e4]) * other.group0().truncate_to_3())
+                - (Simd32x3::from(self[e321]) * other.group1().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e315] * self[e43]) + (other[e3] * self[e4315]) + (other[e5] * self[e41])
@@ -25016,7 +25053,7 @@ impl GeometricProduct<AntiFlector> for MultiVector {
                 (other[e1] * self[e43]) - (other[e3] * self[e41]),
                 (other[e2] * self[e41]) - (other[e1] * self[e42]),
             ]) - (Simd32x3::from(other[e321]) * self.group4())
-                - (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+                - (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (other[e315] * self[e12]) + (other[e315] * self[e4125]) + (other[e2] * self[e35])
@@ -25031,12 +25068,12 @@ impl GeometricProduct<AntiFlector> for MultiVector {
                     - (other[e315] * self[e23])
                     - (other[e315] * self[e4235])
                     - (other[e2] * self[e15]),
-            ]) + (Simd32x3::from(other[e321]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+            ]) + (Simd32x3::from(other[e321]) * self.group3().truncate_to_3())
+                + (Simd32x3::from(other[e5]) * self.group9().truncate_to_3())
                 + (Simd32x3::from(other[e5]) * self.group5())
-                + (Simd32x3::from(self[scalar]) * Simd32x3::from([other[e235], other[e315], other[e125]]))
-                + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e235], other[e315], other[e125]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+                + (Simd32x3::from(self[scalar]) * other.group0().truncate_to_3())
+                + (Simd32x3::from(self[e45]) * other.group0().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e235] * self[e4]) + (other[e315] * self[e412]) + (other[e321] * self[e415]) + (other[e1] * self[e12345]) + (other[e2] * self[e435])
@@ -25298,7 +25335,7 @@ impl GeometricProduct<AntiMotor> for MultiVector {
                 (other[e12] * self[e41]) - (other[e23] * self[e43]),
                 (other[e23] * self[e42]) - (other[e31] * self[e41]),
             ]) + (Simd32x3::from(other[scalar]) * self.group4())
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e23], other[e31], other[e12]])),
+                + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (other[e31] * self[e12]) + (other[e25] * self[e43]) - (other[e12] * self[e31]) - (other[e35] * self[e42]),
@@ -25306,8 +25343,8 @@ impl GeometricProduct<AntiMotor> for MultiVector {
                 (other[e23] * self[e31]) + (other[e15] * self[e42]) - (other[e31] * self[e23]) - (other[e25] * self[e41]),
             ]) + (Simd32x3::from(other[scalar]) * self.group5())
                 + (Simd32x3::from(other[e3215]) * self.group4())
-                + (Simd32x3::from(self[scalar]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e15], other[e25], other[e35]])),
+                + (Simd32x3::from(self[scalar]) * other.group0().truncate_to_3())
+                + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e23] * self[e12345]) + (other[e31] * self[e435]) + (other[e25] * self[e412]) + (other[e3215] * self[e423])
@@ -25328,7 +25365,7 @@ impl GeometricProduct<AntiMotor> for MultiVector {
                 (other[e12] * self[e423]) - (other[e23] * self[e412]),
                 (other[e23] * self[e431]) - (other[e31] * self[e423]),
             ]) + (Simd32x3::from(other[scalar]) * self.group7())
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e23], other[e31], other[e12]])),
+                + (Simd32x3::from(self[e4]) * other.group0().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (other[e31] * self[e125]) - (other[e12] * self[e315]),
@@ -25338,12 +25375,12 @@ impl GeometricProduct<AntiMotor> for MultiVector {
                 + (Simd32x3::from(other[e15]) * Simd32x3::from([self[e12345], self[e3], self[e425]]))
                 + (Simd32x3::from(other[e25]) * Simd32x3::from([self[e435], self[e12345], self[e1]]))
                 + (Simd32x3::from(other[e35]) * Simd32x3::from([self[e2], self[e415], self[e12345]]))
-                + (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                + (Simd32x3::from(self[e5]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
+                + (Simd32x3::from(other[e3215]) * self.group6().truncate_to_3())
+                + (Simd32x3::from(self[e5]) * other.group0().truncate_to_3())
                 - (Simd32x3::from(other[e15]) * Simd32x3::from([self[e321], self[e435], self[e2]]))
                 - (Simd32x3::from(other[e25]) * Simd32x3::from([self[e3], self[e321], self[e415]]))
                 - (Simd32x3::from(other[e35]) * Simd32x3::from([self[e425], self[e1], self[e321]]))
-                - (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+                - (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e31] * self[e4125]) + (other[e35] * self[e42])
@@ -25418,14 +25455,14 @@ impl GeometricProduct<AntiPlane> for MultiVector {
                 (other[e2] * self[e412]) - (other[e3] * self[e431]),
                 (other[e3] * self[e423]) - (other[e1] * self[e412]),
                 (other[e1] * self[e431]) - (other[e2] * self[e423]),
-            ]) + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+            ]) + (Simd32x3::from(self[e4]) * other.group0().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (other[e3] * self[e2]) - (other[e2] * self[e3]),
                 (other[e1] * self[e3]) - (other[e3] * self[e1]),
                 (other[e2] * self[e1]) - (other[e1] * self[e2]),
             ]) - (Simd32x3::from(other[e5]) * self.group7())
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+                - (Simd32x3::from(self[e321]) * other.group0().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e3] * self[e4315]) - (other[e1] * self[e45]) - (other[e2] * self[e4125]),
@@ -25438,15 +25475,15 @@ impl GeometricProduct<AntiPlane> for MultiVector {
                 (other[e3] * self[e42]) - (other[e2] * self[e43]),
                 (other[e1] * self[e43]) - (other[e3] * self[e41]),
                 (other[e2] * self[e41]) - (other[e1] * self[e42]),
-            ]) - (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+            ]) - (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (other[e2] * self[e35]) - (other[e3] * self[e25]),
                 (other[e3] * self[e15]) - (other[e1] * self[e35]),
                 (other[e1] * self[e25]) - (other[e2] * self[e15]),
-            ]) + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+            ]) + (Simd32x3::from(other[e5]) * self.group9().truncate_to_3())
                 + (Simd32x3::from(other[e5]) * self.group5())
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+                + (Simd32x3::from(self[e3215]) * other.group0().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e1] * self[e12345]) + (other[e2] * self[e435]) - (other[e3] * self[e425]),
@@ -25474,7 +25511,7 @@ impl GeometricProduct<AntiScalar> for MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from(other[e12345]) * Simd32x2::from([self[e12345], self[scalar]]) * Simd32x2::from([-1.0, 1.0]),
+            Simd32x2::from(other[e12345]) * crate::swizzle!(self.group0(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
             // e1, e2, e3, e4
             Simd32x4::from(other[e12345]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e1234]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e5
@@ -25484,13 +25521,13 @@ impl GeometricProduct<AntiScalar> for MultiVector {
             // e41, e42, e43
             Simd32x3::from(other[e12345]) * self.group7() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from(other[e12345]) * Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            Simd32x3::from(other[e12345]) * self.group6().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from(other[e12345]) * Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e423, e431, e412
             Simd32x3::from(other[e12345]) * self.group4(),
             // e235, e315, e125
-            Simd32x3::from(other[e12345]) * Simd32x3::from([self[e15], self[e25], self[e35]]),
+            Simd32x3::from(other[e12345]) * self.group3().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(other[e12345]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e5]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1234
@@ -25610,7 +25647,7 @@ impl GeometricProduct<Circle> for MultiVector {
                     - (other[e415] * self[e431]),
             ]) + (Simd32x3::from(other[e321]) * self.group7())
                 - (Simd32x3::from(self[e12345]) * other.group0())
-                - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
+                - (Simd32x3::from(self[e4]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(self[e321]) * other.group0()),
             // e23, e31, e12
             Simd32x3::from([
@@ -25626,8 +25663,8 @@ impl GeometricProduct<Circle> for MultiVector {
                     - (other[e423] * self[e315])
                     - (other[e415] * self[e425])
                     - (other[e235] * self[e431]),
-            ]) - (Simd32x3::from(other[e321]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                - (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
+            ]) - (Simd32x3::from(other[e321]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(self[e12345]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(self[e4]) * other.group2())
                 - (Simd32x3::from(self[e5]) * other.group0()),
             // e415, e425, e435, e321
@@ -25665,7 +25702,7 @@ impl GeometricProduct<Circle> for MultiVector {
             ]) + (Simd32x3::from(other[e423]) * Simd32x3::from([self[scalar], self[e4125], self[e31]]))
                 + (Simd32x3::from(other[e431]) * Simd32x3::from([self[e12], self[scalar], self[e4235]]))
                 + (Simd32x3::from(other[e412]) * Simd32x3::from([self[e4315], self[e23], self[scalar]]))
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
+                + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(other[e423]) * Simd32x3::from([self[e45], self[e12], self[e4315]]))
                 - (Simd32x3::from(other[e431]) * Simd32x3::from([self[e4125], self[e45], self[e23]]))
                 - (Simd32x3::from(other[e412]) * Simd32x3::from([self[e31], self[e4235], self[e45]]))
@@ -25684,10 +25721,10 @@ impl GeometricProduct<Circle> for MultiVector {
                     - (other[e425] * self[e15])
                     - (other[e315] * self[e23])
                     - (other[e315] * self[e4235]),
-            ]) + (Simd32x3::from(other[e321]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
+            ]) + (Simd32x3::from(other[e321]) * self.group3().truncate_to_3())
                 + (Simd32x3::from(self[scalar]) * other.group2())
                 + (Simd32x3::from(self[e45]) * other.group2())
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e415], other[e425], other[e435]])),
+                + (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e412] * self[e315])
@@ -25863,7 +25900,7 @@ impl GeometricProduct<CircleRotor> for MultiVector {
             ]) + (Simd32x3::from(other[e321]) * self.group7())
                 - (Simd32x3::from(other[e12345]) * self.group7())
                 - (Simd32x3::from(self[e12345]) * other.group0())
-                - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
+                - (Simd32x3::from(self[e4]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(self[e321]) * other.group0()),
             // e23, e31, e12
             Simd32x3::from([
@@ -25879,10 +25916,10 @@ impl GeometricProduct<CircleRotor> for MultiVector {
                     - (other[e423] * self[e315])
                     - (other[e415] * self[e425])
                     - (other[e235] * self[e431]),
-            ]) - (Simd32x3::from(other[e321]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                - (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                - (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e235], other[e315], other[e125]]))
+            ]) - (Simd32x3::from(other[e321]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(other[e12345]) * self.group6().truncate_to_3())
+                - (Simd32x3::from(self[e12345]) * other.group1().truncate_to_3())
+                - (Simd32x3::from(self[e4]) * other.group2().truncate_to_3())
                 - (Simd32x3::from(self[e5]) * other.group0()),
             // e415, e425, e435, e321
             Simd32x4::from([
@@ -25936,7 +25973,7 @@ impl GeometricProduct<CircleRotor> for MultiVector {
                 + (Simd32x3::from(other[e431]) * Simd32x3::from([self[e12], self[scalar], self[e4235]]))
                 + (Simd32x3::from(other[e412]) * Simd32x3::from([self[e4315], self[e23], self[scalar]]))
                 + (Simd32x3::from(other[e12345]) * self.group4())
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
+                + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(other[e423]) * Simd32x3::from([self[e45], self[e12], self[e4315]]))
                 - (Simd32x3::from(other[e431]) * Simd32x3::from([self[e4125], self[e45], self[e23]]))
                 - (Simd32x3::from(other[e412]) * Simd32x3::from([self[e31], self[e4235], self[e45]]))
@@ -25955,11 +25992,11 @@ impl GeometricProduct<CircleRotor> for MultiVector {
                     - (other[e425] * self[e15])
                     - (other[e315] * self[e23])
                     - (other[e315] * self[e4235]),
-            ]) + (Simd32x3::from(other[e321]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(self[scalar]) * Simd32x3::from([other[e235], other[e315], other[e125]]))
-                + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e235], other[e315], other[e125]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e415], other[e425], other[e435]])),
+            ]) + (Simd32x3::from(other[e321]) * self.group3().truncate_to_3())
+                + (Simd32x3::from(other[e12345]) * self.group3().truncate_to_3())
+                + (Simd32x3::from(self[scalar]) * other.group2().truncate_to_3())
+                + (Simd32x3::from(self[e45]) * other.group2().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e412] * self[e315])
@@ -26116,7 +26153,7 @@ impl GeometricProduct<Dipole> for MultiVector {
                 + (Simd32x3::from(other[e42]) * Simd32x3::from([self[e12], self[scalar], self[e4235]]))
                 + (Simd32x3::from(other[e43]) * Simd32x3::from([self[e4315], self[e23], self[scalar]]))
                 + (Simd32x3::from(other[e45]) * self.group4())
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
+                + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(other[e41]) * Simd32x3::from([self[e45], self[e12], self[e4315]]))
                 - (Simd32x3::from(other[e42]) * Simd32x3::from([self[e4125], self[e45], self[e23]]))
                 - (Simd32x3::from(other[e43]) * Simd32x3::from([self[e31], self[e4235], self[e45]])),
@@ -26125,8 +26162,8 @@ impl GeometricProduct<Dipole> for MultiVector {
                 (other[e42] * self[e35]) + (other[e31] * self[e12]) + (other[e25] * self[e43]) - (other[e43] * self[e25]) - (other[e12] * self[e31]) - (other[e35] * self[e42]),
                 (other[e43] * self[e15]) + (other[e12] * self[e23]) + (other[e35] * self[e41]) - (other[e41] * self[e35]) - (other[e23] * self[e12]) - (other[e15] * self[e43]),
                 (other[e41] * self[e25]) + (other[e23] * self[e31]) + (other[e15] * self[e42]) - (other[e42] * self[e15]) - (other[e31] * self[e23]) - (other[e25] * self[e41]),
-            ]) + (Simd32x3::from(other[e45]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
-                + (Simd32x3::from(self[scalar]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
+            ]) + (Simd32x3::from(other[e45]) * self.group9().truncate_to_3())
+                + (Simd32x3::from(self[scalar]) * other.group1().truncate_to_3())
                 + (Simd32x3::from(self[e3215]) * other.group0())
                 + (Simd32x3::from(self[e1234]) * other.group2()),
             // e415, e425, e435, e321
@@ -26158,7 +26195,7 @@ impl GeometricProduct<Dipole> for MultiVector {
                 (other[e41] * self[e2]) + (other[e41] * self[e425]) + (other[e23] * self[e431]) - (other[e42] * self[e1]) - (other[e42] * self[e415]) - (other[e31] * self[e423]),
             ]) + (Simd32x3::from(other[e45]) * self.group7())
                 + (Simd32x3::from(self[e12345]) * other.group0())
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
+                + (Simd32x3::from(self[e4]) * other.group1().truncate_to_3())
                 + (Simd32x3::from(self[e321]) * other.group0()),
             // e235, e315, e125
             Simd32x3::from([
@@ -26168,7 +26205,7 @@ impl GeometricProduct<Dipole> for MultiVector {
             ]) + (Simd32x3::from(other[e15]) * Simd32x3::from([self[e12345], self[e3], self[e425]]))
                 + (Simd32x3::from(other[e25]) * Simd32x3::from([self[e435], self[e12345], self[e1]]))
                 + (Simd32x3::from(other[e35]) * Simd32x3::from([self[e2], self[e415], self[e12345]]))
-                + (Simd32x3::from(self[e5]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
+                + (Simd32x3::from(self[e5]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(other[e45]) * self.group8())
                 - (Simd32x3::from(other[e15]) * Simd32x3::from([self[e321], self[e435], self[e2]]))
                 - (Simd32x3::from(other[e25]) * Simd32x3::from([self[e3], self[e321], self[e415]]))
@@ -26356,12 +26393,12 @@ impl GeometricProduct<DipoleInversion> for MultiVector {
                 + (Simd32x3::from(other[e43]) * Simd32x3::from([self[e4315], self[e23], self[scalar]]))
                 + (Simd32x3::from(other[e45]) * self.group4())
                 + (Simd32x3::from(other[e1234]) * self.group5())
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+                + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e1234]) * other.group3().truncate_to_3())
                 - (Simd32x3::from(other[e41]) * Simd32x3::from([self[e45], self[e12], self[e4315]]))
                 - (Simd32x3::from(other[e42]) * Simd32x3::from([self[e4125], self[e45], self[e23]]))
                 - (Simd32x3::from(other[e43]) * Simd32x3::from([self[e31], self[e4235], self[e45]]))
-                - (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]])),
+                - (Simd32x3::from(other[e1234]) * self.group9().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (other[e42] * self[e35]) + (other[e31] * self[e12]) + (other[e25] * self[e43]) + (other[e4315] * self[e4125])
@@ -26379,13 +26416,13 @@ impl GeometricProduct<DipoleInversion> for MultiVector {
                     - (other[e31] * self[e23])
                     - (other[e25] * self[e41])
                     - (other[e4315] * self[e4235]),
-            ]) + (Simd32x3::from(other[e45]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
+            ]) + (Simd32x3::from(other[e45]) * self.group9().truncate_to_3())
+                + (Simd32x3::from(other[e1234]) * self.group3().truncate_to_3())
                 + (Simd32x3::from(other[e3215]) * self.group4())
-                + (Simd32x3::from(self[scalar]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
-                + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+                + (Simd32x3::from(self[scalar]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e45]) * other.group3().truncate_to_3())
                 + (Simd32x3::from(self[e3215]) * other.group0())
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e15], other[e25], other[e35]])),
+                + (Simd32x3::from(self[e1234]) * other.group2().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e41] * self[e5])
@@ -26460,11 +26497,11 @@ impl GeometricProduct<DipoleInversion> for MultiVector {
                     - (other[e31] * self[e423])
                     - (other[e4315] * self[e423]),
             ]) + (Simd32x3::from(other[e45]) * self.group7())
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
+                + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3())
+                + (Simd32x3::from(other[e1234]) * self.group6().truncate_to_3())
                 + (Simd32x3::from(self[e12345]) * other.group0())
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+                + (Simd32x3::from(self[e4]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e4]) * other.group3().truncate_to_3())
                 + (Simd32x3::from(self[e321]) * other.group0()),
             // e235, e315, e125
             Simd32x3::from([
@@ -26474,13 +26511,13 @@ impl GeometricProduct<DipoleInversion> for MultiVector {
             ]) + (Simd32x3::from(other[e15]) * Simd32x3::from([self[e12345], self[e3], self[e425]]))
                 + (Simd32x3::from(other[e25]) * Simd32x3::from([self[e435], self[e12345], self[e1]]))
                 + (Simd32x3::from(other[e35]) * Simd32x3::from([self[e2], self[e415], self[e12345]]))
-                + (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                + (Simd32x3::from(self[e5]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
+                + (Simd32x3::from(other[e3215]) * self.group6().truncate_to_3())
+                + (Simd32x3::from(self[e5]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(other[e15]) * Simd32x3::from([self[e321], self[e435], self[e2]]))
                 - (Simd32x3::from(other[e25]) * Simd32x3::from([self[e3], self[e321], self[e415]]))
                 - (Simd32x3::from(other[e35]) * Simd32x3::from([self[e425], self[e1], self[e321]]))
-                - (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                - (Simd32x3::from(self[e5]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+                - (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(self[e5]) * other.group3().truncate_to_3())
                 - (Simd32x3::from(self[e235]) * Simd32x3::from([other[e45], other[e4125], other[e31]]))
                 - (Simd32x3::from(self[e315]) * Simd32x3::from([other[e12], other[e45], other[e4235]]))
                 - (Simd32x3::from(self[e125]) * Simd32x3::from([other[e4315], other[e23], other[e45]])),
@@ -26557,24 +26594,20 @@ impl GeometricProduct<DualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       33        0
-    //    simd3        3        8        0
-    //    simd4        3        3        0
+    //      f32        8       26        0
+    //    simd3        4       10        0
+    //    simd4        3        4        0
     // Totals...
-    // yes simd       17       44        0
-    //  no simd       32       69        0
+    // yes simd       15       40        0
+    //  no simd       32       72        0
     fn geometric_product(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([-(other[e5] * self[e4]) - (other[e12345] * self[e12345]), (other[e5] * self[e1234]) + (other[e12345] * self[scalar])]),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (other[e5] * self[e41]) - (other[e12345] * self[e4235]),
-                (other[e5] * self[e42]) - (other[e12345] * self[e4315]),
-                (other[e5] * self[e43]) - (other[e12345] * self[e4125]),
-                other[e12345] * self[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e1234]])
+                * ((Simd32x3::from(other[e5]) * self.group4()) - (Simd32x3::from(other[e12345]) * self.group9().truncate_to_3())).extend_to_4(other[e12345]),
             // e5
             (other[e5] * self[scalar]) + (other[e5] * self[e45]) + (other[e12345] * self[e3215]),
             // e15, e25, e35, e45
@@ -26587,16 +26620,16 @@ impl GeometricProduct<DualNum> for MultiVector {
             // e41, e42, e43
             Simd32x3::from(other[e12345]) * self.group7() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            -(Simd32x3::from(other[e5]) * self.group7()) - (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e415], self[e425], self[e435]])),
+            -(Simd32x3::from(other[e5]) * self.group7()) - (Simd32x3::from(other[e12345]) * self.group6().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([other[e12345] * self[e23], other[e12345] * self[e31], other[e12345] * self[e12], (other[e12345] * self[e45]) * -1.0])
                 + (Simd32x4::from(other[e5]) * Simd32x4::from([self[e41], self[e42], self[e43], self[e1234]])),
             // e423, e431, e412
             Simd32x3::from(other[e12345]) * self.group4(),
             // e235, e315, e125
-            (Simd32x3::from(other[e5]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+            (Simd32x3::from(other[e5]) * self.group9().truncate_to_3())
                 + (Simd32x3::from(other[e5]) * self.group5())
-                + (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e15], self[e25], self[e35]])),
+                + (Simd32x3::from(other[e12345]) * self.group3().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 other[e12345] * self[e1],
@@ -26613,13 +26646,13 @@ impl GeometricProduct<FlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       58       82        0
+    //      f32       52       75        0
     //    simd2        3        3        0
-    //    simd3        8       11        0
-    //    simd4        2        2        0
+    //    simd3       10       13        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       71       98        0
-    //  no simd       96      129        0
+    // yes simd       67       94        0
+    //  no simd       96      132        0
     fn geometric_product(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -26629,12 +26662,14 @@ impl GeometricProduct<FlatPoint> for MultiVector {
                 - (Simd32x2::from(other[e25]) * Simd32x2::from([self[e42], self[e431]]))
                 - (Simd32x2::from(other[e35]) * Simd32x2::from([self[e43], self[e412]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (other[e15] * self[e4]) + (other[e25] * self[e412]) - (other[e35] * self[e431]) - (other[e45] * self[e415]),
-                (other[e25] * self[e4]) + (other[e35] * self[e423]) - (other[e15] * self[e412]) - (other[e45] * self[e425]),
-                (other[e15] * self[e431]) + (other[e35] * self[e4]) - (other[e25] * self[e423]) - (other[e45] * self[e435]),
-                other[e45] * self[e4],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e4]])
+                * (Simd32x3::from([
+                    (other[e25] * self[e412]) - (other[e35] * self[e431]),
+                    (other[e35] * self[e423]) - (other[e15] * self[e412]),
+                    (other[e15] * self[e431]) - (other[e25] * self[e423]),
+                ]) + (Simd32x3::from(self[e4]) * other.group0().truncate_to_3())
+                    - (Simd32x3::from(other[e45]) * self.group6().truncate_to_3()))
+                .extend_to_4(other[e45]),
             // e5
             (other[e15] * self[e1]) + (other[e25] * self[e2]) + (other[e35] * self[e3])
                 - (other[e15] * self[e415])
@@ -26655,8 +26690,8 @@ impl GeometricProduct<FlatPoint> for MultiVector {
                 (other[e25] * self[e43]) - (other[e35] * self[e42]),
                 (other[e35] * self[e41]) - (other[e15] * self[e43]),
                 (other[e15] * self[e42]) - (other[e25] * self[e41]),
-            ]) + (Simd32x3::from(other[e45]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e15], other[e25], other[e35]])),
+            ]) + (Simd32x3::from(other[e45]) * self.group9().truncate_to_3())
+                + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e15] * self[e4]) + (other[e25] * self[e412]) - (other[e35] * self[e431]),
@@ -26793,16 +26828,16 @@ impl GeometricProduct<Flector> for MultiVector {
                 (other[e4125] * self[e41]) - (other[e4235] * self[e43]),
                 (other[e4235] * self[e42]) - (other[e4315] * self[e41]),
             ]) + (Simd32x3::from(other[e45]) * self.group4())
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]])),
+                + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (other[e25] * self[e43]) + (other[e4315] * self[e4125]) - (other[e35] * self[e42]) - (other[e4125] * self[e4315]),
                 (other[e35] * self[e41]) + (other[e4125] * self[e4235]) - (other[e15] * self[e43]) - (other[e4235] * self[e4125]),
                 (other[e15] * self[e42]) + (other[e4235] * self[e4315]) - (other[e25] * self[e41]) - (other[e4315] * self[e4235]),
-            ]) + (Simd32x3::from(other[e45]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+            ]) + (Simd32x3::from(other[e45]) * self.group9().truncate_to_3())
                 + (Simd32x3::from(other[e3215]) * self.group4())
-                + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e15], other[e25], other[e35]])),
+                + (Simd32x3::from(self[e45]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e25] * self[e412]) + (other[e4125] * self[e2]) + (other[e3215] * self[e423])
@@ -26829,7 +26864,7 @@ impl GeometricProduct<Flector> for MultiVector {
                 (other[e4125] * self[e423]) - (other[e4235] * self[e412]),
                 (other[e4235] * self[e431]) - (other[e4315] * self[e423]),
             ]) + (Simd32x3::from(other[e45]) * self.group7())
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]])),
+                + (Simd32x3::from(self[e4]) * other.group1().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (other[e4125] * self[e315]) - (other[e4315] * self[e125]),
@@ -26838,13 +26873,13 @@ impl GeometricProduct<Flector> for MultiVector {
             ]) + (Simd32x3::from(other[e15]) * Simd32x3::from([self[e12345], self[e3], self[e425]]))
                 + (Simd32x3::from(other[e25]) * Simd32x3::from([self[e435], self[e12345], self[e1]]))
                 + (Simd32x3::from(other[e35]) * Simd32x3::from([self[e2], self[e415], self[e12345]]))
-                + (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
+                + (Simd32x3::from(other[e3215]) * self.group6().truncate_to_3())
                 - (Simd32x3::from(other[e15]) * Simd32x3::from([self[e321], self[e435], self[e2]]))
                 - (Simd32x3::from(other[e25]) * Simd32x3::from([self[e3], self[e321], self[e415]]))
                 - (Simd32x3::from(other[e35]) * Simd32x3::from([self[e425], self[e1], self[e321]]))
                 - (Simd32x3::from(other[e45]) * self.group8())
-                - (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                - (Simd32x3::from(self[e5]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]])),
+                - (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(self[e5]) * other.group1().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e35] * self[e42]) + (other[e45] * self[e23]) + (other[e4315] * self[e12])
@@ -27113,16 +27148,16 @@ impl GeometricProduct<Motor> for MultiVector {
                 (other[e415] * self[e412]) - (other[e435] * self[e423]),
                 (other[e425] * self[e423]) - (other[e415] * self[e431]),
             ]) - (Simd32x3::from(other[e12345]) * self.group7())
-                - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e415], other[e425], other[e435]])),
+                - (Simd32x3::from(self[e4]) * other.group0().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (other[e435] * self[e425]) + (other[e125] * self[e431]) - (other[e425] * self[e435]) - (other[e315] * self[e412]),
                 (other[e415] * self[e435]) + (other[e235] * self[e412]) - (other[e435] * self[e415]) - (other[e125] * self[e423]),
                 (other[e425] * self[e415]) + (other[e315] * self[e423]) - (other[e415] * self[e425]) - (other[e235] * self[e431]),
-            ]) - (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
+            ]) - (Simd32x3::from(other[e12345]) * self.group6().truncate_to_3())
                 - (Simd32x3::from(other[e5]) * self.group7())
-                - (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e235], other[e315], other[e125]])),
+                - (Simd32x3::from(self[e12345]) * other.group0().truncate_to_3())
+                - (Simd32x3::from(self[e4]) * other.group1().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e415] * self[scalar]) + (other[e425] * self[e12]) + (other[e12345] * self[e23]) + (other[e315] * self[e43]) + (other[e5] * self[e41])
@@ -27146,7 +27181,7 @@ impl GeometricProduct<Motor> for MultiVector {
                 (other[e435] * self[e41]) - (other[e415] * self[e43]),
                 (other[e415] * self[e42]) - (other[e425] * self[e41]),
             ]) + (Simd32x3::from(other[e12345]) * self.group4())
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e415], other[e425], other[e435]])),
+                + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (other[e425] * self[e35]) + (other[e315] * self[e12]) + (other[e315] * self[e4125])
@@ -27161,12 +27196,12 @@ impl GeometricProduct<Motor> for MultiVector {
                     - (other[e425] * self[e15])
                     - (other[e315] * self[e23])
                     - (other[e315] * self[e4235]),
-            ]) + (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+            ]) + (Simd32x3::from(other[e12345]) * self.group3().truncate_to_3())
+                + (Simd32x3::from(other[e5]) * self.group9().truncate_to_3())
                 + (Simd32x3::from(other[e5]) * self.group5())
-                + (Simd32x3::from(self[scalar]) * Simd32x3::from([other[e235], other[e315], other[e125]]))
-                + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e235], other[e315], other[e125]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e415], other[e425], other[e435]])),
+                + (Simd32x3::from(self[scalar]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e45]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group0().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e425] * self[e3]) + (other[e12345] * self[e1]) + (other[e235] * self[e4]) + (other[e315] * self[e412]) + (other[e5] * self[e423])
@@ -27527,21 +27562,21 @@ impl GeometricProduct<MultiVector> for MultiVector {
                 + (Simd32x3::from(other[e42]) * Simd32x3::from([self[e12], self[scalar], self[e4235]]))
                 + (Simd32x3::from(other[e43]) * Simd32x3::from([self[e4315], self[e23], self[scalar]]))
                 + (Simd32x3::from(other[e1234]) * self.group5())
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
+                + (Simd32x3::from(self[e4]) * other.group1().truncate_to_3())
                 + (Simd32x3::from(self[e423]) * Simd32x3::from([other[e321], other[e3], other[e425]]))
                 + (Simd32x3::from(self[e431]) * Simd32x3::from([other[e435], other[e321], other[e1]]))
                 + (Simd32x3::from(self[e412]) * Simd32x3::from([other[e2], other[e415], other[e321]]))
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+                + (Simd32x3::from(self[e1234]) * other.group9().truncate_to_3())
                 + (Simd32x3::from(self[e1234]) * other.group5())
                 - (Simd32x3::from(other[e12345]) * self.group7())
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
+                - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group6().truncate_to_3())
                 - (Simd32x3::from(other[e41]) * Simd32x3::from([self[e45], self[e12], self[e4315]]))
                 - (Simd32x3::from(other[e42]) * Simd32x3::from([self[e4125], self[e45], self[e23]]))
                 - (Simd32x3::from(other[e43]) * Simd32x3::from([self[e31], self[e4235], self[e45]]))
-                - (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+                - (Simd32x3::from(other[e1234]) * self.group9().truncate_to_3())
                 - (Simd32x3::from(self[e12345]) * other.group7())
-                - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
+                - (Simd32x3::from(self[e4]) * other.group6().truncate_to_3())
                 - (Simd32x3::from(self[e321]) * other.group7()),
             // e23, e31, e12
             Simd32x3::from([
@@ -27594,21 +27629,21 @@ impl GeometricProduct<MultiVector> for MultiVector {
                     - (other[e235] * self[e431])
                     - (other[e4315] * self[e4235]),
             ]) + (Simd32x3::from(other[scalar]) * self.group5())
-                + (Simd32x3::from(other[e45]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+                + (Simd32x3::from(other[e45]) * self.group9().truncate_to_3())
                 + (Simd32x3::from(other[e3215]) * self.group4())
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
+                + (Simd32x3::from(other[e1234]) * self.group3().truncate_to_3())
                 + (Simd32x3::from(self[scalar]) * other.group5())
-                + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+                + (Simd32x3::from(self[e45]) * other.group9().truncate_to_3())
                 + (Simd32x3::from(self[e3215]) * other.group4())
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e15], other[e25], other[e35]]))
-                - (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
+                + (Simd32x3::from(self[e1234]) * other.group3().truncate_to_3())
+                - (Simd32x3::from(other[e12345]) * self.group6().truncate_to_3())
                 - (Simd32x3::from(other[e4]) * self.group8())
                 - (Simd32x3::from(other[e5]) * self.group7())
-                - (Simd32x3::from(other[e321]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                - (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
+                - (Simd32x3::from(other[e321]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(self[e12345]) * other.group6().truncate_to_3())
                 - (Simd32x3::from(self[e4]) * other.group8())
                 - (Simd32x3::from(self[e5]) * other.group7())
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+                - (Simd32x3::from(self[e321]) * other.group1().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e12345] * self[e23])
@@ -27745,21 +27780,21 @@ impl GeometricProduct<MultiVector> for MultiVector {
                 + (Simd32x3::from(other[e423]) * Simd32x3::from([self[scalar], self[e4125], self[e31]]))
                 + (Simd32x3::from(other[e431]) * Simd32x3::from([self[e12], self[scalar], self[e4235]]))
                 + (Simd32x3::from(other[e412]) * Simd32x3::from([self[e4315], self[e23], self[scalar]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
+                + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3())
+                + (Simd32x3::from(other[e1234]) * self.group6().truncate_to_3())
                 + (Simd32x3::from(self[e12345]) * other.group4())
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+                + (Simd32x3::from(self[e4]) * other.group9().truncate_to_3())
                 + (Simd32x3::from(self[e4]) * other.group5())
                 + (Simd32x3::from(self[e321]) * other.group4())
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+                + (Simd32x3::from(self[e1234]) * other.group6().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group9().truncate_to_3())
                 - (Simd32x3::from(other[e423]) * Simd32x3::from([self[e45], self[e12], self[e4315]]))
                 - (Simd32x3::from(other[e431]) * Simd32x3::from([self[e4125], self[e45], self[e23]]))
                 - (Simd32x3::from(other[e412]) * Simd32x3::from([self[e31], self[e4235], self[e45]]))
                 - (Simd32x3::from(self[e41]) * Simd32x3::from([other[e321], other[e3], other[e425]]))
                 - (Simd32x3::from(self[e42]) * Simd32x3::from([other[e435], other[e321], other[e1]]))
                 - (Simd32x3::from(self[e43]) * Simd32x3::from([other[e2], other[e415], other[e321]]))
-                - (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+                - (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (other[e2] * self[e35])
@@ -27799,25 +27834,25 @@ impl GeometricProduct<MultiVector> for MultiVector {
                     - (other[e315] * self[e4235])
                     - (other[e4235] * self[e315]),
             ]) + (Simd32x3::from(other[scalar]) * self.group8())
-                + (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+                + (Simd32x3::from(other[e12345]) * self.group3().truncate_to_3())
+                + (Simd32x3::from(other[e5]) * self.group9().truncate_to_3())
                 + (Simd32x3::from(other[e5]) * self.group5())
                 + (Simd32x3::from(other[e15]) * Simd32x3::from([self[e12345], self[e3], self[e425]]))
                 + (Simd32x3::from(other[e25]) * Simd32x3::from([self[e435], self[e12345], self[e1]]))
                 + (Simd32x3::from(other[e35]) * Simd32x3::from([self[e2], self[e415], self[e12345]]))
-                + (Simd32x3::from(other[e321]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
+                + (Simd32x3::from(other[e321]) * self.group3().truncate_to_3())
+                + (Simd32x3::from(other[e3215]) * self.group6().truncate_to_3())
                 + (Simd32x3::from(self[scalar]) * other.group8())
                 + (Simd32x3::from(self[e5]) * other.group5())
                 + (Simd32x3::from(self[e45]) * other.group8())
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
+                + (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group6().truncate_to_3())
                 - (Simd32x3::from(other[e15]) * Simd32x3::from([self[e321], self[e435], self[e2]]))
                 - (Simd32x3::from(other[e25]) * Simd32x3::from([self[e3], self[e321], self[e415]]))
                 - (Simd32x3::from(other[e35]) * Simd32x3::from([self[e425], self[e1], self[e321]]))
                 - (Simd32x3::from(other[e45]) * self.group8())
-                - (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                - (Simd32x3::from(self[e5]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]])),
+                - (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(self[e5]) * other.group9().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e12345] * self[e1])
@@ -28009,13 +28044,13 @@ impl GeometricProduct<Plane> for MultiVector {
                 (self[e43] * other[e4315]) - (self[e42] * other[e4125]),
                 (self[e41] * other[e4125]) - (self[e43] * other[e4235]),
                 (self[e42] * other[e4235]) - (self[e41] * other[e4315]),
-            ]) + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]])),
+            ]) + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e4125] * other[e4315]) - (self[e4315] * other[e4125]),
                 (self[e4235] * other[e4125]) - (self[e4125] * other[e4235]),
                 (self[e4315] * other[e4235]) - (self[e4235] * other[e4315]),
-            ]) + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+            ]) + (Simd32x3::from(self[e45]) * other.group0().truncate_to_3())
                 + (Simd32x3::from(other[e3215]) * self.group4()),
             // e415, e425, e435, e321
             Simd32x4::from([
@@ -28029,15 +28064,15 @@ impl GeometricProduct<Plane> for MultiVector {
                 (self[e412] * other[e4315]) - (self[e431] * other[e4125]),
                 (self[e423] * other[e4125]) - (self[e412] * other[e4235]),
                 (self[e431] * other[e4235]) - (self[e423] * other[e4315]),
-            ]) + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]])),
+            ]) + (Simd32x3::from(self[e4]) * other.group0().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (self[e315] * other[e4125]) - (self[e125] * other[e4315]),
                 (self[e125] * other[e4235]) - (self[e235] * other[e4125]),
                 (self[e235] * other[e4315]) - (self[e315] * other[e4235]),
-            ]) + (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                - (Simd32x3::from(self[e5]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
-                - (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+            ]) + (Simd32x3::from(other[e3215]) * self.group6().truncate_to_3())
+                - (Simd32x3::from(self[e5]) * other.group0().truncate_to_3())
+                - (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e12] * other[e4315]) - (self[e41] * other[e3215]) - (self[e31] * other[e4125]),
@@ -28092,15 +28127,15 @@ impl GeometricProduct<RoundPoint> for MultiVector {
                 (self[e412] * other[e2]) - (self[e431] * other[e3]),
                 (self[e423] * other[e3]) - (self[e412] * other[e1]),
                 (self[e431] * other[e1]) - (self[e423] * other[e2]),
-            ]) + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e415], self[e425], self[e435]])),
+            ]) + (Simd32x3::from(self[e4]) * other.group0().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group6().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e2] * other[e3]) - (self[e3] * other[e2]),
                 (self[e3] * other[e1]) - (self[e1] * other[e3]),
                 (self[e1] * other[e2]) - (self[e2] * other[e1]),
-            ]) - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
+            ]) - (Simd32x3::from(self[e321]) * other.group0().truncate_to_3())
                 - (Simd32x3::from(other[e4]) * self.group8())
                 - (Simd32x3::from(other[e5]) * self.group7()),
             // e415, e425, e435, e321
@@ -28116,15 +28151,15 @@ impl GeometricProduct<RoundPoint> for MultiVector {
                 (self[e43] * other[e1]) - (self[e41] * other[e3]),
                 (self[e41] * other[e2]) - (self[e42] * other[e1]),
             ]) + (Simd32x3::from(other[e4]) * self.group5())
-                - (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]])),
+                - (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group9().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (self[e35] * other[e2]) - (self[e25] * other[e3]),
                 (self[e15] * other[e3]) - (self[e35] * other[e1]),
                 (self[e25] * other[e1]) - (self[e15] * other[e2]),
-            ]) + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+            ]) + (Simd32x3::from(self[e3215]) * other.group0().truncate_to_3())
+                + (Simd32x3::from(other[e5]) * self.group9().truncate_to_3())
                 + (Simd32x3::from(other[e5]) * self.group5()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
@@ -28218,17 +28253,17 @@ impl GeometricProduct<Sphere> for MultiVector {
                 (self[e43] * other[e4315]) - (self[e42] * other[e4125]),
                 (self[e41] * other[e4125]) - (self[e43] * other[e4235]),
                 (self[e42] * other[e4235]) - (self[e41] * other[e4315]),
-            ]) + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+            ]) + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3())
                 + (Simd32x3::from(other[e1234]) * self.group5())
-                - (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]])),
+                - (Simd32x3::from(other[e1234]) * self.group9().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e4125] * other[e4315]) - (self[e4315] * other[e4125]),
                 (self[e4235] * other[e4125]) - (self[e4125] * other[e4235]),
                 (self[e4315] * other[e4235]) - (self[e4235] * other[e4315]),
-            ]) + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+            ]) + (Simd32x3::from(self[e45]) * other.group0().truncate_to_3())
                 + (Simd32x3::from(other[e3215]) * self.group4())
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e15], self[e25], self[e35]])),
+                + (Simd32x3::from(other[e1234]) * self.group3().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e2] * other[e4125]) + (self[e235] * other[e1234]) - (self[e3] * other[e4315]) - (self[e321] * other[e4235]),
@@ -28241,17 +28276,17 @@ impl GeometricProduct<Sphere> for MultiVector {
                 (self[e412] * other[e4315]) - (self[e431] * other[e4125]),
                 (self[e423] * other[e4125]) - (self[e412] * other[e4235]),
                 (self[e431] * other[e4235]) - (self[e423] * other[e4315]),
-            ]) + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e415], self[e425], self[e435]])),
+            ]) + (Simd32x3::from(self[e4]) * other.group0().truncate_to_3())
+                + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3())
+                + (Simd32x3::from(other[e1234]) * self.group6().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (self[e315] * other[e4125]) - (self[e125] * other[e4315]),
                 (self[e125] * other[e4235]) - (self[e235] * other[e4125]),
                 (self[e235] * other[e4315]) - (self[e315] * other[e4235]),
-            ]) + (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                - (Simd32x3::from(self[e5]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
-                - (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+            ]) + (Simd32x3::from(other[e3215]) * self.group6().truncate_to_3())
+                - (Simd32x3::from(self[e5]) * other.group0().truncate_to_3())
+                - (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e15] * other[e1234]) + (self[e12] * other[e4315]) - (self[e41] * other[e3215]) - (self[e31] * other[e4125]),
@@ -28403,18 +28438,18 @@ impl GeometricProduct<VersorEven> for MultiVector {
                 (self[e2] * other[e412]) + (self[e425] * other[e412]) - (self[e3] * other[e431]) - (self[e435] * other[e431]),
                 (self[e3] * other[e423]) + (self[e435] * other[e423]) - (self[e1] * other[e412]) - (self[e415] * other[e412]),
                 (self[e1] * other[e431]) + (self[e415] * other[e431]) - (self[e2] * other[e423]) - (self[e425] * other[e423]),
-            ]) + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
+            ]) + (Simd32x3::from(self[e4]) * other.group3().truncate_to_3())
                 + (Simd32x3::from(self[e423]) * Simd32x3::from([other[e321], other[e3], other[e425]]))
                 + (Simd32x3::from(self[e431]) * Simd32x3::from([other[e435], other[e321], other[e1]]))
                 + (Simd32x3::from(self[e412]) * Simd32x3::from([other[e2], other[e415], other[e321]]))
-                - (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e423], other[e431], other[e412]]))
-                - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e423], other[e431], other[e412]]))
+                - (Simd32x3::from(self[e12345]) * other.group0().truncate_to_3())
+                - (Simd32x3::from(self[e4]) * other.group1().truncate_to_3())
+                - (Simd32x3::from(self[e321]) * other.group0().truncate_to_3())
                 - (Simd32x3::from(self[e423]) * Simd32x3::from([other[e12345], other[e435], other[e2]]))
                 - (Simd32x3::from(self[e431]) * Simd32x3::from([other[e3], other[e12345], other[e415]]))
                 - (Simd32x3::from(self[e412]) * Simd32x3::from([other[e425], other[e1], other[e12345]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e415], self[e425], self[e435]])),
+                - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group6().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e2] * other[e3]) + (self[e425] * other[e435]) + (self[e431] * other[e125]) + (self[e315] * other[e412])
@@ -28432,12 +28467,12 @@ impl GeometricProduct<VersorEven> for MultiVector {
                     - (self[e425] * other[e415])
                     - (self[e431] * other[e235])
                     - (self[e315] * other[e423]),
-            ]) - (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e235], other[e315], other[e125]]))
-                - (Simd32x3::from(self[e5]) * Simd32x3::from([other[e423], other[e431], other[e412]]))
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                - (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                - (Simd32x3::from(other[e321]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
+            ]) - (Simd32x3::from(self[e12345]) * other.group1().truncate_to_3())
+                - (Simd32x3::from(self[e4]) * other.group2().truncate_to_3())
+                - (Simd32x3::from(self[e5]) * other.group0().truncate_to_3())
+                - (Simd32x3::from(self[e321]) * other.group3().truncate_to_3())
+                - (Simd32x3::from(other[e12345]) * self.group6().truncate_to_3())
+                - (Simd32x3::from(other[e321]) * self.group1().truncate_to_3())
                 - (Simd32x3::from(other[e5]) * self.group7())
                 - (Simd32x3::from(other[e4]) * self.group8()),
             // e415, e425, e435, e321
@@ -28502,18 +28537,18 @@ impl GeometricProduct<VersorEven> for MultiVector {
                 (self[e12] * other[e431]) + (self[e4315] * other[e412]) - (self[e31] * other[e412]) - (self[e4125] * other[e431]),
                 (self[e23] * other[e412]) + (self[e4125] * other[e423]) - (self[e12] * other[e423]) - (self[e4235] * other[e412]),
                 (self[e31] * other[e423]) + (self[e4235] * other[e431]) - (self[e23] * other[e431]) - (self[e4315] * other[e423]),
-            ]) + (Simd32x3::from(self[scalar]) * Simd32x3::from([other[e423], other[e431], other[e412]]))
+            ]) + (Simd32x3::from(self[scalar]) * other.group0().truncate_to_3())
                 + (Simd32x3::from(self[e41]) * Simd32x3::from([other[e12345], other[e435], other[e2]]))
                 + (Simd32x3::from(self[e42]) * Simd32x3::from([other[e3], other[e12345], other[e415]]))
                 + (Simd32x3::from(self[e43]) * Simd32x3::from([other[e425], other[e1], other[e12345]]))
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
+                + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3())
                 + (Simd32x3::from(other[e4]) * self.group5())
-                - (Simd32x3::from(self[e45]) * Simd32x3::from([other[e423], other[e431], other[e412]]))
+                - (Simd32x3::from(self[e45]) * other.group0().truncate_to_3())
                 - (Simd32x3::from(self[e41]) * Simd32x3::from([other[e321], other[e3], other[e425]]))
                 - (Simd32x3::from(self[e42]) * Simd32x3::from([other[e435], other[e321], other[e1]]))
                 - (Simd32x3::from(self[e43]) * Simd32x3::from([other[e2], other[e415], other[e321]]))
-                - (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]])),
+                - (Simd32x3::from(self[e1234]) * other.group3().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group9().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (self[e35] * other[e425]) + (self[e35] * other[e2]) + (self[e12] * other[e315]) + (self[e4125] * other[e315])
@@ -28531,13 +28566,13 @@ impl GeometricProduct<VersorEven> for MultiVector {
                     - (self[e15] * other[e2])
                     - (self[e23] * other[e315])
                     - (self[e4235] * other[e315]),
-            ]) + (Simd32x3::from(self[scalar]) * Simd32x3::from([other[e235], other[e315], other[e125]]))
-                + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e235], other[e315], other[e125]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                + (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(other[e321]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+            ]) + (Simd32x3::from(self[scalar]) * other.group2().truncate_to_3())
+                + (Simd32x3::from(self[e45]) * other.group2().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group3().truncate_to_3())
+                + (Simd32x3::from(other[e12345]) * self.group3().truncate_to_3())
+                + (Simd32x3::from(other[e321]) * self.group3().truncate_to_3())
+                + (Simd32x3::from(other[e5]) * self.group9().truncate_to_3())
                 + (Simd32x3::from(other[e5]) * self.group5()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
@@ -28774,14 +28809,14 @@ impl GeometricProduct<VersorOdd> for MultiVector {
                     - (self[e41] * other[e4315])
                     - (self[e23] * other[e42])
                     - (self[e4315] * other[e41]),
-            ]) + (Simd32x3::from(self[scalar]) * Simd32x3::from([other[e41], other[e42], other[e43]]))
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+            ]) + (Simd32x3::from(self[scalar]) * other.group0().truncate_to_3())
+                + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e1234]) * other.group3().truncate_to_3())
                 + (Simd32x3::from(other[scalar]) * self.group4())
                 + (Simd32x3::from(other[e45]) * self.group4())
                 + (Simd32x3::from(other[e1234]) * self.group5())
-                - (Simd32x3::from(self[e45]) * Simd32x3::from([other[e41], other[e42], other[e43]]))
-                - (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]])),
+                - (Simd32x3::from(self[e45]) * other.group0().truncate_to_3())
+                - (Simd32x3::from(other[e1234]) * self.group9().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (self[e35] * other[e42]) + (self[e43] * other[e25]) + (self[e12] * other[e31]) + (self[e4125] * other[e4315])
@@ -28799,13 +28834,13 @@ impl GeometricProduct<VersorOdd> for MultiVector {
                     - (self[e41] * other[e25])
                     - (self[e23] * other[e31])
                     - (self[e4235] * other[e4315]),
-            ]) + (Simd32x3::from(self[scalar]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
-                + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e41], other[e42], other[e43]]))
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e15], other[e25], other[e35]]))
+            ]) + (Simd32x3::from(self[scalar]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e45]) * other.group3().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group0().truncate_to_3())
+                + (Simd32x3::from(self[e1234]) * other.group2().truncate_to_3())
                 + (Simd32x3::from(other[scalar]) * self.group5())
-                + (Simd32x3::from(other[e45]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
+                + (Simd32x3::from(other[e45]) * self.group9().truncate_to_3())
+                + (Simd32x3::from(other[e1234]) * self.group3().truncate_to_3())
                 + (Simd32x3::from(other[e3215]) * self.group4()),
             // e415, e425, e435, e321
             Simd32x4::from([
@@ -28881,33 +28916,33 @@ impl GeometricProduct<VersorOdd> for MultiVector {
                     - (self[e415] * other[e42])
                     - (self[e423] * other[e31])
                     - (self[e423] * other[e4315]),
-            ]) + (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e41], other[e42], other[e43]]))
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
-                + (Simd32x3::from(self[e321]) * Simd32x3::from([other[e41], other[e42], other[e43]]))
+            ]) + (Simd32x3::from(self[e12345]) * other.group0().truncate_to_3())
+                + (Simd32x3::from(self[e4]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e4]) * other.group3().truncate_to_3())
+                + (Simd32x3::from(self[e321]) * other.group0().truncate_to_3())
                 + (Simd32x3::from(other[scalar]) * self.group7())
                 + (Simd32x3::from(other[e45]) * self.group7())
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e415], self[e425], self[e435]])),
+                + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3())
+                + (Simd32x3::from(other[e1234]) * self.group6().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (self[e2] * other[e35]) + (self[e435] * other[e25]),
                 (self[e3] * other[e15]) + (self[e415] * other[e35]),
                 (self[e1] * other[e25]) + (self[e425] * other[e15]),
-            ]) + (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e15], other[e25], other[e35]]))
-                + (Simd32x3::from(self[e5]) * Simd32x3::from([other[e23], other[e31], other[e12]]))
+            ]) + (Simd32x3::from(self[e12345]) * other.group2().truncate_to_3())
+                + (Simd32x3::from(self[e5]) * other.group1().truncate_to_3())
                 + (Simd32x3::from(self[e235]) * Simd32x3::from([other[scalar], other[e12], other[e4315]]))
                 + (Simd32x3::from(self[e315]) * Simd32x3::from([other[e4125], other[scalar], other[e23]]))
                 + (Simd32x3::from(self[e125]) * Simd32x3::from([other[e31], other[e4235], other[scalar]]))
-                + (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                - (Simd32x3::from(self[e5]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+                + (Simd32x3::from(other[e3215]) * self.group6().truncate_to_3())
+                - (Simd32x3::from(self[e5]) * other.group3().truncate_to_3())
                 - (Simd32x3::from(self[e235]) * Simd32x3::from([other[e45], other[e4125], other[e31]]))
                 - (Simd32x3::from(self[e315]) * Simd32x3::from([other[e12], other[e45], other[e4235]]))
                 - (Simd32x3::from(self[e125]) * Simd32x3::from([other[e4315], other[e23], other[e45]]))
                 - (Simd32x3::from(other[e15]) * Simd32x3::from([self[e321], self[e435], self[e2]]))
                 - (Simd32x3::from(other[e25]) * Simd32x3::from([self[e3], self[e321], self[e415]]))
                 - (Simd32x3::from(other[e35]) * Simd32x3::from([self[e425], self[e1], self[e321]]))
-                - (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+                - (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (self[e15] * other[e1234])
@@ -29203,8 +29238,13 @@ impl GeometricProduct<AntiMotor> for Plane {
 impl GeometricProduct<AntiPlane> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       15        0
+    //           add/sub      mul      div
+    //      f32        5       12        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        6       13        0
+    //  no simd        9       15        0
     fn geometric_product(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
@@ -29216,12 +29256,8 @@ impl GeometricProduct<AntiPlane> for Plane {
                 (other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125]),
             ]),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                (other[e1] * self[e3215]) + (other[e5] * self[e4235]),
-                (other[e2] * self[e3215]) + (other[e5] * self[e4315]),
-                (other[e3] * self[e3215]) + (other[e5] * self[e4125]),
-                0.0,
-            ]),
+            Simd32x4::from([other[e5] * self[e4235], other[e5] * self[e4315], other[e5] * self[e4125], 0.0])
+                + (Simd32x3::from(self[e3215]) * other.group0().truncate_to_3()).extend_to_4(0.0),
         );
     }
 }
@@ -29555,13 +29591,13 @@ impl GeometricProduct<MultiVector> for Plane {
                 (other[e43] * self[e4315]) - (other[e42] * self[e4125]),
                 (other[e41] * self[e4125]) - (other[e43] * self[e4235]),
                 (other[e42] * self[e4235]) - (other[e41] * self[e4315]),
-            ]) - (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]])),
+            ]) - (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (other[e4315] * self[e4125]) - (other[e4125] * self[e4315]),
                 (other[e4125] * self[e4235]) - (other[e4235] * self[e4125]),
                 (other[e4235] * self[e4315]) - (other[e4315] * self[e4235]),
-            ]) + (Simd32x3::from(other[e45]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+            ]) + (Simd32x3::from(other[e45]) * self.group0().truncate_to_3())
                 + (Simd32x3::from(self[e3215]) * other.group4()),
             // e415, e425, e435, e321
             Simd32x4::from([
@@ -29575,15 +29611,15 @@ impl GeometricProduct<MultiVector> for Plane {
                 (other[e412] * self[e4315]) - (other[e431] * self[e4125]),
                 (other[e423] * self[e4125]) - (other[e412] * self[e4235]),
                 (other[e431] * self[e4235]) - (other[e423] * self[e4315]),
-            ]) - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]])),
+            ]) - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (other[e315] * self[e4125]) - (other[e125] * self[e4315]),
                 (other[e125] * self[e4235]) - (other[e235] * self[e4125]),
                 (other[e235] * self[e4315]) - (other[e315] * self[e4235]),
-            ]) + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e415], other[e425], other[e435]])),
+            ]) + (Simd32x3::from(other[e5]) * self.group0().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group6().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e41] * self[e3215]) + (other[e31] * self[e4125]) - (other[e12] * self[e4315]),
@@ -29599,8 +29635,13 @@ impl GeometricProduct<MultiVector> for Plane {
 impl GeometricProduct<Plane> for Plane {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       15        0
+    //           add/sub      mul      div
+    //      f32        5       15        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        6       16        0
+    //  no simd        9       18        0
     fn geometric_product(self, other: Plane) -> Self::Output {
         use crate::elements::*;
         return AntiMotor::from_groups(
@@ -29612,12 +29653,8 @@ impl GeometricProduct<Plane> for Plane {
                 -(other[e4235] * self[e4235]) - (other[e4315] * self[e4315]) - (other[e4125] * self[e4125]),
             ]),
             // e15, e25, e35, e3215
-            Simd32x4::from([
-                (other[e3215] * self[e4235]) - (other[e4235] * self[e3215]),
-                (other[e3215] * self[e4315]) - (other[e4315] * self[e3215]),
-                (other[e3215] * self[e4125]) - (other[e4125] * self[e3215]),
-                0.0,
-            ]),
+            Simd32x4::from([(other[e4235] * self[e3215]) * -1.0, (other[e4315] * self[e3215]) * -1.0, (other[e4125] * self[e3215]) * -1.0, 0.0])
+                + (Simd32x3::from(other[e3215]) * self.group0().truncate_to_3()).extend_to_4(0.0),
         );
     }
 }
@@ -29635,7 +29672,7 @@ impl GeometricProduct<RoundPoint> for Plane {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(other[e4]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]) * Simd32x3::from(-1.0),
+            Simd32x3::from(other[e4]) * self.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e4315] * other[e3]) - (self[e4125] * other[e2]),
@@ -29677,7 +29714,7 @@ impl GeometricProduct<Sphere> for Plane {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(other[e1234]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]) * Simd32x3::from(-1.0),
+            Simd32x3::from(other[e1234]) * self.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
             Simd32x4::from([
                 (self[e4125] * other[e4315]) - (self[e4315] * other[e4125]),
@@ -29806,7 +29843,7 @@ impl GeometricProduct<AntiCircleRotor> for RoundPoint {
                 (other[e42] * self[e3]) - (other[e43] * self[e2]),
                 (other[e43] * self[e1]) - (other[e41] * self[e3]),
                 (other[e41] * self[e2]) - (other[e42] * self[e1]),
-            ]) + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e23], other[e31], other[e12]])),
+            ]) + (Simd32x3::from(self[e4]) * other.group1().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e41] * self[e5]) + (other[e15] * self[e4]) - (other[e45] * self[e1]),
@@ -29936,8 +29973,13 @@ impl GeometricProduct<AntiFlatPoint> for RoundPoint {
 impl GeometricProduct<AntiFlector> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       24       40        0
+    //           add/sub      mul      div
+    //      f32       12       26        0
+    //    simd3        4        4        0
+    //    simd4        0        2        0
+    // Totals...
+    // yes simd       16       32        0
+    //  no simd       24       46        0
     fn geometric_product(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -29949,19 +29991,23 @@ impl GeometricProduct<AntiFlector> for RoundPoint {
                 (other[e1] * self[e1]) + (other[e2] * self[e2]) + (other[e3] * self[e3]) - (other[e5] * self[e4]),
             ]),
             // e23, e31, e12, e45
-            Simd32x4::from([
-                (other[e3] * self[e2]) - (other[e235] * self[e4]) - (other[e321] * self[e1]) - (other[e2] * self[e3]),
-                (other[e1] * self[e3]) - (other[e315] * self[e4]) - (other[e321] * self[e2]) - (other[e3] * self[e1]),
-                (other[e2] * self[e1]) - (other[e125] * self[e4]) - (other[e321] * self[e3]) - (other[e1] * self[e2]),
-                other[e5] * self[e4],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e4]])
+                * (Simd32x3::from([
+                    (other[e3] * self[e2]) - (other[e2] * self[e3]),
+                    (other[e1] * self[e3]) - (other[e3] * self[e1]),
+                    (other[e2] * self[e1]) - (other[e1] * self[e2]),
+                ]) - (Simd32x3::from(other[e321]) * self.group0().truncate_to_3())
+                    - (Simd32x3::from(self[e4]) * other.group0().truncate_to_3()))
+                .extend_to_4(other[e5]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (other[e315] * self[e3]) + (other[e5] * self[e1]) - (other[e125] * self[e2]) - (other[e1] * self[e5]),
-                (other[e125] * self[e1]) + (other[e5] * self[e2]) - (other[e235] * self[e3]) - (other[e2] * self[e5]),
-                (other[e235] * self[e2]) + (other[e5] * self[e3]) - (other[e315] * self[e1]) - (other[e3] * self[e5]),
-                other[e321] * self[e4],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e4]])
+                * (Simd32x3::from([
+                    (other[e315] * self[e3]) - (other[e125] * self[e2]),
+                    (other[e125] * self[e1]) - (other[e235] * self[e3]),
+                    (other[e235] * self[e2]) - (other[e315] * self[e1]),
+                ]) + (Simd32x3::from(other[e5]) * self.group0().truncate_to_3())
+                    - (Simd32x3::from(self[e5]) * other.group1().truncate_to_3()))
+                .extend_to_4(other[e321]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 other[e235] * self[e4],
@@ -29976,11 +30022,12 @@ impl GeometricProduct<AntiLine> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       27        0
-    //    simd3        0        1        0
+    //      f32       13       24        0
+    //    simd3        0        2        0
+    //    simd4        1        0        0
     // Totals...
-    // yes simd       16       28        0
-    //  no simd       16       30        0
+    // yes simd       14       26        0
+    //  no simd       17       30        0
     fn geometric_product(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
@@ -29995,11 +30042,11 @@ impl GeometricProduct<AntiLine> for RoundPoint {
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (other[e23] * self[e5]) + (other[e35] * self[e2]) - (other[e25] * self[e3]),
-                (other[e31] * self[e5]) + (other[e15] * self[e3]) - (other[e35] * self[e1]),
-                (other[e12] * self[e5]) + (other[e25] * self[e1]) - (other[e15] * self[e2]),
+                (other[e35] * self[e2]) - (other[e25] * self[e3]),
+                (other[e15] * self[e3]) - (other[e35] * self[e1]),
+                (other[e25] * self[e1]) - (other[e15] * self[e2]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e5]) * other.group0()).extend_to_4(0.0),
             // e1, e2, e3, e5
             Simd32x4::from([
                 (other[e31] * self[e3]) + (other[e15] * self[e4]) - (other[e12] * self[e2]),
@@ -30014,11 +30061,12 @@ impl GeometricProduct<AntiMotor> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        1        2        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       21       34        0
-    //  no simd       24       40        0
+    // yes simd       17       30        0
+    //  no simd       24       43        0
     fn geometric_product(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -30039,12 +30087,14 @@ impl GeometricProduct<AntiMotor> for RoundPoint {
                 (other[e15] * self[e1]) + (other[e25] * self[e2]) + (other[e35] * self[e3]),
             ]) + (Simd32x4::from(self[e5]) * other.group0()),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (other[e31] * self[e3]) + (other[scalar] * self[e1]) + (other[e15] * self[e4]) - (other[e12] * self[e2]),
-                (other[e12] * self[e1]) + (other[scalar] * self[e2]) + (other[e25] * self[e4]) - (other[e23] * self[e3]),
-                (other[e23] * self[e2]) + (other[scalar] * self[e3]) + (other[e35] * self[e4]) - (other[e31] * self[e1]),
-                other[scalar] * self[e4],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e4]])
+                * (Simd32x3::from([
+                    (other[e31] * self[e3]) - (other[e12] * self[e2]),
+                    (other[e12] * self[e1]) - (other[e23] * self[e3]),
+                    (other[e23] * self[e2]) - (other[e31] * self[e1]),
+                ]) + (Simd32x3::from(other[scalar]) * self.group0().truncate_to_3())
+                    + (Simd32x3::from(self[e4]) * other.group1().truncate_to_3()))
+                .extend_to_4(other[scalar]),
         );
     }
 }
@@ -30061,7 +30111,7 @@ impl GeometricProduct<AntiPlane> for RoundPoint {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(self[e4]) * Simd32x3::from([other[e1], other[e2], other[e3]]),
+            Simd32x3::from(self[e4]) * other.group0().truncate_to_3(),
             // e23, e31, e12, e45
             Simd32x4::from([
                 (other[e3] * self[e2]) - (other[e2] * self[e3]),
@@ -30116,7 +30166,7 @@ impl GeometricProduct<Circle> for RoundPoint {
                 (other[e412] * self[e2]) - (other[e431] * self[e3]),
                 (other[e423] * self[e3]) - (other[e412] * self[e1]),
                 (other[e431] * self[e1]) - (other[e423] * self[e2]),
-            ]) - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e415], other[e425], other[e435]])),
+            ]) - (Simd32x3::from(self[e4]) * other.group1().truncate_to_3()),
             // e23, e31, e12, e45
             Simd32x4::from([
                 -(other[e423] * self[e5]) - (other[e321] * self[e1]) - (other[e235] * self[e4]),
@@ -30159,7 +30209,7 @@ impl GeometricProduct<CircleRotor> for RoundPoint {
                 (other[e412] * self[e2]) - (other[e431] * self[e3]),
                 (other[e423] * self[e3]) - (other[e412] * self[e1]),
                 (other[e431] * self[e1]) - (other[e423] * self[e2]),
-            ]) - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e415], other[e425], other[e435]])),
+            ]) - (Simd32x3::from(self[e4]) * other.group1().truncate_to_3()),
             // e23, e31, e12, e45
             Simd32x4::from([
                 -(other[e423] * self[e5]) - (other[e321] * self[e1]) - (other[e235] * self[e4]),
@@ -30202,7 +30252,7 @@ impl GeometricProduct<Dipole> for RoundPoint {
                 (other[e42] * self[e3]) - (other[e43] * self[e2]),
                 (other[e43] * self[e1]) - (other[e41] * self[e3]),
                 (other[e41] * self[e2]) - (other[e42] * self[e1]),
-            ]) + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e23], other[e31], other[e12]])),
+            ]) + (Simd32x3::from(self[e4]) * other.group1().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e41] * self[e5]) + (other[e15] * self[e4]) - (other[e45] * self[e1]),
@@ -30297,20 +30347,21 @@ impl GeometricProduct<DualNum> for RoundPoint {
 impl GeometricProduct<FlatPoint> for RoundPoint {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        9       20        0
+    //           add/sub      mul      div
+    //      f32        6       20        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        7       21        0
+    //  no simd       10       23        0
     fn geometric_product(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (other[e15] * self[e4]) - (other[e45] * self[e1]),
-                (other[e25] * self[e4]) - (other[e45] * self[e2]),
-                (other[e35] * self[e4]) - (other[e45] * self[e3]),
-                0.0,
-            ]),
+            Simd32x4::from([(other[e45] * self[e1]) * -1.0, (other[e45] * self[e2]) * -1.0, (other[e45] * self[e3]) * -1.0, 0.0])
+                + (Simd32x3::from(self[e4]) * other.group0().truncate_to_3()).extend_to_4(0.0),
             // e235, e315, e125, e4
             Simd32x4::from([
                 (other[e35] * self[e2]) - (other[e25] * self[e3]),
@@ -30332,11 +30383,12 @@ impl GeometricProduct<Flector> for RoundPoint {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        1        2        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       21       34        0
-    //  no simd       24       40        0
+    // yes simd       17       30        0
+    //  no simd       24       43        0
     fn geometric_product(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -30348,12 +30400,14 @@ impl GeometricProduct<Flector> for RoundPoint {
                 (other[e4235] * self[e1]) + (other[e4315] * self[e2]) + (other[e4125] * self[e3]) + (other[e3215] * self[e4]),
             ]),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (other[e15] * self[e4]) + (other[e4125] * self[e2]) - (other[e45] * self[e1]) - (other[e4315] * self[e3]),
-                (other[e25] * self[e4]) + (other[e4235] * self[e3]) - (other[e45] * self[e2]) - (other[e4125] * self[e1]),
-                (other[e35] * self[e4]) + (other[e4315] * self[e1]) - (other[e45] * self[e3]) - (other[e4235] * self[e2]),
-                other[e3215] * self[e4],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e4]])
+                * (Simd32x3::from([
+                    (other[e4125] * self[e2]) - (other[e4315] * self[e3]),
+                    (other[e4235] * self[e3]) - (other[e4125] * self[e1]),
+                    (other[e4315] * self[e1]) - (other[e4235] * self[e2]),
+                ]) + (Simd32x3::from(self[e4]) * other.group0().truncate_to_3())
+                    - (Simd32x3::from(other[e45]) * self.group0().truncate_to_3()))
+                .extend_to_4(other[e3215]),
             // e235, e315, e125, e5
             Simd32x4::from([
                 (other[e35] * self[e2]) - (other[e25] * self[e3]) - (other[e3215] * self[e1]),
@@ -30409,11 +30463,12 @@ impl GeometricProduct<Motor> for RoundPoint {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       36        0
-    //    simd4        0        4        0
+    //      f32       18       29        0
+    //    simd3        2        2        0
+    //    simd4        0        5        0
     // Totals...
-    // yes simd       24       40        0
-    //  no simd       24       52        0
+    // yes simd       20       36        0
+    //  no simd       24       55        0
     fn geometric_product(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -30427,12 +30482,15 @@ impl GeometricProduct<Motor> for RoundPoint {
                 (other[e5] * self[e4]) - (other[e415] * self[e1]) - (other[e425] * self[e2]) - (other[e435] * self[e3]),
             ]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (other[e315] * self[e3]) + (other[e5] * self[e1]) - (other[e415] * self[e5]) - (other[e125] * self[e2]),
-                (other[e125] * self[e1]) + (other[e5] * self[e2]) - (other[e425] * self[e5]) - (other[e235] * self[e3]),
-                (other[e235] * self[e2]) + (other[e5] * self[e3]) - (other[e435] * self[e5]) - (other[e315] * self[e1]),
-                other[e12345] * self[e4],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e4]])
+                * (Simd32x3::from([
+                    (other[e315] * self[e3]) - (other[e125] * self[e2]),
+                    (other[e125] * self[e1]) - (other[e235] * self[e3]),
+                    (other[e235] * self[e2]) - (other[e315] * self[e1]),
+                ]) + (Simd32x3::from(other[e5]) * self.group0().truncate_to_3())
+                    - (Simd32x3::from(self[e5]) * other.group0().truncate_to_3()))
+                .extend_to_4(other[e12345])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e425] * self[e3]) + (other[e12345] * self[e1]) + (other[e235] * self[e4]) - (other[e435] * self[e2]),
@@ -30485,15 +30543,15 @@ impl GeometricProduct<MultiVector> for RoundPoint {
                 (other[e412] * self[e2]) - (other[e431] * self[e3]),
                 (other[e423] * self[e3]) - (other[e412] * self[e1]),
                 (other[e431] * self[e1]) - (other[e423] * self[e2]),
-            ]) + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e415], other[e425], other[e435]])),
+            ]) + (Simd32x3::from(self[e4]) * other.group1().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3())
+                - (Simd32x3::from(self[e4]) * other.group6().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (other[e3] * self[e2]) - (other[e2] * self[e3]),
                 (other[e1] * self[e3]) - (other[e3] * self[e1]),
                 (other[e2] * self[e1]) - (other[e1] * self[e2]),
-            ]) - (Simd32x3::from(other[e321]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
+            ]) - (Simd32x3::from(other[e321]) * self.group0().truncate_to_3())
                 - (Simd32x3::from(self[e4]) * other.group8())
                 - (Simd32x3::from(self[e5]) * other.group7()),
             // e415, e425, e435, e321
@@ -30508,8 +30566,8 @@ impl GeometricProduct<MultiVector> for RoundPoint {
                 (other[e42] * self[e3]) - (other[e43] * self[e2]),
                 (other[e43] * self[e1]) - (other[e41] * self[e3]),
                 (other[e41] * self[e2]) - (other[e42] * self[e1]),
-            ]) + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+            ]) + (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3())
+                + (Simd32x3::from(self[e4]) * other.group9().truncate_to_3())
                 + (Simd32x3::from(self[e4]) * other.group5()),
             // e235, e315, e125
             Simd32x3::from([
@@ -30517,8 +30575,8 @@ impl GeometricProduct<MultiVector> for RoundPoint {
                 (other[e15] * self[e3]) - (other[e35] * self[e1]),
                 (other[e25] * self[e1]) - (other[e15] * self[e2]),
             ]) + (Simd32x3::from(self[e5]) * other.group5())
-                - (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                - (Simd32x3::from(self[e5]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]])),
+                - (Simd32x3::from(other[e3215]) * self.group0().truncate_to_3())
+                - (Simd32x3::from(self[e5]) * other.group9().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e12345] * self[e1]) + (other[e425] * self[e3]) + (other[e235] * self[e4]) - (other[e435] * self[e2]),
@@ -30544,7 +30602,7 @@ impl GeometricProduct<Plane> for RoundPoint {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(self[e4]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]),
+            Simd32x3::from(self[e4]) * other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e4125] * self[e2]) - (other[e4315] * self[e3]),
@@ -30576,7 +30634,7 @@ impl GeometricProduct<RoundPoint> for RoundPoint {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            (Simd32x3::from(self[e4]) * Simd32x3::from([other[e1], other[e2], other[e3]])) - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+            (Simd32x3::from(self[e4]) * other.group0().truncate_to_3()) - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3()),
             // e23, e31, e12, e45
             Simd32x4::from([
                 (other[e3] * self[e2]) - (other[e2] * self[e3]),
@@ -30621,8 +30679,7 @@ impl GeometricProduct<Sphere> for RoundPoint {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            (Simd32x3::from(self[e4]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e1], self[e2], self[e3]])),
+            (Simd32x3::from(self[e4]) * other.group0().truncate_to_3()) + (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (self[e2] * other[e4125]) - (self[e3] * other[e4315]),
@@ -31184,7 +31241,7 @@ impl GeometricProduct<AntiCircleRotor> for Sphere {
                 (other[e43] * self[e4315]) - (other[e42] * self[e4125]),
                 (other[e41] * self[e4125]) - (other[e43] * self[e4235]),
                 (other[e42] * self[e4235]) - (other[e41] * self[e4315]),
-            ]) + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e23], other[e31], other[e12]])),
+            ]) + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3()),
             // e23, e31, e12, e45
             Simd32x4::from([
                 (other[e41] * self[e3215]) + (other[e45] * self[e4235]) + (other[e15] * self[e1234]),
@@ -31279,23 +31336,20 @@ impl GeometricProduct<AntiFlatPoint> for Sphere {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       20        0
-    //    simd4        0        1        0
+    //      f32        6       20        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        9       21        0
-    //  no simd        9       24        0
+    // yes simd        7       22        0
+    //  no simd       10       27        0
     fn geometric_product(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (other[e235] * self[e1234]) - (other[e321] * self[e4235]),
-                (other[e315] * self[e1234]) - (other[e321] * self[e4315]),
-                (other[e125] * self[e1234]) - (other[e321] * self[e4125]),
-                0.0,
-            ]),
+            Simd32x4::from([(other[e321] * self[e4235]) * -1.0, (other[e321] * self[e4315]) * -1.0, (other[e321] * self[e4125]) * -1.0, 0.0])
+                + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()).extend_to_4(0.0),
             // e235, e315, e125, e4
             Simd32x4::from([
                 (other[e315] * self[e4125]) - (other[e125] * self[e4315]),
@@ -31317,11 +31371,12 @@ impl GeometricProduct<AntiFlector> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        1        4        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        1        5        0
     // Totals...
-    // yes simd       21       36        0
-    //  no simd       24       48        0
+    // yes simd       17       32        0
+    //  no simd       24       51        0
     fn geometric_product(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -31333,12 +31388,14 @@ impl GeometricProduct<AntiFlector> for Sphere {
                 (other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125]) + (other[e5] * self[e1234]),
             ]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e415, e425, e435, e321
-            Simd32x4::from([
-                (other[e235] * self[e1234]) + (other[e3] * self[e4315]) - (other[e321] * self[e4235]) - (other[e2] * self[e4125]),
-                (other[e315] * self[e1234]) + (other[e1] * self[e4125]) - (other[e321] * self[e4315]) - (other[e3] * self[e4235]),
-                (other[e125] * self[e1234]) + (other[e2] * self[e4235]) - (other[e321] * self[e4125]) - (other[e1] * self[e4315]),
-                other[e5] * self[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e1234]])
+                * (Simd32x3::from([
+                    (other[e3] * self[e4315]) - (other[e2] * self[e4125]),
+                    (other[e1] * self[e4125]) - (other[e3] * self[e4235]),
+                    (other[e2] * self[e4235]) - (other[e1] * self[e4315]),
+                ]) + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3())
+                    - (Simd32x3::from(other[e321]) * self.group0().truncate_to_3()))
+                .extend_to_4(other[e5]),
             // e235, e315, e125, e5
             Simd32x4::from([
                 (other[e315] * self[e4125]) + (other[e5] * self[e4235]) - (other[e125] * self[e4315]),
@@ -31355,11 +31412,12 @@ impl GeometricProduct<AntiLine> for Sphere {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       27        0
-    //    simd3        0        1        0
+    //      f32       13       24        0
+    //    simd3        0        2        0
+    //    simd4        1        0        0
     // Totals...
-    // yes simd       16       28        0
-    //  no simd       16       30        0
+    // yes simd       14       26        0
+    //  no simd       17       30        0
     fn geometric_product(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
@@ -31374,11 +31432,11 @@ impl GeometricProduct<AntiLine> for Sphere {
             ]),
             // e15, e25, e35, e1234
             Simd32x4::from([
-                (other[e23] * self[e3215]) + (other[e25] * self[e4125]) - (other[e35] * self[e4315]),
-                (other[e31] * self[e3215]) + (other[e35] * self[e4235]) - (other[e15] * self[e4125]),
-                (other[e12] * self[e3215]) + (other[e15] * self[e4315]) - (other[e25] * self[e4235]),
+                (other[e25] * self[e4125]) - (other[e35] * self[e4315]),
+                (other[e35] * self[e4235]) - (other[e15] * self[e4125]),
+                (other[e15] * self[e4315]) - (other[e25] * self[e4235]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e3215]) * other.group0()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e31] * self[e4125]) - (other[e12] * self[e4315]) - (other[e15] * self[e1234]),
@@ -31393,11 +31451,12 @@ impl GeometricProduct<AntiMotor> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        1        2        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       21       34        0
-    //  no simd       24       40        0
+    // yes simd       17       30        0
+    //  no simd       24       43        0
     fn geometric_product(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -31411,12 +31470,14 @@ impl GeometricProduct<AntiMotor> for Sphere {
                 -(other[e23] * self[e4235]) - (other[e31] * self[e4315]) - (other[e12] * self[e4125]) - (other[e3215] * self[e1234]),
             ]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (other[e23] * self[e3215]) + (other[e25] * self[e4125]) + (other[e3215] * self[e4235]) - (other[e35] * self[e4315]),
-                (other[e31] * self[e3215]) + (other[e35] * self[e4235]) + (other[e3215] * self[e4315]) - (other[e15] * self[e4125]),
-                (other[e12] * self[e3215]) + (other[e15] * self[e4315]) + (other[e3215] * self[e4125]) - (other[e25] * self[e4235]),
-                other[scalar] * self[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e1234]])
+                * (Simd32x3::from([
+                    (other[e25] * self[e4125]) - (other[e35] * self[e4315]),
+                    (other[e35] * self[e4235]) - (other[e15] * self[e4125]),
+                    (other[e15] * self[e4315]) - (other[e25] * self[e4235]),
+                ]) + (Simd32x3::from(other[e3215]) * self.group0().truncate_to_3())
+                    + (Simd32x3::from(self[e3215]) * other.group0().truncate_to_3()))
+                .extend_to_4(other[scalar]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e31] * self[e4125]) - (other[e12] * self[e4315]) - (other[e15] * self[e1234]),
@@ -31441,7 +31502,7 @@ impl GeometricProduct<AntiPlane> for Sphere {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from(self[e1234]) * Simd32x3::from([other[e1], other[e2], other[e3]]) * Simd32x3::from(-1.0),
+            Simd32x3::from(self[e1234]) * other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e3] * self[e4315]) - (other[e2] * self[e4125]),
@@ -31495,7 +31556,7 @@ impl GeometricProduct<Circle> for Sphere {
                 (other[e412] * self[e4315]) - (other[e431] * self[e4125]),
                 (other[e423] * self[e4125]) - (other[e412] * self[e4235]),
                 (other[e431] * self[e4235]) - (other[e423] * self[e4315]),
-            ]) + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e415], other[e425], other[e435]])),
+            ]) + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e423] * self[e3215]) + (other[e235] * self[e1234]) - (other[e321] * self[e4235]),
@@ -31537,7 +31598,7 @@ impl GeometricProduct<CircleRotor> for Sphere {
                 (other[e412] * self[e4315]) - (other[e431] * self[e4125]),
                 (other[e423] * self[e4125]) - (other[e412] * self[e4235]),
                 (other[e431] * self[e4235]) - (other[e423] * self[e4315]),
-            ]) + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e415], other[e425], other[e435]])),
+            ]) + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e423] * self[e3215]) + (other[e235] * self[e1234]) - (other[e321] * self[e4235]),
@@ -31579,7 +31640,7 @@ impl GeometricProduct<Dipole> for Sphere {
                 (other[e43] * self[e4315]) - (other[e42] * self[e4125]),
                 (other[e41] * self[e4125]) - (other[e43] * self[e4235]),
                 (other[e42] * self[e4235]) - (other[e41] * self[e4315]),
-            ]) + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e23], other[e31], other[e12]])),
+            ]) + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3()),
             // e23, e31, e12, e45
             Simd32x4::from([
                 (other[e41] * self[e3215]) + (other[e45] * self[e4235]) + (other[e15] * self[e1234]),
@@ -31674,23 +31735,20 @@ impl GeometricProduct<FlatPoint> for Sphere {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       20        0
-    //    simd4        0        1        0
+    //      f32        6       17        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        9       21        0
-    //  no simd        9       24        0
+    // yes simd        7       19        0
+    //  no simd       10       24        0
     fn geometric_product(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12, e45
-            Simd32x4::from([
-                (other[e15] * self[e1234]) + (other[e45] * self[e4235]),
-                (other[e25] * self[e1234]) + (other[e45] * self[e4315]),
-                (other[e35] * self[e1234]) + (other[e45] * self[e4125]),
-                0.0,
-            ]),
+            Simd32x4::from([other[e45] * self[e4235], other[e45] * self[e4315], other[e45] * self[e4125], 0.0])
+                + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()).extend_to_4(0.0),
             // e15, e25, e35, e1234
             Simd32x4::from([
                 (other[e25] * self[e4125]) - (other[e35] * self[e4315]),
@@ -31712,11 +31770,12 @@ impl GeometricProduct<Flector> for Sphere {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       40        0
-    //    simd4        0        2        0
+    //      f32       12       26        0
+    //    simd3        4        4        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd       24       42        0
-    //  no simd       24       48        0
+    // yes simd       16       34        0
+    //  no simd       24       54        0
     fn geometric_product(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -31728,19 +31787,24 @@ impl GeometricProduct<Flector> for Sphere {
                 (other[e3215] * self[e1234]) - (other[e4235] * self[e4235]) - (other[e4315] * self[e4315]) - (other[e4125] * self[e4125]),
             ]),
             // e23, e31, e12, e45
-            Simd32x4::from([
-                (other[e15] * self[e1234]) + (other[e45] * self[e4235]) + (other[e4315] * self[e4125]) - (other[e4125] * self[e4315]),
-                (other[e25] * self[e1234]) + (other[e45] * self[e4315]) + (other[e4125] * self[e4235]) - (other[e4235] * self[e4125]),
-                (other[e35] * self[e1234]) + (other[e45] * self[e4125]) + (other[e4235] * self[e4315]) - (other[e4315] * self[e4235]),
-                other[e3215] * self[e1234],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e1234]])
+                * (Simd32x3::from([
+                    (other[e4315] * self[e4125]) - (other[e4125] * self[e4315]),
+                    (other[e4125] * self[e4235]) - (other[e4235] * self[e4125]),
+                    (other[e4235] * self[e4315]) - (other[e4315] * self[e4235]),
+                ]) + (Simd32x3::from(other[e45]) * self.group0().truncate_to_3())
+                    + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()))
+                .extend_to_4(other[e3215])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (other[e25] * self[e4125]) + (other[e3215] * self[e4235]) - (other[e35] * self[e4315]) - (other[e4235] * self[e3215]),
-                (other[e35] * self[e4235]) + (other[e3215] * self[e4315]) - (other[e15] * self[e4125]) - (other[e4315] * self[e3215]),
-                (other[e15] * self[e4315]) + (other[e3215] * self[e4125]) - (other[e25] * self[e4235]) - (other[e4125] * self[e3215]),
-                other[e45] * self[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e1234]])
+                * (Simd32x3::from([
+                    (other[e25] * self[e4125]) - (other[e35] * self[e4315]),
+                    (other[e35] * self[e4235]) - (other[e15] * self[e4125]),
+                    (other[e15] * self[e4315]) - (other[e25] * self[e4235]),
+                ]) + (Simd32x3::from(other[e3215]) * self.group0().truncate_to_3())
+                    - (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3()))
+                .extend_to_4(other[e45]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 other[e15] * self[e1234],
@@ -31755,11 +31819,12 @@ impl GeometricProduct<Line> for Sphere {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       27        0
-    //    simd3        0        1        0
+    //      f32       13       24        0
+    //    simd3        0        2        0
+    //    simd4        1        0        0
     // Totals...
-    // yes simd       16       28        0
-    //  no simd       16       30        0
+    // yes simd       14       26        0
+    //  no simd       17       30        0
     fn geometric_product(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
@@ -31774,11 +31839,11 @@ impl GeometricProduct<Line> for Sphere {
             ]),
             // e235, e315, e125, e4
             Simd32x4::from([
-                (other[e415] * self[e3215]) + (other[e315] * self[e4125]) - (other[e125] * self[e4315]),
-                (other[e425] * self[e3215]) + (other[e125] * self[e4235]) - (other[e235] * self[e4125]),
-                (other[e435] * self[e3215]) + (other[e235] * self[e4315]) - (other[e315] * self[e4235]),
+                (other[e315] * self[e4125]) - (other[e125] * self[e4315]),
+                (other[e125] * self[e4235]) - (other[e235] * self[e4125]),
+                (other[e235] * self[e4315]) - (other[e315] * self[e4235]),
                 0.0,
-            ]),
+            ]) + (Simd32x3::from(self[e3215]) * other.group0()).extend_to_4(0.0),
             // e1, e2, e3, e5
             Simd32x4::from([
                 (other[e435] * self[e4315]) + (other[e235] * self[e1234]) - (other[e425] * self[e4125]),
@@ -31793,11 +31858,12 @@ impl GeometricProduct<Motor> for Sphere {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        1        2        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       21       34        0
-    //  no simd       24       40        0
+    // yes simd       17       30        0
+    //  no simd       24       43        0
     fn geometric_product(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -31818,12 +31884,14 @@ impl GeometricProduct<Motor> for Sphere {
                 -(other[e235] * self[e4235]) - (other[e315] * self[e4315]) - (other[e125] * self[e4125]),
             ]) + (Simd32x4::from(self[e3215]) * other.group0()),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (other[e435] * self[e4315]) + (other[e235] * self[e1234]) - (other[e425] * self[e4125]) - (other[e12345] * self[e4235]),
-                (other[e415] * self[e4125]) + (other[e315] * self[e1234]) - (other[e435] * self[e4235]) - (other[e12345] * self[e4315]),
-                (other[e425] * self[e4235]) + (other[e125] * self[e1234]) - (other[e415] * self[e4315]) - (other[e12345] * self[e4125]),
-                other[e12345] * self[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e1234]])
+                * (Simd32x3::from([
+                    (other[e435] * self[e4315]) - (other[e425] * self[e4125]),
+                    (other[e415] * self[e4125]) - (other[e435] * self[e4235]),
+                    (other[e425] * self[e4235]) - (other[e415] * self[e4315]),
+                ]) + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3())
+                    - (Simd32x3::from(other[e12345]) * self.group0().truncate_to_3()))
+                .extend_to_4(other[e12345]),
         );
     }
 }
@@ -31868,17 +31936,17 @@ impl GeometricProduct<MultiVector> for Sphere {
                 (other[e43] * self[e4315]) - (other[e42] * self[e4125]),
                 (other[e41] * self[e4125]) - (other[e43] * self[e4235]),
                 (other[e42] * self[e4235]) - (other[e41] * self[e4315]),
-            ]) + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+            ]) + (Simd32x3::from(self[e1234]) * other.group9().truncate_to_3())
                 + (Simd32x3::from(self[e1234]) * other.group5())
-                - (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]])),
+                - (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (other[e4315] * self[e4125]) - (other[e4125] * self[e4315]),
                 (other[e4125] * self[e4235]) - (other[e4235] * self[e4125]),
                 (other[e4235] * self[e4315]) - (other[e4315] * self[e4235]),
-            ]) + (Simd32x3::from(other[e45]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+            ]) + (Simd32x3::from(other[e45]) * self.group0().truncate_to_3())
                 + (Simd32x3::from(self[e3215]) * other.group4())
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e15], other[e25], other[e35]])),
+                + (Simd32x3::from(self[e1234]) * other.group3().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e3] * self[e4315]) + (other[e423] * self[e3215]) - (other[e2] * self[e4125]) - (other[e321] * self[e4235]),
@@ -31891,17 +31959,17 @@ impl GeometricProduct<MultiVector> for Sphere {
                 (other[e412] * self[e4315]) - (other[e431] * self[e4125]),
                 (other[e423] * self[e4125]) - (other[e412] * self[e4235]),
                 (other[e431] * self[e4235]) - (other[e423] * self[e4315]),
-            ]) + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
-                - (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+            ]) + (Simd32x3::from(self[e1234]) * other.group6().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3())
+                - (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (other[e315] * self[e4125]) - (other[e125] * self[e4315]),
                 (other[e125] * self[e4235]) - (other[e235] * self[e4125]),
                 (other[e235] * self[e4315]) - (other[e315] * self[e4235]),
-            ]) + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e415], other[e425], other[e435]])),
+            ]) + (Simd32x3::from(other[e5]) * self.group0().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group6().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e41] * self[e3215]) + (other[e31] * self[e4125]) - (other[e15] * self[e1234]) - (other[e12] * self[e4315]),
@@ -31928,7 +31996,7 @@ impl GeometricProduct<Plane> for Sphere {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from(self[e1234]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]),
+            Simd32x3::from(self[e1234]) * other.group0().truncate_to_3(),
             // e23, e31, e12, e45
             Simd32x4::from([
                 (other[e4315] * self[e4125]) - (other[e4125] * self[e4315]),
@@ -31960,8 +32028,7 @@ impl GeometricProduct<RoundPoint> for Sphere {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            -(Simd32x3::from(other[e4]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
-                - (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+            -(Simd32x3::from(other[e4]) * self.group0().truncate_to_3()) - (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()),
             // e415, e425, e435, e321
             Simd32x4::from([
                 (other[e3] * self[e4315]) - (other[e2] * self[e4125]),
@@ -32009,8 +32076,7 @@ impl GeometricProduct<Sphere> for Sphere {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
-                - (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]])),
+            (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()) - (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()),
             // e23, e31, e12, e45
             Simd32x4::from([
                 (other[e4315] * self[e4125]) - (other[e4125] * self[e4315]),
@@ -32450,11 +32516,12 @@ impl GeometricProduct<AntiDualNum> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4       12        0
-    //    simd4        3        5        0
+    //      f32        1        5        0
+    //    simd3        1        2        0
+    //    simd4        3        6        0
     // Totals...
-    // yes simd        7       17        0
-    //  no simd       16       32        0
+    // yes simd        5       13        0
+    //  no simd       16       35        0
     fn geometric_product(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -32471,20 +32538,21 @@ impl GeometricProduct<AntiDualNum> for VersorEven {
             (Simd32x4::from(other[e3215]) * Simd32x4::from([self[e415], self[e425], self[e435], self[e12345]])) + (Simd32x4::from(other[scalar]) * self.group2())
                 - (Simd32x4::from(other[e3215]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e321]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (other[e3215] * self[e423]) + (other[scalar] * self[e1]),
-                (other[e3215] * self[e431]) + (other[scalar] * self[e2]),
-                (other[e3215] * self[e412]) + (other[scalar] * self[e3]),
-                other[scalar] * self[e4],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e4]])
+                * ((Simd32x3::from(other[e3215]) * self.group0().truncate_to_3()) + (Simd32x3::from(other[scalar]) * self.group3().truncate_to_3())).extend_to_4(other[scalar]),
         );
     }
 }
 impl GeometricProduct<AntiFlatPoint> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       48       64        0
+    //           add/sub      mul      div
+    //      f32       30       42        0
+    //    simd3        6        7        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       36       50        0
+    //  no simd       48       67        0
     fn geometric_product(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -32503,24 +32571,15 @@ impl GeometricProduct<AntiFlatPoint> for VersorEven {
                 (other[e321] * self[e12345]) - (other[e235] * self[e423]) - (other[e315] * self[e431]) - (other[e125] * self[e412]),
             ]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (other[e235] * self[e321]) + (other[e315] * self[e3]) + (other[e125] * self[e425])
-                    - (other[e235] * self[e12345])
-                    - (other[e315] * self[e435])
-                    - (other[e125] * self[e2])
-                    - (other[e321] * self[e235]),
-                (other[e235] * self[e435]) + (other[e315] * self[e321]) + (other[e125] * self[e1])
-                    - (other[e235] * self[e3])
-                    - (other[e315] * self[e12345])
-                    - (other[e125] * self[e415])
-                    - (other[e321] * self[e315]),
-                (other[e235] * self[e2]) + (other[e315] * self[e415]) + (other[e125] * self[e321])
-                    - (other[e235] * self[e425])
-                    - (other[e315] * self[e1])
-                    - (other[e125] * self[e12345])
-                    - (other[e321] * self[e125]),
-                other[e321] * self[e4],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e4]])
+                * ((Simd32x3::from(other[e235]) * Simd32x3::from([self[e321], self[e435], self[e2]]))
+                    + (Simd32x3::from(other[e315]) * Simd32x3::from([self[e3], self[e321], self[e415]]))
+                    + (Simd32x3::from(other[e125]) * Simd32x3::from([self[e425], self[e1], self[e321]]))
+                    - (Simd32x3::from(other[e235]) * Simd32x3::from([self[e12345], self[e3], self[e425]]))
+                    - (Simd32x3::from(other[e315]) * Simd32x3::from([self[e435], self[e12345], self[e1]]))
+                    - (Simd32x3::from(other[e125]) * Simd32x3::from([self[e2], self[e415], self[e12345]]))
+                    - (Simd32x3::from(other[e321]) * self.group2().truncate_to_3()))
+                .extend_to_4(other[e321]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e235] * self[e4]) + (other[e315] * self[e412]) + (other[e321] * self[e415]) - (other[e125] * self[e431]),
@@ -33459,11 +33518,12 @@ impl GeometricProduct<DualNum> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       28        0
-    //    simd4        1        3        0
+    //      f32        6       18        0
+    //    simd3        2        3        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       13       31        0
-    //  no simd       16       40        0
+    // yes simd        9       25        0
+    //  no simd       16       43        0
     fn geometric_product(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -33482,12 +33542,12 @@ impl GeometricProduct<DualNum> for VersorEven {
                 (other[e5] * self[e4]) + (other[e12345] * self[e321]),
             ]),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (other[e5] * self[e1]) - (other[e5] * self[e415]) - (other[e12345] * self[e235]),
-                (other[e5] * self[e2]) - (other[e5] * self[e425]) - (other[e12345] * self[e315]),
-                (other[e5] * self[e3]) - (other[e5] * self[e435]) - (other[e12345] * self[e125]),
-                other[e12345] * self[e4],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e4]])
+                * ((Simd32x3::from(other[e5]) * self.group3().truncate_to_3())
+                    - (Simd32x3::from(other[e5]) * self.group1().truncate_to_3())
+                    - (Simd32x3::from(other[e12345]) * self.group2().truncate_to_3()))
+                .extend_to_4(other[e12345])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 other[e12345] * self[e1],
@@ -33502,11 +33562,12 @@ impl GeometricProduct<FlatPoint> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        7        8        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        7        9        0
     // Totals...
-    // yes simd       27       40        0
-    //  no simd       48       64        0
+    // yes simd       23       36        0
+    //  no simd       48       67        0
     fn geometric_product(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -33533,12 +33594,14 @@ impl GeometricProduct<FlatPoint> for VersorEven {
                 - (Simd32x4::from(other[e35]) * Simd32x4::from([self[e425], self[e1], self[e321], self[e435]]))
                 - (Simd32x4::from(other[e45]) * self.group2()),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (other[e15] * self[e4]) + (other[e25] * self[e412]) - (other[e35] * self[e431]) - (other[e45] * self[e415]),
-                (other[e25] * self[e4]) + (other[e35] * self[e423]) - (other[e15] * self[e412]) - (other[e45] * self[e425]),
-                (other[e15] * self[e431]) + (other[e35] * self[e4]) - (other[e25] * self[e423]) - (other[e45] * self[e435]),
-                other[e45] * self[e4],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e4]])
+                * (Simd32x3::from([
+                    (other[e25] * self[e412]) - (other[e35] * self[e431]),
+                    (other[e35] * self[e423]) - (other[e15] * self[e412]),
+                    (other[e15] * self[e431]) - (other[e25] * self[e423]),
+                ]) + (Simd32x3::from(self[e4]) * other.group0().truncate_to_3())
+                    - (Simd32x3::from(other[e45]) * self.group1().truncate_to_3()))
+                .extend_to_4(other[e45]),
         );
     }
 }
@@ -33979,13 +34042,13 @@ impl GeometricProduct<MultiVector> for VersorEven {
             ]) + (Simd32x3::from(self[e423]) * Simd32x3::from([other[e321], other[e3], other[e425]]))
                 + (Simd32x3::from(self[e431]) * Simd32x3::from([other[e435], other[e321], other[e1]]))
                 + (Simd32x3::from(self[e412]) * Simd32x3::from([other[e2], other[e415], other[e321]]))
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                - (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e423], self[e431], self[e412]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
+                + (Simd32x3::from(self[e4]) * other.group1().truncate_to_3())
+                - (Simd32x3::from(other[e12345]) * self.group0().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group3().truncate_to_3())
                 - (Simd32x3::from(self[e12345]) * other.group7())
                 - (Simd32x3::from(self[e321]) * other.group7())
-                - (Simd32x3::from(self[e4]) * Simd32x3::from([other[e415], other[e425], other[e435]])),
+                - (Simd32x3::from(self[e4]) * other.group6().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (other[e3] * self[e2]) + (other[e435] * self[e425]) + (other[e412] * self[e315]) + (other[e125] * self[e431])
@@ -34003,12 +34066,12 @@ impl GeometricProduct<MultiVector> for VersorEven {
                     - (other[e415] * self[e425])
                     - (other[e423] * self[e315])
                     - (other[e235] * self[e431]),
-            ]) - (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e235], self[e315], self[e125]]))
-                - (Simd32x3::from(other[e5]) * Simd32x3::from([self[e423], self[e431], self[e412]]))
-                - (Simd32x3::from(other[e321]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                - (Simd32x3::from(self[e12345]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
+            ]) - (Simd32x3::from(other[e12345]) * self.group1().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group2().truncate_to_3())
+                - (Simd32x3::from(other[e5]) * self.group0().truncate_to_3())
+                - (Simd32x3::from(other[e321]) * self.group3().truncate_to_3())
+                - (Simd32x3::from(self[e12345]) * other.group6().truncate_to_3())
+                - (Simd32x3::from(self[e321]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(self[e5]) * other.group7())
                 - (Simd32x3::from(self[e4]) * other.group8()),
             // e415, e425, e435, e321
@@ -34085,31 +34148,31 @@ impl GeometricProduct<MultiVector> for VersorEven {
                     - (other[e42] * self[e1])
                     - (other[e31] * self[e423])
                     - (other[e4315] * self[e423]),
-            ]) + (Simd32x3::from(other[scalar]) * Simd32x3::from([self[e423], self[e431], self[e412]]))
-                + (Simd32x3::from(other[e45]) * Simd32x3::from([self[e423], self[e431], self[e412]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
+            ]) + (Simd32x3::from(other[scalar]) * self.group0().truncate_to_3())
+                + (Simd32x3::from(other[e45]) * self.group0().truncate_to_3())
+                + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3())
+                + (Simd32x3::from(other[e1234]) * self.group3().truncate_to_3())
                 + (Simd32x3::from(self[e12345]) * other.group4())
                 + (Simd32x3::from(self[e321]) * other.group4())
-                + (Simd32x3::from(self[e4]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+                + (Simd32x3::from(self[e4]) * other.group9().truncate_to_3())
                 + (Simd32x3::from(self[e4]) * other.group5()),
             // e235, e315, e125
             Simd32x3::from([
                 (other[e31] * self[e125]) + (other[e4125] * self[e315]) - (other[e12] * self[e315]) - (other[e4315] * self[e125]),
                 (other[e12] * self[e235]) + (other[e4235] * self[e125]) - (other[e23] * self[e125]) - (other[e4125] * self[e235]),
                 (other[e23] * self[e315]) + (other[e4315] * self[e235]) - (other[e31] * self[e235]) - (other[e4235] * self[e315]),
-            ]) + (Simd32x3::from(other[scalar]) * Simd32x3::from([self[e235], self[e315], self[e125]]))
+            ]) + (Simd32x3::from(other[scalar]) * self.group2().truncate_to_3())
                 + (Simd32x3::from(other[e15]) * Simd32x3::from([self[e12345], self[e3], self[e425]]))
                 + (Simd32x3::from(other[e25]) * Simd32x3::from([self[e435], self[e12345], self[e1]]))
                 + (Simd32x3::from(other[e35]) * Simd32x3::from([self[e2], self[e415], self[e12345]]))
-                + (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e415], self[e425], self[e435]]))
+                + (Simd32x3::from(other[e3215]) * self.group1().truncate_to_3())
                 + (Simd32x3::from(self[e5]) * other.group5())
                 - (Simd32x3::from(other[e15]) * Simd32x3::from([self[e321], self[e435], self[e2]]))
                 - (Simd32x3::from(other[e25]) * Simd32x3::from([self[e3], self[e321], self[e415]]))
                 - (Simd32x3::from(other[e35]) * Simd32x3::from([self[e425], self[e1], self[e321]]))
-                - (Simd32x3::from(other[e45]) * Simd32x3::from([self[e235], self[e315], self[e125]]))
-                - (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e1], self[e2], self[e3]]))
-                - (Simd32x3::from(self[e5]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]])),
+                - (Simd32x3::from(other[e45]) * self.group2().truncate_to_3())
+                - (Simd32x3::from(other[e3215]) * self.group3().truncate_to_3())
+                - (Simd32x3::from(self[e5]) * other.group9().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e12345] * self[e1])
@@ -35110,11 +35173,12 @@ impl GeometricProduct<AntiDualNum> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       28        0
-    //    simd4        2        2        0
+    //      f32        2       18        0
+    //    simd3        2        3        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       10       30        0
-    //  no simd       16       36        0
+    // yes simd        6       24        0
+    //  no simd       16       39        0
     fn geometric_product(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -35129,12 +35193,11 @@ impl GeometricProduct<AntiDualNum> for VersorOdd {
             Simd32x4::from([other[e3215] * self[e41], other[e3215] * self[e42], other[e3215] * self[e43], (other[e3215] * self[e1234]) * -1.0])
                 + (Simd32x4::from(other[scalar]) * self.group1()),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (other[e3215] * self[e23]) + (other[e3215] * self[e4235]) + (other[scalar] * self[e15]),
-                (other[e3215] * self[e31]) + (other[e3215] * self[e4315]) + (other[scalar] * self[e25]),
-                (other[e3215] * self[e12]) + (other[e3215] * self[e4125]) + (other[scalar] * self[e35]),
-                other[scalar] * self[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e1234]])
+                * ((Simd32x3::from(other[e3215]) * self.group1().truncate_to_3())
+                    + (Simd32x3::from(other[e3215]) * self.group3().truncate_to_3())
+                    + (Simd32x3::from(other[scalar]) * self.group2().truncate_to_3()))
+                .extend_to_4(other[scalar]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e3215] * self[e41]) * -1.0,
@@ -35149,11 +35212,12 @@ impl GeometricProduct<AntiFlatPoint> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       60        0
-    //    simd4        1        3        0
+    //      f32       38       53        0
+    //    simd3        2        2        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       45       63        0
-    //  no simd       48       72        0
+    // yes simd       41       59        0
+    //  no simd       48       75        0
     fn geometric_product(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -35190,12 +35254,15 @@ impl GeometricProduct<AntiFlatPoint> for VersorOdd {
                     - (other[e125] * self[e4125]),
             ]) + (Simd32x4::from(other[e321]) * Simd32x4::from([self[e15], self[e25], self[e35], self[e3215]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (other[e235] * self[e1234]) + (other[e315] * self[e43]) + (other[e321] * self[e23]) - (other[e125] * self[e42]),
-                (other[e315] * self[e1234]) + (other[e125] * self[e41]) + (other[e321] * self[e31]) - (other[e235] * self[e43]),
-                (other[e235] * self[e42]) + (other[e125] * self[e1234]) + (other[e321] * self[e12]) - (other[e315] * self[e41]),
-                other[e321] * self[e1234],
-            ]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e1234]])
+                * (Simd32x3::from([
+                    (other[e315] * self[e43]) - (other[e125] * self[e42]),
+                    (other[e125] * self[e41]) - (other[e235] * self[e43]),
+                    (other[e235] * self[e42]) - (other[e315] * self[e41]),
+                ]) + (Simd32x3::from(other[e321]) * self.group1().truncate_to_3())
+                    + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()))
+                .extend_to_4(other[e321])
+                * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -36199,11 +36266,12 @@ impl GeometricProduct<DualNum> for VersorOdd {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4       17        0
-    //    simd4        3        4        0
+    //      f32        1       10        0
+    //    simd3        1        2        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd        7       21        0
-    //  no simd       16       33        0
+    // yes simd        5       17        0
+    //  no simd       16       36        0
     fn geometric_product(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -36222,12 +36290,8 @@ impl GeometricProduct<DualNum> for VersorOdd {
                 + (Simd32x4::from(other[e5]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e45]]))
                 + (Simd32x4::from(other[e12345]) * Simd32x4::from([self[e15], self[e25], self[e35], self[e3215]])),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (other[e5] * self[e41]) - (other[e12345] * self[e4235]),
-                (other[e5] * self[e42]) - (other[e12345] * self[e4315]),
-                (other[e5] * self[e43]) - (other[e12345] * self[e4125]),
-                other[e12345] * self[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e1234]])
+                * ((Simd32x3::from(other[e5]) * self.group0().truncate_to_3()) - (Simd32x3::from(other[e12345]) * self.group3().truncate_to_3())).extend_to_4(other[e12345]),
         );
     }
 }
@@ -36235,11 +36299,12 @@ impl GeometricProduct<FlatPoint> for VersorOdd {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       60        0
-    //    simd4        1        1        0
+    //      f32       35       50        0
+    //    simd3        3        3        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       45       61        0
-    //  no simd       48       64        0
+    // yes simd       39       55        0
+    //  no simd       48       67        0
     fn geometric_product(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
@@ -36258,21 +36323,15 @@ impl GeometricProduct<FlatPoint> for VersorOdd {
                 (other[e15] * self[e41]) + (other[e25] * self[e42]) + (other[e35] * self[e43]),
             ]) + (Simd32x4::from(other[e45]) * Simd32x4::from([self[e4235], self[e4315], self[e4125], self[scalar]])),
             // e15, e25, e35, e1234
-            Simd32x4::from([
-                (other[e15] * self[scalar]) + (other[e15] * self[e45]) + (other[e25] * self[e12]) + (other[e25] * self[e4125])
-                    - (other[e35] * self[e31])
-                    - (other[e35] * self[e4315])
-                    - (other[e45] * self[e15]),
-                (other[e25] * self[scalar]) + (other[e25] * self[e45]) + (other[e35] * self[e23]) + (other[e35] * self[e4235])
-                    - (other[e15] * self[e12])
-                    - (other[e15] * self[e4125])
-                    - (other[e45] * self[e25]),
-                (other[e15] * self[e31]) + (other[e15] * self[e4315]) + (other[e35] * self[scalar]) + (other[e35] * self[e45])
-                    - (other[e25] * self[e23])
-                    - (other[e25] * self[e4235])
-                    - (other[e45] * self[e35]),
-                other[e45] * self[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e1234]])
+                * (Simd32x3::from([
+                    (other[e25] * self[e12]) + (other[e25] * self[e4125]) - (other[e35] * self[e31]) - (other[e35] * self[e4315]),
+                    (other[e35] * self[e23]) + (other[e35] * self[e4235]) - (other[e15] * self[e12]) - (other[e15] * self[e4125]),
+                    (other[e15] * self[e31]) + (other[e15] * self[e4315]) - (other[e25] * self[e23]) - (other[e25] * self[e4235]),
+                ]) + (Simd32x3::from(self[scalar]) * other.group0().truncate_to_3())
+                    + (Simd32x3::from(self[e45]) * other.group0().truncate_to_3())
+                    - (Simd32x3::from(other[e45]) * self.group2().truncate_to_3()))
+                .extend_to_4(other[e45]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e35] * self[e42]) + (other[e45] * self[e23]) - (other[e15] * self[e1234]) - (other[e25] * self[e43]),
@@ -36736,18 +36795,18 @@ impl GeometricProduct<MultiVector> for VersorOdd {
                 (other[e31] * self[e43]) + (other[e4315] * self[e43]) - (other[e12] * self[e42]) - (other[e4125] * self[e42]),
                 (other[e12] * self[e41]) + (other[e4125] * self[e41]) - (other[e23] * self[e43]) - (other[e4235] * self[e43]),
                 (other[e23] * self[e42]) + (other[e4235] * self[e42]) - (other[e31] * self[e41]) - (other[e4315] * self[e41]),
-            ]) + (Simd32x3::from(other[scalar]) * Simd32x3::from([self[e41], self[e42], self[e43]]))
-                + (Simd32x3::from(other[e45]) * Simd32x3::from([self[e41], self[e42], self[e43]]))
+            ]) + (Simd32x3::from(other[scalar]) * self.group0().truncate_to_3())
+                + (Simd32x3::from(other[e45]) * self.group0().truncate_to_3())
                 + (Simd32x3::from(other[e41]) * Simd32x3::from([self[scalar], self[e4125], self[e31]]))
                 + (Simd32x3::from(other[e42]) * Simd32x3::from([self[e12], self[scalar], self[e4235]]))
                 + (Simd32x3::from(other[e43]) * Simd32x3::from([self[e4315], self[e23], self[scalar]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
+                + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3())
+                + (Simd32x3::from(self[e1234]) * other.group9().truncate_to_3())
                 + (Simd32x3::from(self[e1234]) * other.group5())
                 - (Simd32x3::from(other[e41]) * Simd32x3::from([self[e45], self[e12], self[e4315]]))
                 - (Simd32x3::from(other[e42]) * Simd32x3::from([self[e4125], self[e45], self[e23]]))
                 - (Simd32x3::from(other[e43]) * Simd32x3::from([self[e31], self[e4235], self[e45]]))
-                - (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]])),
+                - (Simd32x3::from(other[e1234]) * self.group3().truncate_to_3()),
             // e23, e31, e12
             Simd32x3::from([
                 (other[e25] * self[e43]) + (other[e42] * self[e35]) + (other[e31] * self[e12]) + (other[e4315] * self[e4125])
@@ -36765,13 +36824,13 @@ impl GeometricProduct<MultiVector> for VersorOdd {
                     - (other[e42] * self[e15])
                     - (other[e31] * self[e23])
                     - (other[e4315] * self[e4235]),
-            ]) + (Simd32x3::from(other[scalar]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
-                + (Simd32x3::from(other[e45]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
-                + (Simd32x3::from(other[e3215]) * Simd32x3::from([self[e41], self[e42], self[e43]]))
-                + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
+            ]) + (Simd32x3::from(other[scalar]) * self.group1().truncate_to_3())
+                + (Simd32x3::from(other[e45]) * self.group3().truncate_to_3())
+                + (Simd32x3::from(other[e3215]) * self.group0().truncate_to_3())
+                + (Simd32x3::from(other[e1234]) * self.group2().truncate_to_3())
                 + (Simd32x3::from(self[scalar]) * other.group5())
-                + (Simd32x3::from(self[e45]) * Simd32x3::from([other[e4235], other[e4315], other[e4125]]))
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e15], other[e25], other[e35]]))
+                + (Simd32x3::from(self[e45]) * other.group9().truncate_to_3())
+                + (Simd32x3::from(self[e1234]) * other.group3().truncate_to_3())
                 + (Simd32x3::from(self[e3215]) * other.group4()),
             // e415, e425, e435, e321
             Simd32x4::from([
@@ -36835,20 +36894,20 @@ impl GeometricProduct<MultiVector> for VersorOdd {
                 (other[e3] * self[e42]) + (other[e425] * self[e43]),
                 (other[e1] * self[e43]) + (other[e435] * self[e41]),
                 (other[e2] * self[e41]) + (other[e415] * self[e42]),
-            ]) + (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e41], self[e42], self[e43]]))
-                + (Simd32x3::from(other[e4]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
+            ]) + (Simd32x3::from(other[e12345]) * self.group0().truncate_to_3())
+                + (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())
                 + (Simd32x3::from(other[e423]) * Simd32x3::from([self[scalar], self[e4125], self[e31]]))
                 + (Simd32x3::from(other[e431]) * Simd32x3::from([self[e12], self[scalar], self[e4235]]))
                 + (Simd32x3::from(other[e412]) * Simd32x3::from([self[e4315], self[e23], self[scalar]]))
-                + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e415], other[e425], other[e435]]))
-                - (Simd32x3::from(other[e4]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
+                + (Simd32x3::from(self[e1234]) * other.group6().truncate_to_3())
+                - (Simd32x3::from(other[e4]) * self.group3().truncate_to_3())
                 - (Simd32x3::from(other[e423]) * Simd32x3::from([self[e45], self[e12], self[e4315]]))
                 - (Simd32x3::from(other[e431]) * Simd32x3::from([self[e4125], self[e45], self[e23]]))
                 - (Simd32x3::from(other[e412]) * Simd32x3::from([self[e31], self[e4235], self[e45]]))
                 - (Simd32x3::from(self[e41]) * Simd32x3::from([other[e321], other[e3], other[e425]]))
                 - (Simd32x3::from(self[e42]) * Simd32x3::from([other[e435], other[e321], other[e1]]))
                 - (Simd32x3::from(self[e43]) * Simd32x3::from([other[e2], other[e415], other[e321]]))
-                - (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e1], other[e2], other[e3]])),
+                - (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3()),
             // e235, e315, e125
             Simd32x3::from([
                 (other[e2] * self[e35]) + (other[e425] * self[e35]) + (other[e315] * self[e12]) + (other[e315] * self[e4125])
@@ -36866,14 +36925,14 @@ impl GeometricProduct<MultiVector> for VersorOdd {
                     - (other[e425] * self[e15])
                     - (other[e315] * self[e23])
                     - (other[e315] * self[e4235]),
-            ]) + (Simd32x3::from(other[e12345]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
-                + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e23], self[e31], self[e12]]))
-                + (Simd32x3::from(other[e5]) * Simd32x3::from([self[e4235], self[e4315], self[e4125]]))
-                + (Simd32x3::from(other[e321]) * Simd32x3::from([self[e15], self[e25], self[e35]]))
+            ]) + (Simd32x3::from(other[e12345]) * self.group2().truncate_to_3())
+                + (Simd32x3::from(other[e5]) * self.group1().truncate_to_3())
+                + (Simd32x3::from(other[e5]) * self.group3().truncate_to_3())
+                + (Simd32x3::from(other[e321]) * self.group2().truncate_to_3())
                 + (Simd32x3::from(self[scalar]) * other.group8())
                 + (Simd32x3::from(self[e45]) * other.group8())
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e1], other[e2], other[e3]]))
-                + (Simd32x3::from(self[e3215]) * Simd32x3::from([other[e415], other[e425], other[e435]])),
+                + (Simd32x3::from(self[e3215]) * other.group1().truncate_to_3())
+                + (Simd32x3::from(self[e3215]) * other.group6().truncate_to_3()),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([
                 (other[e35] * self[e42])

@@ -13,7 +13,7 @@ use crate::traits::Wedge;
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         1       2       0
-//  Average:         6       9       0
+//  Average:         5       8       0
 //  Maximum:        97     129       0
 //
 //  No SIMD:   add/sub     mul     div
@@ -65,9 +65,9 @@ impl std::ops::Add<AntiCircleRotor> for MysteryCircleRotor {
             // e41, e42, e43, e45
             crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(other[e45]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -95,7 +95,7 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for MysteryCircleRotor {
             // e41, e42, e43, e45
             crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
             other.group1(),
             // e415, e425, e435, e321
@@ -125,7 +125,7 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for MysteryCircleRot
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group1().truncate_to_3(),
             // e23, e31, e12
             other.group0(),
             // e415, e425, e435, e321
@@ -155,9 +155,9 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, other[e45]]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group1().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -284,7 +284,7 @@ impl std::ops::Add<AntiDipoleOnOrigin> for MysteryCircleRotor {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([self[e415], self[e425], self[e435], other[e321] + self[e321]]),
             // e235, e315, e125, e12345
@@ -469,9 +469,9 @@ impl std::ops::Add<AntiMotor> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group1().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -501,7 +501,7 @@ impl std::ops::Add<AntiMotorOnOrigin> for MysteryCircleRotor {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -531,7 +531,7 @@ impl std::ops::Add<AntiMysteryCircleRotor> for MysteryCircleRotor {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -634,7 +634,7 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for MysteryCircleRotor {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -737,7 +737,7 @@ impl std::ops::Add<CircleOrthogonalOrigin> for MysteryCircleRotor {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([self[e415], self[e425], self[e435], other[e321] + self[e321]]),
             // e235, e315, e125, e12345
@@ -818,7 +818,7 @@ impl std::ops::Add<CircleRotorOnOrigin> for MysteryCircleRotor {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], self[e321]]),
             // e235, e315, e125, e12345
@@ -842,7 +842,7 @@ impl std::ops::Add<Dipole> for MysteryCircleRotor {
             // e15, e25, e35
             other.group2(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -902,7 +902,7 @@ impl std::ops::Add<DipoleAtInfinity> for MysteryCircleRotor {
             // e15, e25, e35
             other.group1(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -960,9 +960,9 @@ impl std::ops::Add<DipoleInversion> for MysteryCircleRotor {
             // e41, e42, e43, e45
             crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(other[e45]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -990,7 +990,7 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for MysteryCircleRotor {
             // e41, e42, e43, e45
             other.group0(),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group1().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1022,7 +1022,7 @@ impl std::ops::Add<DipoleInversionAtInfinity> for MysteryCircleRotor {
             // e15, e25, e35
             other.group1(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -1050,7 +1050,7 @@ impl std::ops::Add<DipoleInversionAtOrigin> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group1().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1110,7 +1110,7 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
             other.group1(),
             // e415, e425, e435, e321
@@ -1249,7 +1249,7 @@ impl std::ops::Add<FlatPoint> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, other[e45]]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1309,7 +1309,7 @@ impl std::ops::Add<Flector> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, other[e45]]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1339,7 +1339,7 @@ impl std::ops::Add<FlectorAtInfinity> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1640,7 +1640,7 @@ impl std::ops::Add<MysteryDipole> for MysteryCircleRotor {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -1670,7 +1670,7 @@ impl std::ops::Add<MysteryDipoleInversion> for MysteryCircleRotor {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -1715,7 +1715,7 @@ impl std::ops::Add<MysteryVersorOdd> for MysteryCircleRotor {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -2200,9 +2200,9 @@ impl std::ops::Add<VersorOdd> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], other[e45]]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -2230,9 +2230,9 @@ impl std::ops::Add<VersorOddAtInfinity> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, other[e45]]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            crate::swizzle!(other.group0(), 1, 2, 3, _),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -2260,9 +2260,9 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -3014,8 +3014,13 @@ impl From<MysteryCircle> for MysteryCircleRotor {
 impl std::ops::Mul<AntiCircleOnOrigin> for MysteryCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       19       30        0
+    //           add/sub      mul      div
+    //      f32       16       27        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd       17       28        0
+    //  no simd       20       30        0
     fn mul(self, other: AntiCircleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3037,11 +3042,12 @@ impl std::ops::Mul<AntiCircleRotorAligningOrigin> for MysteryCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       30       46        0
-    //    simd4        1        1        0
+    //      f32       24       39        0
+    //    simd3        2        2        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       31       47        0
-    //  no simd       34       50        0
+    // yes simd       27       43        0
+    //  no simd       34       53        0
     fn mul(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3049,8 +3055,13 @@ impl std::ops::Mul<AntiCircleRotorAligningOrigin> for MysteryCircleRotor {
 impl std::ops::Mul<AntiCircleRotorAligningOriginAtInfinity> for MysteryCircleRotor {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       23       35        0
+    //           add/sub      mul      div
+    //      f32       17       28        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       19       31        0
+    //  no simd       23       38        0
     fn mul(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3072,11 +3083,12 @@ impl std::ops::Mul<AntiCircleRotorOnOrigin> for MysteryCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       31        0
-    //    simd4        1        1        0
+    //      f32       13       24        0
+    //    simd3        2        2        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       20       32        0
-    //  no simd       23       35        0
+    // yes simd       16       28        0
+    //  no simd       23       38        0
     fn mul(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3111,11 +3123,12 @@ impl std::ops::Mul<AntiDipoleInversionOnOrigin> for MysteryCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       40        0
-    //    simd4        0        2        0
+    //      f32       16       27        0
+    //    simd3        3        4        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       28       42        0
-    //  no simd       28       48        0
+    // yes simd       20       34        0
+    //  no simd       29       51        0
     fn mul(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3137,11 +3150,12 @@ impl std::ops::Mul<AntiDipoleOnOrigin> for MysteryCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       20        0
-    //    simd4        0        3        0
+    //      f32        5       13        0
+    //    simd3        2        2        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd       11       23        0
-    //  no simd       11       32        0
+    // yes simd        7       19        0
+    //  no simd       11       35        0
     fn mul(self, other: AntiDipoleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3214,8 +3228,13 @@ impl std::ops::Mul<AntiFlectorOnOrigin> for MysteryCircleRotor {
 impl std::ops::Mul<AntiLine> for MysteryCircleRotor {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       19       30        0
+    //           add/sub      mul      div
+    //      f32       16       27        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd       17       28        0
+    //  no simd       20       30        0
     fn mul(self, other: AntiLine) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3223,8 +3242,13 @@ impl std::ops::Mul<AntiLine> for MysteryCircleRotor {
 impl std::ops::Mul<AntiLineOnOrigin> for MysteryCircleRotor {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       15        0
+    //           add/sub      mul      div
+    //      f32        5       12        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        6       13        0
+    //  no simd        9       15        0
     fn mul(self, other: AntiLineOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3233,11 +3257,12 @@ impl std::ops::Mul<AntiMotor> for MysteryCircleRotor {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       32        0
-    //    simd4        2        2        0
+    //      f32       14       25        0
+    //    simd3        2        2        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       22       34        0
-    //  no simd       28       40        0
+    // yes simd       18       30        0
+    //  no simd       28       43        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3245,8 +3270,13 @@ impl std::ops::Mul<AntiMotor> for MysteryCircleRotor {
 impl std::ops::Mul<AntiMotorOnOrigin> for MysteryCircleRotor {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        6       13        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        8       16        0
+    //  no simd       12       23        0
     fn mul(self, other: AntiMotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3318,12 +3348,12 @@ impl std::ops::Mul<AntiSphereOnOrigin> for MysteryCircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       17        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //      f32        6       14        0
+    //    simd3        0        3        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        9       20        0
-    //  no simd        9       27        0
+    // yes simd        7       18        0
+    //  no simd       10       27        0
     fn mul(self, other: AntiSphereOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3332,11 +3362,12 @@ impl std::ops::Mul<AntiVersorEvenOnOrigin> for MysteryCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       36        0
-    //    simd4        1        1        0
+    //      f32       18       29        0
+    //    simd3        2        2        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       25       37        0
-    //  no simd       28       40        0
+    // yes simd       21       33        0
+    //  no simd       28       43        0
     fn mul(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3345,11 +3376,12 @@ impl std::ops::Mul<Circle> for MysteryCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       30       46        0
-    //    simd4        1        1        0
+    //      f32       27       42        0
+    //    simd3        1        1        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       31       47        0
-    //  no simd       34       50        0
+    // yes simd       29       45        0
+    //  no simd       34       53        0
     fn mul(self, other: Circle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3366,8 +3398,13 @@ impl std::ops::Mul<CircleAligningOrigin> for MysteryCircleRotor {
 impl std::ops::Mul<CircleAtInfinity> for MysteryCircleRotor {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       23       35        0
+    //           add/sub      mul      div
+    //      f32       20       31        0
+    //    simd3        1        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       21       33        0
+    //  no simd       23       38        0
     fn mul(self, other: CircleAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3398,11 +3435,12 @@ impl std::ops::Mul<CircleOrthogonalOrigin> for MysteryCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       35        0
-    //    simd4        0        2        0
+    //      f32       16       28        0
+    //    simd3        2        2        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd       22       37        0
-    //  no simd       22       43        0
+    // yes simd       18       33        0
+    //  no simd       22       46        0
     fn mul(self, other: CircleOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3424,11 +3462,12 @@ impl std::ops::Mul<CircleRotorAligningOrigin> for MysteryCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       30       46        0
-    //    simd4        1        1        0
+    //      f32       24       39        0
+    //    simd3        2        2        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       31       47        0
-    //  no simd       34       50        0
+    // yes simd       27       43        0
+    //  no simd       34       53        0
     fn mul(self, other: CircleRotorAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3437,11 +3476,12 @@ impl std::ops::Mul<CircleRotorAligningOriginAtInfinity> for MysteryCircleRotor {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       31        0
-    //    simd4        1        1        0
+    //      f32       13       24        0
+    //    simd3        2        2        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       20       32        0
-    //  no simd       23       35        0
+    // yes simd       16       28        0
+    //  no simd       23       38        0
     fn mul(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3463,11 +3503,12 @@ impl std::ops::Mul<CircleRotorOnOrigin> for MysteryCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       31        0
-    //    simd4        1        2        0
+    //      f32       13       24        0
+    //    simd3        2        2        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       20       33        0
-    //  no simd       23       39        0
+    // yes simd       16       29        0
+    //  no simd       23       42        0
     fn mul(self, other: CircleRotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3476,11 +3517,12 @@ impl std::ops::Mul<Dipole> for MysteryCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       34       50        0
-    //    simd4        0        1        0
+    //      f32       31       46        0
+    //    simd3        1        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       34       51        0
-    //  no simd       34       54        0
+    // yes simd       32       49        0
+    //  no simd       34       57        0
     fn mul(self, other: Dipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3489,11 +3531,12 @@ impl std::ops::Mul<DipoleAligningOrigin> for MysteryCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       35        0
-    //    simd4        0        3        0
+    //      f32       16       28        0
+    //    simd3        2        2        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd       22       38        0
-    //  no simd       22       47        0
+    // yes simd       18       34        0
+    //  no simd       22       50        0
     fn mul(self, other: DipoleAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3502,11 +3545,12 @@ impl std::ops::Mul<DipoleAtInfinity> for MysteryCircleRotor {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       31        0
-    //    simd4        1        2        0
+    //      f32       16       27        0
+    //    simd3        1        1        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       20       33        0
-    //  no simd       23       39        0
+    // yes simd       18       31        0
+    //  no simd       23       42        0
     fn mul(self, other: DipoleAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3537,11 +3581,12 @@ impl std::ops::Mul<DipoleInversionAligningOrigin> for MysteryCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       36       52        0
-    //    simd4        2        4        0
+    //      f32       27       42        0
+    //    simd3        3        3        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       38       56        0
-    //  no simd       44       68        0
+    // yes simd       32       50        0
+    //  no simd       44       71        0
     fn mul(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3576,11 +3621,12 @@ impl std::ops::Mul<DipoleInversionOnOrigin> for MysteryCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       40        0
-    //    simd4        0        2        0
+    //      f32       19       30        0
+    //    simd3        3        3        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd       28       42        0
-    //  no simd       28       48        0
+    // yes simd       22       36        0
+    //  no simd       28       51        0
     fn mul(self, other: DipoleInversionOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3589,11 +3635,12 @@ impl std::ops::Mul<DipoleInversionOrthogonalOrigin> for MysteryCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       32       47        0
-    //    simd4        2        2        0
+    //      f32       29       44        0
+    //    simd3        0        1        0
+    //    simd4        3        2        0
     // Totals...
-    // yes simd       34       49        0
-    //  no simd       40       55        0
+    // yes simd       32       47        0
+    //  no simd       41       55        0
     fn mul(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3602,11 +3649,12 @@ impl std::ops::Mul<DipoleOnOrigin> for MysteryCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       20        0
-    //    simd4        0        3        0
+    //      f32        5       13        0
+    //    simd3        2        2        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd       11       23        0
-    //  no simd       11       32        0
+    // yes simd        7       19        0
+    //  no simd       11       35        0
     fn mul(self, other: DipoleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3614,8 +3662,13 @@ impl std::ops::Mul<DipoleOnOrigin> for MysteryCircleRotor {
 impl std::ops::Mul<DipoleOrthogonalOrigin> for MysteryCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       30       45        0
+    //           add/sub      mul      div
+    //      f32       27       42        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd       28       43        0
+    //  no simd       31       45        0
     fn mul(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3760,11 +3813,12 @@ impl std::ops::Mul<Motor> for MysteryCircleRotor {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       36        0
-    //    simd4        1        1        0
+    //      f32       18       29        0
+    //    simd3        2        2        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       25       37        0
-    //  no simd       28       40        0
+    // yes simd       21       33        0
+    //  no simd       28       43        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3785,8 +3839,13 @@ impl std::ops::Mul<MotorAtInfinity> for MysteryCircleRotor {
 impl std::ops::Mul<MotorOnOrigin> for MysteryCircleRotor {
     type Output = MysteryVersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        6       13        0
+    //    simd3        2        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        8       16        0
+    //  no simd       12       23        0
     fn mul(self, other: MotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3809,8 +3868,13 @@ impl std::ops::Mul<MultiVector> for MysteryCircleRotor {
 impl std::ops::Mul<MysteryCircle> for MysteryCircleRotor {
     type Output = MysteryVersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       12       20        0
+    //           add/sub      mul      div
+    //      f32        9       16        0
+    //    simd3        1        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd       10       18        0
+    //  no simd       12       23        0
     fn mul(self, other: MysteryCircle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3828,11 +3892,12 @@ impl std::ops::Mul<MysteryDipole> for MysteryCircleRotor {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       16        0
-    //    simd4        1        2        0
+    //      f32        5       12        0
+    //    simd3        1        1        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        9       18        0
-    //  no simd       12       24        0
+    // yes simd        7       16        0
+    //  no simd       12       27        0
     fn mul(self, other: MysteryDipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4065,11 +4130,12 @@ impl std::ops::Mul<VersorEvenAligningOrigin> for MysteryCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       36       52        0
-    //    simd4        2        2        0
+    //      f32       30       45        0
+    //    simd3        2        2        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       38       54        0
-    //  no simd       44       60        0
+    // yes simd       34       50        0
+    //  no simd       44       63        0
     fn mul(self, other: VersorEvenAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4104,11 +4170,12 @@ impl std::ops::Mul<VersorEvenOnOrigin> for MysteryCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       36        0
-    //    simd4        1        2        0
+    //      f32       18       29        0
+    //    simd3        2        2        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       25       38        0
-    //  no simd       28       44        0
+    // yes simd       21       34        0
+    //  no simd       28       47        0
     fn mul(self, other: VersorEvenOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4117,11 +4184,12 @@ impl std::ops::Mul<VersorEvenOrthogonalOrigin> for MysteryCircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       56        0
-    //    simd4        1        3        0
+    //      f32       31       46        0
+    //    simd3        3        3        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       41       59        0
-    //  no simd       44       68        0
+    // yes simd       35       53        0
+    //  no simd       44       71        0
     fn mul(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4156,11 +4224,12 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for MysteryCircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       32       48        0
-    //    simd4        3        3        0
+    //      f32       26       41        0
+    //    simd3        2        2        0
+    //    simd4        3        4        0
     // Totals...
-    // yes simd       35       51        0
-    //  no simd       44       60        0
+    // yes simd       31       47        0
+    //  no simd       44       63        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4251,9 +4320,9 @@ impl std::ops::Sub<AntiCircleRotor> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], other[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -4289,7 +4358,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
@@ -4326,7 +4395,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for MysteryCircleRot
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
@@ -4364,9 +4433,9 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([1.0, 1.0, 1.0, other[e45]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -4521,7 +4590,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for MysteryCircleRotor {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self[e415], self[e425], self[e435], self[e321] - other[e321]]),
             // e235, e315, e125, e12345
@@ -4741,9 +4810,9 @@ impl std::ops::Sub<AntiMotor> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -4780,7 +4849,7 @@ impl std::ops::Sub<AntiMotorOnOrigin> for MysteryCircleRotor {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -4818,7 +4887,7 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for MysteryCircleRotor {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -4945,7 +5014,7 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for MysteryCircleRotor {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -5078,7 +5147,7 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for MysteryCircleRotor {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self[e415], self[e425], self[e435], self[e321] - other[e321]]),
             // e235, e315, e125, e12345
@@ -5181,7 +5250,7 @@ impl std::ops::Sub<CircleRotorOnOrigin> for MysteryCircleRotor {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321]]),
             // e235, e315, e125, e12345
@@ -5212,7 +5281,7 @@ impl std::ops::Sub<Dipole> for MysteryCircleRotor {
             // e15, e25, e35
             other.group2() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -5286,7 +5355,7 @@ impl std::ops::Sub<DipoleAtInfinity> for MysteryCircleRotor {
             // e15, e25, e35
             other.group1() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -5359,9 +5428,9 @@ impl std::ops::Sub<DipoleInversion> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], other[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -5397,7 +5466,7 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for MysteryCircleRotor {
             // e41, e42, e43, e45
             other.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -5437,7 +5506,7 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for MysteryCircleRotor {
             // e15, e25, e35
             other.group1() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -5473,7 +5542,7 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -5545,7 +5614,7 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
@@ -5710,7 +5779,7 @@ impl std::ops::Sub<FlatPoint> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([1.0, 1.0, 1.0, other[e45]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -5782,7 +5851,7 @@ impl std::ops::Sub<Flector> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([1.0, 1.0, 1.0, other[e45]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -5819,7 +5888,7 @@ impl std::ops::Sub<FlectorAtInfinity> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -6160,7 +6229,7 @@ impl std::ops::Sub<MysteryDipole> for MysteryCircleRotor {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -6197,7 +6266,7 @@ impl std::ops::Sub<MysteryDipoleInversion> for MysteryCircleRotor {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -6254,7 +6323,7 @@ impl std::ops::Sub<MysteryVersorOdd> for MysteryCircleRotor {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -6837,9 +6906,9 @@ impl std::ops::Sub<VersorOdd> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], other[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -6878,7 +6947,7 @@ impl std::ops::Sub<VersorOddAtInfinity> for MysteryCircleRotor {
             // e15, e25, e35
             Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412
@@ -6915,9 +6984,9 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for MysteryCircleRotor {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group0(),
             // e423, e431, e412

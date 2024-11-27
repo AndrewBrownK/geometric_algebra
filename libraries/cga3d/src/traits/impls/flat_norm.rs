@@ -12,13 +12,13 @@ use crate::traits::FlatWeightNorm;
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       4       0
 //   Median:        12      24       0
-//  Average:        18      29       0
+//  Average:        17      29       0
 //  Maximum:        99     124       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0      10       0
 //   Median:        15      27       0
-//  Average:        19      36       0
+//  Average:        19      37       0
 //  Maximum:       111     144       0
 impl std::ops::Div<flat_norm> for AntiCircleRotor {
     type Output = MultiVector;
@@ -73,12 +73,12 @@ impl std::ops::Div<flat_norm> for AntiDipoleInversion {
 impl FlatNorm for AntiDipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       39        0
-    //    simd3        0        2        0
-    //    simd4        0        3        0
+    //      f32       22       32        0
+    //    simd3        1        4        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd       25       44        0
-    //  no simd       25       57        0
+    // yes simd       23       40        0
+    //  no simd       25       60        0
     fn flat_norm(self) -> MultiVector {
         use crate::elements::*;
         let self_2 = self.flat_bulk_norm();
@@ -470,12 +470,12 @@ impl std::ops::Div<flat_norm> for Motor {
 impl FlatNorm for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       26       40        0
-    //    simd3        0        2        0
-    //    simd4        0        3        0
+    //      f32       23       33        0
+    //    simd3        1        4        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd       26       45        0
-    //  no simd       26       58        0
+    // yes simd       24       41        0
+    //  no simd       26       61        0
     fn flat_norm(self) -> MultiVector {
         use crate::elements::*;
         let self_2 = self.flat_bulk_norm();
@@ -653,12 +653,12 @@ impl std::ops::Div<flat_norm> for VersorEven {
 impl FlatNorm for VersorEven {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       26       40        0
-    //    simd3        0        2        0
-    //    simd4        0        3        0
+    //      f32       23       33        0
+    //    simd3        1        4        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd       26       45        0
-    //  no simd       26       58        0
+    // yes simd       24       41        0
+    //  no simd       26       61        0
     fn flat_norm(self) -> MultiVector {
         use crate::elements::*;
         let self_2 = self.flat_bulk_norm();

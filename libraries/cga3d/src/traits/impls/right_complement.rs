@@ -37,7 +37,7 @@ impl RightComplement for AntiCircleRotor {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e12345
@@ -64,7 +64,7 @@ impl RightComplement for AntiDipoleInversion {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
             self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
@@ -115,7 +115,7 @@ impl RightComplement for AntiFlatPoint {
         use crate::elements::*;
         return Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
             Simd32x4::from([1.0, 1.0, 1.0, self[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e15, e25, e35
@@ -142,7 +142,7 @@ impl RightComplement for AntiFlector {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
             Simd32x4::from([1.0, 1.0, 1.0, self[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e15, e25, e35, e1234
@@ -276,7 +276,7 @@ impl RightComplement for CircleRotor {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e235], self[e315], self[e125]]) * Simd32x3::from(-1.0),
+            self.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
             self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, scalar
@@ -329,7 +329,7 @@ impl RightComplement for DipoleInversion {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e4
@@ -380,7 +380,7 @@ impl RightComplement for FlatPoint {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([1.0, 1.0, 1.0, self[e45]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e235, e315, e125
@@ -407,7 +407,7 @@ impl RightComplement for Flector {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([1.0, 1.0, 1.0, self[e45]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e235, e315, e125, e4
@@ -504,11 +504,11 @@ impl RightComplement for MultiVector {
             // e41, e42, e43
             self.group8() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([self[e415], self[e425], self[e435]]) * Simd32x3::from(-1.0),
+            self.group6().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
             // e423, e431, e412
-            Simd32x3::from([self[e15], self[e25], self[e35]]) * Simd32x3::from(-1.0),
+            self.group3().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
             self.group4() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215

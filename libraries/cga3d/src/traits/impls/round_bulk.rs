@@ -195,8 +195,7 @@ impl std::ops::Div<round_bulk> for Dipole {
 impl RoundBulk for Dipole {
     type Output = AntiLine;
     fn round_bulk(self) -> Self::Output {
-        use crate::elements::*;
-        return AntiLine::from_groups(/* e23, e31, e12 */ Simd32x3::from([self[e23], self[e31], self[e12]]), /* e15, e25, e35 */ Simd32x3::from(0.0));
+        return AntiLine::from_groups(/* e23, e31, e12 */ self.group1().truncate_to_3(), /* e15, e25, e35 */ Simd32x3::from(0.0));
     }
 }
 impl std::ops::Div<round_bulk> for DipoleInversion {
@@ -208,8 +207,7 @@ impl std::ops::Div<round_bulk> for DipoleInversion {
 impl RoundBulk for DipoleInversion {
     type Output = AntiLine;
     fn round_bulk(self) -> Self::Output {
-        use crate::elements::*;
-        return AntiLine::from_groups(/* e23, e31, e12 */ Simd32x3::from([self[e23], self[e31], self[e12]]), /* e15, e25, e35 */ Simd32x3::from(0.0));
+        return AntiLine::from_groups(/* e23, e31, e12 */ self.group1().truncate_to_3(), /* e15, e25, e35 */ Simd32x3::from(0.0));
     }
 }
 impl std::ops::Div<round_bulk> for MultiVector {

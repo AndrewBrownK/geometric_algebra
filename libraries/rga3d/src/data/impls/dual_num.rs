@@ -14,13 +14,13 @@ use crate::traits::Wedge;
 //  Minimum:         0       0       0
 //   Median:         0       1       0
 //  Average:         0       1       0
-//  Maximum:         6      18       0
+//  Maximum:         4      14       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         0       2       0
 //  Average:         0       4       0
-//  Maximum:         8      24       0
+//  Maximum:         8      27       0
 impl std::ops::Add<AntiScalar> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
@@ -367,8 +367,13 @@ impl std::ops::MulAssign<DualNum> for DualNum {
 impl std::ops::Mul<Flector> for DualNum {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4       12        0
+    //           add/sub      mul      div
+    //      f32        1        5        0
+    //    simd3        1        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        8        0
+    //  no simd        4       15        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -410,11 +415,12 @@ impl std::ops::Mul<MultiVector> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       15        0
-    //    simd3        1        3        0
+    //      f32        2        8        0
+    //    simd3        2        5        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        6       18        0
-    //  no simd        8       24        0
+    // yes simd        4       14        0
+    //  no simd        8       27        0
     fn mul(self, other: MultiVector) -> Self::Output {
         return self.geometric_product(other);
     }

@@ -40,13 +40,7 @@ impl std::ops::Div<flat_weight> for AntiDipoleInversion {
 impl FlatWeight for AntiDipoleInversion {
     type Output = Line;
     fn flat_weight(self) -> Self::Output {
-        use crate::elements::*;
-        return Line::from_groups(
-            // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-        );
+        return Line::from_groups(/* e415, e425, e435 */ self.group1().truncate_to_3(), /* e235, e315, e125 */ Simd32x3::from(0.0));
     }
 }
 impl std::ops::Div<flat_weight> for AntiScalar {
@@ -75,13 +69,7 @@ impl std::ops::Div<flat_weight> for Circle {
 impl FlatWeight for Circle {
     type Output = Line;
     fn flat_weight(self) -> Self::Output {
-        use crate::elements::*;
-        return Line::from_groups(
-            // e415, e425, e435
-            Simd32x3::from([self[e415], self[e425], self[e435]]),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-        );
+        return Line::from_groups(/* e415, e425, e435 */ self.group1().truncate_to_3(), /* e235, e315, e125 */ Simd32x3::from(0.0));
     }
 }
 impl std::ops::Div<flat_weight> for CircleRotor {

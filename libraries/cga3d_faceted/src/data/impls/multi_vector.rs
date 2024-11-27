@@ -5953,12 +5953,12 @@ impl std::ops::BitXor<AntiCircleRotorAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       46       68        0
-    //    simd3        6        8        0
-    //    simd4        2        3        0
+    //      f32       43       61        0
+    //    simd3        7       10        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       54       79        0
-    //  no simd       72      104        0
+    // yes simd       52       75        0
+    //  no simd       72      107        0
     fn bitxor(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -6010,12 +6010,12 @@ impl std::ops::BitXor<AntiCircleRotorOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       47        0
-    //    simd3        4        7        0
-    //    simd4        2        3        0
+    //      f32       25       40        0
+    //    simd3        5        9        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       34       57        0
-    //  no simd       48       80        0
+    // yes simd       32       53        0
+    //  no simd       48       83        0
     fn bitxor(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -6067,12 +6067,12 @@ impl std::ops::BitXor<AntiDipoleInversionOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       63        0
-    //    simd3        2        4        0
-    //    simd4        1        3        0
+    //      f32       37       56        0
+    //    simd3        3        6        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       43       70        0
-    //  no simd       50       87        0
+    // yes simd       41       66        0
+    //  no simd       50       90        0
     fn bitxor(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -6086,12 +6086,12 @@ impl std::ops::BitXor<AntiDipoleInversionOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       34       49        0
-    //    simd3        2        5        0
-    //    simd4        1        3        0
+    //      f32       31       46        0
+    //    simd3        2        6        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       37       57        0
-    //  no simd       44       76        0
+    // yes simd       35       55        0
+    //  no simd       45       76        0
     fn bitxor(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -6378,12 +6378,12 @@ impl std::ops::BitXor<AntiSphereOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       27       50        0
-    //    simd3        1        3        0
-    //    simd4        1        3        0
+    //      f32       24       43        0
+    //    simd3        2        5        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       29       56        0
-    //  no simd       34       71        0
+    // yes simd       27       52        0
+    //  no simd       34       74        0
     fn bitxor(self, other: AntiSphereOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -6397,12 +6397,12 @@ impl std::ops::BitXor<AntiVersorEvenOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       30       49        0
-    //    simd3        4        7        0
-    //    simd4        2        3        0
+    //      f32       27       42        0
+    //    simd3        5        9        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       36       59        0
-    //  no simd       50       82        0
+    // yes simd       34       55        0
+    //  no simd       50       85        0
     fn bitxor(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -6643,12 +6643,12 @@ impl std::ops::BitXor<DipoleAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       34       49        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
+    //      f32       31       46        0
+    //    simd3        0        2        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       34       51        0
-    //  no simd       34       56        0
+    // yes simd       32       49        0
+    //  no simd       35       56        0
     fn bitxor(self, other: DipoleAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -6681,12 +6681,12 @@ impl std::ops::BitXor<DipoleAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       27       45        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
+    //      f32       24       42        0
+    //    simd3        0        2        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       27       47        0
-    //  no simd       27       52        0
+    // yes simd       25       45        0
+    //  no simd       28       52        0
     fn bitxor(self, other: DipoleAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -6719,12 +6719,12 @@ impl std::ops::BitXor<DipoleInversionAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       55        0
-    //    simd3        0        1        0
-    //    simd4        1        2        0
+    //      f32       37       52        0
+    //    simd3        0        2        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       41       58        0
-    //  no simd       44       66        0
+    // yes simd       39       56        0
+    //  no simd       45       66        0
     fn bitxor(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -6757,12 +6757,12 @@ impl std::ops::BitXor<DipoleInversionAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       31       49        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
+    //      f32       28       46        0
+    //    simd3        0        2        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       31       51        0
-    //  no simd       31       56        0
+    // yes simd       29       49        0
+    //  no simd       32       56        0
     fn bitxor(self, other: DipoleInversionAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -6776,11 +6776,12 @@ impl std::ops::BitXor<DipoleInversionOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       32        0
-    //    simd4        1        2        0
+    //      f32       18       32        0
+    //    simd3        0        1        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       22       34        0
-    //  no simd       25       40        0
+    // yes simd       20       35        0
+    //  no simd       26       43        0
     fn bitxor(self, other: DipoleInversionOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -6813,11 +6814,12 @@ impl std::ops::BitXor<DipoleOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       28        0
-    //    simd4        0        1        0
+    //      f32       14       28        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       17       29        0
-    //  no simd       17       32        0
+    // yes simd       15       30        0
+    //  no simd       18       35        0
     fn bitxor(self, other: DipoleOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -6888,12 +6890,12 @@ impl std::ops::BitXor<FlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       29        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
+    //      f32       14       29        0
+    //    simd3        0        2        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       17       31        0
-    //  no simd       17       36        0
+    // yes simd       15       32        0
+    //  no simd       18       39        0
     fn bitxor(self, other: FlatPoint) -> Self::Output {
         return self.wedge(other);
     }
@@ -6926,12 +6928,12 @@ impl std::ops::BitXor<Flector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       37        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
+    //      f32       22       37        0
+    //    simd3        0        2        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       25       39        0
-    //  no simd       25       44        0
+    // yes simd       23       40        0
+    //  no simd       26       47        0
     fn bitxor(self, other: Flector) -> Self::Output {
         return self.wedge(other);
     }
@@ -7076,12 +7078,12 @@ impl std::ops::BitXor<Motor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       32        0
-    //    simd3        1        3        0
-    //    simd4        0        1        0
+    //      f32       19       29        0
+    //    simd3        1        4        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       23       36        0
-    //  no simd       25       45        0
+    // yes simd       21       34        0
+    //  no simd       26       45        0
     fn bitxor(self, other: Motor) -> Self::Output {
         return self.wedge(other);
     }
@@ -7431,12 +7433,12 @@ impl std::ops::BitXor<RoundPointAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       23        0
-    //    simd3        0        3        0
-    //    simd4        0        3        0
+    //      f32        5       20        0
+    //    simd3        0        4        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        8       29        0
-    //  no simd        8       44        0
+    // yes simd        6       27        0
+    //  no simd        9       44        0
     fn bitxor(self, other: RoundPointAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -7543,12 +7545,12 @@ impl std::ops::BitXor<VersorEvenAligningOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       35       50        0
-    //    simd3        2        5        0
-    //    simd4        1        3        0
+    //      f32       32       47        0
+    //    simd3        2        6        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       38       58        0
-    //  no simd       45       77        0
+    // yes simd       36       56        0
+    //  no simd       46       77        0
     fn bitxor(self, other: VersorEvenAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -7581,12 +7583,12 @@ impl std::ops::BitXor<VersorEvenAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       37        0
-    //    simd3        2        5        0
-    //    simd4        1        3        0
+    //      f32       19       34        0
+    //    simd3        2        6        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       25       45        0
-    //  no simd       32       64        0
+    // yes simd       23       43        0
+    //  no simd       33       64        0
     fn bitxor(self, other: VersorEvenAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -7600,12 +7602,12 @@ impl std::ops::BitXor<VersorEvenOnOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       27        0
-    //    simd3        1        2        0
-    //    simd4        1        4        0
+    //      f32       15       24        0
+    //    simd3        1        3        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       20       33        0
-    //  no simd       25       49        0
+    // yes simd       18       31        0
+    //  no simd       26       49        0
     fn bitxor(self, other: VersorEvenOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -7676,12 +7678,12 @@ impl std::ops::BitXor<VersorOddOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       50       72        0
-    //    simd3        6        8        0
-    //    simd4        2        3        0
+    //      f32       47       65        0
+    //    simd3        7       10        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       58       83        0
-    //  no simd       76      108        0
+    // yes simd       56       79        0
+    //  no simd       76      111        0
     fn bitxor(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -7735,9 +7737,9 @@ impl From<AntiCircleRotor> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([from_anti_circle_rotor[e41], from_anti_circle_rotor[e42], from_anti_circle_rotor[e43], from_anti_circle_rotor[e45]]),
             // e15, e25, e35
-            Simd32x3::from([from_anti_circle_rotor[e15], from_anti_circle_rotor[e25], from_anti_circle_rotor[e35]]),
+            from_anti_circle_rotor.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([from_anti_circle_rotor[e23], from_anti_circle_rotor[e31], from_anti_circle_rotor[e12]]),
+            from_anti_circle_rotor.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -7770,11 +7772,7 @@ impl From<AntiCircleRotorAligningOrigin> for MultiVector {
                 0.0,
             ]),
             // e15, e25, e35
-            Simd32x3::from([
-                from_anti_circle_rotor_aligning_origin[e15],
-                from_anti_circle_rotor_aligning_origin[e25],
-                from_anti_circle_rotor_aligning_origin[e35],
-            ]),
+            from_anti_circle_rotor_aligning_origin.group2().truncate_to_3(),
             // e23, e31, e12
             from_anti_circle_rotor_aligning_origin.group1(),
             // e415, e425, e435, e321
@@ -7804,11 +7802,7 @@ impl From<AntiCircleRotorAligningOriginAtInfinity> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([
-                from_anti_circle_rotor_aligning_origin_at_infinity[e15],
-                from_anti_circle_rotor_aligning_origin_at_infinity[e25],
-                from_anti_circle_rotor_aligning_origin_at_infinity[e35],
-            ]),
+            from_anti_circle_rotor_aligning_origin_at_infinity.group1().truncate_to_3(),
             // e23, e31, e12
             from_anti_circle_rotor_aligning_origin_at_infinity.group0(),
             // e415, e425, e435, e321
@@ -7838,17 +7832,9 @@ impl From<AntiCircleRotorAtInfinity> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, from_anti_circle_rotor_at_infinity[e45]]),
             // e15, e25, e35
-            Simd32x3::from([
-                from_anti_circle_rotor_at_infinity[e15],
-                from_anti_circle_rotor_at_infinity[e25],
-                from_anti_circle_rotor_at_infinity[e35],
-            ]),
+            from_anti_circle_rotor_at_infinity.group1().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([
-                from_anti_circle_rotor_at_infinity[e23],
-                from_anti_circle_rotor_at_infinity[e31],
-                from_anti_circle_rotor_at_infinity[e12],
-            ]),
+            from_anti_circle_rotor_at_infinity.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -7919,7 +7905,7 @@ impl From<AntiDipoleInversion> for MultiVector {
             // e423, e431, e412
             from_anti_dipole_inversion.group0(),
             // e235, e315, e125
-            Simd32x3::from([from_anti_dipole_inversion[e235], from_anti_dipole_inversion[e315], from_anti_dipole_inversion[e125]]),
+            from_anti_dipole_inversion.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -7982,11 +7968,7 @@ impl From<AntiDipoleInversionOnOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, from_anti_dipole_inversion_on_origin[e321]]),
             // e423, e431, e412
-            Simd32x3::from([
-                from_anti_dipole_inversion_on_origin[e423],
-                from_anti_dipole_inversion_on_origin[e431],
-                from_anti_dipole_inversion_on_origin[e412],
-            ]),
+            from_anti_dipole_inversion_on_origin.group0().truncate_to_3(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -8021,17 +8003,9 @@ impl From<AntiDipoleInversionOrthogonalOrigin> for MultiVector {
                 0.0,
             ]),
             // e423, e431, e412
-            Simd32x3::from([
-                from_anti_dipole_inversion_orthogonal_origin[e423],
-                from_anti_dipole_inversion_orthogonal_origin[e431],
-                from_anti_dipole_inversion_orthogonal_origin[e412],
-            ]),
+            from_anti_dipole_inversion_orthogonal_origin.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([
-                from_anti_dipole_inversion_orthogonal_origin[e235],
-                from_anti_dipole_inversion_orthogonal_origin[e315],
-                from_anti_dipole_inversion_orthogonal_origin[e125],
-            ]),
+            from_anti_dipole_inversion_orthogonal_origin.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -8059,7 +8033,7 @@ impl From<AntiDipoleOnOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, from_anti_dipole_on_origin[e321]]),
             // e423, e431, e412
-            Simd32x3::from([from_anti_dipole_on_origin[e423], from_anti_dipole_on_origin[e431], from_anti_dipole_on_origin[e412]]),
+            from_anti_dipole_on_origin.group0().truncate_to_3(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -8151,7 +8125,7 @@ impl From<AntiFlatPoint> for MultiVector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([from_anti_flat_point[e235], from_anti_flat_point[e315], from_anti_flat_point[e125]]),
+            from_anti_flat_point.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -8181,7 +8155,7 @@ impl From<AntiFlector> for MultiVector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([from_anti_flector[e235], from_anti_flector[e315], from_anti_flector[e125]]),
+            from_anti_flector.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -8291,9 +8265,9 @@ impl From<AntiMotor> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([from_anti_motor[e15], from_anti_motor[e25], from_anti_motor[e35]]),
+            from_anti_motor.group1().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([from_anti_motor[e23], from_anti_motor[e31], from_anti_motor[e12]]),
+            from_anti_motor.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -8323,7 +8297,7 @@ impl From<AntiMotorOnOrigin> for MultiVector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([from_anti_motor_on_origin[e23], from_anti_motor_on_origin[e31], from_anti_motor_on_origin[e12]]),
+            from_anti_motor_on_origin.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -8353,7 +8327,7 @@ impl From<AntiMysteryCircleRotor> for MultiVector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([from_anti_mystery_circle_rotor[e23], from_anti_mystery_circle_rotor[e31], from_anti_mystery_circle_rotor[e12]]),
+            from_anti_mystery_circle_rotor.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -8537,7 +8511,7 @@ impl From<AntiVersorEvenOnOrigin> for MultiVector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([from_anti_versor_even_on_origin[e23], from_anti_versor_even_on_origin[e31], from_anti_versor_even_on_origin[e12]]),
+            from_anti_versor_even_on_origin.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -8718,7 +8692,7 @@ impl From<CircleOrthogonalOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, from_circle_orthogonal_origin[e321]]),
             // e423, e431, e412
-            Simd32x3::from([from_circle_orthogonal_origin[e423], from_circle_orthogonal_origin[e431], from_circle_orthogonal_origin[e412]]),
+            from_circle_orthogonal_origin.group0().truncate_to_3(),
             // e235, e315, e125
             from_circle_orthogonal_origin.group1(),
             // e1234, e4235, e4315, e4125
@@ -8750,7 +8724,7 @@ impl From<CircleRotor> for MultiVector {
             // e423, e431, e412
             from_circle_rotor.group0(),
             // e235, e315, e125
-            Simd32x3::from([from_circle_rotor[e235], from_circle_rotor[e315], from_circle_rotor[e125]]),
+            from_circle_rotor.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -8785,11 +8759,7 @@ impl From<CircleRotorAligningOrigin> for MultiVector {
             // e423, e431, e412
             from_circle_rotor_aligning_origin.group0(),
             // e235, e315, e125
-            Simd32x3::from([
-                from_circle_rotor_aligning_origin[e235],
-                from_circle_rotor_aligning_origin[e315],
-                from_circle_rotor_aligning_origin[e125],
-            ]),
+            from_circle_rotor_aligning_origin.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -8824,11 +8794,7 @@ impl From<CircleRotorAligningOriginAtInfinity> for MultiVector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([
-                from_circle_rotor_aligning_origin_at_infinity[e235],
-                from_circle_rotor_aligning_origin_at_infinity[e315],
-                from_circle_rotor_aligning_origin_at_infinity[e125],
-            ]),
+            from_circle_rotor_aligning_origin_at_infinity.group1().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -8858,7 +8824,7 @@ impl From<CircleRotorAtInfinity> for MultiVector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([from_circle_rotor_at_infinity[e235], from_circle_rotor_at_infinity[e315], from_circle_rotor_at_infinity[e125]]),
+            from_circle_rotor_at_infinity.group1().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -8886,7 +8852,7 @@ impl From<CircleRotorOnOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from([from_circle_rotor_on_origin[e415], from_circle_rotor_on_origin[e425], from_circle_rotor_on_origin[e435], 0.0]),
             // e423, e431, e412
-            Simd32x3::from([from_circle_rotor_on_origin[e423], from_circle_rotor_on_origin[e431], from_circle_rotor_on_origin[e412]]),
+            from_circle_rotor_on_origin.group0().truncate_to_3(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -8912,7 +8878,7 @@ impl From<Dipole> for MultiVector {
             // e15, e25, e35
             from_dipole.group2(),
             // e23, e31, e12
-            Simd32x3::from([from_dipole[e23], from_dipole[e31], from_dipole[e12]]),
+            from_dipole.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -8971,7 +8937,7 @@ impl From<DipoleAtInfinity> for MultiVector {
             // e15, e25, e35
             from_dipole_at_infinity.group1(),
             // e23, e31, e12
-            Simd32x3::from([from_dipole_at_infinity[e23], from_dipole_at_infinity[e31], from_dipole_at_infinity[e12]]),
+            from_dipole_at_infinity.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -9029,9 +8995,9 @@ impl From<DipoleInversion> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([from_dipole_inversion[e41], from_dipole_inversion[e42], from_dipole_inversion[e43], from_dipole_inversion[e45]]),
             // e15, e25, e35
-            Simd32x3::from([from_dipole_inversion[e15], from_dipole_inversion[e25], from_dipole_inversion[e35]]),
+            from_dipole_inversion.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([from_dipole_inversion[e23], from_dipole_inversion[e31], from_dipole_inversion[e12]]),
+            from_dipole_inversion.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -9059,11 +9025,7 @@ impl From<DipoleInversionAligningOrigin> for MultiVector {
             // e41, e42, e43, e45
             from_dipole_inversion_aligning_origin.group0(),
             // e15, e25, e35
-            Simd32x3::from([
-                from_dipole_inversion_aligning_origin[e15],
-                from_dipole_inversion_aligning_origin[e25],
-                from_dipole_inversion_aligning_origin[e35],
-            ]),
+            from_dipole_inversion_aligning_origin.group1().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -9100,7 +9062,7 @@ impl From<DipoleInversionAtInfinity> for MultiVector {
             // e15, e25, e35
             from_dipole_inversion_at_infinity.group1(),
             // e23, e31, e12
-            Simd32x3::from([from_dipole_inversion_at_infinity[e23], from_dipole_inversion_at_infinity[e31], from_dipole_inversion_at_infinity[e12]]),
+            from_dipole_inversion_at_infinity.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -9133,7 +9095,7 @@ impl From<DipoleInversionAtOrigin> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([from_dipole_inversion_at_origin[e41], from_dipole_inversion_at_origin[e42], from_dipole_inversion_at_origin[e43], 0.0]),
             // e15, e25, e35
-            Simd32x3::from([from_dipole_inversion_at_origin[e15], from_dipole_inversion_at_origin[e25], from_dipole_inversion_at_origin[e35]]),
+            from_dipole_inversion_at_origin.group1().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -9197,11 +9159,7 @@ impl From<DipoleInversionOrthogonalOrigin> for MultiVector {
                 0.0,
             ]),
             // e15, e25, e35
-            Simd32x3::from([
-                from_dipole_inversion_orthogonal_origin[e15],
-                from_dipole_inversion_orthogonal_origin[e25],
-                from_dipole_inversion_orthogonal_origin[e35],
-            ]),
+            from_dipole_inversion_orthogonal_origin.group2().truncate_to_3(),
             // e23, e31, e12
             from_dipole_inversion_orthogonal_origin.group1(),
             // e415, e425, e435, e321
@@ -9350,7 +9308,7 @@ impl From<FlatPoint> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, from_flat_point[e45]]),
             // e15, e25, e35
-            Simd32x3::from([from_flat_point[e15], from_flat_point[e25], from_flat_point[e35]]),
+            from_flat_point.group0().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -9409,7 +9367,7 @@ impl From<Flector> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, from_flector[e45]]),
             // e15, e25, e35
-            Simd32x3::from([from_flector[e15], from_flector[e25], from_flector[e35]]),
+            from_flector.group0().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -9439,7 +9397,7 @@ impl From<FlectorAtInfinity> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([from_flector_at_infinity[e15], from_flector_at_infinity[e25], from_flector_at_infinity[e35]]),
+            from_flector_at_infinity.group0().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -9656,7 +9614,7 @@ impl From<Motor> for MultiVector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([from_motor[e235], from_motor[e315], from_motor[e125]]),
+            from_motor.group1().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -9686,7 +9644,7 @@ impl From<MotorAtInfinity> for MultiVector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([from_motor_at_infinity[e235], from_motor_at_infinity[e315], from_motor_at_infinity[e125]]),
+            from_motor_at_infinity.group0().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -9799,7 +9757,7 @@ impl From<MysteryDipole> for MultiVector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([from_mystery_dipole[e23], from_mystery_dipole[e31], from_mystery_dipole[e12]]),
+            from_mystery_dipole.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -9829,7 +9787,7 @@ impl From<MysteryDipoleInversion> for MultiVector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([from_mystery_dipole_inversion[e23], from_mystery_dipole_inversion[e31], from_mystery_dipole_inversion[e12]]),
+            from_mystery_dipole_inversion.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -9889,7 +9847,7 @@ impl From<MysteryVersorOdd> for MultiVector {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([from_mystery_versor_odd[e23], from_mystery_versor_odd[e31], from_mystery_versor_odd[e12]]),
+            from_mystery_versor_odd.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -10047,7 +10005,7 @@ impl From<NullVersorEvenAtOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            Simd32x3::from([from_null_versor_even_at_origin[e423], from_null_versor_even_at_origin[e431], from_null_versor_even_at_origin[e412]]),
+            from_null_versor_even_at_origin.group0().truncate_to_3(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -10346,9 +10304,9 @@ impl From<VersorEven> for MultiVector {
             // e415, e425, e435, e321
             from_versor_even.group1(),
             // e423, e431, e412
-            Simd32x3::from([from_versor_even[e423], from_versor_even[e431], from_versor_even[e412]]),
+            from_versor_even.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([from_versor_even[e235], from_versor_even[e315], from_versor_even[e125]]),
+            from_versor_even.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -10381,9 +10339,9 @@ impl From<VersorEvenAligningOrigin> for MultiVector {
                 0.0,
             ]),
             // e423, e431, e412
-            Simd32x3::from([from_versor_even_aligning_origin[e423], from_versor_even_aligning_origin[e431], from_versor_even_aligning_origin[e412]]),
+            from_versor_even_aligning_origin.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([from_versor_even_aligning_origin[e235], from_versor_even_aligning_origin[e315], from_versor_even_aligning_origin[e125]]),
+            from_versor_even_aligning_origin.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -10413,7 +10371,7 @@ impl From<VersorEvenAtInfinity> for MultiVector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([from_versor_even_at_infinity[e235], from_versor_even_at_infinity[e315], from_versor_even_at_infinity[e125]]),
+            from_versor_even_at_infinity.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -10441,9 +10399,9 @@ impl From<VersorEvenAtOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
-            Simd32x3::from([from_versor_even_at_origin[e423], from_versor_even_at_origin[e431], from_versor_even_at_origin[e412]]),
+            from_versor_even_at_origin.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([from_versor_even_at_origin[e235], from_versor_even_at_origin[e315], from_versor_even_at_origin[e125]]),
+            from_versor_even_at_origin.group1().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -10471,7 +10429,7 @@ impl From<VersorEvenOnOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from([from_versor_even_on_origin[e415], from_versor_even_on_origin[e425], from_versor_even_on_origin[e435], 0.0]),
             // e423, e431, e412
-            Simd32x3::from([from_versor_even_on_origin[e423], from_versor_even_on_origin[e431], from_versor_even_on_origin[e412]]),
+            from_versor_even_on_origin.group0().truncate_to_3(),
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
@@ -10501,17 +10459,9 @@ impl From<VersorEvenOrthogonalOrigin> for MultiVector {
             // e415, e425, e435, e321
             Simd32x4::from([0.0, 0.0, 0.0, from_versor_even_orthogonal_origin[e321]]),
             // e423, e431, e412
-            Simd32x3::from([
-                from_versor_even_orthogonal_origin[e423],
-                from_versor_even_orthogonal_origin[e431],
-                from_versor_even_orthogonal_origin[e412],
-            ]),
+            from_versor_even_orthogonal_origin.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([
-                from_versor_even_orthogonal_origin[e235],
-                from_versor_even_orthogonal_origin[e315],
-                from_versor_even_orthogonal_origin[e125],
-            ]),
+            from_versor_even_orthogonal_origin.group1().truncate_to_3(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from(0.0),
             // e3215
@@ -10533,9 +10483,9 @@ impl From<VersorOdd> for MultiVector {
             // e41, e42, e43, e45
             Simd32x4::from([from_versor_odd[e41], from_versor_odd[e42], from_versor_odd[e43], from_versor_odd[e45]]),
             // e15, e25, e35
-            Simd32x3::from([from_versor_odd[e15], from_versor_odd[e25], from_versor_odd[e35]]),
+            from_versor_odd.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([from_versor_odd[e23], from_versor_odd[e31], from_versor_odd[e12]]),
+            from_versor_odd.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -10565,7 +10515,7 @@ impl From<VersorOddAtInfinity> for MultiVector {
             // e15, e25, e35
             Simd32x3::from([from_versor_odd_at_infinity[e15], from_versor_odd_at_infinity[e25], from_versor_odd_at_infinity[e35]]),
             // e23, e31, e12
-            Simd32x3::from([from_versor_odd_at_infinity[e23], from_versor_odd_at_infinity[e31], from_versor_odd_at_infinity[e12]]),
+            from_versor_odd_at_infinity.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -10598,9 +10548,9 @@ impl From<VersorOddOrthogonalOrigin> for MultiVector {
                 0.0,
             ]),
             // e15, e25, e35
-            Simd32x3::from([from_versor_odd_orthogonal_origin[e15], from_versor_odd_orthogonal_origin[e25], from_versor_odd_orthogonal_origin[e35]]),
+            from_versor_odd_orthogonal_origin.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([from_versor_odd_orthogonal_origin[e23], from_versor_odd_orthogonal_origin[e31], from_versor_odd_orthogonal_origin[e12]]),
+            from_versor_odd_orthogonal_origin.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -10877,13 +10827,13 @@ impl std::ops::Mul<AntiFlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       61       87        0
+    //      f32       55       80        0
     //    simd2        1        1        0
-    //    simd3       11       14        0
-    //    simd4        0        1        0
+    //    simd3       13       16        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       73      103        0
-    //  no simd       96      135        0
+    // yes simd       69       99        0
+    //  no simd       96      138        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -11643,13 +11593,13 @@ impl std::ops::Mul<FlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       53       80        0
+    //      f32       47       73        0
     //    simd2        3        3        0
-    //    simd3       11       13        0
-    //    simd4        1        1        0
+    //    simd3       13       15        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       68       97        0
-    //  no simd       96      129        0
+    // yes simd       64       93        0
+    //  no simd       96      132        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -11663,12 +11613,13 @@ impl std::ops::Mul<FlatPointAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       63        0
+    //      f32       41       60        0
     //    simd2        2        3        0
-    //    simd3        8        9        0
+    //    simd3        8       10        0
+    //    simd4        1        0        0
     // Totals...
-    // yes simd       54       75        0
-    //  no simd       72       96        0
+    // yes simd       52       73        0
+    //  no simd       73       96        0
     fn mul(self, other: FlatPointAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -11702,13 +11653,13 @@ impl std::ops::Mul<FlectorAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       55       74        0
+    //      f32       52       71        0
     //    simd2        3        4        0
-    //    simd3       13       14        0
-    //    simd4        1        1        0
+    //    simd3       13       15        0
+    //    simd4        2        1        0
     // Totals...
-    // yes simd       72       93        0
-    //  no simd      104      128        0
+    // yes simd       70       91        0
+    //  no simd      105      128        0
     fn mul(self, other: FlectorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -11799,11 +11750,12 @@ impl std::ops::Mul<LineAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       48       69        0
-    //    simd3        8        9        0
+    //      f32       45       66        0
+    //    simd3        8       10        0
+    //    simd4        1        0        0
     // Totals...
-    // yes simd       56       78        0
-    //  no simd       72       96        0
+    // yes simd       54       76        0
+    //  no simd       73       96        0
     fn mul(self, other: LineAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -11854,12 +11806,12 @@ impl std::ops::Mul<MotorAtInfinity> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       61       82        0
-    //    simd3       13       14        0
-    //    simd4        1        1        0
+    //      f32       58       79        0
+    //    simd3       13       15        0
+    //    simd4        2        1        0
     // Totals...
-    // yes simd       75       97        0
-    //  no simd      104      128        0
+    // yes simd       73       95        0
+    //  no simd      105      128        0
     fn mul(self, other: MotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -12089,13 +12041,13 @@ impl std::ops::Mul<NullSphereAtOrigin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       17        0
+    //      f32        2       10        0
     //    simd2        0        1        0
-    //    simd3        1        3        0
-    //    simd4        0        3        0
+    //    simd3        2        5        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        6       24        0
-    //  no simd        8       40        0
+    // yes simd        4       20        0
+    //  no simd        8       43        0
     fn mul(self, other: NullSphereAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -12128,13 +12080,13 @@ impl std::ops::Mul<Origin> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       17        0
+    //      f32        2       10        0
     //    simd2        0        2        0
-    //    simd3        1        4        0
-    //    simd4        0        5        0
+    //    simd3        2        6        0
+    //    simd4        0        6        0
     // Totals...
-    // yes simd        6       28        0
-    //  no simd        8       53        0
+    // yes simd        4       24        0
+    //  no simd        8       56        0
     fn mul(self, other: Origin) -> Self::Output {
         return self.geometric_product(other);
     }

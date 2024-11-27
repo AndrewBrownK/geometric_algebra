@@ -1651,12 +1651,12 @@ impl std::ops::BitXor<AntiFlector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       40       67        0
-    //    simd3        2        3        0
-    //    simd4        1        2        0
+    //      f32       37       60        0
+    //    simd3        3        5        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       43       72        0
-    //  no simd       50       84        0
+    // yes simd       41       68        0
+    //  no simd       50       87        0
     fn bitxor(self, other: AntiFlector) -> Self::Output {
         return self.wedge(other);
     }
@@ -1689,12 +1689,12 @@ impl std::ops::BitXor<AntiMotor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       30       49        0
-    //    simd3        4        7        0
-    //    simd4        2        3        0
+    //      f32       27       42        0
+    //    simd3        5        9        0
+    //    simd4        2        4        0
     // Totals...
-    // yes simd       36       59        0
-    //  no simd       50       82        0
+    // yes simd       34       55        0
+    //  no simd       50       85        0
     fn bitxor(self, other: AntiMotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -1708,12 +1708,12 @@ impl std::ops::BitXor<AntiPlane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       27       54        0
-    //    simd3        1        2        0
-    //    simd4        1        2        0
+    //      f32       24       47        0
+    //    simd3        2        4        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       29       58        0
-    //  no simd       34       68        0
+    // yes simd       27       54        0
+    //  no simd       34       71        0
     fn bitxor(self, other: AntiPlane) -> Self::Output {
         return self.wedge(other);
     }
@@ -1831,11 +1831,12 @@ impl std::ops::BitXor<FlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       28        0
-    //    simd4        0        1        0
+    //      f32       14       28        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       17       29        0
-    //  no simd       17       32        0
+    // yes simd       15       30        0
+    //  no simd       18       35        0
     fn bitxor(self, other: FlatPoint) -> Self::Output {
         return self.wedge(other);
     }
@@ -1849,11 +1850,12 @@ impl std::ops::BitXor<Flector> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       32        0
-    //    simd4        1        2        0
+    //      f32       18       32        0
+    //    simd3        0        1        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       22       34        0
-    //  no simd       25       40        0
+    // yes simd       20       35        0
+    //  no simd       26       43        0
     fn bitxor(self, other: Flector) -> Self::Output {
         return self.wedge(other);
     }
@@ -1886,12 +1888,12 @@ impl std::ops::BitXor<Motor> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       27        0
-    //    simd3        1        2        0
-    //    simd4        1        2        0
+    //      f32       15       24        0
+    //    simd3        1        3        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       20       31        0
-    //  no simd       25       41        0
+    // yes simd       18       29        0
+    //  no simd       26       41        0
     fn bitxor(self, other: Motor) -> Self::Output {
         return self.wedge(other);
     }
@@ -2049,7 +2051,7 @@ impl From<AntiCircleRotor> for MultiVector {
             // e41, e42, e43
             from_anti_circle_rotor.group0(),
             // e23, e31, e12
-            Simd32x3::from([from_anti_circle_rotor[e23], from_anti_circle_rotor[e31], from_anti_circle_rotor[e12]]),
+            from_anti_circle_rotor.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -2090,7 +2092,7 @@ impl From<AntiDipoleInversion> for MultiVector {
             // e423, e431, e412
             from_anti_dipole_inversion.group0(),
             // e235, e315, e125
-            Simd32x3::from([from_anti_dipole_inversion[e235], from_anti_dipole_inversion[e315], from_anti_dipole_inversion[e125]]),
+            from_anti_dipole_inversion.group2().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -2150,7 +2152,7 @@ impl From<AntiFlatPoint> for MultiVector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([from_anti_flat_point[e235], from_anti_flat_point[e315], from_anti_flat_point[e125]]),
+            from_anti_flat_point.group0().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -2180,7 +2182,7 @@ impl From<AntiFlector> for MultiVector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([from_anti_flector[e235], from_anti_flector[e315], from_anti_flector[e125]]),
+            from_anti_flector.group0().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -2234,7 +2236,7 @@ impl From<AntiMotor> for MultiVector {
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([from_anti_motor[e23], from_anti_motor[e31], from_anti_motor[e12]]),
+            from_anti_motor.group0().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -2359,7 +2361,7 @@ impl From<CircleRotor> for MultiVector {
             // e423, e431, e412
             from_circle_rotor.group0(),
             // e235, e315, e125
-            Simd32x3::from([from_circle_rotor[e235], from_circle_rotor[e315], from_circle_rotor[e125]]),
+            from_circle_rotor.group2().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -2383,7 +2385,7 @@ impl From<Dipole> for MultiVector {
             // e41, e42, e43
             from_dipole.group0(),
             // e23, e31, e12
-            Simd32x3::from([from_dipole[e23], from_dipole[e31], from_dipole[e12]]),
+            from_dipole.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -2413,7 +2415,7 @@ impl From<DipoleInversion> for MultiVector {
             // e41, e42, e43
             from_dipole_inversion.group0(),
             // e23, e31, e12
-            Simd32x3::from([from_dipole_inversion[e23], from_dipole_inversion[e31], from_dipole_inversion[e12]]),
+            from_dipole_inversion.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -2567,7 +2569,7 @@ impl From<Motor> for MultiVector {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([from_motor[e235], from_motor[e315], from_motor[e125]]),
+            from_motor.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -2714,9 +2716,9 @@ impl From<VersorEven> for MultiVector {
             // e415, e425, e435, e321
             from_versor_even.group1(),
             // e423, e431, e412
-            Simd32x3::from([from_versor_even[e423], from_versor_even[e431], from_versor_even[e412]]),
+            from_versor_even.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([from_versor_even[e235], from_versor_even[e315], from_versor_even[e125]]),
+            from_versor_even.group2().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -2738,9 +2740,9 @@ impl From<VersorOdd> for MultiVector {
             // e15, e25, e35, e45
             Simd32x4::from([from_versor_odd[e15], from_versor_odd[e25], from_versor_odd[e35], from_versor_odd[e45]]),
             // e41, e42, e43
-            Simd32x3::from([from_versor_odd[e41], from_versor_odd[e42], from_versor_odd[e43]]),
+            from_versor_odd.group0().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([from_versor_odd[e23], from_versor_odd[e31], from_versor_odd[e12]]),
+            from_versor_odd.group1().truncate_to_3(),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e423, e431, e412
@@ -2798,13 +2800,13 @@ impl std::ops::Mul<AntiDualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       27        0
+    //      f32        6       20        0
     //    simd2        1        2        0
-    //    simd3        3        7        0
-    //    simd4        3        4        0
+    //    simd3        4        9        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd       16       40        0
-    //  no simd       32       68        0
+    // yes simd       14       36        0
+    //  no simd       32       71        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2818,13 +2820,13 @@ impl std::ops::Mul<AntiFlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       67       93        0
+    //      f32       61       86        0
     //    simd2        1        1        0
-    //    simd3        5        8        0
-    //    simd4        3        4        0
+    //    simd3        7       10        0
+    //    simd4        3        5        0
     // Totals...
-    // yes simd       76      106        0
-    //  no simd       96      135        0
+    // yes simd       72      102        0
+    //  no simd       96      138        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3017,12 +3019,12 @@ impl std::ops::Mul<DualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       33        0
-    //    simd3        3        8        0
-    //    simd4        3        3        0
+    //      f32        8       26        0
+    //    simd3        4       10        0
+    //    simd4        3        4        0
     // Totals...
-    // yes simd       17       44        0
-    //  no simd       32       69        0
+    // yes simd       15       40        0
+    //  no simd       32       72        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3036,13 +3038,13 @@ impl std::ops::Mul<FlatPoint> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       58       82        0
+    //      f32       52       75        0
     //    simd2        3        3        0
-    //    simd3        8       11        0
-    //    simd4        2        2        0
+    //    simd3       10       13        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       71       98        0
-    //  no simd       96      129        0
+    // yes simd       67       94        0
+    //  no simd       96      132        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }

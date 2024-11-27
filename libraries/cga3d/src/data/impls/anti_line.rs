@@ -60,7 +60,7 @@ impl std::ops::Add<AntiDipoleInversion> for AntiLine {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -102,7 +102,7 @@ impl std::ops::Add<AntiFlatPoint> for AntiLine {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group0().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -132,7 +132,7 @@ impl std::ops::Add<AntiFlector> for AntiLine {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group0().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -292,7 +292,7 @@ impl std::ops::Add<CircleRotor> for AntiLine {
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -453,7 +453,7 @@ impl std::ops::Add<Motor> for AntiLine {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group1().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -587,9 +587,9 @@ impl std::ops::Add<VersorEven> for AntiLine {
             // e415, e425, e435, e321
             other.group1(),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group2().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -890,8 +890,13 @@ impl std::ops::MulAssign<AntiDualNum> for AntiLine {
 impl std::ops::Mul<AntiFlatPoint> for AntiLine {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       15        0
+    //           add/sub      mul      div
+    //      f32        5       12        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        6       13        0
+    //  no simd        9       15        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1052,11 +1057,12 @@ impl std::ops::Mul<RoundPoint> for AntiLine {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       27        0
-    //    simd3        0        1        0
+    //      f32       13       24        0
+    //    simd3        0        2        0
+    //    simd4        1        0        0
     // Totals...
-    // yes simd       16       28        0
-    //  no simd       16       30        0
+    // yes simd       14       26        0
+    //  no simd       17       30        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1080,11 +1086,12 @@ impl std::ops::Mul<Sphere> for AntiLine {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       27        0
-    //    simd3        0        1        0
+    //      f32       13       24        0
+    //    simd3        0        2        0
+    //    simd4        1        0        0
     // Totals...
-    // yes simd       16       28        0
-    //  no simd       16       30        0
+    // yes simd       14       26        0
+    //  no simd       17       30        0
     fn mul(self, other: Sphere) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1184,7 +1191,7 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiLine {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1236,7 +1243,7 @@ impl std::ops::Sub<AntiFlatPoint> for AntiLine {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1274,7 +1281,7 @@ impl std::ops::Sub<AntiFlector> for AntiLine {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1464,7 +1471,7 @@ impl std::ops::Sub<CircleRotor> for AntiLine {
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1663,7 +1670,7 @@ impl std::ops::Sub<Motor> for AntiLine {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1833,9 +1840,9 @@ impl std::ops::Sub<VersorEven> for AntiLine {
             // e415, e425, e435, e321
             other.group1() * Simd32x4::from(-1.0),
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from(0.0),
             // e1234
@@ -1870,7 +1877,6 @@ impl std::ops::Sub<VersorOdd> for AntiLine {
 impl TryFrom<AntiCircleRotor> for AntiLine {
     type Error = String;
     fn try_from(anti_circle_rotor: AntiCircleRotor) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_circle_rotor[0];
@@ -1916,9 +1922,9 @@ impl TryFrom<AntiCircleRotor> for AntiLine {
         }
         return Ok(AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from([anti_circle_rotor[e23], anti_circle_rotor[e31], anti_circle_rotor[e12]]),
+            anti_circle_rotor.group1().truncate_to_3(),
             // e15, e25, e35
-            Simd32x3::from([anti_circle_rotor[e15], anti_circle_rotor[e25], anti_circle_rotor[e35]]),
+            anti_circle_rotor.group2().truncate_to_3(),
         ));
     }
 }
@@ -1926,7 +1932,6 @@ impl TryFrom<AntiCircleRotor> for AntiLine {
 impl TryFrom<AntiMotor> for AntiLine {
     type Error = String;
     fn try_from(anti_motor: AntiMotor) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_motor[3];
@@ -1951,9 +1956,9 @@ impl TryFrom<AntiMotor> for AntiLine {
         }
         return Ok(AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from([anti_motor[e23], anti_motor[e31], anti_motor[e12]]),
+            anti_motor.group0().truncate_to_3(),
             // e15, e25, e35
-            Simd32x3::from([anti_motor[e15], anti_motor[e25], anti_motor[e35]]),
+            anti_motor.group1().truncate_to_3(),
         ));
     }
 }
@@ -1961,7 +1966,6 @@ impl TryFrom<AntiMotor> for AntiLine {
 impl TryFrom<Dipole> for AntiLine {
     type Error = String;
     fn try_from(dipole: Dipole) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole[0];
@@ -2000,7 +2004,7 @@ impl TryFrom<Dipole> for AntiLine {
         }
         return Ok(AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from([dipole[e23], dipole[e31], dipole[e12]]),
+            dipole.group1().truncate_to_3(),
             // e15, e25, e35
             dipole.group2(),
         ));
@@ -2010,7 +2014,6 @@ impl TryFrom<Dipole> for AntiLine {
 impl TryFrom<DipoleInversion> for AntiLine {
     type Error = String;
     fn try_from(dipole_inversion: DipoleInversion) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = dipole_inversion[0];
@@ -2084,9 +2087,9 @@ impl TryFrom<DipoleInversion> for AntiLine {
         }
         return Ok(AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from([dipole_inversion[e23], dipole_inversion[e31], dipole_inversion[e12]]),
+            dipole_inversion.group1().truncate_to_3(),
             // e15, e25, e35
-            Simd32x3::from([dipole_inversion[e15], dipole_inversion[e25], dipole_inversion[e35]]),
+            dipole_inversion.group2().truncate_to_3(),
         ));
     }
 }
@@ -2094,7 +2097,6 @@ impl TryFrom<DipoleInversion> for AntiLine {
 impl TryFrom<FlatPoint> for AntiLine {
     type Error = String;
     fn try_from(flat_point: FlatPoint) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = flat_point[3];
@@ -2114,7 +2116,7 @@ impl TryFrom<FlatPoint> for AntiLine {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([flat_point[e15], flat_point[e25], flat_point[e35]]),
+            flat_point.group0().truncate_to_3(),
         ));
     }
 }
@@ -2122,7 +2124,6 @@ impl TryFrom<FlatPoint> for AntiLine {
 impl TryFrom<Flector> for AntiLine {
     type Error = String;
     fn try_from(flector: Flector) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = flector[3];
@@ -2170,7 +2171,7 @@ impl TryFrom<Flector> for AntiLine {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([flector[e15], flector[e25], flector[e35]]),
+            flector.group0().truncate_to_3(),
         ));
     }
 }
@@ -2178,7 +2179,6 @@ impl TryFrom<Flector> for AntiLine {
 impl TryFrom<MultiVector> for AntiLine {
     type Error = String;
     fn try_from(multi_vector: MultiVector) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = multi_vector[0];
@@ -2373,7 +2373,7 @@ impl TryFrom<MultiVector> for AntiLine {
             // e23, e31, e12
             multi_vector.group5(),
             // e15, e25, e35
-            Simd32x3::from([multi_vector[e15], multi_vector[e25], multi_vector[e35]]),
+            multi_vector.group3().truncate_to_3(),
         ));
     }
 }
@@ -2381,7 +2381,6 @@ impl TryFrom<MultiVector> for AntiLine {
 impl TryFrom<VersorOdd> for AntiLine {
     type Error = String;
     fn try_from(versor_odd: VersorOdd) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = versor_odd[0];
@@ -2462,9 +2461,9 @@ impl TryFrom<VersorOdd> for AntiLine {
         }
         return Ok(AntiLine::from_groups(
             // e23, e31, e12
-            Simd32x3::from([versor_odd[e23], versor_odd[e31], versor_odd[e12]]),
+            versor_odd.group1().truncate_to_3(),
             // e15, e25, e35
-            Simd32x3::from([versor_odd[e15], versor_odd[e25], versor_odd[e35]]),
+            versor_odd.group2().truncate_to_3(),
         ));
     }
 }

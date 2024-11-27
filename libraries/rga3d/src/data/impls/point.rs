@@ -105,9 +105,9 @@ impl std::ops::Add<Motor> for Point {
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -438,8 +438,13 @@ impl std::ops::Mul<Plane> for Point {
 impl std::ops::Mul<Point> for Point {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       15        0
+    //           add/sub      mul      div
+    //      f32        5       15        0
+    //    simd3        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        6       16        0
+    //  no simd        9       18        0
     fn mul(self, other: Point) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -591,9 +596,9 @@ impl std::ops::Sub<Motor> for Point {
             // e1, e2, e3, e4
             self.group0(),
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );

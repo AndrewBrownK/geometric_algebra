@@ -64,9 +64,9 @@ impl std::ops::Add<AntiCircleRotor> for LineOnOrigin {
             // e41, e42, e43, e45
             crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(other[e45]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -94,7 +94,7 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for LineOnOrigin {
             // e41, e42, e43, e45
             crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
             other.group1(),
             // e415, e425, e435, e321
@@ -124,7 +124,7 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group1().truncate_to_3(),
             // e23, e31, e12
             other.group0(),
             // e415, e425, e435, e321
@@ -154,9 +154,9 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, other[e45]]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group1().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -242,7 +242,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for LineOnOrigin {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e321]),
             // e235, e315, e125, e4
@@ -275,7 +275,7 @@ impl std::ops::Add<AntiDipoleOnOrigin> for LineOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e321]),
             // e235, e315, e125
@@ -328,7 +328,7 @@ impl std::ops::Add<AntiFlatPoint> for LineOnOrigin {
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e321]),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group0().truncate_to_3(),
         );
     }
 }
@@ -340,7 +340,7 @@ impl std::ops::Add<AntiFlector> for LineOnOrigin {
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e321]),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]),
+            other.group0().truncate_to_3(),
             // e1, e2, e3, e5
             other.group1(),
         );
@@ -354,7 +354,7 @@ impl std::ops::Add<AntiFlectorOnOrigin> for LineOnOrigin {
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e321]),
             // e1, e2, e3
-            Simd32x3::from([other[e1], other[e2], other[e3]]),
+            crate::swizzle!(other.group0(), 1, 2, 3, _),
         );
     }
 }
@@ -430,9 +430,9 @@ impl std::ops::Add<AntiMotor> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group1().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -462,7 +462,7 @@ impl std::ops::Add<AntiMotorOnOrigin> for LineOnOrigin {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -492,7 +492,7 @@ impl std::ops::Add<AntiMysteryCircleRotor> for LineOnOrigin {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -584,7 +584,7 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for LineOnOrigin {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -681,7 +681,7 @@ impl std::ops::Add<CircleOrthogonalOrigin> for LineOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e321]),
             // e235, e315, e125
@@ -784,7 +784,7 @@ impl std::ops::Add<Dipole> for LineOnOrigin {
             // e15, e25, e35
             other.group2(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -843,7 +843,7 @@ impl std::ops::Add<DipoleAtInfinity> for LineOnOrigin {
             // e15, e25, e35
             other.group1(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -900,9 +900,9 @@ impl std::ops::Add<DipoleInversion> for LineOnOrigin {
             // e41, e42, e43, e45
             crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(other[e45]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -930,7 +930,7 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for LineOnOrigin {
             // e41, e42, e43, e45
             other.group0(),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group1().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -962,7 +962,7 @@ impl std::ops::Add<DipoleInversionAtInfinity> for LineOnOrigin {
             // e15, e25, e35
             other.group1(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -990,7 +990,7 @@ impl std::ops::Add<DipoleInversionAtOrigin> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group1().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1049,7 +1049,7 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
             other.group1(),
             // e415, e425, e435, e321
@@ -1179,7 +1179,7 @@ impl std::ops::Add<FlatPoint> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, other[e45]]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1238,7 +1238,7 @@ impl std::ops::Add<Flector> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, other[e45]]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1268,7 +1268,7 @@ impl std::ops::Add<FlectorAtInfinity> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -1515,7 +1515,7 @@ impl std::ops::Add<MysteryDipole> for LineOnOrigin {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -1545,7 +1545,7 @@ impl std::ops::Add<MysteryDipoleInversion> for LineOnOrigin {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -1590,7 +1590,7 @@ impl std::ops::Add<MysteryVersorOdd> for LineOnOrigin {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -2020,7 +2020,7 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for LineOnOrigin {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]),
+            other.group0().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e321]),
             // e235, e315, e125, e4
@@ -2044,9 +2044,9 @@ impl std::ops::Add<VersorOdd> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], other[e45]]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -2074,9 +2074,9 @@ impl std::ops::Add<VersorOddAtInfinity> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([0.0, 0.0, 0.0, other[e45]]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            crate::swizzle!(other.group0(), 1, 2, 3, _),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -2104,9 +2104,9 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]),
+            other.group2().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -2518,11 +2518,12 @@ impl std::ops::Mul<AntiCircleRotor> for LineOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       33        0
-    //    simd4        0        1        0
+    //      f32       15       30        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       18       34        0
-    //  no simd       18       37        0
+    // yes simd       16       32        0
+    //  no simd       19       37        0
     fn mul(self, other: AntiCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2549,11 +2550,12 @@ impl std::ops::Mul<AntiCircleRotorAtInfinity> for LineOnOrigin {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       24        0
-    //    simd4        0        1        0
+    //      f32       10       21        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       13       25        0
-    //  no simd       13       28        0
+    // yes simd       11       23        0
+    //  no simd       14       28        0
     fn mul(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -2699,11 +2701,12 @@ impl std::ops::Mul<AntiMysteryCircleRotor> for LineOnOrigin {
     type Output = MysteryVersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       15        0
-    //    simd4        0        1        0
+    //      f32        5       12        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        8       16        0
-    //  no simd        8       19        0
+    // yes simd        6       14        0
+    //  no simd        9       19        0
     fn mul(self, other: AntiMysteryCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3508,9 +3511,9 @@ impl std::ops::Sub<AntiCircleRotor> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], other[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -3546,7 +3549,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
@@ -3583,7 +3586,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group0() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
@@ -3621,9 +3624,9 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([1.0, 1.0, 1.0, other[e45]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -3735,7 +3738,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for LineOnOrigin {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e321] * -1.0)),
             // e235, e315, e125, e4
@@ -3779,7 +3782,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for LineOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e321] * -1.0)),
             // e235, e315, e125
@@ -3849,7 +3852,7 @@ impl std::ops::Sub<AntiFlatPoint> for LineOnOrigin {
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e321] * -1.0)),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -3869,7 +3872,7 @@ impl std::ops::Sub<AntiFlector> for LineOnOrigin {
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e321] * -1.0)),
             // e235, e315, e125
-            Simd32x3::from([other[e235], other[e315], other[e125]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e1, e2, e3, e5
             other.group1() * Simd32x4::from(-1.0),
         );
@@ -3982,9 +3985,9 @@ impl std::ops::Sub<AntiMotor> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -4021,7 +4024,7 @@ impl std::ops::Sub<AntiMotorOnOrigin> for LineOnOrigin {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -4059,7 +4062,7 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for LineOnOrigin {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -4179,7 +4182,7 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for LineOnOrigin {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -4305,7 +4308,7 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for LineOnOrigin {
         use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e321] * -1.0)),
             // e235, e315, e125
@@ -4437,7 +4440,7 @@ impl std::ops::Sub<Dipole> for LineOnOrigin {
             // e15, e25, e35
             other.group2() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -4510,7 +4513,7 @@ impl std::ops::Sub<DipoleAtInfinity> for LineOnOrigin {
             // e15, e25, e35
             other.group1() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -4583,9 +4586,9 @@ impl std::ops::Sub<DipoleInversion> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], other[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -4621,7 +4624,7 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for LineOnOrigin {
             // e41, e42, e43, e45
             other.group0() * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -4661,7 +4664,7 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for LineOnOrigin {
             // e15, e25, e35
             other.group1() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -4697,7 +4700,7 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -4768,7 +4771,7 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
@@ -4928,7 +4931,7 @@ impl std::ops::Sub<FlatPoint> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([1.0, 1.0, 1.0, other[e45]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -4999,7 +5002,7 @@ impl std::ops::Sub<Flector> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([1.0, 1.0, 1.0, other[e45]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -5036,7 +5039,7 @@ impl std::ops::Sub<FlectorAtInfinity> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
@@ -5335,7 +5338,7 @@ impl std::ops::Sub<MysteryDipole> for LineOnOrigin {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -5372,7 +5375,7 @@ impl std::ops::Sub<MysteryDipoleInversion> for LineOnOrigin {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -5429,7 +5432,7 @@ impl std::ops::Sub<MysteryVersorOdd> for LineOnOrigin {
             // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -5955,7 +5958,7 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for LineOnOrigin {
         use crate::elements::*;
         return AntiDipoleInversion::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e321] * -1.0)),
             // e235, e315, e125, e4
@@ -5988,9 +5991,9 @@ impl std::ops::Sub<VersorOdd> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], other[e45]]) * Simd32x4::from(-1.0),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -6029,7 +6032,7 @@ impl std::ops::Sub<VersorOddAtInfinity> for LineOnOrigin {
             // e15, e25, e35
             Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -6066,9 +6069,9 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for LineOnOrigin {
             // e41, e42, e43, e45
             Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e15, e25, e35
-            Simd32x3::from([other[e15], other[e25], other[e35]]) * Simd32x3::from(-1.0),
+            other.group2().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e423, e431, e412
@@ -6086,7 +6089,6 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for LineOnOrigin {
 impl TryFrom<AntiDipoleInversion> for LineOnOrigin {
     type Error = String;
     fn try_from(anti_dipole_inversion: AntiDipoleInversion) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_dipole_inversion[0];
@@ -6179,18 +6181,13 @@ impl TryFrom<AntiDipoleInversion> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([
-            anti_dipole_inversion[e415],
-            anti_dipole_inversion[e425],
-            anti_dipole_inversion[e435],
-        ])));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ anti_dipole_inversion.group1().truncate_to_3()));
     }
 }
 
 impl TryFrom<AntiDipoleInversionAtInfinity> for LineOnOrigin {
     type Error = String;
     fn try_from(anti_dipole_inversion_at_infinity: AntiDipoleInversionAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_dipole_inversion_at_infinity[3];
@@ -6255,11 +6252,7 @@ impl TryFrom<AntiDipoleInversionAtInfinity> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([
-            anti_dipole_inversion_at_infinity[e415],
-            anti_dipole_inversion_at_infinity[e425],
-            anti_dipole_inversion_at_infinity[e435],
-        ])));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ anti_dipole_inversion_at_infinity.group0().truncate_to_3()));
     }
 }
 
@@ -6337,7 +6330,6 @@ impl TryFrom<AntiDipoleInversionOrthogonalOrigin> for LineOnOrigin {
 impl TryFrom<AntiMysteryDipoleInversion> for LineOnOrigin {
     type Error = String;
     fn try_from(anti_mystery_dipole_inversion: AntiMysteryDipoleInversion) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = anti_mystery_dipole_inversion[3];
@@ -6374,18 +6366,13 @@ impl TryFrom<AntiMysteryDipoleInversion> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([
-            anti_mystery_dipole_inversion[e415],
-            anti_mystery_dipole_inversion[e425],
-            anti_mystery_dipole_inversion[e435],
-        ])));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ anti_mystery_dipole_inversion.group0().truncate_to_3()));
     }
 }
 
 impl TryFrom<Circle> for LineOnOrigin {
     type Error = String;
     fn try_from(circle: Circle) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle[0];
@@ -6443,7 +6430,7 @@ impl TryFrom<Circle> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([circle[e415], circle[e425], circle[e435]])));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ circle.group1().truncate_to_3()));
     }
 }
 
@@ -6507,7 +6494,6 @@ impl TryFrom<CircleAligningOrigin> for LineOnOrigin {
 impl TryFrom<CircleAtInfinity> for LineOnOrigin {
     type Error = String;
     fn try_from(circle_at_infinity: CircleAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_at_infinity[3];
@@ -6544,11 +6530,7 @@ impl TryFrom<CircleAtInfinity> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([
-            circle_at_infinity[e415],
-            circle_at_infinity[e425],
-            circle_at_infinity[e435],
-        ])));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ circle_at_infinity.group0().truncate_to_3()));
     }
 }
 
@@ -6591,7 +6573,6 @@ impl TryFrom<CircleOnOrigin> for LineOnOrigin {
 impl TryFrom<CircleRotor> for LineOnOrigin {
     type Error = String;
     fn try_from(circle_rotor: CircleRotor) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_rotor[0];
@@ -6656,10 +6637,7 @@ impl TryFrom<CircleRotor> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(
-            // e415, e425, e435
-            Simd32x3::from([circle_rotor[e415], circle_rotor[e425], circle_rotor[e435]]),
-        ));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ circle_rotor.group1().truncate_to_3()));
     }
 }
 
@@ -6773,7 +6751,6 @@ impl TryFrom<CircleRotorAligningOriginAtInfinity> for LineOnOrigin {
 impl TryFrom<CircleRotorAtInfinity> for LineOnOrigin {
     type Error = String;
     fn try_from(circle_rotor_at_infinity: CircleRotorAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = circle_rotor_at_infinity[3];
@@ -6817,11 +6794,7 @@ impl TryFrom<CircleRotorAtInfinity> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([
-            circle_rotor_at_infinity[e415],
-            circle_rotor_at_infinity[e425],
-            circle_rotor_at_infinity[e435],
-        ])));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ circle_rotor_at_infinity.group0().truncate_to_3()));
     }
 }
 
@@ -6907,7 +6880,6 @@ impl TryFrom<Line> for LineOnOrigin {
 impl TryFrom<Motor> for LineOnOrigin {
     type Error = String;
     fn try_from(motor: Motor) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = motor[3];
@@ -6951,14 +6923,13 @@ impl TryFrom<Motor> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([motor[e415], motor[e425], motor[e435]])));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ motor.group0().truncate_to_3()));
     }
 }
 
 impl TryFrom<MotorOnOrigin> for LineOnOrigin {
     type Error = String;
     fn try_from(motor_on_origin: MotorOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = motor_on_origin[3];
@@ -6974,17 +6945,13 @@ impl TryFrom<MotorOnOrigin> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(
-            // e415, e425, e435
-            Simd32x3::from([motor_on_origin[e415], motor_on_origin[e425], motor_on_origin[e435]]),
-        ));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ motor_on_origin.group0().truncate_to_3()));
     }
 }
 
 impl TryFrom<MultiVector> for LineOnOrigin {
     type Error = String;
     fn try_from(multi_vector: MultiVector) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = multi_vector[0];
@@ -7196,17 +7163,13 @@ impl TryFrom<MultiVector> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(
-            // e415, e425, e435
-            Simd32x3::from([multi_vector[e415], multi_vector[e425], multi_vector[e435]]),
-        ));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ multi_vector.group6().truncate_to_3()));
     }
 }
 
 impl TryFrom<MysteryCircle> for LineOnOrigin {
     type Error = String;
     fn try_from(mystery_circle: MysteryCircle) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = mystery_circle[3];
@@ -7222,17 +7185,13 @@ impl TryFrom<MysteryCircle> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(
-            // e415, e425, e435
-            Simd32x3::from([mystery_circle[e415], mystery_circle[e425], mystery_circle[e435]]),
-        ));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ mystery_circle.group0().truncate_to_3()));
     }
 }
 
 impl TryFrom<MysteryCircleRotor> for LineOnOrigin {
     type Error = String;
     fn try_from(mystery_circle_rotor: MysteryCircleRotor) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = mystery_circle_rotor[3];
@@ -7255,18 +7214,13 @@ impl TryFrom<MysteryCircleRotor> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([
-            mystery_circle_rotor[e415],
-            mystery_circle_rotor[e425],
-            mystery_circle_rotor[e435],
-        ])));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ mystery_circle_rotor.group0().truncate_to_3()));
     }
 }
 
 impl TryFrom<MysteryVersorEven> for LineOnOrigin {
     type Error = String;
     fn try_from(mystery_versor_even: MysteryVersorEven) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = mystery_versor_even[0];
@@ -7310,18 +7264,13 @@ impl TryFrom<MysteryVersorEven> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([
-            mystery_versor_even[e415],
-            mystery_versor_even[e425],
-            mystery_versor_even[e435],
-        ])));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ mystery_versor_even.group1().truncate_to_3()));
     }
 }
 
 impl TryFrom<VersorEven> for LineOnOrigin {
     type Error = String;
     fn try_from(versor_even: VersorEven) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = versor_even[0];
@@ -7421,17 +7370,13 @@ impl TryFrom<VersorEven> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(
-            // e415, e425, e435
-            Simd32x3::from([versor_even[e415], versor_even[e425], versor_even[e435]]),
-        ));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ versor_even.group1().truncate_to_3()));
     }
 }
 
 impl TryFrom<VersorEvenAligningOrigin> for LineOnOrigin {
     type Error = String;
     fn try_from(versor_even_aligning_origin: VersorEvenAligningOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = versor_even_aligning_origin[0];
@@ -7503,18 +7448,13 @@ impl TryFrom<VersorEvenAligningOrigin> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([
-            versor_even_aligning_origin[e415],
-            versor_even_aligning_origin[e425],
-            versor_even_aligning_origin[e435],
-        ])));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ versor_even_aligning_origin.group1().truncate_to_3()));
     }
 }
 
 impl TryFrom<VersorEvenAtInfinity> for LineOnOrigin {
     type Error = String;
     fn try_from(versor_even_at_infinity: VersorEvenAtInfinity) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = versor_even_at_infinity[0];
@@ -7586,18 +7526,13 @@ impl TryFrom<VersorEvenAtInfinity> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([
-            versor_even_at_infinity[e415],
-            versor_even_at_infinity[e425],
-            versor_even_at_infinity[e435],
-        ])));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ versor_even_at_infinity.group1().truncate_to_3()));
     }
 }
 
 impl TryFrom<VersorEvenOnOrigin> for LineOnOrigin {
     type Error = String;
     fn try_from(versor_even_on_origin: VersorEvenOnOrigin) -> Result<Self, Self::Error> {
-        use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
         let el = versor_even_on_origin[0];
@@ -7641,10 +7576,6 @@ impl TryFrom<VersorEvenOnOrigin> for LineOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ Simd32x3::from([
-            versor_even_on_origin[e415],
-            versor_even_on_origin[e425],
-            versor_even_on_origin[e435],
-        ])));
+        return Ok(LineOnOrigin::from_groups(/* e415, e425, e435 */ versor_even_on_origin.group1().truncate_to_3()));
     }
 }

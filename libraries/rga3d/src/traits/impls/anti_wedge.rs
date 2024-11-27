@@ -494,8 +494,7 @@ impl AntiWedge<MultiVector> for Flector {
                 (self[e431] * other[e423]) - (self[e423] * other[e431]),
             ]),
             // e23, e31, e12
-            (Simd32x3::from(other[e321]) * Simd32x3::from([self[e423], self[e431], self[e412]]))
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e423], other[e431], other[e412]])),
+            (Simd32x3::from(other[e321]) * self.group1().truncate_to_3()) - (Simd32x3::from(self[e321]) * other.group4().truncate_to_3()),
             // e423, e431, e412, e321
             Simd32x4::from(other[e1234]) * self.group1(),
         );
@@ -652,7 +651,7 @@ impl AntiWedge<MultiVector> for Horizon {
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from(self[e321]) * Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            Simd32x3::from(self[e321]) * other.group4().truncate_to_3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             Simd32x4::from([1.0, 1.0, 1.0, self[e321] * other[e1234]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
         );
@@ -680,7 +679,7 @@ impl AntiWedge<Plane> for Horizon {
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from(self[e321]) * Simd32x3::from([other[e423], other[e431], other[e412]]) * Simd32x3::from(-1.0),
+            Simd32x3::from(self[e321]) * other.group0().truncate_to_3() * Simd32x3::from(-1.0),
         );
     }
 }
@@ -966,21 +965,18 @@ impl AntiWedge<Motor> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       13        0
-    //    simd4        2        2        0
+    //      f32        5        6        0
+    //    simd3        1        2        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       10       15        0
-    //  no simd       16       21        0
+    // yes simd        8       11        0
+    //  no simd       16       24        0
     fn anti_wedge(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([
-                (other[e41] * self[e1234]) + (other[e1234] * self[e41]),
-                (other[e42] * self[e1234]) + (other[e1234] * self[e42]),
-                (other[e43] * self[e1234]) + (other[e1234] * self[e43]),
-                other[e1234] * self[e1234],
-            ]),
+            Simd32x4::from([1.0, 1.0, 1.0, self[e1234]])
+                * ((Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()) + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3())).extend_to_4(other[e1234]),
             // e23, e31, e12, scalar
             Simd32x4::from([
                 0.0,
@@ -1024,9 +1020,9 @@ impl AntiWedge<MultiVector> for Motor {
                 -(self[e41] * other[e423]) - (self[e42] * other[e431]) - (self[e43] * other[e412]),
             ]) + (Simd32x4::from(self[e1234]) * other.group1()),
             // e41, e42, e43
-            (Simd32x3::from(self[e1234]) * other.group2()) + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e41], self[e42], self[e43]])),
+            (Simd32x3::from(self[e1234]) * other.group2()) + (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()),
             // e23, e31, e12
-            (Simd32x3::from(self[e1234]) * other.group3()) + (Simd32x3::from(other[e1234]) * Simd32x3::from([self[e23], self[e31], self[e12]])),
+            (Simd32x3::from(self[e1234]) * other.group3()) + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3()),
             // e423, e431, e412, e321
             Simd32x4::from(self[e1234]) * other.group4(),
         );
@@ -1181,8 +1177,7 @@ impl AntiWedge<Flector> for MultiVector {
                 (other[e423] * self[e431]) - (other[e431] * self[e423]),
             ]),
             // e23, e31, e12
-            (Simd32x3::from(other[e321]) * Simd32x3::from([self[e423], self[e431], self[e412]]))
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e423], other[e431], other[e412]])),
+            (Simd32x3::from(other[e321]) * self.group4().truncate_to_3()) - (Simd32x3::from(self[e321]) * other.group1().truncate_to_3()),
             // e423, e431, e412, e321
             Simd32x4::from(self[e1234]) * other.group1(),
         );
@@ -1209,7 +1204,7 @@ impl AntiWedge<Horizon> for MultiVector {
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from(other[e321]) * Simd32x3::from([self[e423], self[e431], self[e412]]),
+            Simd32x3::from(other[e321]) * self.group4().truncate_to_3(),
             // e423, e431, e412, e321
             Simd32x4::from([1.0, 1.0, 1.0, other[e321] * self[e1234]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
         );
@@ -1280,9 +1275,9 @@ impl AntiWedge<Motor> for MultiVector {
                 -(other[e41] * self[e423]) - (other[e42] * self[e431]) - (other[e43] * self[e412]),
             ]) + (Simd32x4::from(other[e1234]) * self.group1()),
             // e41, e42, e43
-            (Simd32x3::from(other[e1234]) * self.group2()) + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e41], other[e42], other[e43]])),
+            (Simd32x3::from(other[e1234]) * self.group2()) + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()),
             // e23, e31, e12
-            (Simd32x3::from(other[e1234]) * self.group3()) + (Simd32x3::from(self[e1234]) * Simd32x3::from([other[e23], other[e31], other[e12]])),
+            (Simd32x3::from(other[e1234]) * self.group3()) + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3()),
             // e423, e431, e412, e321
             Simd32x4::from(other[e1234]) * self.group4(),
         );
@@ -1348,10 +1343,8 @@ impl AntiWedge<MultiVector> for MultiVector {
             ]) + (Simd32x3::from(other[e1234]) * self.group2())
                 + (Simd32x3::from(self[e1234]) * other.group2()),
             // e23, e31, e12
-            (Simd32x3::from(other[e1234]) * self.group3())
-                + (Simd32x3::from(other[e321]) * Simd32x3::from([self[e423], self[e431], self[e412]]))
-                + (Simd32x3::from(self[e1234]) * other.group3())
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e423], other[e431], other[e412]])),
+            (Simd32x3::from(other[e1234]) * self.group3()) + (Simd32x3::from(other[e321]) * self.group4().truncate_to_3()) + (Simd32x3::from(self[e1234]) * other.group3())
+                - (Simd32x3::from(self[e321]) * other.group4().truncate_to_3()),
             // e423, e431, e412, e321
             (Simd32x4::from(other[e1234]) * self.group4()) + (Simd32x4::from(self[e1234]) * other.group4()),
         );
@@ -1412,8 +1405,7 @@ impl AntiWedge<Plane> for MultiVector {
                 (self[e431] * other[e423]) - (self[e423] * other[e431]),
             ]),
             // e23, e31, e12
-            (Simd32x3::from(other[e321]) * Simd32x3::from([self[e423], self[e431], self[e412]]))
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e423], other[e431], other[e412]])),
+            (Simd32x3::from(other[e321]) * self.group4().truncate_to_3()) - (Simd32x3::from(self[e321]) * other.group0().truncate_to_3()),
             // e423, e431, e412, e321
             Simd32x4::from(self[e1234]) * other.group0(),
         );
@@ -1615,7 +1607,7 @@ impl AntiWedge<Horizon> for Plane {
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
-            Simd32x3::from(other[e321]) * Simd32x3::from([self[e423], self[e431], self[e412]]),
+            Simd32x3::from(other[e321]) * self.group0().truncate_to_3(),
         );
     }
 }
@@ -1687,8 +1679,7 @@ impl AntiWedge<MultiVector> for Plane {
                 (other[e423] * self[e431]) - (other[e431] * self[e423]),
             ]),
             // e23, e31, e12
-            (Simd32x3::from(other[e321]) * Simd32x3::from([self[e423], self[e431], self[e412]]))
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e423], other[e431], other[e412]])),
+            (Simd32x3::from(other[e321]) * self.group0().truncate_to_3()) - (Simd32x3::from(self[e321]) * other.group4().truncate_to_3()),
             // e423, e431, e412, e321
             Simd32x4::from(other[e1234]) * self.group0(),
         );
@@ -1723,8 +1714,7 @@ impl AntiWedge<Plane> for Plane {
                 (other[e423] * self[e431]) - (other[e431] * self[e423]),
             ]),
             // e23, e31, e12
-            (Simd32x3::from(other[e321]) * Simd32x3::from([self[e423], self[e431], self[e412]]))
-                - (Simd32x3::from(self[e321]) * Simd32x3::from([other[e423], other[e431], other[e412]])),
+            (Simd32x3::from(other[e321]) * self.group0().truncate_to_3()) - (Simd32x3::from(self[e321]) * other.group0().truncate_to_3()),
         );
     }
 }

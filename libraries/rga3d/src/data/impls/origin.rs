@@ -111,9 +111,9 @@ impl std::ops::Add<Motor> for Origin {
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self[e4]]),
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]),
+            other.group0().truncate_to_3(),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]),
+            other.group1().truncate_to_3(),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -533,9 +533,9 @@ impl std::ops::Sub<Motor> for Origin {
             // e1, e2, e3, e4
             Simd32x4::from([0.0, 0.0, 0.0, self[e4]]),
             // e41, e42, e43
-            Simd32x3::from([other[e41], other[e42], other[e43]]) * Simd32x3::from(-1.0),
+            other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            Simd32x3::from([other[e23], other[e31], other[e12]]) * Simd32x3::from(-1.0),
+            other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
