@@ -1156,6 +1156,20 @@ impl From<Variable<MultiVector>> for MultiVectorExpr {
     }
 }
 
+
+impl Display for AnyExpression {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            AnyExpression::Int(e) => write!(f, "{e}")?,
+            AnyExpression::Float(e) => write!(f, "{e}")?,
+            AnyExpression::Vec2(e) => write!(f, "{e}")?,
+            AnyExpression::Vec3(e) => write!(f, "{e}")?,
+            AnyExpression::Vec4(e) => write!(f, "{e}")?,
+            AnyExpression::Class(e) => write!(f, "{e}")?,
+        }
+        Ok(())
+    }
+}
 impl Display for IntExpr {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -3366,6 +3380,28 @@ impl Vec2Expr {
                     return;
                 }
                 match (f0, f1) {
+                    (AccessVec4(box ref mut v4_a, x), AccessVec4(box ref mut v4_b, y)) => {
+                        if v4_a == v4_b {
+                            let trunc = Vec2Expr::Truncate4to2(Box::new(v4_a.take_as_owned()));
+                            *self = if *x == 0 && *y == 1 {
+                                trunc
+                            } else {
+                                Vec2Expr::SwizzleVec2(Box::new(trunc), *x, *y)
+                            };
+                            return;
+                        }
+                    }
+                    (AccessVec3(box ref mut v3_a, x), AccessVec3(box ref mut v3_b, y)) => {
+                        if v3_a == v3_b {
+                            let trunc = Vec2Expr::Truncate3to2(Box::new(v3_a.take_as_owned()));
+                            *self = if *x == 0 && *y == 1 {
+                                trunc
+                            } else {
+                                Vec2Expr::SwizzleVec2(Box::new(trunc), *x, *y)
+                            };
+                            return;
+                        }
+                    }
                     (AccessVec2(box ref mut v2_a, x), AccessVec2(box ref mut v2_b, y)) if v2_a == v2_b => {
                         *self = if *x == 0 && *y == 1 {
                             v2_a.take_as_owned()
@@ -3377,7 +3413,7 @@ impl Vec2Expr {
                     (
                         AccessMultiVecFlat(x_mve, x_idx),
                         AccessMultiVecFlat(y_mve, y_idx),
-                    ) if x_mve == y_mve && (*x_idx + 1 == *y_idx) => {
+                    ) if x_mve == y_mve => {
                         let max_idx = u16::max(*x_idx, *y_idx);
                         let min_idx = u16::min(*x_idx, *y_idx);
                         if (min_idx + 1) < max_idx {
@@ -3391,8 +3427,14 @@ impl Vec2Expr {
                             if flat_idx > min_idx {
                                 return
                             }
-                            if min_idx == flat_idx && group.simd_width() == 2 {
-                                let mv_group = Vec2Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
+                            if min_idx == flat_idx && group.simd_width() >= 2 {
+                                let mv_group = if group.simd_width() == 2 {
+                                    Vec2Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx)
+                                } else if group.simd_width() == 3 {
+                                    Vec2Expr::Truncate3to2(Box::new(Vec3Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx)))
+                                } else {
+                                    Vec2Expr::Truncate4to2(Box::new(Vec4Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx)))
+                                };
                                 *self = if no_swizzle {
                                     mv_group
                                 } else {
@@ -3723,6 +3765,17 @@ impl Vec3Expr {
                     return;
                 }
                 match (f0, f1, f2) {
+                    (AccessVec4(box ref mut v4_a, x), AccessVec4(box ref mut v4_b, y), AccessVec4(box ref mut v4_c, z)) => {
+                        if v4_a == v4_b && v4_a == v4_c {
+                            let trunc = Vec3Expr::Truncate4to3(Box::new(v4_a.take_as_owned()));
+                            *self = if *x == 0 && *y == 1 && *z == 2 {
+                                trunc
+                            } else {
+                                Vec3Expr::SwizzleVec3(Box::new(trunc), *x, *y, *z)
+                            };
+                            return;
+                        }
+                    }
                     (AccessVec3(box ref mut v3_a, x), AccessVec3(box ref mut v3_b, y), AccessVec3(box ref mut v3_c, z)) => {
                         if v3_a == v3_b && v3_a == v3_c {
                             *self = if *x == 0 && *y == 1 && *z == 2 {
@@ -3759,8 +3812,12 @@ impl Vec3Expr {
                             if flat_idx > min_idx {
                                 return
                             }
-                            if min_idx == flat_idx && group.simd_width() == 3 {
-                                let mv_group = Vec3Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx);
+                            if min_idx == flat_idx && group.simd_width() >= 3 {
+                                let mv_group = if group.simd_width() == 3 {
+                                    Vec3Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx)
+                                } else {
+                                    Vec3Expr::Truncate4to3(Box::new(Vec4Expr::AccessMultiVecGroup(x_mve.take_as_owned(), group_idx)))
+                                };
                                 *self = if no_swizzle {
                                     mv_group
                                 } else {
@@ -6362,16 +6419,10 @@ fn vec2_product_extract(
     }
     return match (e0, e1) {
         (
-            AccessVec2(box v0, 0),
-            AccessVec2(box v1, 1)
-        ) if v0 == v1 && f0 == f1 => {
-            vec2_product.push((v0.clone(), *f0));
-            true
-        }
-        (
             AccessVec2(box v0, i0),
             AccessVec2(box v1, i1)
         ) if v0 == v1 && f0 == f1 => {
+            // The swizzle will later be simplified, if applicable
             vec2_product.push((Vec2Expr::SwizzleVec2(Box::new(v0.clone()), *i0, *i1), *f0));
             true
         }
@@ -6394,7 +6445,7 @@ fn vec2_product_extract(
             Sum(v1, a1)
         ) if f0 == f1 => {
             let a = [*a0, *a1];
-            let Some(transposed) = transpose_vec2_sum(v0, v1, a) else { return false };
+            let Some(transposed) = advanced_transpose_vec2_sum(aggressive, v0, v1, a) else { return false };
             vec2_product.push((transposed, *f0));
             true
         }
@@ -6495,16 +6546,10 @@ fn vec2_sum_extract(
     }
     return match (e0, e1) {
         (
-            AccessVec2(box v0, 0),
-            AccessVec2(box v1, 1)
-        ) if v0 == v1 && f0 == f1 => {
-            vec2_sum.push((v0.clone(), *f0));
-            true
-        }
-        (
             AccessVec2(box v0, i0),
             AccessVec2(box v1, i1)
         ) if v0 == v1 && f0 == f1 => {
+            // The swizzle will later be simplified, if applicable
             vec2_sum.push((Vec2Expr::SwizzleVec2(Box::new(v0.clone()), *i0, *i1), *f0));
             true
         }
@@ -6527,7 +6572,7 @@ fn vec2_sum_extract(
             Product(v1, a1)
         ) if f0 == f1 => {
             let a = [*a0, *a1];
-            let Some(transposed) = transpose_vec2_product(v0, v1, a) else { return false };
+            let Some(transposed) = advanced_transpose_vec2_product(aggressive, v0, v1, a) else { return false };
             vec2_sum.push((transposed, *f0));
             true
         }
@@ -6654,18 +6699,11 @@ fn vec3_product_extract(
     }
     return match (e0, e1, e2) {
         (
-            AccessVec3(box v0, 0),
-            AccessVec3(box v1, 1),
-            AccessVec3(box v2, 2)
-        ) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 => {
-            vec3_product.push((v0.clone(), *f0));
-            true
-        }
-        (
             AccessVec3(box v0, i0),
             AccessVec3(box v1, i1),
             AccessVec3(box v2, i2)
         ) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 => {
+            // The swizzle will later be simplified, if applicable
             vec3_product.push((Vec3Expr::SwizzleVec3(Box::new(v0.clone()), *i0, *i1, *i2), *f0));
             true
         }
@@ -6691,8 +6729,18 @@ fn vec3_product_extract(
             Sum(v2, a2)
         ) if f0 == f1 && f1 == f2 => {
             let a = [*a0, *a1, *a2];
-            let Some(transposed) = transpose_vec3_sum(v0, v1, v2, a) else { return false };
+            let Some(transposed) = advanced_transpose_vec3_sum(aggressive, v0, v1, v2, a) else { return false };
             vec3_product.push((transposed, *f0));
+            true
+        }
+        (
+            Sum(v0, a0),
+            Sum(v1, a1),
+            z,
+        ) if f0 == f1 && f1 == f2 => {
+            let a = [*a0, *a1];
+            let Some(transposed) = advanced_transpose_vec2_sum(aggressive, v0, v1, a) else { return false };
+            vec3_product.push((Vec3Expr::Extend2to3(transposed, z.clone()), *f0));
             true
         }
         _ => false,
@@ -6816,18 +6864,11 @@ fn vec3_sum_extract(
     }
     return match (e0, e1, e2) {
         (
-            AccessVec3(box v0, 0),
-            AccessVec3(box v1, 1),
-            AccessVec3(box v2, 2)
-        ) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 => {
-            vec3_sum.push((v0.clone(), *f0));
-            true
-        }
-        (
             AccessVec3(box v0, i0),
             AccessVec3(box v1, i1),
             AccessVec3(box v2, i2)
         ) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 => {
+            // The swizzle will later be simplified, if applicable
             vec3_sum.push((Vec3Expr::SwizzleVec3(Box::new(v0.clone()), *i0, *i1, *i2), *f0));
             true
         }
@@ -6853,8 +6894,18 @@ fn vec3_sum_extract(
             Product(v2, a2)
         ) if f0 == f1 && f1 == f2 => {
             let a = [*a0, *a1, *a2];
-            let Some(transposed) = transpose_vec3_product(v0, v1, v2, a) else { return false };
+            let Some(transposed) = advanced_transpose_vec3_product(aggressive, v0, v1, v2, a) else { return false };
             vec3_sum.push((transposed, *f0));
+            true
+        }
+        (
+            Product(v0, a0),
+            Product(v1, a1),
+            z,
+        ) if f0 == f1 && f1 == f2 => {
+            let a = [*a0, *a1];
+            let Some(transposed) = advanced_transpose_vec2_product(aggressive, v0, v1, a) else { return false };
+            vec3_sum.push((Vec3Expr::Extend2to3(transposed, z.clone()), *f0));
             true
         }
         _ => false,
@@ -7003,21 +7054,13 @@ fn vec4_product_extract(
     }
     return match (e0, e1, e2, e3) {
         (
-            AccessVec4(box v0, 0),
-            AccessVec4(box v1, 1),
-            AccessVec4(box v2, 2),
-            AccessVec4(box v3, 3)
-        ) if v0 == v1 && v1 == v2 && v2 == v3 && f0 == f1 && f1 == f2 && f2 == f3 => {
-            vec4_product.push((v0.clone(), *f0));
-            true
-        }
-        (
             AccessVec4(box v0, i0),
             AccessVec4(box v1, i1),
             AccessVec4(box v2, i2),
             AccessVec4(box v3, i3)
         ) if v0 == v1 && v1 == v2 && v2 == v3 && f0 == f1 && f1 == f2 && f2 == f3 =>
         {
+            // The swizzle will later be simplified, if applicable
             vec4_product.push((Vec4Expr::SwizzleVec4(Box::new(v0.clone()), *i0, *i1, *i2, *i3), *f0));
             true
         }
@@ -7046,8 +7089,30 @@ fn vec4_product_extract(
             Sum(v3, a3)
         ) if f0 == f1 && f1 == f2 && f2 == f3 => {
             let a = [*a0, *a1, *a2, *a3];
-            let Some(transposed) = transpose_vec4_sum(v0, v1, v2, v3, a) else { return false };
+            let Some(transposed) = advanced_transpose_vec4_sum(aggressive, v0, v1, v2, v3, a) else { return false };
             vec4_product.push((transposed, *f0));
+            true
+        }
+        (
+            Sum(v0, a0),
+            Sum(v1, a1),
+            Sum(v2, a2),
+            w
+        ) if f0 == f1 && f1 == f2 && f2 == f3 => {
+            let a = [*a0, *a1, *a2];
+            let Some(transposed) = advanced_transpose_vec3_sum(aggressive, v0, v1, v2, a) else { return false };
+            vec4_product.push((Vec4Expr::Extend3to4(transposed, w.clone()), *f0));
+            true
+        }
+        (
+            Sum(v0, a0),
+            Sum(v1, a1),
+            z,
+            w
+        ) if f0 == f1 && f1 == f2 && f2 == f3 => {
+            let a = [*a0, *a1];
+            let Some(transposed) = advanced_transpose_vec2_sum(aggressive, v0, v1, a) else { return false };
+            vec4_product.push((Vec4Expr::Extend2to4(transposed, z.clone(), w.clone()), *f0));
             true
         }
         _ => false,
@@ -7204,21 +7269,12 @@ fn vec4_sum_extract(
     }
     return match (e0, e1, e2, e3) {
         (
-            AccessVec4(box v0, 0),
-            AccessVec4(box v1, 1),
-            AccessVec4(box v2, 2),
-            AccessVec4(box v3, 3)
-        ) if v0 == v1 && v1 == v2 && v2 == v3 && f0 == f1 && f1 == f2 && f2 == f3 => {
-            vec4_sum.push((v0.clone(), *f0));
-            true
-        }
-        (
             AccessVec4(box v0, i0),
             AccessVec4(box v1, i1),
             AccessVec4(box v2, i2),
             AccessVec4(box v3, i3)
         ) if v0 == v1 && v1 == v2 && v2 == v3 && f0 == f1 && f1 == f2 && f2 == f3 => {
-            // TODO fuck... I already have swizzling... I think what' I'm really looking for is a flag to enable mixed truncate/extend swizzling.
+            // The swizzle will later be simplified, if applicable
             vec4_sum.push((Vec4Expr::SwizzleVec4(Box::new(v0.clone()), *i0, *i1, *i2, *i3), *f0));
             true
         }
@@ -7247,8 +7303,30 @@ fn vec4_sum_extract(
             Product(v3, a3)
         ) if f0 == f1 && f1 == f2 && f2 == f3 => {
             let a = [*a0, *a1, *a2, *a3];
-            let Some(transposed) = transpose_vec4_product(v0, v1, v2, v3, a) else { return false };
+            let Some(transposed) = advanced_transpose_vec4_product(aggressive, v0, v1, v2, v3, a) else { return false };
             vec4_sum.push((transposed, *f0));
+            true
+        }
+        (
+            Product(v0, a0),
+            Product(v1, a1),
+            Product(v2, a2),
+            w
+        ) if f0 == f1 && f1 == f2 && f2 == f3 => {
+            let a = [*a0, *a1, *a2];
+            let Some(transposed) = advanced_transpose_vec3_product(aggressive, v0, v1, v2, a) else { return false };
+            vec4_sum.push((Vec4Expr::Extend3to4(transposed, w.clone()), *f0));
+            true
+        }
+        (
+            Product(v0, a0),
+            Product(v1, a1),
+            z,
+            w
+        ) if f0 == f1 && f1 == f2 && f2 == f3 => {
+            let a = [*a0, *a1];
+            let Some(transposed) = advanced_transpose_vec2_product(aggressive, v0, v1, a) else { return false };
+            vec4_sum.push((Vec4Expr::Extend2to4(transposed, z.clone(), w.clone()), *f0));
             true
         }
         _ => false,
