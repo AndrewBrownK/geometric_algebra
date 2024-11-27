@@ -1369,7 +1369,7 @@ postgres-types = "0.2.7""#
             Vec3Expr::Extend2to3(v2, f1) => {
                 self.write_vec2(w, v2, false)?;
                 write!(w, ".extend_to_3(")?;
-                self.write_float(w, f1, false)?;
+                self.write_float(w, f1, true)?;
                 write!(w, ")")?;
             }
             Vec3Expr::AccessMultiVecGroup(mv, i) => {
@@ -1582,15 +1582,15 @@ postgres-types = "0.2.7""#
             Vec4Expr::Extend2to4(v2, f1, f2) => {
                 self.write_vec2(w, v2, false)?;
                 write!(w, ".extend_to_4(")?;
-                self.write_float(w, f1, false)?;
+                self.write_float(w, f1, true)?;
                 write!(w, ", ")?;
-                self.write_float(w, f2, false)?;
+                self.write_float(w, f2, true)?;
                 write!(w, ")")?;
             }
             Vec4Expr::Extend3to4(v3, f1) => {
                 self.write_vec3(w, v3, false)?;
                 write!(w, ".extend_to_4(")?;
-                self.write_float(w, f1, false)?;
+                self.write_float(w, f1, true)?;
                 write!(w, ")")?;
             }
             Vec4Expr::AccessMultiVecGroup(mv, i) => {

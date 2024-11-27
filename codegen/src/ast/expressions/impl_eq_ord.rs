@@ -200,19 +200,6 @@ impl Ord for Vec2Expr {
                 if c != Ordering::Equal { return c }
                 return a1.cmp(b1)
             },
-            (Truncate3to2(box a), Truncate3to2(box b)) => {
-                return a.cmp(b)
-            }
-            (Truncate4to2(box a), Truncate4to2(box b)) => {
-                return a.cmp(b)
-            }
-            (SwizzleVec2(av, a0, a1), SwizzleVec2(bv, b0, b1)) => {
-                let c = av.cmp(bv);
-                if c != Ordering::Equal { return c }
-                let c = a0.cmp(b0);
-                if c != Ordering::Equal { return c }
-                return a1.cmp(b1)
-            },
             (AccessMultiVecGroup(amv, ai), AccessMultiVecGroup(bmv, bi)) => {
                 let c = amv.cmp(bmv);
                 if c != Ordering::Equal { return c }
@@ -248,24 +235,37 @@ impl Ord for Vec2Expr {
                 }
                 return Ordering::Equal
             },
+            (SwizzleVec2(av, a0, a1), SwizzleVec2(bv, b0, b1)) => {
+                let c = av.cmp(bv);
+                if c != Ordering::Equal { return c }
+                let c = a0.cmp(b0);
+                if c != Ordering::Equal { return c }
+                return a1.cmp(b1)
+            },
+            (Truncate3to2(box a), Truncate3to2(box b)) => {
+                return a.cmp(b)
+            }
+            (Truncate4to2(box a), Truncate4to2(box b)) => {
+                return a.cmp(b)
+            }
             (Variable(_), _) => Ordering::Less,
             (_, Variable(_)) => Ordering::Greater,
             (Gather1(_), _) => Ordering::Less,
             (_, Gather1(_)) => Ordering::Greater,
             (Gather2(_, _), _) => Ordering::Less,
             (_, Gather2(_, _)) => Ordering::Greater,
-            (Truncate3to2(_), _) => Ordering::Less,
-            (_, Truncate3to2(_)) => Ordering::Greater,
-            (Truncate4to2(_), _) => Ordering::Less,
-            (_, Truncate4to2(_)) => Ordering::Greater,
-            (SwizzleVec2(_, _, _), _) => Ordering::Less,
-            (_, SwizzleVec2(_, _, _)) => Ordering::Greater,
             (AccessMultiVecGroup(_, _), _) => Ordering::Less,
             (_, AccessMultiVecGroup(_, _)) => Ordering::Greater,
             (Product(_, _), _) => Ordering::Less,
             (_, Product(_, _)) => Ordering::Greater,
             (Sum(_, _), _) => Ordering::Less,
             (_, Sum(_, _)) => Ordering::Greater,
+            (SwizzleVec2(_, _, _), _) => Ordering::Less,
+            (_, SwizzleVec2(_, _, _)) => Ordering::Greater,
+            (Truncate3to2(_), _) => Ordering::Less,
+            (_, Truncate3to2(_)) => Ordering::Greater,
+            (Truncate4to2(_), _) => Ordering::Less,
+            (_, Truncate4to2(_)) => Ordering::Greater,
         }
     }
 }
@@ -349,23 +349,6 @@ impl Ord for Vec3Expr {
                 if c != Ordering::Equal { return c }
                 return a2.cmp(b2)
             },
-            (Extend2to3(a_v2, a_z), Extend2to3(b_v2, b_z)) => {
-                let c = a_v2.cmp(b_v2);
-                if c != Ordering::Equal { return c }
-                return a_z.cmp(b_z)
-            }
-            (Truncate4to3(box a), Truncate4to3(box b)) => {
-                return a.cmp(b);
-            }
-            (SwizzleVec3(av, a0, a1, a2), SwizzleVec3(bv, b0, b1, b2)) => {
-                let c = av.cmp(bv);
-                if c != Ordering::Equal { return c }
-                let c = a0.cmp(b0);
-                if c != Ordering::Equal { return c }
-                let c = a1.cmp(b1);
-                if c != Ordering::Equal { return c }
-                return a2.cmp(b2)
-            },
             (AccessMultiVecGroup(amv, ai), AccessMultiVecGroup(bmv, bi)) => {
                 let c = amv.cmp(bmv);
                 if c != Ordering::Equal { return c }
@@ -405,24 +388,41 @@ impl Ord for Vec3Expr {
                 }
                 return Ordering::Equal
             },
+            (SwizzleVec3(av, a0, a1, a2), SwizzleVec3(bv, b0, b1, b2)) => {
+                let c = av.cmp(bv);
+                if c != Ordering::Equal { return c }
+                let c = a0.cmp(b0);
+                if c != Ordering::Equal { return c }
+                let c = a1.cmp(b1);
+                if c != Ordering::Equal { return c }
+                return a2.cmp(b2)
+            },
+            (Truncate4to3(box a), Truncate4to3(box b)) => {
+                return a.cmp(b);
+            }
+            (Extend2to3(a_v2, a_z), Extend2to3(b_v2, b_z)) => {
+                let c = a_v2.cmp(b_v2);
+                if c != Ordering::Equal { return c }
+                return a_z.cmp(b_z)
+            }
             (Variable(_), _) => Ordering::Less,
             (_, Variable(_)) => Ordering::Greater,
             (Gather1(_), _) => Ordering::Less,
             (_, Gather1(_)) => Ordering::Greater,
             (Gather3(_, _, _), _) => Ordering::Less,
             (_, Gather3(_, _, _)) => Ordering::Greater,
-            (Extend2to3(_, _), _) => Ordering::Less,
-            (_, Extend2to3(_, _)) => Ordering::Greater,
-            (Truncate4to3(_), _) => Ordering::Less,
-            (_, Truncate4to3(_)) => Ordering::Greater,
-            (SwizzleVec3(_, _, _, _), _) => Ordering::Less,
-            (_, SwizzleVec3(_, _, _, _)) => Ordering::Greater,
             (AccessMultiVecGroup(_, _), _) => Ordering::Less,
             (_, AccessMultiVecGroup(_, _)) => Ordering::Greater,
             (Product(_, _), _) => Ordering::Less,
             (_, Product(_, _)) => Ordering::Greater,
             (Sum(_, _), _) => Ordering::Less,
             (_, Sum(_, _)) => Ordering::Greater,
+            (SwizzleVec3(_, _, _, _), _) => Ordering::Less,
+            (_, SwizzleVec3(_, _, _, _)) => Ordering::Greater,
+            (Truncate4to3(_), _) => Ordering::Less,
+            (_, Truncate4to3(_)) => Ordering::Greater,
+            (Extend2to3(_, _), _) => Ordering::Less,
+            (_, Extend2to3(_, _)) => Ordering::Greater,
         }
     }
 }
@@ -513,29 +513,6 @@ impl Ord for Vec4Expr {
                 if c != Ordering::Equal { return c }
                 return a3.cmp(b3)
             },
-            (Extend2to4(a_v2, a_z, a_w), Extend2to4(b_v2, b_z, b_w)) => {
-                let c = a_v2.cmp(b_v2);
-                if c != Ordering::Equal { return c }
-                let c = a_z.cmp(b_z);
-                if c != Ordering::Equal { return c }
-                return a_w.cmp(b_w)
-            }
-            (Extend3to4(a_v2, a_w), Extend3to4(b_v2, b_w)) => {
-                let c = a_v2.cmp(b_v2);
-                if c != Ordering::Equal { return c }
-                return a_w.cmp(b_w)
-            }
-            (SwizzleVec4(av, a0, a1, a2, a3), SwizzleVec4(bv, b0, b1, b2, b3)) => {
-                let c = av.cmp(bv);
-                if c != Ordering::Equal { return c }
-                let c = a0.cmp(b0);
-                if c != Ordering::Equal { return c }
-                let c = a1.cmp(b1);
-                if c != Ordering::Equal { return c }
-                let c = a2.cmp(b2);
-                if c != Ordering::Equal { return c }
-                return a3.cmp(b3)
-            },
             (AccessMultiVecGroup(amv, ai), AccessMultiVecGroup(bmv, bi)) => {
                 let c = amv.cmp(bmv);
                 if c != Ordering::Equal { return c }
@@ -579,24 +556,47 @@ impl Ord for Vec4Expr {
                 }
                 return Ordering::Equal
             },
+            (SwizzleVec4(av, a0, a1, a2, a3), SwizzleVec4(bv, b0, b1, b2, b3)) => {
+                let c = av.cmp(bv);
+                if c != Ordering::Equal { return c }
+                let c = a0.cmp(b0);
+                if c != Ordering::Equal { return c }
+                let c = a1.cmp(b1);
+                if c != Ordering::Equal { return c }
+                let c = a2.cmp(b2);
+                if c != Ordering::Equal { return c }
+                return a3.cmp(b3)
+            },
+            (Extend2to4(a_v2, a_z, a_w), Extend2to4(b_v2, b_z, b_w)) => {
+                let c = a_v2.cmp(b_v2);
+                if c != Ordering::Equal { return c }
+                let c = a_z.cmp(b_z);
+                if c != Ordering::Equal { return c }
+                return a_w.cmp(b_w)
+            }
+            (Extend3to4(a_v2, a_w), Extend3to4(b_v2, b_w)) => {
+                let c = a_v2.cmp(b_v2);
+                if c != Ordering::Equal { return c }
+                return a_w.cmp(b_w)
+            }
             (Variable(_), _) => Ordering::Less,
             (_, Variable(_)) => Ordering::Greater,
             (Gather1(_), _) => Ordering::Less,
             (_, Gather1(_)) => Ordering::Greater,
             (Gather4(_, _, _, _), _) => Ordering::Less,
             (_, Gather4(_, _, _, _)) => Ordering::Greater,
-            (Extend2to4(_, _, _), _) => Ordering::Less,
-            (_, Extend2to4(_, _, _)) => Ordering::Greater,
-            (Extend3to4(_, _), _) => Ordering::Less,
-            (_, Extend3to4(_, _)) => Ordering::Greater,
-            (SwizzleVec4(_, _, _, _, _), _) => Ordering::Less,
-            (_, SwizzleVec4(_, _, _, _, _)) => Ordering::Greater,
             (AccessMultiVecGroup(_, _), _) => Ordering::Less,
             (_, AccessMultiVecGroup(_, _)) => Ordering::Greater,
             (Product(_, _), _) => Ordering::Less,
             (_, Product(_, _)) => Ordering::Greater,
             (Sum(_, _), _) => Ordering::Less,
             (_, Sum(_, _)) => Ordering::Greater,
+            (SwizzleVec4(_, _, _, _, _), _) => Ordering::Less,
+            (_, SwizzleVec4(_, _, _, _, _)) => Ordering::Greater,
+            (Extend2to4(_, _, _), _) => Ordering::Less,
+            (_, Extend2to4(_, _, _)) => Ordering::Greater,
+            (Extend3to4(_, _), _) => Ordering::Less,
+            (_, Extend3to4(_, _)) => Ordering::Greater,
         }
     }
 }

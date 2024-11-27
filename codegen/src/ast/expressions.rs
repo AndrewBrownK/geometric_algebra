@@ -230,36 +230,36 @@ pub enum Vec2Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
     Gather2(FloatExpr, FloatExpr),
-    Truncate3to2(Box<Vec3Expr>),
-    Truncate4to2(Box<Vec4Expr>),
-    SwizzleVec2(Box<Vec2Expr>, u8, u8),
     AccessMultiVecGroup(MultiVectorExpr, u16),
     Product(Vec<(Vec2Expr, f32)>, [f32; 2]),
     Sum(Vec<(Vec2Expr, f32)>, [f32; 2]),
+    SwizzleVec2(Box<Vec2Expr>, u8, u8),
+    Truncate3to2(Box<Vec3Expr>),
+    Truncate4to2(Box<Vec4Expr>),
 }
 #[derive(Clone, Debug)]
 pub enum Vec3Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
     Gather3(FloatExpr, FloatExpr, FloatExpr),
-    Extend2to3(Vec2Expr, FloatExpr),
-    Truncate4to3(Box<Vec4Expr>),
-    SwizzleVec3(Box<Vec3Expr>, u8, u8, u8),
     AccessMultiVecGroup(MultiVectorExpr, u16),
     Product(Vec<(Vec3Expr, f32)>, [f32; 3]),
     Sum(Vec<(Vec3Expr, f32)>, [f32; 3]),
+    SwizzleVec3(Box<Vec3Expr>, u8, u8, u8),
+    Truncate4to3(Box<Vec4Expr>),
+    Extend2to3(Vec2Expr, FloatExpr),
 }
 #[derive(Clone, Debug)]
 pub enum Vec4Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
     Gather4(FloatExpr, FloatExpr, FloatExpr, FloatExpr),
-    Extend2to4(Vec2Expr, FloatExpr, FloatExpr),
-    Extend3to4(Vec3Expr, FloatExpr),
-    SwizzleVec4(Box<Vec4Expr>, u8, u8, u8, u8),
     AccessMultiVecGroup(MultiVectorExpr, u16),
     Product(Vec<(Vec4Expr, f32)>, [f32; 4]),
     Sum(Vec<(Vec4Expr, f32)>, [f32; 4]),
+    SwizzleVec4(Box<Vec4Expr>, u8, u8, u8, u8),
+    Extend2to4(Vec2Expr, FloatExpr, FloatExpr),
+    Extend3to4(Vec3Expr, FloatExpr),
 }
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum MultiVectorGroupExpr {

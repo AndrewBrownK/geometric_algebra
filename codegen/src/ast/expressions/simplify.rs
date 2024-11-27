@@ -15,12 +15,10 @@
 //    another vec3 extend to vec4 situation
 //  - impl GeometricAntiProduct<Line> for Flector
 //  - impl GeometricAntiProduct<MultiVector> for MultiVector
-//  - impl Dual for Circle
 //  - impl AntiWedge<CircleRotorAligningOrigin> for AntiCircleOnOrigin
 //  - impl Wedge<Motor> for Motor
+//    maybe could use a machine level dot product for wide FloatExpr::Products?
 
-// TODO scanning for good places to simplify... where I left off:
-//  impl Wedge<AntiCircleOnOrigin> for AntiFlectorAtInfinity
 
 // TODO definitely want a particularly close scan of
 //  geometric_anti_product.rs `for Sphere`
@@ -58,13 +56,6 @@ pub union AntiPlane {
 
 impl Wedge<AntiFlectorOnOrigin> for AntiPlane {
     type Output = AntiMotor;
-    // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        6        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        3        8        0
-    //  no simd        3       14        0
     fn wedge(self, other: AntiFlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return AntiMotor::from_groups(
@@ -77,6 +68,165 @@ impl Wedge<AntiFlectorOnOrigin> for AntiPlane {
             ]),
             // e15, e25, e35, e3215
             Simd32x4::from(self[e5]) * crate::swizzle!(other.group0(), 1, 2, 3, 0) * Simd32x4::from(-1.0),
+        );
+    }
+}
+impl Wedge<AntiFlector> for RoundPoint {
+    type Output = DipoleInversion;
+    fn wedge(self, other: AntiFlector) -> Self::Output {
+        use crate::elements::*;
+        return DipoleInversion::from_groups(
+            // e41, e42, e43
+            Simd32x3::from(self[e4]) * other.group1().truncate_to_3(),
+            // e23, e31, e12, e45
+            Simd32x4::from([
+                (other[e3] * self[e2]) - (other[e2] * self[e3]),
+                (other[e1] * self[e3]) - (other[e3] * self[e1]),
+                (other[e2] * self[e1]) - (other[e1] * self[e2]),
+                other[e5] * self[e4],
+            ]),
+            // e15, e25, e35, e1234
+            ((Simd32x3::from(other[e5]) * self.group0().truncate_to_3()) - (Simd32x3::from(self[e5]) * other.group1().truncate_to_3())).extend_to_4(other[e321] * self[e4]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                other[e235] * self[e4],
+                other[e315] * self[e4],
+                other[e125] * self[e4],
+                -(other[e235] * self[e1]) - (other[e315] * self[e2]) - (other[e125] * self[e3]) - (other[e321] * self[e5]),
+            ]),
+        );
+    }
+}
+impl Wedge<AntiSphereOnOrigin> for MultiVector {
+    type Output = MultiVector;
+    fn wedge(self, other: AntiSphereOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, (other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125]) + (other[e4] * self[e3215])]),
+            // e1, e2, e3, e4
+            Simd32x4::from(self[scalar]) * other.group0(),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            ((Simd32x3::from(self[e4]) * other.group0().truncate_to_3()) - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())).extend_to_4(other[e4] * self[e5] * -1.0),
+            // e15, e25, e35
+            Simd32x3::from(self[e5]) * other.group0().truncate_to_3() * Simd32x3::from(-1.0),
+            // e23, e31, e12
+            Simd32x3::from([
+                (other[e3] * self[e2]) - (other[e2] * self[e3]),
+                (other[e1] * self[e3]) - (other[e3] * self[e1]),
+                (other[e2] * self[e1]) - (other[e1] * self[e2]),
+            ]),
+            // e415, e425, e435, e321
+            Simd32x4::from([
+                (other[e4] * self[e15]) - (other[e1] * self[e45]),
+                (other[e4] * self[e25]) - (other[e2] * self[e45]),
+                (other[e4] * self[e35]) - (other[e3] * self[e45]),
+                -(other[e1] * self[e23]) - (other[e2] * self[e31]) - (other[e3] * self[e12]),
+            ]),
+            // e423, e431, e412
+            Simd32x3::from([
+                (other[e3] * self[e42]) - (other[e2] * self[e43]),
+                (other[e1] * self[e43]) - (other[e3] * self[e41]),
+                (other[e2] * self[e41]) - (other[e1] * self[e42]),
+            ]) + (Simd32x3::from(other[e4]) * self.group5()),
+            // e235, e315, e125
+            Simd32x3::from([
+                (other[e2] * self[e35]) - (other[e3] * self[e25]),
+                (other[e3] * self[e15]) - (other[e1] * self[e35]),
+                (other[e1] * self[e25]) - (other[e2] * self[e15]),
+            ]),
+            // e1234, e4235, e4315, e4125
+            Simd32x4::from([
+                -(other[e1] * self[e423]) - (other[e2] * self[e431]) - (other[e3] * self[e412]),
+                (other[e2] * self[e435]) - (other[e3] * self[e425]),
+                (other[e3] * self[e415]) - (other[e1] * self[e435]),
+                (other[e1] * self[e425]) - (other[e2] * self[e415]),
+            ]) - (Simd32x4::from(other[e4]) * Simd32x4::from([self[e321], self[e235], self[e315], self[e125]])),
+            // e3215
+            (other[e1] * self[e235]) + (other[e2] * self[e315]) + (other[e3] * self[e125]),
+        );
+    }
+}
+impl GeometricAntiProduct<Line> for Flector {
+    type Output = Flector;
+    fn geometric_anti_product(self, other: Line) -> Self::Output {
+        use crate::elements::*;
+        return Flector::from_groups(
+            // e15, e25, e35, e45
+            Simd32x4::from([
+                (self[e25] * other[e435]) + (self[e4125] * other[e315]) + (self[e3215] * other[e415])
+                    - (self[e35] * other[e425])
+                    - (self[e45] * other[e235])
+                    - (self[e4315] * other[e125]),
+                (self[e35] * other[e415]) + (self[e4235] * other[e125]) + (self[e3215] * other[e425])
+                    - (self[e15] * other[e435])
+                    - (self[e45] * other[e315])
+                    - (self[e4125] * other[e235]),
+                (self[e15] * other[e425]) + (self[e4315] * other[e235]) + (self[e3215] * other[e435])
+                    - (self[e25] * other[e415])
+                    - (self[e45] * other[e125])
+                    - (self[e4235] * other[e315]),
+                -(self[e4235] * other[e415]) - (self[e4315] * other[e425]) - (self[e4125] * other[e435]),
+            ]),
+            // e4235, e4315, e4125, e3215
+            Simd32x4::from([
+                (self[e45] * other[e415]) + (self[e4315] * other[e435]) - (self[e4125] * other[e425]),
+                (self[e45] * other[e425]) + (self[e4125] * other[e415]) - (self[e4235] * other[e435]),
+                (self[e45] * other[e435]) + (self[e4235] * other[e425]) - (self[e4315] * other[e415]),
+                (self[e4235] * other[e235]) + (self[e4315] * other[e315]) + (self[e4125] * other[e125])
+                    - (self[e15] * other[e415])
+                    - (self[e25] * other[e425])
+                    - (self[e35] * other[e435]),
+            ]),
+        );
+    }
+}
+impl AntiWedge<CircleRotorAligningOrigin> for AntiCircleOnOrigin {
+    type Output = AntiCircleRotorOnOrigin;
+    fn anti_wedge(self, other: CircleRotorAligningOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiCircleRotorOnOrigin::from_groups(
+            // e41, e42, e43, scalar
+            Simd32x4::from([
+                self[e41] * other[e12345],
+                self[e42] * other[e12345],
+                self[e43] * other[e12345],
+                -(self[e41] * other[e235])
+                    - (self[e42] * other[e315])
+                    - (self[e43] * other[e125])
+                    - (self[e23] * other[e415])
+                    - (self[e31] * other[e425])
+                    - (self[e12] * other[e435]),
+            ]),
+            // e23, e31, e12
+            Simd32x3::from(other[e12345]) * self.group1(),
+        );
+    }
+}
+
+
+
+impl Wedge<Motor> for Motor {
+    type Output = Motor;
+    fn wedge(self, other: Motor) -> Self::Output {
+        use crate::elements::*;
+        return Motor::from_groups(
+            // e41, e42, e43, e1234
+            (Simd32x4::from(other[scalar]) * self.group0())
+                + (Simd32x4::from(self[scalar]) * other.group0())
+                + Simd32x3::from(0.0).extend_to_4(
+                    -(other[e41] * self[e23])
+                        - (other[e42] * self[e31])
+                        - (other[e43] * self[e12])
+                        - (other[e23] * self[e41])
+                        - (other[e31] * self[e42])
+                        - (other[e12] * self[e43]),
+                ),
+            // e23, e31, e12, scalar
+            ((Simd32x3::from(other[scalar]) * self.group1().truncate_to_3()) + (Simd32x3::from(self[scalar]) * other.group1().truncate_to_3()))
+                .extend_to_4(other[scalar] * self[scalar]),
         );
     }
 }
@@ -1171,9 +1321,15 @@ impl Vec3Expr {
                         z
                     ) if transpose_simd => {
                         let lits = [*x_lit, *y_lit, 0.0];
-                        let mut z = vec![(z.clone(), 1.0)];
-                        if let Some(transposed) = transpose_vec3_sum(x_sum, y_sum, &mut z, lits) {
+                        let mut zv = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec3_sum(x_sum, y_sum, &mut zv, lits) {
                             *self = transposed;
+                            return
+                        }
+                        let lits = [*x_lit, *y_lit];
+                        if let Some(transposed) = advanced_transpose_vec2_sum(true, x_sum, y_sum, lits) {
+                            *self = Vec3Expr::Extend2to3(transposed, z.take_as_owned());
+                            return
                         }
                     }
                     (x, y, Sum(ref mut z_sum, z_lit)) if transpose_simd => {
@@ -1199,6 +1355,9 @@ impl Vec3Expr {
                         if let Some(transposed) = transpose_vec3_sum(x_sum, &mut y, &mut z, lits) {
                             *self = transposed;
                         }
+                    }
+                    (Literal(x), Literal(y), z) if *x == *y => {
+                        *self = Vec3Expr::Extend2to3(Vec2Expr::Gather1(Literal(*x)), z.take_as_owned())
                     }
                     _ => {}
                 }
@@ -1332,6 +1491,24 @@ impl Vec3Expr {
                         return;
                     }
                 }
+
+                // Vec extensions get pulled to the outside of arithmetic
+                // TODO support more general cases if necessary?
+                if product.len() == 2 {
+                    let (a, b) = product.split_at_mut(1);
+                    match (&mut a[0], &mut b[0]) {
+                        ((Vec3Expr::Extend2to3(va, za), a), (Vec3Expr::Extend2to3(vb, zb), b)) => {
+                            *self = Vec3Expr::Extend2to3(
+                                Vec2Expr::Product(vec![(va.take_as_owned(), *a), (vb.take_as_owned(), *b)], [last_factor[0], last_factor[1]]),
+                                FloatExpr::Product(vec![(za.take_as_owned(), *a), (zb.take_as_owned(), *b)], last_factor[2]),
+                            );
+                            // Significant restructure, so re-simplify
+                            self.simplify_nuanced(false, transpose_simd, prefer_flat_access);
+                            return
+                        }
+                        _ => {}
+                    }
+                }
                 if product.is_empty() {
                     let f0 = FloatExpr::Literal(last_factor[0]);
                     let f1 = FloatExpr::Literal(last_factor[1]);
@@ -1435,6 +1612,24 @@ impl Vec3Expr {
                         let gather = [factor, factor, factor];
                         *self = Vec3Expr::Product(vec![(addend, 1.0)], gather);
                     };
+                }
+
+                // Vec extensions get pulled to the outside of arithmetic
+                // TODO support more general cases if necessary?
+                if sum.len() == 2 {
+                    let (a, b) = sum.split_at_mut(1);
+                    match (&mut a[0], &mut b[0]) {
+                        ((Vec3Expr::Extend2to3(va, za), a), (Vec3Expr::Extend2to3(vb, zb), b)) => {
+                            *self = Vec3Expr::Extend2to3(
+                                Vec2Expr::Sum(vec![(va.take_as_owned(), *a), (vb.take_as_owned(), *b)], [last_addend[0], last_addend[1]]),
+                                FloatExpr::Sum(vec![(za.take_as_owned(), *a), (zb.take_as_owned(), *b)], last_addend[2]),
+                            );
+                            // Significant restructure, so re-simplify
+                            self.simplify_nuanced(false, transpose_simd, prefer_flat_access);
+                            return
+                        }
+                        _ => {}
+                    }
                 }
                 if sum.is_empty() {
                     let f0 = FloatExpr::Literal(last_addend[0]);
@@ -1794,9 +1989,15 @@ impl Vec4Expr {
                         w,
                     ) if transpose_simd => {
                         let lits = [*x_lit, *y_lit, *z_lit, 0.0];
-                        let mut w = vec![(w.clone(), 1.0)];
-                        if let Some(transposed) = transpose_vec4_sum(x_sum, y_sum, z_sum, &mut w, lits) {
+                        let mut wv = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(x_sum, y_sum, z_sum, &mut wv, lits) {
                             *self = transposed;
+                            return
+                        }
+                        let lits = [*x_lit, *y_lit, *z_lit];
+                        if let Some(transposed) = advanced_transpose_vec3_sum(true, x_sum, y_sum, z_sum, lits) {
+                            *self = Vec4Expr::Extend3to4(transposed, w.take_as_owned());
+                            return
                         }
                     }
                     (
@@ -1819,10 +2020,16 @@ impl Vec4Expr {
                         w,
                     ) if transpose_simd => {
                         let lits = [*x_lit, *y_lit, 0.0, 0.0];
-                        let mut z = vec![(z.clone(), 1.0)];
-                        let mut w = vec![(w.clone(), 1.0)];
-                        if let Some(transposed) = transpose_vec4_sum(x_sum, y_sum, &mut z, &mut w, lits) {
+                        let mut zv = vec![(z.clone(), 1.0)];
+                        let mut wv = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_sum(x_sum, y_sum, &mut zv, &mut wv, lits) {
                             *self = transposed;
+                            return
+                        }
+                        let lits = [*x_lit, *y_lit];
+                        if let Some(transposed) = advanced_transpose_vec2_sum(true, x_sum, y_sum, lits) {
+                            *self = Vec4Expr::Extend2to4(transposed, z.take_as_owned(), w.take_as_owned());
+                            return
                         }
                     }
                     (
@@ -1912,6 +2119,12 @@ impl Vec4Expr {
                         if let Some(transposed) = transpose_vec4_sum(x_sum, &mut y, &mut z, &mut w, lits) {
                             *self = transposed;
                         }
+                    }
+                    (Literal(x), Literal(y), Literal(z), w) if *x == *y && *y == *z => {
+                        *self = Vec4Expr::Extend3to4(Vec3Expr::Gather1(Literal(*x)), w.take_as_owned())
+                    }
+                    (Literal(x), Literal(y), z, w) if *x == *y => {
+                        *self = Vec4Expr::Extend2to4(Vec2Expr::Gather1(Literal(*x)), z.take_as_owned(), w.take_as_owned())
                     }
                     _ => {}
                 }
@@ -2072,6 +2285,34 @@ impl Vec4Expr {
                         return;
                     }
                 }
+
+                // Vec extensions get pulled to the outside of arithmetic
+                // TODO support more general cases if necessary?
+                if product.len() == 2 {
+                    let (a, b) = product.split_at_mut(1);
+                    match (&mut a[0], &mut b[0]) {
+                        ((Vec4Expr::Extend3to4(va, wa), a), (Vec4Expr::Extend3to4(vb, wb), b)) => {
+                            *self = Vec4Expr::Extend3to4(
+                                Vec3Expr::Product(vec![(va.take_as_owned(), *a), (vb.take_as_owned(), *b)], [last_factor[0], last_factor[1], last_factor[2]]),
+                                FloatExpr::Product(vec![(wa.take_as_owned(), *a), (wb.take_as_owned(), *b)], last_factor[3])
+                            );
+                            // Significant restructure, so re-simplify
+                            self.simplify_nuanced(false, transpose_simd, prefer_flat_access);
+                            return
+                        }
+                        ((Vec4Expr::Extend2to4(va, za, wa), a), (Vec4Expr::Extend2to4(vb, zb, wb), b)) => {
+                            *self = Vec4Expr::Extend2to4(
+                                Vec2Expr::Product(vec![(va.take_as_owned(), *a), (vb.take_as_owned(), *b)], [last_factor[0], last_factor[1]]),
+                                FloatExpr::Product(vec![(za.take_as_owned(), *a), (zb.take_as_owned(), *b)], last_factor[2]),
+                                FloatExpr::Product(vec![(wa.take_as_owned(), *a), (wb.take_as_owned(), *b)], last_factor[3])
+                            );
+                            // Significant restructure, so re-simplify
+                            self.simplify_nuanced(false, transpose_simd, prefer_flat_access);
+                            return
+                        }
+                        _ => {}
+                    }
+                }
                 if product.is_empty() {
                     let f0 = FloatExpr::Literal(last_factor[0]);
                     let f1 = FloatExpr::Literal(last_factor[1]);
@@ -2185,6 +2426,34 @@ impl Vec4Expr {
                         let gather = [factor, factor, factor, factor];
                         *self = Vec4Expr::Product(vec![(addend, 1.0)], gather);
                     };
+                }
+
+                // Vec extensions get pulled to the outside of arithmetic
+                // TODO support more general cases if necessary?
+                if sum.len() == 2 {
+                    let (a, b) = sum.split_at_mut(1);
+                    match (&mut a[0], &mut b[0]) {
+                        ((Vec4Expr::Extend3to4(va, wa), a), (Vec4Expr::Extend3to4(vb, wb), b)) => {
+                            *self = Vec4Expr::Extend3to4(
+                                Vec3Expr::Sum(vec![(va.take_as_owned(), *a), (vb.take_as_owned(), *b)], [last_addend[0], last_addend[1], last_addend[2]]),
+                                FloatExpr::Sum(vec![(wa.take_as_owned(), *a), (wb.take_as_owned(), *b)], last_addend[3])
+                            );
+                            // Significant restructure, so re-simplify
+                            self.simplify_nuanced(false, transpose_simd, prefer_flat_access);
+                            return
+                        }
+                        ((Vec4Expr::Extend2to4(va, za, wa), a), (Vec4Expr::Extend2to4(vb, zb, wb), b)) => {
+                            *self = Vec4Expr::Extend2to4(
+                                Vec2Expr::Sum(vec![(va.take_as_owned(), *a), (vb.take_as_owned(), *b)], [last_addend[0], last_addend[1]]),
+                                FloatExpr::Sum(vec![(za.take_as_owned(), *a), (zb.take_as_owned(), *b)], last_addend[2]),
+                                FloatExpr::Sum(vec![(wa.take_as_owned(), *a), (wb.take_as_owned(), *b)], last_addend[3])
+                            );
+                            // Significant restructure, so re-simplify
+                            self.simplify_nuanced(false, transpose_simd, prefer_flat_access);
+                            return
+                        }
+                        _ => {}
+                    }
                 }
                 if sum.is_empty() {
                     let f0 = FloatExpr::Literal(last_addend[0]);

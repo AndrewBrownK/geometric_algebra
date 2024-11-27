@@ -24,9 +24,9 @@ fn advanced_transpose_vec2_product(
                 return true;
             }
             pulling_out_factor = vec2_product_extract(&mut vec2_product, &mut coalesce_product_literal, aggressive, e0, f0, e1, f1);
-            !pulling_out_factor
+            if let Literal(1.0) = e1 { false } else { !pulling_out_factor }
         });
-        !pulling_out_factor
+        if let Literal(1.0) = e0 { false } else { !pulling_out_factor }
     });
 
     if vec2_product.is_empty() && coalesce_product_literal == [1.0; 2] {
@@ -151,9 +151,9 @@ fn advanced_transpose_vec2_sum(
                 return true;
             }
             pulling_out_addend = vec2_sum_extract(&mut vec2_sum, &mut coalesce_sum_literal, aggressive, e0, f0, e1, f1);
-            !pulling_out_addend
+            if let Literal(0.0) = e1 { false } else { !pulling_out_addend }
         });
-        !pulling_out_addend
+        if let Literal(0.0) = e0 { false } else { !pulling_out_addend }
     });
 
     if vec2_sum.is_empty() && coalesce_sum_literal == [0.0; 2] {
@@ -286,11 +286,11 @@ fn advanced_transpose_vec3_product(
                     return true;
                 }
                 pulling_out_factor = vec3_product_extract(&mut vec3_product, &mut coalesce_product_literal, aggressive, e0, f0, e1, f1, e2, f2);
-                !pulling_out_factor
+                if let Literal(1.0) = e2 { false } else { !pulling_out_factor }
             });
-            !pulling_out_factor
+            if let Literal(1.0) = e1 { false } else { !pulling_out_factor }
         });
-        !pulling_out_factor
+        if let Literal(1.0) = e0 { false } else { !pulling_out_factor }
     });
 
     if vec3_product.is_empty() && coalesce_product_literal == [1.0; 3] {
@@ -451,11 +451,11 @@ fn advanced_transpose_vec3_sum(
                     return true;
                 }
                 pulling_out_addend = vec3_sum_extract(&mut vec3_sum, &mut coalesce_sum_literal, aggressive, e0, f0, e1, f1, e2, f2);
-                !pulling_out_addend
+                if let Literal(0.0) = e2 { false } else { !pulling_out_addend }
             });
-            !pulling_out_addend
+            if let Literal(0.0) = e1 { false } else { !pulling_out_addend }
         });
-        !pulling_out_addend
+        if let Literal(0.0) = e0 { false } else { !pulling_out_addend }
     });
 
     if vec3_sum.is_empty() && coalesce_sum_literal == [0.0; 3] {
@@ -623,13 +623,13 @@ fn advanced_transpose_vec4_product(
                         return true;
                     }
                     pulling_out_factor = vec4_product_extract(&mut vec4_product, &mut coalesce_product_literal, aggressive, e0, f0, e1, f1, e2, f2, e3, f3);
-                    !pulling_out_factor
+                    if let Literal(1.0) = e3 { false } else { !pulling_out_factor }
                 });
-                !pulling_out_factor
+                if let Literal(1.0) = e2 { false } else { !pulling_out_factor }
             });
-            !pulling_out_factor
+            if let Literal(1.0) = e1 { false } else { !pulling_out_factor }
         });
-        !pulling_out_factor
+        if let Literal(1.0) = e0 { false } else { !pulling_out_factor }
     });
 
     if vec4_product.is_empty() && coalesce_product_literal == [1.0; 4] {
@@ -829,13 +829,13 @@ fn advanced_transpose_vec4_sum(
                         return true;
                     }
                     pulling_out_addend = vec4_sum_extract(&mut vec4_sum, &mut coalesce_sum_literal, aggressive, e0, f0, e1, f1, e2, f2, e3, f3);
-                    !pulling_out_addend
+                    if let Literal(0.0) = e3 { false } else { !pulling_out_addend }
                 });
-                !pulling_out_addend
+                if let Literal(0.0) = e2 { false } else { !pulling_out_addend }
             });
-            !pulling_out_addend
+            if let Literal(0.0) = e1 { false } else { !pulling_out_addend }
         });
-        !pulling_out_addend
+        if let Literal(0.0) = e0 { false } else { !pulling_out_addend }
     });
 
     if vec4_sum.is_empty() && coalesce_sum_literal == [0.0; 4] {
