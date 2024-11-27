@@ -1302,7 +1302,7 @@ impl RightDual for MultiVector {
             // e5
             self[e3215],
             // e41, e42, e43, e45
-            crate::swizzle!(self.group7(), 0, 1, 2).extend_to_4((self[e321] * -1.0)),
+            crate::swizzle!(self.group7(), 0, 1, 2).extend_to_4(self[e321] * -1.0),
             // e15, e25, e35
             self.group8(),
             // e23, e31, e12

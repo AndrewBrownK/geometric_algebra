@@ -18,7 +18,7 @@ use crate::traits::Wedge;
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         1       4       0
+//   Median:         1       2       0
 //  Average:         7      10       0
 //  Maximum:        81      96       0
 impl std::ops::Add<AntiScalar> for Flector {
@@ -393,7 +393,7 @@ impl From<Horizon> for Flector {
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, from_horizon[e321]]),
+            Simd32x3::from(0.0).extend_to_4(from_horizon[e321]),
         );
     }
 }
@@ -403,7 +403,7 @@ impl From<Origin> for Flector {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, from_origin[e4]]),
+            Simd32x3::from(0.0).extend_to_4(from_origin[e4]),
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
         );
@@ -426,10 +426,10 @@ impl std::ops::Mul<AntiScalar> for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        4        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        6        0
-    //  no simd        0       12        0
+    // yes simd        0        5        0
+    //  no simd        0        8        0
     fn mul(self, other: AntiScalar) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -443,12 +443,11 @@ impl std::ops::Mul<DualNum> for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        5        0
+    //      f32        1        6        0
     //    simd3        1        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        2        8        0
-    //  no simd        4       15        0
+    //  no simd        4       12        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -597,9 +596,8 @@ impl std::ops::Neg for Flector {
 impl std::ops::Not for Flector {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn not(self) -> Self::Output {
         return self.right_dual();
     }

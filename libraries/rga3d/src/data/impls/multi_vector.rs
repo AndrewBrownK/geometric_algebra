@@ -492,10 +492,9 @@ impl std::ops::BitXor<Horizon> for MultiVector {
     //           add/sub      mul      div
     //      f32        0        2        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        8        0
+    // yes simd        0        3        0
+    //  no simd        0        4        0
     fn bitxor(self, other: Horizon) -> Self::Output {
         return self.wedge(other);
     }
@@ -568,10 +567,10 @@ impl std::ops::BitXor<Origin> for MultiVector {
     //      f32        0        5        0
     //    simd2        0        1        0
     //    simd3        0        2        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       21        0
+    // yes simd        0        9        0
+    //  no simd        0       17        0
     fn bitxor(self, other: Origin) -> Self::Output {
         return self.wedge(other);
     }
@@ -703,7 +702,7 @@ impl From<Horizon> for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, from_horizon[e321]]),
+            Simd32x3::from(0.0).extend_to_4(from_horizon[e321]),
         );
     }
 }
@@ -750,7 +749,7 @@ impl From<Origin> for MultiVector {
             // scalar, e1234
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, from_origin[e4]]),
+            Simd32x3::from(0.0).extend_to_4(from_origin[e4]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -819,10 +818,10 @@ impl std::ops::Mul<AntiScalar> for MultiVector {
     //      f32        0        5        0
     //    simd2        0        1        0
     //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        9        0
-    //  no simd        0       18        0
+    // yes simd        0        8        0
+    //  no simd        0       14        0
     fn mul(self, other: AntiScalar) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -836,12 +835,11 @@ impl std::ops::Mul<DualNum> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        8        0
+    //      f32        2        9        0
     //    simd3        2        5        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        4       14        0
-    //  no simd        8       27        0
+    //  no simd        8       24        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -956,10 +954,10 @@ impl std::ops::Mul<Origin> for MultiVector {
     //      f32        0        5        0
     //    simd2        0        1        0
     //    simd3        0        2        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       21        0
+    // yes simd        0        9        0
+    //  no simd        0       17        0
     fn mul(self, other: Origin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -973,13 +971,12 @@ impl std::ops::Mul<Plane> for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       24        0
+    //      f32       12       25        0
     //    simd2        0        1        0
     //    simd3        4        6        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd       16       32        0
-    //  no simd       24       48        0
+    //  no simd       24       45        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1056,11 +1053,11 @@ impl std::ops::Not for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        1        0
     //    simd3        0        1        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        7        0
+    //  no simd        0        4        0
     fn not(self) -> Self::Output {
         return self.right_dual();
     }

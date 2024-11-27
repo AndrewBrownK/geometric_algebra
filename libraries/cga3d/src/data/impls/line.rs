@@ -94,7 +94,7 @@ impl std::ops::Add<AntiDualNum> for Line {
             // e235, e315, e125
             self.group1(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
+            Simd32x3::from(0.0).extend_to_4(other[e3215]),
             // e1234
             0.0,
         );
@@ -189,7 +189,7 @@ impl std::ops::Add<AntiMotor> for Line {
             // e235, e315, e125
             self.group1(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
+            Simd32x3::from(0.0).extend_to_4(other[e3215]),
             // e1234
             0.0,
         );
@@ -805,8 +805,12 @@ impl std::ops::MulAssign<AntiDualNum> for Line {
 impl std::ops::Mul<AntiFlatPoint> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       15        0
+    //           add/sub      mul      div
+    //      f32        5       12        0
+    //    simd3        1        1        0
+    // Totals...
+    // yes simd        6       13        0
+    //  no simd        8       15        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -911,10 +915,11 @@ impl std::ops::Mul<FlatPoint> for Line {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       15        0
+    //      f32        5       12        0
+    //    simd3        1        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        8       16        0
+    // yes simd        6       14        0
     //  no simd        8       19        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
@@ -973,11 +978,11 @@ impl std::ops::Mul<RoundPoint> for Line {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       27        0
-    //    simd3        0        2        0
+    //      f32       13       24        0
+    //    simd3        1        3        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd       16       30        0
+    // yes simd       14       28        0
     //  no simd       16       37        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         return self.geometric_product(other);
@@ -1121,11 +1126,11 @@ impl std::ops::Sub<AntiDualNum> for Line {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        6        0
+    //  no simd        0        3        0
     fn sub(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -1148,7 +1153,7 @@ impl std::ops::Sub<AntiDualNum> for Line {
             // e235, e315, e125
             self.group1(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([1.0, 1.0, 1.0, other[e3215]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
             // e1234
             0.0,
         );
@@ -1165,7 +1170,7 @@ impl std::ops::Sub<AntiFlatPoint> for Line {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e321] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e321] * -1.0),
             // e235, e315, e125
             Simd32x3::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125]]),
         );
@@ -1186,7 +1191,7 @@ impl std::ops::Sub<AntiFlector> for Line {
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e321] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e321] * -1.0),
             // e235, e315, e125, e4
             Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], 0.0]),
             // e1, e2, e3, e5
@@ -1235,12 +1240,13 @@ impl std::ops::Sub<AntiMotor> for Line {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        1        0
     //    simd2        0        1        0
     //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       13        0
+    //  no simd        0       10        0
     fn sub(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -1263,7 +1269,7 @@ impl std::ops::Sub<AntiMotor> for Line {
             // e235, e315, e125
             self.group1(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([1.0, 1.0, 1.0, other[e3215]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
             // e1234
             0.0,
         );
@@ -1297,7 +1303,7 @@ impl std::ops::Sub<AntiScalar> for Line {
         use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e12345] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e12345] * -1.0),
             // e235, e315, e125, e5
             crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(0.0),
         );
@@ -1431,9 +1437,9 @@ impl std::ops::Sub<DualNum> for Line {
         use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e12345] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e12345] * -1.0),
             // e235, e315, e125, e5
-            crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4((other[e5] * -1.0)),
+            crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(other[e5] * -1.0),
         );
     }
 }
@@ -1637,7 +1643,7 @@ impl std::ops::Sub<RoundPoint> for Line {
             // e415, e425, e435, e321
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e235, e315, e125, e4
-            crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4((other[e4] * -1.0)),
+            crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(other[e4] * -1.0),
             // e1, e2, e3, e5
             Simd32x4::from([other[e1], other[e2], other[e3], other[e5]]) * Simd32x4::from(-1.0),
         );

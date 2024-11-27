@@ -94,7 +94,7 @@ impl std::ops::Add<AntiDualNum> for AntiPlane {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
+            Simd32x3::from(0.0).extend_to_4(other[e3215]),
             // e1234
             0.0,
         );
@@ -175,7 +175,7 @@ impl std::ops::Add<AntiMotor> for AntiPlane {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([0.0, 0.0, 0.0, other[e3215]]),
+            Simd32x3::from(0.0).extend_to_4(other[e3215]),
             // e1234
             0.0,
         );
@@ -209,11 +209,11 @@ impl std::ops::Add<AntiScalar> for AntiPlane {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, other[e12345]]),
+            Simd32x3::from(0.0).extend_to_4(other[e12345]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
+            Simd32x3::from(0.0).extend_to_4(self[e5]),
             // e1, e2, e3, e4
             Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
         );
@@ -319,11 +319,11 @@ impl std::ops::Add<DualNum> for AntiPlane {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, other[e12345]]),
+            Simd32x3::from(0.0).extend_to_4(other[e12345]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self[e5] + other[e5]]),
+            Simd32x3::from(0.0).extend_to_4(self[e5] + other[e5]),
             // e1, e2, e3, e4
             Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
         );
@@ -413,7 +413,7 @@ impl std::ops::Add<Motor> for AntiPlane {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, other[e12345]]),
+            Simd32x3::from(0.0).extend_to_4(other[e12345]),
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 0.0]),
             // e235, e315, e125, e5
@@ -827,12 +827,12 @@ impl std::ops::BitXor<MultiVector> for AntiPlane {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       47        0
+    //      f32       24       49        0
     //    simd3        2        5        0
-    //    simd4        1        4        0
+    //    simd4        1        2        0
     // Totals...
     // yes simd       27       56        0
-    //  no simd       34       78        0
+    //  no simd       34       72        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
         return self.wedge(other);
     }
@@ -902,12 +902,12 @@ impl std::ops::BitXor<VersorOdd> for AntiPlane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       28        0
+    //      f32       14       29        0
     //    simd3        1        1        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd       15       31        0
-    //  no simd       17       39        0
+    //  no simd       17       36        0
     fn bitxor(self, other: VersorOdd) -> Self::Output {
         return self.wedge(other);
     }
@@ -1150,8 +1150,12 @@ impl std::ops::Mul<MultiVector> for AntiPlane {
 impl std::ops::Mul<Plane> for AntiPlane {
     type Output = Motor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       15        0
+    //           add/sub      mul      div
+    //      f32        5        9        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        6       11        0
+    //  no simd        8       15        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1311,11 +1315,11 @@ impl std::ops::Sub<AntiDualNum> for AntiPlane {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        6        0
+    //  no simd        0        3        0
     fn sub(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -1338,7 +1342,7 @@ impl std::ops::Sub<AntiDualNum> for AntiPlane {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([1.0, 1.0, 1.0, other[e3215]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
             // e1234
             0.0,
         );
@@ -1414,12 +1418,13 @@ impl std::ops::Sub<AntiMotor> for AntiPlane {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        1        0
     //    simd2        0        1        0
     //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       13        0
+    //  no simd        0       10        0
     fn sub(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -1442,7 +1447,7 @@ impl std::ops::Sub<AntiMotor> for AntiPlane {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([1.0, 1.0, 1.0, other[e3215]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
             // e1234
             0.0,
         );
@@ -1473,18 +1478,17 @@ impl std::ops::SubAssign<AntiPlane> for AntiPlane {
 impl std::ops::Sub<AntiScalar> for AntiPlane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn sub(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([1.0, 1.0, 1.0, other[e12345]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e12345] * -1.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self[e5]]),
+            Simd32x3::from(0.0).extend_to_4(self[e5]),
             // e1, e2, e3, e4
             Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
         );
@@ -1611,21 +1615,17 @@ impl std::ops::Sub<DipoleInversion> for AntiPlane {
 impl std::ops::Sub<DualNum> for AntiPlane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        1        0        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        1        1        0
-    //  no simd        1        4        0
+    //      add/sub      mul      div
+    // f32        1        1        0
     fn sub(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([1.0, 1.0, 1.0, other[e12345]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e12345] * -1.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self[e5] - other[e5]]),
+            Simd32x3::from(0.0).extend_to_4(self[e5] - other[e5]),
             // e1, e2, e3, e4
             Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
         );
@@ -1723,16 +1723,16 @@ impl std::ops::Sub<Motor> for AntiPlane {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
-    //    simd4        0        3        0
+    //      f32        1        1        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        1        3        0
-    //  no simd        1       12        0
+    //  no simd        1        9        0
     fn sub(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([1.0, 1.0, 1.0, other[e12345]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e12345] * -1.0),
             // e415, e425, e435, e321
             Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e235, e315, e125, e5
@@ -2122,7 +2122,7 @@ impl TryFrom<DualNum> for AntiPlane {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, dual_num[e5]])));
+        return Ok(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x3::from(0.0).extend_to_4(dual_num[e5])));
     }
 }
 
@@ -2187,7 +2187,7 @@ impl TryFrom<Motor> for AntiPlane {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x4::from([0.0, 0.0, 0.0, motor[e5]])));
+        return Ok(AntiPlane::from_groups(/* e1, e2, e3, e5 */ Simd32x3::from(0.0).extend_to_4(motor[e5])));
     }
 }
 

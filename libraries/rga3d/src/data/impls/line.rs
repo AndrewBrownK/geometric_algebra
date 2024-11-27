@@ -76,7 +76,7 @@ impl std::ops::Add<Horizon> for Line {
             // e23, e31, e12
             self.group1(),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
+            Simd32x3::from(0.0).extend_to_4(other[e321]),
         );
     }
 }
@@ -150,7 +150,7 @@ impl std::ops::Add<Origin> for Line {
             // scalar, e1234
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x3::from(0.0).extend_to_4(other[e4]),
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12
@@ -402,8 +402,12 @@ impl std::ops::Mul<Origin> for Line {
 impl std::ops::Mul<Plane> for Line {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       15        0
+    //           add/sub      mul      div
+    //      f32        5       12        0
+    //    simd3        1        1        0
+    // Totals...
+    // yes simd        6       13        0
+    //  no simd        8       15        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -466,7 +470,7 @@ impl std::ops::Sub<AntiScalar> for Line {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e1234] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e1234] * -1.0),
             // e23, e31, e12, scalar
             crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(0.0),
         );
@@ -481,9 +485,9 @@ impl std::ops::Sub<DualNum> for Line {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e1234] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e1234] * -1.0),
             // e23, e31, e12, scalar
-            crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4((other[scalar] * -1.0)),
+            crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(other[scalar] * -1.0),
         );
     }
 }
@@ -511,9 +515,8 @@ impl std::ops::Sub<Flector> for Line {
 impl std::ops::Sub<Horizon> for Line {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn sub(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -526,7 +529,7 @@ impl std::ops::Sub<Horizon> for Line {
             // e23, e31, e12
             self.group1(),
             // e423, e431, e412, e321
-            Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
         );
     }
 }
@@ -604,16 +607,15 @@ impl std::ops::Sub<MultiVector> for Line {
 impl std::ops::Sub<Origin> for Line {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn sub(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, other[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
             // e41, e42, e43
             self.group0(),
             // e23, e31, e12
@@ -676,7 +678,7 @@ impl std::ops::Sub<Scalar> for Line {
             // e41, e42, e43, e1234
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e23, e31, e12, scalar
-            crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4((other[scalar] * -1.0)),
+            crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(other[scalar] * -1.0),
         );
     }
 }

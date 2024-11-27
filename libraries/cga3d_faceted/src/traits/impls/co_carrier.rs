@@ -768,9 +768,9 @@ impl CoCarrier for DualNum {
         use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, self.right_anti_dual()[e1234]]),
+            Simd32x3::from(0.0).extend_to_4(self.right_anti_dual()[e1234]),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self.right_anti_dual()[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(self.right_anti_dual()[scalar]),
         );
     }
 }
@@ -930,7 +930,7 @@ impl CoCarrier for MultiVector {
             // e5
             self.right_anti_dual()[scalar],
             // e41, e42, e43, e45
-            Simd32x4::from([0.0, 0.0, 0.0, self.right_anti_dual()[e4]]),
+            Simd32x3::from(0.0).extend_to_4(self.right_anti_dual()[e4]),
             // e15, e25, e35
             self.right_anti_dual().group1().truncate_to_3(),
             // e23, e31, e12

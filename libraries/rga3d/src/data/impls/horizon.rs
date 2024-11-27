@@ -18,7 +18,7 @@ use crate::traits::Wedge;
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         0       2       0
+//   Median:         0       1       0
 //  Average:         0       3       0
 //  Maximum:         1      24       0
 impl std::ops::Add<AntiScalar> for Horizon {
@@ -35,7 +35,7 @@ impl std::ops::Add<AntiScalar> for Horizon {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
         );
     }
 }
@@ -53,7 +53,7 @@ impl std::ops::Add<DualNum> for Horizon {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
         );
     }
 }
@@ -102,7 +102,7 @@ impl std::ops::Add<Line> for Horizon {
             // e23, e31, e12
             other.group1(),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
         );
     }
 }
@@ -120,7 +120,7 @@ impl std::ops::Add<Motor> for Horizon {
             // e23, e31, e12
             other.group1().truncate_to_3(),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
         );
     }
 }
@@ -151,9 +151,9 @@ impl std::ops::Add<Origin> for Horizon {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x3::from(0.0).extend_to_4(other[e4]),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
         );
     }
 }
@@ -171,7 +171,7 @@ impl std::ops::Add<Point> for Horizon {
     type Output = Flector;
     fn add(self, other: Point) -> Self::Output {
         use crate::elements::*;
-        return Flector::from_groups(/* e1, e2, e3, e4 */ other.group0(), /* e423, e431, e412, e321 */ Simd32x4::from([0.0, 0.0, 0.0, self[e321]]));
+        return Flector::from_groups(/* e1, e2, e3, e4 */ other.group0(), /* e423, e431, e412, e321 */ Simd32x3::from(0.0).extend_to_4(self[e321]));
     }
 }
 impl std::ops::Add<Scalar> for Horizon {
@@ -188,7 +188,7 @@ impl std::ops::Add<Scalar> for Horizon {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
         );
     }
 }
@@ -235,10 +235,9 @@ impl std::ops::BitXor<MultiVector> for Horizon {
     //           add/sub      mul      div
     //      f32        0        2        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        8        0
+    // yes simd        0        3        0
+    //  no simd        0        4        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
         return self.wedge(other);
     }
@@ -287,12 +286,8 @@ impl std::ops::Mul<AntiScalar> for Horizon {
 impl std::ops::Mul<DualNum> for Horizon {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -366,11 +361,11 @@ impl std::ops::Mul<Plane> for Horizon {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        6        0
-    //  no simd        0       12        0
+    //  no simd        0        9        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -379,11 +374,11 @@ impl std::ops::Mul<Point> for Horizon {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        6        0
-    //  no simd        0       12        0
+    //  no simd        0        9        0
     fn mul(self, other: Point) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -439,7 +434,7 @@ impl std::ops::Sub<AntiScalar> for Horizon {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
         );
     }
 }
@@ -461,7 +456,7 @@ impl std::ops::Sub<DualNum> for Horizon {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
         );
     }
 }
@@ -518,7 +513,7 @@ impl std::ops::Sub<Line> for Horizon {
             // e23, e31, e12
             other.group1() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
         );
     }
 }
@@ -543,7 +538,7 @@ impl std::ops::Sub<Motor> for Horizon {
             // e23, e31, e12
             other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
         );
     }
 }
@@ -577,16 +572,15 @@ impl std::ops::Sub<MultiVector> for Horizon {
 impl std::ops::Sub<Origin> for Horizon {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn sub(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, other[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
         );
     }
 }
@@ -619,7 +613,7 @@ impl std::ops::Sub<Point> for Horizon {
             // e1, e2, e3, e4
             other.group0() * Simd32x4::from(-1.0),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
         );
     }
 }
@@ -641,7 +635,7 @@ impl std::ops::Sub<Scalar> for Horizon {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
         );
     }
 }

@@ -195,9 +195,9 @@ impl Carrier for AntiDualNum {
         use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, self[e1234]]),
+            Simd32x3::from(0.0).extend_to_4(self[e1234]),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, self[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(self[scalar]),
         );
     }
 }
@@ -699,7 +699,7 @@ impl Carrier for MultiVector {
             // e5
             self[scalar],
             // e41, e42, e43, e45
-            Simd32x4::from([0.0, 0.0, 0.0, self[e4]]),
+            Simd32x3::from(0.0).extend_to_4(self[e4]),
             // e15, e25, e35
             self.group1().truncate_to_3(),
             // e23, e31, e12

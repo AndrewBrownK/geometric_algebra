@@ -46,10 +46,7 @@ impl AntiConstraintViolation for AntiCircleRotor {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 (anti_reverse[e41] * self[e15])
                     + (anti_reverse[e42] * self[e25])
                     + (anti_reverse[e43] * self[e35])
@@ -61,21 +58,18 @@ impl AntiConstraintViolation for AntiCircleRotor {
                     + (anti_reverse[e35] * self[e43])
                     - (anti_reverse[e45] * self[e45])
                     - (anti_reverse[scalar] * self[scalar]),
-            ]),
+            ),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 (anti_reverse[e23] * self[e15])
                     + (anti_reverse[e31] * self[e25])
                     + (anti_reverse[e12] * self[e35])
                     + (anti_reverse[e15] * self[e23])
                     + (anti_reverse[e25] * self[e31])
                     + (anti_reverse[e35] * self[e12]),
-            ]),
+            ),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (anti_reverse[e42] * self[e35]) + (anti_reverse[e23] * self[e45]) + (anti_reverse[e45] * self[e23]) + (anti_reverse[e35] * self[e42])
@@ -108,11 +102,16 @@ impl AntiConstraintViolation for AntiCircleRotor {
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
+            Simd32x4::from([
+                geometric_anti_product[e423],
+                geometric_anti_product[e431],
+                geometric_anti_product[e412],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+            ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
+            geometric_anti_product.group2(),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
@@ -148,10 +147,7 @@ impl AntiConstraintViolation for AntiDipoleInversion {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 (anti_reverse[e321] * self[e321]) + (anti_reverse[e4] * self[e5]) + (anti_reverse[e5] * self[e4])
                     - (anti_reverse[e423] * self[e235])
                     - (anti_reverse[e431] * self[e315])
@@ -165,14 +161,11 @@ impl AntiConstraintViolation for AntiDipoleInversion {
                     - (anti_reverse[e1] * self[e1])
                     - (anti_reverse[e2] * self[e2])
                     - (anti_reverse[e3] * self[e3]),
-            ]),
+            ),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 (anti_reverse[e1] * self[e235]) + (anti_reverse[e2] * self[e315]) + (anti_reverse[e3] * self[e125]) + (anti_reverse[e5] * self[e321])
                     - (anti_reverse[e415] * self[e235])
                     - (anti_reverse[e425] * self[e315])
@@ -184,7 +177,7 @@ impl AntiConstraintViolation for AntiDipoleInversion {
                     - (anti_reverse[e315] * self[e2])
                     - (anti_reverse[e125] * self[e435])
                     - (anti_reverse[e125] * self[e3]),
-            ]),
+            ),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (anti_reverse[e423] * self[e5])
@@ -254,11 +247,16 @@ impl AntiConstraintViolation for AntiDipoleInversion {
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
+            Simd32x4::from([
+                geometric_anti_product[e423],
+                geometric_anti_product[e431],
+                geometric_anti_product[e412],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+            ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
+            geometric_anti_product.group2(),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
@@ -481,10 +479,7 @@ impl AntiConstraintViolation for Circle {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 (anti_reverse[e321] * self[e321])
                     - (anti_reverse[e423] * self[e235])
                     - (anti_reverse[e431] * self[e315])
@@ -495,21 +490,18 @@ impl AntiConstraintViolation for Circle {
                     - (anti_reverse[e235] * self[e423])
                     - (anti_reverse[e315] * self[e431])
                     - (anti_reverse[e125] * self[e412]),
-            ]),
+            ),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 -(anti_reverse[e415] * self[e235])
                     - (anti_reverse[e425] * self[e315])
                     - (anti_reverse[e435] * self[e125])
                     - (anti_reverse[e235] * self[e415])
                     - (anti_reverse[e315] * self[e425])
                     - (anti_reverse[e125] * self[e435]),
-            ]),
+            ),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (anti_reverse[e412] * self[e315]) + (anti_reverse[e415] * self[e321]) + (anti_reverse[e321] * self[e415]) + (anti_reverse[e315] * self[e412])
@@ -541,11 +533,16 @@ impl AntiConstraintViolation for Circle {
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
+            Simd32x4::from([
+                geometric_anti_product[e423],
+                geometric_anti_product[e431],
+                geometric_anti_product[e412],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+            ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
+            geometric_anti_product.group2(),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
@@ -579,10 +576,7 @@ impl AntiConstraintViolation for CircleRotor {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 (anti_reverse[e321] * self[e321]) + (anti_reverse[e12345] * self[e12345])
                     - (anti_reverse[e423] * self[e235])
                     - (anti_reverse[e431] * self[e315])
@@ -593,21 +587,18 @@ impl AntiConstraintViolation for CircleRotor {
                     - (anti_reverse[e235] * self[e423])
                     - (anti_reverse[e315] * self[e431])
                     - (anti_reverse[e125] * self[e412]),
-            ]),
+            ),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 -(anti_reverse[e415] * self[e235])
                     - (anti_reverse[e425] * self[e315])
                     - (anti_reverse[e435] * self[e125])
                     - (anti_reverse[e235] * self[e415])
                     - (anti_reverse[e315] * self[e425])
                     - (anti_reverse[e125] * self[e435]),
-            ]),
+            ),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (anti_reverse[e412] * self[e315]) + (anti_reverse[e415] * self[e321]) + (anti_reverse[e321] * self[e415]) + (anti_reverse[e315] * self[e412])
@@ -639,11 +630,16 @@ impl AntiConstraintViolation for CircleRotor {
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
+            Simd32x4::from([
+                geometric_anti_product[e423],
+                geometric_anti_product[e431],
+                geometric_anti_product[e412],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+            ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
+            geometric_anti_product.group2(),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
@@ -677,10 +673,7 @@ impl AntiConstraintViolation for Dipole {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 (anti_reverse[e41] * self[e15])
                     + (anti_reverse[e42] * self[e25])
                     + (anti_reverse[e43] * self[e35])
@@ -691,21 +684,18 @@ impl AntiConstraintViolation for Dipole {
                     + (anti_reverse[e25] * self[e42])
                     + (anti_reverse[e35] * self[e43])
                     - (anti_reverse[e45] * self[e45]),
-            ]),
+            ),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 (anti_reverse[e23] * self[e15])
                     + (anti_reverse[e31] * self[e25])
                     + (anti_reverse[e12] * self[e35])
                     + (anti_reverse[e15] * self[e23])
                     + (anti_reverse[e25] * self[e31])
                     + (anti_reverse[e35] * self[e12]),
-            ]),
+            ),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (anti_reverse[e42] * self[e35]) + (anti_reverse[e23] * self[e45]) + (anti_reverse[e45] * self[e23]) + (anti_reverse[e35] * self[e42])
@@ -737,11 +727,16 @@ impl AntiConstraintViolation for Dipole {
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
+            Simd32x4::from([
+                geometric_anti_product[e423],
+                geometric_anti_product[e431],
+                geometric_anti_product[e412],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+            ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
+            geometric_anti_product.group2(),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
@@ -777,10 +772,7 @@ impl AntiConstraintViolation for DipoleInversion {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 (anti_reverse[e41] * self[e15])
                     + (anti_reverse[e42] * self[e25])
                     + (anti_reverse[e43] * self[e35])
@@ -796,14 +788,11 @@ impl AntiConstraintViolation for DipoleInversion {
                     - (anti_reverse[e45] * self[e45])
                     - (anti_reverse[e1234] * self[e3215])
                     - (anti_reverse[e3215] * self[e1234]),
-            ]),
+            ),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 (anti_reverse[e23] * self[e15])
                     + (anti_reverse[e31] * self[e25])
                     + (anti_reverse[e12] * self[e35])
@@ -818,7 +807,7 @@ impl AntiConstraintViolation for DipoleInversion {
                     - (anti_reverse[e15] * self[e4235])
                     - (anti_reverse[e25] * self[e4315])
                     - (anti_reverse[e35] * self[e4125]),
-            ]),
+            ),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (anti_reverse[e42] * self[e35])
@@ -888,11 +877,16 @@ impl AntiConstraintViolation for DipoleInversion {
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
+            Simd32x4::from([
+                geometric_anti_product[e423],
+                geometric_anti_product[e431],
+                geometric_anti_product[e412],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+            ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
+            geometric_anti_product.group2(),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
@@ -1613,10 +1607,7 @@ impl AntiConstraintViolation for VersorEven {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 (anti_reverse[e12345] * self[e12345]) + (anti_reverse[e321] * self[e321]) + (anti_reverse[e5] * self[e4]) + (anti_reverse[e4] * self[e5])
                     - (anti_reverse[e423] * self[e235])
                     - (anti_reverse[e431] * self[e315])
@@ -1630,14 +1621,11 @@ impl AntiConstraintViolation for VersorEven {
                     - (anti_reverse[e1] * self[e1])
                     - (anti_reverse[e2] * self[e2])
                     - (anti_reverse[e3] * self[e3]),
-            ]),
+            ),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 (anti_reverse[e12345] * self[e5])
                     + (anti_reverse[e5] * self[e12345])
                     + (anti_reverse[e5] * self[e321])
@@ -1654,7 +1642,7 @@ impl AntiConstraintViolation for VersorEven {
                     - (anti_reverse[e315] * self[e2])
                     - (anti_reverse[e125] * self[e435])
                     - (anti_reverse[e125] * self[e3]),
-            ]),
+            ),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (anti_reverse[e423] * self[e5])
@@ -1726,11 +1714,16 @@ impl AntiConstraintViolation for VersorEven {
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
+            Simd32x4::from([
+                geometric_anti_product[e423],
+                geometric_anti_product[e431],
+                geometric_anti_product[e412],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+            ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
+            geometric_anti_product.group2(),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );
@@ -1765,10 +1758,7 @@ impl AntiConstraintViolation for VersorOdd {
         );
         let geometric_anti_product = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 (anti_reverse[e41] * self[e15])
                     + (anti_reverse[e42] * self[e25])
                     + (anti_reverse[e43] * self[e35])
@@ -1785,14 +1775,11 @@ impl AntiConstraintViolation for VersorOdd {
                     - (anti_reverse[e45] * self[e45])
                     - (anti_reverse[e1234] * self[e3215])
                     - (anti_reverse[e3215] * self[e1234]),
-            ]),
+            ),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
+            Simd32x3::from(0.0).extend_to_4(
                 (anti_reverse[e23] * self[e15])
                     + (anti_reverse[e31] * self[e25])
                     + (anti_reverse[e12] * self[e35])
@@ -1809,7 +1796,7 @@ impl AntiConstraintViolation for VersorOdd {
                     - (anti_reverse[e25] * self[e4315])
                     - (anti_reverse[e35] * self[e4125])
                     - (anti_reverse[e3215] * self[scalar]),
-            ]),
+            ),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (anti_reverse[e42] * self[e35])
@@ -1888,11 +1875,16 @@ impl AntiConstraintViolation for VersorOdd {
         );
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e12345] - anti_dot_product[e12345]]),
+            Simd32x4::from([
+                geometric_anti_product[e423],
+                geometric_anti_product[e431],
+                geometric_anti_product[e412],
+                geometric_anti_product[e12345] - anti_dot_product[e12345],
+            ]),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
-            Simd32x4::from([0.0, 0.0, 0.0, geometric_anti_product[e5]]),
+            geometric_anti_product.group2(),
             // e1, e2, e3, e4
             geometric_anti_product.group3(),
         );

@@ -208,7 +208,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for AntiCircleRotorAligningOrigi
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
+            Simd32x3::from(0.0).extend_to_4(other[e321]),
             // e423, e431, e412
             other.group0().truncate_to_3(),
             // e235, e315, e125
@@ -228,7 +228,7 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for AntiCircleRotorAlign
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x3::from(0.0).extend_to_4(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
@@ -268,7 +268,7 @@ impl std::ops::Add<AntiDipoleOnOrigin> for AntiCircleRotorAligningOriginAtInfini
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
+            Simd32x3::from(0.0).extend_to_4(other[e321]),
             // e423, e431, e412
             other.group0().truncate_to_3(),
             // e235, e315, e125
@@ -289,7 +289,7 @@ impl std::ops::Add<AntiDualNum> for AntiCircleRotorAligningOriginAtInfinity {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, self[scalar] + other[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(self[scalar] + other[scalar]),
             // e23, e31, e12, e3215
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e15, e25, e35, e1234
@@ -315,7 +315,7 @@ impl std::ops::Add<AntiFlatOrigin> for AntiCircleRotorAligningOriginAtInfinity {
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
+            Simd32x3::from(0.0).extend_to_4(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -345,7 +345,7 @@ impl std::ops::Add<AntiFlatPoint> for AntiCircleRotorAligningOriginAtInfinity {
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
+            Simd32x3::from(0.0).extend_to_4(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -375,7 +375,7 @@ impl std::ops::Add<AntiFlector> for AntiCircleRotorAligningOriginAtInfinity {
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
+            Simd32x3::from(0.0).extend_to_4(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -405,7 +405,7 @@ impl std::ops::Add<AntiFlectorOnOrigin> for AntiCircleRotorAligningOriginAtInfin
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
+            Simd32x3::from(0.0).extend_to_4(other[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -860,7 +860,7 @@ impl std::ops::Add<CircleOrthogonalOrigin> for AntiCircleRotorAligningOriginAtIn
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
+            Simd32x3::from(0.0).extend_to_4(other[e321]),
             // e423, e431, e412
             other.group0().truncate_to_3(),
             // e235, e315, e125
@@ -1232,7 +1232,7 @@ impl std::ops::Add<DualNum> for AntiCircleRotorAligningOriginAtInfinity {
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x3::from(0.0).extend_to_4(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1810,7 +1810,7 @@ impl std::ops::Add<NullSphereAtOrigin> for AntiCircleRotorAligningOriginAtInfini
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, self[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(self[scalar]),
             // e23, e31, e12, e3215
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e15, e25, e35, e1234
@@ -1826,7 +1826,7 @@ impl std::ops::Add<NullVersorEvenAtOrigin> for AntiCircleRotorAligningOriginAtIn
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x3::from(0.0).extend_to_4(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1856,7 +1856,7 @@ impl std::ops::Add<Origin> for AntiCircleRotorAligningOriginAtInfinity {
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x3::from(0.0).extend_to_4(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1942,7 +1942,7 @@ impl std::ops::Add<RoundPointAtOrigin> for AntiCircleRotorAligningOriginAtInfini
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x3::from(0.0).extend_to_4(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
@@ -1996,7 +1996,7 @@ impl std::ops::Add<Sphere> for AntiCircleRotorAligningOriginAtInfinity {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, self[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(self[scalar]),
             // e23, e31, e12, e45
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e15, e25, e35, e1234
@@ -2012,7 +2012,7 @@ impl std::ops::Add<SphereAtOrigin> for AntiCircleRotorAligningOriginAtInfinity {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, self[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(self[scalar]),
             // e23, e31, e12, e3215
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e3215]),
             // e15, e25, e35, e1234
@@ -2026,7 +2026,7 @@ impl std::ops::Add<SphereOnOrigin> for AntiCircleRotorAligningOriginAtInfinity {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, self[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(self[scalar]),
             // e23, e31, e12, e45
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e15, e25, e35, e1234
@@ -2074,7 +2074,7 @@ impl std::ops::Add<VersorEvenAligningOrigin> for AntiCircleRotorAligningOriginAt
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x3::from(0.0).extend_to_4(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
@@ -2134,7 +2134,7 @@ impl std::ops::Add<VersorEvenAtOrigin> for AntiCircleRotorAligningOriginAtInfini
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x3::from(0.0).extend_to_4(other[e4]),
             // e5
             other[e5],
             // e41, e42, e43, e45
@@ -2164,7 +2164,7 @@ impl std::ops::Add<VersorEvenOnOrigin> for AntiCircleRotorAligningOriginAtInfini
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x3::from(0.0).extend_to_4(other[e4]),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -2204,7 +2204,7 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for AntiCircleRotorAligningOrigin
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
+            Simd32x3::from(0.0).extend_to_4(other[e321]),
             // e423, e431, e412
             other.group0().truncate_to_3(),
             // e235, e315, e125
@@ -2287,12 +2287,12 @@ impl std::ops::BitXor<AntiCircleRotor> for AntiCircleRotorAligningOriginAtInfini
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       24        0
+    //      f32       16       25        0
     //    simd3        1        2        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd       17       28        0
-    //  no simd       19       38        0
+    //  no simd       19       35        0
     fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -2315,12 +2315,11 @@ impl std::ops::BitXor<AntiCircleRotorAligningOriginAtInfinity> for AntiCircleRot
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       12        0
+    //      f32        8       13        0
     //    simd3        1        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        9       15        0
-    //  no simd       11       22        0
+    //  no simd       11       19        0
     fn bitxor(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2329,12 +2328,11 @@ impl std::ops::BitXor<AntiCircleRotorAtInfinity> for AntiCircleRotorAligningOrig
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       16        0
+    //      f32        8       17        0
     //    simd3        1        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        9       19        0
-    //  no simd       11       26        0
+    //  no simd       11       23        0
     fn bitxor(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2357,12 +2355,12 @@ impl std::ops::BitXor<AntiDipoleInversion> for AntiCircleRotorAligningOriginAtIn
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       24        0
+    //      f32       13       25        0
     //    simd3        2        2        0
-    //    simd4        1        3        0
+    //    simd4        1        2        0
     // Totals...
     // yes simd       16       29        0
-    //  no simd       23       42        0
+    //  no simd       23       39        0
     fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -2371,12 +2369,11 @@ impl std::ops::BitXor<AntiDipoleInversionAtInfinity> for AntiCircleRotorAligning
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       19        0
+    //      f32        8       20        0
     //    simd3        2        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd       10       22        0
-    //  no simd       14       29        0
+    //  no simd       14       26        0
     fn bitxor(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2398,12 +2395,11 @@ impl std::ops::BitXor<AntiDipoleInversionOrthogonalOrigin> for AntiCircleRotorAl
     type Output = VersorEvenAligningOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       12        0
+    //      f32        8       14        0
     //    simd3        2        4        0
-    //    simd4        0        2        0
     // Totals...
     // yes simd       10       18        0
-    //  no simd       14       32        0
+    //  no simd       14       26        0
     fn bitxor(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2414,10 +2410,9 @@ impl std::ops::BitXor<AntiDipoleOnOrigin> for AntiCircleRotorAligningOriginAtInf
     //           add/sub      mul      div
     //      f32        2        4        0
     //    simd3        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        2        6        0
-    //  no simd        2       11        0
+    // yes simd        2        5        0
+    //  no simd        2        7        0
     fn bitxor(self, other: AntiDipoleOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2427,10 +2422,10 @@ impl std::ops::BitXor<AntiDualNum> for AntiCircleRotorAligningOriginAtInfinity {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        8        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       16        0
+    // yes simd        0        9        0
+    //  no simd        0       12        0
     fn bitxor(self, other: AntiDualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -2510,12 +2505,12 @@ impl std::ops::BitXor<AntiMotor> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        9        0
+    //      f32        5       10        0
     //    simd3        1        2        0
-    //    simd4        1        2        0
+    //    simd4        1        1        0
     // Totals...
     // yes simd        7       13        0
-    //  no simd       12       23        0
+    //  no simd       12       20        0
     fn bitxor(self, other: AntiMotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -2524,12 +2519,11 @@ impl std::ops::BitXor<AntiMotorOnOrigin> for AntiCircleRotorAligningOriginAtInfi
     type Output = AntiMotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        6        0
+    //      f32        2        7        0
     //    simd3        1        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        3        9        0
-    //  no simd        5       16        0
+    //  no simd        5       13        0
     fn bitxor(self, other: AntiMotorOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2538,12 +2532,12 @@ impl std::ops::BitXor<AntiMysteryCircleRotor> for AntiCircleRotorAligningOriginA
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        6        0
+    //      f32        2        7        0
     //    simd3        1        2        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        3       10        0
-    //  no simd        5       20        0
+    //  no simd        5       17        0
     fn bitxor(self, other: AntiMysteryCircleRotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -2692,10 +2686,9 @@ impl std::ops::BitXor<CircleOrthogonalOrigin> for AntiCircleRotorAligningOriginA
     //           add/sub      mul      div
     //      f32        2        7        0
     //    simd3        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        2        9        0
-    //  no simd        2       14        0
+    // yes simd        2        8        0
+    //  no simd        2       10        0
     fn bitxor(self, other: CircleOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3059,12 +3052,11 @@ impl std::ops::BitXor<Motor> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        0
+    //      f32        3        8        0
     //    simd3        1        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        4       10        0
-    //  no simd        6       17        0
+    //  no simd        6       14        0
     fn bitxor(self, other: Motor) -> Self::Output {
         return self.wedge(other);
     }
@@ -3073,11 +3065,11 @@ impl std::ops::BitXor<MotorAtInfinity> for AntiCircleRotorAligningOriginAtInfini
     type Output = MotorAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        1        0
     //    simd3        1        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        1        3        0
-    //  no simd        3       10        0
+    //  no simd        3        7        0
     fn bitxor(self, other: MotorAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3170,12 +3162,12 @@ impl std::ops::BitXor<MysteryVersorOdd> for AntiCircleRotorAligningOriginAtInfin
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        9        0
+    //      f32        5       10        0
     //    simd3        1        2        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        6       13        0
-    //  no simd        8       23        0
+    //  no simd        8       20        0
     fn bitxor(self, other: MysteryVersorOdd) -> Self::Output {
         return self.wedge(other);
     }
@@ -3274,12 +3266,12 @@ impl std::ops::BitXor<RoundPoint> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       12        0
+    //      f32        5       13        0
     //    simd3        1        2        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        6       16        0
-    //  no simd        8       26        0
+    //  no simd        8       23        0
     fn bitxor(self, other: RoundPoint) -> Self::Output {
         return self.wedge(other);
     }
@@ -3352,12 +3344,12 @@ impl std::ops::BitXor<VersorEven> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       21        0
+    //      f32       10       22        0
     //    simd3        2        2        0
-    //    simd4        2        4        0
+    //    simd4        2        3        0
     // Totals...
     // yes simd       14       27        0
-    //  no simd       24       43        0
+    //  no simd       24       40        0
     fn bitxor(self, other: VersorEven) -> Self::Output {
         return self.wedge(other);
     }
@@ -3366,12 +3358,12 @@ impl std::ops::BitXor<VersorEvenAligningOrigin> for AntiCircleRotorAligningOrigi
     type Output = VersorEvenAligningOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        9        0
+    //      f32        5       11        0
     //    simd3        2        4        0
-    //    simd4        1        3        0
+    //    simd4        1        1        0
     // Totals...
     // yes simd        8       16        0
-    //  no simd       15       33        0
+    //  no simd       15       27        0
     fn bitxor(self, other: VersorEvenAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3380,12 +3372,11 @@ impl std::ops::BitXor<VersorEvenAtInfinity> for AntiCircleRotorAligningOriginAtI
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       20        0
+    //      f32        9       21        0
     //    simd3        2        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd       11       23        0
-    //  no simd       15       30        0
+    //  no simd       15       27        0
     fn bitxor(self, other: VersorEvenAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3394,12 +3385,12 @@ impl std::ops::BitXor<VersorEvenAtOrigin> for AntiCircleRotorAligningOriginAtInf
     type Output = VersorEvenAligningOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        9        0
+    //      f32        5       10        0
     //    simd3        1        2        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        6       13        0
-    //  no simd        8       23        0
+    //  no simd        8       20        0
     fn bitxor(self, other: VersorEvenAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3408,12 +3399,12 @@ impl std::ops::BitXor<VersorEvenOnOrigin> for AntiCircleRotorAligningOriginAtInf
     type Output = VersorEvenOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        9        0
+    //      f32        5       10        0
     //    simd3        1        2        0
-    //    simd4        1        2        0
+    //    simd4        1        1        0
     // Totals...
     // yes simd        7       13        0
-    //  no simd       12       23        0
+    //  no simd       12       20        0
     fn bitxor(self, other: VersorEvenOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3422,12 +3413,12 @@ impl std::ops::BitXor<VersorEvenOrthogonalOrigin> for AntiCircleRotorAligningOri
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       22        0
+    //      f32       11       23        0
     //    simd3        2        2        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd       13       26        0
-    //  no simd       17       36        0
+    //  no simd       17       33        0
     fn bitxor(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -3436,12 +3427,12 @@ impl std::ops::BitXor<VersorOdd> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       21        0
+    //      f32       13       22        0
     //    simd3        1        2        0
-    //    simd4        2        4        0
+    //    simd4        2        3        0
     // Totals...
     // yes simd       16       27        0
-    //  no simd       24       43        0
+    //  no simd       24       40        0
     fn bitxor(self, other: VersorOdd) -> Self::Output {
         return self.wedge(other);
     }
@@ -3450,12 +3441,12 @@ impl std::ops::BitXor<VersorOddAtInfinity> for AntiCircleRotorAligningOriginAtIn
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       16        0
+    //      f32        8       17        0
     //    simd3        1        2        0
-    //    simd4        1        2        0
+    //    simd4        1        1        0
     // Totals...
     // yes simd       10       20        0
-    //  no simd       15       30        0
+    //  no simd       15       27        0
     fn bitxor(self, other: VersorOddAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -3505,7 +3496,7 @@ impl From<AntiMotorOnOrigin> for AntiCircleRotorAligningOriginAtInfinity {
             // e23, e31, e12
             from_anti_motor_on_origin.group0().truncate_to_3(),
             // e15, e25, e35, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, from_anti_motor_on_origin[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(from_anti_motor_on_origin[scalar]),
         );
     }
 }
@@ -3529,7 +3520,7 @@ impl From<Scalar> for AntiCircleRotorAligningOriginAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, from_scalar[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(from_scalar[scalar]),
         );
     }
 }
@@ -3585,12 +3576,12 @@ impl std::ops::Mul<AntiCircleRotorAtInfinity> for AntiCircleRotorAligningOriginA
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       36        0
+    //      f32       25       37        0
     //    simd3        2        2        0
-    //    simd4        1        2        0
+    //    simd4        1        1        0
     // Totals...
     // yes simd       28       40        0
-    //  no simd       35       50        0
+    //  no simd       35       47        0
     fn mul(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3704,12 +3695,11 @@ impl std::ops::Mul<AntiFlatPoint> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = AntiFlector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       12        0
+    //      f32        5       13        0
     //    simd3        2        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        7       15        0
-    //  no simd       11       22        0
+    //  no simd       11       19        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3788,12 +3778,12 @@ impl std::ops::Mul<AntiMysteryCircleRotor> for AntiCircleRotorAligningOriginAtIn
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       24        0
+    //      f32       13       25        0
     //    simd3        2        2        0
-    //    simd4        1        2        0
+    //    simd4        1        1        0
     // Totals...
     // yes simd       16       28        0
-    //  no simd       23       38        0
+    //  no simd       23       35        0
     fn mul(self, other: AntiMysteryCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3898,12 +3888,11 @@ impl std::ops::Mul<CircleAtInfinity> for AntiCircleRotorAligningOriginAtInfinity
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       36        0
+    //      f32       25       37        0
     //    simd3        1        1        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd       26       38        0
-    //  no simd       28       43        0
+    //  no simd       28       40        0
     fn mul(self, other: CircleAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3978,12 +3967,11 @@ impl std::ops::Mul<CircleRotorAtInfinity> for AntiCircleRotorAligningOriginAtInf
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       29       40        0
+    //      f32       29       41        0
     //    simd3        2        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd       31       43        0
-    //  no simd       35       50        0
+    //  no simd       35       47        0
     fn mul(self, other: CircleRotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4027,12 +4015,11 @@ impl std::ops::Mul<DipoleAtInfinity> for AntiCircleRotorAligningOriginAtInfinity
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       36        0
+    //      f32       25       37        0
     //    simd3        1        1        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd       26       38        0
-    //  no simd       28       43        0
+    //  no simd       28       40        0
     fn mul(self, other: DipoleAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4174,12 +4161,11 @@ impl std::ops::Mul<FlatPoint> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       12        0
+    //      f32        5       13        0
     //    simd3        2        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        7       15        0
-    //  no simd       11       22        0
+    //  no simd       11       19        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4333,12 +4319,11 @@ impl std::ops::Mul<MysteryCircle> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       24        0
+    //      f32       13       25        0
     //    simd3        1        1        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd       14       26        0
-    //  no simd       16       31        0
+    //  no simd       16       28        0
     fn mul(self, other: MysteryCircle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4347,12 +4332,11 @@ impl std::ops::Mul<MysteryCircleRotor> for AntiCircleRotorAligningOriginAtInfini
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       17       28        0
+    //      f32       17       29        0
     //    simd3        2        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd       19       31        0
-    //  no simd       23       38        0
+    //  no simd       23       35        0
     fn mul(self, other: MysteryCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4361,12 +4345,11 @@ impl std::ops::Mul<MysteryDipole> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       24        0
+    //      f32       13       25        0
     //    simd3        1        1        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd       14       26        0
-    //  no simd       16       31        0
+    //  no simd       16       28        0
     fn mul(self, other: MysteryDipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4433,11 +4416,10 @@ impl std::ops::Mul<NullDipoleInversionAtOrigin> for AntiCircleRotorAligningOrigi
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32       25       37        0
-    //    simd3        0        1        0
-    //    simd4        1        0        0
+    //    simd3        1        1        0
     // Totals...
     // yes simd       26       38        0
-    //  no simd       29       40        0
+    //  no simd       28       40        0
     fn mul(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4448,10 +4430,10 @@ impl std::ops::Mul<NullSphereAtOrigin> for AntiCircleRotorAligningOriginAtInfini
     //           add/sub      mul      div
     //      f32        0        7        0
     //    simd3        0        1        0
-    //    simd4        0        3        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0       11        0
-    //  no simd        0       22        0
+    // yes simd        0       10        0
+    //  no simd        0       18        0
     fn mul(self, other: NullSphereAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4471,10 +4453,10 @@ impl std::ops::Mul<Origin> for AntiCircleRotorAligningOriginAtInfinity {
     //           add/sub      mul      div
     //      f32        0        7        0
     //    simd3        0        1        0
-    //    simd4        0        3        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        0       11        0
-    //  no simd        0       22        0
+    // yes simd        0       10        0
+    //  no simd        0       18        0
     fn mul(self, other: Origin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4505,12 +4487,12 @@ impl std::ops::Mul<RoundPoint> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       24        0
+    //      f32       13       25        0
     //    simd3        1        2        0
-    //    simd4        1        2        0
+    //    simd4        1        1        0
     // Totals...
     // yes simd       15       28        0
-    //  no simd       20       38        0
+    //  no simd       20       35        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4551,12 +4533,12 @@ impl std::ops::Mul<Sphere> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       24        0
+    //      f32       13       25        0
     //    simd3        1        2        0
-    //    simd4        1        2        0
+    //    simd4        1        1        0
     // Totals...
     // yes simd       15       28        0
-    //  no simd       20       38        0
+    //  no simd       20       35        0
     fn mul(self, other: Sphere) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4946,11 +4928,12 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for AntiCircleRotorAligningOrigi
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        1        0
     //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        3        0
-    //  no simd        0       11        0
+    //  no simd        0        8        0
     fn sub(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -4967,7 +4950,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for AntiCircleRotorAligningOrigi
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e423, e431, e412
             other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -4983,19 +4966,19 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for AntiCircleRotorAlign
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        2        0
     //    simd3        0        2        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        5        0
-    //  no simd        0       15        0
+    //  no simd        0       12        0
     fn sub(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, other[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -5021,11 +5004,11 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for AntiCircleRotorAligningOriginAtInfini
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        1        0
     //    simd3        0        1        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        7        0
+    //  no simd        0        4        0
     fn sub(self, other: AntiDipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -5042,7 +5025,7 @@ impl std::ops::Sub<AntiDipoleOnOrigin> for AntiCircleRotorAligningOriginAtInfini
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e423, e431, e412
             other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -5067,7 +5050,7 @@ impl std::ops::Sub<AntiDualNum> for AntiCircleRotorAligningOriginAtInfinity {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, self[scalar] - other[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(self[scalar] - other[scalar]),
             // e23, e31, e12, e3215
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e15, e25, e35, e1234
@@ -5078,9 +5061,8 @@ impl std::ops::Sub<AntiDualNum> for AntiCircleRotorAligningOriginAtInfinity {
 impl std::ops::Sub<AntiFlatOrigin> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn sub(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -5097,7 +5079,7 @@ impl std::ops::Sub<AntiFlatOrigin> for AntiCircleRotorAligningOriginAtInfinity {
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -5113,11 +5095,11 @@ impl std::ops::Sub<AntiFlatPoint> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        1        0
     //    simd3        0        1        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        7        0
+    //  no simd        0        4        0
     fn sub(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -5134,7 +5116,7 @@ impl std::ops::Sub<AntiFlatPoint> for AntiCircleRotorAligningOriginAtInfinity {
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -5150,12 +5132,12 @@ impl std::ops::Sub<AntiFlector> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        2        0
     //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       12        0
+    //  no simd        0        9        0
     fn sub(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -5172,7 +5154,7 @@ impl std::ops::Sub<AntiFlector> for AntiCircleRotorAligningOriginAtInfinity {
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -5187,9 +5169,12 @@ impl std::ops::Sub<AntiFlector> for AntiCircleRotorAligningOriginAtInfinity {
 impl std::ops::Sub<AntiFlectorOnOrigin> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn sub(self, other: AntiFlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -5206,7 +5191,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for AntiCircleRotorAligningOriginAtInfin
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -5714,11 +5699,11 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for AntiCircleRotorAligningOriginAtIn
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        1        0
     //    simd3        0        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        0        3        0
-    //  no simd        0       10        0
+    //  no simd        0        7        0
     fn sub(self, other: CircleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -5735,7 +5720,7 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for AntiCircleRotorAligningOriginAtIn
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e423, e431, e412
             other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -5974,7 +5959,7 @@ impl std::ops::Sub<DipoleAligningOrigin> for AntiCircleRotorAligningOriginAtInfi
             // e41, e42, e43
             other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e45] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e45] * -1.0),
             // e15, e25, e35, scalar
             Simd32x4::from([self[e15] - other[e15], self[e25] - other[e25], self[e35] - other[e35], self[scalar]]),
         );
@@ -6058,7 +6043,7 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for AntiCircleRotorAligningOri
             // e41, e42, e43, scalar
             Simd32x4::from([other[e41], other[e42], other[e43], self[scalar]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e45
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e45] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e45] * -1.0),
             // e15, e25, e35, e1234
             Simd32x4::from([self[e15] - other[e15], self[e25] - other[e25], self[e35] - other[e35], other[e1234]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
@@ -6102,7 +6087,7 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for AntiCircleRotorAligningOriginAtI
             // e41, e42, e43, scalar
             Simd32x4::from([other[e41], other[e42], other[e43], self[scalar]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e3215
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e3215] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e3215] * -1.0),
             // e15, e25, e35, e1234
             Simd32x4::from([self[e15] - other[e15], self[e25] - other[e25], self[e35] - other[e35], other[e1234]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
@@ -6123,7 +6108,7 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for AntiCircleRotorAligningOriginAtI
             // e41, e42, e43, scalar
             Simd32x4::from([other[e41], other[e42], other[e43], self[scalar]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e45
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e45] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e45] * -1.0),
             // e15, e25, e35, e1234
             Simd32x4::from([self[e15], self[e25], self[e35], other[e1234]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
@@ -6167,7 +6152,7 @@ impl std::ops::Sub<DipoleOnOrigin> for AntiCircleRotorAligningOriginAtInfinity {
             // e41, e42, e43
             other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e45] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e45] * -1.0),
             // e15, e25, e35, scalar
             self.group1(),
         );
@@ -6198,18 +6183,18 @@ impl std::ops::Sub<DualNum> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        6        0
+    //  no simd        0        3        0
     fn sub(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]) * Simd32x2::from([1.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, other[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6240,7 +6225,7 @@ impl std::ops::Sub<FlatOrigin> for AntiCircleRotorAligningOriginAtInfinity {
         use crate::elements::*;
         return AntiCircleRotorAtInfinity::from_groups(
             // e23, e31, e12, e45
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e45] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e45] * -1.0),
             // e15, e25, e35, scalar
             self.group1(),
         );
@@ -6255,7 +6240,7 @@ impl std::ops::Sub<FlatPoint> for AntiCircleRotorAligningOriginAtInfinity {
         use crate::elements::*;
         return AntiCircleRotorAtInfinity::from_groups(
             // e23, e31, e12, e45
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e45] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e45] * -1.0),
             // e15, e25, e35, scalar
             Simd32x4::from([self[e15] - other[e15], self[e25] - other[e25], self[e35] - other[e35], self[scalar]]),
         );
@@ -6302,7 +6287,7 @@ impl std::ops::Sub<Flector> for AntiCircleRotorAligningOriginAtInfinity {
             // scalar, e15, e25, e35
             Simd32x4::from([self[scalar], self[e15] - other[e15], self[e25] - other[e25], self[e35] - other[e35]]),
             // e23, e31, e12, e45
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e45] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e45] * -1.0),
             // e4235, e4315, e4125, e3215
             other.group1() * Simd32x4::from(-1.0),
         );
@@ -6342,7 +6327,7 @@ impl std::ops::Sub<FlectorOnOrigin> for AntiCircleRotorAligningOriginAtInfinity 
             // scalar, e15, e25, e35
             crate::swizzle!(self.group1(), 3, 0, 1, 2),
             // e23, e31, e12, e45
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e45] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e45] * -1.0),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([other[e4235], other[e4315], other[e4125], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
         );
@@ -6902,7 +6887,7 @@ impl std::ops::Sub<NullSphereAtOrigin> for AntiCircleRotorAligningOriginAtInfini
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, self[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(self[scalar]),
             // e23, e31, e12, e3215
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e15, e25, e35, e1234
@@ -6914,18 +6899,18 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for AntiCircleRotorAligningOriginAtIn
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        1        0
     //    simd3        0        1        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        7        0
+    //  no simd        0        4        0
     fn sub(self, other: NullVersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, other[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6950,16 +6935,15 @@ impl std::ops::Sub<NullVersorEvenAtOrigin> for AntiCircleRotorAligningOriginAtIn
 impl std::ops::Sub<Origin> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn sub(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, other[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7056,19 +7040,15 @@ impl std::ops::Sub<RoundPoint> for AntiCircleRotorAligningOriginAtInfinity {
 impl std::ops::Sub<RoundPointAtOrigin> for AntiCircleRotorAligningOriginAtInfinity {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        5        0
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn sub(self, other: RoundPointAtOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, other[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -7126,7 +7106,7 @@ impl std::ops::Sub<Sphere> for AntiCircleRotorAligningOriginAtInfinity {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, self[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(self[scalar]),
             // e23, e31, e12, e45
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e15, e25, e35, e1234
@@ -7149,9 +7129,9 @@ impl std::ops::Sub<SphereAtOrigin> for AntiCircleRotorAligningOriginAtInfinity {
         use crate::elements::*;
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, self[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(self[scalar]),
             // e23, e31, e12, e3215
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4((other[e3215] * -1.0)),
+            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(other[e3215] * -1.0),
             // e15, e25, e35, e1234
             Simd32x4::from([self[e15], self[e25], self[e35], other[e1234]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
@@ -7167,7 +7147,7 @@ impl std::ops::Sub<SphereOnOrigin> for AntiCircleRotorAligningOriginAtInfinity {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, self[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(self[scalar]),
             // e23, e31, e12, e45
             crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
             // e15, e25, e35, e1234
@@ -7220,20 +7200,20 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for AntiCircleRotorAligningOriginAt
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        2        0
     //    simd2        0        1        0
     //    simd3        0        2        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        6        0
-    //  no simd        0       17        0
+    //  no simd        0       14        0
     fn sub(self, other: VersorEvenAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]) * Simd32x2::from([1.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, other[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -7298,19 +7278,18 @@ impl std::ops::Sub<VersorEvenAtOrigin> for AntiCircleRotorAligningOriginAtInfini
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        2        0
     //    simd3        0        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       11        0
+    //  no simd        0        8        0
     fn sub(self, other: VersorEvenAtOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self[scalar], 0.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, other[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -7336,19 +7315,20 @@ impl std::ops::Sub<VersorEvenOnOrigin> for AntiCircleRotorAligningOriginAtInfini
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
+    //      f32        0        1        0
     //    simd2        0        1        0
     //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       13        0
+    //  no simd        0       10        0
     fn sub(self, other: VersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([self[scalar], other[e12345]]) * Simd32x2::from([1.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, other[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7374,12 +7354,12 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for AntiCircleRotorAligningOrigin
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
+    //      f32        0        2        0
     //    simd3        0        2        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        5        0
-    //  no simd        0       15        0
+    //  no simd        0       12        0
     fn sub(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -7396,7 +7376,7 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for AntiCircleRotorAligningOrigin
             // e23, e31, e12
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e423, e431, e412
             other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -7668,7 +7648,7 @@ impl TryFrom<AntiCircleRotorOnOrigin> for AntiCircleRotorAligningOriginAtInfinit
             // e23, e31, e12
             anti_circle_rotor_on_origin.group1(),
             // e15, e25, e35, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, anti_circle_rotor_on_origin[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(anti_circle_rotor_on_origin[scalar]),
         ));
     }
 }
@@ -7696,7 +7676,7 @@ impl TryFrom<AntiDualNum> for AntiCircleRotorAligningOriginAtInfinity {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, anti_dual_num[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(anti_dual_num[scalar]),
         ));
     }
 }
@@ -7752,7 +7732,7 @@ impl TryFrom<AntiMysteryCircleRotor> for AntiCircleRotorAligningOriginAtInfinity
             // e23, e31, e12
             anti_mystery_circle_rotor.group0().truncate_to_3(),
             // e15, e25, e35, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, anti_mystery_circle_rotor[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(anti_mystery_circle_rotor[scalar]),
         ));
     }
 }
@@ -7801,7 +7781,7 @@ impl TryFrom<AntiVersorEvenOnOrigin> for AntiCircleRotorAligningOriginAtInfinity
             // e23, e31, e12
             anti_versor_even_on_origin.group1().truncate_to_3(),
             // e15, e25, e35, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, anti_versor_even_on_origin[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(anti_versor_even_on_origin[scalar]),
         ));
     }
 }
@@ -8784,7 +8764,7 @@ impl TryFrom<MysteryVersorOdd> for AntiCircleRotorAligningOriginAtInfinity {
             // e23, e31, e12
             mystery_versor_odd.group1().truncate_to_3(),
             // e15, e25, e35, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, mystery_versor_odd[scalar]]),
+            Simd32x3::from(0.0).extend_to_4(mystery_versor_odd[scalar]),
         ));
     }
 }

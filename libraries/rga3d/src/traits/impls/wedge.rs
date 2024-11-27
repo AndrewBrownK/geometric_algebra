@@ -263,12 +263,10 @@ impl Wedge<Flector> for Flector {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                (other[e423] * self[e1]) + (other[e431] * self[e2]) + (other[e412] * self[e3]) - (other[e1] * self[e423]) - (other[e2] * self[e431]) - (other[e3] * self[e412]),
-            ]) + (Simd32x4::from(self[e4]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e321]]))
+            (Simd32x4::from(self[e4]) * Simd32x4::from([other[e1], other[e2], other[e3], other[e321]]))
+                + Simd32x3::from(0.0).extend_to_4(
+                    (other[e423] * self[e1]) + (other[e431] * self[e2]) + (other[e412] * self[e3]) - (other[e1] * self[e423]) - (other[e2] * self[e431]) - (other[e3] * self[e412]),
+                )
                 - (Simd32x4::from(other[e4]) * Simd32x4::from([self[e1], self[e2], self[e3], self[e321]])),
             // e23, e31, e12, scalar
             Simd32x4::from([
@@ -487,10 +485,9 @@ impl Wedge<MultiVector> for Horizon {
     //           add/sub      mul      div
     //      f32        0        2        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        8        0
+    // yes simd        0        3        0
+    //  no simd        0        4        0
     fn wedge(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -503,7 +500,7 @@ impl Wedge<MultiVector> for Horizon {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([1.0, 1.0, 1.0, self[e321] * other[scalar]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            Simd32x3::from(0.0).extend_to_4(self[e321] * other[scalar]),
         );
     }
 }
@@ -794,26 +791,29 @@ impl Wedge<Motor> for Motor {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        6        0
+    //      f32        5        7        0
     //    simd3        1        2        0
-    //    simd4        2        3        0
+    //    simd4        2        2        0
     // Totals...
     // yes simd        8       11        0
-    //  no simd       16       24        0
+    //  no simd       16       21        0
     fn wedge(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([
-                0.0,
-                0.0,
-                0.0,
-                -(other[e41] * self[e23]) - (other[e42] * self[e31]) - (other[e43] * self[e12]) - (other[e23] * self[e41]) - (other[e31] * self[e42]) - (other[e12] * self[e43]),
-            ]) + (Simd32x4::from(other[scalar]) * self.group0())
-                + (Simd32x4::from(self[scalar]) * other.group0()),
+            (Simd32x4::from(other[scalar]) * self.group0())
+                + (Simd32x4::from(self[scalar]) * other.group0())
+                + Simd32x3::from(0.0).extend_to_4(
+                    -(other[e41] * self[e23])
+                        - (other[e42] * self[e31])
+                        - (other[e43] * self[e12])
+                        - (other[e23] * self[e41])
+                        - (other[e31] * self[e42])
+                        - (other[e12] * self[e43]),
+                ),
             // e23, e31, e12, scalar
-            Simd32x4::from([1.0, 1.0, 1.0, self[scalar]])
-                * ((Simd32x3::from(other[scalar]) * self.group1().truncate_to_3()) + (Simd32x3::from(self[scalar]) * other.group1().truncate_to_3())).extend_to_4(other[scalar]),
+            ((Simd32x3::from(other[scalar]) * self.group1().truncate_to_3()) + (Simd32x3::from(self[scalar]) * other.group1().truncate_to_3()))
+                .extend_to_4(other[scalar] * self[scalar]),
         );
     }
 }
@@ -862,15 +862,15 @@ impl Wedge<Origin> for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        4        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        6        0
-    //  no simd        0       12        0
+    // yes simd        0        5        0
+    //  no simd        0        8        0
     fn wedge(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, self[scalar] * other[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            Simd32x3::from(0.0).extend_to_4(self[scalar] * other[e4]),
             // e423, e431, e412, e321
             Simd32x4::from([self[e23] * other[e4], self[e31] * other[e4], self[e12] * other[e4], 1.0]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
@@ -1017,10 +1017,9 @@ impl Wedge<Horizon> for MultiVector {
     //           add/sub      mul      div
     //      f32        0        2        0
     //    simd2        0        1        0
-    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        4        0
-    //  no simd        0        8        0
+    // yes simd        0        3        0
+    //  no simd        0        4        0
     fn wedge(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -1033,7 +1032,7 @@ impl Wedge<Horizon> for MultiVector {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([1.0, 1.0, 1.0, other[e321] * self[scalar]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e321] * self[scalar]),
         );
     }
 }
@@ -1173,17 +1172,17 @@ impl Wedge<Origin> for MultiVector {
     //      f32        0        5        0
     //    simd2        0        1        0
     //    simd3        0        2        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0       10        0
-    //  no simd        0       21        0
+    // yes simd        0        9        0
+    //  no simd        0       17        0
     fn wedge(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([1.0, self[e321] * other[e4]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, self[scalar] * other[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            Simd32x3::from(0.0).extend_to_4(self[scalar] * other[e4]),
             // e41, e42, e43
             Simd32x3::from(other[e4]) * self.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
@@ -1343,15 +1342,15 @@ impl Wedge<Motor> for Origin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        4        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        6        0
-    //  no simd        0       12        0
+    // yes simd        0        5        0
+    //  no simd        0        8        0
     fn wedge(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, other[scalar] * self[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[scalar] * self[e4]),
             // e423, e431, e412, e321
             Simd32x4::from([other[e23] * self[e4], other[e31] * self[e4], other[e12] * self[e4], 1.0]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
@@ -1364,17 +1363,17 @@ impl Wedge<MultiVector> for Origin {
     //      f32        0        5        0
     //    simd2        0        1        0
     //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        9        0
-    //  no simd        0       18        0
+    // yes simd        0        8        0
+    //  no simd        0       14        0
     fn wedge(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
             Simd32x2::from([1.0, other[e321] * self[e4]]) * Simd32x2::from([0.0, 1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, other[scalar] * self[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[scalar] * self[e4]),
             // e41, e42, e43
             Simd32x3::from(self[e4]) * other.group1().truncate_to_3(),
             // e23, e31, e12

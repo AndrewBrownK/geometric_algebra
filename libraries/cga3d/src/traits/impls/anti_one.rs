@@ -31,7 +31,7 @@ impl AntiOne for CircleRotor {
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            Simd32x3::from(0.0).extend_to_4(1.0),
         );
     }
 }
@@ -44,7 +44,7 @@ impl AntiOne for Motor {
     fn anti_one() -> Self {
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            Simd32x3::from(0.0).extend_to_4(1.0),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
         );
@@ -82,7 +82,7 @@ impl AntiOne for VersorEven {
     fn anti_one() -> Self {
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            Simd32x3::from(0.0).extend_to_4(1.0),
             // e415, e425, e435, e321
             Simd32x4::from(0.0),
             // e235, e315, e125, e5

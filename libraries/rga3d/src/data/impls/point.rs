@@ -75,7 +75,7 @@ impl std::ops::Add<Horizon> for Point {
     type Output = Flector;
     fn add(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ Simd32x4::from([0.0, 0.0, 0.0, other[e321]]));
+        return Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ Simd32x3::from(0.0).extend_to_4(other[e321]));
     }
 }
 impl std::ops::Add<Line> for Point {
@@ -320,7 +320,7 @@ impl std::ops::BitXorAssign<Scalar> for Point {
 impl From<Origin> for Point {
     fn from(from_origin: Origin) -> Self {
         use crate::elements::*;
-        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, from_origin[e4]]));
+        return Point::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).extend_to_4(from_origin[e4]));
     }
 }
 impl std::ops::Mul<AntiScalar> for Point {
@@ -367,10 +367,10 @@ impl std::ops::Mul<Horizon> for Point {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        4        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        6        0
-    //  no simd        0       12        0
+    // yes simd        0        5        0
+    //  no simd        0        8        0
     fn mul(self, other: Horizon) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -545,16 +545,15 @@ impl std::ops::Sub<Flector> for Point {
 impl std::ops::Sub<Horizon> for Point {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn sub(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
             self.group0(),
             // e423, e431, e412, e321
-            Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
         );
     }
 }

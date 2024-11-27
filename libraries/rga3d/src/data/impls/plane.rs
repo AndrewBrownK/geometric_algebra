@@ -20,7 +20,7 @@ use crate::traits::Wedge;
 //  Minimum:         0       0       0
 //   Median:         0       2       0
 //  Average:         2       5       0
-//  Maximum:        24      48       0
+//  Maximum:        24      45       0
 impl std::ops::Add<AntiScalar> for Plane {
     type Output = MultiVector;
     fn add(self, other: AntiScalar) -> Self::Output {
@@ -147,7 +147,7 @@ impl std::ops::Add<Origin> for Plane {
     type Output = Flector;
     fn add(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        return Flector::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from([0.0, 0.0, 0.0, other[e4]]), /* e423, e431, e412, e321 */ self.group0());
+        return Flector::from_groups(/* e1, e2, e3, e4 */ Simd32x3::from(0.0).extend_to_4(other[e4]), /* e423, e431, e412, e321 */ self.group0());
     }
 }
 impl std::ops::Add<Plane> for Plane {
@@ -285,7 +285,7 @@ impl std::ops::BitXorAssign<Scalar> for Plane {
 impl From<Horizon> for Plane {
     fn from(from_horizon: Horizon) -> Self {
         use crate::elements::*;
-        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from([0.0, 0.0, 0.0, from_horizon[e321]]));
+        return Plane::from_groups(/* e423, e431, e412, e321 */ Simd32x3::from(0.0).extend_to_4(from_horizon[e321]));
     }
 }
 impl std::ops::Mul<AntiScalar> for Plane {
@@ -302,10 +302,10 @@ impl std::ops::Mul<DualNum> for Plane {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        2        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        0        3        0
-    //  no simd        0        9        0
+    // yes simd        0        2        0
+    //  no simd        0        5        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -327,11 +327,11 @@ impl std::ops::Mul<Horizon> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        4        0
-    //    simd4        0        2        0
+    //      f32        0        5        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        6        0
-    //  no simd        0       12        0
+    //  no simd        0        9        0
     fn mul(self, other: Horizon) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -354,12 +354,11 @@ impl std::ops::Mul<Motor> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       13        0
+    //      f32        6       14        0
     //    simd3        2        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        8       16        0
-    //  no simd       12       23        0
+    //  no simd       12       20        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -368,13 +367,12 @@ impl std::ops::Mul<MultiVector> for Plane {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       12       24        0
+    //      f32       12       25        0
     //    simd2        0        1        0
     //    simd3        4        6        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd       16       32        0
-    //  no simd       24       48        0
+    //  no simd       24       45        0
     fn mul(self, other: MultiVector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -392,12 +390,12 @@ impl std::ops::Mul<Plane> for Plane {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        7        0
+    //      f32        0        8        0
     //    simd3        0        1        0
-    //    simd4        1        1        0
+    //    simd4        1        0        0
     // Totals...
     // yes simd        1        9        0
-    //  no simd        4       14        0
+    //  no simd        4       11        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -603,14 +601,13 @@ impl std::ops::Sub<MultiVector> for Plane {
 impl std::ops::Sub<Origin> for Plane {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn sub(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return Flector::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, other[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
             // e423, e431, e412, e321
             self.group0(),
         );

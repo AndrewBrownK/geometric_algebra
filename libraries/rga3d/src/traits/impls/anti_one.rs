@@ -32,7 +32,7 @@ impl AntiOne for Motor {
     fn anti_one() -> Self {
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            Simd32x3::from(0.0).extend_to_4(1.0),
             // e23, e31, e12, scalar
             Simd32x4::from(0.0),
         );

@@ -48,7 +48,7 @@ impl RoundBulk for AntiDipoleInversion {
         use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
             // e1, e2, e3, e5
             Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
         );
@@ -82,7 +82,7 @@ impl RoundBulk for AntiFlatPoint {
     type Output = AntiFlatPoint;
     fn round_bulk(self) -> Self::Output {
         use crate::elements::*;
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([0.0, 0.0, 0.0, self[e321]]));
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x3::from(0.0).extend_to_4(self[e321]));
     }
 }
 impl std::ops::Div<round_bulk> for AntiFlector {
@@ -102,7 +102,7 @@ impl RoundBulk for AntiFlector {
         use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
             // e1, e2, e3, e5
             Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
         );
@@ -170,7 +170,7 @@ impl RoundBulk for Circle {
     type Output = AntiFlatPoint;
     fn round_bulk(self) -> Self::Output {
         use crate::elements::*;
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([0.0, 0.0, 0.0, self[e321]]));
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x3::from(0.0).extend_to_4(self[e321]));
     }
 }
 impl std::ops::Div<round_bulk> for CircleRotor {
@@ -183,7 +183,7 @@ impl RoundBulk for CircleRotor {
     type Output = AntiFlatPoint;
     fn round_bulk(self) -> Self::Output {
         use crate::elements::*;
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x4::from([0.0, 0.0, 0.0, self[e321]]));
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ Simd32x3::from(0.0).extend_to_4(self[e321]));
     }
 }
 impl std::ops::Div<round_bulk> for Dipole {
@@ -239,7 +239,7 @@ impl RoundBulk for MultiVector {
             // e23, e31, e12
             self.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -293,7 +293,7 @@ impl RoundBulk for VersorEven {
         use crate::elements::*;
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
-            Simd32x4::from([0.0, 0.0, 0.0, self[e321]]),
+            Simd32x3::from(0.0).extend_to_4(self[e321]),
             // e1, e2, e3, e5
             Simd32x4::from([self[e1], self[e2], self[e3], 0.0]),
         );

@@ -18,9 +18,9 @@ use crate::traits::Wedge;
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         0       2       0
-//  Average:         0       4       0
-//  Maximum:         8      27       0
+//   Median:         0       1       0
+//  Average:         0       3       0
+//  Maximum:         8      24       0
 impl std::ops::Add<AntiScalar> for DualNum {
     type Output = DualNum;
     // Operative Statistics for this implementation:
@@ -84,7 +84,7 @@ impl std::ops::Add<Horizon> for DualNum {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([0.0, 0.0, 0.0, other[e321]]),
+            Simd32x3::from(0.0).extend_to_4(other[e321]),
         );
     }
 }
@@ -144,7 +144,7 @@ impl std::ops::Add<Origin> for DualNum {
             // scalar, e1234
             self.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from([0.0, 0.0, 0.0, other[e4]]),
+            Simd32x3::from(0.0).extend_to_4(other[e4]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -368,12 +368,11 @@ impl std::ops::Mul<Flector> for DualNum {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        5        0
+    //      f32        1        6        0
     //    simd3        1        2        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        2        8        0
-    //  no simd        4       15        0
+    //  no simd        4       12        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -381,12 +380,8 @@ impl std::ops::Mul<Flector> for DualNum {
 impl std::ops::Mul<Horizon> for DualNum {
     type Output = Flector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        2        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        4        0
-    //  no simd        0       10        0
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn mul(self, other: Horizon) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -415,12 +410,11 @@ impl std::ops::Mul<MultiVector> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        2        8        0
+    //      f32        2        9        0
     //    simd3        2        5        0
-    //    simd4        0        1        0
     // Totals...
     // yes simd        4       14        0
-    //  no simd        8       27        0
+    //  no simd        8       24        0
     fn mul(self, other: MultiVector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -438,11 +432,11 @@ impl std::ops::Mul<Plane> for DualNum {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        1        0
-    //    simd4        0        2        0
+    //      f32        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        3        0
-    //  no simd        0        9        0
+    //  no simd        0        6        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -547,9 +541,8 @@ impl std::ops::Sub<Flector> for DualNum {
 impl std::ops::Sub<Horizon> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn sub(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -562,7 +555,7 @@ impl std::ops::Sub<Horizon> for DualNum {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
-            Simd32x4::from([1.0, 1.0, 1.0, other[e321]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
         );
     }
 }
@@ -630,16 +623,15 @@ impl std::ops::Sub<MultiVector> for DualNum {
 impl std::ops::Sub<Origin> for DualNum {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn sub(self, other: Origin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e1234
             self.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from([1.0, 1.0, 1.0, other[e4]]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+            Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
