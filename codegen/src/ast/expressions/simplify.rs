@@ -42,194 +42,11 @@ roundPoint_roundWeightNormSquared -> TODO use straight constructor when all lite
  */
 
 /*
-pub union AntiFlectorOnOrigin {
-    groups: AntiFlectorOnOriginGroups,
-    /// e321, e1, e2, e3
-    elements: [f32; 4],
-}
-pub union AntiPlane {
-    groups: AntiPlaneGroups,
-    /// e1, e2, e3, e5
-    elements: [f32; 4],
-}
-
-
-impl Wedge<AntiFlectorOnOrigin> for AntiPlane {
-    type Output = AntiMotor;
-    fn wedge(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            Simd32x4::from([
-                (other[e3] * self[e2]) - (other[e2] * self[e3]),
-                (other[e1] * self[e3]) - (other[e3] * self[e1]),
-                (other[e2] * self[e1]) - (other[e1] * self[e2]),
-                0.0,
-            ]),
-            // e15, e25, e35, e3215
-            Simd32x4::from(self[e5]) * crate::swizzle!(other.group0(), 1, 2, 3, 0) * Simd32x4::from(-1.0),
-        );
-    }
-}
-impl Wedge<AntiFlector> for RoundPoint {
-    type Output = DipoleInversion;
-    fn wedge(self, other: AntiFlector) -> Self::Output {
-        use crate::elements::*;
-        return DipoleInversion::from_groups(
-            // e41, e42, e43
-            Simd32x3::from(self[e4]) * other.group1().truncate_to_3(),
-            // e23, e31, e12, e45
-            Simd32x4::from([
-                (other[e3] * self[e2]) - (other[e2] * self[e3]),
-                (other[e1] * self[e3]) - (other[e3] * self[e1]),
-                (other[e2] * self[e1]) - (other[e1] * self[e2]),
-                other[e5] * self[e4],
-            ]),
-            // e15, e25, e35, e1234
-            ((Simd32x3::from(other[e5]) * self.group0().truncate_to_3()) - (Simd32x3::from(self[e5]) * other.group1().truncate_to_3())).extend_to_4(other[e321] * self[e4]),
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([
-                other[e235] * self[e4],
-                other[e315] * self[e4],
-                other[e125] * self[e4],
-                -(other[e235] * self[e1]) - (other[e315] * self[e2]) - (other[e125] * self[e3]) - (other[e321] * self[e5]),
-            ]),
-        );
-    }
-}
 impl Wedge<AntiSphereOnOrigin> for MultiVector {
-    type Output = MultiVector;
-    fn wedge(self, other: AntiSphereOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([0.0, (other[e1] * self[e4235]) + (other[e2] * self[e4315]) + (other[e3] * self[e4125]) + (other[e4] * self[e3215])]),
-            // e1, e2, e3, e4
-            Simd32x4::from(self[scalar]) * other.group0(),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            ((Simd32x3::from(self[e4]) * other.group0().truncate_to_3()) - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())).extend_to_4(other[e4] * self[e5] * -1.0),
-            // e15, e25, e35
-            Simd32x3::from(self[e5]) * other.group0().truncate_to_3() * Simd32x3::from(-1.0),
-            // e23, e31, e12
-            Simd32x3::from([
-                (other[e3] * self[e2]) - (other[e2] * self[e3]),
-                (other[e1] * self[e3]) - (other[e3] * self[e1]),
-                (other[e2] * self[e1]) - (other[e1] * self[e2]),
-            ]),
-            // e415, e425, e435, e321
-            Simd32x4::from([
-                (other[e4] * self[e15]) - (other[e1] * self[e45]),
-                (other[e4] * self[e25]) - (other[e2] * self[e45]),
-                (other[e4] * self[e35]) - (other[e3] * self[e45]),
-                -(other[e1] * self[e23]) - (other[e2] * self[e31]) - (other[e3] * self[e12]),
-            ]),
-            // e423, e431, e412
-            Simd32x3::from([
-                (other[e3] * self[e42]) - (other[e2] * self[e43]),
-                (other[e1] * self[e43]) - (other[e3] * self[e41]),
-                (other[e2] * self[e41]) - (other[e1] * self[e42]),
-            ]) + (Simd32x3::from(other[e4]) * self.group5()),
-            // e235, e315, e125
-            Simd32x3::from([
-                (other[e2] * self[e35]) - (other[e3] * self[e25]),
-                (other[e3] * self[e15]) - (other[e1] * self[e35]),
-                (other[e1] * self[e25]) - (other[e2] * self[e15]),
-            ]),
-            // e1234, e4235, e4315, e4125
-            Simd32x4::from([
-                -(other[e1] * self[e423]) - (other[e2] * self[e431]) - (other[e3] * self[e412]),
-                (other[e2] * self[e435]) - (other[e3] * self[e425]),
-                (other[e3] * self[e415]) - (other[e1] * self[e435]),
-                (other[e1] * self[e425]) - (other[e2] * self[e415]),
-            ]) - (Simd32x4::from(other[e4]) * Simd32x4::from([self[e321], self[e235], self[e315], self[e125]])),
-            // e3215
-            (other[e1] * self[e235]) + (other[e2] * self[e315]) + (other[e3] * self[e125]),
-        );
-    }
-}
 impl GeometricAntiProduct<Line> for Flector {
-    type Output = Flector;
-    fn geometric_anti_product(self, other: Line) -> Self::Output {
-        use crate::elements::*;
-        return Flector::from_groups(
-            // e15, e25, e35, e45
-            Simd32x4::from([
-                (self[e25] * other[e435]) + (self[e4125] * other[e315]) + (self[e3215] * other[e415])
-                    - (self[e35] * other[e425])
-                    - (self[e45] * other[e235])
-                    - (self[e4315] * other[e125]),
-                (self[e35] * other[e415]) + (self[e4235] * other[e125]) + (self[e3215] * other[e425])
-                    - (self[e15] * other[e435])
-                    - (self[e45] * other[e315])
-                    - (self[e4125] * other[e235]),
-                (self[e15] * other[e425]) + (self[e4315] * other[e235]) + (self[e3215] * other[e435])
-                    - (self[e25] * other[e415])
-                    - (self[e45] * other[e125])
-                    - (self[e4235] * other[e315]),
-                -(self[e4235] * other[e415]) - (self[e4315] * other[e425]) - (self[e4125] * other[e435]),
-            ]),
-            // e4235, e4315, e4125, e3215
-            Simd32x4::from([
-                (self[e45] * other[e415]) + (self[e4315] * other[e435]) - (self[e4125] * other[e425]),
-                (self[e45] * other[e425]) + (self[e4125] * other[e415]) - (self[e4235] * other[e435]),
-                (self[e45] * other[e435]) + (self[e4235] * other[e425]) - (self[e4315] * other[e415]),
-                (self[e4235] * other[e235]) + (self[e4315] * other[e315]) + (self[e4125] * other[e125])
-                    - (self[e15] * other[e415])
-                    - (self[e25] * other[e425])
-                    - (self[e35] * other[e435]),
-            ]),
-        );
-    }
-}
 impl AntiWedge<CircleRotorAligningOrigin> for AntiCircleOnOrigin {
-    type Output = AntiCircleRotorOnOrigin;
-    fn anti_wedge(self, other: CircleRotorAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        return AntiCircleRotorOnOrigin::from_groups(
-            // e41, e42, e43, scalar
-            Simd32x4::from([
-                self[e41] * other[e12345],
-                self[e42] * other[e12345],
-                self[e43] * other[e12345],
-                -(self[e41] * other[e235])
-                    - (self[e42] * other[e315])
-                    - (self[e43] * other[e125])
-                    - (self[e23] * other[e415])
-                    - (self[e31] * other[e425])
-                    - (self[e12] * other[e435]),
-            ]),
-            // e23, e31, e12
-            Simd32x3::from(other[e12345]) * self.group1(),
-        );
-    }
-}
 
 
-
-impl Wedge<Motor> for Motor {
-    type Output = Motor;
-    fn wedge(self, other: Motor) -> Self::Output {
-        use crate::elements::*;
-        return Motor::from_groups(
-            // e41, e42, e43, e1234
-            (Simd32x4::from(other[scalar]) * self.group0())
-                + (Simd32x4::from(self[scalar]) * other.group0())
-                + Simd32x3::from(0.0).extend_to_4(
-                    -(other[e41] * self[e23])
-                        - (other[e42] * self[e31])
-                        - (other[e43] * self[e12])
-                        - (other[e23] * self[e41])
-                        - (other[e31] * self[e42])
-                        - (other[e12] * self[e43]),
-                ),
-            // e23, e31, e12, scalar
-            ((Simd32x3::from(other[scalar]) * self.group1().truncate_to_3()) + (Simd32x3::from(self[scalar]) * other.group1().truncate_to_3()))
-                .extend_to_4(other[scalar] * self[scalar]),
-        );
-    }
-}
  */
 
 trait SortVecDespiteF32 {
@@ -250,13 +67,38 @@ impl<Expr: Ord> SortVecDespiteF32 for Vec<(Expr, f32)> {
 
 impl AnyExpression {
     pub(crate) fn final_simplify(&mut self) {
+        // First do the transposing simplify.
+        // Then do the flat access conversion.
+        // Can't do both at once because flat access interferes with transposition,
+        // and simplification takes place depth-first.
+        //
+        // That is the ONLY reason we are consecutive-simplifying though.
+        // The INTENTION behind simplification methods is (in the non-nuanced case), you only
+        // have to invoke it once, and it will simplify as much as possible. The programmer
+        // shouldn't have to second guess and try layering up consecutive simplifications just
+        // to get the basic job done.
         match self {
             AnyExpression::Int(_) => {}
-            AnyExpression::Float(e) => e.simplify_nuanced(false, true, true, true),
-            AnyExpression::Vec2(e) => e.simplify_nuanced(false, true, true),
-            AnyExpression::Vec3(e) => e.simplify_nuanced(false, true, true),
-            AnyExpression::Vec4(e) => e.simplify_nuanced(false, true, true),
-            AnyExpression::Class(e) => e.simplify_nuanced(false, true, true),
+            AnyExpression::Float(e) => {
+                e.simplify_nuanced(false, true, true, false);
+                e.simplify_nuanced(false, false, true, true);
+            },
+            AnyExpression::Vec2(e) => {
+                e.simplify_nuanced(false, true, false);
+                e.simplify_nuanced(false, false, true);
+            },
+            AnyExpression::Vec3(e) => {
+                e.simplify_nuanced(false, true, false);
+                e.simplify_nuanced(false, false, true);
+            },
+            AnyExpression::Vec4(e) => {
+                e.simplify_nuanced(false, true, false);
+                e.simplify_nuanced(false, false, true);
+            },
+            AnyExpression::Class(e) => {
+                e.simplify_nuanced(false, true, false);
+                e.simplify_nuanced(false, false, true);
+            },
         }
     }
 }
@@ -473,8 +315,8 @@ impl FloatExpr {
                 if product.is_empty() {
                     panic!("Problem")
                 }
-                for (factor, _exponent) in product.iter_mut() {
-                    if !insides_already_done {
+                if !insides_already_done {
+                    for (factor, _exponent) in product.iter_mut() {
                         factor.simplify_nuanced(insides_already_done, transpose_simd, distribute_and_flatten_arithmetic, prefer_flat_access);
                     }
                 }
@@ -596,8 +438,8 @@ impl FloatExpr {
                 if sum.is_empty() {
                     panic!("Problem")
                 }
-                for (addend, _factor) in sum.iter_mut() {
-                    if !insides_already_done {
+                if !insides_already_done {
+                    for (addend, _factor) in sum.iter_mut() {
                         addend.simplify_nuanced(insides_already_done, transpose_simd, distribute_and_flatten_arithmetic, prefer_flat_access);
                     }
                 }
@@ -606,7 +448,9 @@ impl FloatExpr {
                     return if factor == 1.0 {
                         *self = addend;
                     } else {
-                        *self = FloatExpr::Product(vec![(addend, 1.0)], factor);
+                        let mut new_self = FloatExpr::Product(vec![(addend, 1.0)], factor);
+                        new_self.simplify_nuanced(true, transpose_simd, distribute_and_flatten_arithmetic, prefer_flat_access);
+                        *self = new_self;
                     };
                 }
                 let mut flatten = vec![];
@@ -749,7 +593,7 @@ impl Vec2Expr {
             Vec2Expr::Variable(_) => {}
             Vec2Expr::Gather1(ref mut f) => {
                 if !insides_already_done {
-                    f.simplify_nuanced(insides_already_done, transpose_simd, true, false);
+                    f.simplify_nuanced(insides_already_done, transpose_simd, true, prefer_flat_access);
                 }
                 // Do I really want to do more here?
             }
@@ -1000,7 +844,9 @@ impl Vec2Expr {
                     return if factor == 1.0 {
                         *self = addend;
                     } else {
-                        *self = Vec2Expr::Product(vec![(addend, 1.0)], [factor, factor]);
+                        let mut new_self = Vec2Expr::Product(vec![(addend, 1.0)], [factor, factor]);
+                        new_self.simplify_nuanced(true, transpose_simd, prefer_flat_access);
+                        *self = new_self;
                     };
                 }
                 let mut flatten = vec![];
@@ -1087,6 +933,10 @@ impl Vec2Expr {
             Vec2Expr::SwizzleVec2(v2, i0, i1) => {
                 if !insides_already_done {
                     v2.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access);
+                }
+                if *i0 == 0 && *i1 == 1 {
+                    *self = v2.take_as_owned();
+                    return;
                 }
                 match v2 {
                     box Vec2Expr::Gather1(f0) => {
@@ -1254,9 +1104,15 @@ impl Vec3Expr {
                         z
                     ) if transpose_simd => {
                         let lits = [*x_lit, *y_lit, 1.0];
-                        let mut z = vec![(z.clone(), 1.0)];
-                        if let Some(transposed) = transpose_vec3_product(x_product, y_product, &mut z, lits) {
+                        let mut zv = vec![(z.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec3_product(x_product, y_product, &mut zv, lits) {
                             *self = transposed;
+                            return
+                        }
+                        let lits = [*x_lit, *y_lit];
+                        if let Some(transposed) = advanced_transpose_vec2_product(true, x_product, y_product, lits) {
+                            *self = Vec3Expr::Extend2to3(transposed, z.take_as_owned());
+                            return
                         }
                     }
                     (x, y, Product(ref mut z_product, z_lit)) if transpose_simd => {
@@ -1530,7 +1386,9 @@ impl Vec3Expr {
                     return if factor == 1.0 {
                         *self = addend;
                     } else {
-                        *self = Vec3Expr::Product(vec![(addend, 1.0)], [factor, factor, factor]);
+                        let mut new_self = Vec3Expr::Product(vec![(addend, 1.0)], [factor, factor, factor]);
+                        new_self.simplify_nuanced(true, transpose_simd, prefer_flat_access);
+                        *self = new_self;
                     };
                 }
                 let mut flatten = vec![];
@@ -1642,6 +1500,10 @@ impl Vec3Expr {
                 if !insides_already_done {
                     v3.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access);
                 }
+                if *i0 == 0 && *i1 == 1 && *i2 == 2 {
+                    *self = v3.take_as_owned();
+                    return;
+                }
                 match v3 {
                     box Vec3Expr::Gather1(f0) => {
                         *self = Vec3Expr::Gather1(f0.take_as_owned());
@@ -1699,6 +1561,7 @@ impl Vec4Expr {
                     *self = Vec4Expr::Gather1(f0.take_as_owned());
                     return;
                 }
+                // TODO impl AntiWedge<CircleRotorAligningOrigin> for AntiCircleOnOrigin {
                 match (f0, f1, f2, f3) {
                     (AccessVec4(box v4_a, x), AccessVec4(box v4_b, y), AccessVec4(box v4_c, z), AccessVec4(box v4_d, w)) => {
                         if v4_a == v4_b && v4_a == v4_c && v4_a == v4_d {
@@ -1816,9 +1679,15 @@ impl Vec4Expr {
                         w,
                     ) if transpose_simd => {
                         let lits = [*x_lit, *y_lit, *z_lit, 1.0];
-                        let mut w = vec![(w.clone(), 1.0)];
-                        if let Some(transposed) = transpose_vec4_product(x_product, y_product, z_product, &mut w, lits) {
+                        let mut wv = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(x_product, y_product, z_product, &mut wv, lits) {
                             *self = transposed;
+                            return
+                        }
+                        let lits = [*x_lit, *y_lit, *z_lit];
+                        if let Some(transposed) = advanced_transpose_vec3_product(true, x_product, y_product, z_product, lits) {
+                            *self = Vec4Expr::Extend3to4(transposed, w.take_as_owned());
+                            return
                         }
                     }
                     (
@@ -1841,10 +1710,16 @@ impl Vec4Expr {
                         w,
                     ) if transpose_simd => {
                         let lits = [*x_lit, *y_lit, 1.0, 1.0];
-                        let mut z = vec![(z.clone(), 1.0)];
-                        let mut w = vec![(w.clone(), 1.0)];
-                        if let Some(transposed) = transpose_vec4_product(x_product, y_product, &mut z, &mut w, lits) {
+                        let mut zv = vec![(z.clone(), 1.0)];
+                        let mut wv = vec![(w.clone(), 1.0)];
+                        if let Some(transposed) = transpose_vec4_product(x_product, y_product, &mut zv, &mut wv, lits) {
                             *self = transposed;
+                            return
+                        }
+                        let lits = [*x_lit, *y_lit];
+                        if let Some(transposed) = advanced_transpose_vec2_product(true, x_product, y_product, lits) {
+                            *self = Vec4Expr::Extend2to4(transposed, z.take_as_owned(), w.take_as_owned());
+                            return
                         }
                     }
                     (
@@ -2155,6 +2030,9 @@ impl Vec4Expr {
                     v3.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access);
                     f1.simplify_nuanced(insides_already_done, transpose_simd, true, prefer_flat_access);
                 }
+
+                // TODO see impl Wedge<AntiFlector> for RoundPoint {
+                //  need to simplify truncate inside extend
                 match (v3, f1) {
                     (Vec3Expr::Gather3(
                         FloatExpr::AccessVec4(box a, x),
@@ -2329,8 +2207,8 @@ impl Vec4Expr {
                 if sum.is_empty() {
                     panic!("Problem")
                 }
-                for (addend, _factor) in sum.iter_mut() {
-                    if !insides_already_done {
+                if !insides_already_done {
+                    for (addend, _factor) in sum.iter_mut() {
                         addend.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access);
                     }
                 }
@@ -2339,7 +2217,9 @@ impl Vec4Expr {
                     return if factor == 1.0 {
                         *self = addend;
                     } else {
-                        *self = Vec4Expr::Product(vec![(addend, 1.0)], [factor, factor, factor, factor]);
+                        let mut new_self = Vec4Expr::Product(vec![(addend, 1.0)], [factor, factor, factor, factor]);
+                        new_self.simplify_nuanced(true, transpose_simd, prefer_flat_access);
+                        *self = new_self;
                     };
                 }
                 let mut flatten = vec![];
@@ -2470,6 +2350,10 @@ impl Vec4Expr {
             Vec4Expr::SwizzleVec4(v4, i0, i1, i2, i3) => {
                 if !insides_already_done {
                     v4.simplify_nuanced(insides_already_done, transpose_simd, prefer_flat_access);
+                }
+                if *i0 == 0 && *i1 == 1 && *i2 == 2 && *i3 == 3 {
+                    *self = v4.take_as_owned();
+                    return;
                 }
                 match v4 {
                     box Vec4Expr::Gather1(f0) => {

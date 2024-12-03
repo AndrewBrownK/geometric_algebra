@@ -1,18 +1,10 @@
 use crate::ast::datatype::ExpressionType;
-use crate::ga;
 use crate::elements::e1234;
 
 crate::multi_vecs! { e1234;
     // Versors
     Motor      as e41, e42, e43, e1234 | e23, e31, e12, scalar;
 }
-
-/// Lengyel styled RGA of 4 dimensions representing 3 dimensions
-pub fn rga3d_script() {
-
-    // let rga3d = ga!(1 => e1, e2, e3; 0 => e4);
-}
-
 
 #[test]
 fn test_stuff() {

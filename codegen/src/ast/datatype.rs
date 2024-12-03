@@ -4,7 +4,7 @@ use crate::algebra::multivector::{BasisElementGroup, MultiVec};
 use crate::ast::expressions::{FloatExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
-use std::fmt::{Display, Formatter};
+use std::fmt::{Debug, Display, Formatter};
 
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug, Ord, PartialOrd)]
 pub struct Integer;
@@ -84,7 +84,7 @@ impl Display for MultiVector {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Ord, PartialOrd)]
+#[derive(Clone, Copy, PartialEq, Eq, Ord, PartialOrd)]
 pub enum ExpressionType {
     Int(Integer),
     Float(Float),
@@ -93,6 +93,22 @@ pub enum ExpressionType {
     Vec4(Vec4),
     Class(MultiVector),
 }
+impl Debug for ExpressionType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ExpressionType::Int(_) => write!(f, "Int"),
+            ExpressionType::Float(_) => write!(f, "Float"),
+            ExpressionType::Vec2(_) => write!(f, "Vec2"),
+            ExpressionType::Vec3(_) => write!(f, "Vec3"),
+            ExpressionType::Vec4(_) => write!(f, "Vec4"),
+            ExpressionType::Class(c) => {
+                let n = c.multi_vec.name;
+                write!(f, "{n}")
+            }
+        }
+    }
+}
+
 
 // SAFETY:
 // MultiVector should not use methods on the multi_vec field that depend on

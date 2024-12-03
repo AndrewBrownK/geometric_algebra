@@ -2637,7 +2637,7 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
         Ok(())
     }
 
-    fn declare_trait_impl<W: Write>(
+    pub(crate) fn declare_trait_impl<W: Write>(
         &self, w: &mut W, impls: Arc<RawTraitImplementation>, already_granted_infix: &mut BTreeSet<&'static str>
     ) -> anyhow::Result<()> {
         let def = &impls.definition;

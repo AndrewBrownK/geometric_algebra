@@ -24,9 +24,9 @@ fn advanced_transpose_vec2_product(
                 return true;
             }
             pulling_out_factor = vec2_product_extract(&mut vec2_product, &mut coalesce_product_literal, aggressive, e0, f0, e1, f1);
-            if let Literal(1.0) = e1 { false } else { !pulling_out_factor }
+            if let Literal(1.0) = e1 { true } else if let Literal(0.0) = e1 { true } else { !pulling_out_factor }
         });
-        if let Literal(1.0) = e0 { false } else { !pulling_out_factor }
+        if let Literal(1.0) = e0 { true } else if let Literal(0.0) = e0 { true } else { !pulling_out_factor }
     });
 
     if vec2_product.is_empty() && coalesce_product_literal == [1.0; 2] {
@@ -151,9 +151,9 @@ fn advanced_transpose_vec2_sum(
                 return true;
             }
             pulling_out_addend = vec2_sum_extract(&mut vec2_sum, &mut coalesce_sum_literal, aggressive, e0, f0, e1, f1);
-            if let Literal(0.0) = e1 { false } else { !pulling_out_addend }
+            if let Literal(0.0) = e1 { true } else { !pulling_out_addend }
         });
-        if let Literal(0.0) = e0 { false } else { !pulling_out_addend }
+        if let Literal(0.0) = e0 { true } else { !pulling_out_addend }
     });
 
     if vec2_sum.is_empty() && coalesce_sum_literal == [0.0; 2] {
@@ -286,11 +286,11 @@ fn advanced_transpose_vec3_product(
                     return true;
                 }
                 pulling_out_factor = vec3_product_extract(&mut vec3_product, &mut coalesce_product_literal, aggressive, e0, f0, e1, f1, e2, f2);
-                if let Literal(1.0) = e2 { false } else { !pulling_out_factor }
+                if let Literal(1.0) = e2 { true } else if let Literal(0.0) = e2 { true } else { !pulling_out_factor }
             });
-            if let Literal(1.0) = e1 { false } else { !pulling_out_factor }
+            if let Literal(1.0) = e1 { true } else if let Literal(0.0) = e1 { true } else { !pulling_out_factor }
         });
-        if let Literal(1.0) = e0 { false } else { !pulling_out_factor }
+        if let Literal(1.0) = e0 { true } else if let Literal(0.0) = e0 { true } else { !pulling_out_factor }
     });
 
     if vec3_product.is_empty() && coalesce_product_literal == [1.0; 3] {
@@ -339,33 +339,38 @@ fn vec3_product_extract(
     f2: &mut f32,
 ) -> bool {
     use crate::ast::expressions::FloatExpr::*;
-    let mut pulled_out_literal = false;
+    let mut e2_is_special_lit = false;
     if let Literal(f) = e0 {
-        if *f != 1.0 {
+        if *f == 0.0 {
+            coalesce_product_literals[0] = 0.0;
+            *f0 = 1.0;
+        } else if *f != 1.0 {
             coalesce_product_literals[0] *= f32::powf(*f, *f0);
             *f = 1.0;
             *f0 = 0.0;
-            pulled_out_literal = true;
         }
     }
     if let Literal(f) = e1 {
-        if *f != 1.0 {
+        if *f == 0.0 {
+            coalesce_product_literals[1] = 0.0;
+            *f1 = 1.0;
+        } else if *f != 1.0 {
             coalesce_product_literals[1] *= f32::powf(*f, *f1);
             *f = 1.0;
             *f1 = 0.0;
-            pulled_out_literal = true;
         }
     }
     if let Literal(f) = e2 {
-        if *f != 1.0 {
+        if *f == 0.0 {
+            coalesce_product_literals[2] = 0.0;
+            *f2 = 1.0;
+            e2_is_special_lit = true;
+        } else if *f != 1.0 {
             coalesce_product_literals[2] *= f32::powf(*f, *f2);
             *f = 1.0;
             *f2 = 0.0;
-            pulled_out_literal = true;
+            e2_is_special_lit = true;
         }
-    }
-    if pulled_out_literal {
-        return false;
     }
     if e0 == e1 && e1 == e2 && f0 == f1 && f1 == f2 {
         vec3_product.push((Vec3Expr::Gather1(e0.clone()), *f0));
@@ -382,10 +387,18 @@ fn vec3_product_extract(
             true
         }
         (
+            AccessVec3(box v0, i0),
+            AccessVec3(box v1, i1),
+            z
+        ) if v0 == v1 && f0 == f1 && (f1 == f2 || e2_is_special_lit) => {
+            vec3_product.push((Vec3Expr::Extend2to3(Vec2Expr::SwizzleVec2(Box::new(Vec2Expr::Truncate3to2(Box::new(v0.clone()))), *i0, *i1), z.clone()), *f0));
+            true
+        }
+        (
             AccessVec2(box v0, i0),
             AccessVec2(box v1, i1),
             z
-        ) if v0 == v1 && f0 == f1 && f1 == f2 => {
+        ) if v0 == v1 && f0 == f1 && (f1 == f2 || e2_is_special_lit) => {
             vec3_product.push((Vec3Expr::Extend2to3(Vec2Expr::SwizzleVec2(Box::new(v0.clone()), *i0, *i1), z.clone()), *f0));
             true
         }
@@ -451,11 +464,11 @@ fn advanced_transpose_vec3_sum(
                     return true;
                 }
                 pulling_out_addend = vec3_sum_extract(&mut vec3_sum, &mut coalesce_sum_literal, aggressive, e0, f0, e1, f1, e2, f2);
-                if let Literal(0.0) = e2 { false } else { !pulling_out_addend }
+                if let Literal(0.0) = e2 { true } else { !pulling_out_addend }
             });
-            if let Literal(0.0) = e1 { false } else { !pulling_out_addend }
+            if let Literal(0.0) = e1 { true } else { !pulling_out_addend }
         });
-        if let Literal(0.0) = e0 { false } else { !pulling_out_addend }
+        if let Literal(0.0) = e0 { true } else { !pulling_out_addend }
     });
 
     if vec3_sum.is_empty() && coalesce_sum_literal == [0.0; 3] {
@@ -504,13 +517,12 @@ fn vec3_sum_extract(
     f2: &mut f32,
 ) -> bool {
     use crate::ast::expressions::FloatExpr::*;
-    let mut pulled_out_literal = false;
+    let mut e2_is_special_lit = false;
     if let Literal(f) = e0 {
         if *f != 0.0 {
             coalesce_sum_literals[0] += *f * *f0;
             *f = 0.0;
             *f0 = 0.0;
-            pulled_out_literal = true;
         }
     }
     if let Literal(f) = e1 {
@@ -518,7 +530,6 @@ fn vec3_sum_extract(
             coalesce_sum_literals[1] += *f * *f1;
             *f = 0.0;
             *f1 = 0.0;
-            pulled_out_literal = true;
         }
     }
     if let Literal(f) = e2 {
@@ -526,11 +537,10 @@ fn vec3_sum_extract(
             coalesce_sum_literals[2] += *f * *f2;
             *f = 0.0;
             *f2 = 0.0;
-            pulled_out_literal = true;
+        } else {
+            *f2 = 0.0;
+            e2_is_special_lit = true;
         }
-    }
-    if pulled_out_literal {
-        return false;
     }
     if e0 == e1 && e1 == e2 && f0 == f1 && f1 == f2 {
         vec3_sum.push((Vec3Expr::Gather1(e0.clone()), *f0));
@@ -541,9 +551,17 @@ fn vec3_sum_extract(
             AccessVec3(box v0, i0),
             AccessVec3(box v1, i1),
             AccessVec3(box v2, i2)
-        ) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 => {
+        ) if v0 == v1 && v1 == v2 && f0 == f1 && (f1 == f2 || e2_is_special_lit) => {
             // The swizzle will later be simplified, if applicable
             vec3_sum.push((Vec3Expr::SwizzleVec3(Box::new(v0.clone()), *i0, *i1, *i2), *f0));
+            true
+        }
+        (
+            AccessVec3(box v0, i0),
+            AccessVec3(box v1, i1),
+            z
+        ) if v0 == v1 && f0 == f1 && (f1 == f2 || e2_is_special_lit) => {
+            vec3_sum.push((Vec3Expr::Extend2to3(Vec2Expr::SwizzleVec2(Box::new(Vec2Expr::Truncate3to2(Box::new(v0.clone()))), *i0, *i1), z.clone()), *f0));
             true
         }
         (
@@ -576,7 +594,7 @@ fn vec3_sum_extract(
             Product(v0, a0),
             Product(v1, a1),
             z,
-        ) if f0 == f1 && f1 == f2 => {
+        ) if f0 == f1 && (f1 == f2 || e2_is_special_lit) => {
             let a = [*a0, *a1];
             let Some(transposed) = advanced_transpose_vec2_product(aggressive, v0, v1, a) else { return false };
             vec3_sum.push((Vec3Expr::Extend2to3(transposed, z.clone()), *f0));
@@ -623,13 +641,13 @@ fn advanced_transpose_vec4_product(
                         return true;
                     }
                     pulling_out_factor = vec4_product_extract(&mut vec4_product, &mut coalesce_product_literal, aggressive, e0, f0, e1, f1, e2, f2, e3, f3);
-                    if let Literal(1.0) = e3 { false } else { !pulling_out_factor }
+                    if let Literal(1.0) = e3 { true } else if let Literal(0.0) = e3 { true } else { !pulling_out_factor }
                 });
-                if let Literal(1.0) = e2 { false } else { !pulling_out_factor }
+                if let Literal(1.0) = e2 { true } else if let Literal(0.0) = e2 { true } else { !pulling_out_factor }
             });
-            if let Literal(1.0) = e1 { false } else { !pulling_out_factor }
+            if let Literal(1.0) = e1 { true } else if let Literal(0.0) = e1 { true } else { !pulling_out_factor }
         });
-        if let Literal(1.0) = e0 { false } else { !pulling_out_factor }
+        if let Literal(1.0) = e0 { true } else if let Literal(0.0) = e0 { true } else { !pulling_out_factor }
     });
 
     if vec4_product.is_empty() && coalesce_product_literal == [1.0; 4] {
@@ -686,41 +704,51 @@ fn vec4_product_extract(
     f3: &mut f32,
 ) -> bool {
     use crate::ast::expressions::FloatExpr::*;
-    let mut pulled_out_literal = false;
+    let mut e2_is_special_lit = false;
+    let mut e3_is_special_lit = false;
     if let Literal(f) = e0 {
-        if *f != 1.0 {
+        if *f == 0.0 {
+            coalesce_product_literals[0] = 0.0;
+            *f0 = 1.0;
+        } else if *f != 1.0 {
             coalesce_product_literals[0] *= f32::powf(*f, *f0);
             *f = 1.0;
             *f0 = 0.0;
-            pulled_out_literal = true;
         }
     }
     if let Literal(f) = e1 {
-        if *f != 1.0 {
+        if *f == 0.0 {
+            coalesce_product_literals[1] = 0.0;
+            *f1 = 1.0;
+        } else if *f != 1.0 {
             coalesce_product_literals[1] *= f32::powf(*f, *f1);
             *f = 1.0;
             *f1 = 0.0;
-            pulled_out_literal = true;
         }
     }
     if let Literal(f) = e2 {
-        if *f != 1.0 {
+        if *f == 0.0 {
+            coalesce_product_literals[2] = 0.0;
+            *f2 = 1.0;
+            e2_is_special_lit = true;
+        } else if *f != 1.0 {
             coalesce_product_literals[2] *= f32::powf(*f, *f2);
             *f = 1.0;
             *f2 = 0.0;
-            pulled_out_literal = true;
+            e2_is_special_lit = true;
         }
     }
     if let Literal(f) = e3 {
-        if *f != 1.0 {
+        if *f == 0.0 {
+            coalesce_product_literals[3] = 0.0;
+            *f3 = 1.0;
+            e3_is_special_lit = true;
+        } else if *f != 1.0 {
             coalesce_product_literals[3] *= f32::powf(*f, *f3);
             *f = 1.0;
             *f3 = 0.0;
-            pulled_out_literal = true;
+            e3_is_special_lit = true;
         }
-    }
-    if pulled_out_literal {
-        return false;
     }
     if e0 == e1 && e1 == e2 && e2 == e3 && f0 == f1 && f1 == f2 && f2 == f3 {
         vec4_product.push((Vec4Expr::Gather1(e0.clone()), *f0));
@@ -732,19 +760,45 @@ fn vec4_product_extract(
             AccessVec4(box v1, i1),
             AccessVec4(box v2, i2),
             AccessVec4(box v3, i3)
-        ) if v0 == v1 && v1 == v2 && v2 == v3 && f0 == f1 && f1 == f2 && f2 == f3 =>
-            {
-                // The swizzle will later be simplified, if applicable
-                vec4_product.push((Vec4Expr::SwizzleVec4(Box::new(v0.clone()), *i0, *i1, *i2, *i3), *f0));
-                true
-            }
+        ) if v0 == v1 && v1 == v2 && v2 == v3 && f0 == f1 && f1 == f2 && f2 == f3 => {
+            // The swizzle will later be simplified, if applicable
+            vec4_product.push((Vec4Expr::SwizzleVec4(Box::new(v0.clone()), *i0, *i1, *i2, *i3), *f0));
+            true
+        }
+        (
+            AccessVec4(box v0, i0),
+            AccessVec4(box v1, i1),
+            AccessVec4(box v2, i2),
+            w
+        ) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 && (f2 == f3 || e3_is_special_lit) => {
+            vec4_product.push((Vec4Expr::Extend3to4(Vec3Expr::SwizzleVec3(Box::new(Vec3Expr::Truncate4to3(Box::new(v0.clone()))), *i0, *i1, *i2), w.clone()), *f0));
+            true
+        }
+        (
+            AccessVec4(box v0, i0),
+            AccessVec4(box v1, i1),
+            z,
+            w
+        ) if v0 == v1 && f0 == f1 && (f1 == f2 || e2_is_special_lit) && (f2 == f3 || e3_is_special_lit) => {
+            vec4_product.push((Vec4Expr::Extend2to4(Vec2Expr::SwizzleVec2(Box::new(Vec2Expr::Truncate4to2(Box::new(v0.clone()))), *i0, *i1), z.clone(), w.clone()), *f0));
+            true
+        }
         (
             AccessVec3(box v0, i0),
             AccessVec3(box v1, i1),
             AccessVec3(box v2, i2),
             w
-        ) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 && f2 == f3 => {
+        ) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 && (f2 == f3 || e3_is_special_lit)  => {
             vec4_product.push((Vec4Expr::Extend3to4(Vec3Expr::SwizzleVec3(Box::new(v0.clone()), *i0, *i1, *i2), w.clone()), *f0));
+            true
+        }
+        (
+            AccessVec3(box v0, i0),
+            AccessVec3(box v1, i1),
+            z,
+            w
+        ) if v0 == v1 && f0 == f1 && (f1 == f2 || e2_is_special_lit) && (f2 == f3 || e3_is_special_lit) => {
+            vec4_product.push((Vec4Expr::Extend2to4(Vec2Expr::SwizzleVec2(Box::new(Vec2Expr::Truncate3to2(Box::new(v0.clone()))), *i0, *i1), z.clone(), w.clone()), *f0));
             true
         }
         (
@@ -829,54 +883,45 @@ fn advanced_transpose_vec4_sum(
                         return true;
                     }
                     pulling_out_addend = vec4_sum_extract(&mut vec4_sum, &mut coalesce_sum_literal, aggressive, e0, f0, e1, f1, e2, f2, e3, f3);
-                    if let Literal(0.0) = e3 { false } else { !pulling_out_addend }
+                    if let Literal(0.0) = e3 { true } else { !pulling_out_addend }
                 });
-                if let Literal(0.0) = e2 { false } else { !pulling_out_addend }
+                if let Literal(0.0) = e2 { true } else { !pulling_out_addend }
             });
-            if let Literal(0.0) = e1 { false } else { !pulling_out_addend }
+            if let Literal(0.0) = e1 { true } else { !pulling_out_addend }
         });
-        if let Literal(0.0) = e0 { false } else { !pulling_out_addend }
+        if let Literal(0.0) = e0 { true } else { !pulling_out_addend }
     });
 
     if vec4_sum.is_empty() && coalesce_sum_literal == [0.0; 4] {
         return None;
     }
     let mut keep_remaining = false;
-    let mut p0 = if float_sum_0.is_empty() {
+    let p0 = if float_sum_0.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
         Sum(float_sum_0.take_as_owned(), 0.0)
     };
-    let mut p1 = if float_sum_1.is_empty() {
+    let p1 = if float_sum_1.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
         Sum(float_sum_1.take_as_owned(), 0.0)
     };
-    let mut p2 = if float_sum_2.is_empty() {
+    let p2 = if float_sum_2.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
         Sum(float_sum_2.take_as_owned(), 0.0)
     };
-    let mut p3 = if float_sum_3.is_empty() {
+    let p3 = if float_sum_3.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
         Sum(float_sum_3.take_as_owned(), 0.0)
     };
     if keep_remaining {
-        // if !aggressive {
-        //     let mut f0 = 1.0;
-        //     let mut f1 = 1.0;
-        //     let mut f2 = 1.0;
-        //     let mut f3 = 1.0;
-        //     // TODO I don't feel like this is right, I feel like I should be calling advanced_transpose, but that has all vec arguments
-        //     vec4_sum_extract(&mut vec4_sum, &mut coalesce_sum_literal, true, &mut p0, &mut f0, &mut p1, &mut f1, &mut p2, &mut f2, &mut p3, &mut f3);
-        //
-        // }
-        // TODO reattempt but aggressive, if not already
+        // TODO reattempt but aggressive?
         vec4_sum.push((Vec4Expr::Gather4(p0, p1, p2, p3), 1.0));
     }
     let mut result = Vec4Expr::Sum(vec4_sum, coalesce_sum_literal);
@@ -901,13 +946,13 @@ fn vec4_sum_extract(
     f3: &mut f32,
 ) -> bool {
     use crate::ast::expressions::FloatExpr::*;
-    let mut pulled_out_literal = false;
+    let mut e2_is_special_lit = false;
+    let mut e3_is_special_lit = false;
     if let Literal(f) = e0 {
         if *f != 0.0 {
             coalesce_sum_literals[0] += *f * *f0;
             *f = 0.0;
             *f0 = 0.0;
-            pulled_out_literal = true;
         }
     }
     if let Literal(f) = e1 {
@@ -915,7 +960,6 @@ fn vec4_sum_extract(
             coalesce_sum_literals[1] += *f * *f1;
             *f = 0.0;
             *f1 = 0.0;
-            pulled_out_literal = true;
         }
     }
     if let Literal(f) = e2 {
@@ -923,7 +967,9 @@ fn vec4_sum_extract(
             coalesce_sum_literals[2] += *f * *f2;
             *f = 0.0;
             *f2 = 0.0;
-            pulled_out_literal = true;
+        } else {
+            *f2 = 0.0;
+            e2_is_special_lit = true;
         }
     }
     if let Literal(f) = e3 {
@@ -931,11 +977,10 @@ fn vec4_sum_extract(
             coalesce_sum_literals[3] += *f * *f3;
             *f = 0.0;
             *f3 = 0.0;
-            pulled_out_literal = true;
+        } else {
+            *f3 = 0.0;
+            e3_is_special_lit = true;
         }
-    }
-    if pulled_out_literal {
-        return false;
     }
     if e0 == e1 && e1 == e2 && e2 == e3 && f0 == f1 && f1 == f2 && f2 == f3 {
         vec4_sum.push((Vec4Expr::Gather1(e0.clone()), *f0));
@@ -953,12 +998,39 @@ fn vec4_sum_extract(
             true
         }
         (
+            AccessVec4(box v0, i0),
+            AccessVec4(box v1, i1),
+            AccessVec4(box v2, i2),
+            w
+        ) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 && (f2 == f3 || e3_is_special_lit) => {
+            vec4_sum.push((Vec4Expr::Extend3to4(Vec3Expr::SwizzleVec3(Box::new(Vec3Expr::Truncate4to3(Box::new(v0.clone()))), *i0, *i1, *i2), w.clone()), *f0));
+            true
+        }
+        (
+            AccessVec4(box v0, i0),
+            AccessVec4(box v1, i1),
+            z,
+            w
+        ) if v0 == v1 && f0 == f1 && (f1 == f2 || e2_is_special_lit) && (f2 == f3 || e3_is_special_lit) => {
+            vec4_sum.push((Vec4Expr::Extend2to4(Vec2Expr::SwizzleVec2(Box::new(Vec2Expr::Truncate4to2(Box::new(v0.clone()))), *i0, *i1), z.clone(), w.clone()), *f0));
+            true
+        }
+        (
             AccessVec3(box v0, i0),
             AccessVec3(box v1, i1),
             AccessVec3(box v2, i2),
             w
-        ) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 && f2 == f3 => {
+        ) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 && (f2 == f3 || e3_is_special_lit) => {
             vec4_sum.push((Vec4Expr::Extend3to4(Vec3Expr::SwizzleVec3(Box::new(v0.clone()), *i0, *i1, *i2), w.clone()), *f0));
+            true
+        }
+        (
+            AccessVec3(box v0, i0),
+            AccessVec3(box v1, i1),
+            z,
+            w
+        ) if v0 == v1 && f0 == f1 && (f1 == f2 || e2_is_special_lit) && (f2 == f3 || e3_is_special_lit) => {
+            vec4_sum.push((Vec4Expr::Extend2to4(Vec2Expr::SwizzleVec2(Box::new(Vec2Expr::Truncate3to2(Box::new(v0.clone()))), *i0, *i1), z.clone(), w.clone()), *f0));
             true
         }
         (
@@ -966,7 +1038,7 @@ fn vec4_sum_extract(
             AccessVec2(box v1, i1),
             z,
             w
-        ) if v0 == v1 && f0 == f1 && f1 == f2 && f2 == f3 => {
+        ) if v0 == v1 && f0 == f1 && (f1 == f2 || e2_is_special_lit) && (f2 == f3 || e3_is_special_lit) => {
             vec4_sum.push((Vec4Expr::Extend2to4(Vec2Expr::SwizzleVec2(Box::new(v0.clone()), *i0, *i1), z.clone(), w.clone()), *f0));
             true
         }
@@ -986,7 +1058,7 @@ fn vec4_sum_extract(
             Product(v1, a1),
             Product(v2, a2),
             w
-        ) if f0 == f1 && f1 == f2 && f2 == f3 => {
+        ) if f0 == f1 && f1 == f2 && (f2 == f3 || e3_is_special_lit) => {
             let a = [*a0, *a1, *a2];
             let Some(transposed) = advanced_transpose_vec3_product(aggressive, v0, v1, v2, a) else { return false };
             vec4_sum.push((Vec4Expr::Extend3to4(transposed, w.clone()), *f0));
@@ -997,7 +1069,7 @@ fn vec4_sum_extract(
             Product(v1, a1),
             z,
             w
-        ) if f0 == f1 && f1 == f2 && f2 == f3 => {
+        ) if f0 == f1 && (f1 == f2 || e2_is_special_lit) && (f2 == f3 || e3_is_special_lit) => {
             let a = [*a0, *a1];
             let Some(transposed) = advanced_transpose_vec2_product(aggressive, v0, v1, a) else { return false };
             vec4_sum.push((Vec4Expr::Extend2to4(transposed, z.clone(), w.clone()), *f0));

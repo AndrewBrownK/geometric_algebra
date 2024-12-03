@@ -1091,11 +1091,15 @@ impl Wgsl {
                 let x = match *i0 {
                     0 => "x",
                     1 => "y",
+                    2 => "z",
+                    3 => "w",
                     _ => bail!("swizzle index out of bounds")
                 };
                 let y = match *i1 {
                     0 => "x",
                     1 => "y",
+                    2 => "z",
+                    3 => "w",
                     _ => bail!("swizzle index out of bounds")
                 };
                 write!(w, ".{x}{y}")?;
@@ -1330,18 +1334,21 @@ impl Wgsl {
                     0 => "x",
                     1 => "y",
                     2 => "z",
+                    3 => "w",
                     _ => bail!("swizzle index out of bounds")
                 };
                 let y = match *i1 {
                     0 => "x",
                     1 => "y",
                     2 => "z",
+                    3 => "w",
                     _ => bail!("swizzle index out of bounds")
                 };
                 let z = match *i2 {
                     0 => "x",
                     1 => "y",
                     2 => "z",
+                    3 => "w",
                     _ => bail!("swizzle index out of bounds")
                 };
                 write!(w, ".{x}{y}{z}")?;

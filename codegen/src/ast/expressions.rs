@@ -261,19 +261,19 @@ pub enum Vec4Expr {
     Extend2to4(Vec2Expr, FloatExpr, FloatExpr),
     Extend3to4(Vec3Expr, FloatExpr),
 }
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum MultiVectorGroupExpr {
     JustFloat(FloatExpr),
     Vec2(Vec2Expr),
     Vec3(Vec3Expr),
     Vec4(Vec4Expr),
 }
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct MultiVectorExpr {
     pub mv_class: MultiVector,
     pub expr: Box<MultiVectorVia>,
 }
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum MultiVectorVia {
     Variable(RawVariableInvocation),
     Construct(Vec<MultiVectorGroupExpr>),
@@ -305,6 +305,7 @@ pub enum AnyExpression {
 include!("expressions/impl_from.rs");
 include!("expressions/impl_expression.rs");
 include!("expressions/impl_display.rs");
+include!("expressions/impl_debug.rs");
 include!("expressions/impl_eq_ord.rs");
 include!("expressions/impl_operators.rs");
 include!("expressions/impl_statistics.rs");

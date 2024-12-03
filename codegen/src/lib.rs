@@ -31,6 +31,9 @@ mod validate;
 mod simd;
 pub mod build_scripts {
     pub mod common_traits;
+}
+pub mod debug_scripts {
+    mod cga3d_faceted;
     mod pga3d;
     mod rga3d;
     mod uwu;
