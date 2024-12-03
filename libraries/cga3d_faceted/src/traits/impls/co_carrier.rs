@@ -52,10 +52,7 @@ impl CoCarrier for AntiCircleRotor {
     //  no simd        0       22        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(
-            // e4235, e4315, e4125, e3215
-            crate::swizzle!(self.right_anti_dual().group0(), 0, 1, 2).extend_to_4(self.right_anti_dual()[e321]),
-        );
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self.right_anti_dual().group0().extend_to_4(self.right_anti_dual()[e321]));
     }
 }
 impl std::ops::Div<co_carrier> for AntiCircleRotorAligningOrigin {
@@ -191,7 +188,7 @@ impl CoCarrier for AntiDipoleInversionOrthogonalOrigin {
             // e415, e425, e435
             self.right_anti_dual().group0().truncate_to_3(),
             // e235, e315, e125, e12345
-            crate::swizzle!(self.right_anti_dual().group1(), 0, 1, 2).extend_to_4(self.right_anti_dual()[e1234]),
+            self.right_anti_dual().group1().extend_to_4(self.right_anti_dual()[e1234]),
         );
     }
 }
@@ -417,7 +414,7 @@ impl CoCarrier for CircleRotor {
         use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            crate::swizzle!(self.right_anti_dual().group0(), 0, 1, 2).extend_to_4(0.0),
+            self.right_anti_dual().group0().extend_to_4(0.0),
             // e235, e315, e125, e5
             Simd32x4::from([self.right_anti_dual()[e23], self.right_anti_dual()[e31], self.right_anti_dual()[e12], self.right_anti_dual()[scalar]]),
         );
@@ -439,9 +436,9 @@ impl CoCarrier for CircleRotorAligningOrigin {
         use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            crate::swizzle!(self.right_anti_dual().group0(), 0, 1, 2).extend_to_4(0.0),
+            self.right_anti_dual().group0().extend_to_4(0.0),
             // e235, e315, e125, e5
-            crate::swizzle!(self.right_anti_dual().group1(), 0, 1, 2).extend_to_4(self.right_anti_dual()[scalar]),
+            self.right_anti_dual().group1().extend_to_4(self.right_anti_dual()[scalar]),
         );
     }
 }
@@ -459,10 +456,7 @@ impl CoCarrier for CircleRotorAligningOriginAtInfinity {
     // no simd        0        8        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
-        return MotorAtInfinity::from_groups(
-            // e235, e315, e125, e5
-            crate::swizzle!(self.right_anti_dual().group0(), 0, 1, 2).extend_to_4(self.right_anti_dual()[scalar]),
-        );
+        return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ self.right_anti_dual().group0().extend_to_4(self.right_anti_dual()[scalar]));
     }
 }
 impl std::ops::Div<co_carrier> for CircleRotorAtInfinity {
@@ -505,7 +499,7 @@ impl CoCarrier for CircleRotorOnOrigin {
             // e415, e425, e435, e12345
             Simd32x4::from([self.right_anti_dual()[e41], self.right_anti_dual()[e42], self.right_anti_dual()[e43], 0.0]),
             // e235, e315, e125, e5
-            crate::swizzle!(self.right_anti_dual().group1(), 0, 1, 2).extend_to_4(self.right_anti_dual()[scalar]),
+            self.right_anti_dual().group1().extend_to_4(self.right_anti_dual()[scalar]),
         );
     }
 }
@@ -526,10 +520,7 @@ impl CoCarrier for Dipole {
     //  no simd        0       20        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(
-            // e4235, e4315, e4125, e3215
-            crate::swizzle!(self.right_anti_dual().group0(), 0, 1, 2).extend_to_4(self.right_anti_dual()[e321]),
-        );
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self.right_anti_dual().group0().extend_to_4(self.right_anti_dual()[e321]));
     }
 }
 impl std::ops::Div<co_carrier> for DipoleAligningOrigin {
@@ -608,7 +599,7 @@ impl CoCarrier for DipoleInversion {
             // e15, e25, e35, e45
             Simd32x4::from([self.right_anti_dual()[e1], self.right_anti_dual()[e2], self.right_anti_dual()[e3], self.right_anti_dual()[e4]]),
             // e4235, e4315, e4125, e3215
-            crate::swizzle!(self.right_anti_dual().group0(), 0, 1, 2).extend_to_4(self.right_anti_dual()[e321]),
+            self.right_anti_dual().group0().extend_to_4(self.right_anti_dual()[e321]),
         );
     }
 }
@@ -1023,10 +1014,7 @@ impl CoCarrier for MysteryDipoleInversion {
     //  no simd        0       14        0
     fn co_carrier(self) -> Self::Output {
         use crate::elements::*;
-        return FlectorAtInfinity::from_groups(
-            // e15, e25, e35, e3215
-            crate::swizzle!(self.right_anti_dual().group1(), 0, 1, 2).extend_to_4(self.right_anti_dual()[e321]),
-        );
+        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ self.right_anti_dual().group1().extend_to_4(self.right_anti_dual()[e321]));
     }
 }
 impl std::ops::Div<co_carrier> for MysteryVersorEven {

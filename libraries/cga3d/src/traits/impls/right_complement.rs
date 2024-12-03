@@ -15,7 +15,7 @@
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         0       7       0
+//   Median:         0       6       0
 //  Average:         0       6       0
 //  Maximum:         0      20       0
 impl std::ops::Div<right_complement> for AntiCircleRotor {
@@ -41,7 +41,7 @@ impl RightComplement for AntiCircleRotor {
             // e415, e425, e435, e321
             self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e41], self[e42], self[e43], self[scalar]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            self.group0().extend_to_4(self[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -68,7 +68,7 @@ impl RightComplement for AntiDipoleInversion {
             // e23, e31, e12, e45
             self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e5]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            self.group0().extend_to_4(self[e5]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125, e3215
             Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]),
         );
@@ -161,19 +161,15 @@ impl std::ops::Div<right_complement> for AntiLine {
 impl RightComplement for AntiLine {
     type Output = Circle;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        7        0
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
     fn right_complement(self) -> Self::Output {
-        use crate::elements::*;
         return Circle::from_groups(
             // e423, e431, e412
             self.group1() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e23], self[e31], self[e12], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (self.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
         );
@@ -188,16 +184,19 @@ impl std::ops::Div<right_complement> for AntiMotor {
 impl RightComplement for AntiMotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        7        0
     fn right_complement(self) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e15], self[e25], self[e35], self[scalar]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            self.group1().truncate_to_3().extend_to_4(self[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e23], self[e31], self[e12], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (self.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
@@ -280,7 +279,7 @@ impl RightComplement for CircleRotor {
             // e23, e31, e12, e45
             self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, scalar
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e12345]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            self.group0().extend_to_4(self[e12345]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -333,7 +332,7 @@ impl RightComplement for DipoleInversion {
             // e415, e425, e435, e321
             self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e4
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e3215]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            self.group0().extend_to_4(self[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e1, e2, e3, e5
             Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e1234]]),
         );
@@ -426,19 +425,15 @@ impl std::ops::Div<right_complement> for Line {
 impl RightComplement for Line {
     type Output = Dipole;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        7        0
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
     fn right_complement(self) -> Self::Output {
-        use crate::elements::*;
         return Dipole::from_groups(
             // e41, e42, e43
             self.group1() * Simd32x3::from(-1.0),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e415], self[e425], self[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (self.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e15, e25, e35
             Simd32x3::from(0.0),
         );
@@ -453,16 +448,19 @@ impl std::ops::Div<right_complement> for Motor {
 impl RightComplement for Motor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        7        0
     fn right_complement(self) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e12345]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            self.group1().truncate_to_3().extend_to_4(self[e12345]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([self[e415], self[e425], self[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (self.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e15, e25, e35, e1234
             Simd32x3::from(0.0).extend_to_4(self[e5]),
             // e4235, e4315, e4125, e3215
@@ -500,13 +498,13 @@ impl RightComplement for MultiVector {
             // e5
             self[e1234],
             // e15, e25, e35, e45
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e321]]) * Simd32x4::from(-1.0),
+            self.group7().extend_to_4(self[e321]) * Simd32x4::from(-1.0),
             // e41, e42, e43
             self.group8() * Simd32x3::from(-1.0),
             // e23, e31, e12
             self.group6().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from(-1.0),
+            self.group5().extend_to_4(self[e45]) * Simd32x4::from(-1.0),
             // e423, e431, e412
             self.group3().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -585,11 +583,11 @@ impl RightComplement for VersorEven {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e12345]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            self.group2().truncate_to_3().extend_to_4(self[e12345]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e23, e31, e12, e45
             self.group1() * Simd32x4::from(-1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e5]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            self.group0().truncate_to_3().extend_to_4(self[e5]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125, e3215
             self.group3(),
         );
@@ -611,11 +609,11 @@ impl RightComplement for VersorOdd {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e15], self[e25], self[e35], self[scalar]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            self.group2().truncate_to_3().extend_to_4(self[scalar]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e415, e425, e435, e321
             self.group1() * Simd32x4::from(-1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e1234]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            self.group0().truncate_to_3().extend_to_4(self[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e1, e2, e3, e4
             self.group3(),
         );

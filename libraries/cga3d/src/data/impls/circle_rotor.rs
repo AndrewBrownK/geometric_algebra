@@ -12,15 +12,15 @@ use crate::traits::Wedge;
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         3       2       0
-//  Average:        18      22       0
-//  Maximum:       251     283       0
+//   Median:         2       3       0
+//  Average:         9      15       0
+//  Maximum:       129     163       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         4       7       0
-//  Average:        21      26       0
-//  Maximum:       320     352       0
+//   Median:         5       7       0
+//  Average:        21      27       0
+//  Maximum:       320     355       0
 impl std::ops::Add<AntiCircleRotor> for CircleRotor {
     type Output = MultiVector;
     fn add(self, other: AntiCircleRotor) -> Self::Output {
@@ -54,17 +54,21 @@ impl std::ops::Add<AntiCircleRotor> for CircleRotor {
 impl std::ops::Add<AntiDipoleInversion> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       10        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd       11        0        0
     fn add(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423] + self[e423], other[e431] + self[e431], other[e412] + self[e412], self[e12345]]),
+            (other.group0() + self.group0()).extend_to_4(self[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], other[e321] + self[e321]]),
+            other.group1() + self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], other[e5]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group2().truncate_to_3().extend_to_4(other[e5]),
             // e1, e2, e3, e4
             Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]),
         );
@@ -103,17 +107,21 @@ impl std::ops::Add<AntiDualNum> for CircleRotor {
 impl std::ops::Add<AntiFlatPoint> for CircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        5        0        0
     fn add(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], other[e321] + self[e321]]),
+            self.group1().truncate_to_3().extend_to_4(other[e321] + self[e321]),
             // e235, e315, e125, e12345
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], self[e12345]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group0().truncate_to_3().extend_to_4(self[e12345]),
         );
     }
 }
@@ -124,26 +132,30 @@ impl std::ops::AddAssign<AntiFlatPoint> for CircleRotor {
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], other[e321] + self[e321]]),
+            self.group1().truncate_to_3().extend_to_4(other[e321] + self[e321]),
             // e235, e315, e125, e12345
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], self[e12345]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group0().truncate_to_3().extend_to_4(self[e12345]),
         );
     }
 }
 impl std::ops::Add<AntiFlector> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        5        0        0
     fn add(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(self[e12345]),
+            self.group0().extend_to_4(self[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], other[e321] + self[e321]]),
+            self.group1().truncate_to_3().extend_to_4(other[e321] + self[e321]),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], other[e5]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group0().truncate_to_3().extend_to_4(other[e5]),
             // e1, e2, e3, e4
             Simd32x4::from([other[e1], other[e2], other[e3], 0.0]),
         );
@@ -161,7 +173,7 @@ impl std::ops::Add<AntiLine> for CircleRotor {
             // e5
             0.0,
             // e15, e25, e35, e45
-            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
+            other.group1().extend_to_4(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -215,7 +227,7 @@ impl std::ops::Add<AntiPlane> for CircleRotor {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(self[e12345]),
+            self.group0().extend_to_4(self[e12345]),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
@@ -228,8 +240,9 @@ impl std::ops::Add<AntiPlane> for CircleRotor {
 impl std::ops::Add<AntiScalar> for CircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return CircleRotor::from_groups(
@@ -238,7 +251,7 @@ impl std::ops::Add<AntiScalar> for CircleRotor {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235], self[e315], self[e125], other[e12345] + self[e12345]]),
+            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e12345]),
         );
     }
 }
@@ -251,24 +264,28 @@ impl std::ops::AddAssign<AntiScalar> for CircleRotor {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235], self[e315], self[e125], other[e12345] + self[e12345]]),
+            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e12345]),
         );
     }
 }
 impl std::ops::Add<Circle> for CircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       10        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd       11        0        0
     fn add(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423] + self[e423], other[e431] + self[e431], other[e412] + self[e412]]),
+            other.group0() + self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], other[e321] + self[e321]]),
+            other.group1() + self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], self[e12345]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group2().extend_to_4(self[e12345]),
         );
     }
 }
@@ -277,41 +294,43 @@ impl std::ops::AddAssign<Circle> for CircleRotor {
         use crate::elements::*;
         *self = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423] + self[e423], other[e431] + self[e431], other[e412] + self[e412]]),
+            other.group0() + self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], other[e321] + self[e321]]),
+            other.group1() + self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], self[e12345]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group2().extend_to_4(self[e12345]),
         );
     }
 }
 impl std::ops::Add<CircleRotor> for CircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       11        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd       11        0        0
     fn add(self, other: CircleRotor) -> Self::Output {
-        use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423] + self[e423], other[e431] + self[e431], other[e412] + self[e412]]),
+            other.group0() + self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], other[e321] + self[e321]]),
+            other.group1() + self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], other[e12345] + self[e12345]]),
+            other.group2() + self.group2(),
         );
     }
 }
 impl std::ops::AddAssign<CircleRotor> for CircleRotor {
     fn add_assign(&mut self, other: CircleRotor) {
-        use crate::elements::*;
         *self = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([other[e423] + self[e423], other[e431] + self[e431], other[e412] + self[e412]]),
+            other.group0() + self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], other[e321] + self[e321]]),
+            other.group1() + self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], other[e12345] + self[e12345]]),
+            other.group2() + self.group2(),
         );
     }
 }
@@ -327,7 +346,7 @@ impl std::ops::Add<Dipole> for CircleRotor {
             // e5
             0.0,
             // e15, e25, e35, e45
-            crate::swizzle!(other.group2(), 0, 1, 2).extend_to_4(other[e45]),
+            other.group2().extend_to_4(other[e45]),
             // e41, e42, e43
             other.group0(),
             // e23, e31, e12
@@ -384,7 +403,7 @@ impl std::ops::Add<DualNum> for CircleRotor {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(self[e12345] + other[e12345]),
+            self.group0().extend_to_4(self[e12345] + other[e12345]),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
@@ -457,17 +476,18 @@ impl std::ops::Add<Flector> for CircleRotor {
 impl std::ops::Add<Line> for CircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6        0        0
+    //          add/sub      mul      div
+    //   simd4        2        0        0
+    // no simd        8        0        0
     fn add(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] + other[e415], self[e425] + other[e425], self[e435] + other[e435], self[e321]]),
+            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().extend_to_4(self[e321]),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235] + other[e235], self[e315] + other[e315], self[e125] + other[e125], self[e12345]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group1().extend_to_4(self[e12345]),
         );
     }
 }
@@ -478,26 +498,30 @@ impl std::ops::AddAssign<Line> for CircleRotor {
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] + other[e415], self[e425] + other[e425], self[e435] + other[e435], self[e321]]),
+            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().extend_to_4(self[e321]),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235] + other[e235], self[e315] + other[e315], self[e125] + other[e125], self[e12345]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group1().extend_to_4(self[e12345]),
         );
     }
 }
 impl std::ops::Add<Motor> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        7        0        0
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd        9        0        0
     fn add(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(self[e12345] + other[e12345]),
+            self.group0().extend_to_4(self[e12345] + other[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] + other[e415], self[e425] + other[e425], self[e435] + other[e435], self[e321]]),
+            Simd32x4::from([other[e415], other[e425], other[e435], 0.0]) + self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] + other[e235], self[e315] + other[e315], self[e125] + other[e125], other[e5]]),
+            Simd32x4::from([other[e235], other[e315], other[e125], 0.0]) + self.group2().truncate_to_3().extend_to_4(other[e5]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
         );
@@ -506,13 +530,18 @@ impl std::ops::Add<Motor> for CircleRotor {
 impl std::ops::Add<MultiVector> for CircleRotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       11        0        0
+    //           add/sub      mul      div
+    //    simd2        1        0        0
+    //    simd3        2        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        4        0        0
+    //  no simd       12        0        0
     fn add(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other[scalar], self[e12345] + other[e12345]]),
+            Simd32x2::from([0.0, self[e12345]]) + other.group0(),
             // e1, e2, e3, e4
             other.group1(),
             // e5
@@ -524,11 +553,11 @@ impl std::ops::Add<MultiVector> for CircleRotor {
             // e23, e31, e12
             other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] + other[e415], self[e425] + other[e425], self[e435] + other[e435], self[e321] + other[e321]]),
+            self.group1() + other.group6(),
             // e423, e431, e412
-            Simd32x3::from([self[e423] + other[e423], self[e431] + other[e431], self[e412] + other[e412]]),
+            self.group0() + other.group7(),
             // e235, e315, e125
-            Simd32x3::from([self[e235] + other[e235], self[e315] + other[e315], self[e125] + other[e125]]),
+            other.group8() + self.group2().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             other.group9(),
             // e1234
@@ -572,7 +601,7 @@ impl std::ops::Add<RoundPoint> for CircleRotor {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(self[e12345]),
+            self.group0().extend_to_4(self[e12345]),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
@@ -645,17 +674,18 @@ impl std::ops::Add<Sphere> for CircleRotor {
 impl std::ops::Add<VersorEven> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       11        0        0
+    //          add/sub      mul      div
+    //   simd4        3        0        0
+    // no simd       12        0        0
     fn add(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423] + other[e423], self[e431] + other[e431], self[e412] + other[e412], self[e12345] + other[e12345]]),
+            other.group0() + self.group0().extend_to_4(self[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] + other[e415], self[e425] + other[e425], self[e435] + other[e435], self[e321] + other[e321]]),
+            self.group1() + other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] + other[e235], self[e315] + other[e315], self[e125] + other[e125], other[e5]]),
+            Simd32x4::from([other[e235], other[e315], other[e125], 0.0]) + self.group2().truncate_to_3().extend_to_4(other[e5]),
             // e1, e2, e3, e4
             other.group3(),
         );
@@ -695,12 +725,12 @@ impl std::ops::BitXor<AntiCircleRotor> for CircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       14        0
+    //      f32       10       11        0
     //    simd3        0        1        0
-    //    simd4        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       10       16        0
-    //  no simd       10       21        0
+    // yes simd       10       14        0
+    //  no simd       10       22        0
     fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -714,10 +744,11 @@ impl std::ops::BitXor<AntiDipoleInversion> for CircleRotor {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       16        0
-    //    simd4        1        1        0
+    //      f32        7       13        0
+    //    simd3        0        1        0
+    //    simd4        2        1        0
     // Totals...
-    // yes simd       12       17        0
+    // yes simd        9       15        0
     //  no simd       15       20        0
     fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
         return self.wedge(other);
@@ -745,11 +776,12 @@ impl std::ops::BitXor<AntiFlector> for CircleRotor {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       12        0
-    //    simd4        1        1        0
+    //      f32        3       12        0
+    //    simd3        0        1        0
+    //    simd4        2        1        0
     // Totals...
-    // yes simd        8       13        0
-    //  no simd       11       16        0
+    // yes simd        5       14        0
+    //  no simd       11       19        0
     fn bitxor(self, other: AntiFlector) -> Self::Output {
         return self.wedge(other);
     }
@@ -767,12 +799,12 @@ impl std::ops::BitXor<AntiMotor> for CircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       10        0
+    //      f32        6        7        0
     //    simd3        0        1        0
-    //    simd4        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        6       12        0
-    //  no simd        6       17        0
+    // yes simd        6       10        0
+    //  no simd        6       18        0
     fn bitxor(self, other: AntiMotor) -> Self::Output {
         return self.wedge(other);
     }
@@ -786,11 +818,12 @@ impl std::ops::BitXor<AntiPlane> for CircleRotor {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       12        0
-    //    simd4        1        1        0
+    //      f32        3       12        0
+    //    simd3        0        1        0
+    //    simd4        2        1        0
     // Totals...
-    // yes simd        8       13        0
-    //  no simd       11       16        0
+    // yes simd        5       14        0
+    //  no simd       11       19        0
     fn bitxor(self, other: AntiPlane) -> Self::Output {
         return self.wedge(other);
     }
@@ -855,11 +888,11 @@ impl std::ops::BitXor<MultiVector> for CircleRotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       27        0
+    //      f32       17       23        0
     //    simd3        0        2        0
-    //    simd4        1        2        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       22       31        0
+    // yes simd       19       28        0
     //  no simd       25       41        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
         return self.wedge(other);
@@ -869,10 +902,10 @@ impl std::ops::BitXor<RoundPoint> for CircleRotor {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       16        0
-    //    simd4        1        1        0
+    //      f32        7       12        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       12       17        0
+    // yes simd        9       14        0
     //  no simd       15       20        0
     fn bitxor(self, other: RoundPoint) -> Self::Output {
         return self.wedge(other);
@@ -900,10 +933,10 @@ impl std::ops::BitXor<VersorEven> for CircleRotor {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       16        0
-    //    simd4        1        1        0
+    //      f32        7       12        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       12       17        0
+    // yes simd        9       14        0
     //  no simd       15       20        0
     fn bitxor(self, other: VersorEven) -> Self::Output {
         return self.wedge(other);
@@ -913,12 +946,12 @@ impl std::ops::BitXor<VersorOdd> for CircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       14        0
+    //      f32       10       11        0
     //    simd3        0        1        0
-    //    simd4        0        1        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd       10       16        0
-    //  no simd       10       21        0
+    // yes simd       10       14        0
+    //  no simd       10       22        0
     fn bitxor(self, other: VersorOdd) -> Self::Output {
         return self.wedge(other);
     }
@@ -988,11 +1021,12 @@ impl std::ops::Mul<AntiCircleRotor> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       97      113        0
-    //    simd4        2        2        0
+    //      f32       37       63        0
+    //    simd3        0        9        0
+    //    simd4       17        8        0
     // Totals...
-    // yes simd       99      115        0
-    //  no simd      105      121        0
+    // yes simd       54       80        0
+    //  no simd      105      122        0
     fn mul(self, other: AntiCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1001,11 +1035,12 @@ impl std::ops::Mul<AntiDipoleInversion> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      125      141        0
-    //    simd4        6        6        0
+    //      f32       25       56        0
+    //    simd3        0        9        0
+    //    simd4       31       22        0
     // Totals...
-    // yes simd      131      147        0
-    //  no simd      149      165        0
+    // yes simd       56       87        0
+    //  no simd      149      171        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1014,12 +1049,12 @@ impl std::ops::Mul<AntiDualNum> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        9        0
+    //      f32        0        6        0
     //    simd3        1        2        0
-    //    simd4        1        3        0
+    //    simd4        1        5        0
     // Totals...
-    // yes simd        2       14        0
-    //  no simd        7       27        0
+    // yes simd        2       13        0
+    //  no simd        7       32        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1028,11 +1063,12 @@ impl std::ops::Mul<AntiFlatPoint> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       35        0
-    //    simd3        3        3        0
+    //      f32        4       15        0
+    //    simd3        0        7        0
+    //    simd4        8        3        0
     // Totals...
-    // yes simd       23       38        0
-    //  no simd       29       44        0
+    // yes simd       12       25        0
+    //  no simd       36       48        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1041,11 +1077,12 @@ impl std::ops::Mul<AntiFlector> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       68       84        0
-    //    simd4        1        1        0
+    //      f32       15       32        0
+    //    simd3        0        5        0
+    //    simd4       16       11        0
     // Totals...
-    // yes simd       69       85        0
-    //  no simd       72       88        0
+    // yes simd       31       48        0
+    //  no simd       79       91        0
     fn mul(self, other: AntiFlector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1053,8 +1090,13 @@ impl std::ops::Mul<AntiFlector> for CircleRotor {
 impl std::ops::Mul<AntiLine> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       50       66        0
+    //           add/sub      mul      div
+    //      f32       22       45        0
+    //    simd3        0        6        0
+    //    simd4        7        1        0
+    // Totals...
+    // yes simd       29       52        0
+    //  no simd       50       67        0
     fn mul(self, other: AntiLine) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1063,11 +1105,12 @@ impl std::ops::Mul<AntiMotor> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       72        0
-    //    simd4        4        4        0
+    //      f32       32       56        0
+    //    simd3        0        7        0
+    //    simd4       10        3        0
     // Totals...
-    // yes simd       60       76        0
-    //  no simd       72       88        0
+    // yes simd       42       66        0
+    //  no simd       72       89        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1076,11 +1119,12 @@ impl std::ops::Mul<AntiPlane> for CircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       40        0
-    //    simd4        1        1        0
+    //      f32        0       12        0
+    //    simd3        1        6        0
+    //    simd4        8        4        0
     // Totals...
-    // yes simd       26       41        0
-    //  no simd       29       44        0
+    // yes simd        9       22        0
+    //  no simd       35       46        0
     fn mul(self, other: AntiPlane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1102,11 +1146,12 @@ impl std::ops::Mul<Circle> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       90      106        0
-    //    simd4        1        1        0
+    //      f32       26       55        0
+    //    simd3        0       10        0
+    //    simd4       17        7        0
     // Totals...
-    // yes simd       91      107        0
-    //  no simd       94      110        0
+    // yes simd       43       72        0
+    //  no simd       94      113        0
     fn mul(self, other: Circle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1115,10 +1160,11 @@ impl std::ops::Mul<CircleRotor> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       97      113        0
-    //    simd4        2        2        0
+    //      f32       33       57        0
+    //    simd3        0        8        0
+    //    simd4       18       10        0
     // Totals...
-    // yes simd       99      115        0
+    // yes simd       51       75        0
     //  no simd      105      121        0
     fn mul(self, other: CircleRotor) -> Self::Output {
         return self.geometric_product(other);
@@ -1127,8 +1173,13 @@ impl std::ops::Mul<CircleRotor> for CircleRotor {
 impl std::ops::Mul<Dipole> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       94      110        0
+    //           add/sub      mul      div
+    //      f32       34       61        0
+    //    simd3        0       10        0
+    //    simd4       15        5        0
+    // Totals...
+    // yes simd       49       76        0
+    //  no simd       94      111        0
     fn mul(self, other: Dipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1137,10 +1188,11 @@ impl std::ops::Mul<DipoleInversion> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      125      141        0
-    //    simd4        6        6        0
+    //      f32       33       56        0
+    //    simd3        0       11        0
+    //    simd4       29       19        0
     // Totals...
-    // yes simd      131      147        0
+    // yes simd       62       86        0
     //  no simd      149      165        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -1150,12 +1202,12 @@ impl std::ops::Mul<DualNum> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        6        0
+    //      f32        1        3        0
     //    simd3        2        4        0
-    //    simd4        0        2        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        3       12        0
-    //  no simd        7       26        0
+    // yes simd        3       10        0
+    //  no simd        7       27        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1164,11 +1216,12 @@ impl std::ops::Mul<FlatPoint> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       26       41        0
-    //    simd3        1        1        0
+    //      f32        8       16        0
+    //    simd3        0        3        0
+    //    simd4        6        5        0
     // Totals...
-    // yes simd       27       42        0
-    //  no simd       29       44        0
+    // yes simd       14       24        0
+    //  no simd       32       45        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1177,11 +1230,12 @@ impl std::ops::Mul<Flector> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       80        0
-    //    simd4        2        2        0
+    //      f32       16       27        0
+    //    simd3        0        3        0
+    //    simd4       15       13        0
     // Totals...
-    // yes simd       66       82        0
-    //  no simd       72       88        0
+    // yes simd       31       43        0
+    //  no simd       76       88        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1189,8 +1243,13 @@ impl std::ops::Mul<Flector> for CircleRotor {
 impl std::ops::Mul<Line> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       50       66        0
+    //           add/sub      mul      div
+    //      f32       16       43        0
+    //    simd3        0        7        0
+    //    simd4        9        2        0
+    // Totals...
+    // yes simd       25       52        0
+    //  no simd       52       72        0
     fn mul(self, other: Line) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1199,11 +1258,12 @@ impl std::ops::Mul<Motor> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       64       80        0
-    //    simd4        2        2        0
+    //      f32       25       44        0
+    //    simd3        0        5        0
+    //    simd4       13        8        0
     // Totals...
-    // yes simd       66       82        0
-    //  no simd       72       88        0
+    // yes simd       38       57        0
+    //  no simd       77       91        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1212,13 +1272,13 @@ impl std::ops::Mul<MultiVector> for CircleRotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      218      250        0
-    //    simd2        1        1        0
-    //    simd3       28       28        0
-    //    simd4        4        4        0
+    //      f32       50       79        0
+    //    simd2        3        3        0
+    //    simd3       40       54        0
+    //    simd4       36       27        0
     // Totals...
-    // yes simd      251      283        0
-    //  no simd      320      352        0
+    // yes simd      129      163        0
+    //  no simd      320      355        0
     fn mul(self, other: MultiVector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1227,11 +1287,12 @@ impl std::ops::Mul<Plane> for CircleRotor {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       40        0
-    //    simd4        1        1        0
+    //      f32        6       24        0
+    //    simd3        1        2        0
+    //    simd4        5        5        0
     // Totals...
-    // yes simd       26       41        0
-    //  no simd       29       44        0
+    // yes simd       12       31        0
+    //  no simd       29       50        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1240,12 +1301,12 @@ impl std::ops::Mul<RoundPoint> for CircleRotor {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       48        0
-    //    simd3        1        1        0
-    //    simd4        1        1        0
+    //      f32        2       14        0
+    //    simd3        2        4        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       35       50        0
-    //  no simd       40       55        0
+    // yes simd       12       26        0
+    //  no simd       40       58        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1272,12 +1333,12 @@ impl std::ops::Mul<Sphere> for CircleRotor {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       33       48        0
-    //    simd3        1        1        0
-    //    simd4        1        1        0
+    //      f32        5       17        0
+    //    simd3        2        3        0
+    //    simd4        8        8        0
     // Totals...
-    // yes simd       35       50        0
-    //  no simd       40       55        0
+    // yes simd       15       28        0
+    //  no simd       43       58        0
     fn mul(self, other: Sphere) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1286,10 +1347,11 @@ impl std::ops::Mul<VersorEven> for CircleRotor {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      132      148        0
-    //    simd4        7        7        0
+    //      f32       32       55        0
+    //    simd3        0        7        0
+    //    simd4       32       25        0
     // Totals...
-    // yes simd      139      155        0
+    // yes simd       64       87        0
     //  no simd      160      176        0
     fn mul(self, other: VersorEven) -> Self::Output {
         return self.geometric_product(other);
@@ -1299,10 +1361,11 @@ impl std::ops::Mul<VersorOdd> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      116      132        0
-    //    simd4       11       11        0
+    //      f32       36       54        0
+    //    simd3        0        6        0
+    //    simd4       31       26        0
     // Totals...
-    // yes simd      127      143        0
+    // yes simd       67       86        0
     //  no simd      160      176        0
     fn mul(self, other: VersorOdd) -> Self::Output {
         return self.geometric_product(other);
@@ -1358,7 +1421,7 @@ impl std::ops::Sub<AntiCircleRotor> for CircleRotor {
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
+            other.group2().truncate_to_3().extend_to_4(other[e45]) * Simd32x4::from(-1.0),
             // e41, e42, e43
             other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
@@ -1380,22 +1443,23 @@ impl std::ops::Sub<AntiDipoleInversion> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10        0        0
-    //    simd4        0        2        0
+    //      f32        0        3        0
+    //    simd3        1        0        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       10        2        0
-    //  no simd       10        8        0
+    // yes simd        3        5        0
+    //  no simd       11       11        0
     fn sub(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412], self[e12345]]),
+            Simd32x4::from([other[e423] * -1.0, other[e431] * -1.0, other[e412] * -1.0, 0.0]) + self.group0().extend_to_4(self[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], other[e5]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group2().truncate_to_3() - other.group2().truncate_to_3()).extend_to_4(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]) * Simd32x4::from(-1.0),
+            other.group3().truncate_to_3().extend_to_4(other[e4]) * Simd32x4::from(-1.0),
         );
     }
 }
@@ -1439,17 +1503,21 @@ impl std::ops::Sub<AntiDualNum> for CircleRotor {
 impl std::ops::Sub<AntiFlatPoint> for CircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        2        4        0
+    //  no simd        8        4        0
     fn sub(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321] - other[e321]]),
+            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e12345]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, 0.0]) + self.group2(),
         );
     }
 }
@@ -1460,9 +1528,9 @@ impl std::ops::SubAssign<AntiFlatPoint> for CircleRotor {
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321] - other[e321]]),
+            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e12345]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, 0.0]) + self.group2(),
         );
     }
 }
@@ -1470,34 +1538,32 @@ impl std::ops::Sub<AntiFlector> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        0        0
-    //    simd4        0        2        0
+    //      f32        0        1        0
+    //    simd3        1        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        4        2        0
-    //  no simd        4        8        0
+    // yes simd        2        3        0
+    //  no simd        7        8        0
     fn sub(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(self[e12345]),
+            self.group0().extend_to_4(self[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321] - other[e321]]),
+            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], other[e5]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group2().truncate_to_3() - other.group0().truncate_to_3()).extend_to_4(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
         );
     }
 }
 impl std::ops::Sub<AntiLine> for CircleRotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        7        0
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
     fn sub(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -1508,7 +1574,7 @@ impl std::ops::Sub<AntiLine> for CircleRotor {
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other[e15], other[e25], other[e35], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -1532,11 +1598,10 @@ impl std::ops::Sub<AntiMotor> for CircleRotor {
     //           add/sub      mul      div
     //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       10        0
+    //  no simd        0        9        0
     fn sub(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -1547,7 +1612,7 @@ impl std::ops::Sub<AntiMotor> for CircleRotor {
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other[e15], other[e25], other[e35], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -1568,28 +1633,35 @@ impl std::ops::Sub<AntiMotor> for CircleRotor {
 impl std::ops::Sub<AntiPlane> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        7        0
     fn sub(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(self[e12345]),
+            self.group0().extend_to_4(self[e12345]),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], other[e5]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group2().truncate_to_3().extend_to_4(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
         );
     }
 }
 impl std::ops::Sub<AntiScalar> for CircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        1        1        0
+    //  no simd        4        1        0
     fn sub(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return CircleRotor::from_groups(
@@ -1598,7 +1670,7 @@ impl std::ops::Sub<AntiScalar> for CircleRotor {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e12345] - other[e12345]]),
+            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e12345] * -1.0),
         );
     }
 }
@@ -1611,24 +1683,29 @@ impl std::ops::SubAssign<AntiScalar> for CircleRotor {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e12345] - other[e12345]]),
+            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e12345] * -1.0),
         );
     }
 }
 impl std::ops::Sub<Circle> for CircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       10        0        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        1        0        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        3        3        0
+    //  no simd       11        3        0
     fn sub(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412]]),
+            self.group0() - other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e12345]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, 0.0]) + self.group2(),
         );
     }
 }
@@ -1637,41 +1714,43 @@ impl std::ops::SubAssign<Circle> for CircleRotor {
         use crate::elements::*;
         *self = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412]]),
+            self.group0() - other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e12345]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, 0.0]) + self.group2(),
         );
     }
 }
 impl std::ops::Sub<CircleRotor> for CircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       11        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd       11        0        0
     fn sub(self, other: CircleRotor) -> Self::Output {
-        use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412]]),
+            self.group0() - other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e12345] - other[e12345]]),
+            self.group2() - other.group2(),
         );
     }
 }
 impl std::ops::SubAssign<CircleRotor> for CircleRotor {
     fn sub_assign(&mut self, other: CircleRotor) {
-        use crate::elements::*;
         *self = CircleRotor::from_groups(
             // e423, e431, e412
-            Simd32x3::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412]]),
+            self.group0() - other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e12345] - other[e12345]]),
+            self.group2() - other.group2(),
         );
     }
 }
@@ -1694,7 +1773,7 @@ impl std::ops::Sub<Dipole> for CircleRotor {
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
+            other.group2().extend_to_4(other[e45]) * Simd32x4::from(-1.0),
             // e41, e42, e43
             other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
@@ -1732,7 +1811,7 @@ impl std::ops::Sub<DipoleInversion> for CircleRotor {
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
+            other.group2().truncate_to_3().extend_to_4(other[e45]) * Simd32x4::from(-1.0),
             // e41, e42, e43
             other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
@@ -1763,11 +1842,11 @@ impl std::ops::Sub<DualNum> for CircleRotor {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(self[e12345] - other[e12345]),
+            self.group0().extend_to_4(self[e12345] - other[e12345]),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], other[e5]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group2().truncate_to_3().extend_to_4(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
         );
@@ -1844,17 +1923,21 @@ impl std::ops::Sub<Flector> for CircleRotor {
 impl std::ops::Sub<Line> for CircleRotor {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6        0        0
+    //           add/sub      mul      div
+    //      f32        0        6        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        2        6        0
+    //  no simd        8        6        0
     fn sub(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return CircleRotor::from_groups(
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321]]),
+            Simd32x4::from([other[e415] * -1.0, other[e425] * -1.0, other[e435] * -1.0, 0.0]) + self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e12345]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, 0.0]) + self.group2(),
         );
     }
 }
@@ -1865,9 +1948,9 @@ impl std::ops::SubAssign<Line> for CircleRotor {
             // e423, e431, e412
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321]]),
+            Simd32x4::from([other[e415] * -1.0, other[e425] * -1.0, other[e435] * -1.0, 0.0]) + self.group1(),
             // e235, e315, e125, e12345
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e12345]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, 0.0]) + self.group2(),
         );
     }
 }
@@ -1875,20 +1958,21 @@ impl std::ops::Sub<Motor> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7        0        0
-    //    simd4        0        1        0
+    //      f32        1        3        0
+    //    simd3        1        0        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        7        1        0
-    //  no simd        7        4        0
+    // yes simd        3        4        0
+    //  no simd        8        7        0
     fn sub(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(self[e12345] - other[e12345]),
+            self.group0().extend_to_4(self[e12345] - other[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321]]),
+            Simd32x4::from([other[e415] * -1.0, other[e425] * -1.0, other[e435] * -1.0, 0.0]) + self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], other[e5]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group2().truncate_to_3() - other.group1().truncate_to_3()).extend_to_4(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
         );
@@ -1898,12 +1982,12 @@ impl std::ops::Sub<MultiVector> for CircleRotor {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11        2        0
+    //      f32        1        2        0
     //    simd2        0        1        0
-    //    simd3        0        2        0
-    //    simd4        0        3        0
+    //    simd3        2        2        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd       11        8        0
+    // yes simd        4        8        0
     //  no simd       11       22        0
     fn sub(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -1921,11 +2005,11 @@ impl std::ops::Sub<MultiVector> for CircleRotor {
             // e23, e31, e12
             other.group5() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group6(),
             // e423, e431, e412
-            Simd32x3::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412]]),
+            self.group0() - other.group7(),
             // e235, e315, e125
-            Simd32x3::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125]]),
+            self.group2().truncate_to_3() - other.group8(),
             // e4235, e4315, e4125, e3215
             other.group9() * Simd32x4::from(-1.0),
             // e1234
@@ -1977,11 +2061,11 @@ impl std::ops::Sub<RoundPoint> for CircleRotor {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(self[e12345]),
+            self.group0().extend_to_4(self[e12345]),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], other[e5]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group2().truncate_to_3().extend_to_4(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1, e2, e3, e4
             other.group0() * Simd32x4::from(-1.0),
         );
@@ -2062,20 +2146,20 @@ impl std::ops::Sub<VersorEven> for CircleRotor {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11        0        0
-    //    simd4        0        2        0
+    //    simd3        1        0        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       11        2        0
+    // yes simd        3        2        0
     //  no simd       11        8        0
     fn sub(self, other: VersorEven) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412], self[e12345] - other[e12345]]),
+            self.group0().extend_to_4(self[e12345]) - other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], other[e5]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group2().truncate_to_3() - other.group2().truncate_to_3()).extend_to_4(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1, e2, e3, e4
             other.group3() * Simd32x4::from(-1.0),
         );
@@ -2102,7 +2186,7 @@ impl std::ops::Sub<VersorOdd> for CircleRotor {
             // e5
             0.0,
             // e15, e25, e35, e45
-            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
+            other.group2().truncate_to_3().extend_to_4(other[e45]) * Simd32x4::from(-1.0),
             // e41, e42, e43
             other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12

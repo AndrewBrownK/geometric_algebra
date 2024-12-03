@@ -42,7 +42,7 @@ impl Carrier for AntiCircleRotor {
         use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
+            self.group0().extend_to_4(0.0),
             // e235, e315, e125, e5
             Simd32x4::from([self[e23], self[e31], self[e12], self[scalar]]),
         );
@@ -60,9 +60,9 @@ impl Carrier for AntiCircleRotorAligningOrigin {
         use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(0.0),
+            self.group0().extend_to_4(0.0),
             // e235, e315, e125, e5
-            crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(self[scalar]),
+            self.group1().extend_to_4(self[scalar]),
         );
     }
 }
@@ -76,7 +76,7 @@ impl Carrier for AntiCircleRotorAligningOriginAtInfinity {
     type Output = MotorAtInfinity;
     fn carrier(self) -> Self::Output {
         use crate::elements::*;
-        return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(self[scalar]));
+        return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ self.group0().extend_to_4(self[scalar]));
     }
 }
 impl std::ops::Div<carrier> for AntiCircleRotorAtInfinity {
@@ -106,7 +106,7 @@ impl Carrier for AntiCircleRotorOnOrigin {
             // e415, e425, e435, e12345
             Simd32x4::from([self[e41], self[e42], self[e43], 0.0]),
             // e235, e315, e125, e5
-            crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(self[scalar]),
+            self.group1().extend_to_4(self[scalar]),
         );
     }
 }
@@ -124,7 +124,7 @@ impl Carrier for AntiDipoleInversion {
             // e15, e25, e35, e45
             Simd32x4::from([self[e1], self[e2], self[e3], self[e4]]),
             // e4235, e4315, e4125, e3215
-            crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(self[e321]),
+            self.group0().extend_to_4(self[e321]),
         );
     }
 }
@@ -323,7 +323,7 @@ impl Carrier for AntiMysteryDipoleInversion {
     type Output = FlectorAtInfinity;
     fn carrier(self) -> Self::Output {
         use crate::elements::*;
-        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(self[e321]));
+        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ self.group1().extend_to_4(self[e321]));
     }
 }
 impl std::ops::Div<carrier> for AntiPlane {
@@ -390,7 +390,7 @@ impl Carrier for Circle {
     type Output = Plane;
     fn carrier(self) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(self[e321]));
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0().extend_to_4(self[e321]));
     }
 }
 impl std::ops::Div<carrier> for CircleAligningOrigin {
@@ -464,7 +464,7 @@ impl Carrier for CircleRotor {
     type Output = Plane;
     fn carrier(self) -> Self::Output {
         use crate::elements::*;
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ crate::swizzle!(self.group0(), 0, 1, 2).extend_to_4(self[e321]));
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ self.group0().extend_to_4(self[e321]));
     }
 }
 impl std::ops::Div<carrier> for CircleRotorAligningOrigin {
@@ -635,7 +635,7 @@ impl Carrier for DipoleInversionOrthogonalOrigin {
             // e415, e425, e435
             self.group0().truncate_to_3(),
             // e235, e315, e125, e12345
-            crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(self[e1234]),
+            self.group1().extend_to_4(self[e1234]),
         );
     }
 }

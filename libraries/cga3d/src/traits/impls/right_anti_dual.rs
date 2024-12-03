@@ -406,23 +406,23 @@ impl RightAntiDual for MultiVector {
             // scalar, e12345
             crate::swizzle!(self.group0(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e1234]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            self.group9().truncate_to_3().extend_to_4(self[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e5
             self[e3215],
             // e15, e25, e35, e45
-            crate::swizzle!(self.group8(), 0, 1, 2).extend_to_4(self[e321] * -1.0),
+            self.group8().extend_to_4(self[e321] * -1.0),
             // e41, e42, e43
             self.group7(),
             // e23, e31, e12
             self.group6().truncate_to_3(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e23], self[e31], self[e12], self[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            self.group5().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e423, e431, e412
             self.group4() * Simd32x3::from(-1.0),
             // e235, e315, e125
             self.group3().truncate_to_3() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e5]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group1().truncate_to_3().extend_to_4(self[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1234
             self[e4] * -1.0,
         );
@@ -463,7 +463,7 @@ impl RightAntiDual for RoundPoint {
         use crate::elements::*;
         return Sphere::from_groups(
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e5]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().truncate_to_3().extend_to_4(self[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e1234
             self[e4] * -1.0,
         );
@@ -498,7 +498,7 @@ impl RightAntiDual for Sphere {
         use crate::elements::*;
         return RoundPoint::from_groups(
             // e1, e2, e3, e4
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e1234]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            self.group0().truncate_to_3().extend_to_4(self[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e5
             self[e3215],
         );
@@ -524,9 +524,9 @@ impl RightAntiDual for VersorEven {
             // e23, e31, e12, e45
             self.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e4]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group2().truncate_to_3().extend_to_4(self[e4]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([self[e1], self[e2], self[e3], self[e5]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group3().truncate_to_3().extend_to_4(self[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -550,9 +550,9 @@ impl RightAntiDual for VersorOdd {
             // e415, e425, e435, e321
             self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e15], self[e25], self[e35], self[e3215]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            self.group2().truncate_to_3().extend_to_4(self[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e4235], self[e4315], self[e4125], self[e1234]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            self.group3().truncate_to_3().extend_to_4(self[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }

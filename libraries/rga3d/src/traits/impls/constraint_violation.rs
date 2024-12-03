@@ -10,14 +10,14 @@
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         1       4       0
-//  Average:         9       9       0
-//  Maximum:        50      50       0
+//  Average:         7       8       0
+//  Maximum:        38      38       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         1       7       0
-//  Average:        12      15       0
-//  Maximum:        67      74       0
+//  Average:        13      15       0
+//  Maximum:        71      75       0
 impl std::ops::Div<constraint_violation> for DualNum {
     type Output = AntiScalar;
     fn div(self, _rhs: constraint_violation) -> Self::Output {
@@ -52,25 +52,25 @@ impl ConstraintViolation for Flector {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7        4        0
-    //    simd2        4        4        0
+    //      f32        6        5        0
+    //    simd2        5        4        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd       11        9        0
-    //  no simd       15       16        0
+    // yes simd       11       10        0
+    //  no simd       16       17        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = Flector::from_groups(/* e1, e2, e3, e4 */ self.group0(), /* e423, e431, e412, e321 */ self.group1() * Simd32x4::from(-1.0));
         let geometric_product = DualNum::from_groups(
             // scalar, e1234
-            Simd32x2::from([0.0, (reverse[e321] * self[e4]) - (reverse[e1] * self[e423]) - (reverse[e2] * self[e431]) - (reverse[e3] * self[e412])])
+            Simd32x2::from([0.0, (reverse[e321] * self[e4]) - (reverse[e2] * self[e431]) - (reverse[e3] * self[e412]) - (reverse[e4] * self[e321])])
                 + (Simd32x2::from(self[e1]) * Simd32x2::from([reverse[e1], reverse[e423]]))
                 + (Simd32x2::from(self[e2]) * Simd32x2::from([reverse[e2], reverse[e431]]))
                 + (Simd32x2::from(self[e3]) * Simd32x2::from([reverse[e3], reverse[e412]]))
-                - (Simd32x2::from(self[e321]) * Simd32x2::from([reverse[e321], reverse[e4]])),
+                - (Simd32x2::from([reverse[e321], reverse[e1]]) * crate::swizzle!(self.group1(), 3, 0, _, _)),
         );
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(self[e1], 2) + f32::powi(self[e2], 2) + f32::powi(self[e3], 2) - f32::powi(self[e321], 2));
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([geometric_product[scalar] - dot_product[scalar], geometric_product[e1234]]));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([dot_product[scalar] * -1.0, 0.0]) + geometric_product.group0());
     }
 }
 impl std::ops::Div<constraint_violation> for Horizon {
@@ -102,12 +102,12 @@ impl ConstraintViolation for Line {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        3        0
-    //    simd2        3        3        0
+    //      f32        4        4        0
+    //    simd2        4        3        0
     //    simd3        0        2        0
     // Totals...
-    // yes simd        8        8        0
-    //  no simd       11       15        0
+    // yes simd        8        9        0
+    //  no simd       12       16        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = Line::from_groups(
@@ -124,7 +124,7 @@ impl ConstraintViolation for Line {
                 - (Simd32x2::from(self[e12]) * Simd32x2::from([reverse[e12], reverse[e43]])),
         );
         let dot_product = Scalar::from_groups(/* scalar */ -f32::powi(self[e23], 2) - f32::powi(self[e31], 2) - f32::powi(self[e12], 2));
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([geometric_product[scalar] - dot_product[scalar], geometric_product[e1234]]));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([dot_product[scalar] * -1.0, 0.0]) + geometric_product.group0());
     }
 }
 impl std::ops::Div<constraint_violation> for Motor {
@@ -137,12 +137,12 @@ impl ConstraintViolation for Motor {
     type Output = DualNum;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7        4        0
-    //    simd2        4        4        0
+    //      f32        6        5        0
+    //    simd2        5        4        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd       11       10        0
-    //  no simd       15       20        0
+    // yes simd       11       11        0
+    //  no simd       16       21        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = Motor::from_groups(
@@ -165,7 +165,7 @@ impl ConstraintViolation for Motor {
             // scalar
             f32::powi(self[scalar], 2) - f32::powi(self[e23], 2) - f32::powi(self[e31], 2) - f32::powi(self[e12], 2),
         );
-        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([geometric_product[scalar] - dot_product[scalar], geometric_product[e1234]]));
+        return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([dot_product[scalar] * -1.0, 0.0]) + geometric_product.group0());
     }
 }
 impl std::ops::Div<constraint_violation> for MultiVector {
@@ -183,13 +183,13 @@ impl ConstraintViolation for MultiVector {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       39       36        0
-    //    simd2        8        8        0
-    //    simd3        0        2        0
-    //    simd4        3        4        0
+    //      f32       21       19        0
+    //    simd2        9        8        0
+    //    simd3        0        4        0
+    //    simd4        8        7        0
     // Totals...
-    // yes simd       50       50        0
-    //  no simd       67       74        0
+    // yes simd       38       38        0
+    //  no simd       71       75        0
     fn constraint_violation(self) -> Self::Output {
         use crate::elements::*;
         let reverse = MultiVector::from_groups(
@@ -209,9 +209,9 @@ impl ConstraintViolation for MultiVector {
             Simd32x2::from([
                 0.0,
                 (reverse[e1234] * self[scalar]) + (reverse[e321] * self[e4])
-                    - (reverse[e1] * self[e423])
                     - (reverse[e2] * self[e431])
                     - (reverse[e3] * self[e412])
+                    - (reverse[e4] * self[e321])
                     - (reverse[e23] * self[e41])
                     - (reverse[e31] * self[e42])
                     - (reverse[e12] * self[e43]),
@@ -222,26 +222,26 @@ impl ConstraintViolation for MultiVector {
                 - (Simd32x2::from(self[e23]) * Simd32x2::from([reverse[e23], reverse[e41]]))
                 - (Simd32x2::from(self[e31]) * Simd32x2::from([reverse[e31], reverse[e42]]))
                 - (Simd32x2::from(self[e12]) * Simd32x2::from([reverse[e12], reverse[e43]]))
-                - (Simd32x2::from(self[e321]) * Simd32x2::from([reverse[e321], reverse[e4]])),
+                - (Simd32x2::from([reverse[e321], reverse[e1]]) * crate::swizzle!(self.group4(), 3, 0, _, _)),
             // e1, e2, e3, e4
-            Simd32x4::from([
-                (reverse[e2] * self[e12]) + (reverse[e31] * self[e3]) + (reverse[e321] * self[e23]) - (reverse[e3] * self[e31]) - (reverse[e12] * self[e2]),
-                (reverse[e3] * self[e23]) + (reverse[e12] * self[e1]) + (reverse[e321] * self[e31]) - (reverse[e1] * self[e12]) - (reverse[e23] * self[e3]),
-                (reverse[e1] * self[e31]) + (reverse[e23] * self[e2]) + (reverse[e321] * self[e12]) - (reverse[e2] * self[e23]) - (reverse[e31] * self[e1]),
-                (reverse[e1] * self[e41]) + (reverse[e2] * self[e42]) + (reverse[e3] * self[e43])
-                    - (reverse[e41] * self[e1])
-                    - (reverse[e42] * self[e2])
-                    - (reverse[e43] * self[e3])
-                    - (reverse[e23] * self[e423])
-                    - (reverse[e31] * self[e431])
-                    - (reverse[e12] * self[e412])
-                    - (reverse[e423] * self[e23])
-                    - (reverse[e431] * self[e31])
-                    - (reverse[e412] * self[e12])
-                    - (reverse[e321] * self[e1234]),
-            ]) + (Simd32x4::from(reverse[scalar]) * self.group1())
-                + (Simd32x4::from(self[scalar]) * reverse.group1())
-                + (Simd32x4::from(self[e321]) * Simd32x4::from([reverse[e23], reverse[e31], reverse[e12], reverse[e1234]])),
+            (Simd32x4::from(reverse[scalar]) * self.group1())
+                + (Simd32x4::from([reverse[e2], reverse[e321], reverse[e321], reverse[e3]]) * crate::swizzle!(self.group3(), 2, 1, 2).extend_to_4(self[e43]))
+                + (Simd32x4::from([reverse[e321], reverse[e3], reverse[e1], reverse[e2]]) * crate::swizzle!(self.group3(), 0, 0, 1).extend_to_4(self[e42]))
+                + (crate::swizzle!(self.group0(), 0, 0).extend_to_4(self[scalar], reverse[e1234]) * reverse.group1().truncate_to_3().extend_to_4(self[e321]))
+                + (crate::swizzle!(self.group1(), 2, 0, _, _).extend_to_4(self[e321], reverse[e1]) * crate::swizzle!(reverse.group3(), 1, 2, 2).extend_to_4(self[e41]))
+                + (crate::swizzle!(self.group4(), 3, 3, _, _).extend_to_4(self[e2], reverse[e4]) * crate::swizzle!(reverse.group3(), 0, 1, 0).extend_to_4(self[scalar]))
+                + Simd32x3::from(0.0).extend_to_4(
+                    -(reverse[e42] * self[e2])
+                        - (reverse[e43] * self[e3])
+                        - (reverse[e23] * self[e423])
+                        - (reverse[e31] * self[e431])
+                        - (reverse[e12] * self[e412])
+                        - (reverse[e423] * self[e23])
+                        - (reverse[e431] * self[e31])
+                        - (reverse[e412] * self[e12]),
+                )
+                - (crate::swizzle!(reverse.group3(), 2, 0, 1) * crate::swizzle!(self.group1(), 1, 2, 0, _)).extend_to_4(reverse[e321] * self[e1234])
+                - (crate::swizzle!(self.group3(), 1, 2, 0) * crate::swizzle!(reverse.group1(), 2, 0, 1, _)).extend_to_4(reverse[e41] * self[e1]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -259,7 +259,7 @@ impl ConstraintViolation for MultiVector {
         );
         return MultiVector::from_groups(
             // scalar, e1234
-            Simd32x2::from([geometric_product[scalar] - dot_product[scalar], geometric_product[e1234]]),
+            Simd32x2::from([dot_product[scalar] * -1.0, 0.0]) + geometric_product.group0(),
             // e1, e2, e3, e4
             geometric_product.group1(),
             // e41, e42, e43

@@ -14,13 +14,13 @@ use crate::traits::Wedge;
 //  Minimum:         0       2       0
 //   Median:         2       5       0
 //  Average:         4       8       0
-//  Maximum:        32      42       0
+//  Maximum:        32      41       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       2       0
 //   Median:         2       9       0
-//  Average:         4      13       0
-//  Maximum:        32      53       0
+//  Average:         4      14       0
+//  Maximum:        32      58       0
 impl std::ops::Div<round_weight_norm_squared> for AntiCircleRotor {
     type Output = AntiScalar;
     fn div(self, _rhs: round_weight_norm_squared) -> Self::Output {
@@ -125,11 +125,11 @@ impl std::ops::Div<round_weight_norm_squared> for DipoleInversion {
 impl RoundWeightNormSquared for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        0
-    //    simd4        0        2        0
+    //      f32        3        4        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        3        9        0
-    //  no simd        3       15        0
+    // yes simd        3        8        0
+    //  no simd        3       20        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([1.0, 0.0])));
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
@@ -144,12 +144,12 @@ impl std::ops::Div<round_weight_norm_squared> for MultiVector {
 impl RoundWeightNormSquared for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       32       38        0
+    //      f32       32       35        0
     //    simd3        0        1        0
-    //    simd4        0        3        0
+    //    simd4        0        5        0
     // Totals...
-    // yes simd       32       42        0
-    //  no simd       32       53        0
+    // yes simd       32       41        0
+    //  no simd       32       58        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([1.0, 0.0])));
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
@@ -217,11 +217,11 @@ impl std::ops::Div<round_weight_norm_squared> for VersorOdd {
 impl RoundWeightNormSquared for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        0
-    //    simd4        0        2        0
+    //      f32        3        4        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        3        9        0
-    //  no simd        3       15        0
+    // yes simd        3        8        0
+    //  no simd        3       20        0
     fn round_weight_norm_squared(self) -> AntiScalar {
         let round_weight_carrier = self.round_weight().wedge(DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([1.0, 0.0])));
         return round_weight_carrier.anti_dot_product(round_weight_carrier);

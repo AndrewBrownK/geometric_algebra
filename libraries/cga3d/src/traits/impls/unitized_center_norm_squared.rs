@@ -13,13 +13,13 @@ use crate::traits::RoundWeightNormSquared;
 //  Minimum:         5      10       1
 //   Median:         9      14       1
 //  Average:        17      23       1
-//  Maximum:        95     107       1
+//  Maximum:        95     106       1
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         5      13       1
 //   Median:         9      20       1
-//  Average:        17      29       1
-//  Maximum:        95     118       1
+//  Average:        17      31       1
+//  Maximum:        95     123       1
 impl std::ops::Div<unitized_center_norm_squared> for AntiCircleRotor {
     type Output = f32;
     fn div(self, _rhs: unitized_center_norm_squared) -> Self::Output {
@@ -124,11 +124,11 @@ impl std::ops::Div<unitized_center_norm_squared> for DipoleInversion {
 impl UnitizedCenterNormSquared for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        9       15        1
-    //    simd4        0        2        0
+    //      f32        9       12        1
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        9       17        1
-    //  no simd        9       23        1
+    // yes simd        9       16        1
+    //  no simd        9       28        1
     fn unitized_center_norm_squared(self) -> f32 {
         use crate::elements::*;
         return (self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
@@ -143,12 +143,12 @@ impl std::ops::Div<unitized_center_norm_squared> for MultiVector {
 impl UnitizedCenterNormSquared for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       95      103        1
+    //      f32       95      100        1
     //    simd3        0        1        0
-    //    simd4        0        3        0
+    //    simd4        0        5        0
     // Totals...
-    // yes simd       95      107        1
-    //  no simd       95      118        1
+    // yes simd       95      106        1
+    //  no simd       95      123        1
     fn unitized_center_norm_squared(self) -> f32 {
         use crate::elements::*;
         return (self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));
@@ -182,11 +182,11 @@ impl std::ops::Div<unitized_center_norm_squared> for VersorOdd {
 impl UnitizedCenterNormSquared for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       16        1
-    //    simd4        0        2        0
+    //      f32       10       13        1
+    //    simd4        0        4        0
     // Totals...
-    // yes simd       10       18        1
-    //  no simd       10       24        1
+    // yes simd       10       17        1
+    //  no simd       10       29        1
     fn unitized_center_norm_squared(self) -> f32 {
         use crate::elements::*;
         return (self.center_norm_squared()[scalar] / (self.round_weight_norm_squared()[e12345]));

@@ -13,26 +13,27 @@ use crate::traits::Wedge;
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
 //   Median:         1       2       0
-//  Average:         4       7       0
-//  Maximum:        68      95       0
+//  Average:         2       5       0
+//  Maximum:        43      67       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         1       5       0
-//  Average:         5      10       0
-//  Maximum:        96     129       0
+//   Median:         2       5       0
+//  Average:         5      11       0
+//  Maximum:       100     129       0
 impl std::ops::Add<AntiCircleOnOrigin> for DipoleOnOrigin {
     type Output = Dipole;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
+    //          add/sub      mul      div
+    //   simd3        1        0        0
+    // no simd        3        0        0
     fn add(self, other: AntiCircleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from([other[e41] + self[e41], other[e42] + self[e42], other[e43] + self[e43]]),
+            other.group0() + self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(self[e45]),
+            other.group1().extend_to_4(self[e45]),
             // e15, e25, e35
             Simd32x3::from(0.0),
         );
@@ -41,15 +42,19 @@ impl std::ops::Add<AntiCircleOnOrigin> for DipoleOnOrigin {
 impl std::ops::Add<AntiCircleRotor> for DipoleOnOrigin {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        7        0        0
     fn add(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from([other[e41] + self[e41], other[e42] + self[e42], other[e43] + self[e43]]),
+            other.group0() + self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], other[e45] + self[e45]]),
+            other.group1() + Simd32x3::from(0.0).extend_to_4(self[e45]),
             // e15, e25, e35, scalar
             other.group2(),
         );
@@ -58,15 +63,16 @@ impl std::ops::Add<AntiCircleRotor> for DipoleOnOrigin {
 impl std::ops::Add<AntiCircleRotorAligningOrigin> for DipoleOnOrigin {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
+    //          add/sub      mul      div
+    //   simd3        1        0        0
+    // no simd        3        0        0
     fn add(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from([other[e41] + self[e41], other[e42] + self[e42], other[e43] + self[e43]]),
+            other.group0() + self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(self[e45]),
+            other.group1().extend_to_4(self[e45]),
             // e15, e25, e35, scalar
             other.group2(),
         );
@@ -80,7 +86,7 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for DipoleOnOrigin {
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(self[e45]),
+            other.group0().extend_to_4(self[e45]),
             // e15, e25, e35, scalar
             other.group1(),
         );
@@ -89,15 +95,16 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for DipoleOnOrigin {
 impl std::ops::Add<AntiCircleRotorAtInfinity> for DipoleOnOrigin {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], other[e45] + self[e45]]),
+            other.group0() + Simd32x3::from(0.0).extend_to_4(self[e45]),
             // e15, e25, e35, scalar
             other.group1(),
         );
@@ -106,15 +113,16 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for DipoleOnOrigin {
 impl std::ops::Add<AntiCircleRotorOnOrigin> for DipoleOnOrigin {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
+    //          add/sub      mul      div
+    //   simd3        1        0        0
+    // no simd        3        0        0
     fn add(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from([other[e41] + self[e41], other[e42] + self[e42], other[e43] + self[e43]]),
+            other.group0().truncate_to_3() + self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(self[e45]),
+            other.group1().extend_to_4(self[e45]),
             // e15, e25, e35, scalar
             Simd32x3::from(0.0).extend_to_4(other[scalar]),
         );
@@ -228,7 +236,7 @@ impl std::ops::Add<AntiDipoleInversionOrthogonalOrigin> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
+            other.group1().extend_to_4(0.0),
             // e423, e431, e412
             other.group0().truncate_to_3(),
             // e235, e315, e125
@@ -414,7 +422,7 @@ impl std::ops::Add<AntiLine> for DipoleOnOrigin {
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(self[e45]),
+            other.group0().extend_to_4(self[e45]),
             // e15, e25, e35
             other.group1(),
         );
@@ -428,7 +436,7 @@ impl std::ops::Add<AntiLineOnOrigin> for DipoleOnOrigin {
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(self[e45]),
+            other.group0().extend_to_4(self[e45]),
             // e15, e25, e35
             Simd32x3::from(0.0),
         );
@@ -467,15 +475,16 @@ impl std::ops::Add<AntiMotorOnOrigin> for DipoleOnOrigin {
 impl std::ops::Add<AntiMysteryCircleRotor> for DipoleOnOrigin {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: AntiMysteryCircleRotor) -> Self::Output {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], other[e45] + self[e45]]),
+            other.group0() + Simd32x3::from(0.0).extend_to_4(self[e45]),
             // e15, e25, e35, scalar
             Simd32x3::from(0.0).extend_to_4(other[scalar]),
         );
@@ -488,7 +497,7 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for DipoleOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
+            other.group1().extend_to_4(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -547,7 +556,7 @@ impl std::ops::Add<AntiPlaneOnOrigin> for DipoleOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(0.0),
+            other.group0().extend_to_4(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -631,13 +640,14 @@ impl std::ops::Add<AntiSphereOnOrigin> for DipoleOnOrigin {
 impl std::ops::Add<AntiVersorEvenOnOrigin> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([other[e41] + self[e41], other[e42] + self[e42], other[e43] + self[e43], other[scalar]]),
+            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0(),
             // e23, e31, e12, e45
             Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]),
             // e15, e25, e35, e1234
@@ -693,7 +703,7 @@ impl std::ops::Add<CircleAligningOrigin> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
+            other.group1().extend_to_4(0.0),
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
@@ -780,7 +790,7 @@ impl std::ops::Add<CircleOnOrigin> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
+            other.group1().extend_to_4(0.0),
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
@@ -870,7 +880,7 @@ impl std::ops::Add<CircleRotorAligningOrigin> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
+            other.group1().extend_to_4(0.0),
             // e423, e431, e412
             other.group0(),
             // e235, e315, e125
@@ -900,7 +910,7 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(0.0),
+            other.group0().extend_to_4(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -960,7 +970,7 @@ impl std::ops::Add<CircleRotorOnOrigin> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
+            other.group1().extend_to_4(0.0),
             // e423, e431, e412
             other.group0().truncate_to_3(),
             // e235, e315, e125
@@ -975,15 +985,19 @@ impl std::ops::Add<CircleRotorOnOrigin> for DipoleOnOrigin {
 impl std::ops::Add<Dipole> for DipoleOnOrigin {
     type Output = Dipole;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        7        0        0
     fn add(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         return Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from([other[e41] + self[e41], other[e42] + self[e42], other[e43] + self[e43]]),
+            other.group0() + self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], other[e45] + self[e45]]),
+            other.group1() + Simd32x3::from(0.0).extend_to_4(self[e45]),
             // e15, e25, e35
             other.group2(),
         );
@@ -992,30 +1006,26 @@ impl std::ops::Add<Dipole> for DipoleOnOrigin {
 impl std::ops::Add<DipoleAligningOrigin> for DipoleOnOrigin {
     type Output = DipoleAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: DipoleAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        return DipoleAligningOrigin::from_groups(
-            // e41, e42, e43, e45
-            Simd32x4::from([other[e41] + self[e41], other[e42] + self[e42], other[e43] + self[e43], other[e45] + self[e45]]),
-            // e15, e25, e35
-            other.group1(),
-        );
+        return DipoleAligningOrigin::from_groups(/* e41, e42, e43, e45 */ other.group0() + self.group0(), /* e15, e25, e35 */ other.group1());
     }
 }
 impl std::ops::Add<DipoleAtInfinity> for DipoleOnOrigin {
     type Output = Dipole;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: DipoleAtInfinity) -> Self::Output {
         use crate::elements::*;
         return Dipole::from_groups(
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], other[e45] + self[e45]]),
+            other.group0() + Simd32x3::from(0.0).extend_to_4(self[e45]),
             // e15, e25, e35
             other.group1(),
         );
@@ -1024,13 +1034,14 @@ impl std::ops::Add<DipoleAtInfinity> for DipoleOnOrigin {
 impl std::ops::Add<DipoleAtOrigin> for DipoleOnOrigin {
     type Output = DipoleAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: DipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return DipoleAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([other[e41] + self[e41], other[e42] + self[e42], other[e43] + self[e43], self[e45]]),
+            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().extend_to_4(self[e45]),
             // e15, e25, e35
             other.group1(),
         );
@@ -1039,15 +1050,19 @@ impl std::ops::Add<DipoleAtOrigin> for DipoleOnOrigin {
 impl std::ops::Add<DipoleInversion> for DipoleOnOrigin {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //           add/sub      mul      div
+    //    simd3        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        7        0        0
     fn add(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from([other[e41] + self[e41], other[e42] + self[e42], other[e43] + self[e43]]),
+            other.group0() + self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], other[e45] + self[e45]]),
+            other.group1() + Simd32x3::from(0.0).extend_to_4(self[e45]),
             // e15, e25, e35, e1234
             other.group2(),
             // e4235, e4315, e4125, e3215
@@ -1058,13 +1073,13 @@ impl std::ops::Add<DipoleInversion> for DipoleOnOrigin {
 impl std::ops::Add<DipoleInversionAligningOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: DipoleInversionAligningOrigin) -> Self::Output {
-        use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([other[e41] + self[e41], other[e42] + self[e42], other[e43] + self[e43], other[e45] + self[e45]]),
+            other.group0() + self.group0(),
             // e15, e25, e35, e1234
             other.group1(),
             // e4235, e4315, e4125, e3215
@@ -1075,17 +1090,18 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for DipoleOnOrigin {
 impl std::ops::Add<DipoleInversionAtInfinity> for DipoleOnOrigin {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: DipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], other[e45] + self[e45]]),
+            other.group0() + Simd32x3::from(0.0).extend_to_4(self[e45]),
             // e15, e25, e35, e1234
-            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
+            other.group1().extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             other.group2(),
         );
@@ -1094,13 +1110,14 @@ impl std::ops::Add<DipoleInversionAtInfinity> for DipoleOnOrigin {
 impl std::ops::Add<DipoleInversionAtOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: DipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([other[e41] + self[e41], other[e42] + self[e42], other[e43] + self[e43], self[e45]]),
+            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().truncate_to_3().extend_to_4(self[e45]),
             // e15, e25, e35, e1234
             other.group1(),
             // e4235, e4315, e4125, e3215
@@ -1111,30 +1128,26 @@ impl std::ops::Add<DipoleInversionAtOrigin> for DipoleOnOrigin {
 impl std::ops::Add<DipoleInversionOnOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: DipoleInversionOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return DipoleInversionOnOrigin::from_groups(
-            // e41, e42, e43, e45
-            Simd32x4::from([other[e41] + self[e41], other[e42] + self[e42], other[e43] + self[e43], other[e45] + self[e45]]),
-            // e1234, e4235, e4315, e4125
-            other.group1(),
-        );
+        return DipoleInversionOnOrigin::from_groups(/* e41, e42, e43, e45 */ other.group0() + self.group0(), /* e1234, e4235, e4315, e4125 */ other.group1());
     }
 }
 impl std::ops::Add<DipoleInversionOrthogonalOrigin> for DipoleOnOrigin {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
+    //          add/sub      mul      div
+    //   simd3        1        0        0
+    // no simd        3        0        0
     fn add(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from([other[e41] + self[e41], other[e42] + self[e42], other[e43] + self[e43]]),
+            other.group0().truncate_to_3() + self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(self[e45]),
+            other.group1().extend_to_4(self[e45]),
             // e15, e25, e35, e1234
             other.group2(),
             // e4235, e4315, e4125, e3215
@@ -1145,37 +1158,31 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for DipoleOnOrigin {
 impl std::ops::Add<DipoleOnOrigin> for DipoleOnOrigin {
     type Output = DipoleOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: DipoleOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return DipoleOnOrigin::from_groups(
-            // e41, e42, e43, e45
-            Simd32x4::from([other[e41] + self[e41], other[e42] + self[e42], other[e43] + self[e43], other[e45] + self[e45]]),
-        );
+        return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ other.group0() + self.group0());
     }
 }
 impl std::ops::AddAssign<DipoleOnOrigin> for DipoleOnOrigin {
     fn add_assign(&mut self, other: DipoleOnOrigin) {
-        use crate::elements::*;
-        *self = DipoleOnOrigin::from_groups(
-            // e41, e42, e43, e45
-            Simd32x4::from([other[e41] + self[e41], other[e42] + self[e42], other[e43] + self[e43], other[e45] + self[e45]]),
-        );
+        *self = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ other.group0() + self.group0());
     }
 }
 impl std::ops::Add<DipoleOrthogonalOrigin> for DipoleOnOrigin {
     type Output = Dipole;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
+    //          add/sub      mul      div
+    //   simd3        1        0        0
+    // no simd        3        0        0
     fn add(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41] + other[e41], self[e42] + other[e42], self[e43] + other[e43]]),
+            other.group0() + self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(self[e45]),
+            other.group1().extend_to_4(self[e45]),
             // e15, e25, e35
             other.group2(),
         );
@@ -1214,29 +1221,31 @@ impl std::ops::Add<DualNum> for DipoleOnOrigin {
 impl std::ops::Add<FlatOrigin> for DipoleOnOrigin {
     type Output = DipoleOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ Simd32x4::from([self[e41], self[e42], self[e43], self[e45] + other[e45]]));
+        return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45]));
     }
 }
 impl std::ops::AddAssign<FlatOrigin> for DipoleOnOrigin {
     fn add_assign(&mut self, other: FlatOrigin) {
         use crate::elements::*;
-        *self = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ Simd32x4::from([self[e41], self[e42], self[e43], self[e45] + other[e45]]));
+        *self = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45]));
     }
 }
 impl std::ops::Add<FlatPoint> for DipoleOnOrigin {
     type Output = DipoleAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return DipoleAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e45] + other[e45]]),
+            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45]),
             // e15, e25, e35
             other.group0().truncate_to_3(),
         );
@@ -1251,13 +1260,14 @@ impl std::ops::Add<FlatPointAtInfinity> for DipoleOnOrigin {
 impl std::ops::Add<Flector> for DipoleOnOrigin {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e45] + other[e45]]),
+            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15], other[e25], other[e35], 0.0]),
             // e4235, e4315, e4125, e3215
@@ -1282,13 +1292,14 @@ impl std::ops::Add<FlectorAtInfinity> for DipoleOnOrigin {
 impl std::ops::Add<FlectorOnOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: FlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return DipoleInversionOnOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e45] + other[e45]]),
+            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45]),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([0.0, other[e4235], other[e4315], other[e4125]]),
         );
@@ -1355,7 +1366,7 @@ impl std::ops::Add<Line> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(0.0),
+            other.group0().extend_to_4(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -1413,7 +1424,7 @@ impl std::ops::Add<LineOnOrigin> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            crate::swizzle!(other.group0(), 0, 1, 2).extend_to_4(0.0),
+            other.group0().extend_to_4(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -1518,8 +1529,9 @@ impl std::ops::Add<MotorOnOrigin> for DipoleOnOrigin {
 impl std::ops::Add<MultiVector> for DipoleOnOrigin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -1530,7 +1542,7 @@ impl std::ops::Add<MultiVector> for DipoleOnOrigin {
             // e5
             other[e5],
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41] + other[e41], self[e42] + other[e42], self[e43] + other[e43], self[e45] + other[e45]]),
+            self.group0() + other.group3(),
             // e15, e25, e35
             other.group4(),
             // e23, e31, e12
@@ -1618,7 +1630,7 @@ impl std::ops::Add<MysteryDipole> for DipoleOnOrigin {
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] + other[e45]]),
+            other.group0().truncate_to_3().extend_to_4(self[e45] + other[e45]),
             // e15, e25, e35
             Simd32x3::from(0.0),
         );
@@ -1635,11 +1647,11 @@ impl std::ops::Add<MysteryDipoleInversion> for DipoleOnOrigin {
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] + other[e45]]),
+            other.group0().truncate_to_3().extend_to_4(self[e45] + other[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
-            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
+            other.group1().extend_to_4(0.0),
         );
     }
 }
@@ -1684,7 +1696,7 @@ impl std::ops::Add<MysteryVersorOdd> for DipoleOnOrigin {
             // e41, e42, e43, scalar
             Simd32x4::from([self[e41], self[e42], self[e43], other[scalar]]),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] + other[e45]]),
+            other.group1().truncate_to_3().extend_to_4(self[e45] + other[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
@@ -1724,13 +1736,14 @@ impl std::ops::Add<NullCircleAtOrigin> for DipoleOnOrigin {
 impl std::ops::Add<NullDipoleAtOrigin> for DipoleOnOrigin {
     type Output = DipoleOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: NullDipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return DipoleOnOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41] + other[e41], self[e42] + other[e42], self[e43] + other[e43], self[e45]]),
+            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().extend_to_4(self[e45]),
         );
     }
 }
@@ -1739,20 +1752,21 @@ impl std::ops::AddAssign<NullDipoleAtOrigin> for DipoleOnOrigin {
         use crate::elements::*;
         *self = DipoleOnOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41] + other[e41], self[e42] + other[e42], self[e43] + other[e43], self[e45]]),
+            Simd32x4::from([self[e41], self[e42], self[e43], 0.0]) + other.group0().extend_to_4(self[e45]),
         );
     }
 }
 impl std::ops::Add<NullDipoleInversionAtOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
         return DipoleInversionOnOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41] + other[e41], self[e42] + other[e42], self[e43] + other[e43], self[e45]]),
+            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0(),
             // e1234, e4235, e4315, e4125
             Simd32x4::from([other[e1234], 0.0, 0.0, 0.0]),
         );
@@ -2151,15 +2165,19 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for DipoleOnOrigin {
 impl std::ops::Add<VersorOdd> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        5        0        0
     fn add(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41] + other[e41], self[e42] + other[e42], self[e43] + other[e43], other[scalar]]),
+            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().truncate_to_3().extend_to_4(other[scalar]),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] + other[e45]]),
+            other.group1().truncate_to_3().extend_to_4(self[e45] + other[e45]),
             // e15, e25, e35, e1234
             other.group2(),
             // e4235, e4315, e4125, e3215
@@ -2178,7 +2196,7 @@ impl std::ops::Add<VersorOddAtInfinity> for DipoleOnOrigin {
             // e41, e42, e43, scalar
             Simd32x4::from([self[e41], self[e42], self[e43], other[scalar]]),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] + other[e45]]),
+            other.group1().truncate_to_3().extend_to_4(self[e45] + other[e45]),
             // e15, e25, e35, e1234
             Simd32x4::from([other[e15], other[e25], other[e35], 0.0]),
             // e4235, e4315, e4125, e3215
@@ -2189,13 +2207,14 @@ impl std::ops::Add<VersorOddAtInfinity> for DipoleOnOrigin {
 impl std::ops::Add<VersorOddOrthogonalOrigin> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41] + other[e41], self[e42] + other[e42], self[e43] + other[e43], other[scalar]]),
+            Simd32x4::from([other[e41], other[e42], other[e43], 0.0]) + self.group0().truncate_to_3().extend_to_4(other[scalar]),
             // e23, e31, e12, e45
             Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]),
             // e15, e25, e35, e1234
@@ -2208,8 +2227,12 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for DipoleOnOrigin {
 impl std::ops::BitXor<AntiCircleOnOrigin> for DipoleOnOrigin {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        6        0
+    //           add/sub      mul      div
+    //      f32        2        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        4        0
+    //  no simd        2        7        0
     fn bitxor(self, other: AntiCircleOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2218,10 +2241,10 @@ impl std::ops::BitXor<AntiCircleRotor> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       12        0
-    //    simd4        0        1        0
+    //      f32        4        8        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        8       13        0
+    // yes simd        5       10        0
     //  no simd        8       16        0
     fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
         return self.wedge(other);
@@ -2231,10 +2254,10 @@ impl std::ops::BitXor<AntiCircleRotorAligningOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       12        0
-    //    simd4        0        1        0
+    //      f32        4        8        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        8       13        0
+    // yes simd        5       10        0
     //  no simd        8       16        0
     fn bitxor(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         return self.wedge(other);
@@ -2244,10 +2267,10 @@ impl std::ops::BitXor<AntiCircleRotorAligningOriginAtInfinity> for DipoleOnOrigi
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       12        0
-    //    simd4        0        1        0
+    //      f32        4        8        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        8       13        0
+    // yes simd        5       10        0
     //  no simd        8       16        0
     fn bitxor(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.wedge(other);
@@ -2257,10 +2280,10 @@ impl std::ops::BitXor<AntiCircleRotorAtInfinity> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       12        0
-    //    simd4        0        1        0
+    //      f32        4        8        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        8       13        0
+    // yes simd        5       10        0
     //  no simd        8       16        0
     fn bitxor(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         return self.wedge(other);
@@ -2283,10 +2306,11 @@ impl std::ops::BitXor<AntiDipoleInversion> for DipoleOnOrigin {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       10        0
+    //      f32        2        6        0
     //    simd3        1        2        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        7       12        0
+    // yes simd        4        9        0
     //  no simd        9       16        0
     fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
         return self.wedge(other);
@@ -2296,10 +2320,11 @@ impl std::ops::BitXor<AntiDipoleInversionAtInfinity> for DipoleOnOrigin {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       10        0
+    //      f32        2        6        0
     //    simd3        1        2        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        7       12        0
+    // yes simd        4        9        0
     //  no simd        9       16        0
     fn bitxor(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         return self.wedge(other);
@@ -2309,12 +2334,11 @@ impl std::ops::BitXor<AntiDipoleInversionOnOrigin> for DipoleOnOrigin {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //      f32        0        2        0
+    //    simd3        1        4        0
     // Totals...
-    // yes simd        3       10        0
-    //  no simd        3       17        0
+    // yes simd        1        6        0
+    //  no simd        3       14        0
     fn bitxor(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2322,8 +2346,12 @@ impl std::ops::BitXor<AntiDipoleInversionOnOrigin> for DipoleOnOrigin {
 impl std::ops::BitXor<AntiDipoleInversionOrthogonalOrigin> for DipoleOnOrigin {
     type Output = MotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        6        0
+    //           add/sub      mul      div
+    //      f32        2        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        4        0
+    //  no simd        2        7        0
     fn bitxor(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2374,10 +2402,11 @@ impl std::ops::BitXor<AntiFlector> for DipoleOnOrigin {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       10        0
+    //      f32        2        6        0
     //    simd3        1        2        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        7       12        0
+    // yes simd        4        9        0
     //  no simd        9       16        0
     fn bitxor(self, other: AntiFlector) -> Self::Output {
         return self.wedge(other);
@@ -2387,12 +2416,11 @@ impl std::ops::BitXor<AntiFlectorOnOrigin> for DipoleOnOrigin {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //      f32        0        2        0
+    //    simd3        1        4        0
     // Totals...
-    // yes simd        3       10        0
-    //  no simd        3       17        0
+    // yes simd        1        6        0
+    //  no simd        3       14        0
     fn bitxor(self, other: AntiFlectorOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2400,8 +2428,12 @@ impl std::ops::BitXor<AntiFlectorOnOrigin> for DipoleOnOrigin {
 impl std::ops::BitXor<AntiLine> for DipoleOnOrigin {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn bitxor(self, other: AntiLine) -> Self::Output {
         return self.wedge(other);
     }
@@ -2409,8 +2441,12 @@ impl std::ops::BitXor<AntiLine> for DipoleOnOrigin {
 impl std::ops::BitXor<AntiLineOnOrigin> for DipoleOnOrigin {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        6        0
+    //           add/sub      mul      div
+    //      f32        2        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        4        0
+    //  no simd        2        7        0
     fn bitxor(self, other: AntiLineOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2419,10 +2455,10 @@ impl std::ops::BitXor<AntiMotor> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       12        0
-    //    simd4        0        1        0
+    //      f32        4        8        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        8       13        0
+    // yes simd        5       10        0
     //  no simd        8       16        0
     fn bitxor(self, other: AntiMotor) -> Self::Output {
         return self.wedge(other);
@@ -2458,12 +2494,11 @@ impl std::ops::BitXor<AntiMysteryDipoleInversion> for DipoleOnOrigin {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //      f32        0        2        0
+    //    simd3        1        4        0
     // Totals...
-    // yes simd        3       10        0
-    //  no simd        3       17        0
+    // yes simd        1        6        0
+    //  no simd        3       14        0
     fn bitxor(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -2471,12 +2506,9 @@ impl std::ops::BitXor<AntiMysteryDipoleInversion> for DipoleOnOrigin {
 impl std::ops::BitXor<AntiPlane> for DipoleOnOrigin {
     type Output = CircleOnOrigin;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        6        0
-    //    simd3        1        2        0
-    // Totals...
-    // yes simd        4        8        0
-    //  no simd        6       12        0
+    //          add/sub      mul      div
+    //   simd3        2        4        0
+    // no simd        6       12        0
     fn bitxor(self, other: AntiPlane) -> Self::Output {
         return self.wedge(other);
     }
@@ -2484,12 +2516,9 @@ impl std::ops::BitXor<AntiPlane> for DipoleOnOrigin {
 impl std::ops::BitXor<AntiPlaneOnOrigin> for DipoleOnOrigin {
     type Output = CircleOnOrigin;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        6        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        3        8        0
-    //  no simd        3       12        0
+    //          add/sub      mul      div
+    //   simd3        1        4        0
+    // no simd        3       12        0
     fn bitxor(self, other: AntiPlaneOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2497,12 +2526,9 @@ impl std::ops::BitXor<AntiPlaneOnOrigin> for DipoleOnOrigin {
 impl std::ops::BitXor<AntiSphereOnOrigin> for DipoleOnOrigin {
     type Output = CircleOnOrigin;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        6        0
-    //    simd3        0        2        0
-    // Totals...
-    // yes simd        3        8        0
-    //  no simd        3       12        0
+    //          add/sub      mul      div
+    //   simd3        1        4        0
+    // no simd        3       12        0
     fn bitxor(self, other: AntiSphereOnOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2604,8 +2630,12 @@ impl std::ops::BitXor<CircleRotorAtInfinity> for DipoleOnOrigin {
 impl std::ops::BitXor<Dipole> for DipoleOnOrigin {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn bitxor(self, other: Dipole) -> Self::Output {
         return self.wedge(other);
     }
@@ -2613,8 +2643,9 @@ impl std::ops::BitXor<Dipole> for DipoleOnOrigin {
 impl std::ops::BitXor<DipoleAligningOrigin> for DipoleOnOrigin {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        6        0
+    //          add/sub      mul      div
+    //   simd3        1        2        0
+    // no simd        3        6        0
     fn bitxor(self, other: DipoleAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2622,8 +2653,12 @@ impl std::ops::BitXor<DipoleAligningOrigin> for DipoleOnOrigin {
 impl std::ops::BitXor<DipoleAtInfinity> for DipoleOnOrigin {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn bitxor(self, other: DipoleAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2631,8 +2666,9 @@ impl std::ops::BitXor<DipoleAtInfinity> for DipoleOnOrigin {
 impl std::ops::BitXor<DipoleAtOrigin> for DipoleOnOrigin {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        6        0
+    //          add/sub      mul      div
+    //   simd3        1        2        0
+    // no simd        3        6        0
     fn bitxor(self, other: DipoleAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2640,8 +2676,12 @@ impl std::ops::BitXor<DipoleAtOrigin> for DipoleOnOrigin {
 impl std::ops::BitXor<DipoleInversion> for DipoleOnOrigin {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn bitxor(self, other: DipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -2649,8 +2689,9 @@ impl std::ops::BitXor<DipoleInversion> for DipoleOnOrigin {
 impl std::ops::BitXor<DipoleInversionAligningOrigin> for DipoleOnOrigin {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        6        0
+    //          add/sub      mul      div
+    //   simd3        1        2        0
+    // no simd        3        6        0
     fn bitxor(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2658,8 +2699,12 @@ impl std::ops::BitXor<DipoleInversionAligningOrigin> for DipoleOnOrigin {
 impl std::ops::BitXor<DipoleInversionAtInfinity> for DipoleOnOrigin {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn bitxor(self, other: DipoleInversionAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2667,8 +2712,9 @@ impl std::ops::BitXor<DipoleInversionAtInfinity> for DipoleOnOrigin {
 impl std::ops::BitXor<DipoleInversionAtOrigin> for DipoleOnOrigin {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        6        0
+    //          add/sub      mul      div
+    //   simd3        1        2        0
+    // no simd        3        6        0
     fn bitxor(self, other: DipoleInversionAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2676,8 +2722,12 @@ impl std::ops::BitXor<DipoleInversionAtOrigin> for DipoleOnOrigin {
 impl std::ops::BitXor<DipoleInversionOrthogonalOrigin> for DipoleOnOrigin {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn bitxor(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2685,8 +2735,12 @@ impl std::ops::BitXor<DipoleInversionOrthogonalOrigin> for DipoleOnOrigin {
 impl std::ops::BitXor<DipoleOrthogonalOrigin> for DipoleOnOrigin {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn bitxor(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2694,8 +2748,9 @@ impl std::ops::BitXor<DipoleOrthogonalOrigin> for DipoleOnOrigin {
 impl std::ops::BitXor<FlatPoint> for DipoleOnOrigin {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        6        0
+    //          add/sub      mul      div
+    //   simd3        1        2        0
+    // no simd        3        6        0
     fn bitxor(self, other: FlatPoint) -> Self::Output {
         return self.wedge(other);
     }
@@ -2703,8 +2758,9 @@ impl std::ops::BitXor<FlatPoint> for DipoleOnOrigin {
 impl std::ops::BitXor<FlatPointAtInfinity> for DipoleOnOrigin {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        6        0
+    //          add/sub      mul      div
+    //   simd3        1        2        0
+    // no simd        3        6        0
     fn bitxor(self, other: FlatPointAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2712,8 +2768,9 @@ impl std::ops::BitXor<FlatPointAtInfinity> for DipoleOnOrigin {
 impl std::ops::BitXor<Flector> for DipoleOnOrigin {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        6        0
+    //          add/sub      mul      div
+    //   simd3        1        2        0
+    // no simd        3        6        0
     fn bitxor(self, other: Flector) -> Self::Output {
         return self.wedge(other);
     }
@@ -2721,8 +2778,9 @@ impl std::ops::BitXor<Flector> for DipoleOnOrigin {
 impl std::ops::BitXor<FlectorAtInfinity> for DipoleOnOrigin {
     type Output = PlaneOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        6        0
+    //          add/sub      mul      div
+    //   simd3        1        2        0
+    // no simd        3        6        0
     fn bitxor(self, other: FlectorAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2758,8 +2816,12 @@ impl std::ops::BitXor<LineAtInfinity> for DipoleOnOrigin {
 impl std::ops::BitXor<Motor> for DipoleOnOrigin {
     type Output = MotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        6        0
+    //           add/sub      mul      div
+    //      f32        2        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        4        0
+    //  no simd        2        7        0
     fn bitxor(self, other: Motor) -> Self::Output {
         return self.wedge(other);
     }
@@ -2767,8 +2829,12 @@ impl std::ops::BitXor<Motor> for DipoleOnOrigin {
 impl std::ops::BitXor<MotorAtInfinity> for DipoleOnOrigin {
     type Output = MotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        6        0
+    //           add/sub      mul      div
+    //      f32        2        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        4        0
+    //  no simd        2        7        0
     fn bitxor(self, other: MotorAtInfinity) -> Self::Output {
         return self.wedge(other);
     }
@@ -2777,12 +2843,12 @@ impl std::ops::BitXor<MultiVector> for DipoleOnOrigin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       28        0
-    //    simd3        0        1        0
-    //    simd4        1        1        0
+    //      f32        7       12        0
+    //    simd3        2        4        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd       15       30        0
-    //  no simd       18       35        0
+    // yes simd       10       18        0
+    //  no simd       17       32        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
         return self.wedge(other);
     }
@@ -2808,8 +2874,12 @@ impl std::ops::BitXor<MysteryCircleRotor> for DipoleOnOrigin {
 impl std::ops::BitXor<MysteryDipole> for DipoleOnOrigin {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        6        0
+    //           add/sub      mul      div
+    //      f32        2        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        4        0
+    //  no simd        2        7        0
     fn bitxor(self, other: MysteryDipole) -> Self::Output {
         return self.wedge(other);
     }
@@ -2817,8 +2887,12 @@ impl std::ops::BitXor<MysteryDipole> for DipoleOnOrigin {
 impl std::ops::BitXor<MysteryDipoleInversion> for DipoleOnOrigin {
     type Output = SphereOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        6        0
+    //           add/sub      mul      div
+    //      f32        2        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        4        0
+    //  no simd        2        7        0
     fn bitxor(self, other: MysteryDipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -2827,12 +2901,11 @@ impl std::ops::BitXor<MysteryVersorEven> for DipoleOnOrigin {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        7        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //      f32        0        2        0
+    //    simd3        1        4        0
     // Totals...
-    // yes simd        3       10        0
-    //  no simd        3       17        0
+    // yes simd        1        6        0
+    //  no simd        3       14        0
     fn bitxor(self, other: MysteryVersorEven) -> Self::Output {
         return self.wedge(other);
     }
@@ -2853,12 +2926,9 @@ impl std::ops::BitXor<MysteryVersorOdd> for DipoleOnOrigin {
 impl std::ops::BitXor<RoundPoint> for DipoleOnOrigin {
     type Output = CircleOnOrigin;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        3        6        0
-    //    simd3        1        2        0
-    // Totals...
-    // yes simd        4        8        0
-    //  no simd        6       12        0
+    //          add/sub      mul      div
+    //   simd3        2        4        0
+    // no simd        6       12        0
     fn bitxor(self, other: RoundPoint) -> Self::Output {
         return self.wedge(other);
     }
@@ -2892,10 +2962,11 @@ impl std::ops::BitXor<VersorEven> for DipoleOnOrigin {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       10        0
+    //      f32        2        6        0
     //    simd3        1        2        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        7       12        0
+    // yes simd        4        9        0
     //  no simd        9       16        0
     fn bitxor(self, other: VersorEven) -> Self::Output {
         return self.wedge(other);
@@ -2904,8 +2975,12 @@ impl std::ops::BitXor<VersorEven> for DipoleOnOrigin {
 impl std::ops::BitXor<VersorEvenAligningOrigin> for DipoleOnOrigin {
     type Output = MotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        6        0
+    //           add/sub      mul      div
+    //      f32        2        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        4        0
+    //  no simd        2        7        0
     fn bitxor(self, other: VersorEvenAligningOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2914,10 +2989,11 @@ impl std::ops::BitXor<VersorEvenAtInfinity> for DipoleOnOrigin {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       10        0
+    //      f32        2        6        0
     //    simd3        1        2        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        7       12        0
+    // yes simd        4        9        0
     //  no simd        9       16        0
     fn bitxor(self, other: VersorEvenAtInfinity) -> Self::Output {
         return self.wedge(other);
@@ -2926,8 +3002,12 @@ impl std::ops::BitXor<VersorEvenAtInfinity> for DipoleOnOrigin {
 impl std::ops::BitXor<VersorEvenAtOrigin> for DipoleOnOrigin {
     type Output = MotorOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        6        0
+    //           add/sub      mul      div
+    //      f32        2        3        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        2        4        0
+    //  no simd        2        7        0
     fn bitxor(self, other: VersorEvenAtOrigin) -> Self::Output {
         return self.wedge(other);
     }
@@ -2936,10 +3016,11 @@ impl std::ops::BitXor<VersorEvenOrthogonalOrigin> for DipoleOnOrigin {
     type Output = CircleRotorOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       10        0
+    //      f32        2        6        0
     //    simd3        1        2        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        7       12        0
+    // yes simd        4        9        0
     //  no simd        9       16        0
     fn bitxor(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
@@ -2949,10 +3030,10 @@ impl std::ops::BitXor<VersorOdd> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       12        0
-    //    simd4        0        1        0
+    //      f32        4        8        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        8       13        0
+    // yes simd        5       10        0
     //  no simd        8       16        0
     fn bitxor(self, other: VersorOdd) -> Self::Output {
         return self.wedge(other);
@@ -2962,10 +3043,10 @@ impl std::ops::BitXor<VersorOddAtInfinity> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       12        0
-    //    simd4        0        1        0
+    //      f32        4        8        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        8       13        0
+    // yes simd        5       10        0
     //  no simd        8       16        0
     fn bitxor(self, other: VersorOddAtInfinity) -> Self::Output {
         return self.wedge(other);
@@ -2975,10 +3056,10 @@ impl std::ops::BitXor<VersorOddOrthogonalOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       12        0
-    //    simd4        0        1        0
+    //      f32        4        8        0
+    //    simd4        1        2        0
     // Totals...
-    // yes simd        8       13        0
+    // yes simd        5       10        0
     //  no simd        8       16        0
     fn bitxor(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.wedge(other);
@@ -3005,11 +3086,12 @@ impl std::ops::Mul<AntiCircleOnOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       12        0
-    //    simd3        1        1        0
+    //      f32        2        6        0
+    //    simd3        0        3        0
+    //    simd4        2        0        0
     // Totals...
-    // yes simd        6       13        0
-    //  no simd        8       15        0
+    // yes simd        4        9        0
+    //  no simd       10       15        0
     fn mul(self, other: AntiCircleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3018,12 +3100,12 @@ impl std::ops::Mul<AntiCircleRotor> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       37        0
-    //    simd3        0        1        0
-    //    simd4        2        1        0
+    //      f32        7       20        0
+    //    simd3        0        3        0
+    //    simd4        6        5        0
     // Totals...
-    // yes simd       24       39        0
-    //  no simd       30       44        0
+    // yes simd       13       28        0
+    //  no simd       31       49        0
     fn mul(self, other: AntiCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3032,12 +3114,12 @@ impl std::ops::Mul<AntiCircleRotorAligningOrigin> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       37        0
-    //    simd3        0        1        0
-    //    simd4        1        0        0
+    //      f32        7       20        0
+    //    simd3        0        3        0
+    //    simd4        5        4        0
     // Totals...
-    // yes simd       23       38        0
-    //  no simd       26       40        0
+    // yes simd       12       27        0
+    //  no simd       27       45        0
     fn mul(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3046,12 +3128,12 @@ impl std::ops::Mul<AntiCircleRotorAligningOriginAtInfinity> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       34        0
-    //    simd3        0        1        0
-    //    simd4        1        0        0
+    //      f32        8       20        0
+    //    simd3        0        3        0
+    //    simd4        4        3        0
     // Totals...
-    // yes simd       20       35        0
-    //  no simd       23       37        0
+    // yes simd       12       26        0
+    //  no simd       24       41        0
     fn mul(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3060,12 +3142,12 @@ impl std::ops::Mul<AntiCircleRotorAtInfinity> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       19       34        0
-    //    simd3        0        1        0
-    //    simd4        2        1        0
+    //      f32        8       20        0
+    //    simd3        0        3        0
+    //    simd4        5        4        0
     // Totals...
-    // yes simd       21       36        0
-    //  no simd       27       41        0
+    // yes simd       13       27        0
+    //  no simd       28       45        0
     fn mul(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3074,10 +3156,10 @@ impl std::ops::Mul<AntiCircleRotorOnOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       13        0
-    //    simd3        2        2        0
+    //      f32        2        7        0
+    //    simd3        3        4        0
     // Totals...
-    // yes simd        7       15        0
+    // yes simd        5       11        0
     //  no simd       11       19        0
     fn mul(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -3087,11 +3169,11 @@ impl std::ops::Mul<AntiDipoleInversion> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       36        0
-    //    simd4        5        6        0
+    //      f32        8       17        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       30       42        0
-    //  no simd       45       60        0
+    // yes simd       18       28        0
+    //  no simd       48       61        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3100,11 +3182,11 @@ impl std::ops::Mul<AntiDipoleInversionAtInfinity> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       41        0
-    //    simd4        3        4        0
+    //      f32        7       18        0
+    //    simd4        9       10        0
     // Totals...
-    // yes simd       31       45        0
-    //  no simd       40       57        0
+    // yes simd       16       28        0
+    //  no simd       43       58        0
     fn mul(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3113,12 +3195,12 @@ impl std::ops::Mul<AntiDipoleInversionOnOrigin> for DipoleOnOrigin {
     type Output = VersorEvenOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       15        0
-    //    simd3        2        2        0
-    //    simd4        0        1        0
+    //      f32        3        6        0
+    //    simd3        3        4        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        8       18        0
-    //  no simd       12       25        0
+    // yes simd        6       12        0
+    //  no simd       12       26        0
     fn mul(self, other: AntiDipoleInversionOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3127,11 +3209,11 @@ impl std::ops::Mul<AntiDipoleInversionOrthogonalOrigin> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       36        0
-    //    simd4        1        2        0
+    //      f32        8       21        0
+    //    simd4        5        6        0
     // Totals...
-    // yes simd       25       38        0
-    //  no simd       28       44        0
+    // yes simd       13       27        0
+    //  no simd       28       45        0
     fn mul(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3176,11 +3258,12 @@ impl std::ops::Mul<AntiFlatPoint> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       25        0
-    //    simd4        0        2        0
+    //      f32        4        9        0
+    //    simd3        1        2        0
+    //    simd4        1        6        0
     // Totals...
-    // yes simd       11       27        0
-    //  no simd       11       33        0
+    // yes simd        6       17        0
+    //  no simd       11       39        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3189,11 +3272,11 @@ impl std::ops::Mul<AntiFlector> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       24       36        0
-    //    simd4        1        2        0
+    //      f32        4       20        0
+    //    simd4        6        7        0
     // Totals...
-    // yes simd       25       38        0
-    //  no simd       28       44        0
+    // yes simd       10       27        0
+    //  no simd       28       48        0
     fn mul(self, other: AntiFlector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3202,12 +3285,12 @@ impl std::ops::Mul<AntiFlectorOnOrigin> for DipoleOnOrigin {
     type Output = VersorEvenOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       14        0
-    //    simd3        1        1        0
-    //    simd4        0        1        0
+    //      f32        2        5        0
+    //    simd3        2        3        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        6       16        0
-    //  no simd        8       21        0
+    // yes simd        4       10        0
+    //  no simd        8       22        0
     fn mul(self, other: AntiFlectorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3216,12 +3299,12 @@ impl std::ops::Mul<AntiLine> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       15       30        0
-    //    simd3        0        1        0
-    //    simd4        1        0        0
+    //      f32        4       16        0
+    //    simd3        0        3        0
+    //    simd4        4        3        0
     // Totals...
-    // yes simd       16       31        0
-    //  no simd       19       33        0
+    // yes simd        8       22        0
+    //  no simd       20       37        0
     fn mul(self, other: AntiLine) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3229,8 +3312,12 @@ impl std::ops::Mul<AntiLine> for DipoleOnOrigin {
 impl std::ops::Mul<AntiLineOnOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       12        0
+    //           add/sub      mul      div
+    //      f32        2        6        0
+    //    simd3        1        2        0
+    // Totals...
+    // yes simd        3        8        0
+    //  no simd        5       12        0
     fn mul(self, other: AntiLineOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3239,11 +3326,12 @@ impl std::ops::Mul<AntiMotor> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       38        0
-    //    simd3        2        2        0
+    //      f32        7       20        0
+    //    simd3        3        4        0
+    //    simd4        3        4        0
     // Totals...
-    // yes simd       24       40        0
-    //  no simd       28       44        0
+    // yes simd       13       28        0
+    //  no simd       28       48        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3252,10 +3340,10 @@ impl std::ops::Mul<AntiMotorOnOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       13        0
-    //    simd3        1        1        0
+    //      f32        2        7        0
+    //    simd3        2        3        0
     // Totals...
-    // yes simd        6       14        0
+    // yes simd        4       10        0
     //  no simd        8       16        0
     fn mul(self, other: AntiMotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -3265,12 +3353,12 @@ impl std::ops::Mul<AntiMysteryCircleRotor> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       14        0
-    //    simd3        2        2        0
-    //    simd4        0        1        0
+    //      f32        2        5        0
+    //    simd3        3        4        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        7       17        0
-    //  no simd       11       24        0
+    // yes simd        5       12        0
+    //  no simd       11       29        0
     fn mul(self, other: AntiMysteryCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3279,12 +3367,12 @@ impl std::ops::Mul<AntiMysteryDipoleInversion> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       20        0
-    //    simd3        3        3        0
-    //    simd4        0        2        0
+    //      f32        5        8        0
+    //    simd3        4        5        0
+    //    simd4        0        5        0
     // Totals...
-    // yes simd       11       25        0
-    //  no simd       17       37        0
+    // yes simd        9       18        0
+    //  no simd       17       43        0
     fn mul(self, other: AntiMysteryDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3293,12 +3381,12 @@ impl std::ops::Mul<AntiPlane> for DipoleOnOrigin {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       15        0
-    //    simd3        0        1        0
-    //    simd4        1        1        0
+    //      f32        2        3        0
+    //    simd3        2        4        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        6       17        0
-    //  no simd        9       22        0
+    // yes simd        4        8        0
+    //  no simd        8       19        0
     fn mul(self, other: AntiPlane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3307,11 +3395,12 @@ impl std::ops::Mul<AntiPlaneOnOrigin> for DipoleOnOrigin {
     type Output = VersorEvenOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       12        0
-    //    simd4        0        1        0
+    //      f32        2        3        0
+    //    simd3        1        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        5       13        0
-    //  no simd        5       16        0
+    // yes simd        3        7        0
+    //  no simd        5       17        0
     fn mul(self, other: AntiPlaneOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3330,11 +3419,12 @@ impl std::ops::Mul<AntiSphereOnOrigin> for DipoleOnOrigin {
     type Output = VersorEvenOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       13        0
-    //    simd4        0        1        0
+    //      f32        3        4        0
+    //    simd3        1        2        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        6       14        0
-    //  no simd        6       17        0
+    // yes simd        4        8        0
+    //  no simd        6       18        0
     fn mul(self, other: AntiSphereOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3343,10 +3433,10 @@ impl std::ops::Mul<AntiVersorEvenOnOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       14        0
-    //    simd3        2        2        0
+    //      f32        3        8        0
+    //    simd3        3        4        0
     // Totals...
-    // yes simd        8       16        0
+    // yes simd        6       12        0
     //  no simd       12       20        0
     fn mul(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -3356,11 +3446,11 @@ impl std::ops::Mul<Circle> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       36        0
-    //    simd4        1        2        0
+    //      f32        1       15        0
+    //    simd4        6        9        0
     // Totals...
-    // yes simd       22       38        0
-    //  no simd       25       44        0
+    // yes simd        7       24        0
+    //  no simd       25       51        0
     fn mul(self, other: Circle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3369,11 +3459,11 @@ impl std::ops::Mul<CircleAligningOrigin> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       36        0
-    //    simd4        0        1        0
+    //      f32        1       15        0
+    //    simd4        5        8        0
     // Totals...
-    // yes simd       21       37        0
-    //  no simd       21       40        0
+    // yes simd        6       23        0
+    //  no simd       21       47        0
     fn mul(self, other: CircleAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3382,11 +3472,11 @@ impl std::ops::Mul<CircleAtInfinity> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       33        0
-    //    simd4        1        2        0
+    //      f32        2       15        0
+    //    simd4        5        8        0
     // Totals...
-    // yes simd       19       35        0
-    //  no simd       22       41        0
+    // yes simd        7       23        0
+    //  no simd       22       47        0
     fn mul(self, other: CircleAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3395,11 +3485,12 @@ impl std::ops::Mul<CircleAtOrigin> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       24        0
-    //    simd4        0        2        0
+    //      f32        3        8        0
+    //    simd3        1        2        0
+    //    simd4        1        6        0
     // Totals...
-    // yes simd       10       26        0
-    //  no simd       10       32        0
+    // yes simd        5       16        0
+    //  no simd       10       38        0
     fn mul(self, other: CircleAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3408,12 +3499,12 @@ impl std::ops::Mul<CircleOnOrigin> for DipoleOnOrigin {
     type Output = AntiDipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       12        0
-    //    simd3        1        1        0
-    //    simd4        0        1        0
+    //      f32        2        6        0
+    //    simd3        0        3        0
+    //    simd4        2        1        0
     // Totals...
-    // yes simd        6       14        0
-    //  no simd        8       19        0
+    // yes simd        4       10        0
+    //  no simd       10       19        0
     fn mul(self, other: CircleOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3422,11 +3513,12 @@ impl std::ops::Mul<CircleOrthogonalOrigin> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       27        0
-    //    simd4        1        2        0
+    //      f32        2        7        0
+    //    simd3        1        2        0
+    //    simd4        3        6        0
     // Totals...
-    // yes simd       11       29        0
-    //  no simd       14       35        0
+    // yes simd        6       15        0
+    //  no simd       17       37        0
     fn mul(self, other: CircleOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3435,11 +3527,11 @@ impl std::ops::Mul<CircleRotor> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       40        0
-    //    simd4        1        2        0
+    //      f32        5       19        0
+    //    simd4        6        9        0
     // Totals...
-    // yes simd       26       42        0
-    //  no simd       29       48        0
+    // yes simd       11       28        0
+    //  no simd       29       55        0
     fn mul(self, other: CircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3448,11 +3540,11 @@ impl std::ops::Mul<CircleRotorAligningOrigin> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       40        0
-    //    simd4        0        1        0
+    //      f32        5       19        0
+    //    simd4        5        8        0
     // Totals...
-    // yes simd       25       41        0
-    //  no simd       25       44        0
+    // yes simd       10       27        0
+    //  no simd       25       51        0
     fn mul(self, other: CircleRotorAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3461,11 +3553,11 @@ impl std::ops::Mul<CircleRotorAligningOriginAtInfinity> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       37        0
-    //    simd4        0        1        0
+    //      f32        6       19        0
+    //    simd4        4        7        0
     // Totals...
-    // yes simd       22       38        0
-    //  no simd       22       41        0
+    // yes simd       10       26        0
+    //  no simd       22       47        0
     fn mul(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3474,11 +3566,11 @@ impl std::ops::Mul<CircleRotorAtInfinity> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       37        0
-    //    simd4        1        2        0
+    //      f32        6       19        0
+    //    simd4        5        8        0
     // Totals...
-    // yes simd       23       39        0
-    //  no simd       26       45        0
+    // yes simd       11       27        0
+    //  no simd       26       51        0
     fn mul(self, other: CircleRotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3487,11 +3579,11 @@ impl std::ops::Mul<CircleRotorOnOrigin> for DipoleOnOrigin {
     type Output = AntiDipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       14        0
-    //    simd3        2        2        0
+    //      f32        2        8        0
+    //    simd3        3        4        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        7       17        0
+    // yes simd        5       13        0
     //  no simd       11       24        0
     fn mul(self, other: CircleRotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -3501,12 +3593,12 @@ impl std::ops::Mul<Dipole> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       33        0
-    //    simd3        0        1        0
-    //    simd4        2        1        0
+    //      f32        3       16        0
+    //    simd3        0        3        0
+    //    simd4        6        5        0
     // Totals...
-    // yes simd       20       35        0
-    //  no simd       26       40        0
+    // yes simd        9       24        0
+    //  no simd       27       45        0
     fn mul(self, other: Dipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3515,11 +3607,12 @@ impl std::ops::Mul<DipoleAligningOrigin> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       27        0
-    //    simd4        1        2        0
+    //      f32        2       10        0
+    //    simd3        1        2        0
+    //    simd4        3        6        0
     // Totals...
-    // yes simd       11       29        0
-    //  no simd       14       35        0
+    // yes simd        6       18        0
+    //  no simd       17       40        0
     fn mul(self, other: DipoleAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3528,12 +3621,12 @@ impl std::ops::Mul<DipoleAtInfinity> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       15       30        0
-    //    simd3        0        1        0
-    //    simd4        2        1        0
+    //      f32        4       16        0
+    //    simd3        0        3        0
+    //    simd4        5        4        0
     // Totals...
-    // yes simd       17       32        0
-    //  no simd       23       37        0
+    // yes simd        9       23        0
+    //  no simd       24       41        0
     fn mul(self, other: DipoleAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3542,11 +3635,12 @@ impl std::ops::Mul<DipoleAtOrigin> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       24        0
-    //    simd4        0        2        0
+    //      f32        3       11        0
+    //    simd3        1        2        0
+    //    simd4        1        6        0
     // Totals...
-    // yes simd       10       26        0
-    //  no simd       10       32        0
+    // yes simd        5       19        0
+    //  no simd       10       41        0
     fn mul(self, other: DipoleAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3555,12 +3649,12 @@ impl std::ops::Mul<DipoleInversion> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       34       50        0
-    //    simd3        2        2        0
-    //    simd4        1        1        0
+    //      f32        9       20        0
+    //    simd3        3        4        0
+    //    simd4        7        8        0
     // Totals...
-    // yes simd       37       53        0
-    //  no simd       44       60        0
+    // yes simd       19       32        0
+    //  no simd       46       64        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3569,12 +3663,12 @@ impl std::ops::Mul<DipoleInversionAligningOrigin> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       41        0
-    //    simd3        1        1        0
-    //    simd4        1        1        0
+    //      f32        3       16        0
+    //    simd3        2        3        0
+    //    simd4        6        7        0
     // Totals...
-    // yes simd       27       43        0
-    //  no simd       32       48        0
+    // yes simd       11       26        0
+    //  no simd       33       53        0
     fn mul(self, other: DipoleInversionAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3583,12 +3677,12 @@ impl std::ops::Mul<DipoleInversionAtInfinity> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       30       46        0
-    //    simd3        2        2        0
-    //    simd4        1        1        0
+    //      f32        8       21        0
+    //    simd3        3        4        0
+    //    simd4        6        7        0
     // Totals...
-    // yes simd       33       49        0
-    //  no simd       40       56        0
+    // yes simd       17       32        0
+    //  no simd       41       61        0
     fn mul(self, other: DipoleInversionAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3597,12 +3691,12 @@ impl std::ops::Mul<DipoleInversionAtOrigin> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       25        0
-    //    simd3        1        1        0
-    //    simd4        0        3        0
+    //      f32        2       11        0
+    //    simd3        2        3        0
+    //    simd4        2        6        0
     // Totals...
-    // yes simd       14       29        0
-    //  no simd       16       40        0
+    // yes simd        6       20        0
+    //  no simd       16       44        0
     fn mul(self, other: DipoleInversionAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3611,11 +3705,12 @@ impl std::ops::Mul<DipoleInversionOnOrigin> for DipoleOnOrigin {
     type Output = AntiVersorEvenOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       14        0
-    //    simd3        2        2        0
+    //      f32        3        5        0
+    //    simd3        3        4        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        8       16        0
-    //  no simd       12       20        0
+    // yes simd        6       10        0
+    //  no simd       12       21        0
     fn mul(self, other: DipoleInversionOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3624,11 +3719,12 @@ impl std::ops::Mul<DipoleInversionOrthogonalOrigin> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       22       38        0
-    //    simd3        2        2        0
+    //      f32        3       17        0
+    //    simd3        3        4        0
+    //    simd4        4        5        0
     // Totals...
-    // yes simd       24       40        0
-    //  no simd       28       44        0
+    // yes simd       10       26        0
+    //  no simd       28       49        0
     fn mul(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3650,11 +3746,12 @@ impl std::ops::Mul<DipoleOrthogonalOrigin> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       33        0
-    //    simd3        1        1        0
+    //      f32        3       16        0
+    //    simd3        0        3        0
+    //    simd4        5        4        0
     // Totals...
-    // yes simd       19       34        0
-    //  no simd       21       36        0
+    // yes simd        8       23        0
+    //  no simd       23       41        0
     fn mul(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3686,11 +3783,12 @@ impl std::ops::Mul<FlatPoint> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       25        0
-    //    simd4        0        1        0
+    //      f32        4       12        0
+    //    simd3        1        2        0
+    //    simd4        1        5        0
     // Totals...
-    // yes simd       11       26        0
-    //  no simd       11       29        0
+    // yes simd        6       19        0
+    //  no simd       11       38        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3698,8 +3796,13 @@ impl std::ops::Mul<FlatPoint> for DipoleOnOrigin {
 impl std::ops::Mul<FlatPointAtInfinity> for DipoleOnOrigin {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       10       21        0
+    //           add/sub      mul      div
+    //      f32        3       14        0
+    //    simd3        1        2        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5       17        0
+    //  no simd       10       24        0
     fn mul(self, other: FlatPointAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3708,12 +3811,12 @@ impl std::ops::Mul<Flector> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       37        0
-    //    simd3        1        1        0
-    //    simd4        1        1        0
+    //      f32        3       15        0
+    //    simd3        2        3        0
+    //    simd4        5        6        0
     // Totals...
-    // yes simd       23       39        0
-    //  no simd       28       44        0
+    // yes simd       10       24        0
+    //  no simd       29       48        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3722,11 +3825,12 @@ impl std::ops::Mul<FlectorAtInfinity> for DipoleOnOrigin {
     type Output = VersorOddAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       25        0
-    //    simd3        1        1        0
+    //      f32        2       14        0
+    //    simd3        2        3        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       14       26        0
-    //  no simd       16       28        0
+    // yes simd        6       19        0
+    //  no simd       16       31        0
     fn mul(self, other: FlectorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3735,11 +3839,12 @@ impl std::ops::Mul<FlectorOnOrigin> for DipoleOnOrigin {
     type Output = AntiVersorEvenOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       13        0
-    //    simd3        1        1        0
+    //      f32        2        4        0
+    //    simd3        2        3        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        6       14        0
-    //  no simd        8       16        0
+    // yes simd        4        8        0
+    //  no simd        8       17        0
     fn mul(self, other: FlectorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3747,12 +3852,9 @@ impl std::ops::Mul<FlectorOnOrigin> for DipoleOnOrigin {
 impl std::ops::Mul<Horizon> for DipoleOnOrigin {
     type Output = DipoleInversionAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        3        0
-    // Totals...
-    // yes simd        0        6        0
-    //  no simd        0       15        0
+    //          add/sub      mul      div
+    //   simd4        0        4        0
+    // no simd        0       16        0
     fn mul(self, other: Horizon) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3760,12 +3862,9 @@ impl std::ops::Mul<Horizon> for DipoleOnOrigin {
 impl std::ops::Mul<Infinity> for DipoleOnOrigin {
     type Output = AntiDipoleInversionAtInfinity;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        0        3        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        0        5        0
-    //  no simd        0       11        0
+    //          add/sub      mul      div
+    //   simd4        0        3        0
+    // no simd        0       12        0
     fn mul(self, other: Infinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3774,11 +3873,11 @@ impl std::ops::Mul<Line> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       33        0
-    //    simd4        0        1        0
+    //      f32        2       15        0
+    //    simd4        4        7        0
     // Totals...
-    // yes simd       18       34        0
-    //  no simd       18       37        0
+    // yes simd        6       22        0
+    //  no simd       18       43        0
     fn mul(self, other: Line) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3787,11 +3886,11 @@ impl std::ops::Mul<LineAtInfinity> for DipoleOnOrigin {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       21        0
-    //    simd4        0        1        0
+    //      f32        2       10        0
+    //    simd4        2        5        0
     // Totals...
-    // yes simd       10       22        0
-    //  no simd       10       25        0
+    // yes simd        4       15        0
+    //  no simd       10       30        0
     fn mul(self, other: LineAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3800,10 +3899,11 @@ impl std::ops::Mul<LineOnOrigin> for DipoleOnOrigin {
     type Output = AntiDipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       12        0
+    //      f32        2        6        0
+    //    simd3        1        2        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        5       13        0
+    // yes simd        3        9        0
     //  no simd        5       16        0
     fn mul(self, other: LineOnOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -3813,11 +3913,11 @@ impl std::ops::Mul<Motor> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       40        0
-    //    simd4        0        1        0
+    //      f32       12       25        0
+    //    simd4        4        5        0
     // Totals...
-    // yes simd       28       41        0
-    //  no simd       28       44        0
+    // yes simd       16       30        0
+    //  no simd       28       45        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3826,10 +3926,10 @@ impl std::ops::Mul<MotorAtInfinity> for DipoleOnOrigin {
     type Output = VersorEvenAtInfinity;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16       24        0
-    //    simd4        0        1        0
+    //      f32        8       16        0
+    //    simd4        2        3        0
     // Totals...
-    // yes simd       16       25        0
+    // yes simd       10       19        0
     //  no simd       16       28        0
     fn mul(self, other: MotorAtInfinity) -> Self::Output {
         return self.geometric_product(other);
@@ -3839,11 +3939,11 @@ impl std::ops::Mul<MotorOnOrigin> for DipoleOnOrigin {
     type Output = AntiDipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       14        0
-    //    simd3        1        1        0
+    //      f32        2        8        0
+    //    simd3        2        3        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        6       16        0
+    // yes simd        4       12        0
     //  no simd        8       21        0
     fn mul(self, other: MotorOnOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -3853,13 +3953,13 @@ impl std::ops::Mul<MultiVector> for DipoleOnOrigin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       54       78        0
+    //      f32       19       39        0
     //    simd2        3        3        0
-    //    simd3        8       11        0
-    //    simd4        3        3        0
+    //    simd3        9       16        0
+    //    simd4       12        9        0
     // Totals...
-    // yes simd       68       95        0
-    //  no simd       96      129        0
+    // yes simd       43       67        0
+    //  no simd      100      129        0
     fn mul(self, other: MultiVector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3868,12 +3968,12 @@ impl std::ops::Mul<MysteryCircle> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       14        0
-    //    simd3        1        1        0
-    //    simd4        0        1        0
+    //      f32        2        5        0
+    //    simd3        2        3        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        6       16        0
-    //  no simd        8       21        0
+    // yes simd        4       10        0
+    //  no simd        8       22        0
     fn mul(self, other: MysteryCircle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3882,12 +3982,12 @@ impl std::ops::Mul<MysteryCircleRotor> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       16        0
-    //    simd3        2        2        0
-    //    simd4        0        1        0
+    //      f32        2        7        0
+    //    simd3        3        4        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        7       19        0
-    //  no simd       11       26        0
+    // yes simd        5       13        0
+    //  no simd       11       27        0
     fn mul(self, other: MysteryCircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3896,12 +3996,12 @@ impl std::ops::Mul<MysteryDipole> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       13        0
-    //    simd3        1        1        0
-    //    simd4        0        1        0
+    //      f32        2        4        0
+    //    simd3        2        3        0
+    //    simd4        0        3        0
     // Totals...
-    // yes simd        6       15        0
-    //  no simd        8       20        0
+    // yes simd        4       10        0
+    //  no simd        8       25        0
     fn mul(self, other: MysteryDipole) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3910,12 +4010,12 @@ impl std::ops::Mul<MysteryDipoleInversion> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       25        0
-    //    simd3        1        1        0
-    //    simd4        0        2        0
+    //      f32        5        7        0
+    //    simd3        4        5        0
+    //    simd4        0        6        0
     // Totals...
-    // yes simd       15       28        0
-    //  no simd       17       36        0
+    // yes simd        9       18        0
+    //  no simd       17       46        0
     fn mul(self, other: MysteryDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3924,12 +4024,12 @@ impl std::ops::Mul<MysteryVersorEven> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       11        0
+    //      f32        5        8        0
     //    simd3        5        6        0
-    //    simd4        0        3        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd       10       20        0
-    //  no simd       20       41        0
+    // yes simd       10       18        0
+    //  no simd       20       42        0
     fn mul(self, other: MysteryVersorEven) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -3938,12 +4038,12 @@ impl std::ops::Mul<MysteryVersorOdd> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       22        0
-    //    simd3        2        2        0
-    //    simd4        0        2        0
+    //      f32        5        7        0
+    //    simd3        5        6        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd       16       26        0
-    //  no simd       20       36        0
+    // yes simd       10       17        0
+    //  no simd       20       41        0
     fn mul(self, other: MysteryVersorOdd) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4010,12 +4110,12 @@ impl std::ops::Mul<Plane> for DipoleOnOrigin {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       12        0
-    //    simd3        0        1        0
-    //    simd4        1        2        0
+    //      f32        2        3        0
+    //    simd3        2        4        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        6       15        0
-    //  no simd        9       23        0
+    // yes simd        4        9        0
+    //  no simd        8       23        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4023,8 +4123,13 @@ impl std::ops::Mul<Plane> for DipoleOnOrigin {
 impl std::ops::Mul<PlaneOnOrigin> for DipoleOnOrigin {
     type Output = AntiVersorEvenOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5       12        0
+    //           add/sub      mul      div
+    //      f32        2        3        0
+    //    simd3        1        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        3        6        0
+    //  no simd        5       13        0
     fn mul(self, other: PlaneOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4033,12 +4138,12 @@ impl std::ops::Mul<RoundPoint> for DipoleOnOrigin {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       16        0
-    //    simd3        0        1        0
-    //    simd4        1        1        0
+    //      f32        3        4        0
+    //    simd3        2        4        0
+    //    simd4        0        1        0
     // Totals...
-    // yes simd        7       18        0
-    //  no simd       10       23        0
+    // yes simd        5        9        0
+    //  no simd        9       20        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4047,11 +4152,11 @@ impl std::ops::Mul<RoundPointAtOrigin> for DipoleOnOrigin {
     type Output = AntiDipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        5        0
-    //    simd4        0        2        0
+    //      f32        0        2        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        0        7        0
-    //  no simd        0       13        0
+    // yes simd        0        6        0
+    //  no simd        0       18        0
     fn mul(self, other: RoundPointAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4075,12 +4180,12 @@ impl std::ops::Mul<Sphere> for DipoleOnOrigin {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       13        0
-    //    simd3        0        1        0
-    //    simd4        1        2        0
+    //      f32        3        4        0
+    //    simd3        2        4        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        7       16        0
-    //  no simd       10       24        0
+    // yes simd        5       10        0
+    //  no simd        9       24        0
     fn mul(self, other: Sphere) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4089,11 +4194,11 @@ impl std::ops::Mul<SphereAtOrigin> for DipoleOnOrigin {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        0        5        0
-    //    simd4        0        3        0
+    //      f32        0        2        0
+    //    simd4        0        5        0
     // Totals...
-    // yes simd        0        8        0
-    //  no simd        0       17        0
+    // yes simd        0        7        0
+    //  no simd        0       22        0
     fn mul(self, other: SphereAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4101,8 +4206,13 @@ impl std::ops::Mul<SphereAtOrigin> for DipoleOnOrigin {
 impl std::ops::Mul<SphereOnOrigin> for DipoleOnOrigin {
     type Output = AntiVersorEvenOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6       13        0
+    //           add/sub      mul      div
+    //      f32        3        4        0
+    //    simd3        1        2        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        4        7        0
+    //  no simd        6       14        0
     fn mul(self, other: SphereOnOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4111,11 +4221,11 @@ impl std::ops::Mul<VersorEven> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       25       36        0
-    //    simd4        6        7        0
+    //      f32       12       20        0
+    //    simd4       10       11        0
     // Totals...
-    // yes simd       31       43        0
-    //  no simd       49       64        0
+    // yes simd       22       31        0
+    //  no simd       52       64        0
     fn mul(self, other: VersorEven) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4124,11 +4234,11 @@ impl std::ops::Mul<VersorEvenAligningOrigin> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       40        0
-    //    simd4        1        2        0
+    //      f32       12       25        0
+    //    simd4        5        6        0
     // Totals...
-    // yes simd       29       42        0
-    //  no simd       32       48        0
+    // yes simd       17       31        0
+    //  no simd       32       49        0
     fn mul(self, other: VersorEvenAligningOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4137,11 +4247,11 @@ impl std::ops::Mul<VersorEvenAtInfinity> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       41        0
-    //    simd4        4        5        0
+    //      f32       11       21        0
+    //    simd4        9       10        0
     // Totals...
-    // yes simd       32       46        0
-    //  no simd       44       61        0
+    // yes simd       20       31        0
+    //  no simd       47       61        0
     fn mul(self, other: VersorEvenAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4150,12 +4260,12 @@ impl std::ops::Mul<VersorEvenAtOrigin> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       26        0
-    //    simd3        1        1        0
-    //    simd4        0        2        0
+    //      f32        6       13        0
+    //    simd3        2        3        0
+    //    simd4        1        4        0
     // Totals...
-    // yes simd       14       29        0
-    //  no simd       16       37        0
+    // yes simd        9       20        0
+    //  no simd       16       38        0
     fn mul(self, other: VersorEvenAtOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4164,11 +4274,11 @@ impl std::ops::Mul<VersorEvenOnOrigin> for DipoleOnOrigin {
     type Output = AntiDipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       15        0
-    //    simd3        2        2        0
+    //      f32        3        9        0
+    //    simd3        3        4        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        8       18        0
+    // yes simd        6       14        0
     //  no simd       12       25        0
     fn mul(self, other: VersorEvenOnOrigin) -> Self::Output {
         return self.geometric_product(other);
@@ -4178,11 +4288,11 @@ impl std::ops::Mul<VersorEvenOrthogonalOrigin> for DipoleOnOrigin {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       28       40        0
-    //    simd4        1        2        0
+    //      f32        3       14        0
+    //    simd4        8        9        0
     // Totals...
-    // yes simd       29       42        0
-    //  no simd       32       48        0
+    // yes simd       11       23        0
+    //  no simd       35       50        0
     fn mul(self, other: VersorEvenOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4191,12 +4301,12 @@ impl std::ops::Mul<VersorOdd> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       34       50        0
-    //    simd3        2        2        0
-    //    simd4        2        2        0
+    //      f32       12       24        0
+    //    simd3        3        4        0
+    //    simd4        7        8        0
     // Totals...
-    // yes simd       38       54        0
-    //  no simd       48       64        0
+    // yes simd       22       36        0
+    //  no simd       49       68        0
     fn mul(self, other: VersorOdd) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4205,12 +4315,12 @@ impl std::ops::Mul<VersorOddAtInfinity> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       30       46        0
-    //    simd3        2        2        0
-    //    simd4        2        2        0
+    //      f32       11       25        0
+    //    simd3        3        4        0
+    //    simd4        6        7        0
     // Totals...
-    // yes simd       34       50        0
-    //  no simd       44       60        0
+    // yes simd       20       36        0
+    //  no simd       44       65        0
     fn mul(self, other: VersorOddAtInfinity) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4219,11 +4329,12 @@ impl std::ops::Mul<VersorOddOrthogonalOrigin> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       26       42        0
-    //    simd3        2        2        0
+    //      f32        7       21        0
+    //    simd3        3        4        0
+    //    simd4        4        5        0
     // Totals...
-    // yes simd       28       44        0
-    //  no simd       32       48        0
+    // yes simd       14       30        0
+    //  no simd       32       53        0
     fn mul(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -4252,18 +4363,18 @@ impl std::ops::Sub<AntiCircleOnOrigin> for DipoleOnOrigin {
     type Output = Dipole;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        0
+    //    simd3        1        0        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        3        1        0
+    // yes simd        1        1        0
     //  no simd        3        4        0
     fn sub(self, other: AntiCircleOnOrigin) -> Self::Output {
         use crate::elements::*;
         return Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43]]),
+            self.group0().truncate_to_3() - other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35
             Simd32x3::from(0.0),
         );
@@ -4273,18 +4384,19 @@ impl std::ops::Sub<AntiCircleRotor> for DipoleOnOrigin {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        0        0
+    //      f32        1        0        0
+    //    simd3        1        0        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        4        2        0
+    // yes simd        2        2        0
     //  no simd        4        8        0
     fn sub(self, other: AntiCircleRotor) -> Self::Output {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43]]),
+            self.group0().truncate_to_3() - other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] - other[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, scalar
             other.group2() * Simd32x4::from(-1.0),
         );
@@ -4294,18 +4406,18 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for DipoleOnOrigin {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        0
+    //    simd3        1        0        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        3        2        0
+    // yes simd        1        2        0
     //  no simd        3        8        0
     fn sub(self, other: AntiCircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43]]),
+            self.group0().truncate_to_3() - other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, scalar
             other.group2() * Simd32x4::from(-1.0),
         );
@@ -4323,7 +4435,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for DipoleOnOrigin {
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, scalar
             other.group1() * Simd32x4::from(-1.0),
         );
@@ -4344,7 +4456,7 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for DipoleOnOrigin {
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] - other[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, scalar
             other.group1() * Simd32x4::from(-1.0),
         );
@@ -4354,18 +4466,19 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for DipoleOnOrigin {
     type Output = AntiCircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        1        0
+    //      f32        0        1        0
+    //    simd3        1        0        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        3        2        0
+    // yes simd        1        2        0
     //  no simd        3        5        0
     fn sub(self, other: AntiCircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return AntiCircleRotor::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43]]),
+            self.group0().truncate_to_3() - other.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, scalar
             Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
         );
@@ -4387,7 +4500,7 @@ impl std::ops::Sub<AntiDipoleInversion> for DipoleOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], other[e4]]) * Simd32x4::from(-1.0),
+            other.group3().truncate_to_3().extend_to_4(other[e4]) * Simd32x4::from(-1.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -4414,18 +4527,18 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       12        0
+    //  no simd        0       11        0
     fn sub(self, other: AntiDipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group2().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -4490,11 +4603,10 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //    simd3        0        3        0
     // Totals...
     // yes simd        0        5        0
-    //  no simd        0       12        0
+    //  no simd        0       11        0
     fn sub(self, other: AntiDipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -4511,7 +4623,7 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e423, e431, e412
             other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -4573,7 +4685,7 @@ impl std::ops::Sub<AntiDualNum> for DipoleOnOrigin {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], other[scalar]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().truncate_to_3().extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
             Simd32x3::from(0.0).extend_to_4(self[e45]),
             // e15, e25, e35, e1234
@@ -4658,18 +4770,17 @@ impl std::ops::Sub<AntiFlector> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        2        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0        9        0
+    //  no simd        0        8        0
     fn sub(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -4696,17 +4807,17 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        1        0
+    //    simd3        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        5        0
+    //  no simd        0        4        0
     fn sub(self, other: AntiFlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -4743,7 +4854,7 @@ impl std::ops::Sub<AntiLine> for DipoleOnOrigin {
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35
             other.group1() * Simd32x3::from(-1.0),
         );
@@ -4761,7 +4872,7 @@ impl std::ops::Sub<AntiLineOnOrigin> for DipoleOnOrigin {
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35
             Simd32x3::from(0.0),
         );
@@ -4772,19 +4883,20 @@ impl std::ops::Sub<AntiMotor> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        3        0
+    //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       13        0
+    //  no simd        0       12        0
     fn sub(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], other[scalar]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().truncate_to_3().extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().truncate_to_3().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
         );
@@ -4805,7 +4917,7 @@ impl std::ops::Sub<AntiMotorOnOrigin> for DipoleOnOrigin {
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().truncate_to_3().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, scalar
             Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
         );
@@ -4826,7 +4938,7 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for DipoleOnOrigin {
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] - other[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, scalar
             Simd32x3::from(0.0).extend_to_4(other[scalar] * -1.0),
         );
@@ -4835,16 +4947,18 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for DipoleOnOrigin {
 impl std::ops::Sub<AntiMysteryDipoleInversion> for DipoleOnOrigin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //          add/sub      mul      div
-    //   simd4        0        2        0
-    // no simd        0        8        0
+    //           add/sub      mul      div
+    //    simd3        0        1        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        0        2        0
+    //  no simd        0        7        0
     fn sub(self, other: AntiMysteryDipoleInversion) -> Self::Output {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -4871,17 +4985,17 @@ impl std::ops::Sub<AntiPlane> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        1        0
+    //    simd3        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        5        0
+    //  no simd        0        4        0
     fn sub(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -4907,15 +5021,14 @@ impl std::ops::Sub<AntiPlaneOnOrigin> for DipoleOnOrigin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //   simd3        0        1        0
+    // no simd        0        3        0
     fn sub(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5008,18 +5121,19 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        1        0
+    //      f32        0        1        0
+    //    simd3        1        0        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        3        3        0
+    // yes simd        1        3        0
     //  no simd        3        9        0
     fn sub(self, other: AntiVersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43], other[scalar]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().truncate_to_3() - other.group0().truncate_to_3()).extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().truncate_to_3().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
@@ -5066,14 +5180,10 @@ impl std::ops::Sub<Circle> for DipoleOnOrigin {
 impl std::ops::Sub<CircleAligningOrigin> for DipoleOnOrigin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //    simd3        0        2        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        3        0
-    //  no simd        0       10        0
+    //          add/sub      mul      div
+    //   simd3        0        3        0
+    // no simd        0        9        0
     fn sub(self, other: CircleAligningOrigin) -> Self::Output {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
@@ -5088,7 +5198,7 @@ impl std::ops::Sub<CircleAligningOrigin> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -5172,14 +5282,10 @@ impl std::ops::Sub<CircleAtOrigin> for DipoleOnOrigin {
 impl std::ops::Sub<CircleOnOrigin> for DipoleOnOrigin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        7        0
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
     fn sub(self, other: CircleOnOrigin) -> Self::Output {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
@@ -5194,7 +5300,7 @@ impl std::ops::Sub<CircleOnOrigin> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -5286,11 +5392,10 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //    simd2        0        1        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //    simd3        0        3        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       12        0
+    //  no simd        0       11        0
     fn sub(self, other: CircleRotorAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -5307,7 +5412,7 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e423, e431, e412
             other.group0() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -5324,11 +5429,10 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //    simd2        0        1        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        0        3        0
-    //  no simd        0        9        0
+    //  no simd        0        8        0
     fn sub(self, other: CircleRotorAligningOriginAtInfinity) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -5345,7 +5449,7 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -5400,11 +5504,10 @@ impl std::ops::Sub<CircleRotorOnOrigin> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //    simd2        0        1        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        0        3        0
-    //  no simd        0        9        0
+    //  no simd        0        8        0
     fn sub(self, other: CircleRotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -5421,7 +5524,7 @@ impl std::ops::Sub<CircleRotorOnOrigin> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e423, e431, e412
             other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -5437,19 +5540,19 @@ impl std::ops::Sub<Dipole> for DipoleOnOrigin {
     type Output = Dipole;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        0        0
-    //    simd3        0        1        0
+    //      f32        1        0        0
+    //    simd3        1        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        4        2        0
+    // yes simd        2        2        0
     //  no simd        4        7        0
     fn sub(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
         return Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43]]),
+            self.group0().truncate_to_3() - other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] - other[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35
             other.group2() * Simd32x3::from(-1.0),
         );
@@ -5459,16 +5562,15 @@ impl std::ops::Sub<DipoleAligningOrigin> for DipoleOnOrigin {
     type Output = DipoleAligningOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        0        0
     //    simd3        0        1        0
+    //    simd4        1        0        0
     // Totals...
-    // yes simd        4        1        0
+    // yes simd        1        1        0
     //  no simd        4        3        0
     fn sub(self, other: DipoleAligningOrigin) -> Self::Output {
-        use crate::elements::*;
         return DipoleAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43], self[e45] - other[e45]]),
+            self.group0() - other.group0(),
             // e15, e25, e35
             other.group1() * Simd32x3::from(-1.0),
         );
@@ -5490,7 +5592,7 @@ impl std::ops::Sub<DipoleAtInfinity> for DipoleOnOrigin {
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] - other[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35
             other.group1() * Simd32x3::from(-1.0),
         );
@@ -5500,16 +5602,17 @@ impl std::ops::Sub<DipoleAtOrigin> for DipoleOnOrigin {
     type Output = DipoleAligningOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        0
+    //      f32        0        3        0
     //    simd3        0        1        0
+    //    simd4        1        0        0
     // Totals...
-    // yes simd        3        1        0
-    //  no simd        3        3        0
+    // yes simd        1        4        0
+    //  no simd        4        6        0
     fn sub(self, other: DipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return DipoleAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43], self[e45]]),
+            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0(),
             // e15, e25, e35
             other.group1() * Simd32x3::from(-1.0),
         );
@@ -5519,18 +5622,19 @@ impl std::ops::Sub<DipoleInversion> for DipoleOnOrigin {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        0        0
+    //      f32        1        0        0
+    //    simd3        1        0        0
     //    simd4        0        3        0
     // Totals...
-    // yes simd        4        3        0
+    // yes simd        2        3        0
     //  no simd        4       12        0
     fn sub(self, other: DipoleInversion) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43]]),
+            self.group0().truncate_to_3() - other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] - other[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             other.group2() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
@@ -5541,17 +5645,13 @@ impl std::ops::Sub<DipoleInversion> for DipoleOnOrigin {
 impl std::ops::Sub<DipoleInversionAligningOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        0        0
-    //    simd4        0        2        0
-    // Totals...
-    // yes simd        4        2        0
-    //  no simd        4        8        0
+    //          add/sub      mul      div
+    //   simd4        1        2        0
+    // no simd        4        8        0
     fn sub(self, other: DipoleInversionAligningOrigin) -> Self::Output {
-        use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43], self[e45] - other[e45]]),
+            self.group0() - other.group0(),
             // e15, e25, e35, e1234
             other.group1() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
@@ -5564,19 +5664,20 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        0        0
-    //    simd4        0        3        0
+    //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        1        3        0
-    //  no simd        1       12        0
+    //  no simd        1       11        0
     fn sub(self, other: DipoleInversionAtInfinity) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] - other[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             other.group2() * Simd32x4::from(-1.0),
         );
@@ -5586,16 +5687,16 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        1        0
-    //    simd4        0        1        0
+    //      f32        0        4        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        3        2        0
-    //  no simd        3        5        0
+    // yes simd        1        5        0
+    //  no simd        4        8        0
     fn sub(self, other: DipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43], self[e45]]),
+            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0(),
             // e15, e25, e35, e1234
             other.group1() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
@@ -5606,17 +5707,13 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for DipoleOnOrigin {
 impl std::ops::Sub<DipoleInversionOnOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //      f32        4        0        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        4        1        0
-    //  no simd        4        4        0
+    //          add/sub      mul      div
+    //   simd4        1        1        0
+    // no simd        4        4        0
     fn sub(self, other: DipoleInversionOnOrigin) -> Self::Output {
-        use crate::elements::*;
         return DipoleInversionOnOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43], self[e45] - other[e45]]),
+            self.group0() - other.group0(),
             // e1234, e4235, e4315, e4125
             other.group1() * Simd32x4::from(-1.0),
         );
@@ -5626,18 +5723,19 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for DipoleOnOrigin {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        1        0
+    //      f32        0        1        0
+    //    simd3        1        0        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd        3        3        0
+    // yes simd        1        3        0
     //  no simd        3        9        0
     fn sub(self, other: DipoleInversionOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43]]),
+            self.group0().truncate_to_3() - other.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             other.group2() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
@@ -5648,42 +5746,34 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for DipoleOnOrigin {
 impl std::ops::Sub<DipoleOnOrigin> for DipoleOnOrigin {
     type Output = DipoleOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn sub(self, other: DipoleOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return DipoleOnOrigin::from_groups(
-            // e41, e42, e43, e45
-            Simd32x4::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43], self[e45] - other[e45]]),
-        );
+        return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ self.group0() - other.group0());
     }
 }
 impl std::ops::SubAssign<DipoleOnOrigin> for DipoleOnOrigin {
     fn sub_assign(&mut self, other: DipoleOnOrigin) {
-        use crate::elements::*;
-        *self = DipoleOnOrigin::from_groups(
-            // e41, e42, e43, e45
-            Simd32x4::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43], self[e45] - other[e45]]),
-        );
+        *self = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ self.group0() - other.group0());
     }
 }
 impl std::ops::Sub<DipoleOrthogonalOrigin> for DipoleOnOrigin {
     type Output = Dipole;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        0
-    //    simd3        0        1        0
+    //    simd3        1        1        0
     //    simd4        0        1        0
     // Totals...
-    // yes simd        3        2        0
+    // yes simd        1        2        0
     //  no simd        3        7        0
     fn sub(self, other: DipoleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return Dipole::from_groups(
             // e41, e42, e43
-            Simd32x3::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43]]),
+            self.group0().truncate_to_3() - other.group0(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35
             other.group2() * Simd32x3::from(-1.0),
         );
@@ -5729,33 +5819,38 @@ impl std::ops::Sub<DualNum> for DipoleOnOrigin {
 impl std::ops::Sub<FlatOrigin> for DipoleOnOrigin {
     type Output = DipoleOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        1        1        0
+    //  no simd        4        1        0
     fn sub(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ Simd32x4::from([self[e41], self[e42], self[e43], self[e45] - other[e45]]));
+        return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0));
     }
 }
 impl std::ops::SubAssign<FlatOrigin> for DipoleOnOrigin {
     fn sub_assign(&mut self, other: FlatOrigin) {
         use crate::elements::*;
-        *self = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ Simd32x4::from([self[e41], self[e42], self[e43], self[e45] - other[e45]]));
+        *self = DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0));
     }
 }
 impl std::ops::Sub<FlatPoint> for DipoleOnOrigin {
     type Output = DipoleAligningOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
+    //      f32        0        1        0
     //    simd3        0        1        0
+    //    simd4        1        0        0
     // Totals...
-    // yes simd        1        1        0
-    //  no simd        1        3        0
+    // yes simd        1        2        0
+    //  no simd        4        4        0
     fn sub(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
         return DipoleAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e45] - other[e45]]),
+            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
             // e15, e25, e35
             other.group0().truncate_to_3() * Simd32x3::from(-1.0),
         );
@@ -5775,18 +5870,19 @@ impl std::ops::Sub<Flector> for DipoleOnOrigin {
     type Output = DipoleInversionAligningOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
-    //    simd4        0        2        0
+    //      f32        0        1        0
+    //    simd3        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        1        2        0
-    //  no simd        1        8        0
+    // yes simd        1        3        0
+    //  no simd        4        8        0
     fn sub(self, other: Flector) -> Self::Output {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e45] - other[e45]]),
+            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             other.group1() * Simd32x4::from(-1.0),
         );
@@ -5797,17 +5893,17 @@ impl std::ops::Sub<FlectorAtInfinity> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        0        1        0
-    //    simd4        0        1        0
+    //    simd3        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        5        0
+    //  no simd        0        4        0
     fn sub(self, other: FlectorAtInfinity) -> Self::Output {
         use crate::elements::*;
         return DipoleInversionAligningOrigin::from_groups(
             // e41, e42, e43, e45
             self.group0(),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             Simd32x3::from(0.0).extend_to_4(other[e3215] * -1.0),
         );
@@ -5817,18 +5913,18 @@ impl std::ops::Sub<FlectorOnOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        0        0
-    //    simd4        0        1        0
+    //      f32        0        1        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        1        1        0
-    //  no simd        1        4        0
+    // yes simd        1        2        0
+    //  no simd        4        5        0
     fn sub(self, other: FlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return DipoleInversionOnOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41], self[e42], self[e43], self[e45] - other[e45]]),
+            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([1.0, other[e4235], other[e4315], other[e4125]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]),
+            Simd32x4::from([0.0, other[e4235], other[e4315], other[e4125]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]),
         );
     }
 }
@@ -5885,14 +5981,10 @@ impl std::ops::Sub<Infinity> for DipoleOnOrigin {
 impl std::ops::Sub<Line> for DipoleOnOrigin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        7        0
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
     fn sub(self, other: Line) -> Self::Output {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
@@ -5907,7 +5999,7 @@ impl std::ops::Sub<Line> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -5956,10 +6048,9 @@ impl std::ops::Sub<LineOnOrigin> for DipoleOnOrigin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //          add/sub      mul      div
-    //   simd4        0        1        0
-    // no simd        0        4        0
+    //   simd3        0        1        0
+    // no simd        0        3        0
     fn sub(self, other: LineOnOrigin) -> Self::Output {
-        use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(0.0),
@@ -5974,7 +6065,7 @@ impl std::ops::Sub<LineOnOrigin> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -5992,11 +6083,10 @@ impl std::ops::Sub<Motor> for DipoleOnOrigin {
     //           add/sub      mul      div
     //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       10        0
+    //  no simd        0        9        0
     fn sub(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -6013,7 +6103,7 @@ impl std::ops::Sub<Motor> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -6067,10 +6157,10 @@ impl std::ops::Sub<MotorOnOrigin> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //    simd2        0        1        0
-    //    simd4        0        1        0
+    //    simd3        0        1        0
     // Totals...
     // yes simd        0        2        0
-    //  no simd        0        6        0
+    //  no simd        0        5        0
     fn sub(self, other: MotorOnOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -6087,7 +6177,7 @@ impl std::ops::Sub<MotorOnOrigin> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
@@ -6103,12 +6193,12 @@ impl std::ops::Sub<MultiVector> for DipoleOnOrigin {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        2        0
+    //      f32        0        2        0
     //    simd2        0        1        0
     //    simd3        0        4        0
-    //    simd4        0        3        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        4       10        0
+    // yes simd        1       10        0
     //  no simd        4       28        0
     fn sub(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -6120,7 +6210,7 @@ impl std::ops::Sub<MultiVector> for DipoleOnOrigin {
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43], self[e45] - other[e45]]),
+            self.group0() - other.group3(),
             // e15, e25, e35
             other.group4() * Simd32x3::from(-1.0),
             // e23, e31, e12
@@ -6223,7 +6313,7 @@ impl std::ops::Sub<MysteryDipole> for DipoleOnOrigin {
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] - other[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35
             Simd32x3::from(0.0),
         );
@@ -6234,21 +6324,22 @@ impl std::ops::Sub<MysteryDipoleInversion> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        0        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        1        2        0
-    //  no simd        1        8        0
+    //  no simd        1        7        0
     fn sub(self, other: MysteryDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return DipoleInversion::from_groups(
             // e41, e42, e43
             self.group0().truncate_to_3(),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] - other[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e4235], other[e4315], other[e4125], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
         );
     }
 }
@@ -6257,17 +6348,18 @@ impl std::ops::Sub<MysteryVersorEven> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //    simd2        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        1        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        3        0
-    //  no simd        0       10        0
+    //  no simd        0        9        0
     fn sub(self, other: MysteryVersorEven) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6294,21 +6386,22 @@ impl std::ops::Sub<MysteryVersorOdd> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        0        0
-    //    simd4        0        3        0
+    //    simd3        0        1        0
+    //    simd4        0        2        0
     // Totals...
     // yes simd        1        3        0
-    //  no simd        1       12        0
+    //  no simd        1       11        0
     fn sub(self, other: MysteryVersorOdd) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], other[scalar]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().truncate_to_3().extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] - other[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             Simd32x4::from(0.0),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e4235], other[e4315], other[e4125], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
         );
     }
 }
@@ -6348,13 +6441,17 @@ impl std::ops::Sub<NullCircleAtOrigin> for DipoleOnOrigin {
 impl std::ops::Sub<NullDipoleAtOrigin> for DipoleOnOrigin {
     type Output = DipoleOnOrigin;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        0        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        1        3        0
+    //  no simd        4        3        0
     fn sub(self, other: NullDipoleAtOrigin) -> Self::Output {
         use crate::elements::*;
         return DipoleOnOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43], self[e45]]),
+            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0(),
         );
     }
 }
@@ -6363,7 +6460,7 @@ impl std::ops::SubAssign<NullDipoleAtOrigin> for DipoleOnOrigin {
         use crate::elements::*;
         *self = DipoleOnOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43], self[e45]]),
+            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0(),
         );
     }
 }
@@ -6371,18 +6468,18 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for DipoleOnOrigin {
     type Output = DipoleInversionOnOrigin;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        0        0
-    //    simd4        0        1        0
+    //      f32        0        3        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd        3        1        0
-    //  no simd        3        4        0
+    // yes simd        1        4        0
+    //  no simd        4        7        0
     fn sub(self, other: NullDipoleInversionAtOrigin) -> Self::Output {
         use crate::elements::*;
         return DipoleInversionOnOrigin::from_groups(
             // e41, e42, e43, e45
-            Simd32x4::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43], self[e45]]),
+            Simd32x4::from([other[e41] * -1.0, other[e42] * -1.0, other[e43] * -1.0, 0.0]) + self.group0(),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([other[e1234], 1.0, 1.0, 1.0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]),
+            Simd32x4::from([other[e1234], 0.0, 0.0, 0.0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]),
         );
     }
 }
@@ -6398,7 +6495,7 @@ impl std::ops::Sub<NullSphereAtOrigin> for DipoleOnOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([other[e1234], 1.0, 1.0, 1.0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]),
+            Simd32x4::from([other[e1234], 0.0, 0.0, 0.0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]),
         );
     }
 }
@@ -6501,7 +6598,7 @@ impl std::ops::Sub<PlaneOnOrigin> for DipoleOnOrigin {
             // e41, e42, e43, e45
             self.group0(),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([1.0, other[e4235], other[e4315], other[e4125]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]),
+            Simd32x4::from([0.0, other[e4235], other[e4315], other[e4125]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]),
         );
     }
 }
@@ -6690,11 +6787,10 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for DipoleOnOrigin {
     //           add/sub      mul      div
     //      f32        0        2        0
     //    simd2        0        1        0
-    //    simd3        0        2        0
-    //    simd4        0        1        0
+    //    simd3        0        3        0
     // Totals...
     // yes simd        0        6        0
-    //  no simd        0       14        0
+    //  no simd        0       13        0
     fn sub(self, other: VersorEvenAligningOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -6711,7 +6807,7 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e423, e431, e412
             other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -6729,18 +6825,18 @@ impl std::ops::Sub<VersorEvenAtInfinity> for DipoleOnOrigin {
     //           add/sub      mul      div
     //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd3        0        1        0
-    //    simd4        0        2        0
+    //    simd3        0        2        0
+    //    simd4        0        1        0
     // Totals...
     // yes simd        0        5        0
-    //  no simd        0       14        0
+    //  no simd        0       13        0
     fn sub(self, other: VersorEvenAtInfinity) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -6805,11 +6901,10 @@ impl std::ops::Sub<VersorEvenOnOrigin> for DipoleOnOrigin {
     //           add/sub      mul      div
     //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       10        0
+    //  no simd        0        9        0
     fn sub(self, other: VersorEvenOnOrigin) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -6826,7 +6921,7 @@ impl std::ops::Sub<VersorEvenOnOrigin> for DipoleOnOrigin {
             // e23, e31, e12
             Simd32x3::from(0.0),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415], other[e425], other[e435], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e423, e431, e412
             other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e235, e315, e125
@@ -6880,18 +6975,19 @@ impl std::ops::Sub<VersorOdd> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        4        0        0
+    //      f32        1        0        0
+    //    simd3        1        0        0
     //    simd4        0        4        0
     // Totals...
-    // yes simd        4        4        0
+    // yes simd        2        4        0
     //  no simd        4       16        0
     fn sub(self, other: VersorOdd) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43], other[scalar]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().truncate_to_3() - other.group0().truncate_to_3()).extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] - other[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             other.group2() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
@@ -6904,19 +7000,20 @@ impl std::ops::Sub<VersorOddAtInfinity> for DipoleOnOrigin {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
     //      f32        1        0        0
-    //    simd4        0        4        0
+    //    simd3        0        1        0
+    //    simd4        0        3        0
     // Totals...
     // yes simd        1        4        0
-    //  no simd        1       16        0
+    //  no simd        1       15        0
     fn sub(self, other: VersorOddAtInfinity) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41], self[e42], self[e43], other[scalar]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().truncate_to_3().extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45] - other[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
-            Simd32x4::from([other[e15], other[e25], other[e35], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             other.group2() * Simd32x4::from(-1.0),
         );
@@ -6926,18 +7023,19 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for DipoleOnOrigin {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        3        1        0
+    //      f32        0        1        0
+    //    simd3        1        0        0
     //    simd4        0        3        0
     // Totals...
-    // yes simd        3        4        0
+    // yes simd        1        4        0
     //  no simd        3       13        0
     fn sub(self, other: VersorOddOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
-            Simd32x4::from([self[e41] - other[e41], self[e42] - other[e42], self[e43] - other[e43], other[scalar]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().truncate_to_3() - other.group0().truncate_to_3()).extend_to_4(other[scalar]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             // e23, e31, e12, e45
-            Simd32x4::from([other[e23], other[e31], other[e12], self[e45]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().truncate_to_3().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e15, e25, e35, e1234
             other.group2() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215

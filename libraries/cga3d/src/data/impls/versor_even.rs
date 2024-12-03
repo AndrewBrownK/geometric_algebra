@@ -12,14 +12,14 @@ use crate::traits::Wedge;
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         5       2       0
-//  Average:        26      30       0
-//  Maximum:       358     390       0
+//   Median:         3       4       0
+//  Average:        13      19       0
+//  Maximum:       184     215       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       0       0
-//   Median:         6       7       0
-//  Average:        32      38       0
+//   Median:         8       6       0
+//  Average:        33      39       0
 //  Maximum:       480     512       0
 impl std::ops::Add<AntiCircleRotor> for VersorEven {
     type Output = MultiVector;
@@ -54,19 +54,20 @@ impl std::ops::Add<AntiCircleRotor> for VersorEven {
 impl std::ops::Add<AntiDipoleInversion> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15        0        0
+    //          add/sub      mul      div
+    //   simd4        4        0        0
+    // no simd       16        0        0
     fn add(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423] + self[e423], other[e431] + self[e431], other[e412] + self[e412], self[e12345]]),
+            Simd32x4::from([self[e423], self[e431], self[e412], 0.0]) + other.group0().extend_to_4(self[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], other[e321] + self[e321]]),
+            other.group1() + self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], other[e5] + self[e5]]),
+            self.group2() + other.group2().truncate_to_3().extend_to_4(other[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1] + self[e1], other[e2] + self[e2], other[e3] + self[e3], other[e4] + self[e4]]),
+            self.group3() + other.group3().truncate_to_3().extend_to_4(other[e4]),
         );
     }
 }
@@ -75,13 +76,13 @@ impl std::ops::AddAssign<AntiDipoleInversion> for VersorEven {
         use crate::elements::*;
         *self = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423] + self[e423], other[e431] + self[e431], other[e412] + self[e412], self[e12345]]),
+            Simd32x4::from([self[e423], self[e431], self[e412], 0.0]) + other.group0().extend_to_4(self[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], other[e321] + self[e321]]),
+            other.group1() + self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], other[e5] + self[e5]]),
+            self.group2() + other.group2().truncate_to_3().extend_to_4(other[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1] + self[e1], other[e2] + self[e2], other[e3] + self[e3], other[e4] + self[e4]]),
+            self.group3() + other.group3().truncate_to_3().extend_to_4(other[e4]),
         );
     }
 }
@@ -118,17 +119,21 @@ impl std::ops::Add<AntiDualNum> for VersorEven {
 impl std::ops::Add<AntiFlatPoint> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        5        0        0
     fn add(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], other[e321] + self[e321]]),
+            self.group1().truncate_to_3().extend_to_4(other[e321] + self[e321]),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], self[e5]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group0().truncate_to_3().extend_to_4(self[e5]),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -141,9 +146,9 @@ impl std::ops::AddAssign<AntiFlatPoint> for VersorEven {
             // e423, e431, e412, e12345
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], other[e321] + self[e321]]),
+            self.group1().truncate_to_3().extend_to_4(other[e321] + self[e321]),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], self[e5]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group0().truncate_to_3().extend_to_4(self[e5]),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -152,19 +157,23 @@ impl std::ops::AddAssign<AntiFlatPoint> for VersorEven {
 impl std::ops::Add<AntiFlector> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8        0        0
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd        9        0        0
     fn add(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], other[e321] + self[e321]]),
+            self.group1().truncate_to_3().extend_to_4(other[e321] + self[e321]),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], other[e5] + self[e5]]),
+            self.group2() + other.group0().truncate_to_3().extend_to_4(other[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1] + self[e1], other[e2] + self[e2], other[e3] + self[e3], self[e4]]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group1().truncate_to_3().extend_to_4(self[e4]),
         );
     }
 }
@@ -175,11 +184,11 @@ impl std::ops::AddAssign<AntiFlector> for VersorEven {
             // e423, e431, e412, e12345
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], other[e321] + self[e321]]),
+            self.group1().truncate_to_3().extend_to_4(other[e321] + self[e321]),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], other[e5] + self[e5]]),
+            self.group2() + other.group0().truncate_to_3().extend_to_4(other[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1] + self[e1], other[e2] + self[e2], other[e3] + self[e3], self[e4]]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group1().truncate_to_3().extend_to_4(self[e4]),
         );
     }
 }
@@ -195,7 +204,7 @@ impl std::ops::Add<AntiLine> for VersorEven {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            crate::swizzle!(other.group1(), 0, 1, 2).extend_to_4(0.0),
+            other.group1().extend_to_4(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -246,8 +255,12 @@ impl std::ops::Add<AntiMotor> for VersorEven {
 impl std::ops::Add<AntiPlane> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        2        0        0
+    //  no simd        5        0        0
     fn add(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -256,9 +269,9 @@ impl std::ops::Add<AntiPlane> for VersorEven {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], other[e5] + self[e5]]),
+            self.group2().truncate_to_3().extend_to_4(other[e5] + self[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1] + self[e1], other[e2] + self[e2], other[e3] + self[e3], self[e4]]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group0().truncate_to_3().extend_to_4(self[e4]),
         );
     }
 }
@@ -271,22 +284,23 @@ impl std::ops::AddAssign<AntiPlane> for VersorEven {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], other[e5] + self[e5]]),
+            self.group2().truncate_to_3().extend_to_4(other[e5] + self[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1] + self[e1], other[e2] + self[e2], other[e3] + self[e3], self[e4]]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group0().truncate_to_3().extend_to_4(self[e4]),
         );
     }
 }
 impl std::ops::Add<AntiScalar> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
+    //          add/sub      mul      div
+    //   simd4        1        0        0
+    // no simd        4        0        0
     fn add(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], other[e12345] + self[e12345]]),
+            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e12345]),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
@@ -301,7 +315,7 @@ impl std::ops::AddAssign<AntiScalar> for VersorEven {
         use crate::elements::*;
         *self = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], other[e12345] + self[e12345]]),
+            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e12345]),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
@@ -314,17 +328,18 @@ impl std::ops::AddAssign<AntiScalar> for VersorEven {
 impl std::ops::Add<Circle> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       10        0        0
+    //          add/sub      mul      div
+    //   simd4        3        0        0
+    // no simd       12        0        0
     fn add(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423] + self[e423], other[e431] + self[e431], other[e412] + self[e412], self[e12345]]),
+            Simd32x4::from([self[e423], self[e431], self[e412], 0.0]) + other.group0().extend_to_4(self[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], other[e321] + self[e321]]),
+            other.group1() + self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], self[e5]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group2().extend_to_4(self[e5]),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -335,11 +350,11 @@ impl std::ops::AddAssign<Circle> for VersorEven {
         use crate::elements::*;
         *self = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423] + self[e423], other[e431] + self[e431], other[e412] + self[e412], self[e12345]]),
+            Simd32x4::from([self[e423], self[e431], self[e412], 0.0]) + other.group0().extend_to_4(self[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], other[e321] + self[e321]]),
+            other.group1() + self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], self[e5]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group2().extend_to_4(self[e5]),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -348,17 +363,18 @@ impl std::ops::AddAssign<Circle> for VersorEven {
 impl std::ops::Add<CircleRotor> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       11        0        0
+    //          add/sub      mul      div
+    //   simd4        3        0        0
+    // no simd       12        0        0
     fn add(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423] + self[e423], other[e431] + self[e431], other[e412] + self[e412], other[e12345] + self[e12345]]),
+            self.group0() + other.group0().extend_to_4(other[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], other[e321] + self[e321]]),
+            other.group1() + self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], self[e5]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group2().truncate_to_3().extend_to_4(self[e5]),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -369,11 +385,11 @@ impl std::ops::AddAssign<CircleRotor> for VersorEven {
         use crate::elements::*;
         *self = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423] + self[e423], other[e431] + self[e431], other[e412] + self[e412], other[e12345] + self[e12345]]),
+            self.group0() + other.group0().extend_to_4(other[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], other[e321] + self[e321]]),
+            other.group1() + self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], self[e5]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group2().truncate_to_3().extend_to_4(self[e5]),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -391,7 +407,7 @@ impl std::ops::Add<Dipole> for VersorEven {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            crate::swizzle!(other.group2(), 0, 1, 2).extend_to_4(other[e45]),
+            other.group2().extend_to_4(other[e45]),
             // e41, e42, e43
             other.group0(),
             // e23, e31, e12
@@ -448,11 +464,11 @@ impl std::ops::Add<DualNum> for VersorEven {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], other[e12345] + self[e12345]]),
+            self.group0().truncate_to_3().extend_to_4(other[e12345] + self[e12345]),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], other[e5] + self[e5]]),
+            self.group2().truncate_to_3().extend_to_4(other[e5] + self[e5]),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -463,11 +479,11 @@ impl std::ops::AddAssign<DualNum> for VersorEven {
         use crate::elements::*;
         *self = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], other[e12345] + self[e12345]]),
+            self.group0().truncate_to_3().extend_to_4(other[e12345] + self[e12345]),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], other[e5] + self[e5]]),
+            self.group2().truncate_to_3().extend_to_4(other[e5] + self[e5]),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -536,17 +552,18 @@ impl std::ops::Add<Flector> for VersorEven {
 impl std::ops::Add<Line> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6        0        0
+    //          add/sub      mul      div
+    //   simd4        2        0        0
+    // no simd        8        0        0
     fn add(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], self[e321]]),
+            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().extend_to_4(self[e321]),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], self[e5]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group1().extend_to_4(self[e5]),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -559,9 +576,9 @@ impl std::ops::AddAssign<Line> for VersorEven {
             // e423, e431, e412, e12345
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], self[e321]]),
+            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().extend_to_4(self[e321]),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], self[e5]]),
+            Simd32x4::from([self[e235], self[e315], self[e125], 0.0]) + other.group1().extend_to_4(self[e5]),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -570,17 +587,21 @@ impl std::ops::AddAssign<Line> for VersorEven {
 impl std::ops::Add<Motor> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8        0        0
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        3        0        0
+    //  no simd        9        0        0
     fn add(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], other[e12345] + self[e12345]]),
+            self.group0().truncate_to_3().extend_to_4(other[e12345] + self[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], self[e321]]),
+            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().truncate_to_3().extend_to_4(self[e321]),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], other[e5] + self[e5]]),
+            other.group1() + self.group2(),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -591,11 +612,11 @@ impl std::ops::AddAssign<Motor> for VersorEven {
         use crate::elements::*;
         *self = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], other[e12345] + self[e12345]]),
+            self.group0().truncate_to_3().extend_to_4(other[e12345] + self[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], self[e321]]),
+            Simd32x4::from([self[e415], self[e425], self[e435], 0.0]) + other.group0().truncate_to_3().extend_to_4(self[e321]),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], other[e5] + self[e5]]),
+            other.group1() + self.group2(),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -604,15 +625,21 @@ impl std::ops::AddAssign<Motor> for VersorEven {
 impl std::ops::Add<MultiVector> for VersorEven {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16        0        0
+    //           add/sub      mul      div
+    //      f32        1        0        0
+    //    simd2        1        0        0
+    //    simd3        2        0        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        6        0        0
+    //  no simd       17        0        0
     fn add(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            Simd32x2::from([other[scalar], other[e12345] + self[e12345]]),
+            Simd32x2::from([0.0, self[e12345]]) + other.group0(),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1] + self[e1], other[e2] + self[e2], other[e3] + self[e3], other[e4] + self[e4]]),
+            other.group1() + self.group3(),
             // e5
             other[e5] + self[e5],
             // e15, e25, e35, e45
@@ -622,11 +649,11 @@ impl std::ops::Add<MultiVector> for VersorEven {
             // e23, e31, e12
             other.group5(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], other[e321] + self[e321]]),
+            other.group6() + self.group1(),
             // e423, e431, e412
-            Simd32x3::from([other[e423] + self[e423], other[e431] + self[e431], other[e412] + self[e412]]),
+            other.group7() + self.group0().truncate_to_3(),
             // e235, e315, e125
-            Simd32x3::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125]]),
+            other.group8() + self.group2().truncate_to_3(),
             // e4235, e4315, e4125, e3215
             other.group9(),
             // e1234
@@ -667,8 +694,9 @@ impl std::ops::Add<Plane> for VersorEven {
 impl std::ops::Add<RoundPoint> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5        0        0
+    //          add/sub      mul      div
+    //   simd4        2        0        0
+    // no simd        8        0        0
     fn add(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -677,9 +705,9 @@ impl std::ops::Add<RoundPoint> for VersorEven {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], other[e5] + self[e5]]),
+            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1] + self[e1], other[e2] + self[e2], other[e3] + self[e3], other[e4] + self[e4]]),
+            other.group0() + self.group3(),
         );
     }
 }
@@ -692,9 +720,9 @@ impl std::ops::AddAssign<RoundPoint> for VersorEven {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], other[e5] + self[e5]]),
+            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1] + self[e1], other[e2] + self[e2], other[e3] + self[e3], other[e4] + self[e4]]),
+            other.group0() + self.group3(),
         );
     }
 }
@@ -761,34 +789,33 @@ impl std::ops::Add<Sphere> for VersorEven {
 impl std::ops::Add<VersorEven> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16        0        0
+    //          add/sub      mul      div
+    //   simd4        4        0        0
+    // no simd       16        0        0
     fn add(self, other: VersorEven) -> Self::Output {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423] + self[e423], other[e431] + self[e431], other[e412] + self[e412], other[e12345] + self[e12345]]),
+            other.group0() + self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], other[e321] + self[e321]]),
+            other.group1() + self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], other[e5] + self[e5]]),
+            other.group2() + self.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1] + self[e1], other[e2] + self[e2], other[e3] + self[e3], other[e4] + self[e4]]),
+            other.group3() + self.group3(),
         );
     }
 }
 impl std::ops::AddAssign<VersorEven> for VersorEven {
     fn add_assign(&mut self, other: VersorEven) {
-        use crate::elements::*;
         *self = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([other[e423] + self[e423], other[e431] + self[e431], other[e412] + self[e412], other[e12345] + self[e12345]]),
+            other.group0() + self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([other[e415] + self[e415], other[e425] + self[e425], other[e435] + self[e435], other[e321] + self[e321]]),
+            other.group1() + self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([other[e235] + self[e235], other[e315] + self[e315], other[e125] + self[e125], other[e5] + self[e5]]),
+            other.group2() + self.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1] + self[e1], other[e2] + self[e2], other[e3] + self[e3], other[e4] + self[e4]]),
+            other.group3() + self.group3(),
         );
     }
 }
@@ -826,11 +853,11 @@ impl std::ops::BitXor<AntiCircleRotor> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       26       38        0
-    //    simd3        2        2        0
-    //    simd4        2        3        0
+    //      f32       15       27        0
+    //    simd3        3        7        0
+    //    simd4        4        2        0
     // Totals...
-    // yes simd       30       43        0
+    // yes simd       22       36        0
     //  no simd       40       56        0
     fn bitxor(self, other: AntiCircleRotor) -> Self::Output {
         return self.wedge(other);
@@ -845,12 +872,12 @@ impl std::ops::BitXor<AntiDipoleInversion> for VersorEven {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       34       46        0
-    //    simd3        1        2        0
-    //    simd4        2        2        0
+    //      f32        5       11        0
+    //    simd3        1        7        0
+    //    simd4       10        7        0
     // Totals...
-    // yes simd       37       50        0
-    //  no simd       45       60        0
+    // yes simd       16       25        0
+    //  no simd       48       60        0
     fn bitxor(self, other: AntiDipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -859,11 +886,11 @@ impl std::ops::BitXor<AntiDualNum> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        5        0
-    //    simd4        0        3        0
+    //      f32        1        2        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        1        8        0
-    //  no simd        1       17        0
+    // yes simd        1        6        0
+    //  no simd        1       18        0
     fn bitxor(self, other: AntiDualNum) -> Self::Output {
         return self.wedge(other);
     }
@@ -876,8 +903,12 @@ impl std::ops::BitXorAssign<AntiDualNum> for VersorEven {
 impl std::ops::BitXor<AntiFlatPoint> for VersorEven {
     type Output = Sphere;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        3        8        0
+    //           add/sub      mul      div
+    //      f32        3        5        0
+    //    simd4        0        1        0
+    // Totals...
+    // yes simd        3        6        0
+    //  no simd        3        9        0
     fn bitxor(self, other: AntiFlatPoint) -> Self::Output {
         return self.wedge(other);
     }
@@ -886,12 +917,12 @@ impl std::ops::BitXor<AntiFlector> for VersorEven {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       21       33        0
-    //    simd3        0        1        0
-    //    simd4        1        1        0
+    //      f32        4        9        0
+    //    simd3        1        5        0
+    //    simd4        6        4        0
     // Totals...
-    // yes simd       22       35        0
-    //  no simd       25       40        0
+    // yes simd       11       18        0
+    //  no simd       31       40        0
     fn bitxor(self, other: AntiFlector) -> Self::Output {
         return self.wedge(other);
     }
@@ -900,11 +931,12 @@ impl std::ops::BitXor<AntiLine> for VersorEven {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       21        0
-    //    simd3        0        1        0
+    //      f32        9       15        0
+    //    simd3        0        2        0
+    //    simd4        1        1        0
     // Totals...
-    // yes simd       13       22        0
-    //  no simd       13       24        0
+    // yes simd       10       18        0
+    //  no simd       13       25        0
     fn bitxor(self, other: AntiLine) -> Self::Output {
         return self.wedge(other);
     }
@@ -913,11 +945,11 @@ impl std::ops::BitXor<AntiMotor> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       10       19        0
-    //    simd3        2        2        0
-    //    simd4        3        4        0
+    //      f32        7       14        0
+    //    simd3        3        5        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd       15       25        0
+    // yes simd       13       22        0
     //  no simd       28       41        0
     fn bitxor(self, other: AntiMotor) -> Self::Output {
         return self.wedge(other);
@@ -932,12 +964,12 @@ impl std::ops::BitXor<AntiPlane> for VersorEven {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       13       25        0
-    //    simd3        0        1        0
-    //    simd4        1        1        0
+    //      f32        2       14        0
+    //    simd3        1        3        0
+    //    simd4        3        3        0
     // Totals...
-    // yes simd       14       27        0
-    //  no simd       17       32        0
+    // yes simd        6       20        0
+    //  no simd       17       35        0
     fn bitxor(self, other: AntiPlane) -> Self::Output {
         return self.wedge(other);
     }
@@ -946,10 +978,11 @@ impl std::ops::BitXor<Circle> for VersorEven {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       16        0
-    //    simd4        1        1        0
+    //      f32        7       13        0
+    //    simd3        0        1        0
+    //    simd4        2        1        0
     // Totals...
-    // yes simd       12       17        0
+    // yes simd        9       15        0
     //  no simd       15       20        0
     fn bitxor(self, other: Circle) -> Self::Output {
         return self.wedge(other);
@@ -959,10 +992,10 @@ impl std::ops::BitXor<CircleRotor> for VersorEven {
     type Output = Sphere;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       11       16        0
-    //    simd4        1        1        0
+    //      f32        7       12        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       12       17        0
+    // yes simd        9       14        0
     //  no simd       15       20        0
     fn bitxor(self, other: CircleRotor) -> Self::Output {
         return self.wedge(other);
@@ -972,10 +1005,11 @@ impl std::ops::BitXor<Dipole> for VersorEven {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       26       37        0
-    //    simd3        1        1        0
+    //      f32       15       24        0
+    //    simd3        2        4        0
+    //    simd4        2        1        0
     // Totals...
-    // yes simd       27       38        0
+    // yes simd       19       29        0
     //  no simd       29       40        0
     fn bitxor(self, other: Dipole) -> Self::Output {
         return self.wedge(other);
@@ -985,12 +1019,12 @@ impl std::ops::BitXor<DipoleInversion> for VersorEven {
     type Output = CircleRotor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       27       38        0
-    //    simd3        1        1        0
-    //    simd4        1        1        0
+    //      f32       15       21        0
+    //    simd3        2        4        0
+    //    simd4        4        3        0
     // Totals...
-    // yes simd       29       40        0
-    //  no simd       34       45        0
+    // yes simd       21       28        0
+    //  no simd       37       45        0
     fn bitxor(self, other: DipoleInversion) -> Self::Output {
         return self.wedge(other);
     }
@@ -1009,10 +1043,11 @@ impl std::ops::BitXor<FlatPoint> for VersorEven {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       12        0
+    //      f32        2        6        0
+    //    simd3        1        2        0
     //    simd4        1        1        0
     // Totals...
-    // yes simd        6       13        0
+    // yes simd        4        9        0
     //  no simd        9       16        0
     fn bitxor(self, other: FlatPoint) -> Self::Output {
         return self.wedge(other);
@@ -1022,10 +1057,11 @@ impl std::ops::BitXor<Flector> for VersorEven {
     type Output = Motor;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       12        0
+    //      f32        5        6        0
+    //    simd3        1        2        0
     //    simd4        2        2        0
     // Totals...
-    // yes simd       10       14        0
+    // yes simd        8       10        0
     //  no simd       16       20        0
     fn bitxor(self, other: Flector) -> Self::Output {
         return self.wedge(other);
@@ -1034,8 +1070,12 @@ impl std::ops::BitXor<Flector> for VersorEven {
 impl std::ops::BitXor<Line> for VersorEven {
     type Output = Plane;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8       12        0
+    //           add/sub      mul      div
+    //      f32        4        8        0
+    //    simd4        1        1        0
+    // Totals...
+    // yes simd        5        9        0
+    //  no simd        8       12        0
     fn bitxor(self, other: Line) -> Self::Output {
         return self.wedge(other);
     }
@@ -1044,10 +1084,11 @@ impl std::ops::BitXor<Motor> for VersorEven {
     type Output = Flector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       12        0
-    //    simd4        1        2        0
+    //      f32        4        9        0
+    //    simd3        0        1        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd        9       14        0
+    // yes simd        6       12        0
     //  no simd       12       20        0
     fn bitxor(self, other: Motor) -> Self::Output {
         return self.wedge(other);
@@ -1057,11 +1098,11 @@ impl std::ops::BitXor<MultiVector> for VersorEven {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       59       79        0
-    //    simd3        5        6        0
-    //    simd4        4        6        0
+    //      f32       26       38        0
+    //    simd3        8       17        0
+    //    simd4       10        8        0
     // Totals...
-    // yes simd       68       91        0
+    // yes simd       44       63        0
     //  no simd       90      121        0
     fn bitxor(self, other: MultiVector) -> Self::Output {
         return self.wedge(other);
@@ -1080,11 +1121,11 @@ impl std::ops::BitXor<RoundPoint> for VersorEven {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       18       30        0
-    //    simd3        1        2        0
-    //    simd4        1        1        0
+    //      f32        6       15        0
+    //    simd3        1        3        0
+    //    simd4        4        4        0
     // Totals...
-    // yes simd       20       33        0
+    // yes simd       11       22        0
     //  no simd       25       40        0
     fn bitxor(self, other: RoundPoint) -> Self::Output {
         return self.wedge(other);
@@ -1118,12 +1159,12 @@ impl std::ops::BitXor<VersorEven> for VersorEven {
     type Output = DipoleInversion;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       34       46        0
-    //    simd3        1        2        0
-    //    simd4        2        2        0
+    //      f32        5       11        0
+    //    simd3        1        7        0
+    //    simd4       10        7        0
     // Totals...
-    // yes simd       37       50        0
-    //  no simd       45       60        0
+    // yes simd       16       25        0
+    //  no simd       48       60        0
     fn bitxor(self, other: VersorEven) -> Self::Output {
         return self.wedge(other);
     }
@@ -1132,12 +1173,12 @@ impl std::ops::BitXor<VersorOdd> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       27       39        0
-    //    simd3        2        2        0
-    //    simd4        3        4        0
+    //      f32       15       23        0
+    //    simd3        3        6        0
+    //    simd4        6        5        0
     // Totals...
-    // yes simd       32       45        0
-    //  no simd       45       61        0
+    // yes simd       24       34        0
+    //  no simd       48       61        0
     fn bitxor(self, other: VersorOdd) -> Self::Output {
         return self.wedge(other);
     }
@@ -1337,10 +1378,11 @@ impl std::ops::Mul<AntiCircleRotor> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      108      124        0
-    //    simd4       13       13        0
+    //      f32       48       76        0
+    //    simd3        0       12        0
+    //    simd4       28       16        0
     // Totals...
-    // yes simd      121      137        0
+    // yes simd       76      104        0
     //  no simd      160      176        0
     fn mul(self, other: AntiCircleRotor) -> Self::Output {
         return self.geometric_product(other);
@@ -1355,11 +1397,12 @@ impl std::ops::Mul<AntiDipoleInversion> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      184      200        0
-    //    simd4       10       10        0
+    //      f32       32       71        0
+    //    simd3        0       17        0
+    //    simd4       48       31        0
     // Totals...
-    // yes simd      194      210        0
-    //  no simd      224      240        0
+    // yes simd       80      119        0
+    //  no simd      224      246        0
     fn mul(self, other: AntiDipoleInversion) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1368,12 +1411,12 @@ impl std::ops::Mul<AntiDualNum> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        1        6        0
+    //      f32        1        3        0
     //    simd3        1        2        0
-    //    simd4        3        5        0
+    //    simd4        3        6        0
     // Totals...
-    // yes simd        5       13        0
-    //  no simd       16       32        0
+    // yes simd        5       11        0
+    //  no simd       16       33        0
     fn mul(self, other: AntiDualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1387,11 +1430,12 @@ impl std::ops::Mul<AntiFlatPoint> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       30       43        0
+    //      f32        5        8        0
     //    simd3        6        7        0
+    //    simd4        7        9        0
     // Totals...
-    // yes simd       36       50        0
-    //  no simd       48       64        0
+    // yes simd       18       24        0
+    //  no simd       51       65        0
     fn mul(self, other: AntiFlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1400,11 +1444,12 @@ impl std::ops::Mul<AntiFlector> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      108      124        0
-    //    simd4        1        1        0
+    //      f32       27       34        0
+    //    simd3        0        2        0
+    //    simd4       23       22        0
     // Totals...
-    // yes simd      109      125        0
-    //  no simd      112      128        0
+    // yes simd       50       58        0
+    //  no simd      119      128        0
     fn mul(self, other: AntiFlector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1413,11 +1458,12 @@ impl std::ops::Mul<AntiLine> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       72        0
-    //    simd4        6        6        0
+    //      f32       32       55        0
+    //    simd3        0        6        0
+    //    simd4       12        6        0
     // Totals...
-    // yes simd       62       78        0
-    //  no simd       80       96        0
+    // yes simd       44       67        0
+    //  no simd       80       97        0
     fn mul(self, other: AntiLine) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1431,11 +1477,12 @@ impl std::ops::Mul<AntiMotor> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       56       72        0
-    //    simd4       14       14        0
+    //      f32       32       52        0
+    //    simd3        0        3        0
+    //    simd4       20       17        0
     // Totals...
-    // yes simd       70       86        0
-    //  no simd      112      128        0
+    // yes simd       52       72        0
+    //  no simd      112      129        0
     fn mul(self, other: AntiMotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1449,11 +1496,11 @@ impl std::ops::Mul<AntiPlane> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       60        0
-    //    simd4        1        1        0
+    //      f32        3        8        0
+    //    simd4       13       14        0
     // Totals...
-    // yes simd       45       61        0
-    //  no simd       48       64        0
+    // yes simd       16       22        0
+    //  no simd       55       64        0
     fn mul(self, other: AntiPlane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1472,11 +1519,12 @@ impl std::ops::Mul<Circle> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      136      152        0
-    //    simd4        2        2        0
+    //      f32       36       63        0
+    //    simd3        0       12        0
+    //    simd4       27       16        0
     // Totals...
-    // yes simd      138      154        0
-    //  no simd      144      160        0
+    // yes simd       63       91        0
+    //  no simd      144      163        0
     fn mul(self, other: Circle) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1485,11 +1533,12 @@ impl std::ops::Mul<CircleRotor> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      144      160        0
-    //    simd4        4        4        0
+    //      f32       40       68        0
+    //    simd3        0       11        0
+    //    simd4       30       19        0
     // Totals...
-    // yes simd      148      164        0
-    //  no simd      160      176        0
+    // yes simd       70       98        0
+    //  no simd      160      177        0
     fn mul(self, other: CircleRotor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1498,10 +1547,11 @@ impl std::ops::Mul<Dipole> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      108      124        0
-    //    simd4        9        9        0
+    //      f32       48       73        0
+    //    simd3        0        9        0
+    //    simd4       24       15        0
     // Totals...
-    // yes simd      117      133        0
+    // yes simd       72       97        0
     //  no simd      144      160        0
     fn mul(self, other: Dipole) -> Self::Output {
         return self.geometric_product(other);
@@ -1516,10 +1566,11 @@ impl std::ops::Mul<DipoleInversion> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      152      168        0
-    //    simd4       18       18        0
+    //      f32       36       65        0
+    //    simd3        0       17        0
+    //    simd4       47       31        0
     // Totals...
-    // yes simd      170      186        0
+    // yes simd       83      113        0
     //  no simd      224      240        0
     fn mul(self, other: DipoleInversion) -> Self::Output {
         return self.geometric_product(other);
@@ -1534,12 +1585,12 @@ impl std::ops::Mul<DualNum> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       20        0
+    //      f32        6       17        0
     //    simd3        2        3        0
-    //    simd4        1        2        0
+    //    simd4        1        3        0
     // Totals...
-    // yes simd        9       25        0
-    //  no simd       16       37        0
+    // yes simd        9       23        0
+    //  no simd       16       38        0
     fn mul(self, other: DualNum) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1548,12 +1599,12 @@ impl std::ops::Mul<FlatPoint> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       14       26        0
-    //    simd3        2        2        0
-    //    simd4        7        8        0
+    //      f32        7       13        0
+    //    simd3        3        4        0
+    //    simd4        8       10        0
     // Totals...
-    // yes simd       23       36        0
-    //  no simd       48       64        0
+    // yes simd       18       27        0
+    //  no simd       48       65        0
     fn mul(self, other: FlatPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1567,11 +1618,12 @@ impl std::ops::Mul<Flector> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       60       76        0
-    //    simd4       13       13        0
+    //      f32       16       26        0
+    //    simd3        0        2        0
+    //    simd4       25       24        0
     // Totals...
-    // yes simd       73       89        0
-    //  no simd      112      128        0
+    // yes simd       41       52        0
+    //  no simd      116      128        0
     fn mul(self, other: Flector) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1584,8 +1636,13 @@ impl std::ops::MulAssign<Flector> for VersorEven {
 impl std::ops::Mul<Line> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       80       96        0
+    //           add/sub      mul      div
+    //      f32       28       43        0
+    //    simd3        0        3        0
+    //    simd4       14       11        0
+    // Totals...
+    // yes simd       42       57        0
+    //  no simd       84       96        0
     fn mul(self, other: Line) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1594,11 +1651,11 @@ impl std::ops::Mul<Motor> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       96      112        0
-    //    simd4        4        4        0
+    //      f32       28       39        0
+    //    simd4       22       23        0
     // Totals...
-    // yes simd      100      116        0
-    //  no simd      112      128        0
+    // yes simd       50       62        0
+    //  no simd      116      131        0
     fn mul(self, other: Motor) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1607,12 +1664,12 @@ impl std::ops::Mul<MultiVector> for VersorEven {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      302      334        0
-    //    simd2        4        4        0
-    //    simd3       38       38        0
-    //    simd4       14       14        0
+    //      f32       60       85        0
+    //    simd2        8        8        0
+    //    simd3       60       77        0
+    //    simd4       56       45        0
     // Totals...
-    // yes simd      358      390        0
+    // yes simd      184      215        0
     //  no simd      480      512        0
     fn mul(self, other: MultiVector) -> Self::Output {
         return self.geometric_product(other);
@@ -1622,11 +1679,11 @@ impl std::ops::Mul<Plane> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       32       48        0
-    //    simd4        4        4        0
+    //      f32       12       32        0
+    //    simd4        9        9        0
     // Totals...
-    // yes simd       36       52        0
-    //  no simd       48       64        0
+    // yes simd       21       41        0
+    //  no simd       48       68        0
     fn mul(self, other: Plane) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1640,11 +1697,12 @@ impl std::ops::Mul<RoundPoint> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       52       68        0
-    //    simd4        3        3        0
+    //      f32        4       25        0
+    //    simd3        0        3        0
+    //    simd4       15       13        0
     // Totals...
-    // yes simd       55       71        0
-    //  no simd       64       80        0
+    // yes simd       19       41        0
+    //  no simd       64       86        0
     fn mul(self, other: RoundPoint) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1668,11 +1726,12 @@ impl std::ops::Mul<Sphere> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       44       60        0
-    //    simd4        5        5        0
+    //      f32        4       24        0
+    //    simd3        0        2        0
+    //    simd4       15       14        0
     // Totals...
-    // yes simd       49       65        0
-    //  no simd       64       80        0
+    // yes simd       19       40        0
+    //  no simd       64       86        0
     fn mul(self, other: Sphere) -> Self::Output {
         return self.geometric_product(other);
     }
@@ -1686,10 +1745,11 @@ impl std::ops::Mul<VersorEven> for VersorEven {
     type Output = VersorOdd;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      192      208        0
-    //    simd4       12       12        0
+    //      f32       36       67        0
+    //    simd3        0       19        0
+    //    simd4       51       33        0
     // Totals...
-    // yes simd      204      220        0
+    // yes simd       87      119        0
     //  no simd      240      256        0
     fn mul(self, other: VersorEven) -> Self::Output {
         return self.geometric_product(other);
@@ -1699,10 +1759,11 @@ impl std::ops::Mul<VersorOdd> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32      152      168        0
-    //    simd4       22       22        0
+    //      f32       36       59        0
+    //    simd3        0       11        0
+    //    simd4       51       41        0
     // Totals...
-    // yes simd      174      190        0
+    // yes simd       87      111        0
     //  no simd      240      256        0
     fn mul(self, other: VersorOdd) -> Self::Output {
         return self.geometric_product(other);
@@ -1762,7 +1823,7 @@ impl std::ops::Sub<AntiCircleRotor> for VersorEven {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
+            other.group2().truncate_to_3().extend_to_4(other[e45]) * Simd32x4::from(-1.0),
             // e41, e42, e43
             other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
@@ -1783,19 +1844,23 @@ impl std::ops::Sub<AntiCircleRotor> for VersorEven {
 impl std::ops::Sub<AntiDipoleInversion> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       15        0        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        4        0        0
+    // Totals...
+    // yes simd        4        3        0
+    //  no simd       16        3        0
     fn sub(self, other: AntiDipoleInversion) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412], self[e12345]]),
+            Simd32x4::from([other[e423] * -1.0, other[e431] * -1.0, other[e412] * -1.0, 0.0]) + self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5] - other[e5]]),
+            self.group2() - other.group2().truncate_to_3().extend_to_4(other[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1] - other[e1], self[e2] - other[e2], self[e3] - other[e3], self[e4] - other[e4]]),
+            self.group3() - other.group3().truncate_to_3().extend_to_4(other[e4]),
         );
     }
 }
@@ -1804,13 +1869,13 @@ impl std::ops::SubAssign<AntiDipoleInversion> for VersorEven {
         use crate::elements::*;
         *self = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412], self[e12345]]),
+            Simd32x4::from([other[e423] * -1.0, other[e431] * -1.0, other[e412] * -1.0, 0.0]) + self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5] - other[e5]]),
+            self.group2() - other.group2().truncate_to_3().extend_to_4(other[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1] - other[e1], self[e2] - other[e2], self[e3] - other[e3], self[e4] - other[e4]]),
+            self.group3() - other.group3().truncate_to_3().extend_to_4(other[e4]),
         );
     }
 }
@@ -1854,17 +1919,21 @@ impl std::ops::Sub<AntiDualNum> for VersorEven {
 impl std::ops::Sub<AntiFlatPoint> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        2        4        0
+    //  no simd        8        4        0
     fn sub(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321] - other[e321]]),
+            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, 0.0]) + self.group2(),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -1877,9 +1946,9 @@ impl std::ops::SubAssign<AntiFlatPoint> for VersorEven {
             // e423, e431, e412, e12345
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321] - other[e321]]),
+            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, 0.0]) + self.group2(),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -1888,19 +1957,23 @@ impl std::ops::SubAssign<AntiFlatPoint> for VersorEven {
 impl std::ops::Sub<AntiFlector> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8        0        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        3        0        0
+    // Totals...
+    // yes simd        3        4        0
+    //  no simd       12        4        0
     fn sub(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321] - other[e321]]),
+            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5] - other[e5]]),
+            self.group2() - other.group0().truncate_to_3().extend_to_4(other[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1] - other[e1], self[e2] - other[e2], self[e3] - other[e3], self[e4]]),
+            Simd32x4::from([other[e1] * -1.0, other[e2] * -1.0, other[e3] * -1.0, 0.0]) + self.group3(),
         );
     }
 }
@@ -1911,23 +1984,20 @@ impl std::ops::SubAssign<AntiFlector> for VersorEven {
             // e423, e431, e412, e12345
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415], self[e425], self[e435], self[e321] - other[e321]]),
+            self.group1() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5] - other[e5]]),
+            self.group2() - other.group0().truncate_to_3().extend_to_4(other[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1] - other[e1], self[e2] - other[e2], self[e3] - other[e3], self[e4]]),
+            Simd32x4::from([other[e1] * -1.0, other[e2] * -1.0, other[e3] * -1.0, 0.0]) + self.group3(),
         );
     }
 }
 impl std::ops::Sub<AntiLine> for VersorEven {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
-    //           add/sub      mul      div
-    //    simd3        0        1        0
-    //    simd4        0        1        0
-    // Totals...
-    // yes simd        0        2        0
-    //  no simd        0        7        0
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
     fn sub(self, other: AntiLine) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -1938,7 +2008,7 @@ impl std::ops::Sub<AntiLine> for VersorEven {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            Simd32x4::from([other[e15], other[e25], other[e35], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -1962,11 +2032,10 @@ impl std::ops::Sub<AntiMotor> for VersorEven {
     //           add/sub      mul      div
     //      f32        0        1        0
     //    simd2        0        1        0
-    //    simd3        0        1        0
-    //    simd4        0        1        0
+    //    simd3        0        2        0
     // Totals...
     // yes simd        0        4        0
-    //  no simd        0       10        0
+    //  no simd        0        9        0
     fn sub(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -1977,7 +2046,7 @@ impl std::ops::Sub<AntiMotor> for VersorEven {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            Simd32x4::from([other[e15], other[e25], other[e35], 1.0]) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12
@@ -1998,8 +2067,12 @@ impl std::ops::Sub<AntiMotor> for VersorEven {
 impl std::ops::Sub<AntiPlane> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        4        0        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        2        4        0
+    //  no simd        8        4        0
     fn sub(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -2008,9 +2081,9 @@ impl std::ops::Sub<AntiPlane> for VersorEven {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5] - other[e5]]),
+            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e5] * -1.0),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1] - other[e1], self[e2] - other[e2], self[e3] - other[e3], self[e4]]),
+            Simd32x4::from([other[e1] * -1.0, other[e2] * -1.0, other[e3] * -1.0, 0.0]) + self.group3(),
         );
     }
 }
@@ -2023,22 +2096,26 @@ impl std::ops::SubAssign<AntiPlane> for VersorEven {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5] - other[e5]]),
+            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e5] * -1.0),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1] - other[e1], self[e2] - other[e2], self[e3] - other[e3], self[e4]]),
+            Simd32x4::from([other[e1] * -1.0, other[e2] * -1.0, other[e3] * -1.0, 0.0]) + self.group3(),
         );
     }
 }
 impl std::ops::Sub<AntiScalar> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        1        0        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        1        0        0
+    // Totals...
+    // yes simd        1        1        0
+    //  no simd        4        1        0
     fn sub(self, other: AntiScalar) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e12345] - other[e12345]]),
+            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e12345] * -1.0),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
@@ -2053,7 +2130,7 @@ impl std::ops::SubAssign<AntiScalar> for VersorEven {
         use crate::elements::*;
         *self = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e12345] - other[e12345]]),
+            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e12345] * -1.0),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
@@ -2066,17 +2143,21 @@ impl std::ops::SubAssign<AntiScalar> for VersorEven {
 impl std::ops::Sub<Circle> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       10        0        0
+    //           add/sub      mul      div
+    //      f32        0        6        0
+    //    simd4        3        0        0
+    // Totals...
+    // yes simd        3        6        0
+    //  no simd       12        6        0
     fn sub(self, other: Circle) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412], self[e12345]]),
+            Simd32x4::from([other[e423] * -1.0, other[e431] * -1.0, other[e412] * -1.0, 0.0]) + self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, 0.0]) + self.group2(),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -2087,11 +2168,11 @@ impl std::ops::SubAssign<Circle> for VersorEven {
         use crate::elements::*;
         *self = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412], self[e12345]]),
+            Simd32x4::from([other[e423] * -1.0, other[e431] * -1.0, other[e412] * -1.0, 0.0]) + self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, 0.0]) + self.group2(),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -2100,17 +2181,21 @@ impl std::ops::SubAssign<Circle> for VersorEven {
 impl std::ops::Sub<CircleRotor> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       11        0        0
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd4        3        0        0
+    // Totals...
+    // yes simd        3        3        0
+    //  no simd       12        3        0
     fn sub(self, other: CircleRotor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412], self[e12345] - other[e12345]]),
+            self.group0() - other.group0().extend_to_4(other[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, 0.0]) + self.group2(),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -2121,11 +2206,11 @@ impl std::ops::SubAssign<CircleRotor> for VersorEven {
         use crate::elements::*;
         *self = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412], self[e12345] - other[e12345]]),
+            self.group0() - other.group0().extend_to_4(other[e12345]),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, 0.0]) + self.group2(),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -2150,7 +2235,7 @@ impl std::ops::Sub<Dipole> for VersorEven {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
+            other.group2().extend_to_4(other[e45]) * Simd32x4::from(-1.0),
             // e41, e42, e43
             other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
@@ -2188,7 +2273,7 @@ impl std::ops::Sub<DipoleInversion> for VersorEven {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
+            other.group2().truncate_to_3().extend_to_4(other[e45]) * Simd32x4::from(-1.0),
             // e41, e42, e43
             other.group0() * Simd32x3::from(-1.0),
             // e23, e31, e12
@@ -2209,17 +2294,21 @@ impl std::ops::Sub<DipoleInversion> for VersorEven {
 impl std::ops::Sub<DualNum> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        2        0        0
+    //           add/sub      mul      div
+    //      f32        0        2        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        2        2        0
+    //  no simd        8        2        0
     fn sub(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e12345] - other[e12345]]),
+            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e12345] * -1.0),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5] - other[e5]]),
+            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e5] * -1.0),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -2230,11 +2319,11 @@ impl std::ops::SubAssign<DualNum> for VersorEven {
         use crate::elements::*;
         *self = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e12345] - other[e12345]]),
+            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e12345] * -1.0),
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5] - other[e5]]),
+            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e5] * -1.0),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -2311,17 +2400,21 @@ impl std::ops::Sub<Flector> for VersorEven {
 impl std::ops::Sub<Line> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        6        0        0
+    //           add/sub      mul      div
+    //      f32        0        6        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        2        6        0
+    //  no simd        8        6        0
     fn sub(self, other: Line) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321]]),
+            Simd32x4::from([other[e415] * -1.0, other[e425] * -1.0, other[e435] * -1.0, 0.0]) + self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, 0.0]) + self.group2(),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -2334,9 +2427,9 @@ impl std::ops::SubAssign<Line> for VersorEven {
             // e423, e431, e412, e12345
             self.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321]]),
+            Simd32x4::from([other[e415] * -1.0, other[e425] * -1.0, other[e435] * -1.0, 0.0]) + self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5]]),
+            Simd32x4::from([other[e235] * -1.0, other[e315] * -1.0, other[e125] * -1.0, 0.0]) + self.group2(),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -2345,17 +2438,21 @@ impl std::ops::SubAssign<Line> for VersorEven {
 impl std::ops::Sub<Motor> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        8        0        0
+    //           add/sub      mul      div
+    //      f32        0        4        0
+    //    simd4        3        0        0
+    // Totals...
+    // yes simd        3        4        0
+    //  no simd       12        4        0
     fn sub(self, other: Motor) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e12345] - other[e12345]]),
+            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e12345] * -1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321]]),
+            Simd32x4::from([other[e415] * -1.0, other[e425] * -1.0, other[e435] * -1.0, 0.0]) + self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5] - other[e5]]),
+            self.group2() - other.group1(),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -2366,11 +2463,11 @@ impl std::ops::SubAssign<Motor> for VersorEven {
         use crate::elements::*;
         *self = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423], self[e431], self[e412], self[e12345] - other[e12345]]),
+            self.group0() + Simd32x3::from(0.0).extend_to_4(other[e12345] * -1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321]]),
+            Simd32x4::from([other[e415] * -1.0, other[e425] * -1.0, other[e435] * -1.0, 0.0]) + self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5] - other[e5]]),
+            self.group2() - other.group1(),
             // e1, e2, e3, e4
             self.group3(),
         );
@@ -2380,12 +2477,12 @@ impl std::ops::Sub<MultiVector> for VersorEven {
     type Output = MultiVector;
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       16        1        0
+    //      f32        2        1        0
     //    simd2        0        1        0
-    //    simd3        0        2        0
-    //    simd4        0        2        0
+    //    simd3        2        2        0
+    //    simd4        2        2        0
     // Totals...
-    // yes simd       16        6        0
+    // yes simd        6        6        0
     //  no simd       16       17        0
     fn sub(self, other: MultiVector) -> Self::Output {
         use crate::elements::*;
@@ -2393,7 +2490,7 @@ impl std::ops::Sub<MultiVector> for VersorEven {
             // scalar, e12345
             Simd32x2::from([other[scalar], self[e12345] - other[e12345]]) * Simd32x2::from([-1.0, 1.0]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1] - other[e1], self[e2] - other[e2], self[e3] - other[e3], self[e4] - other[e4]]),
+            self.group3() - other.group1(),
             // e5
             self[e5] - other[e5],
             // e15, e25, e35, e45
@@ -2403,11 +2500,11 @@ impl std::ops::Sub<MultiVector> for VersorEven {
             // e23, e31, e12
             other.group5() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group6(),
             // e423, e431, e412
-            Simd32x3::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412]]),
+            self.group0().truncate_to_3() - other.group7(),
             // e235, e315, e125
-            Simd32x3::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125]]),
+            self.group2().truncate_to_3() - other.group8(),
             // e4235, e4315, e4125, e3215
             other.group9() * Simd32x4::from(-1.0),
             // e1234
@@ -2452,8 +2549,12 @@ impl std::ops::Sub<Plane> for VersorEven {
 impl std::ops::Sub<RoundPoint> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32        5        0        0
+    //           add/sub      mul      div
+    //      f32        0        1        0
+    //    simd4        2        0        0
+    // Totals...
+    // yes simd        2        1        0
+    //  no simd        8        1        0
     fn sub(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
         return VersorEven::from_groups(
@@ -2462,9 +2563,9 @@ impl std::ops::Sub<RoundPoint> for VersorEven {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5] - other[e5]]),
+            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e5] * -1.0),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1] - other[e1], self[e2] - other[e2], self[e3] - other[e3], self[e4] - other[e4]]),
+            self.group3() - other.group0(),
         );
     }
 }
@@ -2477,9 +2578,9 @@ impl std::ops::SubAssign<RoundPoint> for VersorEven {
             // e415, e425, e435, e321
             self.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235], self[e315], self[e125], self[e5] - other[e5]]),
+            self.group2() + Simd32x3::from(0.0).extend_to_4(other[e5] * -1.0),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1] - other[e1], self[e2] - other[e2], self[e3] - other[e3], self[e4] - other[e4]]),
+            self.group3() - other.group0(),
         );
     }
 }
@@ -2557,34 +2658,33 @@ impl std::ops::Sub<Sphere> for VersorEven {
 impl std::ops::Sub<VersorEven> for VersorEven {
     type Output = VersorEven;
     // Operative Statistics for this implementation:
-    //      add/sub      mul      div
-    // f32       16        0        0
+    //          add/sub      mul      div
+    //   simd4        4        0        0
+    // no simd       16        0        0
     fn sub(self, other: VersorEven) -> Self::Output {
-        use crate::elements::*;
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412], self[e12345] - other[e12345]]),
+            self.group0() - other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5] - other[e5]]),
+            self.group2() - other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1] - other[e1], self[e2] - other[e2], self[e3] - other[e3], self[e4] - other[e4]]),
+            self.group3() - other.group3(),
         );
     }
 }
 impl std::ops::SubAssign<VersorEven> for VersorEven {
     fn sub_assign(&mut self, other: VersorEven) {
-        use crate::elements::*;
         *self = VersorEven::from_groups(
             // e423, e431, e412, e12345
-            Simd32x4::from([self[e423] - other[e423], self[e431] - other[e431], self[e412] - other[e412], self[e12345] - other[e12345]]),
+            self.group0() - other.group0(),
             // e415, e425, e435, e321
-            Simd32x4::from([self[e415] - other[e415], self[e425] - other[e425], self[e435] - other[e435], self[e321] - other[e321]]),
+            self.group1() - other.group1(),
             // e235, e315, e125, e5
-            Simd32x4::from([self[e235] - other[e235], self[e315] - other[e315], self[e125] - other[e125], self[e5] - other[e5]]),
+            self.group2() - other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1] - other[e1], self[e2] - other[e2], self[e3] - other[e3], self[e4] - other[e4]]),
+            self.group3() - other.group3(),
         );
     }
 }
@@ -2609,7 +2709,7 @@ impl std::ops::Sub<VersorOdd> for VersorEven {
             // e5
             self[e5],
             // e15, e25, e35, e45
-            Simd32x4::from([other[e15], other[e25], other[e35], other[e45]]) * Simd32x4::from(-1.0),
+            other.group2().truncate_to_3().extend_to_4(other[e45]) * Simd32x4::from(-1.0),
             // e41, e42, e43
             other.group0().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12

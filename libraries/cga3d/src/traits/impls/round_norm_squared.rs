@@ -13,13 +13,13 @@ use crate::traits::RoundWeightNormSquared;
 //  Minimum:         2       6       0
 //   Median:         5      10       0
 //  Average:        10      15       0
-//  Maximum:        63      74       0
+//  Maximum:        63      73       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         2       9       0
 //   Median:         5      16       0
-//  Average:        10      20       0
-//  Maximum:        63      85       0
+//  Average:        10      22       0
+//  Maximum:        63      90       0
 impl std::ops::Div<round_norm_squared> for AntiCircleRotor {
     type Output = MultiVector;
     fn div(self, _rhs: round_norm_squared) -> Self::Output {
@@ -249,11 +249,11 @@ impl std::ops::Div<round_norm_squared> for DipoleInversion {
 impl RoundNormSquared for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5       10        0
-    //    simd4        0        2        0
+    //      f32        5        7        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        5       12        0
-    //  no simd        5       18        0
+    // yes simd        5       11        0
+    //  no simd        5       23        0
     fn round_norm_squared(self) -> MultiVector {
         use crate::elements::*;
         let self_2 = self.round_bulk_norm_squared();
@@ -298,12 +298,12 @@ impl std::ops::DivAssign<round_norm_squared> for MultiVector {
 impl RoundNormSquared for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       63       70        0
+    //      f32       63       67        0
     //    simd3        0        1        0
-    //    simd4        0        3        0
+    //    simd4        0        5        0
     // Totals...
-    // yes simd       63       74        0
-    //  no simd       63       85        0
+    // yes simd       63       73        0
+    //  no simd       63       90        0
     fn round_norm_squared(self) -> MultiVector {
         use crate::elements::*;
         let self_2 = self.round_bulk_norm_squared();
@@ -431,11 +431,11 @@ impl std::ops::Div<round_norm_squared> for VersorOdd {
 impl RoundNormSquared for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        6       11        0
-    //    simd4        0        2        0
+    //      f32        6        8        0
+    //    simd4        0        4        0
     // Totals...
-    // yes simd        6       13        0
-    //  no simd        6       19        0
+    // yes simd        6       12        0
+    //  no simd        6       24        0
     fn round_norm_squared(self) -> MultiVector {
         use crate::elements::*;
         let self_2 = self.round_bulk_norm_squared();

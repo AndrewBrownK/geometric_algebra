@@ -117,7 +117,7 @@ impl std::ops::Div<flat_bulk> for AntiLine {
 impl FlatBulk for AntiLine {
     type Output = FlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(0.0));
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group1().extend_to_4(0.0));
     }
 }
 impl std::ops::Div<flat_bulk> for AntiMotor {
@@ -160,7 +160,7 @@ impl std::ops::Div<flat_bulk> for Circle {
 impl FlatBulk for Circle {
     type Output = AntiFlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ crate::swizzle!(self.group2(), 0, 1, 2).extend_to_4(0.0));
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group2().extend_to_4(0.0));
     }
 }
 impl std::ops::Div<flat_bulk> for CircleRotor {
@@ -185,7 +185,7 @@ impl std::ops::Div<flat_bulk> for Dipole {
 impl FlatBulk for Dipole {
     type Output = FlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ crate::swizzle!(self.group2(), 0, 1, 2).extend_to_4(0.0));
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ self.group2().extend_to_4(0.0));
     }
 }
 impl std::ops::Div<flat_bulk> for DipoleInversion {
@@ -274,7 +274,7 @@ impl std::ops::Div<flat_bulk> for Line {
 impl FlatBulk for Line {
     type Output = AntiFlatPoint;
     fn flat_bulk(self) -> Self::Output {
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ crate::swizzle!(self.group1(), 0, 1, 2).extend_to_4(0.0));
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ self.group1().extend_to_4(0.0));
     }
 }
 impl std::ops::Div<flat_bulk> for Motor {

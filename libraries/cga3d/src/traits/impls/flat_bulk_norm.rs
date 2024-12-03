@@ -11,9 +11,9 @@ use crate::traits::SquareRoot;
 //
 // Yes SIMD:   add/sub     mul     div
 //  Minimum:         0       3       0
-//   Median:         9      19       0
-//  Average:        12      21       0
-//  Maximum:        68      92       0
+//   Median:         7      16       0
+//  Average:        10      17       0
+//  Maximum:        56      74       0
 //
 //  No SIMD:   add/sub     mul     div
 //  Minimum:         0       9       0
@@ -29,10 +29,10 @@ impl std::ops::Div<flat_bulk_norm> for AntiCircleRotor {
 impl FlatBulkNorm for AntiCircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        9        0
-    //    simd3        1        2        0
+    //      f32        2        3        0
+    //    simd3        2        4        0
     // Totals...
-    // yes simd        6       11        0
+    // yes simd        4        7        0
     //  no simd        8       15        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
@@ -47,12 +47,12 @@ impl std::ops::Div<flat_bulk_norm> for AntiDipoleInversion {
 impl FlatBulkNorm for AntiDipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       31        0
-    //    simd3        1        4        0
+    //      f32       17       23        0
+    //    simd3        2        6        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd       21       37        0
-    //  no simd       23       51        0
+    // yes simd       19       31        0
+    //  no simd       23       49        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
@@ -84,11 +84,11 @@ impl std::ops::Div<flat_bulk_norm> for AntiFlatPoint {
 impl FlatBulkNorm for AntiFlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       14        0
-    //    simd4        0        1        0
+    //      f32        7       11        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        7       15        0
-    //  no simd        7       18        0
+    // yes simd        7       13        0
+    //  no simd        7       19        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
@@ -102,12 +102,12 @@ impl std::ops::Div<flat_bulk_norm> for AntiFlector {
 impl FlatBulkNorm for AntiFlector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       31        0
-    //    simd3        1        4        0
+    //      f32       17       23        0
+    //    simd3        2        6        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd       21       37        0
-    //  no simd       23       51        0
+    // yes simd       19       31        0
+    //  no simd       23       49        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
@@ -121,10 +121,10 @@ impl std::ops::Div<flat_bulk_norm> for AntiLine {
 impl FlatBulkNorm for AntiLine {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        9        0
-    //    simd3        1        2        0
+    //      f32        2        3        0
+    //    simd3        2        4        0
     // Totals...
-    // yes simd        6       11        0
+    // yes simd        4        7        0
     //  no simd        8       15        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
@@ -139,10 +139,11 @@ impl std::ops::Div<flat_bulk_norm> for AntiMotor {
 impl FlatBulkNorm for AntiMotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       19        0
+    //      f32        5       13        0
+    //    simd3        1        2        0
     //    simd4        1        1        0
     // Totals...
-    // yes simd        9       20        0
+    // yes simd        7       16        0
     //  no simd       12       23        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
@@ -175,11 +176,11 @@ impl std::ops::Div<flat_bulk_norm> for Circle {
 impl FlatBulkNorm for Circle {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       14        0
-    //    simd4        0        1        0
+    //      f32        7       11        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        7       15        0
-    //  no simd        7       18        0
+    // yes simd        7       13        0
+    //  no simd        7       19        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
@@ -193,11 +194,11 @@ impl std::ops::Div<flat_bulk_norm> for CircleRotor {
 impl FlatBulkNorm for CircleRotor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       14        0
-    //    simd4        0        1        0
+    //      f32        7       11        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        7       15        0
-    //  no simd        7       18        0
+    // yes simd        7       13        0
+    //  no simd        7       19        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
@@ -211,10 +212,10 @@ impl std::ops::Div<flat_bulk_norm> for Dipole {
 impl FlatBulkNorm for Dipole {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        9        0
-    //    simd3        1        2        0
+    //      f32        2        3        0
+    //    simd3        2        4        0
     // Totals...
-    // yes simd        6       11        0
+    // yes simd        4        7        0
     //  no simd        8       15        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
@@ -229,10 +230,11 @@ impl std::ops::Div<flat_bulk_norm> for DipoleInversion {
 impl FlatBulkNorm for DipoleInversion {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       19        0
+    //      f32        5       13        0
+    //    simd3        1        2        0
     //    simd4        1        1        0
     // Totals...
-    // yes simd        9       20        0
+    // yes simd        7       16        0
     //  no simd       12       23        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
@@ -265,10 +267,10 @@ impl std::ops::Div<flat_bulk_norm> for FlatPoint {
 impl FlatBulkNorm for FlatPoint {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        5        9        0
-    //    simd3        1        2        0
+    //      f32        2        3        0
+    //    simd3        2        4        0
     // Totals...
-    // yes simd        6       11        0
+    // yes simd        4        7        0
     //  no simd        8       15        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
@@ -283,10 +285,11 @@ impl std::ops::Div<flat_bulk_norm> for Flector {
 impl FlatBulkNorm for Flector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       19        0
+    //      f32        5       13        0
+    //    simd3        1        2        0
     //    simd4        1        1        0
     // Totals...
-    // yes simd        9       20        0
+    // yes simd        7       16        0
     //  no simd       12       23        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
@@ -301,11 +304,11 @@ impl std::ops::Div<flat_bulk_norm> for Line {
 impl FlatBulkNorm for Line {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        7       14        0
-    //    simd4        0        1        0
+    //      f32        7       11        0
+    //    simd4        0        2        0
     // Totals...
-    // yes simd        7       15        0
-    //  no simd        7       18        0
+    // yes simd        7       13        0
+    //  no simd        7       19        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
@@ -319,12 +322,12 @@ impl std::ops::Div<flat_bulk_norm> for Motor {
 impl FlatBulkNorm for Motor {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       31        0
-    //    simd3        1        4        0
+    //      f32       17       23        0
+    //    simd3        2        6        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd       21       37        0
-    //  no simd       23       51        0
+    // yes simd       19       31        0
+    //  no simd       23       49        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
@@ -338,11 +341,11 @@ impl std::ops::Div<flat_bulk_norm> for MultiVector {
 impl FlatBulkNorm for MultiVector {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       63       84        0
-    //    simd3        3        4        0
-    //    simd4        2        4        0
+    //      f32       46       58        0
+    //    simd3        6       10        0
+    //    simd4        4        6        0
     // Totals...
-    // yes simd       68       92        0
+    // yes simd       56       74        0
     //  no simd       80      112        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
@@ -411,12 +414,12 @@ impl std::ops::Div<flat_bulk_norm> for VersorEven {
 impl FlatBulkNorm for VersorEven {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32       20       31        0
-    //    simd3        1        4        0
+    //      f32       17       23        0
+    //    simd3        2        6        0
     //    simd4        0        2        0
     // Totals...
-    // yes simd       21       37        0
-    //  no simd       23       51        0
+    // yes simd       19       31        0
+    //  no simd       23       49        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
     }
@@ -430,10 +433,11 @@ impl std::ops::Div<flat_bulk_norm> for VersorOdd {
 impl FlatBulkNorm for VersorOdd {
     // Operative Statistics for this implementation:
     //           add/sub      mul      div
-    //      f32        8       19        0
+    //      f32        5       13        0
+    //    simd3        1        2        0
     //    simd4        1        1        0
     // Totals...
-    // yes simd        9       20        0
+    // yes simd        7       16        0
     //  no simd       12       23        0
     fn flat_bulk_norm(self) -> Scalar {
         return self.flat_bulk_norm_squared().square_root();
