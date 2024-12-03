@@ -1088,20 +1088,8 @@ impl Wgsl {
                     Vec2Expr::Truncate4to2(box v4) => self.write_vec4(w, v4, false)?,
                     _ => self.write_vec2(w, v, false)?,
                 }
-                let x = match *i0 {
-                    0 => "x",
-                    1 => "y",
-                    2 => "z",
-                    3 => "w",
-                    _ => bail!("swizzle index out of bounds")
-                };
-                let y = match *i1 {
-                    0 => "x",
-                    1 => "y",
-                    2 => "z",
-                    3 => "w",
-                    _ => bail!("swizzle index out of bounds")
-                };
+                let x = swizzle_term(i0)?;
+                let y = swizzle_term(i1)?;
                 write!(w, ".{x}{y}")?;
             }
             Vec2Expr::Truncate3to2(box v3) => {
@@ -1330,27 +1318,9 @@ impl Wgsl {
                     Vec3Expr::Truncate4to3(box v4) => self.write_vec4(w, v4, false)?,
                     _ => self.write_vec3(w, v, false)?,
                 }
-                let x = match *i0 {
-                    0 => "x",
-                    1 => "y",
-                    2 => "z",
-                    3 => "w",
-                    _ => bail!("swizzle index out of bounds")
-                };
-                let y = match *i1 {
-                    0 => "x",
-                    1 => "y",
-                    2 => "z",
-                    3 => "w",
-                    _ => bail!("swizzle index out of bounds")
-                };
-                let z = match *i2 {
-                    0 => "x",
-                    1 => "y",
-                    2 => "z",
-                    3 => "w",
-                    _ => bail!("swizzle index out of bounds")
-                };
+                let x = swizzle_term(i0)?;
+                let y = swizzle_term(i1)?;
+                let z = swizzle_term(i2)?;
                 write!(w, ".{x}{y}{z}")?;
             }
             Vec3Expr::Truncate4to3(box v4) => {
@@ -1576,34 +1546,10 @@ impl Wgsl {
             }
             Vec4Expr::SwizzleVec4(box v, i0, i1, i2, i3) => {
                 self.write_vec4(w, v, false)?;
-                let x = match *i0 {
-                    0 => "x",
-                    1 => "y",
-                    2 => "z",
-                    3 => "w",
-                    _ => bail!("swizzle index out of bounds")
-                };
-                let y = match *i1 {
-                    0 => "x",
-                    1 => "y",
-                    2 => "z",
-                    3 => "w",
-                    _ => bail!("swizzle index out of bounds")
-                };
-                let z = match *i2 {
-                    0 => "x",
-                    1 => "y",
-                    2 => "z",
-                    3 => "w",
-                    _ => bail!("swizzle index out of bounds")
-                };
-                let w2 = match *i3 {
-                    0 => "x",
-                    1 => "y",
-                    2 => "z",
-                    3 => "w",
-                    _ => bail!("swizzle index out of bounds")
-                };
+                let x = swizzle_term(i0)?;
+                let y = swizzle_term(i1)?;
+                let z = swizzle_term(i2)?;
+                let w2 = swizzle_term(i3)?;
                 write!(w, ".{x}{y}{z}{w2}")?;
             }
         }
@@ -1761,5 +1707,15 @@ impl Wgsl {
             }
         }
         Ok(())
+    }
+}
+
+fn swizzle_term(idx: &u8) -> anyhow::Result<&'static str> {
+    match *idx {
+        0 => Ok("x"),
+        1 => Ok("y"),
+        2 => Ok("z"),
+        3 => Ok("w"),
+        _ => bail!("swizzle index out of bounds")
     }
 }

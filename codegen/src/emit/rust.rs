@@ -1311,22 +1311,15 @@ postgres-types = "0.2.7""#
                     write!(w, ")")?;
                 }
             }
-            Vec2Expr::SwizzleVec2(box v, i0, i1) => match v {
-                Vec2Expr::Truncate4to2(box v4) => {
-                    write!(w, "crate::swizzle!(")?;
-                    self.write_vec4(w, v4, true)?;
-                    write!(w, ", {i0}, {i1}, _, _)")?;
+            Vec2Expr::SwizzleVec2(box v, i0, i1) => {
+                match v {
+                    Vec2Expr::Truncate3to2(box v3) => self.write_vec3(w, v3, false)?,
+                    Vec2Expr::Truncate4to2(box v4) => self.write_vec4(w, v4, false)?,
+                    _ => self.write_vec2(w, v, false)?,
                 }
-                Vec2Expr::Truncate3to2(box v3) => {
-                    write!(w, "crate::swizzle!(")?;
-                    self.write_vec3(w, v3, true)?;
-                    write!(w, ", {i0}, {i1}, _)")?;
-                }
-                _ => {
-                    write!(w, "crate::swizzle!(")?;
-                    self.write_vec2(w, v, true)?;
-                    write!(w, ", {i0}, {i1})")?;
-                }
+                let x = swizzle_term(i0)?;
+                let y = swizzle_term(i1)?;
+                write!(w, ".{x}{y}()")?;
             },
             Vec2Expr::Truncate3to2(box v3) => {
                 self.write_vec3(w, v3, true)?;
@@ -1531,17 +1524,15 @@ postgres-types = "0.2.7""#
                     write!(w, ")")?;
                 }
             }
-            Vec3Expr::SwizzleVec3(box v, i0, i1, i2) => match v {
-                Vec3Expr::Truncate4to3(box v4) => {
-                    write!(w, "crate::swizzle!(")?;
-                    self.write_vec4(w, v4, true)?;
-                    write!(w, ", {i0}, {i1}, {i2}, _)")?;
+            Vec3Expr::SwizzleVec3(box v, i0, i1, i2) => {
+                match v {
+                    Vec3Expr::Truncate4to3(box v4) => self.write_vec4(w, v4, false)?,
+                    _ => self.write_vec3(w, v, false)?,
                 }
-                _ => {
-                    write!(w, "crate::swizzle!(")?;
-                    self.write_vec3(w, v, true)?;
-                    write!(w, ", {i0}, {i1}, {i2})")?;
-                }
+                let x = swizzle_term(i0)?;
+                let y = swizzle_term(i1)?;
+                let z = swizzle_term(i2)?;
+                write!(w, ".{x}{y}{z}()")?;
             },
             Vec3Expr::Truncate4to3(box v4) => {
                 self.write_vec4(w, v4, true)?;
@@ -1759,9 +1750,12 @@ postgres-types = "0.2.7""#
                 }
             }
             Vec4Expr::SwizzleVec4(box v, i0, i1, i2, i3) => {
-                write!(w, "crate::swizzle!(")?;
                 self.write_vec4(w, v, false)?;
-                write!(w, ", {i0}, {i1}, {i2}, {i3})")?;
+                let x = swizzle_term(i0)?;
+                let y = swizzle_term(i1)?;
+                let z = swizzle_term(i2)?;
+                let w2 = swizzle_term(i3)?;
+                write!(w, ".{x}{y}{z}{w2}()")?;
             }
         }
         Ok(())
@@ -2986,5 +2980,16 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
             Err(e) => Err(Error::from(e)).with_context(move || file_name)?,
         }
         Ok(())
+    }
+}
+
+
+fn swizzle_term(idx: &u8) -> anyhow::Result<&'static str> {
+    match *idx {
+        0 => Ok("x"),
+        1 => Ok("y"),
+        2 => Ok("z"),
+        3 => Ok("w"),
+        _ => bail!("swizzle index out of bounds")
     }
 }
