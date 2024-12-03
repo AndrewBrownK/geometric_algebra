@@ -662,7 +662,7 @@ impl CoCarrier for DipoleInversionAtOrigin {
     //   simd4        0        2        0
     // no simd        0        8        0
     fn co_carrier(self) -> Self::Output {
-        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ crate::swizzle!(self.right_anti_dual().group0(), 3, 0, 1, 2));
+        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ self.right_anti_dual().group0().wxyz());
     }
 }
 impl std::ops::Div<co_carrier> for DipoleInversionOnOrigin {
@@ -680,7 +680,7 @@ impl CoCarrier for DipoleInversionOnOrigin {
     fn co_carrier(self) -> Self::Output {
         return Flector::from_groups(
             // e15, e25, e35, e45
-            crate::swizzle!(self.right_anti_dual().group1(), 1, 2, 3, 0),
+            self.right_anti_dual().group1().yzwx(),
             // e4235, e4315, e4125, e3215
             self.right_anti_dual().group0(),
         );
@@ -830,7 +830,7 @@ impl CoCarrier for FlectorOnOrigin {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn co_carrier(self) -> Self::Output {
-        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ crate::swizzle!(self.right_anti_dual().group0(), 1, 2, 3, 0));
+        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ self.right_anti_dual().group0().yzwx());
     }
 }
 impl std::ops::Div<co_carrier> for Line {
@@ -1102,7 +1102,7 @@ impl CoCarrier for NullDipoleInversionAtOrigin {
     //   simd4        0        1        0
     // no simd        0        4        0
     fn co_carrier(self) -> Self::Output {
-        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ crate::swizzle!(self.right_anti_dual().group0(), 3, 0, 1, 2));
+        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ self.right_anti_dual().group0().wxyz());
     }
 }
 impl std::ops::Div<co_carrier> for NullSphereAtOrigin {

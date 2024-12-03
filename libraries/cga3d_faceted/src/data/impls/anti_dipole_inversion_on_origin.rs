@@ -29,7 +29,7 @@ impl std::ops::Add<AntiCircleOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -59,7 +59,7 @@ impl std::ops::Add<AntiCircleRotor> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -89,7 +89,7 @@ impl std::ops::Add<AntiCircleRotorAligningOrigin> for AntiDipoleInversionOnOrigi
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -119,7 +119,7 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for AntiDipoleInvers
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -149,7 +149,7 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -179,7 +179,7 @@ impl std::ops::Add<AntiCircleRotorOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -315,7 +315,7 @@ impl std::ops::Add<AntiDualNum> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -378,7 +378,7 @@ impl std::ops::Add<AntiFlatPoint> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([other[e235], other[e315], other[e125], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -396,7 +396,7 @@ impl std::ops::Add<AntiFlector> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([other[e235], other[e315], other[e125], other[e5]]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]) + crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]) + self.group1().yzwx(),
         );
     }
 }
@@ -435,7 +435,7 @@ impl std::ops::Add<AntiLine> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -465,7 +465,7 @@ impl std::ops::Add<AntiLineOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -495,7 +495,7 @@ impl std::ops::Add<AntiMotor> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -525,7 +525,7 @@ impl std::ops::Add<AntiMotorOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -555,7 +555,7 @@ impl std::ops::Add<AntiMysteryCircleRotor> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -596,7 +596,7 @@ impl std::ops::Add<AntiMysteryDipoleInversion> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e4
             Simd32x3::from(0.0).extend_to_4(self[e4]),
             // e1, e2, e3, e5
-            (other.group1() + crate::swizzle!(self.group1(), 1, 2, 3, _)).extend_to_4(0.0),
+            (other.group1() + self.group1().yzw()).extend_to_4(0.0),
         );
     }
 }
@@ -614,7 +614,7 @@ impl std::ops::Add<AntiPlane> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x3::from(0.0).extend_to_4(other[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]) + crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]) + self.group1().yzwx(),
         );
     }
 }
@@ -657,7 +657,7 @@ impl std::ops::Add<AntiScalar> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -668,22 +668,12 @@ impl std::ops::Add<AntiSphereOnOrigin> for AntiDipoleInversionOnOrigin {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn add(self, other: AntiSphereOnOrigin) -> Self::Output {
-        return AntiDipoleInversionOnOrigin::from_groups(
-            // e423, e431, e412, e321
-            self.group0(),
-            // e4, e1, e2, e3
-            self.group1() + crate::swizzle!(other.group0(), 3, 0, 1, 2),
-        );
+        return AntiDipoleInversionOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0(), /* e4, e1, e2, e3 */ self.group1() + other.group0().wxyz());
     }
 }
 impl std::ops::AddAssign<AntiSphereOnOrigin> for AntiDipoleInversionOnOrigin {
     fn add_assign(&mut self, other: AntiSphereOnOrigin) {
-        *self = AntiDipoleInversionOnOrigin::from_groups(
-            // e423, e431, e412, e321
-            self.group0(),
-            // e4, e1, e2, e3
-            self.group1() + crate::swizzle!(other.group0(), 3, 0, 1, 2),
-        );
+        *self = AntiDipoleInversionOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0(), /* e4, e1, e2, e3 */ self.group1() + other.group0().wxyz());
     }
 }
 impl std::ops::Add<AntiVersorEvenOnOrigin> for AntiDipoleInversionOnOrigin {
@@ -694,7 +684,7 @@ impl std::ops::Add<AntiVersorEvenOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -792,7 +782,7 @@ impl std::ops::Add<CircleAtOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group1().extend_to_4(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -829,7 +819,7 @@ impl std::ops::Add<CircleOrthogonalOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group1().extend_to_4(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -852,7 +842,7 @@ impl std::ops::Add<CircleRotor> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([other[e235], other[e315], other[e125], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -872,7 +862,7 @@ impl std::ops::Add<CircleRotorAligningOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([other[e235], other[e315], other[e125], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -888,7 +878,7 @@ impl std::ops::Add<CircleRotorAligningOriginAtInfinity> for AntiDipoleInversionO
             // e235, e315, e125, e5
             Simd32x4::from([other[e235], other[e315], other[e125], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -907,7 +897,7 @@ impl std::ops::Add<CircleRotorAtInfinity> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from([other[e235], other[e315], other[e125], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -927,7 +917,7 @@ impl std::ops::Add<CircleRotorOnOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -939,7 +929,7 @@ impl std::ops::Add<Dipole> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -969,7 +959,7 @@ impl std::ops::Add<DipoleAligningOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -999,7 +989,7 @@ impl std::ops::Add<DipoleAtInfinity> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1029,7 +1019,7 @@ impl std::ops::Add<DipoleAtOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1059,7 +1049,7 @@ impl std::ops::Add<DipoleInversion> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1089,7 +1079,7 @@ impl std::ops::Add<DipoleInversionAligningOrigin> for AntiDipoleInversionOnOrigi
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1119,7 +1109,7 @@ impl std::ops::Add<DipoleInversionAtInfinity> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1149,7 +1139,7 @@ impl std::ops::Add<DipoleInversionAtOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1179,7 +1169,7 @@ impl std::ops::Add<DipoleInversionOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1209,7 +1199,7 @@ impl std::ops::Add<DipoleInversionOrthogonalOrigin> for AntiDipoleInversionOnOri
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1239,7 +1229,7 @@ impl std::ops::Add<DipoleOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1269,7 +1259,7 @@ impl std::ops::Add<DipoleOrthogonalOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1306,7 +1296,7 @@ impl std::ops::Add<DualNum> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, _).extend_to_4(self[e4] + other[e4]),
+            self.group1().yzw().extend_to_4(self[e4] + other[e4]),
         );
     }
 }
@@ -1318,7 +1308,7 @@ impl std::ops::Add<FlatOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1348,7 +1338,7 @@ impl std::ops::Add<FlatPoint> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1378,7 +1368,7 @@ impl std::ops::Add<FlatPointAtInfinity> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1408,7 +1398,7 @@ impl std::ops::Add<Flector> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1438,7 +1428,7 @@ impl std::ops::Add<FlectorAtInfinity> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1468,7 +1458,7 @@ impl std::ops::Add<FlectorOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1498,7 +1488,7 @@ impl std::ops::Add<Horizon> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1530,7 +1520,7 @@ impl std::ops::Add<Infinity> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x3::from(0.0).extend_to_4(other[e5]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -1559,7 +1549,7 @@ impl std::ops::Add<LineAtInfinity> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group0().extend_to_4(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -1591,7 +1581,7 @@ impl std::ops::Add<Motor> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group1(),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -1604,7 +1594,7 @@ impl std::ops::Add<MotorAtInfinity> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group0(),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -1620,7 +1610,7 @@ impl std::ops::Add<MotorOnOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -1640,7 +1630,7 @@ impl std::ops::Add<MultiVector> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             other.group0(),
             // e1, e2, e3, e4
-            other.group1() + crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            other.group1() + self.group1().yzwx(),
             // e5
             other[e5],
             // e41, e42, e43, e45
@@ -1696,7 +1686,7 @@ impl std::ops::Add<MysteryCircleRotor> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -1708,7 +1698,7 @@ impl std::ops::Add<MysteryDipole> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1738,7 +1728,7 @@ impl std::ops::Add<MysteryDipoleInversion> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1779,7 +1769,7 @@ impl std::ops::Add<MysteryVersorEven> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]) + crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]) + self.group1().yzwx(),
         );
     }
 }
@@ -1791,7 +1781,7 @@ impl std::ops::Add<MysteryVersorOdd> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1848,7 +1838,7 @@ impl std::ops::Add<NullDipoleAtOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1878,7 +1868,7 @@ impl std::ops::Add<NullDipoleInversionAtOrigin> for AntiDipoleInversionOnOrigin 
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1908,7 +1898,7 @@ impl std::ops::Add<NullSphereAtOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -1992,7 +1982,7 @@ impl std::ops::Add<Plane> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -2022,7 +2012,7 @@ impl std::ops::Add<PlaneOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -2058,7 +2048,7 @@ impl std::ops::Add<RoundPoint> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x3::from(0.0).extend_to_4(other[e5]),
             // e1, e2, e3, e4
-            other.group0() + crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            other.group0() + self.group1().yzwx(),
         );
     }
 }
@@ -2075,7 +2065,7 @@ impl std::ops::Add<RoundPointAtOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x3::from(0.0).extend_to_4(other[e5]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, _).extend_to_4(self[e4] + other[e4]),
+            self.group1().yzw().extend_to_4(self[e4] + other[e4]),
         );
     }
 }
@@ -2087,7 +2077,7 @@ impl std::ops::Add<Scalar> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -2117,7 +2107,7 @@ impl std::ops::Add<Sphere> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -2147,7 +2137,7 @@ impl std::ops::Add<SphereAtOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -2177,7 +2167,7 @@ impl std::ops::Add<SphereOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -2193,7 +2183,7 @@ impl std::ops::Add<SphereOnOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
-            crate::swizzle!(other.group0(), 3, 0, 1, 2),
+            other.group0().wxyz(),
             // e3215
             0.0,
         );
@@ -2218,7 +2208,7 @@ impl std::ops::Add<VersorEven> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group2(),
             // e1, e2, e3, e4
-            other.group3() + crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            other.group3() + self.group1().yzwx(),
         );
     }
 }
@@ -2238,7 +2228,7 @@ impl std::ops::Add<VersorEvenAligningOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group2(),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0) + Simd32x3::from(0.0).extend_to_4(other[e4]),
+            self.group1().yzwx() + Simd32x3::from(0.0).extend_to_4(other[e4]),
         );
     }
 }
@@ -2261,7 +2251,7 @@ impl std::ops::Add<VersorEvenAtInfinity> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group2(),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]) + crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            Simd32x4::from([other[e1], other[e2], other[e3], 0.0]) + self.group1().yzwx(),
         );
     }
 }
@@ -2279,7 +2269,7 @@ impl std::ops::Add<VersorEvenAtOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group1(),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0) + Simd32x3::from(0.0).extend_to_4(other[e4]),
+            self.group1().yzwx() + Simd32x3::from(0.0).extend_to_4(other[e4]),
         );
     }
 }
@@ -2299,7 +2289,7 @@ impl std::ops::Add<VersorEvenOnOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0) + Simd32x3::from(0.0).extend_to_4(other[e4]),
+            self.group1().yzwx() + Simd32x3::from(0.0).extend_to_4(other[e4]),
         );
     }
 }
@@ -2316,7 +2306,7 @@ impl std::ops::Add<VersorEvenOrthogonalOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group1(),
             // e1, e2, e3, e4
-            other.group2() + crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            other.group2() + self.group1().yzwx(),
         );
     }
 }
@@ -2328,7 +2318,7 @@ impl std::ops::Add<VersorOdd> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -2358,13 +2348,13 @@ impl std::ops::Add<VersorOddAtInfinity> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
             Simd32x3::from(0.0).extend_to_4(other[e45]),
             // e15, e25, e35
-            crate::swizzle!(other.group0(), 1, 2, 3, _),
+            other.group0().yzw(),
             // e23, e31, e12
             other.group1().truncate_to_3(),
             // e415, e425, e435, e321
@@ -2388,7 +2378,7 @@ impl std::ops::Add<VersorOddOrthogonalOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -3670,7 +3660,7 @@ impl From<AntiSphereOnOrigin> for AntiDipoleInversionOnOrigin {
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
             // e4, e1, e2, e3
-            crate::swizzle!(from_anti_sphere_on_origin.group0(), 3, 0, 1, 2),
+            from_anti_sphere_on_origin.group0().wxyz(),
         );
     }
 }
@@ -5044,7 +5034,7 @@ impl std::ops::Sub<AntiCircleOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5082,7 +5072,7 @@ impl std::ops::Sub<AntiCircleRotor> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5119,7 +5109,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOrigin> for AntiDipoleInversionOnOrigi
             // scalar, e12345
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5156,7 +5146,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for AntiDipoleInvers
             // scalar, e12345
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5194,7 +5184,7 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5231,7 +5221,7 @@ impl std::ops::Sub<AntiCircleRotorOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5273,7 +5263,7 @@ impl std::ops::Sub<AntiDipoleInversion> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e4
             other.group2().truncate_to_3().extend_to_4(self[e4] - other[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e1, e2, e3, e5
-            (crate::swizzle!(self.group1(), 1, 2, 3, _) - other.group3().truncate_to_3()).extend_to_4(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group1().yzw() - other.group3().truncate_to_3()).extend_to_4(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -5297,7 +5287,7 @@ impl std::ops::Sub<AntiDipoleInversionAtInfinity> for AntiDipoleInversionOnOrigi
             // e235, e315, e125, e4
             other.group1().extend_to_4(self[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e1, e2, e3, e5
-            (crate::swizzle!(self.group1(), 1, 2, 3, _) - other.group2().truncate_to_3()).extend_to_4(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group1().yzw() - other.group2().truncate_to_3()).extend_to_4(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -5346,7 +5336,7 @@ impl std::ops::Sub<AntiDipoleInversionOrthogonalOrigin> for AntiDipoleInversionO
             // e235, e315, e125, e4
             other.group2().truncate_to_3().extend_to_4(self[e4] - other[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e1, e2, e3, e5
-            crate::swizzle!(self.group1(), 1, 2, 3, _).extend_to_4(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group1().yzw().extend_to_4(other[e5]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -5380,7 +5370,7 @@ impl std::ops::Sub<AntiDualNum> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5450,7 +5440,7 @@ impl std::ops::Sub<AntiFlatPoint> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             (other.group0().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -5471,7 +5461,7 @@ impl std::ops::Sub<AntiFlector> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group0().truncate_to_3().extend_to_4(other[e5]) * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1] * -1.0, other[e2] * -1.0, other[e3] * -1.0, 0.0]) + crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            Simd32x4::from([other[e1] * -1.0, other[e2] * -1.0, other[e3] * -1.0, 0.0]) + self.group1().yzwx(),
         );
     }
 }
@@ -5517,7 +5507,7 @@ impl std::ops::Sub<AntiLine> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5551,7 +5541,7 @@ impl std::ops::Sub<AntiLineOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5589,7 +5579,7 @@ impl std::ops::Sub<AntiMotor> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5626,7 +5616,7 @@ impl std::ops::Sub<AntiMotorOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5664,7 +5654,7 @@ impl std::ops::Sub<AntiMysteryCircleRotor> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5706,7 +5696,7 @@ impl std::ops::Sub<AntiMysteryDipoleInversion> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e4
             Simd32x3::from(0.0).extend_to_4(self[e4]),
             // e1, e2, e3, e5
-            (crate::swizzle!(self.group1(), 1, 2, 3, _) - other.group1()).extend_to_4(0.0),
+            (self.group1().yzw() - other.group1()).extend_to_4(0.0),
         );
     }
 }
@@ -5727,7 +5717,7 @@ impl std::ops::Sub<AntiPlane> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x3::from(0.0).extend_to_4(other[e5] * -1.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1] * -1.0, other[e2] * -1.0, other[e3] * -1.0, 0.0]) + crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            Simd32x4::from([other[e1] * -1.0, other[e2] * -1.0, other[e3] * -1.0, 0.0]) + self.group1().yzwx(),
         );
     }
 }
@@ -5777,7 +5767,7 @@ impl std::ops::Sub<AntiScalar> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -5788,22 +5778,12 @@ impl std::ops::Sub<AntiSphereOnOrigin> for AntiDipoleInversionOnOrigin {
     //   simd4        1        0        0
     // no simd        4        0        0
     fn sub(self, other: AntiSphereOnOrigin) -> Self::Output {
-        return AntiDipoleInversionOnOrigin::from_groups(
-            // e423, e431, e412, e321
-            self.group0(),
-            // e4, e1, e2, e3
-            self.group1() - crate::swizzle!(other.group0(), 3, 0, 1, 2),
-        );
+        return AntiDipoleInversionOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0(), /* e4, e1, e2, e3 */ self.group1() - other.group0().wxyz());
     }
 }
 impl std::ops::SubAssign<AntiSphereOnOrigin> for AntiDipoleInversionOnOrigin {
     fn sub_assign(&mut self, other: AntiSphereOnOrigin) {
-        *self = AntiDipoleInversionOnOrigin::from_groups(
-            // e423, e431, e412, e321
-            self.group0(),
-            // e4, e1, e2, e3
-            self.group1() - crate::swizzle!(other.group0(), 3, 0, 1, 2),
-        );
+        *self = AntiDipoleInversionOnOrigin::from_groups(/* e423, e431, e412, e321 */ self.group0(), /* e4, e1, e2, e3 */ self.group1() - other.group0().wxyz());
     }
 }
 impl std::ops::Sub<AntiVersorEvenOnOrigin> for AntiDipoleInversionOnOrigin {
@@ -5822,7 +5802,7 @@ impl std::ops::Sub<AntiVersorEvenOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5932,7 +5912,7 @@ impl std::ops::Sub<CircleAtOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -5975,7 +5955,7 @@ impl std::ops::Sub<CircleOrthogonalOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             (other.group1() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -5999,7 +5979,7 @@ impl std::ops::Sub<CircleRotor> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             (other.group2().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -6022,7 +6002,7 @@ impl std::ops::Sub<CircleRotorAligningOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             (other.group2().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -6045,7 +6025,7 @@ impl std::ops::Sub<CircleRotorAligningOriginAtInfinity> for AntiDipoleInversionO
             // e235, e315, e125, e5
             (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -6069,7 +6049,7 @@ impl std::ops::Sub<CircleRotorAtInfinity> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             (other.group1().truncate_to_3() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -6092,7 +6072,7 @@ impl std::ops::Sub<CircleRotorOnOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -6111,7 +6091,7 @@ impl std::ops::Sub<Dipole> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6148,7 +6128,7 @@ impl std::ops::Sub<DipoleAligningOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6185,7 +6165,7 @@ impl std::ops::Sub<DipoleAtInfinity> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6219,7 +6199,7 @@ impl std::ops::Sub<DipoleAtOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6257,7 +6237,7 @@ impl std::ops::Sub<DipoleInversion> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6295,7 +6275,7 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for AntiDipoleInversionOnOrigi
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6333,7 +6313,7 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6371,7 +6351,7 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6405,7 +6385,7 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6443,7 +6423,7 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for AntiDipoleInversionOnOri
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6477,7 +6457,7 @@ impl std::ops::Sub<DipoleOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6511,7 +6491,7 @@ impl std::ops::Sub<DipoleOrthogonalOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6552,7 +6532,7 @@ impl std::ops::Sub<DualNum> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0) + Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            self.group1().yzwx() + Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
         );
     }
 }
@@ -6567,7 +6547,7 @@ impl std::ops::Sub<FlatOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6604,7 +6584,7 @@ impl std::ops::Sub<FlatPoint> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6638,7 +6618,7 @@ impl std::ops::Sub<FlatPointAtInfinity> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6676,7 +6656,7 @@ impl std::ops::Sub<Flector> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6713,7 +6693,7 @@ impl std::ops::Sub<FlectorAtInfinity> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6750,7 +6730,7 @@ impl std::ops::Sub<FlectorOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6783,7 +6763,7 @@ impl std::ops::Sub<Horizon> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6818,7 +6798,7 @@ impl std::ops::Sub<Infinity> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x3::from(0.0).extend_to_4(other[e5] * -1.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -6855,7 +6835,7 @@ impl std::ops::Sub<LineAtInfinity> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -6895,7 +6875,7 @@ impl std::ops::Sub<Motor> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group1() * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -6912,7 +6892,7 @@ impl std::ops::Sub<MotorAtInfinity> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group0() * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -6932,7 +6912,7 @@ impl std::ops::Sub<MotorOnOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -6953,7 +6933,7 @@ impl std::ops::Sub<MultiVector> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             other.group0() * Simd32x2::from(-1.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0) - other.group1(),
+            self.group1().yzwx() - other.group1(),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -7017,7 +6997,7 @@ impl std::ops::Sub<MysteryCircleRotor> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
         );
     }
 }
@@ -7036,7 +7016,7 @@ impl std::ops::Sub<MysteryDipole> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7074,7 +7054,7 @@ impl std::ops::Sub<MysteryDipoleInversion> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7115,7 +7095,7 @@ impl std::ops::Sub<MysteryVersorEven> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1] * -1.0, other[e2] * -1.0, other[e3] * -1.0, 0.0]) + crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            Simd32x4::from([other[e1] * -1.0, other[e2] * -1.0, other[e3] * -1.0, 0.0]) + self.group1().yzwx(),
         );
     }
 }
@@ -7136,7 +7116,7 @@ impl std::ops::Sub<MysteryVersorOdd> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7200,7 +7180,7 @@ impl std::ops::Sub<NullDipoleAtOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7237,7 +7217,7 @@ impl std::ops::Sub<NullDipoleInversionAtOrigin> for AntiDipoleInversionOnOrigin 
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7271,7 +7251,7 @@ impl std::ops::Sub<NullSphereAtOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7368,7 +7348,7 @@ impl std::ops::Sub<Plane> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7402,7 +7382,7 @@ impl std::ops::Sub<PlaneOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7441,7 +7421,7 @@ impl std::ops::Sub<RoundPoint> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x3::from(0.0).extend_to_4(other[e5] * -1.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0) - other.group0(),
+            self.group1().yzwx() - other.group0(),
         );
     }
 }
@@ -7462,7 +7442,7 @@ impl std::ops::Sub<RoundPointAtOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x3::from(0.0).extend_to_4(other[e5] * -1.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0) + Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            self.group1().yzwx() + Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
         );
     }
 }
@@ -7478,7 +7458,7 @@ impl std::ops::Sub<Scalar> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7515,7 +7495,7 @@ impl std::ops::Sub<Sphere> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7552,7 +7532,7 @@ impl std::ops::Sub<SphereAtOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7586,7 +7566,7 @@ impl std::ops::Sub<SphereOnOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7602,7 +7582,7 @@ impl std::ops::Sub<SphereOnOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
-            crate::swizzle!(other.group0(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
+            other.group0().wxyz() * Simd32x4::from(-1.0),
             // e3215
             0.0,
         );
@@ -7628,7 +7608,7 @@ impl std::ops::Sub<VersorEven> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group2() * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0) - other.group3(),
+            self.group1().yzwx() - other.group3(),
         );
     }
 }
@@ -7652,7 +7632,7 @@ impl std::ops::Sub<VersorEvenAligningOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group2() * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0) + Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            self.group1().yzwx() + Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
         );
     }
 }
@@ -7675,7 +7655,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group2() * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            Simd32x4::from([other[e1] * -1.0, other[e2] * -1.0, other[e3] * -1.0, 0.0]) + crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            Simd32x4::from([other[e1] * -1.0, other[e2] * -1.0, other[e3] * -1.0, 0.0]) + self.group1().yzwx(),
         );
     }
 }
@@ -7696,7 +7676,7 @@ impl std::ops::Sub<VersorEvenAtOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group1() * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0) + Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            self.group1().yzwx() + Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
         );
     }
 }
@@ -7720,7 +7700,7 @@ impl std::ops::Sub<VersorEvenOnOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0) + Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
+            self.group1().yzwx() + Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
         );
     }
 }
@@ -7737,7 +7717,7 @@ impl std::ops::Sub<VersorEvenOrthogonalOrigin> for AntiDipoleInversionOnOrigin {
             // e235, e315, e125, e5
             other.group1() * Simd32x4::from(-1.0),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0) - other.group2(),
+            self.group1().yzwx() - other.group2(),
         );
     }
 }
@@ -7758,7 +7738,7 @@ impl std::ops::Sub<VersorOdd> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7797,13 +7777,13 @@ impl std::ops::Sub<VersorOddAtInfinity> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
             Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
             // e15, e25, e35
-            crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0),
+            other.group0().yzw() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
@@ -7836,7 +7816,7 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for AntiDipoleInversionOnOrigin {
             // scalar, e12345
             Simd32x2::from([other[scalar], 1.0]) * Simd32x2::from([-1.0, 0.0]),
             // e1, e2, e3, e4
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
+            self.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -9020,7 +9000,7 @@ impl TryFrom<MultiVector> for AntiDipoleInversionOnOrigin {
             // e423, e431, e412, e321
             Simd32x4::from([multi_vector[e423], multi_vector[e431], multi_vector[e412], multi_vector[e321]]),
             // e4, e1, e2, e3
-            crate::swizzle!(multi_vector.group1(), 3, 0, 1, 2),
+            multi_vector.group1().wxyz(),
         ));
     }
 }
@@ -9187,7 +9167,7 @@ impl TryFrom<RoundPoint> for AntiDipoleInversionOnOrigin {
             // e423, e431, e412, e321
             Simd32x4::from(0.0),
             // e4, e1, e2, e3
-            crate::swizzle!(round_point.group0(), 3, 0, 1, 2),
+            round_point.group0().wxyz(),
         ));
     }
 }
@@ -9292,7 +9272,7 @@ impl TryFrom<VersorEven> for AntiDipoleInversionOnOrigin {
             // e423, e431, e412, e321
             Simd32x4::from([versor_even[e423], versor_even[e431], versor_even[e412], versor_even[e321]]),
             // e4, e1, e2, e3
-            crate::swizzle!(versor_even.group3(), 3, 0, 1, 2),
+            versor_even.group3().wxyz(),
         ));
     }
 }
@@ -9592,7 +9572,7 @@ impl TryFrom<VersorEvenOrthogonalOrigin> for AntiDipoleInversionOnOrigin {
             // e423, e431, e412, e321
             versor_even_orthogonal_origin.group0(),
             // e4, e1, e2, e3
-            crate::swizzle!(versor_even_orthogonal_origin.group2(), 3, 0, 1, 2),
+            versor_even_orthogonal_origin.group2().wxyz(),
         ));
     }
 }

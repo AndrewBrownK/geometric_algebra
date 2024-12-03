@@ -79,7 +79,7 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for FlectorOnOrigin 
         use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            crate::swizzle!(other.group1(), 3, 0, 1, 2),
+            other.group1().wxyz(),
             // e23, e31, e12, e45
             other.group0().extend_to_4(self[e45]),
             // e4235, e4315, e4125, e3215
@@ -97,7 +97,7 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for FlectorOnOrigin {
         use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            crate::swizzle!(other.group1(), 3, 0, 1, 2),
+            other.group1().wxyz(),
             // e23, e31, e12, e45
             other.group0() + Simd32x3::from(0.0).extend_to_4(self[e45]),
             // e4235, e4315, e4125, e3215
@@ -189,7 +189,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for FlectorOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(other.group1(), 1, 2, 3, 0),
+            other.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -425,12 +425,7 @@ impl std::ops::Add<AntiLineOnOrigin> for FlectorOnOrigin {
     type Output = MysteryDipoleInversion;
     fn add(self, other: AntiLineOnOrigin) -> Self::Output {
         use crate::elements::*;
-        return MysteryDipoleInversion::from_groups(
-            // e23, e31, e12, e45
-            other.group0().extend_to_4(self[e45]),
-            // e4235, e4315, e4125
-            crate::swizzle!(self.group0(), 1, 2, 3, _),
-        );
+        return MysteryDipoleInversion::from_groups(/* e23, e31, e12, e45 */ other.group0().extend_to_4(self[e45]), /* e4235, e4315, e4125 */ self.group0().yzw());
     }
 }
 impl std::ops::Add<AntiMotor> for FlectorOnOrigin {
@@ -1623,7 +1618,7 @@ impl std::ops::Add<MysteryDipole> for FlectorOnOrigin {
             // e23, e31, e12, e45
             other.group0().truncate_to_3().extend_to_4(self[e45] + other[e45]),
             // e4235, e4315, e4125
-            crate::swizzle!(self.group0(), 1, 2, 3, _),
+            self.group0().yzw(),
         );
     }
 }
@@ -1642,7 +1637,7 @@ impl std::ops::Add<MysteryDipoleInversion> for FlectorOnOrigin {
             // e23, e31, e12, e45
             other.group0().truncate_to_3().extend_to_4(self[e45] + other[e45]),
             // e4235, e4315, e4125
-            other.group1() + crate::swizzle!(self.group0(), 1, 2, 3, _),
+            other.group1() + self.group0().yzw(),
         );
     }
 }
@@ -1833,7 +1828,7 @@ impl std::ops::Add<Plane> for FlectorOnOrigin {
             // e15, e25, e35, e45
             Simd32x3::from(0.0).extend_to_4(self[e45]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e4235], other[e4315], other[e4125], 0.0]) + crate::swizzle!(self.group0(), 1, 2, 3, _).extend_to_4(other[e3215]),
+            Simd32x4::from([other[e4235], other[e4315], other[e4125], 0.0]) + self.group0().yzw().extend_to_4(other[e3215]),
         );
     }
 }
@@ -1946,7 +1941,7 @@ impl std::ops::Add<Sphere> for FlectorOnOrigin {
             // e15, e25, e35, e1234
             Simd32x3::from(0.0).extend_to_4(other[e1234]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e4235], other[e4315], other[e4125], 0.0]) + crate::swizzle!(self.group0(), 1, 2, 3, _).extend_to_4(other[e3215]),
+            Simd32x4::from([other[e4235], other[e4315], other[e4125], 0.0]) + self.group0().yzw().extend_to_4(other[e3215]),
         );
     }
 }
@@ -1976,7 +1971,7 @@ impl std::ops::Add<SphereOnOrigin> for FlectorOnOrigin {
             // e41, e42, e43, e45
             Simd32x3::from(0.0).extend_to_4(self[e45]),
             // e1234, e4235, e4315, e4125
-            Simd32x4::from([0.0, self[e4235], other[e4315], other[e4125]]) + crate::swizzle!(other.group0(), 3, 0, _, _).extend_to_4(self[e4315], self[e4125]),
+            Simd32x4::from([0.0, self[e4235], other[e4315], other[e4125]]) + other.group0().wx().extend_to_4(self[e4315], self[e4125]),
         );
     }
 }
@@ -2179,7 +2174,7 @@ impl std::ops::Add<VersorOdd> for FlectorOnOrigin {
             // e15, e25, e35, e1234
             other.group2(),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e4235], other[e4315], other[e4125], 0.0]) + crate::swizzle!(self.group0(), 1, 2, 3, _).extend_to_4(other[e3215]),
+            Simd32x4::from([other[e4235], other[e4315], other[e4125], 0.0]) + self.group0().yzw().extend_to_4(other[e3215]),
         );
     }
 }
@@ -2200,7 +2195,7 @@ impl std::ops::Add<VersorOddAtInfinity> for FlectorOnOrigin {
             // e23, e31, e12, e45
             other.group1().truncate_to_3().extend_to_4(self[e45] + other[e45]),
             // e4235, e4315, e4125, e3215
-            Simd32x4::from([other[e4235], other[e4315], other[e4125], 0.0]) + crate::swizzle!(self.group0(), 1, 2, 3, _).extend_to_4(other[e3215]),
+            Simd32x4::from([other[e4235], other[e4315], other[e4125], 0.0]) + self.group0().yzw().extend_to_4(other[e3215]),
         );
     }
 }
@@ -4161,7 +4156,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for FlectorOnOrigin 
         use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            crate::swizzle!(other.group1(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
+            other.group1().wxyz() * Simd32x4::from(-1.0),
             // e23, e31, e12, e45
             other.group0().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125, e3215
@@ -4182,7 +4177,7 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for FlectorOnOrigin {
         use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            crate::swizzle!(other.group1(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
+            other.group1().wxyz() * Simd32x4::from(-1.0),
             // e23, e31, e12, e45
             other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125, e3215
@@ -4302,7 +4297,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for FlectorOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(other.group1(), 1, 2, 3, 0) * Simd32x4::from(-1.0),
+            other.group1().yzwx() * Simd32x4::from(-1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -4539,7 +4534,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for FlectorOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -4594,7 +4589,7 @@ impl std::ops::Sub<AntiLineOnOrigin> for FlectorOnOrigin {
             // e23, e31, e12, e45
             other.group0().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125
-            crate::swizzle!(self.group0(), 1, 2, 3, _),
+            self.group0().yzw(),
         );
     }
 }
@@ -4612,7 +4607,7 @@ impl std::ops::Sub<AntiMotor> for FlectorOnOrigin {
             // e23, e31, e12, e45
             other.group0().truncate_to_3().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125, e3215
-            crate::swizzle!(self.group0(), 1, 2, 3, _).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().yzw().extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -5359,7 +5354,7 @@ impl std::ops::Sub<DipoleInversion> for FlectorOnOrigin {
             // e15, e25, e35, e1234
             other.group2() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
-            (crate::swizzle!(self.group0(), 1, 2, 3, _) - other.group3().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().yzw() - other.group3().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -5381,7 +5376,7 @@ impl std::ops::Sub<DipoleInversionAligningOrigin> for FlectorOnOrigin {
             // e15, e25, e35, e1234
             other.group1() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
-            (crate::swizzle!(self.group0(), 1, 2, 3, _) - other.group2().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().yzw() - other.group2().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -5403,7 +5398,7 @@ impl std::ops::Sub<DipoleInversionAtInfinity> for FlectorOnOrigin {
             // e15, e25, e35
             other.group1() * Simd32x3::from(-1.0),
             // e4235, e4315, e4125, e3215
-            (crate::swizzle!(self.group0(), 1, 2, 3, _) - other.group2().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().yzw() - other.group2().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -5421,7 +5416,7 @@ impl std::ops::Sub<DipoleInversionAtOrigin> for FlectorOnOrigin {
             // e15, e25, e35, e1234
             other.group1() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
-            crate::swizzle!(self.group0(), 1, 2, 3, _).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().yzw().extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -5463,7 +5458,7 @@ impl std::ops::Sub<DipoleInversionOrthogonalOrigin> for FlectorOnOrigin {
             // e15, e25, e35, e1234
             other.group2() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
-            crate::swizzle!(self.group0(), 1, 2, 3, _).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().yzw().extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -5617,7 +5612,7 @@ impl std::ops::Sub<Flector> for FlectorOnOrigin {
             // e15, e25, e35, e45
             other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125, e3215
-            (crate::swizzle!(self.group0(), 1, 2, 3, _) - other.group1().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().yzw() - other.group1().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -5633,7 +5628,7 @@ impl std::ops::Sub<FlectorAtInfinity> for FlectorOnOrigin {
             // e15, e25, e35, e45
             other.group0().truncate_to_3().extend_to_4(self[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125, e3215
-            crate::swizzle!(self.group0(), 1, 2, 3, _).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().yzw().extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -5664,7 +5659,7 @@ impl std::ops::Sub<Horizon> for FlectorOnOrigin {
             // e15, e25, e35, e45
             Simd32x3::from(0.0).extend_to_4(self[e45]),
             // e4235, e4315, e4125, e3215
-            crate::swizzle!(self.group0(), 1, 2, 3, _).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().yzw().extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -6040,7 +6035,7 @@ impl std::ops::Sub<MysteryDipole> for FlectorOnOrigin {
             // e23, e31, e12, e45
             other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125
-            crate::swizzle!(self.group0(), 1, 2, 3, _),
+            self.group0().yzw(),
         );
     }
 }
@@ -6060,7 +6055,7 @@ impl std::ops::Sub<MysteryDipoleInversion> for FlectorOnOrigin {
             // e23, e31, e12, e45
             other.group0().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125
-            crate::swizzle!(self.group0(), 1, 2, 3, _) - other.group1(),
+            self.group0().yzw() - other.group1(),
         );
     }
 }
@@ -6080,7 +6075,7 @@ impl std::ops::Sub<MysteryVersorEven> for FlectorOnOrigin {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6288,7 +6283,7 @@ impl std::ops::Sub<Plane> for FlectorOnOrigin {
             // e15, e25, e35, e45
             Simd32x3::from(0.0).extend_to_4(self[e45]),
             // e4235, e4315, e4125, e3215
-            (crate::swizzle!(self.group0(), 1, 2, 3, _) - other.group0().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().yzw() - other.group0().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -6422,7 +6417,7 @@ impl std::ops::Sub<Sphere> for FlectorOnOrigin {
             // e15, e25, e35, e1234
             Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
-            (crate::swizzle!(self.group0(), 1, 2, 3, _) - other.group0().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().yzw() - other.group0().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -6443,7 +6438,7 @@ impl std::ops::Sub<SphereAtOrigin> for FlectorOnOrigin {
             // e15, e25, e35, e1234
             Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
-            crate::swizzle!(self.group0(), 1, 2, 3, _).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().yzw().extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -6560,7 +6555,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for FlectorOnOrigin {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -6715,7 +6710,7 @@ impl std::ops::Sub<VersorOdd> for FlectorOnOrigin {
             // e15, e25, e35, e1234
             other.group2() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
-            (crate::swizzle!(self.group0(), 1, 2, 3, _) - other.group3().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().yzw() - other.group3().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -6737,7 +6732,7 @@ impl std::ops::Sub<VersorOddAtInfinity> for FlectorOnOrigin {
             // e23, e31, e12, e45
             other.group1().truncate_to_3().extend_to_4(self[e45] - other[e45]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e4235, e4315, e4125, e3215
-            (crate::swizzle!(self.group0(), 1, 2, 3, _) - other.group2().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            (self.group0().yzw() - other.group2().truncate_to_3()).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }
@@ -6757,7 +6752,7 @@ impl std::ops::Sub<VersorOddOrthogonalOrigin> for FlectorOnOrigin {
             // e15, e25, e35, e1234
             other.group2() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
-            crate::swizzle!(self.group0(), 1, 2, 3, _).extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            self.group0().yzw().extend_to_4(other[e3215]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
         );
     }
 }

@@ -81,7 +81,7 @@ impl AntiConstraintViolation for Flector {
             ]) + (Simd32x2::from(anti_reverse[e423]) * Simd32x2::from([self[e1], self[e423]]))
                 + (Simd32x2::from(anti_reverse[e431]) * Simd32x2::from([self[e2], self[e431]]))
                 + (Simd32x2::from(anti_reverse[e412]) * Simd32x2::from([self[e3], self[e412]]))
-                - (Simd32x2::from([self[e423], self[e4]]) * crate::swizzle!(anti_reverse.group0(), 0, 3, _, _)),
+                - (Simd32x2::from([self[e423], self[e4]]) * anti_reverse.group0().xw()),
         );
         let anti_dot_product = AntiScalar::from_groups(/* e1234 */ f32::powi(self[e423], 2) + f32::powi(self[e431], 2) + f32::powi(self[e412], 2) - f32::powi(self[e4], 2));
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([0.0, anti_dot_product[e1234] * -1.0]) + geometric_anti_product.group0());
@@ -214,7 +214,7 @@ impl AntiConstraintViolation for MultiVector {
                 - (Simd32x2::from(anti_reverse[e41]) * Simd32x2::from([self[e23], self[e41]]))
                 - (Simd32x2::from(anti_reverse[e42]) * Simd32x2::from([self[e31], self[e42]]))
                 - (Simd32x2::from(anti_reverse[e43]) * Simd32x2::from([self[e12], self[e43]]))
-                - (Simd32x2::from([self[e423], self[e4]]) * crate::swizzle!(anti_reverse.group1(), 0, 3, _, _)),
+                - (Simd32x2::from([self[e423], self[e4]]) * anti_reverse.group1().xw()),
             // e1, e2, e3, e4
             Simd32x4::from(0.0),
             // e41, e42, e43
@@ -223,13 +223,11 @@ impl AntiConstraintViolation for MultiVector {
             Simd32x3::from(0.0),
             // e423, e431, e412, e321
             (Simd32x4::from(anti_reverse[e1234]) * self.group4())
-                + (Simd32x4::from([self[e4], self[e412], self[e423], anti_reverse[e321]]) * crate::swizzle!(anti_reverse.group2(), 0, 0, 1).extend_to_4(self[e1234]))
-                + (Simd32x4::from([self[e431], self[e4], self[e4], self[e423]]) * crate::swizzle!(anti_reverse.group2(), 2, 1, 2).extend_to_4(anti_reverse[e23]))
-                + (crate::swizzle!(self.group0(), 1, 1).extend_to_4(self[e1234], self[scalar]) * anti_reverse.group4().truncate_to_3().extend_to_4(anti_reverse[e4]))
-                + (crate::swizzle!(anti_reverse.group1(), 3, 3, _, _).extend_to_4(anti_reverse[e431], self[e431])
-                    * crate::swizzle!(self.group2(), 0, 1, 0).extend_to_4(anti_reverse[e31]))
-                + (crate::swizzle!(anti_reverse.group4(), 2, 0, _, _).extend_to_4(anti_reverse[e4], self[e412])
-                    * crate::swizzle!(self.group2(), 1, 2, 2).extend_to_4(anti_reverse[e12]))
+                + (Simd32x4::from([self[e4], self[e412], self[e423], anti_reverse[e321]]) * anti_reverse.group2().xxy().extend_to_4(self[e1234]))
+                + (Simd32x4::from([self[e431], self[e4], self[e4], self[e423]]) * anti_reverse.group2().zyz().extend_to_4(anti_reverse[e23]))
+                + (self.group0().yy().extend_to_4(self[e1234], self[scalar]) * anti_reverse.group4().truncate_to_3().extend_to_4(anti_reverse[e4]))
+                + (anti_reverse.group1().ww().extend_to_4(anti_reverse[e431], self[e431]) * self.group2().xyx().extend_to_4(anti_reverse[e31]))
+                + (anti_reverse.group4().zx().extend_to_4(anti_reverse[e4], self[e412]) * self.group2().yzz().extend_to_4(anti_reverse[e12]))
                 + Simd32x3::from(0.0).extend_to_4(
                     -(anti_reverse[e1] * self[e41])
                         - (anti_reverse[e2] * self[e42])
@@ -240,8 +238,8 @@ impl AntiConstraintViolation for MultiVector {
                         - (anti_reverse[e431] * self[e31])
                         - (anti_reverse[e412] * self[e12]),
                 )
-                - (crate::swizzle!(anti_reverse.group2(), 1, 2, 0) * crate::swizzle!(self.group4(), 2, 0, 1, _)).extend_to_4(anti_reverse[scalar] * self[e4])
-                - (crate::swizzle!(self.group2(), 2, 0, 1) * crate::swizzle!(anti_reverse.group4(), 1, 2, 0, _)).extend_to_4(anti_reverse[e41] * self[e1]),
+                - (anti_reverse.group2().yzx() * self.group4().zxy()).extend_to_4(anti_reverse[scalar] * self[e4])
+                - (self.group2().zxy() * anti_reverse.group4().yzx()).extend_to_4(anti_reverse[e41] * self[e1]),
         );
         let anti_dot_product = AntiScalar::from_groups(
             // e1234

@@ -404,7 +404,7 @@ impl RightDual for MultiVector {
         use crate::elements::*;
         return MultiVector::from_groups(
             // scalar, e12345
-            crate::swizzle!(self.group0(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
+            self.group0().yx() * Simd32x2::from([-1.0, 1.0]),
             // e1, e2, e3, e4
             self.group9().truncate_to_3().extend_to_4(self[e1234]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             // e5

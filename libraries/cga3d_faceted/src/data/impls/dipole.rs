@@ -222,7 +222,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for Dipole {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(other.group1(), 1, 2, 3, 0),
+            other.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -2528,7 +2528,7 @@ impl std::ops::Add<VersorOddAtInfinity> for Dipole {
             // e23, e31, e12, e45
             self.group1() + other.group1(),
             // e15, e25, e35, e1234
-            (self.group2() + crate::swizzle!(other.group0(), 1, 2, 3, _)).extend_to_4(0.0),
+            (self.group2() + other.group0().yzw()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             other.group2(),
         );
@@ -5400,7 +5400,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for Dipole {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(other.group1(), 1, 2, 3, 0) * Simd32x4::from(-1.0),
+            other.group1().yzwx() * Simd32x4::from(-1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5637,7 +5637,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for Dipole {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6635,7 +6635,7 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for Dipole {
             // e15, e25, e35, e1234
             self.group2().extend_to_4(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
-            (crate::swizzle!(other.group1(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group1().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
         );
     }
 }
@@ -6935,7 +6935,7 @@ impl std::ops::Sub<FlectorOnOrigin> for Dipole {
             // e15, e25, e35, e1234
             self.group2().extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
-            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
         );
     }
 }
@@ -7382,7 +7382,7 @@ impl std::ops::Sub<MysteryVersorEven> for Dipole {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -7424,7 +7424,7 @@ impl std::ops::Sub<MysteryVersorOdd> for Dipole {
             // e15, e25, e35, e1234
             self.group2().extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
-            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
         );
     }
 }
@@ -7887,7 +7887,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for Dipole {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45
@@ -8063,7 +8063,7 @@ impl std::ops::Sub<VersorOddAtInfinity> for Dipole {
             // e23, e31, e12, e45
             self.group1() - other.group1(),
             // e15, e25, e35, e1234
-            (self.group2() - crate::swizzle!(other.group0(), 1, 2, 3, _)).extend_to_4(0.0),
+            (self.group2() - other.group0().yzw()).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
             other.group2() * Simd32x4::from(-1.0),
         );

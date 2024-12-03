@@ -148,8 +148,7 @@ impl Wedge<Motor> for DualNum {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([other[e41], other[e42], other[e43], 1.0])
-                * crate::swizzle!(self.group0(), 0, 0).extend_to_4(self[scalar], (self[scalar] * other[e1234]) + (self[e1234] * other[scalar])),
+            Simd32x4::from([other[e41], other[e42], other[e43], 1.0]) * self.group0().xx().extend_to_4(self[scalar], (self[scalar] * other[e1234]) + (self[e1234] * other[scalar])),
             // e23, e31, e12, scalar
             Simd32x4::from(self[scalar]) * other.group1(),
         );
@@ -260,15 +259,13 @@ impl Wedge<Flector> for Flector {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            (crate::swizzle!(self.group0(), 3, 3, 3, 0) * other.group0().truncate_to_3().extend_to_4(other[e423]))
+            (self.group0().wwwx() * other.group0().truncate_to_3().extend_to_4(other[e423]))
                 + Simd32x3::from(0.0).extend_to_4(
                     (other[e431] * self[e2]) + (other[e412] * self[e3]) + (other[e321] * self[e4]) - (other[e2] * self[e431]) - (other[e3] * self[e412]) - (other[e4] * self[e321]),
                 )
-                - (crate::swizzle!(other.group0(), 3, 3, 3, 0) * self.group0().truncate_to_3().extend_to_4(self[e423])),
+                - (other.group0().wwwx() * self.group0().truncate_to_3().extend_to_4(self[e423])),
             // e23, e31, e12, scalar
-            ((crate::swizzle!(other.group0(), 2, 0, 1, _) * crate::swizzle!(self.group0(), 1, 2, 0, _))
-                - (crate::swizzle!(other.group0(), 1, 2, 0, _) * crate::swizzle!(self.group0(), 2, 0, 1, _)))
-            .extend_to_4(0.0),
+            ((other.group0().zxy() * self.group0().yzx()) - (other.group0().yzx() * self.group0().zxy())).extend_to_4(0.0),
         );
     }
 }
@@ -300,7 +297,7 @@ impl Wedge<Line> for Flector {
                 (self[e1] * other[e43]) + (self[e4] * other[e31]),
                 (self[e2] * other[e41]) + (self[e4] * other[e12]),
                 -(self[e2] * other[e31]) - (self[e3] * other[e12]),
-            ]) - (crate::swizzle!(self.group0(), 1, 2, 0, 0) * crate::swizzle!(other.group0(), 2, 0, 1).extend_to_4(other[e23])),
+            ]) - (self.group0().yzxx() * other.group0().zxy().extend_to_4(other[e23])),
         );
     }
 }
@@ -325,8 +322,8 @@ impl Wedge<Motor> for Flector {
                 (self[e4] * other[e31]) + (self[e431] * other[scalar]),
                 (self[e4] * other[e12]) + (self[e412] * other[scalar]),
                 -(self[e2] * other[e31]) - (self[e3] * other[e12]),
-            ]) + (crate::swizzle!(self.group0(), 2, 0, 1, _) * crate::swizzle!(other.group0(), 1, 2, 0, _)).extend_to_4(self[e321] * other[scalar])
-                - (crate::swizzle!(self.group0(), 1, 2, 0, 0) * crate::swizzle!(other.group0(), 2, 0, 1, _).extend_to_4(other[e23])),
+            ]) + (self.group0().zxy() * other.group0().yzx()).extend_to_4(self[e321] * other[scalar])
+                - (self.group0().yzxx() * other.group0().zxy().extend_to_4(other[e23])),
         );
     }
 }
@@ -357,8 +354,7 @@ impl Wedge<MultiVector> for Flector {
             // e41, e42, e43
             (Simd32x3::from(self[e4]) * other.group1().truncate_to_3()) - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3()),
             // e23, e31, e12
-            (crate::swizzle!(self.group0(), 1, 2, 0, _) * crate::swizzle!(other.group1(), 2, 0, 1, _))
-                - (crate::swizzle!(self.group0(), 2, 0, 1, _) * crate::swizzle!(other.group1(), 1, 2, 0, _)),
+            (self.group0().yzx() * other.group1().zxy()) - (self.group0().zxy() * other.group1().yzx()),
             // e423, e431, e412, e321
             Simd32x4::from([
                 (self[e3] * other[e42]) + (self[e4] * other[e23]),
@@ -366,7 +362,7 @@ impl Wedge<MultiVector> for Flector {
                 (self[e2] * other[e41]) + (self[e4] * other[e12]),
                 -(self[e2] * other[e31]) - (self[e3] * other[e12]),
             ]) + (Simd32x4::from(other[scalar]) * self.group1())
-                - (crate::swizzle!(self.group0(), 1, 2, 0, 0) * crate::swizzle!(other.group2(), 2, 0, 1).extend_to_4(other[e23])),
+                - (self.group0().yzxx() * other.group2().zxy().extend_to_4(other[e23])),
         );
     }
 }
@@ -418,11 +414,9 @@ impl Wedge<Point> for Flector {
                 self[e4] * other[e2],
                 self[e4] * other[e3],
                 -(self[e431] * other[e2]) - (self[e412] * other[e3]) - (self[e321] * other[e4]),
-            ]) - (crate::swizzle!(other.group0(), 3, 3, 3, 0) * self.group0().truncate_to_3().extend_to_4(self[e423])),
+            ]) - (other.group0().wwwx() * self.group0().truncate_to_3().extend_to_4(self[e423])),
             // e23, e31, e12, scalar
-            ((crate::swizzle!(self.group0(), 1, 2, 0, _) * crate::swizzle!(other.group0(), 2, 0, 1, _))
-                - (crate::swizzle!(self.group0(), 2, 0, 1, _) * crate::swizzle!(other.group0(), 1, 2, 0, _)))
-            .extend_to_4(0.0),
+            ((self.group0().yzx() * other.group0().zxy()) - (self.group0().zxy() * other.group0().yzx())).extend_to_4(0.0),
         );
     }
 }
@@ -573,7 +567,7 @@ impl Wedge<Flector> for Line {
                 (other[e1] * self[e43]) + (other[e4] * self[e31]),
                 (other[e2] * self[e41]) + (other[e4] * self[e12]),
                 -(other[e2] * self[e31]) - (other[e3] * self[e12]),
-            ]) - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1).extend_to_4(self[e23])),
+            ]) - (other.group0().yzxx() * self.group0().zxy().extend_to_4(self[e23])),
         );
     }
 }
@@ -613,10 +607,7 @@ impl Wedge<Motor> for Line {
                         - (self[e12] * other[e43]),
                 ),
             // e23, e31, e12, scalar
-            Simd32x3::from(1.0).extend_to_4(0.0)
-                * self.group1().extend_to_4(0.0)
-                * crate::swizzle!(other.group1(), 3, 3, 3, _).extend_to_4(0.0)
-                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            Simd32x3::from(1.0).extend_to_4(0.0) * self.group1().extend_to_4(0.0) * other.group1().www().extend_to_4(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
     }
 }
@@ -650,7 +641,7 @@ impl Wedge<MultiVector> for Line {
                 (self[e43] * other[e1]) + (self[e31] * other[e4]),
                 (self[e41] * other[e2]) + (self[e12] * other[e4]),
                 -(self[e31] * other[e2]) - (self[e12] * other[e3]),
-            ]) - (crate::swizzle!(other.group1(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1).extend_to_4(self[e23])),
+            ]) - (other.group1().yzxx() * self.group0().zxy().extend_to_4(self[e23])),
         );
     }
 }
@@ -686,7 +677,7 @@ impl Wedge<Point> for Line {
                 (self[e43] * other[e1]) + (self[e31] * other[e4]),
                 (self[e41] * other[e2]) + (self[e12] * other[e4]),
                 -(self[e31] * other[e2]) - (self[e12] * other[e3]),
-            ]) - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1).extend_to_4(self[e23])),
+            ]) - (other.group0().yzxx() * self.group0().zxy().extend_to_4(self[e23])),
         );
     }
 }
@@ -735,8 +726,7 @@ impl Wedge<DualNum> for Motor {
         use crate::elements::*;
         return Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x4::from([self[e41], self[e42], self[e43], 1.0])
-                * crate::swizzle!(other.group0(), 0, 0).extend_to_4(other[scalar], (other[scalar] * self[e1234]) + (other[e1234] * self[scalar])),
+            Simd32x4::from([self[e41], self[e42], self[e43], 1.0]) * other.group0().xx().extend_to_4(other[scalar], (other[scalar] * self[e1234]) + (other[e1234] * self[scalar])),
             // e23, e31, e12, scalar
             Simd32x4::from(other[scalar]) * self.group1(),
         );
@@ -763,8 +753,8 @@ impl Wedge<Flector> for Motor {
                 (other[e4] * self[e31]) + (other[e431] * self[scalar]),
                 (other[e4] * self[e12]) + (other[e412] * self[scalar]),
                 -(other[e2] * self[e31]) - (other[e3] * self[e12]),
-            ]) + (crate::swizzle!(other.group0(), 2, 0, 1, _) * crate::swizzle!(self.group0(), 1, 2, 0, _)).extend_to_4(other[e321] * self[scalar])
-                - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1, _).extend_to_4(self[e23])),
+            ]) + (other.group0().zxy() * self.group0().yzx()).extend_to_4(other[e321] * self[scalar])
+                - (other.group0().yzxx() * self.group0().zxy().extend_to_4(self[e23])),
         );
     }
 }
@@ -801,10 +791,7 @@ impl Wedge<Line> for Motor {
                         - (other[e12] * self[e43]),
                 ),
             // e23, e31, e12, scalar
-            Simd32x3::from(1.0).extend_to_4(0.0)
-                * other.group1().extend_to_4(0.0)
-                * crate::swizzle!(self.group1(), 3, 3, 3, _).extend_to_4(0.0)
-                * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            Simd32x3::from(1.0).extend_to_4(0.0) * other.group1().extend_to_4(0.0) * self.group1().www().extend_to_4(0.0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
         );
     }
 }
@@ -874,8 +861,8 @@ impl Wedge<MultiVector> for Motor {
                 (self[e31] * other[e4]) + (self[scalar] * other[e431]),
                 (self[e12] * other[e4]) + (self[scalar] * other[e412]),
                 -(self[e31] * other[e2]) - (self[e12] * other[e3]),
-            ]) + (crate::swizzle!(self.group0(), 1, 2, 0, _) * crate::swizzle!(other.group1(), 2, 0, 1, _)).extend_to_4(self[scalar] * other[e321])
-                - (crate::swizzle!(other.group1(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1, _).extend_to_4(self[e23])),
+            ]) + (self.group0().yzx() * other.group1().zxy()).extend_to_4(self[scalar] * other[e321])
+                - (other.group1().yzxx() * self.group0().zxy().extend_to_4(self[e23])),
         );
     }
 }
@@ -929,7 +916,7 @@ impl Wedge<Point> for Motor {
                 (self[e43] * other[e1]) + (self[e31] * other[e4]),
                 (self[e41] * other[e2]) + (self[e12] * other[e4]),
                 -(self[e31] * other[e2]) - (self[e12] * other[e3]),
-            ]) - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1, _).extend_to_4(self[e23])),
+            ]) - (other.group0().yzxx() * self.group0().zxy().extend_to_4(self[e23])),
         );
     }
 }
@@ -1018,8 +1005,7 @@ impl Wedge<Flector> for MultiVector {
             // e41, e42, e43
             (Simd32x3::from(self[e4]) * other.group0().truncate_to_3()) - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3()),
             // e23, e31, e12
-            (crate::swizzle!(other.group0(), 2, 0, 1, _) * crate::swizzle!(self.group1(), 1, 2, 0, _))
-                - (crate::swizzle!(other.group0(), 1, 2, 0, _) * crate::swizzle!(self.group1(), 2, 0, 1, _)),
+            (other.group0().zxy() * self.group1().yzx()) - (other.group0().yzx() * self.group1().zxy()),
             // e423, e431, e412, e321
             Simd32x4::from([
                 (other[e3] * self[e42]) + (other[e4] * self[e23]),
@@ -1027,7 +1013,7 @@ impl Wedge<Flector> for MultiVector {
                 (other[e2] * self[e41]) + (other[e4] * self[e12]),
                 -(other[e2] * self[e31]) - (other[e3] * self[e12]),
             ]) + (Simd32x4::from(self[scalar]) * other.group1())
-                - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group2(), 2, 0, 1).extend_to_4(self[e23])),
+                - (other.group0().yzxx() * self.group2().zxy().extend_to_4(self[e23])),
         );
     }
 }
@@ -1086,7 +1072,7 @@ impl Wedge<Line> for MultiVector {
                 (other[e43] * self[e1]) + (other[e31] * self[e4]),
                 (other[e41] * self[e2]) + (other[e12] * self[e4]),
                 -(other[e31] * self[e2]) - (other[e12] * self[e3]),
-            ]) - (crate::swizzle!(self.group1(), 1, 2, 0, 0) * crate::swizzle!(other.group0(), 2, 0, 1).extend_to_4(other[e23])),
+            ]) - (self.group1().yzxx() * other.group0().zxy().extend_to_4(other[e23])),
         );
     }
 }
@@ -1126,8 +1112,8 @@ impl Wedge<Motor> for MultiVector {
                 (other[e31] * self[e4]) + (other[scalar] * self[e431]),
                 (other[e12] * self[e4]) + (other[scalar] * self[e412]),
                 -(other[e31] * self[e2]) - (other[e12] * self[e3]),
-            ]) + (crate::swizzle!(other.group0(), 1, 2, 0, _) * crate::swizzle!(self.group1(), 2, 0, 1, _)).extend_to_4(other[scalar] * self[e321])
-                - (crate::swizzle!(self.group1(), 1, 2, 0, 0) * crate::swizzle!(other.group0(), 2, 0, 1, _).extend_to_4(other[e23])),
+            ]) + (other.group0().yzx() * self.group1().zxy()).extend_to_4(other[scalar] * self[e321])
+                - (self.group1().yzxx() * other.group0().zxy().extend_to_4(other[e23])),
         );
     }
 }
@@ -1170,10 +1156,8 @@ impl Wedge<MultiVector> for MultiVector {
             (Simd32x3::from(other[scalar]) * self.group2()) + (Simd32x3::from(self[scalar]) * other.group2()) + (Simd32x3::from(self[e4]) * other.group1().truncate_to_3())
                 - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3()),
             // e23, e31, e12
-            (Simd32x3::from(other[scalar]) * self.group3())
-                + (Simd32x3::from(self[scalar]) * other.group3())
-                + (crate::swizzle!(other.group1(), 2, 0, 1, _) * crate::swizzle!(self.group1(), 1, 2, 0, _))
-                - (crate::swizzle!(other.group1(), 1, 2, 0, _) * crate::swizzle!(self.group1(), 2, 0, 1, _)),
+            (Simd32x3::from(other[scalar]) * self.group3()) + (Simd32x3::from(self[scalar]) * other.group3()) + (other.group1().zxy() * self.group1().yzx())
+                - (other.group1().yzx() * self.group1().zxy()),
             // e423, e431, e412, e321
             Simd32x4::from([
                 (other[e3] * self[e42]) + (other[e4] * self[e23]) + (other[e42] * self[e3]) + (other[e23] * self[e4]),
@@ -1182,8 +1166,8 @@ impl Wedge<MultiVector> for MultiVector {
                 -(other[e1] * self[e23]) - (other[e2] * self[e31]) - (other[e3] * self[e12]) - (other[e12] * self[e3]),
             ]) + (Simd32x4::from(other[scalar]) * self.group4())
                 + (Simd32x4::from(self[scalar]) * other.group4())
-                - (crate::swizzle!(self.group1(), 1, 2, 0, 0) * crate::swizzle!(other.group2(), 2, 0, 1).extend_to_4(other[e23]))
-                - (crate::swizzle!(self.group2(), 2, 0, 1) * crate::swizzle!(other.group1(), 1, 2, 0, _)).extend_to_4(other[e31] * self[e2]),
+                - (self.group1().yzxx() * other.group2().zxy().extend_to_4(other[e23]))
+                - (self.group2().zxy() * other.group1().yzx()).extend_to_4(other[e31] * self[e2]),
         );
     }
 }
@@ -1259,15 +1243,14 @@ impl Wedge<Point> for MultiVector {
             // e41, e42, e43
             (Simd32x3::from(self[e4]) * other.group0().truncate_to_3()) - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3()),
             // e23, e31, e12
-            (crate::swizzle!(self.group1(), 1, 2, 0, _) * crate::swizzle!(other.group0(), 2, 0, 1, _))
-                - (crate::swizzle!(self.group1(), 2, 0, 1, _) * crate::swizzle!(other.group0(), 1, 2, 0, _)),
+            (self.group1().yzx() * other.group0().zxy()) - (self.group1().zxy() * other.group0().yzx()),
             // e423, e431, e412, e321
             Simd32x4::from([
                 (self[e42] * other[e3]) + (self[e23] * other[e4]),
                 (self[e43] * other[e1]) + (self[e31] * other[e4]),
                 (self[e41] * other[e2]) + (self[e12] * other[e4]),
                 -(self[e31] * other[e2]) - (self[e12] * other[e3]),
-            ]) - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group2(), 2, 0, 1).extend_to_4(self[e23])),
+            ]) - (other.group0().yzxx() * self.group2().zxy().extend_to_4(self[e23])),
         );
     }
 }
@@ -1571,11 +1554,9 @@ impl Wedge<Flector> for Point {
                 other[e4] * self[e2] * -1.0,
                 other[e4] * self[e3] * -1.0,
                 (other[e431] * self[e2]) + (other[e412] * self[e3]) + (other[e321] * self[e4]),
-            ]) + (crate::swizzle!(self.group0(), 3, 3, 3, 0) * other.group0().truncate_to_3().extend_to_4(other[e423])),
+            ]) + (self.group0().wwwx() * other.group0().truncate_to_3().extend_to_4(other[e423])),
             // e23, e31, e12, scalar
-            ((crate::swizzle!(other.group0(), 2, 0, 1, _) * crate::swizzle!(self.group0(), 1, 2, 0, _))
-                - (crate::swizzle!(other.group0(), 1, 2, 0, _) * crate::swizzle!(self.group0(), 2, 0, 1, _)))
-            .extend_to_4(0.0),
+            ((other.group0().zxy() * self.group0().yzx()) - (other.group0().yzx() * self.group0().zxy())).extend_to_4(0.0),
         );
     }
 }
@@ -1607,7 +1588,7 @@ impl Wedge<Line> for Point {
                 (other[e43] * self[e1]) + (other[e31] * self[e4]),
                 (other[e41] * self[e2]) + (other[e12] * self[e4]),
                 -(other[e31] * self[e2]) - (other[e12] * self[e3]),
-            ]) - (crate::swizzle!(self.group0(), 1, 2, 0, 0) * crate::swizzle!(other.group0(), 2, 0, 1).extend_to_4(other[e23])),
+            ]) - (self.group0().yzxx() * other.group0().zxy().extend_to_4(other[e23])),
         );
     }
 }
@@ -1631,7 +1612,7 @@ impl Wedge<Motor> for Point {
                 (other[e43] * self[e1]) + (other[e31] * self[e4]),
                 (other[e41] * self[e2]) + (other[e12] * self[e4]),
                 -(other[e31] * self[e2]) - (other[e12] * self[e3]),
-            ]) - (crate::swizzle!(self.group0(), 1, 2, 0, 0) * crate::swizzle!(other.group0(), 2, 0, 1, _).extend_to_4(other[e23])),
+            ]) - (self.group0().yzxx() * other.group0().zxy().extend_to_4(other[e23])),
         );
     }
 }
@@ -1655,15 +1636,14 @@ impl Wedge<MultiVector> for Point {
             // e41, e42, e43
             (Simd32x3::from(self[e4]) * other.group1().truncate_to_3()) - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3()),
             // e23, e31, e12
-            (crate::swizzle!(other.group1(), 2, 0, 1, _) * crate::swizzle!(self.group0(), 1, 2, 0, _))
-                - (crate::swizzle!(other.group1(), 1, 2, 0, _) * crate::swizzle!(self.group0(), 2, 0, 1, _)),
+            (other.group1().zxy() * self.group0().yzx()) - (other.group1().yzx() * self.group0().zxy()),
             // e423, e431, e412, e321
             Simd32x4::from([
                 (other[e42] * self[e3]) + (other[e23] * self[e4]),
                 (other[e43] * self[e1]) + (other[e31] * self[e4]),
                 (other[e41] * self[e2]) + (other[e12] * self[e4]),
                 -(other[e31] * self[e2]) - (other[e12] * self[e3]),
-            ]) - (crate::swizzle!(self.group0(), 1, 2, 0, 0) * crate::swizzle!(other.group2(), 2, 0, 1).extend_to_4(other[e23])),
+            ]) - (self.group0().yzxx() * other.group2().zxy().extend_to_4(other[e23])),
         );
     }
 }
@@ -1708,8 +1688,7 @@ impl Wedge<Point> for Point {
             // e41, e42, e43
             (Simd32x3::from(self[e4]) * other.group0().truncate_to_3()) - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3()),
             // e23, e31, e12
-            (crate::swizzle!(other.group0(), 2, 0, 1, _) * crate::swizzle!(self.group0(), 1, 2, 0, _))
-                - (crate::swizzle!(other.group0(), 1, 2, 0, _) * crate::swizzle!(self.group0(), 2, 0, 1, _)),
+            (other.group0().zxy() * self.group0().yzx()) - (other.group0().yzx() * self.group0().zxy()),
         );
     }
 }

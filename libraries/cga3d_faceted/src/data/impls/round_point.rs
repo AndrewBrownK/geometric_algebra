@@ -255,7 +255,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for RoundPoint {
             // e235, e315, e125, e5
             Simd32x3::from(0.0).extend_to_4(self[e5]),
             // e1, e2, e3, e4
-            self.group0() + crate::swizzle!(other.group1(), 1, 2, 3, 0),
+            self.group0() + other.group1().yzwx(),
         );
     }
 }
@@ -389,7 +389,7 @@ impl std::ops::Add<AntiFlectorOnOrigin> for RoundPoint {
             // e235, e315, e125, e5
             Simd32x3::from(0.0).extend_to_4(self[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + crate::swizzle!(other.group0(), 1, 2, 3, _).extend_to_4(self[e4]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group0().yzw().extend_to_4(self[e4]),
         );
     }
 }
@@ -1705,7 +1705,7 @@ impl std::ops::Add<MysteryVersorEven> for RoundPoint {
             // e235, e315, e125, e5
             Simd32x3::from(0.0).extend_to_4(self[e5]),
             // e1, e2, e3, e4
-            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + crate::swizzle!(other.group0(), 1, 2, 3, _).extend_to_4(self[e4]),
+            Simd32x4::from([self[e1], self[e2], self[e3], 0.0]) + other.group0().yzw().extend_to_4(self[e4]),
         );
     }
 }
@@ -2097,7 +2097,7 @@ impl std::ops::Add<SphereOnOrigin> for RoundPoint {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
-            crate::swizzle!(other.group0(), 3, 0, 1, 2),
+            other.group0().wxyz(),
             // e3215
             0.0,
         );
@@ -2263,7 +2263,7 @@ impl std::ops::Add<VersorOddAtInfinity> for RoundPoint {
             // e41, e42, e43, e45
             Simd32x3::from(0.0).extend_to_4(other[e45]),
             // e15, e25, e35
-            crate::swizzle!(other.group0(), 1, 2, 3, _),
+            other.group0().yzw(),
             // e23, e31, e12
             other.group1().truncate_to_3(),
             // e415, e425, e435, e321
@@ -5180,7 +5180,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for RoundPoint {
             // e235, e315, e125, e5
             Simd32x3::from(0.0).extend_to_4(self[e5]),
             // e1, e2, e3, e4
-            self.group0() - crate::swizzle!(other.group1(), 1, 2, 3, 0),
+            self.group0() - other.group1().yzwx(),
         );
     }
 }
@@ -7414,7 +7414,7 @@ impl std::ops::Sub<SphereOnOrigin> for RoundPoint {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
-            crate::swizzle!(other.group0(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
+            other.group0().wxyz() * Simd32x4::from(-1.0),
             // e3215
             0.0,
         );
@@ -7619,7 +7619,7 @@ impl std::ops::Sub<VersorOddAtInfinity> for RoundPoint {
             // e41, e42, e43, e45
             Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
             // e15, e25, e35
-            crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0),
+            other.group0().yzw() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321
@@ -7875,12 +7875,7 @@ impl TryFrom<AntiDipoleInversionOnOrigin> for RoundPoint {
             error.push('}');
             return Err(error);
         }
-        return Ok(RoundPoint::from_groups(
-            // e1, e2, e3, e4
-            crate::swizzle!(anti_dipole_inversion_on_origin.group1(), 1, 2, 3, 0),
-            // e5
-            0.0,
-        ));
+        return Ok(RoundPoint::from_groups(/* e1, e2, e3, e4 */ anti_dipole_inversion_on_origin.group1().yzwx(), /* e5 */ 0.0));
     }
 }
 

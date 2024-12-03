@@ -67,7 +67,7 @@ impl ConstraintViolation for Flector {
                 + (Simd32x2::from(self[e1]) * Simd32x2::from([reverse[e1], reverse[e423]]))
                 + (Simd32x2::from(self[e2]) * Simd32x2::from([reverse[e2], reverse[e431]]))
                 + (Simd32x2::from(self[e3]) * Simd32x2::from([reverse[e3], reverse[e412]]))
-                - (Simd32x2::from([reverse[e321], reverse[e1]]) * crate::swizzle!(self.group1(), 3, 0, _, _)),
+                - (Simd32x2::from([reverse[e321], reverse[e1]]) * self.group1().wx()),
         );
         let dot_product = Scalar::from_groups(/* scalar */ f32::powi(self[e1], 2) + f32::powi(self[e2], 2) + f32::powi(self[e3], 2) - f32::powi(self[e321], 2));
         return DualNum::from_groups(/* scalar, e1234 */ Simd32x2::from([dot_product[scalar] * -1.0, 0.0]) + geometric_product.group0());
@@ -222,14 +222,14 @@ impl ConstraintViolation for MultiVector {
                 - (Simd32x2::from(self[e23]) * Simd32x2::from([reverse[e23], reverse[e41]]))
                 - (Simd32x2::from(self[e31]) * Simd32x2::from([reverse[e31], reverse[e42]]))
                 - (Simd32x2::from(self[e12]) * Simd32x2::from([reverse[e12], reverse[e43]]))
-                - (Simd32x2::from([reverse[e321], reverse[e1]]) * crate::swizzle!(self.group4(), 3, 0, _, _)),
+                - (Simd32x2::from([reverse[e321], reverse[e1]]) * self.group4().wx()),
             // e1, e2, e3, e4
             (Simd32x4::from(reverse[scalar]) * self.group1())
-                + (Simd32x4::from([reverse[e2], reverse[e321], reverse[e321], reverse[e3]]) * crate::swizzle!(self.group3(), 2, 1, 2).extend_to_4(self[e43]))
-                + (Simd32x4::from([reverse[e321], reverse[e3], reverse[e1], reverse[e2]]) * crate::swizzle!(self.group3(), 0, 0, 1).extend_to_4(self[e42]))
-                + (crate::swizzle!(self.group0(), 0, 0).extend_to_4(self[scalar], reverse[e1234]) * reverse.group1().truncate_to_3().extend_to_4(self[e321]))
-                + (crate::swizzle!(self.group1(), 2, 0, _, _).extend_to_4(self[e321], reverse[e1]) * crate::swizzle!(reverse.group3(), 1, 2, 2).extend_to_4(self[e41]))
-                + (crate::swizzle!(self.group4(), 3, 3, _, _).extend_to_4(self[e2], reverse[e4]) * crate::swizzle!(reverse.group3(), 0, 1, 0).extend_to_4(self[scalar]))
+                + (Simd32x4::from([reverse[e2], reverse[e321], reverse[e321], reverse[e3]]) * self.group3().zyz().extend_to_4(self[e43]))
+                + (Simd32x4::from([reverse[e321], reverse[e3], reverse[e1], reverse[e2]]) * self.group3().xxy().extend_to_4(self[e42]))
+                + (self.group0().xx().extend_to_4(self[scalar], reverse[e1234]) * reverse.group1().truncate_to_3().extend_to_4(self[e321]))
+                + (self.group1().zx().extend_to_4(self[e321], reverse[e1]) * reverse.group3().yzz().extend_to_4(self[e41]))
+                + (self.group4().ww().extend_to_4(self[e2], reverse[e4]) * reverse.group3().xyx().extend_to_4(self[scalar]))
                 + Simd32x3::from(0.0).extend_to_4(
                     -(reverse[e42] * self[e2])
                         - (reverse[e43] * self[e3])
@@ -240,8 +240,8 @@ impl ConstraintViolation for MultiVector {
                         - (reverse[e431] * self[e31])
                         - (reverse[e412] * self[e12]),
                 )
-                - (crate::swizzle!(reverse.group3(), 2, 0, 1) * crate::swizzle!(self.group1(), 1, 2, 0, _)).extend_to_4(reverse[e321] * self[e1234])
-                - (crate::swizzle!(self.group3(), 1, 2, 0) * crate::swizzle!(reverse.group1(), 2, 0, 1, _)).extend_to_4(reverse[e41] * self[e1]),
+                - (reverse.group3().zxy() * self.group1().yzx()).extend_to_4(reverse[e321] * self[e1234])
+                - (self.group3().yzx() * reverse.group1().zxy()).extend_to_4(reverse[e41] * self[e1]),
             // e41, e42, e43
             Simd32x3::from(0.0),
             // e23, e31, e12

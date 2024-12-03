@@ -235,8 +235,7 @@ impl AntiSandwich<Flector> for DualNum {
             // e1, e2, e3, e4
             ((Simd32x3::from(self[scalar]) * other.group1().truncate_to_3()) + (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3())).extend_to_4(self[e1234] * other[e4]),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e423], other[e431], other[e412], 1.0])
-                * crate::swizzle!(self.group0(), 1, 1).extend_to_4(self[e1234], (self[scalar] * other[e4]) + (self[e1234] * other[e321])),
+            Simd32x4::from([other[e423], other[e431], other[e412], 1.0]) * self.group0().yy().extend_to_4(self[e1234], (self[scalar] * other[e4]) + (self[e1234] * other[e321])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -308,8 +307,7 @@ impl AntiSandwich<MultiVector> for DualNum {
             // e23, e31, e12
             (Simd32x3::from(self[scalar]) * other.group2()) + (Simd32x3::from(self[e1234]) * other.group3()),
             // e423, e431, e412, e321
-            Simd32x4::from([other[e423], other[e431], other[e412], 1.0])
-                * crate::swizzle!(self.group0(), 1, 1).extend_to_4(self[e1234], (self[scalar] * other[e4]) + (self[e1234] * other[e321])),
+            Simd32x4::from([other[e423], other[e431], other[e412], 1.0]) * self.group0().yy().extend_to_4(self[e1234], (self[scalar] * other[e4]) + (self[e1234] * other[e321])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -349,7 +347,7 @@ impl AntiSandwich<Plane> for DualNum {
         use crate::elements::*;
         let geometric_anti_product = Flector::from_groups(
             // e1, e2, e3, e4
-            crate::swizzle!(self.group0(), 0, 0).extend_to_4(self[scalar], 0.0)
+            self.group0().xx().extend_to_4(self[scalar], 0.0)
                 * Simd32x3::from(1.0).extend_to_4(0.0)
                 * other.group0().truncate_to_3().extend_to_4(0.0)
                 * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
@@ -433,8 +431,7 @@ impl AntiSandwich<DualNum> for Flector {
             // e1, e2, e3, e4
             ((Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()) - (Simd32x3::from(other[scalar]) * self.group1().truncate_to_3())).extend_to_4(other[e1234] * self[e4]),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], 1.0])
-                * crate::swizzle!(other.group0(), 1, 1).extend_to_4(other[e1234], (other[e1234] * self[e321]) - (other[scalar] * self[e4])),
+            Simd32x4::from([self[e423], self[e431], self[e412], 1.0]) * other.group0().yy().extend_to_4(other[e1234], (other[e1234] * self[e321]) - (other[scalar] * self[e4])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -457,17 +454,17 @@ impl AntiSandwich<Flector> for Flector {
                 -(other[e423] * self[e412]) - (other[e431] * self[e4]),
                 -(other[e431] * self[e423]) - (other[e412] * self[e4]),
                 (other[e431] * self[e431]) + (other[e412] * self[e412]),
-            ]) + (crate::swizzle!(other.group1(), 1, 2, 0, 0) * crate::swizzle!(self.group1(), 2, 0, 1, 0))
+            ]) + (other.group1().yzxx() * self.group1().zxyx())
                 - (Simd32x4::from(other[e4]) * self.group1().truncate_to_3().extend_to_4(self[e4])),
             // e23, e31, e12, scalar
             (Simd32x4::from(other[e321]) * self.group1().truncate_to_3().extend_to_4(self[e4]))
-                + (Simd32x4::from([self[e4], self[e412], self[e423], self[e1]]) * crate::swizzle!(other.group0(), 0, 0, 1, _).extend_to_4(other[e423]))
-                + (Simd32x4::from([self[e431], self[e4], self[e4], self[e2]]) * crate::swizzle!(other.group0(), 2, 1, 2, _).extend_to_4(other[e431]))
-                + (crate::swizzle!(other.group1(), 1, 2, 0, 2) * crate::swizzle!(self.group0(), 2, 0, 1, 2))
-                - (Simd32x4::from([self[e2], self[e321], self[e321], self[e321]]) * crate::swizzle!(other.group1(), 2, 1, 2, _).extend_to_4(other[e4]))
-                - (Simd32x4::from([self[e321], self[e3], self[e1], self[e412]]) * crate::swizzle!(other.group1(), 0, 0, 1, _).extend_to_4(other[e3]))
-                - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group1(), 2, 0, 1, 0))
-                - (crate::swizzle!(other.group0(), 3, 3, 3, 1) * self.group0().truncate_to_3().extend_to_4(self[e431])),
+                + (Simd32x4::from([self[e4], self[e412], self[e423], self[e1]]) * other.group0().xxy().extend_to_4(other[e423]))
+                + (Simd32x4::from([self[e431], self[e4], self[e4], self[e2]]) * other.group0().zyz().extend_to_4(other[e431]))
+                + (other.group1().yzxz() * self.group0().zxyz())
+                - (Simd32x4::from([self[e2], self[e321], self[e321], self[e321]]) * other.group1().zyz().extend_to_4(other[e4]))
+                - (Simd32x4::from([self[e321], self[e3], self[e1], self[e412]]) * other.group1().xxy().extend_to_4(other[e3]))
+                - (other.group0().yzxx() * self.group1().zxyx())
+                - (other.group0().wwwy() * self.group0().truncate_to_3().extend_to_4(self[e431])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -511,14 +508,14 @@ impl AntiSandwich<Line> for Flector {
                 (self[e3] * other[e41]) + (self[e423] * other[e12]) + (self[e321] * other[e42]),
                 (self[e1] * other[e42]) + (self[e431] * other[e23]) + (self[e321] * other[e43]),
                 0.0,
-            ]) - (Simd32x4::from([self[e4], self[e412], self[e423], self[e431]]) * crate::swizzle!(other.group1(), 0, 0, 1).extend_to_4(other[e42]))
-                - (Simd32x4::from([self[e431], self[e4], self[e4], self[e412]]) * crate::swizzle!(other.group1(), 2, 1, 2).extend_to_4(other[e43]))
-                - (crate::swizzle!(other.group0(), 1, 2, 0) * crate::swizzle!(self.group0(), 2, 0, 1, _)).extend_to_4(self[e423] * other[e41]),
+            ]) - (Simd32x4::from([self[e4], self[e412], self[e423], self[e431]]) * other.group1().xxy().extend_to_4(other[e42]))
+                - (Simd32x4::from([self[e431], self[e4], self[e4], self[e412]]) * other.group1().zyz().extend_to_4(other[e43]))
+                - (other.group0().yzx() * self.group0().zxy()).extend_to_4(self[e423] * other[e41]),
             // e423, e431, e412, e321
-            (Simd32x4::from([self[e4], self[e412], self[e423], self[e423]]) * crate::swizzle!(other.group0(), 0, 0, 1).extend_to_4(other[e23]))
-                + (Simd32x4::from([self[e431], self[e4], self[e4], self[e431]]) * crate::swizzle!(other.group0(), 2, 1, 2).extend_to_4(other[e31]))
+            (Simd32x4::from([self[e4], self[e412], self[e423], self[e423]]) * other.group0().xxy().extend_to_4(other[e23]))
+                + (Simd32x4::from([self[e431], self[e4], self[e4], self[e431]]) * other.group0().zyz().extend_to_4(other[e31]))
                 + Simd32x3::from(0.0).extend_to_4((self[e412] * other[e12]) - (self[e2] * other[e42]) - (self[e3] * other[e43]))
-                - (crate::swizzle!(other.group0(), 1, 2, 0) * crate::swizzle!(self.group1(), 2, 0, 1, _)).extend_to_4(self[e1] * other[e41]),
+                - (other.group0().yzx() * self.group1().zxy()).extend_to_4(self[e1] * other[e41]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -542,16 +539,16 @@ impl AntiSandwich<Motor> for Flector {
                 (self[e3] * other[e41]) + (self[e423] * other[e12]) + (self[e321] * other[e42]) - (self[e412] * other[e23]),
                 (self[e3] * other[e1234]) + (self[e431] * other[e23]) + (self[e321] * other[e43]) - (self[e412] * other[scalar]),
                 0.0,
-            ]) + (crate::swizzle!(self.group0(), 0, 1, 0, 3) * crate::swizzle!(other.group0(), 3, 3, 1, 3))
-                - (crate::swizzle!(self.group1(), 0, 1, 0, 2) * crate::swizzle!(other.group1(), 3, 3, 1, _).extend_to_4(other[e43]))
-                - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1, _).extend_to_4(self[e423]))
-                - (crate::swizzle!(self.group0(), 3, 3, 3, _) * other.group1().truncate_to_3()).extend_to_4(self[e431] * other[e42]),
+            ]) + (self.group0().xyxw() * other.group0().wwyw())
+                - (self.group1().xyxz() * other.group1().wwy().extend_to_4(other[e43]))
+                - (other.group0().yzxx() * self.group0().zxy().extend_to_4(self[e423]))
+                - (self.group0().www() * other.group1().truncate_to_3()).extend_to_4(self[e431] * other[e42]),
             // e423, e431, e412, e321
-            (crate::swizzle!(self.group1(), 0, 1, 0, 1) * crate::swizzle!(other.group0(), 3, 3, 1, _).extend_to_4(other[e31]))
-                + (crate::swizzle!(self.group1(), 1, 2, 2, 2) * crate::swizzle!(other.group0(), 2, 0, 3, _).extend_to_4(other[e12]))
+            (self.group1().xyxy() * other.group0().wwy().extend_to_4(other[e31]))
+                + (self.group1().yzzz() * other.group0().zxw().extend_to_4(other[e12]))
                 + Simd32x3::from(0.0).extend_to_4((self[e321] * other[e1234]) - (self[e2] * other[e42]) - (self[e3] * other[e43]) - (self[e4] * other[scalar]))
-                + (crate::swizzle!(self.group0(), 3, 3, 3, _) * other.group0().truncate_to_3()).extend_to_4(self[e423] * other[e23])
-                - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group1(), 2, 0, 1, _).extend_to_4(self[e1])),
+                + (self.group0().www() * other.group0().truncate_to_3()).extend_to_4(self[e423] * other[e23])
+                - (other.group0().yzxx() * self.group1().zxy().extend_to_4(self[e1])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -575,7 +572,7 @@ impl AntiSandwich<MultiVector> for Flector {
                 + (Simd32x2::from(other[e423]) * Simd32x2::from([self[e1], self[e423]]))
                 + (Simd32x2::from(other[e431]) * Simd32x2::from([self[e2], self[e431]]))
                 + (Simd32x2::from(other[e412]) * Simd32x2::from([self[e3], self[e412]]))
-                - (Simd32x2::from([self[e423], self[e4]]) * crate::swizzle!(other.group1(), 0, 3, _, _)),
+                - (Simd32x2::from([self[e423], self[e4]]) * other.group1().xw()),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (self[e2] * other[e43]) + (self[e412] * other[e31]) + (self[e321] * other[e41]) - (self[e431] * other[e12]),
@@ -583,29 +580,29 @@ impl AntiSandwich<MultiVector> for Flector {
                 (self[e1] * other[e42]) + (self[e431] * other[e23]) + (self[e321] * other[e43]) - (self[e4] * other[e12]),
                 0.0,
             ]) + (Simd32x4::from(other[e1234]) * self.group0())
-                - (Simd32x4::from([self[e4], self[e412], self[e423], self[e412]]) * crate::swizzle!(other.group3(), 0, 0, 1).extend_to_4(other[e43]))
-                - (crate::swizzle!(self.group1(), 0, 1, 2, 0) * crate::swizzle!(other.group0(), 0, 0).extend_to_4(other[scalar], other[e41]))
-                - (crate::swizzle!(other.group2(), 1, 2, 0) * crate::swizzle!(self.group0(), 2, 0, 1, _)).extend_to_4(self[e431] * other[e42]),
+                - (Simd32x4::from([self[e4], self[e412], self[e423], self[e412]]) * other.group3().xxy().extend_to_4(other[e43]))
+                - (self.group1().xyzx() * other.group0().xx().extend_to_4(other[scalar], other[e41]))
+                - (other.group2().yzx() * self.group0().zxy()).extend_to_4(self[e431] * other[e42]),
             // e41, e42, e43
-            (crate::swizzle!(self.group1(), 2, 0, 1, _) * crate::swizzle!(other.group4(), 1, 2, 0, _))
+            (self.group1().zxy() * other.group4().yzx())
                 - (Simd32x3::from(self[e4]) * other.group4().truncate_to_3())
-                - (Simd32x3::from([other[e4], other[e4], other[e431]]) * crate::swizzle!(self.group1(), 0, 1, 0, _))
-                - (Simd32x3::from([other[e412], other[e423], other[e4]]) * crate::swizzle!(self.group1(), 1, 2, 2, _)),
+                - (Simd32x3::from([other[e4], other[e4], other[e431]]) * self.group1().xyx())
+                - (Simd32x3::from([other[e412], other[e423], other[e4]]) * self.group1().yzz()),
             // e23, e31, e12
             (Simd32x3::from(self[e4]) * other.group1().truncate_to_3())
-                + (Simd32x3::from([other[e3], other[e1], other[e321]]) * crate::swizzle!(self.group1(), 1, 2, 2, _))
-                + (Simd32x3::from([other[e321], other[e321], other[e2]]) * crate::swizzle!(self.group1(), 0, 1, 0, _))
-                + (crate::swizzle!(self.group0(), 2, 0, 1, _) * crate::swizzle!(other.group4(), 1, 2, 0, _))
+                + (Simd32x3::from([other[e3], other[e1], other[e321]]) * self.group1().yzz())
+                + (Simd32x3::from([other[e321], other[e321], other[e2]]) * self.group1().xyx())
+                + (self.group0().zxy() * other.group4().yzx())
                 - (Simd32x3::from(self[e321]) * other.group4().truncate_to_3())
-                - (Simd32x3::from([other[e4], other[e4], other[e431]]) * crate::swizzle!(self.group0(), 0, 1, 0, _))
-                - (Simd32x3::from([other[e412], other[e423], other[e4]]) * crate::swizzle!(self.group0(), 1, 2, 2, _))
-                - (crate::swizzle!(self.group1(), 2, 0, 1, _) * crate::swizzle!(other.group1(), 1, 2, 0, _)),
+                - (Simd32x3::from([other[e4], other[e4], other[e431]]) * self.group0().xyx())
+                - (Simd32x3::from([other[e412], other[e423], other[e4]]) * self.group0().yzz())
+                - (self.group1().zxy() * other.group1().yzx()),
             // e423, e431, e412, e321
             (Simd32x4::from(other[e1234]) * self.group1())
-                + (Simd32x4::from([self[e4], self[e412], self[e423], self[e423]]) * crate::swizzle!(other.group2(), 0, 0, 1).extend_to_4(other[e23]))
-                + (Simd32x4::from([self[e431], self[e4], self[e4], self[e431]]) * crate::swizzle!(other.group2(), 2, 1, 2).extend_to_4(other[e31]))
+                + (Simd32x4::from([self[e4], self[e412], self[e423], self[e423]]) * other.group2().xxy().extend_to_4(other[e23]))
+                + (Simd32x4::from([self[e431], self[e4], self[e4], self[e431]]) * other.group2().zyz().extend_to_4(other[e31]))
                 + Simd32x3::from(0.0).extend_to_4((self[e412] * other[e12]) - (self[e1] * other[e41]) - (self[e2] * other[e42]) - (self[e3] * other[e43]))
-                - (crate::swizzle!(other.group2(), 1, 2, 0) * crate::swizzle!(self.group1(), 2, 0, 1, _)).extend_to_4(self[e4] * other[scalar]),
+                - (other.group2().yzx() * self.group1().zxy()).extend_to_4(self[e4] * other[scalar]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -648,15 +645,15 @@ impl AntiSandwich<Plane> for Flector {
                 -(self[e4] * other[e431]) - (self[e412] * other[e423]),
                 -(self[e4] * other[e412]) - (self[e423] * other[e431]),
                 (self[e431] * other[e431]) + (self[e412] * other[e412]),
-            ]) + (crate::swizzle!(self.group1(), 2, 0, 1, 0) * crate::swizzle!(other.group0(), 1, 2, 0, 0)),
+            ]) + (self.group1().zxyx() * other.group0().yzxx()),
             // e23, e31, e12, scalar
             Simd32x4::from([
                 -(self[e2] * other[e412]) - (self[e321] * other[e423]),
                 -(self[e3] * other[e423]) - (self[e321] * other[e431]),
                 -(self[e1] * other[e431]) - (self[e321] * other[e412]),
                 (self[e3] * other[e412]) + (self[e4] * other[e321]),
-            ]) + (crate::swizzle!(self.group0(), 2, 0, 1, 0) * crate::swizzle!(other.group0(), 1, 2, 0, 0))
-                + (crate::swizzle!(other.group0(), 3, 3, 3, 1) * self.group1().truncate_to_3().extend_to_4(self[e2])),
+            ]) + (self.group0().zxyx() * other.group0().yzxx())
+                + (other.group0().wwwy() * self.group1().truncate_to_3().extend_to_4(self[e2])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -681,8 +678,8 @@ impl AntiSandwich<Point> for Flector {
                 (self[e4] * other[e2]) + (self[e412] * other[e1]),
                 (self[e4] * other[e3]) + (self[e423] * other[e2]),
                 -(self[e412] * other[e3]) - (self[e321] * other[e4]),
-            ]) - (crate::swizzle!(self.group1(), 2, 0, 1, 1) * crate::swizzle!(other.group0(), 1, 2, 0, 1))
-                - (crate::swizzle!(other.group0(), 3, 3, 3, 0) * self.group0().truncate_to_3().extend_to_4(self[e423])),
+            ]) - (self.group1().zxyy() * other.group0().yzxy())
+                - (other.group0().wwwx() * self.group0().truncate_to_3().extend_to_4(self[e423])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -886,15 +883,15 @@ impl AntiSandwich<Flector> for Line {
                 (other[e1] * self[e43]) + (other[e4] * self[e31]) + (other[e423] * self[e12]) + (other[e321] * self[e42]),
                 (other[e2] * self[e41]) + (other[e4] * self[e12]) + (other[e431] * self[e23]) + (other[e321] * self[e43]),
                 other[e412] * self[e43] * -1.0,
-            ]) - (crate::swizzle!(other.group1(), 1, 2, 0, 1) * crate::swizzle!(self.group1(), 2, 0, 1).extend_to_4(self[e42]))
-                - (crate::swizzle!(self.group0(), 2, 0, 1) * crate::swizzle!(other.group0(), 1, 2, 0, _)).extend_to_4(other[e423] * self[e41]),
+            ]) - (other.group1().yzxy() * self.group1().zxy().extend_to_4(self[e42]))
+                - (self.group0().zxy() * other.group0().yzx()).extend_to_4(other[e423] * self[e41]),
             // e423, e431, e412, e321
             Simd32x4::from([
                 (other[e4] * self[e41]) + (other[e412] * self[e42]),
                 (other[e4] * self[e42]) + (other[e423] * self[e43]),
                 (other[e4] * self[e43]) + (other[e431] * self[e41]),
                 -(other[e2] * self[e42]) - (other[e3] * self[e43]) - (other[e423] * self[e23]) - (other[e431] * self[e31]) - (other[e412] * self[e12]),
-            ]) - (crate::swizzle!(self.group0(), 2, 0, 1) * crate::swizzle!(other.group1(), 1, 2, 0, _)).extend_to_4(other[e1] * self[e41]),
+            ]) - (self.group0().zxy() * other.group1().yzx()).extend_to_4(other[e1] * self[e41]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -937,15 +934,15 @@ impl AntiSandwich<Line> for Line {
                 other[e41] * self[e43],
                 other[e42] * self[e41],
                 -(other[e42] * self[e42]) - (other[e43] * self[e43]),
-            ]) - (crate::swizzle!(other.group0(), 1, 2, 0) * crate::swizzle!(self.group0(), 2, 0, 1)).extend_to_4(other[e41] * self[e41]),
+            ]) - (other.group0().yzx() * self.group0().zxy()).extend_to_4(other[e41] * self[e41]),
             // e23, e31, e12, scalar
             Simd32x4::from([
                 (other[e43] * self[e31]) + (other[e12] * self[e42]),
                 (other[e41] * self[e12]) + (other[e23] * self[e43]),
                 (other[e42] * self[e23]) + (other[e31] * self[e41]),
                 -(other[e43] * self[e12]) - (other[e23] * self[e41]) - (other[e31] * self[e42]) - (other[e12] * self[e43]),
-            ]) - (crate::swizzle!(other.group0(), 1, 2, 0) * crate::swizzle!(self.group1(), 2, 0, 1)).extend_to_4(other[e41] * self[e23])
-                - (crate::swizzle!(other.group1(), 1, 2, 0) * crate::swizzle!(self.group0(), 2, 0, 1)).extend_to_4(other[e42] * self[e31]),
+            ]) - (other.group0().yzx() * self.group1().zxy()).extend_to_4(other[e41] * self[e23])
+                - (other.group1().yzx() * self.group0().zxy()).extend_to_4(other[e42] * self[e31]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -969,15 +966,15 @@ impl AntiSandwich<Motor> for Line {
                 (self[e42] * other[e1234]) + (self[e43] * other[e41]),
                 (self[e41] * other[e42]) + (self[e43] * other[e1234]),
                 -(self[e42] * other[e42]) - (self[e43] * other[e43]),
-            ]) - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1).extend_to_4(self[e41])),
+            ]) - (other.group0().yzxx() * self.group0().zxy().extend_to_4(self[e41])),
             // e23, e31, e12, scalar
             Simd32x4::from([
                 (self[e41] * other[scalar]) + (self[e42] * other[e12]) + (self[e23] * other[e1234]) + (self[e31] * other[e43]),
                 (self[e42] * other[scalar]) + (self[e43] * other[e23]) + (self[e31] * other[e1234]) + (self[e12] * other[e41]),
                 (self[e41] * other[e31]) + (self[e43] * other[scalar]) + (self[e23] * other[e42]) + (self[e12] * other[e1234]),
                 -(self[e43] * other[e12]) - (self[e23] * other[e41]) - (self[e31] * other[e42]) - (self[e12] * other[e43]),
-            ]) - (crate::swizzle!(other.group1(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1).extend_to_4(self[e41]))
-                - (crate::swizzle!(self.group1(), 2, 0, 1) * crate::swizzle!(other.group0(), 1, 2, 0, _)).extend_to_4(self[e42] * other[e31]),
+            ]) - (other.group1().yzxx() * self.group0().zxy().extend_to_4(self[e41]))
+                - (self.group1().zxy() * other.group0().yzx()).extend_to_4(self[e42] * other[e31]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -1007,25 +1004,24 @@ impl AntiSandwich<MultiVector> for Line {
                 (self[e42] * other[e321]) + (self[e43] * other[e1]) + (self[e31] * other[e4]) + (self[e12] * other[e423]),
                 (self[e41] * other[e2]) + (self[e43] * other[e321]) + (self[e23] * other[e431]) + (self[e12] * other[e4]),
                 self[e43] * other[e412] * -1.0,
-            ]) - (crate::swizzle!(other.group4(), 1, 2, 0, 1) * crate::swizzle!(self.group1(), 2, 0, 1).extend_to_4(self[e42]))
-                - (crate::swizzle!(self.group0(), 2, 0, 1) * crate::swizzle!(other.group1(), 1, 2, 0, _)).extend_to_4(self[e41] * other[e423]),
+            ]) - (other.group4().yzxy() * self.group1().zxy().extend_to_4(self[e42]))
+                - (self.group0().zxy() * other.group1().yzx()).extend_to_4(self[e41] * other[e423]),
             // e41, e42, e43
-            (Simd32x3::from(other[e1234]) * self.group0()) + (crate::swizzle!(self.group0(), 1, 2, 0) * crate::swizzle!(other.group2(), 2, 0, 1))
-                - (crate::swizzle!(self.group0(), 2, 0, 1) * crate::swizzle!(other.group2(), 1, 2, 0)),
+            (Simd32x3::from(other[e1234]) * self.group0()) + (self.group0().yzx() * other.group2().zxy()) - (self.group0().zxy() * other.group2().yzx()),
             // e23, e31, e12
             (Simd32x3::from(other[scalar]) * self.group0())
                 + (Simd32x3::from(other[e1234]) * self.group1())
-                + (crate::swizzle!(self.group0(), 1, 2, 0) * crate::swizzle!(other.group3(), 2, 0, 1))
-                + (crate::swizzle!(self.group1(), 1, 2, 0) * crate::swizzle!(other.group2(), 2, 0, 1))
-                - (crate::swizzle!(self.group0(), 2, 0, 1) * crate::swizzle!(other.group3(), 1, 2, 0))
-                - (crate::swizzle!(self.group1(), 2, 0, 1) * crate::swizzle!(other.group2(), 1, 2, 0)),
+                + (self.group0().yzx() * other.group3().zxy())
+                + (self.group1().yzx() * other.group2().zxy())
+                - (self.group0().zxy() * other.group3().yzx())
+                - (self.group1().zxy() * other.group2().yzx()),
             // e423, e431, e412, e321
             Simd32x4::from([
                 (self[e41] * other[e4]) + (self[e42] * other[e412]),
                 (self[e42] * other[e4]) + (self[e43] * other[e423]),
                 (self[e41] * other[e431]) + (self[e43] * other[e4]),
                 -(self[e42] * other[e2]) - (self[e43] * other[e3]) - (self[e23] * other[e423]) - (self[e31] * other[e431]) - (self[e12] * other[e412]),
-            ]) - (crate::swizzle!(self.group0(), 2, 0, 1) * crate::swizzle!(other.group4(), 1, 2, 0, _)).extend_to_4(self[e41] * other[e1]),
+            ]) - (self.group0().zxy() * other.group4().yzx()).extend_to_4(self[e41] * other[e1]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -1070,14 +1066,14 @@ impl AntiSandwich<Plane> for Line {
                 (self[e42] * other[e321]) + (self[e12] * other[e423]),
                 (self[e43] * other[e321]) + (self[e23] * other[e431]),
                 -(self[e42] * other[e431]) - (self[e43] * other[e412]),
-            ]) - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group1(), 2, 0, 1).extend_to_4(self[e41])),
+            ]) - (other.group0().yzxx() * self.group1().zxy().extend_to_4(self[e41])),
             // e423, e431, e412, e321
             Simd32x4::from([
                 self[e42] * other[e412],
                 self[e43] * other[e423],
                 self[e41] * other[e431],
                 -(self[e31] * other[e431]) - (self[e12] * other[e412]),
-            ]) - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1).extend_to_4(self[e23])),
+            ]) - (other.group0().yzxx() * self.group0().zxy().extend_to_4(self[e23])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -1096,8 +1092,8 @@ impl AntiSandwich<Point> for Line {
         use crate::elements::*;
         let geometric_anti_product = Flector::from_groups(
             // e1, e2, e3, e4
-            (Simd32x3::from(other[e4]) * self.group1()).extend_to_4(0.0) + (crate::swizzle!(self.group0(), 1, 2, 0) * crate::swizzle!(other.group0(), 2, 0, 1, _)).extend_to_4(0.0)
-                - (crate::swizzle!(self.group0(), 2, 0, 1) * crate::swizzle!(other.group0(), 1, 2, 0, _)).extend_to_4(0.0),
+            (Simd32x3::from(other[e4]) * self.group1()).extend_to_4(0.0) + (self.group0().yzx() * other.group0().zxy()).extend_to_4(0.0)
+                - (self.group0().zxy() * other.group0().yzx()).extend_to_4(0.0),
             // e423, e431, e412, e321
             Simd32x4::from([other[e4], other[e4], other[e4], 1.0]) * self.group0().extend_to_4(-(self[e41] * other[e1]) - (self[e42] * other[e2]) - (self[e43] * other[e3])),
         );
@@ -1187,9 +1183,9 @@ impl AntiSandwich<Flector> for Motor {
                 (other[e2] * self[e1234]) + (other[e4] * self[e31]) + (other[e423] * self[e12]) + (other[e431] * self[scalar]) + (other[e321] * self[e42]),
                 (other[e3] * self[e1234]) + (other[e4] * self[e12]) + (other[e431] * self[e23]) + (other[e412] * self[scalar]) + (other[e321] * self[e43]),
                 other[e412] * self[e43] * -1.0,
-            ]) + (crate::swizzle!(other.group0(), 0, 0, 1, 3) * crate::swizzle!(self.group0(), 3, 2, 0, 3))
-                - (crate::swizzle!(other.group1(), 1, 2, 0, 1) * crate::swizzle!(self.group1(), 2, 0, 1, _).extend_to_4(self[e42]))
-                - (crate::swizzle!(self.group0(), 2, 0, 1, 0) * crate::swizzle!(other.group0(), 1, 2, 0, _).extend_to_4(other[e423])),
+            ]) + (other.group0().xxyw() * self.group0().wzxw())
+                - (other.group1().yzxy() * self.group1().zxy().extend_to_4(self[e42]))
+                - (self.group0().zxyx() * other.group0().yzx().extend_to_4(other[e423])),
             // e423, e431, e412, e321
             Simd32x4::from([
                 other[e412] * self[e42],
@@ -1197,8 +1193,8 @@ impl AntiSandwich<Flector> for Motor {
                 other[e412] * self[e1234],
                 -(other[e2] * self[e42]) - (other[e3] * self[e43]) - (other[e423] * self[e23]) - (other[e431] * self[e31]) - (other[e412] * self[e12]),
             ]) + (Simd32x4::from(other[e4]) * self.group0().truncate_to_3().extend_to_4(self[scalar]))
-                + (crate::swizzle!(other.group1(), 0, 0, 1, 3) * crate::swizzle!(self.group0(), 3, 2, 0, 3))
-                - (crate::swizzle!(self.group0(), 2, 0, 1, 0) * crate::swizzle!(other.group1(), 1, 2, 0, _).extend_to_4(other[e1])),
+                + (other.group1().xxyw() * self.group0().wzxw())
+                - (self.group0().zxyx() * other.group1().yzx().extend_to_4(other[e1])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -1243,15 +1239,15 @@ impl AntiSandwich<Line> for Motor {
                 (other[e41] * self[e43]) + (other[e42] * self[e1234]),
                 (other[e42] * self[e41]) + (other[e43] * self[e1234]),
                 -(other[e42] * self[e42]) - (other[e43] * self[e43]),
-            ]) - (crate::swizzle!(self.group0(), 2, 0, 1, 0) * crate::swizzle!(other.group0(), 1, 2, 0).extend_to_4(other[e41])),
+            ]) - (self.group0().zxyx() * other.group0().yzx().extend_to_4(other[e41])),
             // e23, e31, e12, scalar
             Simd32x4::from([
                 (other[e41] * self[scalar]) + (other[e43] * self[e31]) + (other[e23] * self[e1234]) + (other[e12] * self[e42]),
                 (other[e41] * self[e12]) + (other[e42] * self[scalar]) + (other[e23] * self[e43]) + (other[e31] * self[e1234]),
                 (other[e42] * self[e23]) + (other[e43] * self[scalar]) + (other[e31] * self[e41]) + (other[e12] * self[e1234]),
                 -(other[e43] * self[e12]) - (other[e23] * self[e41]) - (other[e31] * self[e42]) - (other[e12] * self[e43]),
-            ]) - (crate::swizzle!(self.group1(), 2, 0, 1, 0) * crate::swizzle!(other.group0(), 1, 2, 0).extend_to_4(other[e41]))
-                - (crate::swizzle!(other.group1(), 1, 2, 0) * crate::swizzle!(self.group0(), 2, 0, 1, _)).extend_to_4(other[e42] * self[e31]),
+            ]) - (self.group1().zxyx() * other.group0().yzx().extend_to_4(other[e41]))
+                - (other.group1().yzx() * self.group0().zxy()).extend_to_4(other[e42] * self[e31]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -1275,18 +1271,18 @@ impl AntiSandwich<Motor> for Motor {
                 (other[e42] * self[e1234]) + (other[e1234] * self[e42]),
                 (other[e43] * self[e1234]) + (other[e1234] * self[e43]),
                 -(other[e42] * self[e42]) - (other[e43] * self[e43]),
-            ]) + (crate::swizzle!(other.group0(), 0, 0, 1, 3) * crate::swizzle!(self.group0(), 3, 2, 0, 3))
-                - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1, 0)),
+            ]) + (other.group0().xxyw() * self.group0().wzxw())
+                - (other.group0().yzxx() * self.group0().zxyx()),
             // e23, e31, e12, scalar
             Simd32x4::from([
                 (other[e1234] * self[e23]) + (other[e23] * self[e1234]) + (other[e12] * self[e42]) + (other[scalar] * self[e41]),
                 (other[e1234] * self[e31]) + (other[e23] * self[e43]) + (other[e31] * self[e1234]) + (other[scalar] * self[e42]),
                 (other[e1234] * self[e12]) + (other[e31] * self[e41]) + (other[e12] * self[e1234]) + (other[scalar] * self[e43]),
                 -(other[e43] * self[e12]) - (other[e23] * self[e41]) - (other[e31] * self[e42]) - (other[e12] * self[e43]),
-            ]) + (crate::swizzle!(other.group0(), 0, 0, 1, 3) * crate::swizzle!(self.group1(), 3, 2, 0, 3))
-                + (crate::swizzle!(other.group0(), 2, 1, 2, _) * crate::swizzle!(self.group1(), 1, 3, 3, _)).extend_to_4(other[scalar] * self[e1234])
-                - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group1(), 2, 0, 1, 0))
-                - (crate::swizzle!(other.group1(), 1, 2, 0, _) * crate::swizzle!(self.group0(), 2, 0, 1, _)).extend_to_4(other[e42] * self[e31]),
+            ]) + (other.group0().xxyw() * self.group1().wzxw())
+                + (other.group0().zyz() * self.group1().yww()).extend_to_4(other[scalar] * self[e1234])
+                - (other.group0().yzxx() * self.group1().zxyx())
+                - (other.group1().yzx() * self.group0().zxy()).extend_to_4(other[e42] * self[e31]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -1317,32 +1313,30 @@ impl AntiSandwich<MultiVector> for Motor {
                 (self[e43] * other[e1]) + (self[e1234] * other[e2]) + (self[e31] * other[e4]) + (self[e12] * other[e423]) + (self[scalar] * other[e431]),
                 (self[e43] * other[e321]) + (self[e1234] * other[e3]) + (self[e23] * other[e431]) + (self[e12] * other[e4]) + (self[scalar] * other[e412]),
                 self[e43] * other[e412] * -1.0,
-            ]) + (crate::swizzle!(self.group0(), 0, 1, 0, 3) * crate::swizzle!(other.group4(), 3, 3, _, _).extend_to_4(other[e2], other[e4]))
-                - (crate::swizzle!(self.group0(), 2, 0, 1, 0) * crate::swizzle!(other.group1(), 1, 2, 0, _).extend_to_4(other[e423]))
-                - (crate::swizzle!(other.group4(), 1, 2, 0, 1) * crate::swizzle!(self.group1(), 2, 0, 1, _).extend_to_4(self[e42])),
+            ]) + (self.group0().xyxw() * other.group4().ww().extend_to_4(other[e2], other[e4]))
+                - (self.group0().zxyx() * other.group1().yzx().extend_to_4(other[e423]))
+                - (other.group4().yzxy() * self.group1().zxy().extend_to_4(self[e42])),
             // e41, e42, e43
-            (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3())
-                + (crate::swizzle!(other.group2(), 0, 0, 1) * crate::swizzle!(self.group0(), 3, 2, 0, _))
-                + (crate::swizzle!(other.group2(), 2, 1, 2) * crate::swizzle!(self.group0(), 1, 3, 3, _))
-                - (crate::swizzle!(other.group2(), 1, 2, 0) * crate::swizzle!(self.group0(), 2, 0, 1, _)),
+            (Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()) + (other.group2().xxy() * self.group0().wzx()) + (other.group2().zyz() * self.group0().yww())
+                - (other.group2().yzx() * self.group0().zxy()),
             // e23, e31, e12
             (Simd32x3::from(other[scalar]) * self.group0().truncate_to_3())
                 + (Simd32x3::from(other[e1234]) * self.group1().truncate_to_3())
-                + (crate::swizzle!(other.group2(), 0, 0, 1) * crate::swizzle!(self.group1(), 3, 2, 0, _))
-                + (crate::swizzle!(other.group2(), 2, 1, 2) * crate::swizzle!(self.group1(), 1, 3, 3, _))
-                + (crate::swizzle!(other.group3(), 0, 0, 1) * crate::swizzle!(self.group0(), 3, 2, 0, _))
-                + (crate::swizzle!(other.group3(), 2, 1, 2) * crate::swizzle!(self.group0(), 1, 3, 3, _))
-                - (crate::swizzle!(other.group2(), 1, 2, 0) * crate::swizzle!(self.group1(), 2, 0, 1, _))
-                - (crate::swizzle!(other.group3(), 1, 2, 0) * crate::swizzle!(self.group0(), 2, 0, 1, _)),
+                + (other.group2().xxy() * self.group1().wzx())
+                + (other.group2().zyz() * self.group1().yww())
+                + (other.group3().xxy() * self.group0().wzx())
+                + (other.group3().zyz() * self.group0().yww())
+                - (other.group2().yzx() * self.group1().zxy())
+                - (other.group3().yzx() * self.group0().zxy()),
             // e423, e431, e412, e321
             Simd32x4::from([
                 self[e1234] * other[e423],
                 self[e1234] * other[e431],
                 self[e1234] * other[e412],
                 -(self[e42] * other[e2]) - (self[e43] * other[e3]) - (self[e23] * other[e423]) - (self[e31] * other[e431]) - (self[e12] * other[e412]),
-            ]) + (crate::swizzle!(self.group0(), 0, 1, 0, 3) * crate::swizzle!(other.group1(), 3, 3, _, _).extend_to_4(other[e431], other[e321]))
-                + (crate::swizzle!(other.group4(), 2, 0, _, _).extend_to_4(other[e4], other[e4]) * crate::swizzle!(self.group0(), 1, 2, 2, _).extend_to_4(self[scalar]))
-                - (crate::swizzle!(self.group0(), 2, 0, 1, 0) * crate::swizzle!(other.group4(), 1, 2, 0, _).extend_to_4(other[e1])),
+            ]) + (self.group0().xyxw() * other.group1().ww().extend_to_4(other[e431], other[e321]))
+                + (other.group4().zx().extend_to_4(other[e4], other[e4]) * self.group0().yzz().extend_to_4(self[scalar]))
+                - (self.group0().zxyx() * other.group4().yzx().extend_to_4(other[e1])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -1387,15 +1381,15 @@ impl AntiSandwich<Plane> for Motor {
                 (self[e42] * other[e321]) + (self[e12] * other[e423]) + (self[scalar] * other[e431]),
                 (self[e43] * other[e321]) + (self[e23] * other[e431]) + (self[scalar] * other[e412]),
                 -(self[e42] * other[e431]) - (self[e43] * other[e412]),
-            ]) - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group1(), 2, 0, 1, _).extend_to_4(self[e41])),
+            ]) - (other.group0().yzxx() * self.group1().zxy().extend_to_4(self[e41])),
             // e423, e431, e412, e321
             Simd32x4::from([
                 self[e1234] * other[e423],
                 self[e1234] * other[e431],
                 self[e1234] * other[e412],
                 -(self[e31] * other[e431]) - (self[e12] * other[e412]),
-            ]) + (crate::swizzle!(self.group0(), 1, 2, 0, 3) * crate::swizzle!(other.group0(), 2, 0, 1, 3))
-                - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1, _).extend_to_4(self[e23])),
+            ]) + (self.group0().yzxw() * other.group0().zxyw())
+                - (other.group0().yzxx() * self.group0().zxy().extend_to_4(self[e23])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -1416,8 +1410,8 @@ impl AntiSandwich<Point> for Motor {
             // e1, e2, e3, e4
             ((Simd32x3::from(self[e1234]) * other.group0().truncate_to_3())
                 + (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())
-                + (crate::swizzle!(self.group0(), 1, 2, 0, _) * crate::swizzle!(other.group0(), 2, 0, 1, _))
-                - (crate::swizzle!(self.group0(), 2, 0, 1, _) * crate::swizzle!(other.group0(), 1, 2, 0, _)))
+                + (self.group0().yzx() * other.group0().zxy())
+                - (self.group0().zxy() * other.group0().yzx()))
             .extend_to_4(self[e1234] * other[e4]),
             // e423, e431, e412, e321
             Simd32x4::from([other[e4], other[e4], other[e4], 1.0])
@@ -1507,8 +1501,7 @@ impl AntiSandwich<DualNum> for MultiVector {
             // e23, e31, e12
             (Simd32x3::from(other[scalar]) * self.group2()) + (Simd32x3::from(other[e1234]) * self.group3()),
             // e423, e431, e412, e321
-            Simd32x4::from([self[e423], self[e431], self[e412], 1.0])
-                * crate::swizzle!(other.group0(), 1, 1).extend_to_4(other[e1234], (other[e1234] * self[e321]) - (other[scalar] * self[e4])),
+            Simd32x4::from([self[e423], self[e431], self[e412], 1.0]) * other.group0().yy().extend_to_4(other[e1234], (other[e1234] * self[e321]) - (other[scalar] * self[e4])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -1532,39 +1525,39 @@ impl AntiSandwich<Flector> for MultiVector {
                 + (Simd32x2::from(other[e423]) * Simd32x2::from([self[e1], self[e423]]))
                 + (Simd32x2::from(other[e431]) * Simd32x2::from([self[e2], self[e431]]))
                 + (Simd32x2::from(other[e412]) * Simd32x2::from([self[e3], self[e412]]))
-                - (Simd32x2::from([self[e423], self[e4]]) * crate::swizzle!(other.group0(), 0, 3, _, _)),
+                - (Simd32x2::from([self[e423], self[e4]]) * other.group0().xw()),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other[e1] * self[e1234]) + (other[e3] * self[e42]) + (other[e4] * self[e23]) + (other[e412] * self[e31]) + (other[e321] * self[e41]),
                 (other[e1] * self[e43]) + (other[e2] * self[e1234]) + (other[e4] * self[e31]) + (other[e423] * self[e12]) + (other[e321] * self[e42]),
                 (other[e2] * self[e41]) + (other[e3] * self[e1234]) + (other[e4] * self[e12]) + (other[e431] * self[e23]) + (other[e321] * self[e43]),
                 other[e412] * self[e43] * -1.0,
-            ]) + (crate::swizzle!(self.group0(), 0, 0).extend_to_4(self[scalar], self[e1234]) * other.group1().truncate_to_3().extend_to_4(other[e4]))
-                - (crate::swizzle!(other.group1(), 1, 2, 0, 1) * crate::swizzle!(self.group3(), 2, 0, 1).extend_to_4(self[e42]))
-                - (crate::swizzle!(self.group2(), 2, 0, 1) * crate::swizzle!(other.group0(), 1, 2, 0, _)).extend_to_4(other[e423] * self[e41]),
+            ]) + (self.group0().xx().extend_to_4(self[scalar], self[e1234]) * other.group1().truncate_to_3().extend_to_4(other[e4]))
+                - (other.group1().yzxy() * self.group3().zxy().extend_to_4(self[e42]))
+                - (self.group2().zxy() * other.group0().yzx()).extend_to_4(other[e423] * self[e41]),
             // e41, e42, e43
-            (crate::swizzle!(other.group1(), 1, 2, 0, _) * crate::swizzle!(self.group4(), 2, 0, 1, _))
+            (other.group1().yzx() * self.group4().zxy())
                 - (Simd32x3::from(other[e4]) * self.group4().truncate_to_3())
-                - (Simd32x3::from([self[e4], self[e412], self[e423]]) * crate::swizzle!(other.group1(), 0, 0, 1, _))
-                - (Simd32x3::from([self[e431], self[e4], self[e4]]) * crate::swizzle!(other.group1(), 2, 1, 2, _)),
+                - (Simd32x3::from([self[e4], self[e412], self[e423]]) * other.group1().xxy())
+                - (Simd32x3::from([self[e431], self[e4], self[e4]]) * other.group1().zyz()),
             // e23, e31, e12
             (Simd32x3::from(other[e321]) * self.group4().truncate_to_3())
-                + (Simd32x3::from([self[e4], self[e412], self[e423]]) * crate::swizzle!(other.group0(), 0, 0, 1, _))
-                + (Simd32x3::from([self[e431], self[e4], self[e4]]) * crate::swizzle!(other.group0(), 2, 1, 2, _))
-                + (crate::swizzle!(other.group1(), 1, 2, 0, _) * crate::swizzle!(self.group1(), 2, 0, 1, _))
+                + (Simd32x3::from([self[e4], self[e412], self[e423]]) * other.group0().xxy())
+                + (Simd32x3::from([self[e431], self[e4], self[e4]]) * other.group0().zyz())
+                + (other.group1().yzx() * self.group1().zxy())
                 - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())
-                - (Simd32x3::from([self[e2], self[e321], self[e321]]) * crate::swizzle!(other.group1(), 2, 1, 2, _))
-                - (Simd32x3::from([self[e321], self[e3], self[e1]]) * crate::swizzle!(other.group1(), 0, 0, 1, _))
-                - (crate::swizzle!(other.group0(), 1, 2, 0, _) * crate::swizzle!(self.group4(), 2, 0, 1, _)),
+                - (Simd32x3::from([self[e2], self[e321], self[e321]]) * other.group1().zyz())
+                - (Simd32x3::from([self[e321], self[e3], self[e1]]) * other.group1().xxy())
+                - (other.group0().yzx() * self.group4().zxy()),
             // e423, e431, e412, e321
             Simd32x4::from([
                 other[e412] * self[e42],
                 other[e423] * self[e43],
                 other[e4] * self[e43],
                 -(other[e2] * self[e42]) - (other[e3] * self[e43]) - (other[e423] * self[e23]) - (other[e431] * self[e31]) - (other[e412] * self[e12]),
-            ]) + (crate::swizzle!(self.group0(), 1, 1).extend_to_4(self[e1234], self[scalar]) * other.group1().truncate_to_3().extend_to_4(other[e4]))
-                + (crate::swizzle!(other.group0(), 3, 3, _, _).extend_to_4(other[e431], other[e321]) * crate::swizzle!(self.group2(), 0, 1, 0).extend_to_4(self[e1234]))
-                - (crate::swizzle!(self.group2(), 2, 0, 1) * crate::swizzle!(other.group1(), 1, 2, 0, _)).extend_to_4(other[e1] * self[e41]),
+            ]) + (self.group0().yy().extend_to_4(self[e1234], self[scalar]) * other.group1().truncate_to_3().extend_to_4(other[e4]))
+                + (other.group0().ww().extend_to_4(other[e431], other[e321]) * self.group2().xyx().extend_to_4(self[e1234]))
+                - (self.group2().zxy() * other.group1().yzx()).extend_to_4(other[e1] * self[e41]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -1622,24 +1615,23 @@ impl AntiSandwich<Line> for MultiVector {
                 (other[e41] * self[e3]) + (other[e42] * self[e321]) + (other[e12] * self[e423]),
                 (other[e42] * self[e1]) + (other[e43] * self[e321]) + (other[e23] * self[e431]),
                 0.0,
-            ]) - (Simd32x4::from([self[e4], self[e412], self[e423], self[e431]]) * crate::swizzle!(other.group1(), 0, 0, 1).extend_to_4(other[e42]))
-                - (Simd32x4::from([self[e431], self[e4], self[e4], self[e412]]) * crate::swizzle!(other.group1(), 2, 1, 2).extend_to_4(other[e43]))
-                - (crate::swizzle!(other.group0(), 1, 2, 0) * crate::swizzle!(self.group1(), 2, 0, 1, _)).extend_to_4(other[e41] * self[e423]),
+            ]) - (Simd32x4::from([self[e4], self[e412], self[e423], self[e431]]) * other.group1().xxy().extend_to_4(other[e42]))
+                - (Simd32x4::from([self[e431], self[e4], self[e4], self[e412]]) * other.group1().zyz().extend_to_4(other[e43]))
+                - (other.group0().yzx() * self.group1().zxy()).extend_to_4(other[e41] * self[e423]),
             // e41, e42, e43
-            (Simd32x3::from(self[e1234]) * other.group0()) + (crate::swizzle!(other.group0(), 2, 0, 1) * crate::swizzle!(self.group2(), 1, 2, 0))
-                - (crate::swizzle!(other.group0(), 1, 2, 0) * crate::swizzle!(self.group2(), 2, 0, 1)),
+            (Simd32x3::from(self[e1234]) * other.group0()) + (other.group0().zxy() * self.group2().yzx()) - (other.group0().yzx() * self.group2().zxy()),
             // e23, e31, e12
             (Simd32x3::from(self[scalar]) * other.group0())
                 + (Simd32x3::from(self[e1234]) * other.group1())
-                + (crate::swizzle!(other.group0(), 2, 0, 1) * crate::swizzle!(self.group3(), 1, 2, 0))
-                + (crate::swizzle!(other.group1(), 2, 0, 1) * crate::swizzle!(self.group2(), 1, 2, 0))
-                - (crate::swizzle!(other.group0(), 1, 2, 0) * crate::swizzle!(self.group3(), 2, 0, 1))
-                - (crate::swizzle!(other.group1(), 1, 2, 0) * crate::swizzle!(self.group2(), 2, 0, 1)),
+                + (other.group0().zxy() * self.group3().yzx())
+                + (other.group1().zxy() * self.group2().yzx())
+                - (other.group0().yzx() * self.group3().zxy())
+                - (other.group1().yzx() * self.group2().zxy()),
             // e423, e431, e412, e321
-            (Simd32x4::from([self[e4], self[e412], self[e423], self[e423]]) * crate::swizzle!(other.group0(), 0, 0, 1).extend_to_4(other[e23]))
-                + (Simd32x4::from([self[e431], self[e4], self[e4], self[e431]]) * crate::swizzle!(other.group0(), 2, 1, 2).extend_to_4(other[e31]))
+            (Simd32x4::from([self[e4], self[e412], self[e423], self[e423]]) * other.group0().xxy().extend_to_4(other[e23]))
+                + (Simd32x4::from([self[e431], self[e4], self[e4], self[e431]]) * other.group0().zyz().extend_to_4(other[e31]))
                 + Simd32x3::from(0.0).extend_to_4((other[e12] * self[e412]) - (other[e42] * self[e2]) - (other[e43] * self[e3]))
-                - (crate::swizzle!(other.group0(), 1, 2, 0) * crate::swizzle!(self.group4(), 2, 0, 1, _)).extend_to_4(other[e41] * self[e1]),
+                - (other.group0().yzx() * self.group4().zxy()).extend_to_4(other[e41] * self[e1]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -1670,30 +1662,28 @@ impl AntiSandwich<Motor> for MultiVector {
                 (other[e42] * self[e321]) + (other[e1234] * self[e2]) + (other[e12] * self[e423]) - (other[scalar] * self[e431]),
                 (other[e43] * self[e321]) + (other[e1234] * self[e3]) + (other[e23] * self[e431]) - (other[scalar] * self[e412]),
                 0.0,
-            ]) + (Simd32x4::from([self[e321], self[e3], self[e1], self[e4]]) * crate::swizzle!(other.group0(), 0, 0, 1, 3))
-                - (Simd32x4::from([self[e4], self[e412], self[e423], self[e431]]) * crate::swizzle!(other.group1(), 0, 0, 1, _).extend_to_4(other[e42]))
-                - (Simd32x4::from([self[e431], self[e4], self[e4], self[e412]]) * crate::swizzle!(other.group1(), 2, 1, 2, _).extend_to_4(other[e43]))
-                - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group1(), 2, 0, 1, _).extend_to_4(self[e423])),
+            ]) + (Simd32x4::from([self[e321], self[e3], self[e1], self[e4]]) * other.group0().xxyw())
+                - (Simd32x4::from([self[e4], self[e412], self[e423], self[e431]]) * other.group1().xxy().extend_to_4(other[e42]))
+                - (Simd32x4::from([self[e431], self[e4], self[e4], self[e412]]) * other.group1().zyz().extend_to_4(other[e43]))
+                - (other.group0().yzxx() * self.group1().zxy().extend_to_4(self[e423])),
             // e41, e42, e43
-            (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3())
-                + (crate::swizzle!(self.group2(), 0, 1, 0) * crate::swizzle!(other.group0(), 3, 3, 1, _))
-                + (crate::swizzle!(self.group2(), 1, 2, 2) * crate::swizzle!(other.group0(), 2, 0, 3, _))
-                - (crate::swizzle!(self.group2(), 2, 0, 1) * crate::swizzle!(other.group0(), 1, 2, 0, _)),
+            (Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()) + (self.group2().xyx() * other.group0().wwy()) + (self.group2().yzz() * other.group0().zxw())
+                - (self.group2().zxy() * other.group0().yzx()),
             // e23, e31, e12
             (Simd32x3::from(self[scalar]) * other.group0().truncate_to_3())
                 + (Simd32x3::from(self[e1234]) * other.group1().truncate_to_3())
-                + (crate::swizzle!(self.group2(), 0, 1, 0) * crate::swizzle!(other.group1(), 3, 3, 1, _))
-                + (crate::swizzle!(self.group2(), 1, 2, 2) * crate::swizzle!(other.group1(), 2, 0, 3, _))
-                + (crate::swizzle!(self.group3(), 0, 1, 0) * crate::swizzle!(other.group0(), 3, 3, 1, _))
-                + (crate::swizzle!(self.group3(), 1, 2, 2) * crate::swizzle!(other.group0(), 2, 0, 3, _))
-                - (crate::swizzle!(self.group2(), 2, 0, 1) * crate::swizzle!(other.group1(), 1, 2, 0, _))
-                - (crate::swizzle!(self.group3(), 2, 0, 1) * crate::swizzle!(other.group0(), 1, 2, 0, _)),
+                + (self.group2().xyx() * other.group1().wwy())
+                + (self.group2().yzz() * other.group1().zxw())
+                + (self.group3().xyx() * other.group0().wwy())
+                + (self.group3().yzz() * other.group0().zxw())
+                - (self.group2().zxy() * other.group1().yzx())
+                - (self.group3().zxy() * other.group0().yzx()),
             // e423, e431, e412, e321
-            (Simd32x4::from([self[e4], self[e412], self[e423], self[e321]]) * crate::swizzle!(other.group0(), 0, 0, 1, 3))
-                + (Simd32x4::from([self[e431], self[e4], self[e4], self[e423]]) * crate::swizzle!(other.group0(), 2, 1, 2, _).extend_to_4(other[e23]))
-                + (crate::swizzle!(self.group4(), 0, 1, 2, 1) * crate::swizzle!(other.group0(), 3, 3, 3, _).extend_to_4(other[e31]))
+            (Simd32x4::from([self[e4], self[e412], self[e423], self[e321]]) * other.group0().xxyw())
+                + (Simd32x4::from([self[e431], self[e4], self[e4], self[e423]]) * other.group0().zyz().extend_to_4(other[e23]))
+                + (self.group4().xyzy() * other.group0().www().extend_to_4(other[e31]))
                 + Simd32x3::from(0.0).extend_to_4((other[e12] * self[e412]) - (other[e42] * self[e2]) - (other[e43] * self[e3]) - (other[scalar] * self[e4]))
-                - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group4(), 2, 0, 1, _).extend_to_4(self[e1])),
+                - (other.group0().yzxx() * self.group4().zxy().extend_to_4(self[e1])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -1729,7 +1719,7 @@ impl AntiSandwich<MultiVector> for MultiVector {
                 - (Simd32x2::from(other[e41]) * Simd32x2::from([self[e23], self[e41]]))
                 - (Simd32x2::from(other[e42]) * Simd32x2::from([self[e31], self[e42]]))
                 - (Simd32x2::from(other[e43]) * Simd32x2::from([self[e12], self[e43]]))
-                - (Simd32x2::from([self[e423], self[e4]]) * crate::swizzle!(other.group1(), 0, 3, _, _)),
+                - (Simd32x2::from([self[e423], self[e4]]) * other.group1().xw()),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (other[e1] * self[e1234])
@@ -1758,46 +1748,46 @@ impl AntiSandwich<MultiVector> for MultiVector {
                     + (other[e321] * self[e43]),
                 0.0,
             ]) + (Simd32x4::from(other[e1234]) * self.group1())
-                + (crate::swizzle!(self.group0(), 0, 0).extend_to_4(self[scalar], self[e1234]) * other.group4().truncate_to_3().extend_to_4(other[e4]))
-                - (Simd32x4::from([self[e4], self[e412], self[e423], self[e412]]) * crate::swizzle!(other.group3(), 0, 0, 1).extend_to_4(other[e43]))
-                - (Simd32x4::from([self[e431], self[e4], self[e4], other[e423]]) * crate::swizzle!(other.group3(), 2, 1, 2).extend_to_4(self[e41]))
-                - (crate::swizzle!(other.group4(), 1, 2, 0, 2) * crate::swizzle!(self.group3(), 2, 0, 1).extend_to_4(self[e43]))
-                - (crate::swizzle!(self.group4(), 0, 1, 2, 0) * crate::swizzle!(other.group0(), 0, 0).extend_to_4(other[scalar], other[e41]))
-                - (crate::swizzle!(other.group2(), 1, 2, 0) * crate::swizzle!(self.group1(), 2, 0, 1, _)).extend_to_4(other[e42] * self[e431])
-                - (crate::swizzle!(self.group2(), 2, 0, 1) * crate::swizzle!(other.group1(), 1, 2, 0, _)).extend_to_4(other[e431] * self[e42]),
+                + (self.group0().xx().extend_to_4(self[scalar], self[e1234]) * other.group4().truncate_to_3().extend_to_4(other[e4]))
+                - (Simd32x4::from([self[e4], self[e412], self[e423], self[e412]]) * other.group3().xxy().extend_to_4(other[e43]))
+                - (Simd32x4::from([self[e431], self[e4], self[e4], other[e423]]) * other.group3().zyz().extend_to_4(self[e41]))
+                - (other.group4().yzxz() * self.group3().zxy().extend_to_4(self[e43]))
+                - (self.group4().xyzx() * other.group0().xx().extend_to_4(other[scalar], other[e41]))
+                - (other.group2().yzx() * self.group1().zxy()).extend_to_4(other[e42] * self[e431])
+                - (self.group2().zxy() * other.group1().yzx()).extend_to_4(other[e431] * self[e42]),
             // e41, e42, e43
             (Simd32x3::from(other[e1234]) * self.group2())
                 + (Simd32x3::from(self[e1234]) * other.group2())
-                + (crate::swizzle!(other.group2(), 2, 0, 1) * crate::swizzle!(self.group2(), 1, 2, 0))
-                + (crate::swizzle!(other.group4(), 1, 2, 0, _) * crate::swizzle!(self.group4(), 2, 0, 1, _))
+                + (other.group2().zxy() * self.group2().yzx())
+                + (other.group4().yzx() * self.group4().zxy())
                 - (Simd32x3::from(other[e4]) * self.group4().truncate_to_3())
-                - (Simd32x3::from([self[e4], self[e412], self[e423]]) * crate::swizzle!(other.group4(), 0, 0, 1, _))
-                - (Simd32x3::from([self[e431], self[e4], self[e4]]) * crate::swizzle!(other.group4(), 2, 1, 2, _))
-                - (crate::swizzle!(other.group2(), 1, 2, 0) * crate::swizzle!(self.group2(), 2, 0, 1)),
+                - (Simd32x3::from([self[e4], self[e412], self[e423]]) * other.group4().xxy())
+                - (Simd32x3::from([self[e431], self[e4], self[e4]]) * other.group4().zyz())
+                - (other.group2().yzx() * self.group2().zxy()),
             // e23, e31, e12
             (Simd32x3::from(other[scalar]) * self.group2())
                 + (Simd32x3::from(other[e1234]) * self.group3())
                 + (Simd32x3::from(other[e321]) * self.group4().truncate_to_3())
                 + (Simd32x3::from(self[scalar]) * other.group2())
                 + (Simd32x3::from(self[e1234]) * other.group3())
-                + (Simd32x3::from([self[e4], self[e412], self[e423]]) * crate::swizzle!(other.group1(), 0, 0, 1, _))
-                + (Simd32x3::from([self[e431], self[e4], self[e4]]) * crate::swizzle!(other.group1(), 2, 1, 2, _))
-                + (crate::swizzle!(other.group2(), 2, 0, 1) * crate::swizzle!(self.group3(), 1, 2, 0))
-                + (crate::swizzle!(other.group3(), 2, 0, 1) * crate::swizzle!(self.group2(), 1, 2, 0))
-                + (crate::swizzle!(other.group4(), 1, 2, 0, _) * crate::swizzle!(self.group1(), 2, 0, 1, _))
+                + (Simd32x3::from([self[e4], self[e412], self[e423]]) * other.group1().xxy())
+                + (Simd32x3::from([self[e431], self[e4], self[e4]]) * other.group1().zyz())
+                + (other.group2().zxy() * self.group3().yzx())
+                + (other.group3().zxy() * self.group2().yzx())
+                + (other.group4().yzx() * self.group1().zxy())
                 - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())
-                - (Simd32x3::from([self[e2], self[e321], self[e321]]) * crate::swizzle!(other.group4(), 2, 1, 2, _))
-                - (Simd32x3::from([self[e321], self[e3], self[e1]]) * crate::swizzle!(other.group4(), 0, 0, 1, _))
-                - (crate::swizzle!(other.group2(), 1, 2, 0) * crate::swizzle!(self.group3(), 2, 0, 1))
-                - (crate::swizzle!(other.group3(), 1, 2, 0) * crate::swizzle!(self.group2(), 2, 0, 1))
-                - (crate::swizzle!(other.group1(), 1, 2, 0, _) * crate::swizzle!(self.group4(), 2, 0, 1, _)),
+                - (Simd32x3::from([self[e2], self[e321], self[e321]]) * other.group4().zyz())
+                - (Simd32x3::from([self[e321], self[e3], self[e1]]) * other.group4().xxy())
+                - (other.group2().yzx() * self.group3().zxy())
+                - (other.group3().yzx() * self.group2().zxy())
+                - (other.group1().yzx() * self.group4().zxy()),
             // e423, e431, e412, e321
             (Simd32x4::from(other[e1234]) * self.group4())
-                + (Simd32x4::from([self[e4], self[e412], self[e423], other[e321]]) * crate::swizzle!(other.group2(), 0, 0, 1).extend_to_4(self[e1234]))
-                + (Simd32x4::from([self[e431], self[e4], self[e4], self[e423]]) * crate::swizzle!(other.group2(), 2, 1, 2).extend_to_4(other[e23]))
-                + (crate::swizzle!(self.group0(), 1, 1).extend_to_4(self[e1234], self[scalar]) * other.group4().truncate_to_3().extend_to_4(other[e4]))
-                + (crate::swizzle!(other.group1(), 3, 3, _, _).extend_to_4(other[e431], self[e431]) * crate::swizzle!(self.group2(), 0, 1, 0).extend_to_4(other[e31]))
-                + (crate::swizzle!(other.group4(), 2, 0, _, _).extend_to_4(other[e4], self[e412]) * crate::swizzle!(self.group2(), 1, 2, 2).extend_to_4(other[e12]))
+                + (Simd32x4::from([self[e4], self[e412], self[e423], other[e321]]) * other.group2().xxy().extend_to_4(self[e1234]))
+                + (Simd32x4::from([self[e431], self[e4], self[e4], self[e423]]) * other.group2().zyz().extend_to_4(other[e23]))
+                + (self.group0().yy().extend_to_4(self[e1234], self[scalar]) * other.group4().truncate_to_3().extend_to_4(other[e4]))
+                + (other.group1().ww().extend_to_4(other[e431], self[e431]) * self.group2().xyx().extend_to_4(other[e31]))
+                + (other.group4().zx().extend_to_4(other[e4], self[e412]) * self.group2().yzz().extend_to_4(other[e12]))
                 + Simd32x3::from(0.0).extend_to_4(
                     -(other[e1] * self[e41])
                         - (other[e2] * self[e42])
@@ -1808,8 +1798,8 @@ impl AntiSandwich<MultiVector> for MultiVector {
                         - (other[e431] * self[e31])
                         - (other[e412] * self[e12]),
                 )
-                - (crate::swizzle!(other.group2(), 1, 2, 0) * crate::swizzle!(self.group4(), 2, 0, 1, _)).extend_to_4(other[scalar] * self[e4])
-                - (crate::swizzle!(self.group2(), 2, 0, 1) * crate::swizzle!(other.group4(), 1, 2, 0, _)).extend_to_4(other[e41] * self[e1]),
+                - (other.group2().yzx() * self.group4().zxy()).extend_to_4(other[scalar] * self[e4])
+                - (self.group2().zxy() * other.group4().yzx()).extend_to_4(other[e41] * self[e1]),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -1867,15 +1857,13 @@ impl AntiSandwich<Plane> for MultiVector {
                 (self[scalar] * other[e431]) + (self[e42] * other[e321]) + (self[e12] * other[e423]),
                 (self[scalar] * other[e412]) + (self[e43] * other[e321]) + (self[e23] * other[e431]),
                 -(self[e42] * other[e431]) - (self[e43] * other[e412]),
-            ]) - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group3(), 2, 0, 1).extend_to_4(self[e41])),
+            ]) - (other.group0().yzxx() * self.group3().zxy().extend_to_4(self[e41])),
             // e41, e42, e43
-            (crate::swizzle!(self.group4(), 2, 0, 1, _) * crate::swizzle!(other.group0(), 1, 2, 0, _))
-                - (Simd32x3::from(self[e4]) * other.group0().truncate_to_3())
-                - (crate::swizzle!(self.group4(), 1, 2, 0, _) * crate::swizzle!(other.group0(), 2, 0, 1, _)),
+            (self.group4().zxy() * other.group0().yzx()) - (Simd32x3::from(self[e4]) * other.group0().truncate_to_3()) - (self.group4().yzx() * other.group0().zxy()),
             // e23, e31, e12
-            (Simd32x3::from(other[e321]) * self.group4().truncate_to_3()) + (crate::swizzle!(self.group1(), 2, 0, 1, _) * crate::swizzle!(other.group0(), 1, 2, 0, _))
+            (Simd32x3::from(other[e321]) * self.group4().truncate_to_3()) + (self.group1().zxy() * other.group0().yzx())
                 - (Simd32x3::from(self[e321]) * other.group0().truncate_to_3())
-                - (crate::swizzle!(self.group1(), 1, 2, 0, _) * crate::swizzle!(other.group0(), 2, 0, 1, _)),
+                - (self.group1().yzx() * other.group0().zxy()),
             // e423, e431, e412, e321
             Simd32x4::from([
                 self[e42] * other[e412],
@@ -1883,7 +1871,7 @@ impl AntiSandwich<Plane> for MultiVector {
                 self[e41] * other[e431],
                 -(self[e31] * other[e431]) - (self[e12] * other[e412]),
             ]) + (Simd32x4::from(self[e1234]) * other.group0())
-                - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group2(), 2, 0, 1).extend_to_4(self[e23])),
+                - (other.group0().yzxx() * self.group2().zxy().extend_to_4(self[e23])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -1908,17 +1896,15 @@ impl AntiSandwich<Point> for MultiVector {
                 self[e4] * other[e4],
             ]) * Simd32x2::from([1.0, -1.0]),
             // e1, e2, e3, e4
-            ((Simd32x3::from(self[e1234]) * other.group0().truncate_to_3())
-                + (Simd32x3::from(other[e4]) * self.group3())
-                + (crate::swizzle!(self.group2(), 1, 2, 0) * crate::swizzle!(other.group0(), 2, 0, 1, _))
-                - (crate::swizzle!(self.group2(), 2, 0, 1) * crate::swizzle!(other.group0(), 1, 2, 0, _)))
+            ((Simd32x3::from(self[e1234]) * other.group0().truncate_to_3()) + (Simd32x3::from(other[e4]) * self.group3()) + (self.group2().yzx() * other.group0().zxy())
+                - (self.group2().zxy() * other.group0().yzx()))
             .extend_to_4(self[e1234] * other[e4]),
             // e41, e42, e43
             Simd32x3::from(other[e4]) * self.group4().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (Simd32x3::from(self[e4]) * other.group0().truncate_to_3()) + (crate::swizzle!(self.group4(), 1, 2, 0, _) * crate::swizzle!(other.group0(), 2, 0, 1, _))
+            (Simd32x3::from(self[e4]) * other.group0().truncate_to_3()) + (self.group4().yzx() * other.group0().zxy())
                 - (Simd32x3::from(other[e4]) * self.group1().truncate_to_3())
-                - (crate::swizzle!(self.group4(), 2, 0, 1, _) * crate::swizzle!(other.group0(), 1, 2, 0, _)),
+                - (self.group4().zxy() * other.group0().yzx()),
             // e423, e431, e412, e321
             Simd32x4::from([other[e4], other[e4], other[e4], 1.0])
                 * self
@@ -2189,7 +2175,7 @@ impl AntiSandwich<DualNum> for Plane {
         use crate::elements::*;
         let geometric_anti_product = Flector::from_groups(
             // e1, e2, e3, e4
-            crate::swizzle!(other.group0(), 0, 0).extend_to_4(other[scalar], 0.0)
+            other.group0().xx().extend_to_4(other[scalar], 0.0)
                 * Simd32x3::from(1.0).extend_to_4(0.0)
                 * self.group0().truncate_to_3().extend_to_4(0.0)
                 * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
@@ -2217,15 +2203,15 @@ impl AntiSandwich<Flector> for Plane {
                 -(other[e4] * self[e431]) - (other[e423] * self[e412]),
                 -(other[e4] * self[e412]) - (other[e431] * self[e423]),
                 (other[e431] * self[e431]) + (other[e412] * self[e412]),
-            ]) + (crate::swizzle!(other.group1(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1, 0)),
+            ]) + (other.group1().yzxx() * self.group0().zxyx()),
             // e23, e31, e12, scalar
             Simd32x4::from([
                 (other[e3] * self[e431]) + (other[e321] * self[e423]),
                 (other[e1] * self[e412]) + (other[e321] * self[e431]),
                 (other[e2] * self[e423]) + (other[e321] * self[e412]),
                 -(other[e3] * self[e412]) - (other[e4] * self[e321]),
-            ]) - (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1, 0))
-                - (crate::swizzle!(self.group0(), 3, 3, 3, 1) * other.group1().truncate_to_3().extend_to_4(other[e2])),
+            ]) - (other.group0().yzxx() * self.group0().zxyx())
+                - (self.group0().wwwy() * other.group1().truncate_to_3().extend_to_4(other[e2])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -2269,14 +2255,14 @@ impl AntiSandwich<Line> for Plane {
                 (other[e42] * self[e321]) + (other[e12] * self[e423]),
                 (other[e43] * self[e321]) + (other[e23] * self[e431]),
                 -(other[e42] * self[e431]) - (other[e43] * self[e412]),
-            ]) - (crate::swizzle!(self.group0(), 1, 2, 0, 0) * crate::swizzle!(other.group1(), 2, 0, 1).extend_to_4(other[e41])),
+            ]) - (self.group0().yzxx() * other.group1().zxy().extend_to_4(other[e41])),
             // e423, e431, e412, e321
             Simd32x4::from([
                 other[e42] * self[e412] * -1.0,
                 other[e43] * self[e423] * -1.0,
                 other[e41] * self[e431] * -1.0,
                 (other[e31] * self[e431]) + (other[e12] * self[e412]),
-            ]) + (crate::swizzle!(self.group0(), 1, 2, 0, 0) * crate::swizzle!(other.group0(), 2, 0, 1).extend_to_4(other[e23])),
+            ]) + (self.group0().yzxx() * other.group0().zxy().extend_to_4(other[e23])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -2299,16 +2285,16 @@ impl AntiSandwich<Motor> for Plane {
                 (other[e42] * self[e321]) + (other[e12] * self[e423]),
                 (other[e43] * self[e321]) + (other[e23] * self[e431]),
                 other[e43] * self[e412] * -1.0,
-            ]) - (crate::swizzle!(self.group0(), 0, 1, 2, 1) * crate::swizzle!(other.group1(), 3, 3, 3, _).extend_to_4(other[e42]))
-                - (crate::swizzle!(self.group0(), 1, 2, 0, 0) * crate::swizzle!(other.group1(), 2, 0, 1, _).extend_to_4(other[e41])),
+            ]) - (self.group0().xyzy() * other.group1().www().extend_to_4(other[e42]))
+                - (self.group0().yzxx() * other.group1().zxy().extend_to_4(other[e41])),
             // e423, e431, e412, e321
             Simd32x4::from([
                 other[e42] * self[e412] * -1.0,
                 other[e43] * self[e423] * -1.0,
                 other[e41] * self[e431] * -1.0,
                 (other[e31] * self[e431]) + (other[e12] * self[e412]),
-            ]) + (crate::swizzle!(other.group0(), 2, 0, 1, 3) * crate::swizzle!(self.group0(), 1, 2, 0, 3))
-                + (crate::swizzle!(self.group0(), 0, 1, 2, 0) * crate::swizzle!(other.group0(), 3, 3, 3, _).extend_to_4(other[e23])),
+            ]) + (other.group0().zxyw() * self.group0().yzxw())
+                + (self.group0().xyzx() * other.group0().www().extend_to_4(other[e23])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -2338,16 +2324,14 @@ impl AntiSandwich<MultiVector> for Plane {
                 (other[e42] * self[e321]) + (other[e12] * self[e423]),
                 (other[e43] * self[e321]) + (other[e23] * self[e431]),
                 other[e43] * self[e412] * -1.0,
-            ]) - (crate::swizzle!(self.group0(), 0, 1, 2, 0) * crate::swizzle!(other.group0(), 0, 0).extend_to_4(other[scalar], other[e41]))
-                - (crate::swizzle!(self.group0(), 1, 2, 0, 1) * crate::swizzle!(other.group3(), 2, 0, 1).extend_to_4(other[e42])),
+            ]) - (self.group0().xyzx() * other.group0().xx().extend_to_4(other[scalar], other[e41]))
+                - (self.group0().yzxy() * other.group3().zxy().extend_to_4(other[e42])),
             // e41, e42, e43
-            (crate::swizzle!(other.group4(), 1, 2, 0, _) * crate::swizzle!(self.group0(), 2, 0, 1, _))
-                - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3())
-                - (crate::swizzle!(other.group4(), 2, 0, 1, _) * crate::swizzle!(self.group0(), 1, 2, 0, _)),
+            (other.group4().yzx() * self.group0().zxy()) - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3()) - (other.group4().zxy() * self.group0().yzx()),
             // e23, e31, e12
-            (Simd32x3::from(other[e321]) * self.group0().truncate_to_3()) + (crate::swizzle!(other.group1(), 2, 0, 1, _) * crate::swizzle!(self.group0(), 1, 2, 0, _))
+            (Simd32x3::from(other[e321]) * self.group0().truncate_to_3()) + (other.group1().zxy() * self.group0().yzx())
                 - (Simd32x3::from(self[e321]) * other.group4().truncate_to_3())
-                - (crate::swizzle!(other.group1(), 1, 2, 0, _) * crate::swizzle!(self.group0(), 2, 0, 1, _)),
+                - (other.group1().yzx() * self.group0().zxy()),
             // e423, e431, e412, e321
             Simd32x4::from([
                 other[e42] * self[e412] * -1.0,
@@ -2355,7 +2339,7 @@ impl AntiSandwich<MultiVector> for Plane {
                 other[e41] * self[e431] * -1.0,
                 (other[e31] * self[e431]) + (other[e12] * self[e412]),
             ]) + (Simd32x4::from(other[e1234]) * self.group0())
-                + (crate::swizzle!(self.group0(), 1, 2, 0, 0) * crate::swizzle!(other.group2(), 2, 0, 1).extend_to_4(other[e23])),
+                + (self.group0().yzxx() * other.group2().zxy().extend_to_4(other[e23])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -2399,7 +2383,7 @@ impl AntiSandwich<Plane> for Plane {
                 other[e423] * self[e412] * -1.0,
                 other[e431] * self[e423] * -1.0,
                 (other[e431] * self[e431]) + (other[e412] * self[e412]),
-            ]) + (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1, 0)),
+            ]) + (other.group0().yzxx() * self.group0().zxyx()),
             // e23, e31, e12, scalar
             ((Simd32x3::from(other[e321]) * self.group0().truncate_to_3()) - (Simd32x3::from(self[e321]) * other.group0().truncate_to_3())).extend_to_4(0.0),
         );
@@ -2419,17 +2403,14 @@ impl AntiSandwich<Point> for Plane {
         use crate::elements::*;
         let geometric_anti_product = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x3::from(1.0).extend_to_4(0.0)
-                * crate::swizzle!(other.group0(), 3, 3, 3, _).extend_to_4(0.0)
-                * self.group0().truncate_to_3().extend_to_4(0.0)
-                * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            Simd32x3::from(1.0).extend_to_4(0.0) * other.group0().www().extend_to_4(0.0) * self.group0().truncate_to_3().extend_to_4(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e23, e31, e12, scalar
             Simd32x4::from([
                 self[e431] * other[e3],
                 self[e412] * other[e1],
                 self[e423] * other[e2],
                 -(self[e431] * other[e2]) - (self[e412] * other[e3]) - (self[e321] * other[e4]),
-            ]) - (crate::swizzle!(self.group0(), 2, 0, 1, 0) * crate::swizzle!(other.group0(), 1, 2, 0, 0)),
+            ]) - (self.group0().zxyx() * other.group0().yzxx()),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -2515,8 +2496,8 @@ impl AntiSandwich<Flector> for Point {
                 -(other[e4] * self[e2]) - (other[e423] * self[e3]),
                 -(other[e4] * self[e3]) - (other[e431] * self[e1]),
                 (other[e412] * self[e3]) + (other[e321] * self[e4]),
-            ]) + (crate::swizzle!(other.group1(), 1, 2, 0, 1) * crate::swizzle!(self.group0(), 2, 0, 1, 1))
-                + (crate::swizzle!(self.group0(), 3, 3, 3, 0) * other.group0().truncate_to_3().extend_to_4(other[e423])),
+            ]) + (other.group1().yzxy() * self.group0().zxyy())
+                + (self.group0().wwwx() * other.group0().truncate_to_3().extend_to_4(other[e423])),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }
@@ -2550,9 +2531,9 @@ impl AntiSandwich<Line> for Point {
         use crate::elements::*;
         let geometric_anti_product = Flector::from_groups(
             // e1, e2, e3, e4
-            (crate::swizzle!(other.group0(), 2, 0, 1) * crate::swizzle!(self.group0(), 1, 2, 0, _)).extend_to_4(0.0)
+            (other.group0().zxy() * self.group0().yzx()).extend_to_4(0.0)
                 - (Simd32x3::from(self[e4]) * other.group1()).extend_to_4(0.0)
-                - (crate::swizzle!(other.group0(), 1, 2, 0) * crate::swizzle!(self.group0(), 2, 0, 1, _)).extend_to_4(0.0),
+                - (other.group0().yzx() * self.group0().zxy()).extend_to_4(0.0),
             // e423, e431, e412, e321
             Simd32x4::from([self[e4], self[e4], self[e4], 1.0]) * other.group0().extend_to_4(-(other[e41] * self[e1]) - (other[e42] * self[e2]) - (other[e43] * self[e3])),
         );
@@ -2573,9 +2554,9 @@ impl AntiSandwich<Motor> for Point {
         use crate::elements::*;
         let geometric_anti_product = Flector::from_groups(
             // e1, e2, e3, e4
-            ((Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()) + (crate::swizzle!(other.group0(), 2, 0, 1, _) * crate::swizzle!(self.group0(), 1, 2, 0, _))
+            ((Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()) + (other.group0().zxy() * self.group0().yzx())
                 - (Simd32x3::from(self[e4]) * other.group1().truncate_to_3())
-                - (crate::swizzle!(other.group0(), 1, 2, 0, _) * crate::swizzle!(self.group0(), 2, 0, 1, _)))
+                - (other.group0().yzx() * self.group0().zxy()))
             .extend_to_4(other[e1234] * self[e4]),
             // e423, e431, e412, e321
             Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
@@ -2607,16 +2588,16 @@ impl AntiSandwich<MultiVector> for Point {
                 other[e4] * self[e4],
             ]) * Simd32x2::from([1.0, -1.0]),
             // e1, e2, e3, e4
-            ((Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()) + (crate::swizzle!(other.group2(), 2, 0, 1) * crate::swizzle!(self.group0(), 1, 2, 0, _))
+            ((Simd32x3::from(other[e1234]) * self.group0().truncate_to_3()) + (other.group2().zxy() * self.group0().yzx())
                 - (Simd32x3::from(self[e4]) * other.group3())
-                - (crate::swizzle!(other.group2(), 1, 2, 0) * crate::swizzle!(self.group0(), 2, 0, 1, _)))
+                - (other.group2().yzx() * self.group0().zxy()))
             .extend_to_4(other[e1234] * self[e4]),
             // e41, e42, e43
             Simd32x3::from(self[e4]) * other.group4().truncate_to_3() * Simd32x3::from(-1.0),
             // e23, e31, e12
-            (Simd32x3::from(self[e4]) * other.group1().truncate_to_3()) + (crate::swizzle!(other.group4(), 1, 2, 0, _) * crate::swizzle!(self.group0(), 2, 0, 1, _))
+            (Simd32x3::from(self[e4]) * other.group1().truncate_to_3()) + (other.group4().yzx() * self.group0().zxy())
                 - (Simd32x3::from(other[e4]) * self.group0().truncate_to_3())
-                - (crate::swizzle!(other.group4(), 2, 0, 1, _) * crate::swizzle!(self.group0(), 1, 2, 0, _)),
+                - (other.group4().zxy() * self.group0().yzx()),
             // e423, e431, e412, e321
             Simd32x4::from([self[e4], self[e4], self[e4], 1.0])
                 * other
@@ -2661,17 +2642,14 @@ impl AntiSandwich<Plane> for Point {
         use crate::elements::*;
         let geometric_anti_product = Motor::from_groups(
             // e41, e42, e43, e1234
-            Simd32x3::from(1.0).extend_to_4(0.0)
-                * crate::swizzle!(self.group0(), 3, 3, 3, _).extend_to_4(0.0)
-                * other.group0().truncate_to_3().extend_to_4(0.0)
-                * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
+            Simd32x3::from(1.0).extend_to_4(0.0) * self.group0().www().extend_to_4(0.0) * other.group0().truncate_to_3().extend_to_4(0.0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]),
             // e23, e31, e12, scalar
             Simd32x4::from([
                 other[e412] * self[e2] * -1.0,
                 other[e423] * self[e3] * -1.0,
                 other[e431] * self[e1] * -1.0,
                 (other[e431] * self[e2]) + (other[e412] * self[e3]) + (other[e321] * self[e4]),
-            ]) + (crate::swizzle!(other.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group0(), 2, 0, 1, 0)),
+            ]) + (other.group0().yzxx() * self.group0().zxyx()),
         );
         return geometric_anti_product.geometric_anti_product(self.anti_reverse());
     }

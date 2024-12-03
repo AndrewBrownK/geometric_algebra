@@ -260,7 +260,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for VersorEvenAligningOrigin {
             // e235, e315, e125, e5
             self.group2(),
             // e1, e2, e3, e4
-            crate::swizzle!(other.group1(), 1, 2, 3, 0) + Simd32x3::from(0.0).extend_to_4(self[e4]),
+            other.group1().yzwx() + Simd32x3::from(0.0).extend_to_4(self[e4]),
         );
     }
 }
@@ -2418,7 +2418,7 @@ impl std::ops::Add<SphereOnOrigin> for VersorEvenAligningOrigin {
             // e235, e315, e125
             self.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
-            crate::swizzle!(other.group0(), 3, 0, 1, 2),
+            other.group0().wxyz(),
             // e3215
             0.0,
         );
@@ -2620,7 +2620,7 @@ impl std::ops::Add<VersorOddAtInfinity> for VersorEvenAligningOrigin {
             // e41, e42, e43, e45
             Simd32x3::from(0.0).extend_to_4(other[e45]),
             // e15, e25, e35
-            crate::swizzle!(other.group0(), 1, 2, 3, _),
+            other.group0().yzw(),
             // e23, e31, e12
             other.group1().truncate_to_3(),
             // e415, e425, e435, e321
@@ -5807,7 +5807,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for VersorEvenAligningOrigin {
             // e235, e315, e125, e5
             self.group2(),
             // e1, e2, e3, e4
-            crate::swizzle!(other.group1(), 1, 2, 3, _).extend_to_4(self[e4] - other[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().yzw().extend_to_4(self[e4] - other[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -5984,7 +5984,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for VersorEvenAligningOrigin {
             // e235, e315, e125, e5
             self.group2(),
             // e1, e2, e3, e4
-            crate::swizzle!(other.group0(), 1, 2, 3, _).extend_to_4(self[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().yzw().extend_to_4(self[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -7787,7 +7787,7 @@ impl std::ops::Sub<MysteryVersorEven> for VersorEvenAligningOrigin {
             // e235, e315, e125, e5
             self.group2(),
             // e1, e2, e3, e4
-            crate::swizzle!(other.group0(), 1, 2, 3, _).extend_to_4(self[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().yzw().extend_to_4(self[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -8301,7 +8301,7 @@ impl std::ops::Sub<SphereOnOrigin> for VersorEvenAligningOrigin {
             // e235, e315, e125
             self.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
-            crate::swizzle!(other.group0(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
+            other.group0().wxyz() * Simd32x4::from(-1.0),
             // e3215
             0.0,
         );
@@ -8380,7 +8380,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for VersorEvenAligningOrigin {
             // e235, e315, e125, e5
             self.group2() - other.group2(),
             // e1, e2, e3, e4
-            crate::swizzle!(other.group0(), 1, 2, 3, _).extend_to_4(self[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().yzw().extend_to_4(self[e4]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -8532,7 +8532,7 @@ impl std::ops::Sub<VersorOddAtInfinity> for VersorEvenAligningOrigin {
             // e41, e42, e43, e45
             Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
             // e15, e25, e35
-            crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0),
+            other.group0().yzw() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321

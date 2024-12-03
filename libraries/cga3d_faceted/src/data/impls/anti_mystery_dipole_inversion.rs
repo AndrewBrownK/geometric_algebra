@@ -257,7 +257,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for AntiMysteryDipoleInversion {
             // e235, e315, e125, e4
             Simd32x3::from(0.0).extend_to_4(other[e4]),
             // e1, e2, e3, e5
-            (self.group1() + crate::swizzle!(other.group1(), 1, 2, 3, _)).extend_to_4(0.0),
+            (self.group1() + other.group1().yzw()).extend_to_4(0.0),
         );
     }
 }
@@ -410,7 +410,7 @@ impl std::ops::Add<AntiFlectorOnOrigin> for AntiMysteryDipoleInversion {
             // e415, e425, e435, e321
             self.group0().truncate_to_3().extend_to_4(other[e321] + self[e321]),
             // e1, e2, e3
-            self.group1() + crate::swizzle!(other.group0(), 1, 2, 3, _),
+            self.group1() + other.group0().yzw(),
         );
     }
 }
@@ -421,7 +421,7 @@ impl std::ops::AddAssign<AntiFlectorOnOrigin> for AntiMysteryDipoleInversion {
             // e415, e425, e435, e321
             self.group0().truncate_to_3().extend_to_4(other[e321] + self[e321]),
             // e1, e2, e3
-            self.group1() + crate::swizzle!(other.group0(), 1, 2, 3, _),
+            self.group1() + other.group0().yzw(),
         );
     }
 }
@@ -2109,7 +2109,7 @@ impl std::ops::Add<SphereOnOrigin> for AntiMysteryDipoleInversion {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
-            crate::swizzle!(other.group0(), 3, 0, 1, 2),
+            other.group0().wxyz(),
             // e3215
             0.0,
         );
@@ -2273,7 +2273,7 @@ impl std::ops::Add<VersorOddAtInfinity> for AntiMysteryDipoleInversion {
             // e41, e42, e43, e45
             Simd32x3::from(0.0).extend_to_4(other[e45]),
             // e15, e25, e35
-            crate::swizzle!(other.group0(), 1, 2, 3, _),
+            other.group0().yzw(),
             // e23, e31, e12
             other.group1().truncate_to_3(),
             // e415, e425, e435, e321
@@ -5098,7 +5098,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for AntiMysteryDipoleInversion {
             // e235, e315, e125, e4
             Simd32x3::from(0.0).extend_to_4(other[e4] * -1.0),
             // e1, e2, e3, e5
-            (self.group1() - crate::swizzle!(other.group1(), 1, 2, 3, _)).extend_to_4(0.0),
+            (self.group1() - other.group1().yzw()).extend_to_4(0.0),
         );
     }
 }
@@ -5277,7 +5277,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for AntiMysteryDipoleInversion {
             // e415, e425, e435, e321
             self.group0() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e1, e2, e3
-            self.group1() - crate::swizzle!(other.group0(), 1, 2, 3, _),
+            self.group1() - other.group0().yzw(),
         );
     }
 }
@@ -5288,7 +5288,7 @@ impl std::ops::SubAssign<AntiFlectorOnOrigin> for AntiMysteryDipoleInversion {
             // e415, e425, e435, e321
             self.group0() + Simd32x3::from(0.0).extend_to_4(other[e321] * -1.0),
             // e1, e2, e3
-            self.group1() - crate::swizzle!(other.group0(), 1, 2, 3, _),
+            self.group1() - other.group0().yzw(),
         );
     }
 }
@@ -7311,7 +7311,7 @@ impl std::ops::Sub<SphereOnOrigin> for AntiMysteryDipoleInversion {
             // e235, e315, e125
             Simd32x3::from(0.0),
             // e1234, e4235, e4315, e4125
-            crate::swizzle!(other.group0(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
+            other.group0().wxyz() * Simd32x4::from(-1.0),
             // e3215
             0.0,
         );
@@ -7517,7 +7517,7 @@ impl std::ops::Sub<VersorOddAtInfinity> for AntiMysteryDipoleInversion {
             // e41, e42, e43, e45
             Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
             // e15, e25, e35
-            crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0),
+            other.group0().yzw() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321

@@ -73,7 +73,7 @@ impl std::ops::Add<AntiCircleRotorAligningOriginAtInfinity> for PlaneOnOrigin {
     fn add(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            crate::swizzle!(other.group1(), 3, 0, 1, 2),
+            other.group1().wxyz(),
             // e23, e31, e12, e45
             other.group0().extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
@@ -86,7 +86,7 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for PlaneOnOrigin {
     fn add(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            crate::swizzle!(other.group1(), 3, 0, 1, 2),
+            other.group1().wxyz(),
             // e23, e31, e12, e45
             other.group0(),
             // e4235, e4315, e4125, e3215
@@ -177,7 +177,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for PlaneOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(other.group1(), 1, 2, 3, 0),
+            other.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -3831,7 +3831,7 @@ impl std::ops::Sub<AntiCircleRotorAligningOriginAtInfinity> for PlaneOnOrigin {
     fn sub(self, other: AntiCircleRotorAligningOriginAtInfinity) -> Self::Output {
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            crate::swizzle!(other.group1(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
+            other.group1().wxyz() * Simd32x4::from(-1.0),
             // e23, e31, e12, e45
             (other.group0() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e4235, e4315, e4125, e3215
@@ -3848,7 +3848,7 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for PlaneOnOrigin {
     fn sub(self, other: AntiCircleRotorAtInfinity) -> Self::Output {
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            crate::swizzle!(other.group1(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
+            other.group1().wxyz() * Simd32x4::from(-1.0),
             // e23, e31, e12, e45
             other.group0() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
@@ -3970,7 +3970,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for PlaneOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(other.group1(), 1, 2, 3, 0) * Simd32x4::from(-1.0),
+            other.group1().yzwx() * Simd32x4::from(-1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -4207,7 +4207,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for PlaneOnOrigin {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5709,7 +5709,7 @@ impl std::ops::Sub<MysteryVersorEven> for PlaneOnOrigin {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -6163,7 +6163,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for PlaneOnOrigin {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45

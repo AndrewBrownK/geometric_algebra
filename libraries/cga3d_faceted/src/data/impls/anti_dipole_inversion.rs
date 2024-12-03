@@ -2665,7 +2665,7 @@ impl std::ops::Add<SphereOnOrigin> for AntiDipoleInversion {
             // e235, e315, e125
             self.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
-            crate::swizzle!(other.group0(), 3, 0, 1, 2),
+            other.group0().wxyz(),
             // e3215
             0.0,
         );
@@ -2877,7 +2877,7 @@ impl std::ops::Add<VersorOddAtInfinity> for AntiDipoleInversion {
             // e41, e42, e43, e45
             Simd32x3::from(0.0).extend_to_4(other[e45]),
             // e15, e25, e35
-            crate::swizzle!(other.group0(), 1, 2, 3, _),
+            other.group0().yzw(),
             // e23, e31, e12
             other.group1().truncate_to_3(),
             // e415, e425, e435, e321
@@ -9037,7 +9037,7 @@ impl std::ops::Sub<SphereOnOrigin> for AntiDipoleInversion {
             // e235, e315, e125
             self.group2().truncate_to_3(),
             // e1234, e4235, e4315, e4125
-            crate::swizzle!(other.group0(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
+            other.group0().wxyz() * Simd32x4::from(-1.0),
             // e3215
             0.0,
         );
@@ -9277,7 +9277,7 @@ impl std::ops::Sub<VersorOddAtInfinity> for AntiDipoleInversion {
             // e41, e42, e43, e45
             Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
             // e15, e25, e35
-            crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0),
+            other.group0().yzw() * Simd32x3::from(-1.0),
             // e23, e31, e12
             other.group1().truncate_to_3() * Simd32x3::from(-1.0),
             // e415, e425, e435, e321

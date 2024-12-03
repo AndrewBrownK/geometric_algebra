@@ -83,7 +83,7 @@ impl std::ops::Add<AntiCircleRotorAtInfinity> for Horizon {
         use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            crate::swizzle!(other.group1(), 3, 0, 1, 2),
+            other.group1().wxyz(),
             // e23, e31, e12, e45
             other.group0(),
             // e4235, e4315, e4125, e3215
@@ -173,7 +173,7 @@ impl std::ops::Add<AntiDipoleInversionOnOrigin> for Horizon {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(other.group1(), 1, 2, 3, 0),
+            other.group1().yzwx(),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -3572,7 +3572,7 @@ impl std::ops::Sub<AntiCircleRotorAtInfinity> for Horizon {
         use crate::elements::*;
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
-            crate::swizzle!(other.group1(), 3, 0, 1, 2) * Simd32x4::from(-1.0),
+            other.group1().wxyz() * Simd32x4::from(-1.0),
             // e23, e31, e12, e45
             other.group0() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
@@ -3690,7 +3690,7 @@ impl std::ops::Sub<AntiDipoleInversionOnOrigin> for Horizon {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            crate::swizzle!(other.group1(), 1, 2, 3, 0) * Simd32x4::from(-1.0),
+            other.group1().yzwx() * Simd32x4::from(-1.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -3925,7 +3925,7 @@ impl std::ops::Sub<AntiFlectorOnOrigin> for Horizon {
             // scalar, e12345
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
-            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -4819,7 +4819,7 @@ impl std::ops::Sub<DipoleInversionOnOrigin> for Horizon {
             // e15, e25, e35, e1234
             Simd32x3::from(0.0).extend_to_4(other[e1234] * -1.0),
             // e4235, e4315, e4125, e3215
-            crate::swizzle!(other.group1(), 1, 2, 3, _).extend_to_4(self[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group1().yzw().extend_to_4(self[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -5014,7 +5014,7 @@ impl std::ops::Sub<FlectorOnOrigin> for Horizon {
             // e15, e25, e35, e45
             Simd32x3::from(0.0).extend_to_4(other[e45] * -1.0),
             // e4235, e4315, e4125, e3215
-            crate::swizzle!(other.group0(), 1, 2, 3, _).extend_to_4(self[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().yzw().extend_to_4(self[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -5443,7 +5443,7 @@ impl std::ops::Sub<MysteryVersorEven> for Horizon {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -5479,7 +5479,7 @@ impl std::ops::Sub<MysteryVersorOdd> for Horizon {
             // e23, e31, e12, e45
             other.group1() * Simd32x4::from(-1.0),
             // e4235, e4315, e4125, e3215
-            crate::swizzle!(other.group0(), 1, 2, 3, _).extend_to_4(self[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            other.group0().yzw().extend_to_4(self[e3215]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
         );
     }
 }
@@ -5892,7 +5892,7 @@ impl std::ops::Sub<VersorEvenAtInfinity> for Horizon {
             // scalar, e12345
             Simd32x2::from([1.0, other[e12345]]) * Simd32x2::from([0.0, -1.0]),
             // e1, e2, e3, e4
-            (crate::swizzle!(other.group0(), 1, 2, 3, _) * Simd32x3::from(-1.0)).extend_to_4(0.0),
+            (other.group0().yzw() * Simd32x3::from(-1.0)).extend_to_4(0.0),
             // e5
             other[e5] * -1.0,
             // e41, e42, e43, e45

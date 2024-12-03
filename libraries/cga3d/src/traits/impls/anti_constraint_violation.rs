@@ -76,10 +76,10 @@ impl AntiConstraintViolation for AntiCircleRotor {
                 -(anti_reverse[e41] * self[e35]) - (anti_reverse[e35] * self[e41]),
                 -(anti_reverse[e42] * self[e15]) - (anti_reverse[e15] * self[e42]),
                 (anti_reverse[e31] * self[e42]) + (anti_reverse[e12] * self[e43]),
-            ]) + (crate::swizzle!(self.group1(), 3, 3, 3, 2) * anti_reverse.group1().truncate_to_3().extend_to_4(anti_reverse[e43]))
-                + (crate::swizzle!(anti_reverse.group0(), 1, 2, 0) * crate::swizzle!(self.group2(), 2, 0, 1, _)).extend_to_4(anti_reverse[e41] * self[e23])
-                + (crate::swizzle!(self.group0(), 1, 2, 0) * crate::swizzle!(anti_reverse.group2(), 2, 0, 1, _)).extend_to_4(anti_reverse[e42] * self[e31])
-                + (crate::swizzle!(anti_reverse.group1(), 3, 3, 3, _) * self.group1().truncate_to_3()).extend_to_4(anti_reverse[e23] * self[e41]),
+            ]) + (self.group1().wwwz() * anti_reverse.group1().truncate_to_3().extend_to_4(anti_reverse[e43]))
+                + (anti_reverse.group0().yzx() * self.group2().zxy()).extend_to_4(anti_reverse[e41] * self[e23])
+                + (self.group0().yzx() * anti_reverse.group2().zxy()).extend_to_4(anti_reverse[e42] * self[e31])
+                + (anti_reverse.group1().www() * self.group1().truncate_to_3()).extend_to_4(anti_reverse[e23] * self[e41]),
         );
         let anti_dot_product = AntiScalar::from_groups(
             // e12345
@@ -171,18 +171,16 @@ impl AntiConstraintViolation for AntiDipoleInversion {
                 (anti_reverse[e425] * self[e321]) + (anti_reverse[e321] * self[e425]) + (anti_reverse[e4] * self[e315]) + (anti_reverse[e1] * self[e435]),
                 (anti_reverse[e435] * self[e321]) + (anti_reverse[e321] * self[e435]) + (anti_reverse[e4] * self[e125]) + (anti_reverse[e2] * self[e415]),
                 -(anti_reverse[e435] * self[e412]) - (anti_reverse[e4] * self[e321]) - (anti_reverse[e2] * self[e431]) - (anti_reverse[e3] * self[e412]),
-            ]) + (Simd32x4::from([self[e321], self[e3], self[e1], self[e4]]) * crate::swizzle!(anti_reverse.group1(), 0, 0, 1, 3))
-                + (Simd32x4::from([self[e315], self[e5], self[e5], self[e2]]) * crate::swizzle!(anti_reverse.group0(), 2, 1, 2).extend_to_4(anti_reverse[e431]))
-                + (Simd32x4::from([self[e5], self[e125], self[e235], self[e1]]) * crate::swizzle!(anti_reverse.group0(), 0, 0, 1).extend_to_4(anti_reverse[e423]))
-                + (crate::swizzle!(self.group0(), 2, 0, 1) * crate::swizzle!(anti_reverse.group2(), 1, 2, 0, _)).extend_to_4(anti_reverse[e412] * self[e3])
-                - (crate::swizzle!(anti_reverse.group2(), 2, 0, _, _).extend_to_4(anti_reverse[e5], self[e435])
-                    * crate::swizzle!(self.group0(), 1, 2, 2).extend_to_4(anti_reverse[e412]))
-                - (crate::swizzle!(anti_reverse.group3(), 3, 3, _, _).extend_to_4(anti_reverse[e315], self[e425])
-                    * crate::swizzle!(self.group0(), 0, 1, 0).extend_to_4(anti_reverse[e431]))
-                - (crate::swizzle!(anti_reverse.group0(), 1, 2, 0) * crate::swizzle!(self.group2(), 2, 0, 1, _)).extend_to_4(anti_reverse[e423] * self[e415])
-                - (crate::swizzle!(anti_reverse.group1(), 1, 2, 0, _) * crate::swizzle!(self.group3(), 2, 0, 1, _)).extend_to_4(anti_reverse[e415] * self[e423])
-                - (crate::swizzle!(anti_reverse.group3(), 1, 2, 0, _) * crate::swizzle!(self.group1(), 2, 0, 1, _)).extend_to_4(anti_reverse[e425] * self[e431])
-                - (crate::swizzle!(self.group2(), 3, 3, 3, _) * anti_reverse.group2().truncate_to_3()).extend_to_4(anti_reverse[e1] * self[e423]),
+            ]) + (Simd32x4::from([self[e321], self[e3], self[e1], self[e4]]) * anti_reverse.group1().xxyw())
+                + (Simd32x4::from([self[e315], self[e5], self[e5], self[e2]]) * anti_reverse.group0().zyz().extend_to_4(anti_reverse[e431]))
+                + (Simd32x4::from([self[e5], self[e125], self[e235], self[e1]]) * anti_reverse.group0().xxy().extend_to_4(anti_reverse[e423]))
+                + (self.group0().zxy() * anti_reverse.group2().yzx()).extend_to_4(anti_reverse[e412] * self[e3])
+                - (anti_reverse.group2().zx().extend_to_4(anti_reverse[e5], self[e435]) * self.group0().yzz().extend_to_4(anti_reverse[e412]))
+                - (anti_reverse.group3().ww().extend_to_4(anti_reverse[e315], self[e425]) * self.group0().xyx().extend_to_4(anti_reverse[e431]))
+                - (anti_reverse.group0().yzx() * self.group2().zxy()).extend_to_4(anti_reverse[e423] * self[e415])
+                - (anti_reverse.group1().yzx() * self.group3().zxy()).extend_to_4(anti_reverse[e415] * self[e423])
+                - (anti_reverse.group3().yzx() * self.group1().zxy()).extend_to_4(anti_reverse[e425] * self[e431])
+                - (self.group2().www() * anti_reverse.group2().truncate_to_3()).extend_to_4(anti_reverse[e1] * self[e423]),
         );
         let anti_dot_product = AntiScalar::from_groups(
             // e12345
@@ -280,7 +278,7 @@ impl AntiConstraintViolation for AntiFlector {
             Simd32x2::from([
                 (anti_reverse[e2] * self[e315]) + (anti_reverse[e3] * self[e125]) + (anti_reverse[e5] * self[e321]) - (anti_reverse[e321] * self[e5]),
                 0.0,
-            ]) + (Simd32x2::from([anti_reverse[e1], anti_reverse[e321]]) * crate::swizzle!(self.group0(), 0, 3, _, _))
+            ]) + (Simd32x2::from([anti_reverse[e1], anti_reverse[e321]]) * self.group0().xw())
                 - (Simd32x2::from(self[e1]) * Simd32x2::from([anti_reverse[e235], anti_reverse[e1]]))
                 - (Simd32x2::from(self[e2]) * Simd32x2::from([anti_reverse[e315], anti_reverse[e2]]))
                 - (Simd32x2::from(self[e3]) * Simd32x2::from([anti_reverse[e125], anti_reverse[e3]])),
@@ -446,8 +444,8 @@ impl AntiConstraintViolation for Circle {
                 (anti_reverse[e423] * self[e125]) + (anti_reverse[e425] * self[e321]) + (anti_reverse[e321] * self[e425]) + (anti_reverse[e125] * self[e423]),
                 (anti_reverse[e431] * self[e235]) + (anti_reverse[e435] * self[e321]) + (anti_reverse[e321] * self[e435]) + (anti_reverse[e235] * self[e431]),
                 -(anti_reverse[e412] * self[e435]) - (anti_reverse[e415] * self[e423]) - (anti_reverse[e425] * self[e431]) - (anti_reverse[e435] * self[e412]),
-            ]) - (crate::swizzle!(anti_reverse.group0(), 1, 2, 0) * crate::swizzle!(self.group2(), 2, 0, 1)).extend_to_4(anti_reverse[e423] * self[e415])
-                - (crate::swizzle!(anti_reverse.group2(), 2, 0, 1) * crate::swizzle!(self.group0(), 1, 2, 0)).extend_to_4(anti_reverse[e431] * self[e425]),
+            ]) - (anti_reverse.group0().yzx() * self.group2().zxy()).extend_to_4(anti_reverse[e423] * self[e415])
+                - (anti_reverse.group2().zxy() * self.group0().yzx()).extend_to_4(anti_reverse[e431] * self[e425]),
         );
         let anti_dot_product = AntiScalar::from_groups(
             // e12345
@@ -528,8 +526,8 @@ impl AntiConstraintViolation for CircleRotor {
                 (anti_reverse[e423] * self[e125]) + (anti_reverse[e425] * self[e321]) + (anti_reverse[e321] * self[e425]) + (anti_reverse[e125] * self[e423]),
                 (anti_reverse[e431] * self[e235]) + (anti_reverse[e435] * self[e321]) + (anti_reverse[e321] * self[e435]) + (anti_reverse[e235] * self[e431]),
                 -(anti_reverse[e412] * self[e435]) - (anti_reverse[e415] * self[e423]) - (anti_reverse[e425] * self[e431]) - (anti_reverse[e435] * self[e412]),
-            ]) - (crate::swizzle!(anti_reverse.group0(), 1, 2, 0) * crate::swizzle!(self.group2(), 2, 0, 1, _)).extend_to_4(anti_reverse[e423] * self[e415])
-                - (crate::swizzle!(self.group0(), 1, 2, 0) * crate::swizzle!(anti_reverse.group2(), 2, 0, 1, _)).extend_to_4(anti_reverse[e431] * self[e425]),
+            ]) - (anti_reverse.group0().yzx() * self.group2().zxy()).extend_to_4(anti_reverse[e423] * self[e415])
+                - (self.group0().yzx() * anti_reverse.group2().zxy()).extend_to_4(anti_reverse[e431] * self[e425]),
         );
         let anti_dot_product = AntiScalar::from_groups(
             // e12345
@@ -610,10 +608,10 @@ impl AntiConstraintViolation for Dipole {
                 -(anti_reverse[e41] * self[e35]) - (anti_reverse[e35] * self[e41]),
                 -(anti_reverse[e42] * self[e15]) - (anti_reverse[e15] * self[e42]),
                 (anti_reverse[e31] * self[e42]) + (anti_reverse[e12] * self[e43]),
-            ]) + (crate::swizzle!(self.group1(), 3, 3, 3, 2) * anti_reverse.group1().truncate_to_3().extend_to_4(anti_reverse[e43]))
-                + (crate::swizzle!(anti_reverse.group0(), 1, 2, 0) * crate::swizzle!(self.group2(), 2, 0, 1)).extend_to_4(anti_reverse[e41] * self[e23])
-                + (crate::swizzle!(anti_reverse.group2(), 2, 0, 1) * crate::swizzle!(self.group0(), 1, 2, 0)).extend_to_4(anti_reverse[e42] * self[e31])
-                + (crate::swizzle!(anti_reverse.group1(), 3, 3, 3, _) * self.group1().truncate_to_3()).extend_to_4(anti_reverse[e23] * self[e41]),
+            ]) + (self.group1().wwwz() * anti_reverse.group1().truncate_to_3().extend_to_4(anti_reverse[e43]))
+                + (anti_reverse.group0().yzx() * self.group2().zxy()).extend_to_4(anti_reverse[e41] * self[e23])
+                + (anti_reverse.group2().zxy() * self.group0().yzx()).extend_to_4(anti_reverse[e42] * self[e31])
+                + (anti_reverse.group1().www() * self.group1().truncate_to_3()).extend_to_4(anti_reverse[e23] * self[e41]),
         );
         let anti_dot_product = AntiScalar::from_groups(
             // e12345
@@ -709,20 +707,18 @@ impl AntiConstraintViolation for DipoleInversion {
                 -(anti_reverse[e1234] * self[e25]) - (anti_reverse[e4125] * self[e23]),
                 -(anti_reverse[e1234] * self[e35]) - (anti_reverse[e4235] * self[e31]),
                 (anti_reverse[e12] * self[e43]) + (anti_reverse[e45] * self[e1234]),
-            ]) + (Simd32x4::from([self[e45], self[e4125], self[e4235], self[e4315]]) * crate::swizzle!(anti_reverse.group1(), 0, 0, 1, _).extend_to_4(anti_reverse[e42]))
-                + (Simd32x4::from([self[e4315], self[e45], self[e45], self[e12]]) * crate::swizzle!(anti_reverse.group1(), 2, 1, 2, _).extend_to_4(anti_reverse[e43]))
-                + (crate::swizzle!(anti_reverse.group2(), 2, 0, _, _).extend_to_4(anti_reverse[e3215], self[e31])
-                    * crate::swizzle!(self.group0(), 1, 2, 2).extend_to_4(anti_reverse[e42]))
-                + (crate::swizzle!(anti_reverse.group3(), 3, 3, _, _).extend_to_4(anti_reverse[e25], self[e4235])
-                    * crate::swizzle!(self.group0(), 0, 1, 0).extend_to_4(anti_reverse[e41]))
-                + (crate::swizzle!(anti_reverse.group0(), 1, 2, 0) * crate::swizzle!(self.group2(), 2, 0, 1, _)).extend_to_4(anti_reverse[e41] * self[e23])
-                + (crate::swizzle!(anti_reverse.group1(), 3, 3, 3, _) * self.group1().truncate_to_3()).extend_to_4(anti_reverse[e43] * self[e4125])
-                + (crate::swizzle!(anti_reverse.group3(), 2, 0, 1, _) * crate::swizzle!(self.group1(), 1, 2, 0, _)).extend_to_4(anti_reverse[e31] * self[e42])
-                + (crate::swizzle!(self.group2(), 3, 3, 3, _) * anti_reverse.group2().truncate_to_3()).extend_to_4(anti_reverse[e23] * self[e41])
-                - (Simd32x4::from([self[e25], self[e3215], self[e3215], anti_reverse[e4315]]) * crate::swizzle!(anti_reverse.group0(), 2, 1, 2).extend_to_4(self[e42]))
-                - (Simd32x4::from([self[e3215], self[e35], self[e15], anti_reverse[e4235]]) * crate::swizzle!(anti_reverse.group0(), 0, 0, 1).extend_to_4(self[e41]))
-                - (crate::swizzle!(self.group0(), 2, 0, 1) * crate::swizzle!(anti_reverse.group2(), 1, 2, 0, _)).extend_to_4(anti_reverse[e4125] * self[e43])
-                - (crate::swizzle!(anti_reverse.group1(), 1, 2, 0, _) * crate::swizzle!(self.group3(), 2, 0, 1, _)).extend_to_4(anti_reverse[e1234] * self[e45]),
+            ]) + (Simd32x4::from([self[e45], self[e4125], self[e4235], self[e4315]]) * anti_reverse.group1().xxy().extend_to_4(anti_reverse[e42]))
+                + (Simd32x4::from([self[e4315], self[e45], self[e45], self[e12]]) * anti_reverse.group1().zyz().extend_to_4(anti_reverse[e43]))
+                + (anti_reverse.group2().zx().extend_to_4(anti_reverse[e3215], self[e31]) * self.group0().yzz().extend_to_4(anti_reverse[e42]))
+                + (anti_reverse.group3().ww().extend_to_4(anti_reverse[e25], self[e4235]) * self.group0().xyx().extend_to_4(anti_reverse[e41]))
+                + (anti_reverse.group0().yzx() * self.group2().zxy()).extend_to_4(anti_reverse[e41] * self[e23])
+                + (anti_reverse.group1().www() * self.group1().truncate_to_3()).extend_to_4(anti_reverse[e43] * self[e4125])
+                + (anti_reverse.group3().zxy() * self.group1().yzx()).extend_to_4(anti_reverse[e31] * self[e42])
+                + (self.group2().www() * anti_reverse.group2().truncate_to_3()).extend_to_4(anti_reverse[e23] * self[e41])
+                - (Simd32x4::from([self[e25], self[e3215], self[e3215], anti_reverse[e4315]]) * anti_reverse.group0().zyz().extend_to_4(self[e42]))
+                - (Simd32x4::from([self[e3215], self[e35], self[e15], anti_reverse[e4235]]) * anti_reverse.group0().xxy().extend_to_4(self[e41]))
+                - (self.group0().zxy() * anti_reverse.group2().yzx()).extend_to_4(anti_reverse[e4125] * self[e43])
+                - (anti_reverse.group1().yzx() * self.group3().zxy()).extend_to_4(anti_reverse[e1234] * self[e45]),
         );
         let anti_dot_product = AntiScalar::from_groups(
             // e12345
@@ -826,7 +822,7 @@ impl AntiConstraintViolation for Flector {
             ]) + (Simd32x2::from(anti_reverse[e4235]) * Simd32x2::from([self[e15], self[e4235]]))
                 + (Simd32x2::from(anti_reverse[e4315]) * Simd32x2::from([self[e25], self[e4315]]))
                 + (Simd32x2::from(anti_reverse[e4125]) * Simd32x2::from([self[e35], self[e4125]]))
-                - (Simd32x2::from([self[e4235], self[e45]]) * crate::swizzle!(anti_reverse.group0(), 0, 3, _, _)),
+                - (Simd32x2::from([self[e4235], self[e45]]) * anti_reverse.group0().xw()),
         );
         let anti_dot_product = AntiScalar::from_groups(
             // e12345
@@ -995,11 +991,11 @@ impl AntiConstraintViolation for MultiVector {
                     - (anti_reverse[e3215] * self[e1234])
                     - (anti_reverse[e1234] * self[e3215]),
             ]) + (Simd32x2::from(self[e12345]) * anti_reverse.group0())
-                + (Simd32x2::from([anti_reverse[e2], anti_reverse[e4235]]) * crate::swizzle!(self.group9(), 1, 0, _, _))
-                + (Simd32x2::from([anti_reverse[e3], anti_reverse[e4315]]) * crate::swizzle!(self.group9(), 2, 1, _, _))
-                + (Simd32x2::from([anti_reverse[e4], anti_reverse[e4125]]) * crate::swizzle!(self.group9(), 3, 2, _, _))
-                + (Simd32x2::from([anti_reverse[e4235], anti_reverse[e5]]) * crate::swizzle!(self.group1(), 0, 3, _, _))
-                + (Simd32x2::from([self[e4235], self[e5]]) * crate::swizzle!(anti_reverse.group1(), 0, 3, _, _))
+                + (Simd32x2::from([anti_reverse[e2], anti_reverse[e4235]]) * self.group9().yx())
+                + (Simd32x2::from([anti_reverse[e3], anti_reverse[e4315]]) * self.group9().zy())
+                + (Simd32x2::from([anti_reverse[e4], anti_reverse[e4125]]) * self.group9().wz())
+                + (Simd32x2::from([anti_reverse[e4235], anti_reverse[e5]]) * self.group1().xw())
+                + (Simd32x2::from([self[e4235], self[e5]]) * anti_reverse.group1().xw())
                 - (Simd32x2::from(anti_reverse[e235]) * Simd32x2::from([self[e41], self[e423]]))
                 - (Simd32x2::from(anti_reverse[e315]) * Simd32x2::from([self[e42], self[e431]]))
                 - (Simd32x2::from(anti_reverse[e125]) * Simd32x2::from([self[e43], self[e412]]))
@@ -1009,45 +1005,41 @@ impl AntiConstraintViolation for MultiVector {
                 - (Simd32x2::from(self[e235]) * Simd32x2::from([anti_reverse[e41], anti_reverse[e423]]))
                 - (Simd32x2::from(self[e315]) * Simd32x2::from([anti_reverse[e42], anti_reverse[e431]]))
                 - (Simd32x2::from(self[e125]) * Simd32x2::from([anti_reverse[e43], anti_reverse[e412]]))
-                - (Simd32x2::from([anti_reverse[e423], anti_reverse[e45]]) * crate::swizzle!(self.group3(), 0, 3, _, _)),
+                - (Simd32x2::from([anti_reverse[e423], anti_reverse[e45]]) * self.group3().xw()),
             // e1, e2, e3, e4
             Simd32x4::from([
                 (anti_reverse[e15] * self[e1234]) + (anti_reverse[e415] * self[e321]) + (anti_reverse[e435] * self[e2]) + (anti_reverse[e321] * self[e415]),
                 (anti_reverse[e25] * self[e1234]) + (anti_reverse[e415] * self[e3]) + (anti_reverse[e425] * self[e321]) + (anti_reverse[e321] * self[e425]),
                 (anti_reverse[e35] * self[e1234]) + (anti_reverse[e425] * self[e1]) + (anti_reverse[e435] * self[e321]) + (anti_reverse[e321] * self[e435]),
                 -(anti_reverse[e3] * self[e412]) - (anti_reverse[e4] * self[e321]) - (anti_reverse[e435] * self[e412]) - (anti_reverse[e1234] * self[e45]),
-            ]) + (Simd32x4::from([self[e5], self[e125], self[e235], self[e4125]]) * crate::swizzle!(anti_reverse.group7(), 0, 0, 1).extend_to_4(anti_reverse[e43]))
-                + (Simd32x4::from([self[e45], self[e4125], self[e4235], self[e4315]]) * crate::swizzle!(anti_reverse.group5(), 0, 0, 1).extend_to_4(anti_reverse[e42]))
-                + (Simd32x4::from([self[e315], self[e5], self[e5], self[e41]]) * crate::swizzle!(anti_reverse.group7(), 2, 1, 2).extend_to_4(anti_reverse[e23]))
-                + (Simd32x4::from([self[e4315], self[e45], self[e45], self[e12]]) * crate::swizzle!(anti_reverse.group5(), 2, 1, 2).extend_to_4(anti_reverse[e43]))
-                + (crate::swizzle!(anti_reverse.group0(), 0, 0).extend_to_4(anti_reverse[scalar], anti_reverse[e12345]) * self.group9().truncate_to_3().extend_to_4(self[e4]))
-                + (crate::swizzle!(anti_reverse.group0(), 1, 1).extend_to_4(anti_reverse[e12345], self[e12345]) * self.group1().truncate_to_3().extend_to_4(anti_reverse[e4]))
-                + (crate::swizzle!(self.group0(), 0, 0).extend_to_4(self[scalar], anti_reverse[e41]) * anti_reverse.group9().truncate_to_3().extend_to_4(self[e23]))
-                + (crate::swizzle!(self.group0(), 1, 1).extend_to_4(self[e12345], anti_reverse[e41]) * anti_reverse.group1().truncate_to_3().extend_to_4(self[e4235]))
-                + (crate::swizzle!(anti_reverse.group3(), 2, 0, _, _).extend_to_4(anti_reverse[e3215], self[e1])
-                    * crate::swizzle!(self.group4(), 1, 2, 2).extend_to_4(anti_reverse[e423]))
-                + (crate::swizzle!(anti_reverse.group3(), 3, 3, _, _).extend_to_4(anti_reverse[e4315], self[e2])
-                    * crate::swizzle!(self.group5(), 0, 1, 0).extend_to_4(anti_reverse[e431]))
-                + (crate::swizzle!(anti_reverse.group9(), 2, 0, _, _).extend_to_4(anti_reverse[e45], self[e3])
-                    * crate::swizzle!(self.group5(), 1, 2, 2).extend_to_4(anti_reverse[e412]))
-                + (crate::swizzle!(anti_reverse.group9(), 3, 3, _, _).extend_to_4(anti_reverse[e25], self[e43])
-                    * crate::swizzle!(self.group4(), 0, 1, 0).extend_to_4(anti_reverse[e12]))
-                + (self.group8() * crate::swizzle!(anti_reverse.group1(), 3, 3, 3, _)).extend_to_4(anti_reverse[e45] * self[e1234])
-                + (crate::swizzle!(anti_reverse.group4(), 1, 2, 0) * crate::swizzle!(self.group3(), 2, 0, 1, _)).extend_to_4(anti_reverse[e42] * self[e31])
-                + (crate::swizzle!(anti_reverse.group8(), 1, 2, 0) * crate::swizzle!(self.group7(), 2, 0, 1)).extend_to_4(anti_reverse[e31] * self[e42])
-                + (crate::swizzle!(anti_reverse.group1(), 2, 0, 1, _) * crate::swizzle!(self.group6(), 1, 2, 0, _)).extend_to_4(anti_reverse[e321] * self[e4])
+            ]) + (Simd32x4::from([self[e5], self[e125], self[e235], self[e4125]]) * anti_reverse.group7().xxy().extend_to_4(anti_reverse[e43]))
+                + (Simd32x4::from([self[e45], self[e4125], self[e4235], self[e4315]]) * anti_reverse.group5().xxy().extend_to_4(anti_reverse[e42]))
+                + (Simd32x4::from([self[e315], self[e5], self[e5], self[e41]]) * anti_reverse.group7().zyz().extend_to_4(anti_reverse[e23]))
+                + (Simd32x4::from([self[e4315], self[e45], self[e45], self[e12]]) * anti_reverse.group5().zyz().extend_to_4(anti_reverse[e43]))
+                + (anti_reverse.group0().xx().extend_to_4(anti_reverse[scalar], anti_reverse[e12345]) * self.group9().truncate_to_3().extend_to_4(self[e4]))
+                + (anti_reverse.group0().yy().extend_to_4(anti_reverse[e12345], self[e12345]) * self.group1().truncate_to_3().extend_to_4(anti_reverse[e4]))
+                + (self.group0().xx().extend_to_4(self[scalar], anti_reverse[e41]) * anti_reverse.group9().truncate_to_3().extend_to_4(self[e23]))
+                + (self.group0().yy().extend_to_4(self[e12345], anti_reverse[e41]) * anti_reverse.group1().truncate_to_3().extend_to_4(self[e4235]))
+                + (anti_reverse.group3().zx().extend_to_4(anti_reverse[e3215], self[e1]) * self.group4().yzz().extend_to_4(anti_reverse[e423]))
+                + (anti_reverse.group3().ww().extend_to_4(anti_reverse[e4315], self[e2]) * self.group5().xyx().extend_to_4(anti_reverse[e431]))
+                + (anti_reverse.group9().zx().extend_to_4(anti_reverse[e45], self[e3]) * self.group5().yzz().extend_to_4(anti_reverse[e412]))
+                + (anti_reverse.group9().ww().extend_to_4(anti_reverse[e25], self[e43]) * self.group4().xyx().extend_to_4(anti_reverse[e12]))
+                + (self.group8() * anti_reverse.group1().www()).extend_to_4(anti_reverse[e45] * self[e1234])
+                + (anti_reverse.group4().yzx() * self.group3().zxy()).extend_to_4(anti_reverse[e42] * self[e31])
+                + (anti_reverse.group8().yzx() * self.group7().zxy()).extend_to_4(anti_reverse[e31] * self[e42])
+                + (anti_reverse.group1().zxy() * self.group6().yzx()).extend_to_4(anti_reverse[e321] * self[e4])
                 - (Simd32x4::from([anti_reverse[e5], anti_reverse[e5], anti_reverse[e5], anti_reverse[e1]]) * self.group7().extend_to_4(self[e423]))
                 - (Simd32x4::from([anti_reverse[e1234], anti_reverse[e1234], anti_reverse[e1234], anti_reverse[e425]]) * self.group3().truncate_to_3().extend_to_4(self[e431]))
-                - (Simd32x4::from([self[e4], self[e412], self[e423], self[e435]]) * crate::swizzle!(anti_reverse.group8(), 0, 0, 1).extend_to_4(anti_reverse[e412]))
-                - (Simd32x4::from([self[e25], self[e3215], self[e3215], anti_reverse[e1234]]) * crate::swizzle!(anti_reverse.group4(), 2, 1, 2).extend_to_4(self[scalar]))
-                - (Simd32x4::from([self[e431], self[e4], self[e4], anti_reverse[e4235]]) * crate::swizzle!(anti_reverse.group8(), 2, 1, 2).extend_to_4(self[e41]))
-                - (Simd32x4::from([self[e3215], self[e35], self[e15], self[e1234]]) * crate::swizzle!(anti_reverse.group4(), 0, 0, 1).extend_to_4(anti_reverse[scalar]))
-                - (crate::swizzle!(anti_reverse.group9(), 1, 2, 0, 2) * crate::swizzle!(self.group5(), 2, 0, 1).extend_to_4(self[e43]))
-                - (crate::swizzle!(anti_reverse.group5(), 1, 2, 0) * crate::swizzle!(self.group9(), 2, 0, 1, _)).extend_to_4(anti_reverse[e423] * self[e415])
-                - (crate::swizzle!(anti_reverse.group7(), 1, 2, 0) * crate::swizzle!(self.group8(), 2, 0, 1)).extend_to_4(anti_reverse[e431] * self[e425])
-                - (crate::swizzle!(self.group4(), 2, 0, 1) * crate::swizzle!(anti_reverse.group3(), 1, 2, 0, _)).extend_to_4(anti_reverse[e4315] * self[e42])
-                - (crate::swizzle!(anti_reverse.group1(), 1, 2, 0, _) * crate::swizzle!(self.group6(), 2, 0, 1, _)).extend_to_4(anti_reverse[e415] * self[e423])
-                - (crate::swizzle!(anti_reverse.group6(), 1, 2, 0, _) * crate::swizzle!(self.group1(), 2, 0, 1, _)).extend_to_4(anti_reverse[e2] * self[e431]),
+                - (Simd32x4::from([self[e4], self[e412], self[e423], self[e435]]) * anti_reverse.group8().xxy().extend_to_4(anti_reverse[e412]))
+                - (Simd32x4::from([self[e25], self[e3215], self[e3215], anti_reverse[e1234]]) * anti_reverse.group4().zyz().extend_to_4(self[scalar]))
+                - (Simd32x4::from([self[e431], self[e4], self[e4], anti_reverse[e4235]]) * anti_reverse.group8().zyz().extend_to_4(self[e41]))
+                - (Simd32x4::from([self[e3215], self[e35], self[e15], self[e1234]]) * anti_reverse.group4().xxy().extend_to_4(anti_reverse[scalar]))
+                - (anti_reverse.group9().yzxz() * self.group5().zxy().extend_to_4(self[e43]))
+                - (anti_reverse.group5().yzx() * self.group9().zxy()).extend_to_4(anti_reverse[e423] * self[e415])
+                - (anti_reverse.group7().yzx() * self.group8().zxy()).extend_to_4(anti_reverse[e431] * self[e425])
+                - (self.group4().zxy() * anti_reverse.group3().yzx()).extend_to_4(anti_reverse[e4315] * self[e42])
+                - (anti_reverse.group1().yzx() * self.group6().zxy()).extend_to_4(anti_reverse[e415] * self[e423])
+                - (anti_reverse.group6().yzx() * self.group1().zxy()).extend_to_4(anti_reverse[e2] * self[e431]),
             // e5
             (anti_reverse[e12345] * self[e5])
                 + (anti_reverse[e1] * self[e235])
@@ -1100,37 +1092,33 @@ impl AntiConstraintViolation for MultiVector {
                 (anti_reverse[e45] * self[e435]) + (anti_reverse[e425] * self[e4235]) + (anti_reverse[e435] * self[e45]) + (anti_reverse[e4315] * self[e415]),
                 -(anti_reverse[e5] * self[e45]) - (anti_reverse[e425] * self[e25]) - (anti_reverse[e435] * self[e35]) - (anti_reverse[e321] * self[e3215]),
             ]) + (Simd32x4::from([anti_reverse[e5], anti_reverse[e5], anti_reverse[e5], self[e15]]) * self.group4().extend_to_4(anti_reverse[e1]))
-                + (Simd32x4::from([self[e42], self[e1234], self[e1234], self[e4125]]) * crate::swizzle!(anti_reverse.group8(), 2, 1, 2).extend_to_4(anti_reverse[e125]))
-                + (Simd32x4::from([self[e1234], self[e43], self[e41], self[e4315]]) * crate::swizzle!(anti_reverse.group8(), 0, 0, 1).extend_to_4(anti_reverse[e315]))
-                + (crate::swizzle!(anti_reverse.group0(), 1, 1).extend_to_4(anti_reverse[e12345], anti_reverse[scalar]) * self.group9().truncate_to_3().extend_to_4(self[e5]))
-                + (crate::swizzle!(self.group0(), 1, 1).extend_to_4(self[e12345], anti_reverse[e12345]) * anti_reverse.group9().truncate_to_3().extend_to_4(self[e3215]))
-                + (crate::swizzle!(anti_reverse.group3(), 2, 0, _, _).extend_to_4(anti_reverse[e3215], self[e5])
-                    * crate::swizzle!(self.group7(), 1, 2, 2).extend_to_4(anti_reverse[e45]))
-                + (crate::swizzle!(anti_reverse.group9(), 3, 3, _, _).extend_to_4(anti_reverse[e25], self[e35])
-                    * crate::swizzle!(self.group7(), 0, 1, 0).extend_to_4(anti_reverse[e3]))
-                + (crate::swizzle!(anti_reverse.group4(), 1, 2, 0) * crate::swizzle!(self.group8(), 2, 0, 1)).extend_to_4(anti_reverse[e5] * self[scalar])
-                + (crate::swizzle!(anti_reverse.group5(), 1, 2, 0) * crate::swizzle!(self.group1(), 2, 0, 1, _)).extend_to_4(anti_reverse[e3215] * self[e12345])
-                + (crate::swizzle!(anti_reverse.group7(), 1, 2, 0) * crate::swizzle!(self.group3(), 2, 0, 1, _)).extend_to_4(anti_reverse[e235] * self[e4235])
-                + (crate::swizzle!(self.group5(), 2, 0, 1) * crate::swizzle!(anti_reverse.group1(), 1, 2, 0, _)).extend_to_4(anti_reverse[e2] * self[e25])
-                + (crate::swizzle!(self.group1(), 3, 3, 3, _) * anti_reverse.group3().truncate_to_3()).extend_to_4(anti_reverse[e3215] * self[e321])
+                + (Simd32x4::from([self[e42], self[e1234], self[e1234], self[e4125]]) * anti_reverse.group8().zyz().extend_to_4(anti_reverse[e125]))
+                + (Simd32x4::from([self[e1234], self[e43], self[e41], self[e4315]]) * anti_reverse.group8().xxy().extend_to_4(anti_reverse[e315]))
+                + (anti_reverse.group0().yy().extend_to_4(anti_reverse[e12345], anti_reverse[scalar]) * self.group9().truncate_to_3().extend_to_4(self[e5]))
+                + (self.group0().yy().extend_to_4(self[e12345], anti_reverse[e12345]) * anti_reverse.group9().truncate_to_3().extend_to_4(self[e3215]))
+                + (anti_reverse.group3().zx().extend_to_4(anti_reverse[e3215], self[e5]) * self.group7().yzz().extend_to_4(anti_reverse[e45]))
+                + (anti_reverse.group9().ww().extend_to_4(anti_reverse[e25], self[e35]) * self.group7().xyx().extend_to_4(anti_reverse[e3]))
+                + (anti_reverse.group4().yzx() * self.group8().zxy()).extend_to_4(anti_reverse[e5] * self[scalar])
+                + (anti_reverse.group5().yzx() * self.group1().zxy()).extend_to_4(anti_reverse[e3215] * self[e12345])
+                + (anti_reverse.group7().yzx() * self.group3().zxy()).extend_to_4(anti_reverse[e235] * self[e4235])
+                + (self.group5().zxy() * anti_reverse.group1().yzx()).extend_to_4(anti_reverse[e2] * self[e25])
+                + (self.group1().www() * anti_reverse.group3().truncate_to_3()).extend_to_4(anti_reverse[e3215] * self[e321])
                 - (Simd32x4::from([anti_reverse[e1234], anti_reverse[e1234], anti_reverse[e1234], self[e425]]) * self.group8().extend_to_4(anti_reverse[e25]))
-                - (Simd32x4::from([self[e2], self[e321], self[e321], self[e12]]) * crate::swizzle!(anti_reverse.group5(), 2, 1, 2).extend_to_4(anti_reverse[e125]))
-                - (Simd32x4::from([self[e5], self[e125], self[e235], self[e125]]) * crate::swizzle!(anti_reverse.group4(), 0, 0, 1).extend_to_4(anti_reverse[e12]))
-                - (Simd32x4::from([self[e25], self[e3215], self[e3215], anti_reverse[e4315]]) * crate::swizzle!(anti_reverse.group7(), 2, 1, 2).extend_to_4(self[e315]))
-                - (Simd32x4::from([self[e321], self[e3], self[e1], self[e31]]) * crate::swizzle!(anti_reverse.group5(), 0, 0, 1).extend_to_4(anti_reverse[e315]))
-                - (Simd32x4::from([self[e315], self[e5], self[e5], self[e23]]) * crate::swizzle!(anti_reverse.group4(), 2, 1, 2).extend_to_4(anti_reverse[e235]))
-                - (Simd32x4::from([self[e3215], self[e35], self[e15], anti_reverse[e4235]]) * crate::swizzle!(anti_reverse.group7(), 0, 0, 1).extend_to_4(self[e235]))
-                - (crate::swizzle!(anti_reverse.group0(), 0, 0).extend_to_4(anti_reverse[scalar], anti_reverse[e23]) * self.group1().truncate_to_3().extend_to_4(self[e235]))
-                - (crate::swizzle!(self.group0(), 0, 0).extend_to_4(self[scalar], anti_reverse[e31]) * anti_reverse.group1().truncate_to_3().extend_to_4(self[e315]))
-                - (crate::swizzle!(anti_reverse.group1(), 2, 0, _, _).extend_to_4(anti_reverse[e321], self[e415])
-                    * crate::swizzle!(self.group5(), 1, 2, 2).extend_to_4(anti_reverse[e15]))
-                - (crate::swizzle!(anti_reverse.group6(), 3, 3, _, _).extend_to_4(anti_reverse[e2], self[e1])
-                    * crate::swizzle!(self.group5(), 0, 1, 0).extend_to_4(anti_reverse[e15]))
-                - (crate::swizzle!(anti_reverse.group8(), 1, 2, 0) * crate::swizzle!(self.group4(), 2, 0, 1)).extend_to_4(anti_reverse[e4125] * self[e125])
-                - (crate::swizzle!(self.group7(), 2, 0, 1) * crate::swizzle!(anti_reverse.group3(), 1, 2, 0, _)).extend_to_4(anti_reverse[e25] * self[e2])
-                - (crate::swizzle!(anti_reverse.group1(), 3, 3, 3, _) * self.group3().truncate_to_3()).extend_to_4(anti_reverse[e35] * self[e3])
-                - (crate::swizzle!(anti_reverse.group6(), 1, 2, 0, _) * crate::swizzle!(self.group9(), 2, 0, 1, _)).extend_to_4(anti_reverse[e35] * self[e435])
-                - (crate::swizzle!(anti_reverse.group9(), 1, 2, 0, _) * crate::swizzle!(self.group6(), 2, 0, 1, _)).extend_to_4(anti_reverse[e415] * self[e15]),
+                - (Simd32x4::from([self[e2], self[e321], self[e321], self[e12]]) * anti_reverse.group5().zyz().extend_to_4(anti_reverse[e125]))
+                - (Simd32x4::from([self[e5], self[e125], self[e235], self[e125]]) * anti_reverse.group4().xxy().extend_to_4(anti_reverse[e12]))
+                - (Simd32x4::from([self[e25], self[e3215], self[e3215], anti_reverse[e4315]]) * anti_reverse.group7().zyz().extend_to_4(self[e315]))
+                - (Simd32x4::from([self[e321], self[e3], self[e1], self[e31]]) * anti_reverse.group5().xxy().extend_to_4(anti_reverse[e315]))
+                - (Simd32x4::from([self[e315], self[e5], self[e5], self[e23]]) * anti_reverse.group4().zyz().extend_to_4(anti_reverse[e235]))
+                - (Simd32x4::from([self[e3215], self[e35], self[e15], anti_reverse[e4235]]) * anti_reverse.group7().xxy().extend_to_4(self[e235]))
+                - (anti_reverse.group0().xx().extend_to_4(anti_reverse[scalar], anti_reverse[e23]) * self.group1().truncate_to_3().extend_to_4(self[e235]))
+                - (self.group0().xx().extend_to_4(self[scalar], anti_reverse[e31]) * anti_reverse.group1().truncate_to_3().extend_to_4(self[e315]))
+                - (anti_reverse.group1().zx().extend_to_4(anti_reverse[e321], self[e415]) * self.group5().yzz().extend_to_4(anti_reverse[e15]))
+                - (anti_reverse.group6().ww().extend_to_4(anti_reverse[e2], self[e1]) * self.group5().xyx().extend_to_4(anti_reverse[e15]))
+                - (anti_reverse.group8().yzx() * self.group4().zxy()).extend_to_4(anti_reverse[e4125] * self[e125])
+                - (self.group7().zxy() * anti_reverse.group3().yzx()).extend_to_4(anti_reverse[e25] * self[e2])
+                - (anti_reverse.group1().www() * self.group3().truncate_to_3()).extend_to_4(anti_reverse[e35] * self[e3])
+                - (anti_reverse.group6().yzx() * self.group9().zxy()).extend_to_4(anti_reverse[e35] * self[e435])
+                - (anti_reverse.group9().yzx() * self.group6().zxy()).extend_to_4(anti_reverse[e415] * self[e15]),
             // e1234
             (anti_reverse[scalar] * self[e4])
                 + (anti_reverse[e12345] * self[e1234])
@@ -1348,18 +1336,18 @@ impl AntiConstraintViolation for VersorEven {
                 (anti_reverse[e125] * self[e423]) + (anti_reverse[e1] * self[e435]) + (anti_reverse[e2] * self[e12345]) + (anti_reverse[e4] * self[e315]),
                 (anti_reverse[e235] * self[e431]) + (anti_reverse[e2] * self[e415]) + (anti_reverse[e3] * self[e12345]) + (anti_reverse[e4] * self[e125]),
                 -(anti_reverse[e1] * self[e423]) - (anti_reverse[e2] * self[e431]) - (anti_reverse[e3] * self[e412]) - (anti_reverse[e4] * self[e321]),
-            ]) + (Simd32x4::from([self[e321], self[e3], self[e1], self[e4]]) * crate::swizzle!(anti_reverse.group1(), 0, 0, 1, _).extend_to_4(anti_reverse[e12345]))
-                + (Simd32x4::from([self[e2], self[e321], self[e321], self[e4]]) * crate::swizzle!(anti_reverse.group1(), 2, 1, 2, 3))
-                + (crate::swizzle!(anti_reverse.group0(), 0, 0, 1, 0) * crate::swizzle!(self.group2(), 3, 2, 0, _).extend_to_4(self[e1]))
-                + (crate::swizzle!(anti_reverse.group0(), 2, 1, 2, 1) * crate::swizzle!(self.group2(), 1, 3, 3, _).extend_to_4(self[e2]))
-                + (crate::swizzle!(anti_reverse.group0(), 3, 3, 3, 2) * crate::swizzle!(self.group3(), 0, 1, 2, 2))
-                + (crate::swizzle!(anti_reverse.group1(), 3, 3, 3, _) * self.group1().truncate_to_3()).extend_to_4(anti_reverse[e4] * self[e12345])
-                - (Simd32x4::from([self[e431], self[e4], self[e4], self[e423]]) * crate::swizzle!(anti_reverse.group2(), 2, 1, 2, _).extend_to_4(anti_reverse[e415]))
-                - (Simd32x4::from([self[e4], self[e412], self[e423], self[e435]]) * crate::swizzle!(anti_reverse.group2(), 0, 0, 1, _).extend_to_4(anti_reverse[e412]))
-                - (crate::swizzle!(anti_reverse.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group2(), 2, 0, 1, _).extend_to_4(self[e415]))
-                - (crate::swizzle!(self.group0(), 0, 1, 2, 1) * crate::swizzle!(anti_reverse.group2(), 3, 3, 3, _).extend_to_4(anti_reverse[e425]))
-                - (crate::swizzle!(anti_reverse.group1(), 1, 2, 0, _) * crate::swizzle!(self.group3(), 2, 0, 1, _)).extend_to_4(anti_reverse[e431] * self[e425])
-                - (crate::swizzle!(anti_reverse.group3(), 1, 2, 0, _) * crate::swizzle!(self.group1(), 2, 0, 1, _)).extend_to_4(anti_reverse[e435] * self[e412]),
+            ]) + (Simd32x4::from([self[e321], self[e3], self[e1], self[e4]]) * anti_reverse.group1().xxy().extend_to_4(anti_reverse[e12345]))
+                + (Simd32x4::from([self[e2], self[e321], self[e321], self[e4]]) * anti_reverse.group1().zyzw())
+                + (anti_reverse.group0().xxyx() * self.group2().wzx().extend_to_4(self[e1]))
+                + (anti_reverse.group0().zyzy() * self.group2().yww().extend_to_4(self[e2]))
+                + (anti_reverse.group0().wwwz() * self.group3().xyzz())
+                + (anti_reverse.group1().www() * self.group1().truncate_to_3()).extend_to_4(anti_reverse[e4] * self[e12345])
+                - (Simd32x4::from([self[e431], self[e4], self[e4], self[e423]]) * anti_reverse.group2().zyz().extend_to_4(anti_reverse[e415]))
+                - (Simd32x4::from([self[e4], self[e412], self[e423], self[e435]]) * anti_reverse.group2().xxy().extend_to_4(anti_reverse[e412]))
+                - (anti_reverse.group0().yzxx() * self.group2().zxy().extend_to_4(self[e415]))
+                - (self.group0().xyzy() * anti_reverse.group2().www().extend_to_4(anti_reverse[e425]))
+                - (anti_reverse.group1().yzx() * self.group3().zxy()).extend_to_4(anti_reverse[e431] * self[e425])
+                - (anti_reverse.group3().yzx() * self.group1().zxy()).extend_to_4(anti_reverse[e435] * self[e412]),
         );
         let anti_dot_product = AntiScalar::from_groups(
             // e12345
@@ -1456,22 +1444,22 @@ impl AntiConstraintViolation for VersorOdd {
                     - (anti_reverse[e3215] * self[scalar]),
             ),
             // e1, e2, e3, e4
-            (Simd32x4::from([self[e42], self[e1234], self[e1234], self[e41]]) * crate::swizzle!(anti_reverse.group2(), 2, 1, 2, _).extend_to_4(anti_reverse[e23]))
-                + (Simd32x4::from([self[scalar], self[e12], self[e23], self[e42]]) * crate::swizzle!(anti_reverse.group3(), 0, 0, 1, _).extend_to_4(anti_reverse[e31]))
-                + (Simd32x4::from([self[e31], self[scalar], self[scalar], self[e43]]) * crate::swizzle!(anti_reverse.group3(), 2, 1, 2, _).extend_to_4(anti_reverse[e12]))
-                + (Simd32x4::from([self[e45], self[e4125], self[e4235], self[e31]]) * crate::swizzle!(anti_reverse.group1(), 0, 0, 1, _).extend_to_4(anti_reverse[e42]))
-                + (Simd32x4::from([self[e1234], self[e43], self[e41], self[e4125]]) * crate::swizzle!(anti_reverse.group2(), 0, 0, 1, _).extend_to_4(anti_reverse[e43]))
-                + (Simd32x4::from([self[e4315], self[e45], self[e45], self[e4315]]) * crate::swizzle!(anti_reverse.group1(), 2, 1, 2, _).extend_to_4(anti_reverse[e42]))
-                + (crate::swizzle!(anti_reverse.group0(), 1, 2, 0, 0) * crate::swizzle!(self.group2(), 2, 0, 1, _).extend_to_4(self[e23]))
-                + (crate::swizzle!(anti_reverse.group0(), 3, 3, 3, 0) * crate::swizzle!(self.group3(), 0, 1, 2, 0))
-                + (crate::swizzle!(self.group1(), 0, 1, 2, 2) * crate::swizzle!(anti_reverse.group1(), 3, 3, 3, _).extend_to_4(anti_reverse[e43]))
-                + (crate::swizzle!(anti_reverse.group3(), 3, 3, 3, _) * self.group0().truncate_to_3()).extend_to_4(anti_reverse[e45] * self[e1234])
-                - (Simd32x4::from([self[e25], self[e3215], self[e3215], self[scalar]]) * crate::swizzle!(anti_reverse.group0(), 2, 1, 2, _).extend_to_4(anti_reverse[e1234]))
-                - (Simd32x4::from([self[e3215], self[e35], self[e15], self[e1234]]) * crate::swizzle!(anti_reverse.group0(), 0, 0, 1, 3))
-                - (crate::swizzle!(anti_reverse.group3(), 1, 2, 0, 2) * crate::swizzle!(self.group1(), 2, 0, 1, _).extend_to_4(self[e43]))
-                - (crate::swizzle!(self.group0(), 2, 0, 1, 0) * crate::swizzle!(anti_reverse.group2(), 1, 2, 0, _).extend_to_4(anti_reverse[e4235]))
-                - (crate::swizzle!(anti_reverse.group1(), 1, 2, 0, _) * crate::swizzle!(self.group3(), 2, 0, 1, _)).extend_to_4(anti_reverse[e1234] * self[e45])
-                - (crate::swizzle!(anti_reverse.group2(), 3, 3, 3, _) * self.group2().truncate_to_3()).extend_to_4(anti_reverse[e4315] * self[e42]),
+            (Simd32x4::from([self[e42], self[e1234], self[e1234], self[e41]]) * anti_reverse.group2().zyz().extend_to_4(anti_reverse[e23]))
+                + (Simd32x4::from([self[scalar], self[e12], self[e23], self[e42]]) * anti_reverse.group3().xxy().extend_to_4(anti_reverse[e31]))
+                + (Simd32x4::from([self[e31], self[scalar], self[scalar], self[e43]]) * anti_reverse.group3().zyz().extend_to_4(anti_reverse[e12]))
+                + (Simd32x4::from([self[e45], self[e4125], self[e4235], self[e31]]) * anti_reverse.group1().xxy().extend_to_4(anti_reverse[e42]))
+                + (Simd32x4::from([self[e1234], self[e43], self[e41], self[e4125]]) * anti_reverse.group2().xxy().extend_to_4(anti_reverse[e43]))
+                + (Simd32x4::from([self[e4315], self[e45], self[e45], self[e4315]]) * anti_reverse.group1().zyz().extend_to_4(anti_reverse[e42]))
+                + (anti_reverse.group0().yzxx() * self.group2().zxy().extend_to_4(self[e23]))
+                + (anti_reverse.group0().wwwx() * self.group3().xyzx())
+                + (self.group1().xyzz() * anti_reverse.group1().www().extend_to_4(anti_reverse[e43]))
+                + (anti_reverse.group3().www() * self.group0().truncate_to_3()).extend_to_4(anti_reverse[e45] * self[e1234])
+                - (Simd32x4::from([self[e25], self[e3215], self[e3215], self[scalar]]) * anti_reverse.group0().zyz().extend_to_4(anti_reverse[e1234]))
+                - (Simd32x4::from([self[e3215], self[e35], self[e15], self[e1234]]) * anti_reverse.group0().xxyw())
+                - (anti_reverse.group3().yzxz() * self.group1().zxy().extend_to_4(self[e43]))
+                - (self.group0().zxyx() * anti_reverse.group2().yzx().extend_to_4(anti_reverse[e4235]))
+                - (anti_reverse.group1().yzx() * self.group3().zxy()).extend_to_4(anti_reverse[e1234] * self[e45])
+                - (anti_reverse.group2().www() * self.group2().truncate_to_3()).extend_to_4(anti_reverse[e4315] * self[e42]),
         );
         let anti_dot_product = AntiScalar::from_groups(
             // e12345

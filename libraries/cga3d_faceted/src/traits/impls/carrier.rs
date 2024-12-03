@@ -150,12 +150,7 @@ impl std::ops::Div<carrier> for AntiDipoleInversionOnOrigin {
 impl Carrier for AntiDipoleInversionOnOrigin {
     type Output = Flector;
     fn carrier(self) -> Self::Output {
-        return Flector::from_groups(
-            // e15, e25, e35, e45
-            crate::swizzle!(self.group1(), 1, 2, 3, 0),
-            // e4235, e4315, e4125, e3215
-            self.group0(),
-        );
+        return Flector::from_groups(/* e15, e25, e35, e45 */ self.group1().yzwx(), /* e4235, e4315, e4125, e3215 */ self.group0());
     }
 }
 impl std::ops::Div<carrier> for AntiDipoleInversionOrthogonalOrigin {
@@ -249,7 +244,7 @@ impl std::ops::Div<carrier> for AntiFlectorOnOrigin {
 impl Carrier for AntiFlectorOnOrigin {
     type Output = FlectorAtInfinity;
     fn carrier(self) -> Self::Output {
-        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ crate::swizzle!(self.group0(), 1, 2, 3, 0));
+        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ self.group0().yzwx());
     }
 }
 impl std::ops::Div<carrier> for AntiLine {
@@ -851,7 +846,7 @@ impl std::ops::Div<carrier> for NullVersorEvenAtOrigin {
 impl Carrier for NullVersorEvenAtOrigin {
     type Output = FlectorOnOrigin;
     fn carrier(self) -> Self::Output {
-        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ crate::swizzle!(self.group0(), 3, 0, 1, 2));
+        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ self.group0().wxyz());
     }
 }
 impl std::ops::Div<carrier> for Origin {
@@ -997,7 +992,7 @@ impl std::ops::Div<carrier> for VersorEvenAtOrigin {
 impl Carrier for VersorEvenAtOrigin {
     type Output = FlectorOnOrigin;
     fn carrier(self) -> Self::Output {
-        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ crate::swizzle!(self.group0(), 3, 0, 1, 2));
+        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ self.group0().wxyz());
     }
 }
 impl std::ops::Div<carrier> for VersorEvenOnOrigin {
