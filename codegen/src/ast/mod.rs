@@ -54,7 +54,7 @@ impl<ExprType> Ord for Variable<ExprType> where ExprType: Ord {
 
 
 #[derive(Clone, Debug)]
-pub(crate) struct RawVariableDeclaration {
+pub struct RawVariableDeclaration {
     pub(crate) comment: Option<Cow<'static, String>>,
     pub(crate) name: (String, usize),
     pub(crate) expr: Option<Arc<RwLock<AnyExpression>>>,
@@ -109,7 +109,7 @@ impl Ord for RawVariableDeclaration {
 
 
 #[derive(Clone, Debug)]
-pub(crate) struct RawVariableInvocation {
+pub struct RawVariableInvocation {
     pub(crate) decl: Arc<RawVariableDeclaration>,
 }
 impl PartialEq for RawVariableInvocation {

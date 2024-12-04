@@ -1,4 +1,3 @@
-use std::marker::PhantomData;
 use std::ops::MulAssign;
 use std::sync::Arc;
 
@@ -8,11 +7,11 @@ use crate::algebra::basis::arithmetic::Sum;
 use crate::algebra::basis::generators::GeneratorSquares;
 use crate::algebra::basis::substitutes::Substitutions;
 use crate::algebra::basis::{BasisElement, BasisElementNames};
-use crate::algebra::multivector::MultiVec;
 
 pub mod basis;
 pub mod multivector;
 
+#[allow(non_upper_case_globals)]
 pub struct GeometricAlgebra<const AntiScalar: BasisElement> {
     repo: Substitutions,
     named_bases: RwLock<BasisElementNames>,
@@ -49,6 +48,7 @@ macro_rules! ga {
     };
 }
 
+#[allow(non_upper_case_globals)]
 impl<const AntiScalar: BasisElement> GeometricAlgebra<AntiScalar> {
     pub fn from_squares(generator_squares: GeneratorSquares) -> Arc<Self> {
         Self::from_substitutions(Substitutions::new(generator_squares, vec![]))
@@ -77,7 +77,7 @@ impl<const AntiScalar: BasisElement> GeometricAlgebra<AntiScalar> {
     }
 
     pub(crate) fn fix_name_and_sign(&self, a: BasisElement) -> (f32, BasisElement) {
-        let mut nb = self.named_bases.read();
+        let nb = self.named_bases.read();
         let preferred_sign = nb.provide_name_and_sign(a).coefficient();
         let mut result = nb.provide_name(a);
         drop(nb);
@@ -186,12 +186,6 @@ impl<const AntiScalar: BasisElement> GeometricAlgebra<AntiScalar> {
 
     pub fn anti_reverse(&self, a: BasisElement) -> (f32, BasisElement) {
         self.fix_name_and_sign(self.name_in(a).anti_reverse(AntiScalar))
-    }
-
-    fn internalize_element_names(&self, mv: &MultiVec<AntiScalar>) {
-        for el in MultiVec::<AntiScalar>::elements(&mv).into_iter() {
-            self.name_in(el);
-        }
     }
 
     pub fn all_elements(&self) -> impl Iterator<Item = BasisElement> {

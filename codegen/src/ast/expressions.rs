@@ -5,7 +5,7 @@ use std::ops::{Add, AddAssign, Deref, DerefMut, Mul, MulAssign, Neg, Sub, SubAss
 use std::sync::Arc;
 use float_ord::FloatOrd;
 use crate::algebra::basis::BasisElement;
-use crate::algebra::multivector::{BasisElementGroup, DynamicMultiVector};
+use crate::algebra::multivector::{BasisElementGroup};
 use crate::ast::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
 use crate::ast::operations_tracker::{TrackOperations, TraitOperationsLookup, VectoredOperationsTracker};
 use crate::ast::traits::TraitKey;

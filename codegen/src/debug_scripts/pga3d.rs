@@ -1,4 +1,5 @@
 #![allow(non_upper_case_globals)]
+#![allow(unused)]
 
 use crate::algebra::basis::elements::e0123;
 use crate::algebra::multivector::DynamicMultiVector;

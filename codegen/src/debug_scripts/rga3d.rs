@@ -1,3 +1,6 @@
+#![allow(non_upper_case_globals)]
+#![allow(unused)]
+
 use crate::ast::datatype::ExpressionType;
 use crate::elements::e1234;
 

@@ -1,7 +1,7 @@
 use anyhow::{anyhow, bail, Context, Error};
 use indicatif::ProgressFinish;
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
-use std::io::{BufRead, BufReader, ErrorKind, Read, Write};
+use std::io::{BufRead, BufReader, ErrorKind, Write};
 use std::ops::Deref;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -96,6 +96,7 @@ impl Rust {
         self
     }
 
+    #[allow(non_upper_case_globals)]
     pub fn write_crate<P: AsRef<Path>, const AntiScalar: BasisElement>(
         self,
         crate_folder: P,
@@ -206,6 +207,7 @@ postgres-types = "0.2.7""#
         Ok(())
     }
 
+    #[allow(non_upper_case_globals)]
     async fn write_src<P: AsRef<Path>, const AntiScalar: BasisElement>(
         mut self,
         src_folder: P,
@@ -261,7 +263,7 @@ postgres-types = "0.2.7""#
 
         let file_path = src_folder.join(Path::new("generated-files.txt"));
         if let Ok(file) = fs::OpenOptions::new().read(true).open(&file_path) {
-            let mut reader = BufReader::new(file);
+            let reader = BufReader::new(file);
             for line in reader.lines() {
                 let line = line?;
                 let line = line.trim();
@@ -392,7 +394,7 @@ postgres-types = "0.2.7""#
             }
             .into_iter()
             .enumerate()
-            .find(|(i, it)| it.contains(gr))
+            .find(|(_, it)| it.contains(gr))
             .map(|(i, _)| i);
             if let Some(i) = k_reflection {
                 data_mods.entry(format!("reflection_{i}")).and_modify(|v| v.push(multi_vec)).or_insert(vec![multi_vec]);
@@ -471,7 +473,7 @@ postgres-types = "0.2.7""#
                     v.push(i2);
                 })
                 .or_insert_with(|| {
-                    let mut t_deps: BTreeSet<_> = i.definition.dependencies.lock().iter().cloned().collect();
+                    let t_deps: BTreeSet<_> = i.definition.dependencies.lock().iter().cloned().collect();
                     (vec![i], t_deps)
                 });
             impls_pb.inc(1);
@@ -826,7 +828,7 @@ postgres-types = "0.2.7""#
             let src_folder2 = src_folder.clone();
             let tx2 = started_file.clone();
             let tx3 = finished_file.clone();
-            let algebra_name = algebra_name.to_string();
+            // let algebra_name = algebra_name.to_string();
             join_set.spawn(async move {
                 let file_path = src_folder2.join(Path::new("integrations/sql.rs"));
                 tx2.send(file_path.clone())?;
@@ -855,11 +857,11 @@ postgres-types = "0.2.7""#
 
     fn write_type<W: Write>(&self, w: &mut W, data_type: ExpressionType) -> anyhow::Result<()> {
         match data_type {
-            ExpressionType::Int(i) => write!(w, "usize")?,
-            ExpressionType::Float(f) => write!(w, "f32")?,
-            ExpressionType::Vec2(v) => write!(w, "Simd32x2")?,
-            ExpressionType::Vec3(v) => write!(w, "Simd32x3")?,
-            ExpressionType::Vec4(v) => write!(w, "Simd32x4")?,
+            ExpressionType::Int(_) => write!(w, "usize")?,
+            ExpressionType::Float(_) => write!(w, "f32")?,
+            ExpressionType::Vec2(_) => write!(w, "Simd32x2")?,
+            ExpressionType::Vec3(_) => write!(w, "Simd32x3")?,
+            ExpressionType::Vec4(_) => write!(w, "Simd32x4")?,
             ExpressionType::Class(mv) => {
                 let n = mv.name();
                 write!(w, "{n}")?;
@@ -868,13 +870,13 @@ postgres-types = "0.2.7""#
         Ok(())
     }
 
-    fn write_expression<W: Write>(&self, w: &mut W, expr: &AnyExpression) -> anyhow::Result<()> {
+    fn write_expression<W: Write>(&self, w: &mut W, expr: &AnyExpression, grouping_provided: bool) -> anyhow::Result<()> {
         match expr {
             AnyExpression::Int(e) => self.write_int(w, e)?,
-            AnyExpression::Float(e) => self.write_float(w, e, false)?,
-            AnyExpression::Vec2(e) => self.write_vec2(w, e, false)?,
-            AnyExpression::Vec3(e) => self.write_vec3(w, e, false)?,
-            AnyExpression::Vec4(e) => self.write_vec4(w, e, false)?,
+            AnyExpression::Float(e) => self.write_float(w, e, grouping_provided)?,
+            AnyExpression::Vec2(e) => self.write_vec2(w, e, grouping_provided)?,
+            AnyExpression::Vec3(e) => self.write_vec3(w, e, grouping_provided)?,
+            AnyExpression::Vec4(e) => self.write_vec4(w, e, grouping_provided)?,
             AnyExpression::Class(e) => self.write_multi_vec(w, e)?,
         }
         Ok(())
@@ -1033,8 +1035,6 @@ postgres-types = "0.2.7""#
                                 write!(w, ", {e})")?;
                             }
                         }
-
-                        _ => unreachable!("This match is complete across conditions (unless NaN?)"),
                     }
                 }
                 match (*last_factor, len > 1) {
@@ -1044,7 +1044,6 @@ postgres-types = "0.2.7""#
                         write!(w, " * ")?;
                         self.write_f32(w, fl)?
                     }
-                    _ => {}
                 }
                 if len > 1 && !grouping_provided {
                     write!(w, ")")?;
@@ -1220,8 +1219,6 @@ postgres-types = "0.2.7""#
                                 write!(w, ", {e})")?;
                             }
                         }
-
-                        _ => unreachable!("This match is complete across conditions (unless NaN?)"),
                     }
                 }
                 if *last_factor != [1.0; 2] {
@@ -1322,12 +1319,12 @@ postgres-types = "0.2.7""#
                 write!(w, ".{x}{y}()")?;
             },
             Vec2Expr::Truncate3to2(box v3) => {
-                self.write_vec3(w, v3, true)?;
-                write!(w, ".truncate_to_2()")?;
+                self.write_vec3(w, v3, false)?;
+                write!(w, ".xy()")?;
             }
             Vec2Expr::Truncate4to2(box v4) => {
-                self.write_vec4(w, v4, true)?;
-                write!(w, ".truncate_to_2()")?;
+                self.write_vec4(w, v4, false)?;
+                write!(w, ".xy()")?;
             }
         }
         Ok(())
@@ -1361,7 +1358,7 @@ postgres-types = "0.2.7""#
             }
             Vec3Expr::Extend2to3(v2, f1) => {
                 self.write_vec2(w, v2, false)?;
-                write!(w, ".extend_to_3(")?;
+                write!(w, ".with_z(")?;
                 self.write_float(w, f1, true)?;
                 write!(w, ")")?;
             }
@@ -1427,8 +1424,6 @@ postgres-types = "0.2.7""#
                                 write!(w, ", {e})")?;
                             }
                         }
-
-                        _ => unreachable!("This match is complete across conditions (unless NaN?)"),
                     }
                 }
                 if *last_factor != [1.0; 3] {
@@ -1535,8 +1530,8 @@ postgres-types = "0.2.7""#
                 write!(w, ".{x}{y}{z}()")?;
             },
             Vec3Expr::Truncate4to3(box v4) => {
-                self.write_vec4(w, v4, true)?;
-                write!(w, ".truncate_to_3()")?;
+                self.write_vec4(w, v4, false)?;
+                write!(w, ".xyz()")?;
             }
         }
         Ok(())
@@ -1572,7 +1567,7 @@ postgres-types = "0.2.7""#
             }
             Vec4Expr::Extend2to4(v2, f1, f2) => {
                 self.write_vec2(w, v2, false)?;
-                write!(w, ".extend_to_4(")?;
+                write!(w, ".with_zw(")?;
                 self.write_float(w, f1, true)?;
                 write!(w, ", ")?;
                 self.write_float(w, f2, true)?;
@@ -1580,7 +1575,7 @@ postgres-types = "0.2.7""#
             }
             Vec4Expr::Extend3to4(v3, f1) => {
                 self.write_vec3(w, v3, false)?;
-                write!(w, ".extend_to_4(")?;
+                write!(w, ".with_w(")?;
                 self.write_float(w, f1, true)?;
                 write!(w, ")")?;
             }
@@ -1646,8 +1641,6 @@ postgres-types = "0.2.7""#
                                 write!(w, ", {e})")?;
                             }
                         }
-
-                        _ => unreachable!("This match is complete across conditions (unless NaN?)"),
                     }
                 }
                 if *last_factor != [1.0; 4] {
@@ -1925,7 +1918,7 @@ impl From<{other}> for {owner} {{
         });
         ret.substitute_variable(old_var, new_var);
         writeln!(w, "        return ")?;
-        self.write_expression(w, &ret)?;
+        self.write_expression(w, &ret, true)?;
         writeln!(w, "    }}\n}}")?;
         Ok(())
     }
@@ -1990,22 +1983,19 @@ impl TryFrom<{other}> for {owner} {{
         }}
         return Ok("#
         )?;
-        self.write_expression(w, &ret)?;
+        self.write_expression(w, &ret, true)?;
         writeln!(w, ")\n    }}\n}}")?;
         Ok(())
     }
 
-    fn file_extension() -> &'static str {
-        "rs"
-    }
-
+    #[allow(non_upper_case_globals)]
     fn declare_multi_vector<W: Write, const AntiScalar: BasisElement>(
         &self, w: &mut W, multi_vec: &'static MultiVec<AntiScalar>, docs: Option<String>
     ) -> anyhow::Result<()> {
         let name = TraitKey::new(multi_vec.name);
         let ucc = name.as_upper_camel();
-        let lcc = name.as_lower_camel();
-        let lsc = name.as_lower_snake();
+        // let lcc = name.as_lower_camel();
+        // let lsc = name.as_lower_snake();
         let ssc = name.as_screaming_snake();
         // TODO built in documentation, statistics, and traits that output this type
         let docs = docs.unwrap_or(ucc.clone());
@@ -2587,7 +2577,7 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
         writeln!(w, ";\n}}")?;
 
         let op = *def.op.lock();
-        if let Some(op) = op {
+        if let Some(_op) = op {
             // TODO
         }
 
@@ -2848,14 +2838,14 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
                         self.emit_comment(w, false, c.to_string())?;
                     }
                     let name = var_dec.name.0.to_string();
-                    let mut no = var_dec.name.1;
+                    let no = var_dec.name.1;
                     if no == 0 {
                         write!(w, "let {name} = ")?;
                     } else {
                         let no = no + 1;
                         write!(w, "let {name}_{no} = ")?;
                     }
-                    self.write_expression(w, expr.read().deref())?;
+                    self.write_expression(w, expr.read().deref(), true)?;
                     writeln!(w, ";")?;
                 }
             }
@@ -2864,7 +2854,7 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
             self.emit_comment(w, false, c.to_string())?;
         }
         write!(w, "        return ")?;
-        self.write_expression(w, &impls.return_expr)?;
+        self.write_expression(w, &impls.return_expr, true)?;
         writeln!(w, ";")?;
         writeln!(w, "    }}\n}}")?;
 
@@ -2908,14 +2898,14 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
                         self.emit_comment(w, false, c.to_string())?;
                     }
                     let name = var_dec.name.0.to_string();
-                    let mut no = var_dec.name.1;
+                    let no = var_dec.name.1;
                     if no == 0 {
                         write!(w, "let {name} = ")?;
                     } else {
                         let no = no + 1;
                         write!(w, "let {name}_{no} = ")?;
                     }
-                    self.write_expression(w, expr.read().deref())?;
+                    self.write_expression(w, expr.read().deref(), true)?;
                     writeln!(w, ";")?;
                 }
             }
@@ -2924,7 +2914,7 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
             self.emit_comment(w, false, c.to_string())?;
         }
         write!(w, "        *self = ")?;
-        self.write_expression(w, &impls.return_expr)?;
+        self.write_expression(w, &impls.return_expr, true)?;
         writeln!(w, ";")?;
         writeln!(w, "    }}\n}}")?;
 
@@ -2960,7 +2950,7 @@ impl<'de> serde::Deserialize<'de> for {ucc} {{
         let file_name = p.as_ref().to_string_lossy().to_string();
         cmd.arg(file_name.clone());
         match cmd.spawn() {
-            Ok(mut child) => {
+            Ok(child) => {
                 tokio::task::spawn_blocking::<_, anyhow::Result<()>>(move || {
                     match child.wait_with_output() {
                         Ok(o) if o.status.success() => {}

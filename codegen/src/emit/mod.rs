@@ -1,11 +1,9 @@
 use std::collections::HashSet;
-use std::io::Write;
 use std::sync::Arc;
 
 use anyhow::bail;
 
 use crate::ast::traits::{RawTraitImplementation, TraitKey};
-use crate::utility::CollectResults;
 
 pub mod rust;
 pub mod wgsl;

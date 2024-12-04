@@ -68,7 +68,7 @@ fn main() {
     }
     let traits = traits.finish();
 
-    let mut wgsl = codegen::Wgsl::new();
+    let wgsl = codegen::Wgsl::new();
     wgsl.write_shader_file(
         "libraries/rga3d/src/",
         "rga3d",

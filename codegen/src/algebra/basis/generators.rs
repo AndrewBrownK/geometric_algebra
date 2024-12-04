@@ -1,7 +1,7 @@
 #![allow(non_upper_case_globals)]
 
 use crate::algebra::basis::arithmetic::{GradedProduct, GradedSum, Product};
-use crate::algebra::basis::grades::{grade1, Grades};
+use crate::algebra::basis::grades::{grade1};
 use crate::algebra::basis::substitutes::Substitutions;
 use crate::algebra::basis::{BasisElement, BasisSignature};
 use crate::utility::ConstOption;
@@ -454,17 +454,17 @@ impl GeneratorElement {
         }
     }
 
-    const fn const_cmp(&self, other: &GeneratorElement) -> Ordering {
-        let a = *self as u8;
-        let b = *other as u8;
-        if a < b {
-            return Ordering::Less;
-        }
-        if a > b {
-            return Ordering::Greater;
-        }
-        Ordering::Equal
-    }
+    // const fn const_cmp(&self, other: &GeneratorElement) -> Ordering {
+    //     let a = *self as u8;
+    //     let b = *other as u8;
+    //     if a < b {
+    //         return Ordering::Less;
+    //     }
+    //     if a > b {
+    //         return Ordering::Greater;
+    //     }
+    //     Ordering::Equal
+    // }
 }
 
 impl Mul<f32> for GeneratorElement {

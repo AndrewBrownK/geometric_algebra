@@ -104,7 +104,9 @@ impl AnyExpression {
 }
 
 impl IntExpr {
-    fn simplify(&mut self) {}
+    #[allow(unused)]
+    pub(crate) fn simplify(&mut self) {}
+    #[allow(unused)]
     fn simplify_nuanced(&mut self, insides_already_done: bool, transpose_simd: bool) {}
 }
 impl FloatExpr {
@@ -396,12 +398,12 @@ impl FloatExpr {
                     let mut result_sum = first_sum.take_as_owned();
                     let mut idx = 1;
                     while idx < sums_to_distribute.len() {
-                        let mut next_sum = &mut sums_to_distribute[idx];
+                        let next_sum = &mut sums_to_distribute[idx];
                         idx += 1;
 
                         let mut result_replacer = vec![];
                         next_sum.0.push((FloatExpr::Literal(next_sum.1), 1.0));
-                        let mut next_sum = &mut next_sum.0;
+                        let next_sum = &mut next_sum.0;
                         for result_addend in result_sum.iter_mut() {
                             for next_addend in next_sum.iter_mut() {
                                 result_replacer.push((result_addend.0.take_as_owned() * next_addend.0.take_as_owned(), result_addend.1 * next_addend.1));
@@ -648,7 +650,7 @@ impl Vec2Expr {
                             // indexes are too far apart
                             return
                         }
-                        let no_swizzle = (*x_idx + 1 == *y_idx);
+                        let no_swizzle = *x_idx + 1 == *y_idx;
                         let mut group_idx = 0;
                         let mut flat_idx = 0;
                         for group in x_mve.mv_class.groups().into_iter() {
@@ -2382,9 +2384,6 @@ impl Vec4Expr {
     }
 }
 impl MultiVectorGroupExpr {
-    pub(crate) fn simplify(&mut self) {
-        self.simplify_nuanced(false, false, false);
-    }
     fn simplify_nuanced(&mut self, insides_already_done: bool, transpose_simd: bool, prefer_flat_access: bool) {
         match self {
             MultiVectorGroupExpr::JustFloat(f) => {

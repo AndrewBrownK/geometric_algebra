@@ -1,4 +1,5 @@
 #![allow(non_camel_case_types)]
+#![allow(non_upper_case_globals)]
 
 use std::future::Future;
 use std::marker::PhantomData;
@@ -748,12 +749,12 @@ impl<Impl: TraitDef_1_Type_0_Args> TraitImpl_10 for OvertDelegate<Impl> {
 }
 #[async_trait]
 impl<Impl: TraitDef_1_Type_0_Args> TraitDef_1_Type_0_Args for OvertDelegate<Impl> {
-    type Owner = AnyClasses;
+    type Owner = Impl::Owner;
     fn general_documentation(&self) -> String {
         String::new()
     }
     fn domain(&self) -> Self::Owner {
-        self.domain()
+        self.the_impl.domain()
     }
 }
 #[async_trait]
@@ -775,7 +776,7 @@ impl<Impl: TraitDef_1_Type_1_Arg> TraitDef_1_Type_1_Arg for OvertDelegate<Impl> 
         String::new()
     }
     fn domain(&self) -> Self::Owner {
-        self.domain()
+        self.the_impl.domain()
     }
 }
 #[async_trait]
@@ -799,7 +800,7 @@ impl<Impl: TraitDef_2_Types_1_Arg> TraitDef_2_Types_1_Arg for OvertDelegate<Impl
         String::new()
     }
     fn domain(&self) -> (Self::Owner, Self::Other) {
-        self.domain()
+        self.the_impl.domain()
     }
 }
 #[async_trait]
@@ -823,7 +824,7 @@ impl<Impl: TraitDef_2_Types_2_Args> TraitDef_2_Types_2_Args for OvertDelegate<Im
         String::new()
     }
     fn domain(&self) -> (Self::Owner, Self::Other) {
-        self.domain()
+        self.the_impl.domain()
     }
 }
 

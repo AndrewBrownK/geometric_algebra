@@ -4,6 +4,8 @@ use naga::ShaderStage;
 use std::io::Read;
 use std::path::PathBuf;
 
+// TODO put back to use, or clean up
+#[allow(unused)]
 pub fn validate_glsl(algebra_name: &str, file_path: PathBuf) {
     // Prepare some of naga's clutter
     let mut glsl_frontend = naga::front::glsl::Frontend::default();
@@ -43,6 +45,8 @@ pub fn validate_glsl(algebra_name: &str, file_path: PathBuf) {
     // glsl success, woo hoo!
 }
 
+// TODO put back to use, or clean up
+#[allow(unused)]
 pub fn validate_wgsl(algebra_name: &str, file_path: PathBuf) {
     // Prepare some of naga's clutter
     let mut wgsl_frontend = naga::front::wgsl::Frontend::new();

@@ -218,6 +218,7 @@ impl MultiVector {
     }
 }
 
+#[allow(non_upper_case_globals)]
 impl<const AntiScalar: BasisElement> From<&'static MultiVec<AntiScalar>> for MultiVector {
     fn from(value: &'static MultiVec<AntiScalar>) -> Self {
         // SAFETY:
@@ -235,6 +236,8 @@ impl<const AntiScalar: BasisElement> From<&'static MultiVec<AntiScalar>> for Mul
         }
     }
 }
+
+#[allow(non_upper_case_globals)]
 impl<const AntiScalar: BasisElement> From<MultiVector> for Option<&'static MultiVec<AntiScalar>> {
     fn from(value: MultiVector) -> Self {
         if value.anti_scalar != AntiScalar {

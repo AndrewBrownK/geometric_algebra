@@ -1,12 +1,8 @@
 #![allow(non_upper_case_globals)]
+#![allow(unused)]
 
-use std::collections::BTreeSet;
-
-use crate::algebra::basis::filter::{allow_all_signatures, signatures_containing};
 use crate::algebra::multivector::DeclareMultiVecs;
-use crate::ast::datatype::ExpressionType;
-use crate::elements::{e12345, e4, e5};
-use crate::Rust;
+use crate::elements::{e12345};
 
 crate::multi_vecs! { e12345;
 
@@ -44,7 +40,12 @@ crate::multi_vecs! { e12345;
 }
 
 #[test]
-fn test_stuff() {
+fn debug_stuff() {
+    use crate::emit::rust::Rust;
+    use crate::ast::datatype::ExpressionType;
+    use std::collections::BTreeSet;;
+
+
     let cga3d = crate::ga! { e12345;
         1 => e1, e2, e3, eP;
         -1 => eM;
@@ -52,7 +53,7 @@ fn test_stuff() {
         e4 => 0.5 * (eM - eP);
         e5 => eP + eM;
     };
-    let mut decls = register_multi_vecs(cga3d);
+    let decls = register_multi_vecs(cga3d);
     let repo = generate_variants(decls).finished();
     let traits = crate::register_all! { repo;
         Wedge

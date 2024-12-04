@@ -1,8 +1,7 @@
-use std::cell::{Cell, RefCell};
 use crate::ast::datatype::MultiVector;
 use crate::ast::traits::{RawTraitImplementation, TraitKey};
 use std::collections::{BTreeSet, HashMap};
-use std::ops::{Add, AddAssign, Deref, Mul, MulAssign};
+use std::ops::{Add, AddAssign, Mul, MulAssign};
 use std::sync::Arc;
 
 #[derive(Clone, Copy)]

@@ -11,7 +11,7 @@ impl AnyExpression {
         }
     }
 
-    pub fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+    pub(crate) fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
         match self {
             AnyExpression::Int(i) => i.substitute_variable(old.clone(), new.clone()),
             AnyExpression::Float(f) => f.substitute_variable(old.clone(), new.clone()),
@@ -200,6 +200,7 @@ impl IntExpr {
         result
     }
 
+    #[allow(unused)]
     fn take_as_owned(&mut self) -> Self {
         let mut x = IntExpr::Literal(0);
         mem::swap(&mut x, self);

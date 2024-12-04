@@ -124,7 +124,9 @@ impl Ord for FloatExpr {
             (_, Product(_, _)) => Ordering::Greater,
             (Sum(_, _), _) => Ordering::Less,
             (_, Sum(_, _)) => Ordering::Greater,
+            #[allow(unreachable_patterns)]
             (Exp(_, _, _), _) => Ordering::Less,
+            #[allow(unreachable_patterns)]
             (_, Exp(_, _, _)) => Ordering::Greater,
         }
     }
@@ -264,7 +266,9 @@ impl Ord for Vec2Expr {
             (_, SwizzleVec2(_, _, _)) => Ordering::Greater,
             (Truncate3to2(_), _) => Ordering::Less,
             (_, Truncate3to2(_)) => Ordering::Greater,
+            #[allow(unreachable_patterns)]
             (Truncate4to2(_), _) => Ordering::Less,
+            #[allow(unreachable_patterns)]
             (_, Truncate4to2(_)) => Ordering::Greater,
         }
     }
@@ -421,7 +425,9 @@ impl Ord for Vec3Expr {
             (_, SwizzleVec3(_, _, _, _)) => Ordering::Greater,
             (Truncate4to3(_), _) => Ordering::Less,
             (_, Truncate4to3(_)) => Ordering::Greater,
+            #[allow(unreachable_patterns)]
             (Extend2to3(_, _), _) => Ordering::Less,
+            #[allow(unreachable_patterns)]
             (_, Extend2to3(_, _)) => Ordering::Greater,
         }
     }
@@ -595,7 +601,9 @@ impl Ord for Vec4Expr {
             (_, SwizzleVec4(_, _, _, _, _)) => Ordering::Greater,
             (Extend2to4(_, _, _), _) => Ordering::Less,
             (_, Extend2to4(_, _, _)) => Ordering::Greater,
+            #[allow(unreachable_patterns)]
             (Extend3to4(_, _), _) => Ordering::Less,
+            #[allow(unreachable_patterns)]
             (_, Extend3to4(_, _)) => Ordering::Greater,
         }
     }

@@ -1,16 +1,16 @@
-use std::collections::{BTreeSet, HashSet};
+use std::collections::{HashSet};
 use std::fs;
 use std::io::Write;
 use std::ops::Deref;
 use std::path::Path;
 use std::sync::Arc;
-use anyhow::{anyhow, bail};
+use anyhow::{bail};
 use indicatif::ProgressFinish;
 use crate::algebra::basis::BasisElement;
 use crate::algebra::multivector::{MultiVec, MultiVecRepository};
-use crate::ast::datatype::{ExpressionType, MultiVector};
+use crate::ast::datatype::{ExpressionType};
 use crate::ast::expressions::{AnyExpression, Expression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
-use crate::ast::traits::{CommentOrVariableDeclaration, progress_style, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus};
+use crate::ast::traits::{CommentOrVariableDeclaration, progress_style, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey};
 use crate::emit::sort_trait_impls;
 
 // Awesome function reference:
@@ -110,6 +110,7 @@ impl Wgsl {
         }
     }
 
+    #[allow(non_upper_case_globals)]
     pub fn write_shader_file<P: AsRef<Path>, const AntiScalar: BasisElement>(
         self,
         src_folder: P,
@@ -182,7 +183,7 @@ impl Wgsl {
         let mut mvs = multi_vecs.declarations();
         mvs.sort_by(|a, b| a.name.cmp(&b.name));
         let mvs = mvs;
-        let mut rt = tokio::runtime::Runtime::new().expect("Tokio must work");
+        let rt = tokio::runtime::Runtime::new().expect("Tokio must work");
         let mut impls = rt.block_on(async {
             impls.get_impls().await
         });
@@ -208,7 +209,7 @@ impl Wgsl {
 // AUTO-GENERATED - DO NOT MODIFY
 //
 // To contribute to this file, see the adjacent codegen package.
-// https://github.com/AndrewBrownK/projective_ga/
+// {repository}
 //
 // v{version_major}.{version_minor}.{version_patch}{pre}
 // {description}
@@ -243,6 +244,7 @@ impl Wgsl {
         }
     }
 
+    #[allow(non_upper_case_globals)]
     fn declare_multi_vector<W: Write, const AntiScalar: BasisElement>(
         &self, w: &mut W, multi_vec: &'static MultiVec<AntiScalar>
     ) -> anyhow::Result<()> {
@@ -254,7 +256,7 @@ impl Wgsl {
             if i > 0 {
                 write!(w, ",\n    ")?;
             }
-            let mut g = g.into_vec();
+            let g = g.into_vec();
             for (i, el) in g.clone().into_iter().enumerate() {
                 if i > 0 {
                     write!(w, ", ")?;
@@ -276,7 +278,7 @@ impl Wgsl {
                 writeln!(w, ",")?;
             }
             write!(w, "    // ")?;
-            let mut g = g.into_vec();
+            let g = g.into_vec();
             for (i, el) in g.clone().into_iter().enumerate() {
                 if i > 0 {
                     write!(w, ", ")?;
@@ -307,7 +309,7 @@ impl Wgsl {
                 write!(w, ",\n        ")?;
             }
             write!(w, "vec4<f32>(")?;
-            let mut g = g.into_vec();
+            let g = g.into_vec();
             let l = g.len();
             for (i, el) in g.clone().into_iter().enumerate() {
                 if i > 0 {
@@ -338,7 +340,7 @@ impl Wgsl {
             if i > 0 {
                 write!(w, ",\n        ")?;
             }
-            let mut g = g.into_vec();
+            let g = g.into_vec();
             for (j, _) in g.clone().into_iter().enumerate() {
                 if j > 0 {
                     write!(w, ", ")?;
@@ -382,7 +384,6 @@ impl Wgsl {
         }
         let owner_ty = &impls.owner;
 
-        let trait_ucc = def.names.trait_key.as_upper_camel();
         let trait_lcc = def.names.trait_key.as_lower_camel();
 
         // Unsupported traits in wgsl - no algebraic data types
@@ -462,7 +463,7 @@ impl Wgsl {
                         self.emit_comment(w, false, c.to_string())?;
                     }
                     let name = var_dec.name.0.to_string();
-                    let mut no = var_dec.name.1;
+                    let no = var_dec.name.1;
                     let guard = expr.read();
                     let x = guard.deref();
                     let x_ty = x.expression_type();
@@ -495,9 +496,9 @@ impl Wgsl {
                     }
                     write!(w, " = ")?;
                     if needs_second_var || (needs_group_var == is_multivector_expr_grouped) {
-                        self.write_expression(w, x, false, is_multivector_expr_grouped)?;
+                        self.write_expression(w, x, true, false, is_multivector_expr_grouped)?;
                     } else {
-                        self.write_expression(w, x, false, needs_group_var)?;
+                        self.write_expression(w, x, true, false, needs_group_var)?;
                     }
                     writeln!(w, ";")?;
 
@@ -533,7 +534,7 @@ impl Wgsl {
             self.emit_comment(w, false, c.to_string())?;
         }
         write!(w, "    return ")?;
-        self.write_expression(w, &impls.return_expr, false, false)?;
+        self.write_expression(w, &impls.return_expr, true, false, false)?;
         writeln!(w, ";")?;
         writeln!(w, "}}")?;
         Ok(())
@@ -541,11 +542,11 @@ impl Wgsl {
 
     fn write_type<W: Write>(&self, w: &mut W, data_type: ExpressionType, upper_camel_case: bool, multivector_grouped: bool) -> anyhow::Result<()> {
         match data_type {
-            ExpressionType::Int(i) => write!(w, "i32")?,
-            ExpressionType::Float(f) => write!(w, "f32")?,
-            ExpressionType::Vec2(v) => write!(w, "vec2<f32>")?,
-            ExpressionType::Vec3(v) => write!(w, "vec3<f32>")?,
-            ExpressionType::Vec4(v) => write!(w, "vec4<f32>")?,
+            ExpressionType::Int(_) => write!(w, "i32")?,
+            ExpressionType::Float(_) => write!(w, "f32")?,
+            ExpressionType::Vec2(_) => write!(w, "vec2<f32>")?,
+            ExpressionType::Vec3(_) => write!(w, "vec3<f32>")?,
+            ExpressionType::Vec4(_) => write!(w, "vec4<f32>")?,
             ExpressionType::Class(mv) => {
                 let n = mv.name();
                 let g = if multivector_grouped { "Groups" } else { "" };
@@ -588,13 +589,13 @@ impl Wgsl {
         Ok(())
     }
 
-    fn write_expression<W: Write>(&self, w: &mut W, expr: &AnyExpression, f32_as_vec4: bool, multivector_grouped: bool) -> anyhow::Result<()> {
+    fn write_expression<W: Write>(&self, w: &mut W, expr: &AnyExpression, grouping_provided: bool, f32_as_vec4: bool, multivector_grouped: bool) -> anyhow::Result<()> {
         match expr {
             AnyExpression::Int(e) => self.write_int(w, e)?,
-            AnyExpression::Float(e) => self.write_float(w, e, false, f32_as_vec4)?,
-            AnyExpression::Vec2(e) => self.write_vec2(w, e, false)?,
-            AnyExpression::Vec3(e) => self.write_vec3(w, e, false)?,
-            AnyExpression::Vec4(e) => self.write_vec4(w, e, false)?,
+            AnyExpression::Float(e) => self.write_float(w, e, grouping_provided, f32_as_vec4)?,
+            AnyExpression::Vec2(e) => self.write_vec2(w, e, grouping_provided)?,
+            AnyExpression::Vec3(e) => self.write_vec3(w, e, grouping_provided)?,
+            AnyExpression::Vec4(e) => self.write_vec4(w, e, grouping_provided)?,
             AnyExpression::Class(e) => self.write_multi_vec(w, e, multivector_grouped)?,
         }
         Ok(())
@@ -692,7 +693,7 @@ impl Wgsl {
             }
             FloatExpr::AccessMultiVecGroup(mv, i) => {
                 self.write_multi_vec(w, mv, true)?;
-                let mut i = *i;
+                let i = *i;
                 write!(w, ".group{i}_")?;
             }
             FloatExpr::AccessMultiVecFlat(mv, i) => {
@@ -784,8 +785,6 @@ impl Wgsl {
                                 write!(w, ", {e})")?;
                             }
                         }
-
-                        _ => unreachable!("This match is complete across conditions (unless NaN?)"),
                     }
                 }
                 match (*last_factor, len > 1) {
@@ -795,7 +794,6 @@ impl Wgsl {
                         write!(w, " * ")?;
                         self.write_f32(w, fl)?
                     }
-                    _ => {}
                 }
                 if len > 1 && !grouping_provided {
                     write!(w, ")")?;
@@ -991,8 +989,6 @@ impl Wgsl {
                                 write!(w, ", vec2<f32>({e}))")?;
                             }
                         }
-
-                        _ => unreachable!("This match is complete across conditions (unless NaN?)"),
                     }
                 }
                 if *last_factor != [1.0; 2] {
@@ -1216,8 +1212,6 @@ impl Wgsl {
                                 write!(w, ", vec3<f32>({e}))")?;
                             }
                         }
-
-                        _ => unreachable!("This match is complete across conditions (unless NaN?)"),
                     }
                 }
                 if *last_factor != [1.0; 3] {
@@ -1441,8 +1435,6 @@ impl Wgsl {
                                 write!(w, ", vec4<f32>({e}))")?;
                             }
                         }
-
-                        _ => unreachable!("This match is complete across conditions (unless NaN?)"),
                     }
                 }
                 if *last_factor != [1.0; 4] {

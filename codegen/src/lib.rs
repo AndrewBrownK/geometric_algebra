@@ -36,7 +36,6 @@ pub mod debug_scripts {
     mod cga3d_faceted;
     mod pga3d;
     mod rga3d;
-    mod uwu;
 }
 
 const SIMD_SRC: &'static str = include_str!("simd.rs");

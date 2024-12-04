@@ -4,7 +4,7 @@
 use crate::algebra::basis::filter::{SigFilter, SigSetFilter};
 use crate::algebra::basis::grades::{AntiGrades, Grades};
 use crate::ast::impls::{Elaborated, InlineOnly};
-use crate::ast::traits::{NameTrait, TraitDef_1_Type_1_Arg, TraitImpl_10, TraitImpl_11, TraitImpl_21};
+use crate::ast::traits::{NameTrait};
 use crate::build_scripts::common_traits::impls::*;
 
 pub mod conformal;
@@ -295,7 +295,7 @@ mod impls {
     use crate::algebra::multivector::DynamicMultiVector;
     use crate::ast::datatype::{Integer, MultiVector};
     use crate::ast::expressions::{Expression, FloatExpr, IntExpr};
-    use crate::ast::traits::{HasNotReturned, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder};
+    use crate::ast::traits::{HasNotReturned, TraitDef_1_Type_1_Arg, TraitDef_2_Types_2_Args, TraitImpl_11, TraitImplBuilder};
     use crate::ast::Variable;
     use crate::build_scripts::common_traits::{AntiInverse, AntiReverse, AntiDotProduct, AntiSquareRoot, AntiWedge, GeometricAntiProduct, GeometricProduct, Inverse, Reverse, RightAntiDual, RightDual, DotProduct, SquareRoot, Subtraction, Wedge};
     use crate::elements::scalar;
@@ -308,6 +308,7 @@ mod impls {
             #[async_trait]
             impl $crate::ast::traits::TraitImpl_10 for $trait_impl {
                 type Output = $output;
+                #[allow(unused_mut)]
                 async fn general_implementation<const AntiScalar: $crate::algebra::basis::BasisElement>(
                     self,
                     mut $builder: $crate::ast::traits::TraitImplBuilder<AntiScalar, $crate::ast::traits::HasNotReturned>,
@@ -326,6 +327,7 @@ mod impls {
             #[async_trait]
             impl $crate::ast::traits::TraitImpl_11 for $trait_impl {
                 type Output = $output;
+                #[allow(unused_mut)]
                 async fn general_implementation<const AntiScalar: $crate::algebra::basis::BasisElement>(
                     self,
                     mut $builder: $crate::ast::traits::TraitImplBuilder<AntiScalar, $crate::ast::traits::HasNotReturned>,
@@ -344,6 +346,7 @@ mod impls {
             #[async_trait]
             impl $crate::ast::traits::TraitImpl_21 for $trait_impl {
                 type Output = $output;
+                #[allow(unused_mut)]
                 async fn general_implementation<const AntiScalar: $crate::algebra::basis::BasisElement>(
                     self,
                     mut $builder: $crate::ast::traits::TraitImplBuilder<AntiScalar, $crate::ast::traits::HasNotReturned>,
@@ -363,6 +366,7 @@ mod impls {
             #[async_trait]
             impl $crate::ast::traits::TraitImpl_22 for $trait_impl {
                 type Output = $output;
+                #[allow(unused_mut)]
                 async fn general_implementation<const AntiScalar: $crate::algebra::basis::BasisElement>(
                     self,
                     mut $builder: $crate::ast::traits::TraitImplBuilder<AntiScalar, $crate::ast::traits::HasNotReturned>,
@@ -382,6 +386,7 @@ mod impls {
             #[async_trait]
             impl $crate::ast::traits::TraitImpl_12i for $trait_impl {
                 type Output = $output;
+                #[allow(unused_mut)]
                 async fn general_implementation<const AntiScalar: $crate::algebra::basis::BasisElement>(
                     self,
                     mut $builder: $crate::ast::traits::TraitImplBuilder<AntiScalar, $crate::ast::traits::HasNotReturned>,
@@ -401,6 +406,7 @@ mod impls {
             #[async_trait]
             impl $crate::ast::traits::TraitImpl_12f for $trait_impl {
                 type Output = $output;
+                #[allow(unused_mut)]
                 async fn general_implementation<const AntiScalar: $crate::algebra::basis::BasisElement>(
                     self,
                     mut $builder: $crate::ast::traits::TraitImplBuilder<AntiScalar, $crate::ast::traits::HasNotReturned>,

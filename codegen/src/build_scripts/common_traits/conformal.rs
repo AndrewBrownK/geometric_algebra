@@ -27,7 +27,7 @@ impl TraitImpl_11 for RoundBulkImpl {
     type Output = MultiVector;
     async fn general_implementation<const AntiScalar: BasisElement>(
         self,
-        mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         let all = allow_all_signatures();
@@ -55,7 +55,7 @@ impl TraitImpl_11 for RoundWeightImpl {
     type Output = MultiVector;
     async fn general_implementation<const AntiScalar: BasisElement>(
         self,
-        mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         let all = allow_all_signatures();
@@ -83,7 +83,7 @@ impl TraitImpl_11 for FlatBulkImpl {
     type Output = MultiVector;
     async fn general_implementation<const AntiScalar: BasisElement>(
         self,
-        mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         let all = allow_all_signatures();
@@ -111,7 +111,7 @@ impl TraitImpl_11 for FlatWeightImpl {
     type Output = MultiVector;
     async fn general_implementation<const AntiScalar: BasisElement>(
         self,
-        mut builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        builder: TraitImplBuilder<AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         let all = allow_all_signatures();

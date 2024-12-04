@@ -1,3 +1,5 @@
+#![allow(non_upper_case_globals)]
+
 use std::borrow::Cow;
 use std::collections::{BTreeSet, HashMap, HashSet};
 use std::ops::Deref;
@@ -71,7 +73,7 @@ impl TraitArity {
     }
 }
 
-pub(crate) struct RawTraitDefinition {
+pub struct RawTraitDefinition {
     pub(crate) documentation: String,
     pub(crate) names: TraitNames,
     pub(crate) owner: Arc<RwLock<TraitTypeConsensus>>,
@@ -224,7 +226,7 @@ pub trait TraitDef_1_Type_0_Args: TraitImpl_10 + ProvideTraitNames {
         builder: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: MultiVector,
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
-        let trait_key = self.trait_names().trait_key;
+        // let trait_key = self.trait_names().trait_key;
         let slf = self.clone();
         // We do not implicitly declare the trait unless it is invoked by name.
         // Inlining will not trigger implicit declaration.
@@ -365,7 +367,7 @@ pub trait TraitDef_1_Type_1_Arg: TraitImpl_11 + ProvideTraitNames {
         // Inlining will not trigger implicit declaration.
         // let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def = slf.def();
-        let mut inner_builder = TraitImplBuilder::new(
+        let inner_builder = TraitImplBuilder::new(
             builder.ga.clone(),
             builder.mvs.clone(),
             the_def,
@@ -385,14 +387,14 @@ pub trait TraitDef_1_Type_1_Arg: TraitImpl_11 + ProvideTraitNames {
         builder: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr,
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
-        let trait_key = self.trait_names().trait_key;
+        // let trait_key = self.trait_names().trait_key;
         let slf = self.clone();
         // We do not implicitly declare the trait unless it is invoked by name.
         // Inlining will not trigger implicit declaration.
         // let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def = slf.def();
         let variables = Arc::new(Mutex::new(HashMap::new()));
-        let mut inner_builder = TraitImplBuilder::new(
+        let inner_builder = TraitImplBuilder::new(
             builder.ga.clone(),
             builder.mvs.clone(),
             the_def,
@@ -534,7 +536,7 @@ pub trait TraitDef_2_Types_1_Arg: TraitImpl_21 + ProvideTraitNames {
         // Inlining will not trigger implicit declaration.
         // let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def = slf.def();
-        let mut inner_builder = TraitImplBuilder::new(
+        let inner_builder = TraitImplBuilder::new(
             builder.ga.clone(),
             builder.mvs.clone(),
             the_def,
@@ -555,14 +557,14 @@ pub trait TraitDef_2_Types_1_Arg: TraitImpl_21 + ProvideTraitNames {
         owner: Expr,
         other: MultiVector,
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
-        let trait_key = self.trait_names().trait_key;
+        // let trait_key = self.trait_names().trait_key;
         let slf = self.clone();
         // We do not implicitly declare the trait unless it is invoked by name.
         // Inlining will not trigger implicit declaration.
         // let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def = slf.def();
         let variables = Arc::new(Mutex::new(HashMap::new()));
-        let mut inner_builder = TraitImplBuilder::new(
+        let inner_builder = TraitImplBuilder::new(
             builder.ga.clone(),
             builder.mvs.clone(),
             the_def,
@@ -712,7 +714,7 @@ pub trait TraitDef_2_Types_2_Args: TraitImpl_22 + ProvideTraitNames {
         // Inlining will not trigger implicit declaration.
         // let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def = slf.def();
-        let mut inner_builder = TraitImplBuilder::new(
+        let inner_builder = TraitImplBuilder::new(
             builder.ga.clone(),
             builder.mvs.clone(),
             the_def,
@@ -745,14 +747,14 @@ pub trait TraitDef_2_Types_2_Args: TraitImpl_22 + ProvideTraitNames {
         //  inlining on the return value, and accumulate inner inlining. The inner builders do
         //  the regular inlinings which inline all the way down and use variables.
 
-        let trait_key = self.trait_names().trait_key;
+        // let trait_key = self.trait_names().trait_key;
         let slf = self.clone();
         // We do not implicitly declare the trait unless it is invoked by name.
         // Inlining will not trigger implicit declaration.
         // let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def = slf.def();
         let variables = Arc::new(Mutex::new(HashMap::new()));
-        let mut inner_builder = TraitImplBuilder::new(
+        let inner_builder = TraitImplBuilder::new(
             builder.ga.clone(),
             builder.mvs.clone(),
             the_def,
@@ -830,7 +832,7 @@ pub trait TraitDef_1_Type_2_Args_f32: TraitImpl_12f + ProvideTraitNames {
 
         let impl_key = (trait_key.clone(), owner_class.clone());
         let owner_class_clone = owner_class.clone();
-        let other_class_clone = other_class.clone();
+        // let other_class_clone = other_class.clone();
         let registry = builder.registry.clone();
         let cycle_detector_clone = builder.cycle_detector.clone();
         let ga = builder.ga.clone();
@@ -899,7 +901,7 @@ pub trait TraitDef_1_Type_2_Args_f32: TraitImpl_12f + ProvideTraitNames {
 
         let slf = self.clone();
         let the_def = slf.def();
-        let mut inner_builder = TraitImplBuilder::new(
+        let inner_builder = TraitImplBuilder::new(
             builder.ga.clone(),
             builder.mvs.clone(),
             the_def,
@@ -924,7 +926,7 @@ pub trait TraitDef_1_Type_2_Args_f32: TraitImpl_12f + ProvideTraitNames {
         let slf = self.clone();
         let the_def = slf.def();
         let variables = Arc::new(Mutex::new(HashMap::new()));
-        let mut inner_builder = TraitImplBuilder::new(
+        let inner_builder = TraitImplBuilder::new(
             builder.ga.clone(),
             builder.mvs.clone(),
             the_def,
@@ -1002,7 +1004,7 @@ pub trait TraitDef_1_Type_2_Args_i32: TraitImpl_12i + ProvideTraitNames {
 
         let impl_key = (trait_key.clone(), owner_class.clone());
         let owner_class_clone = owner_class.clone();
-        let other_class_clone = other_class.clone();
+        // let other_class_clone = other_class.clone();
         let registry = builder.registry.clone();
         let cycle_detector_clone = builder.cycle_detector.clone();
         let ga = builder.ga.clone();
@@ -1071,7 +1073,7 @@ pub trait TraitDef_1_Type_2_Args_i32: TraitImpl_12i + ProvideTraitNames {
 
         let slf = self.clone();
         let the_def = slf.def();
-        let mut inner_builder = TraitImplBuilder::new(
+        let inner_builder = TraitImplBuilder::new(
             builder.ga.clone(),
             builder.mvs.clone(),
             the_def,
@@ -1104,11 +1106,11 @@ pub trait TraitDef_1_Type_2_Args_i32: TraitImpl_12i + ProvideTraitNames {
         //  inlining on the return value, and accumulate inner inlining. The inner builders do
         //  the regular inlinings which inline all the way down and use variables.
 
-        let trait_key = self.trait_names().trait_key;
+        // let trait_key = self.trait_names().trait_key;
         let slf = self.clone();
         let the_def = slf.def();
         let variables = Arc::new(Mutex::new(HashMap::new()));
-        let mut inner_builder = TraitImplBuilder::new(
+        let inner_builder = TraitImplBuilder::new(
             builder.ga.clone(),
             builder.mvs.clone(),
             the_def,
@@ -1695,7 +1697,7 @@ impl<T: TraitDef_1_Type_0_Args> Register10 for T {
                 let the_impl = tir_2
                     .traits10
                     .get_or_create_or_panic((trait_key, mv_a), async move {
-                        let mut variables = Arc::new(Mutex::new(HashMap::new()));
+                        let variables = Arc::new(Mutex::new(HashMap::new()));
                         let b = TraitImplBuilder::new(ga_2, mv_repo_2, def_3, tir_3, false, variables, im::HashSet::new());
                         let result = self.general_implementation(b, mv_a.clone()).await;
                         match result {
@@ -1789,7 +1791,7 @@ impl<T: TraitDef_2_Types_1_Arg> Register21 for T {
         let trait_key = self.trait_names().trait_key;
         let def = tir.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
 
-        let mut qty = mv_repo.qty_classes() as u64;
+        let qty = mv_repo.qty_classes() as u64;
         let qty = qty * qty;
         let pb = Arc::new(progress.add(indicatif::ProgressBar::new(qty)));
         pb.set_style(progress_style());
@@ -1854,7 +1856,7 @@ impl<T: TraitDef_2_Types_2_Args> Register22 for T {
         let trait_key = self.trait_names().trait_key;
         let def = tir.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
 
-        let mut qty = mv_repo.qty_classes() as u64;
+        let qty = mv_repo.qty_classes() as u64;
         let qty = qty * qty;
         let pb = Arc::new(progress.add(indicatif::ProgressBar::new(qty)));
         pb.set_style(progress_style());
@@ -1925,7 +1927,7 @@ impl<T: TraitDef_1_Type_2_Args_f32> Register12f for T {
         let trait_key = self.trait_names().trait_key;
         let def = tir.defs.traits12f.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
 
-        let mut qty = mv_repo.qty_classes() as u64;
+        let qty = mv_repo.qty_classes() as u64;
         let qty = qty * qty;
         let pb = Arc::new(progress.add(indicatif::ProgressBar::new(qty)));
         pb.set_style(progress_style());
@@ -1993,7 +1995,7 @@ impl<T: TraitDef_1_Type_2_Args_i32> Register12i for T {
         let trait_key = self.trait_names().trait_key;
         let def = tir.defs.traits12i.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
 
-        let mut qty = mv_repo.qty_classes() as u64;
+        let qty = mv_repo.qty_classes() as u64;
         let qty = qty * qty;
         let pb = Arc::new(progress.add(indicatif::ProgressBar::new(qty)));
         pb.set_style(progress_style());

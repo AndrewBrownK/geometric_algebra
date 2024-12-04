@@ -5,11 +5,9 @@ use std::marker::ConstParamTy;
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, Neg, Sub};
 
 use const_panic::PanicFmt;
-use rand::Rng;
 
 use crate::algebra::basis::generators::GeneratorElement;
 use crate::algebra::basis::grades::{AntiGrades, Grades};
-use crate::generator_squares;
 use crate::utility::ConstOption;
 
 pub mod arithmetic;

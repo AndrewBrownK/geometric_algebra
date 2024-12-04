@@ -1,13 +1,10 @@
-use std::collections::BTreeMap;
 use std::fmt::Debug;
 use std::ops::{Add, AddAssign, Mul, MulAssign};
 
 use crate::algebra::basis::arithmetic::{GradedSum, Product, Sum};
 use crate::algebra::basis::generators::{GeneratorElement, GeneratorSquares};
 use crate::algebra::basis::grades::grade1;
-use crate::algebra::basis::{BasisElement, BasisSignature};
-use crate::generator_squares;
-use crate::utility::ConstOption;
+use crate::algebra::basis::{BasisElement};
 use im::HashMap;
 use parking_lot::RwLock;
 
@@ -386,20 +383,21 @@ impl Substitutions {
         })
     }
 
-    fn substitute_product_to_underlying_sum(&self, p: Product) -> Sum {
-        let mut c = p.coefficient;
-        let mut a = p.element;
-        if c == 0.0 || a.coefficient == 0 {
-            return Sum::zero();
-        }
-        if a.coefficient != 1 {
-            c *= a.coefficient as f32;
-            a.coefficient = 1;
-        }
-        let mut s = self.substitute_element_to_underlying_sum(a);
-        s *= c;
-        s
-    }
+    // TODO unused... delete?
+    // fn substitute_product_to_underlying_sum(&self, p: Product) -> Sum {
+    //     let mut c = p.coefficient;
+    //     let mut a = p.element;
+    //     if c == 0.0 || a.coefficient == 0 {
+    //         return Sum::zero();
+    //     }
+    //     if a.coefficient != 1 {
+    //         c *= a.coefficient as f32;
+    //         a.coefficient = 1;
+    //     }
+    //     let mut s = self.substitute_element_to_underlying_sum(a);
+    //     s *= c;
+    //     s
+    // }
 
     fn underlying_product_to_substitute_sum(&self, p: Product) -> Sum {
         let mut c = p.coefficient;
@@ -416,14 +414,15 @@ impl Substitutions {
         s
     }
 
-    fn substitute_sum_to_underlying_sum(&self, s: Sum) -> Sum {
-        let mut result = Sum { sum: vec![] };
-        for sub_p in s.sum.iter() {
-            let und_s = self.substitute_product_to_underlying_sum(*sub_p);
-            result += und_s;
-        }
-        result
-    }
+    // TODO unused... delete?
+    // fn substitute_sum_to_underlying_sum(&self, s: Sum) -> Sum {
+    //     let mut result = Sum { sum: vec![] };
+    //     for sub_p in s.sum.iter() {
+    //         let und_s = self.substitute_product_to_underlying_sum(*sub_p);
+    //         result += und_s;
+    //     }
+    //     result
+    // }
 
     fn underlying_sum_to_substitute_sum(&self, s: Sum) -> Sum {
         let mut result = Sum { sum: vec![] };

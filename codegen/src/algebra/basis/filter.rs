@@ -1,5 +1,5 @@
 use std::collections::BTreeSet;
-use std::ops::{BitAnd, BitAndAssign, BitOr, BitXor, Neg, Not};
+use std::ops::{BitAnd, BitOr, BitXor, Not};
 
 use crate::algebra::basis::{BasisElement, BasisSignature};
 

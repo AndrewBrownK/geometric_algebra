@@ -8,10 +8,9 @@ use std::sync::Arc;
 use const_panic::concat_panic;
 use parking_lot::Mutex;
 
-use crate::algebra::basis::elements::*;
+use crate::algebra::basis::{BasisElement, BasisSignature};
 use crate::algebra::basis::filter::{SigFilter, SigSetFilter};
 use crate::algebra::basis::grades::Grades;
-use crate::algebra::basis::{BasisElement, BasisSignature};
 use crate::algebra::GeometricAlgebra;
 use crate::ast::datatype::{ExpressionType, Float, MultiVector, Vec2, Vec3, Vec4};
 use crate::ast::expressions::{FloatExpr, MultiVectorExpr};
@@ -578,40 +577,42 @@ impl const TupleToGroup for [BasisElement; 1] {
     }
 }
 
-static Circle: MultiVec<{ e12345 }> = MultiVec::<e12345>::new_by_groups("Circle", {
-    let mut cv = ConstVec::new();
-    cv.push((e423, e431, e412, e321).tuple_to_group());
-    cv.push((e415, e425, e435).tuple_to_group());
-    cv.push((e235, e315, e125).tuple_to_group());
-    cv
-});
-
-// Allocations are not allowed in static/const, but can't be bothered to make a compatible version
-// when specifying groups is fine instead.
-// static Dipole: MultiVec<{e12345}> = multi_vec!(Dipole<e12345> => e41, e42, e43, e23, e31, e12, e15, e25, e35, e45);
-static Circle2: MultiVec<{ e12345 }> = multi_vec!(Circle<e12345> => (e423, e431, e412, e321), (e415, e425, e435), (e235, e315, e125));
-static Circle3: MultiVec<{ e12345 }> = multi_vec!(Circle<e12345> => [e423, e431, e412, e321], [e415, e425, e435], [e235, e315, e125]);
-
-static Dipole2: MultiVec<{ e12345 }> = multi_vec!(Dipole<e12345> as e41, e42, e43 | e23, e31, e12 | e15, e25, e35, e45);
-
 #[test]
-fn test_construction() {
-    println!("{Circle:?}");
-    println!("{Circle}");
+mod test_stuff {
+    use crate::algebra::basis::elements::*;
+    use crate::algebra::multivector::{MultiVec, TupleToGroup};
+    use crate::utility::ConstVec;
 
-    let circle_again = &Circle2;
-    println!("{circle_again}");
+    static Circle: MultiVec<{ e12345 }> = MultiVec::<e12345>::new_by_groups("Circle", {
+        let mut cv = ConstVec::new();
+        cv.push((e423, e431, e412, e321).tuple_to_group());
+        cv.push((e415, e425, e435).tuple_to_group());
+        cv.push((e235, e315, e125).tuple_to_group());
+        cv
+    });
 
-    let circle_again = &Circle3;
-    println!("{circle_again}");
+    static Circle2: MultiVec<{ e12345 }> = multi_vec!(Circle<e12345> => (e423, e431, e412, e321), (e415, e425, e435), (e235, e315, e125));
+    static Circle3: MultiVec<{ e12345 }> = multi_vec!(Circle<e12345> => [e423, e431, e412, e321], [e415, e425, e435], [e235, e315, e125]);
+    static Dipole2: MultiVec<{ e12345 }> = multi_vec!(Dipole<e12345> as e41, e42, e43 | e23, e31, e12 | e15, e25, e35, e45);
 
-    let dipole_again = &Dipole2;
-    println!("{dipole_again}");
+    #[test]
+    fn test_construction() {
+        println!("{Circle:?}");
+        println!("{Circle}");
+
+        let circle_again = &Circle2;
+        println!("{circle_again}");
+
+        let circle_again = &Circle3;
+        println!("{circle_again}");
+
+        let dipole_again = &Dipole2;
+        println!("{dipole_again}");
+    }
 }
 
 pub struct DeclareMultiVecs<const AntiScalar: BasisElement> {
     ga: Arc<GeometricAlgebra<AntiScalar>>,
-    anti_scalar_sig: BasisSignature,
     declared: Vec<(Grades, BTreeSet<BasisSignature>, &'static MultiVec<AntiScalar>)>,
     unique_names: BTreeSet<&'static str>,
     documentation: BTreeMap<String, String>,
@@ -654,7 +655,6 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
         drop(nb);
         let mut slf = DeclareMultiVecs {
             ga,
-            anti_scalar_sig: AntiScalar.signature(),
             declared,
             unique_names,
             documentation: Default::default(),
@@ -672,10 +672,8 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
     }
 
     pub fn new(ga: Arc<GeometricAlgebra<AntiScalar>>) -> Self {
-        let anti_scalar = ga.anti_scalar();
         DeclareMultiVecs {
             ga,
-            anti_scalar_sig: anti_scalar.signature(),
             declared: vec![],
             unique_names: BTreeSet::new(),
             documentation: Default::default(),
@@ -698,7 +696,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
         let mut add_these = vec![];
         let prefix = prefix.into();
         let suffix = suffix.into();
-        for (gr, sigs, mv) in self.declared.iter() {
+        for (_gr, sigs, mv) in self.declared.iter() {
             if !filter_vecs_in.filter_sig_set(sigs) {
                 continue;
             }
@@ -805,7 +803,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
         for (new_grades, new_sigs, old_name, new_name, new_groups) in add_these.into_iter() {
             let idx = self
                 .declared
-                .binary_search_by(|(gr, sig, mv)| gr.cmp(&new_grades).then_with(|| sig.len().cmp(&new_sigs.len()).then_with(|| sig.cmp(&new_sigs))));
+                .binary_search_by(|(gr, sig, _mv)| gr.cmp(&new_grades).then_with(|| sig.len().cmp(&new_sigs.len()).then_with(|| sig.cmp(&new_sigs))));
             let idx = match idx {
                 Ok(_) => {
                     // already exists
@@ -838,7 +836,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             self.declared.insert(idx, (new_grades, new_sigs, new_mv));
             if let Some(d) = documentation {
                 let n = new_mv.name;
-                let mut docs = self.documentation.entry(new_mv.name.to_string()).or_insert(format!("{n}.\n"));
+                let docs = self.documentation.entry(new_mv.name.to_string()).or_insert(format!("{n}.\n"));
                 let mut d = d.to_string();
                 d = d.replace("{type}", old_name);
                 d = d.replace("{Vector}", old_name);
@@ -872,7 +870,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
         for (new_grades, new_sigs, old_name, new_name, new_groups) in add_these.into_iter() {
             let idx = self
                 .declared
-                .binary_search_by(|(gr, sig, mv)| gr.cmp(&new_grades).then_with(|| sig.len().cmp(&new_sigs.len()).then_with(|| sig.cmp(&new_sigs))));
+                .binary_search_by(|(gr, sig, _mv)| gr.cmp(&new_grades).then_with(|| sig.len().cmp(&new_sigs.len()).then_with(|| sig.cmp(&new_sigs))));
             let idx = match idx {
                 Ok(_) => {
                     // already exists
@@ -919,7 +917,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
                 }
 
                 let n = new_mv.name;
-                let mut docs = self.documentation.entry(new_mv.name.to_string()).or_insert(format!("{n}.\n"));
+                let docs = self.documentation.entry(new_mv.name.to_string()).or_insert(format!("{n}.\n"));
                 let mut d = d.to_string();
                 d = d.replace("{type}", old_name);
                 d = d.replace("{Vector}", old_name);
@@ -1076,7 +1074,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
             }
             i += 1;
         }
-        let mut all_groups = self.uniform_grade_groups.iter().map(|it| it.1).chain(self.mixed_grade_groups.iter().map(|it| it.1));
+        let all_groups = self.uniform_grade_groups.iter().map(|it| it.1).chain(self.mixed_grade_groups.iter().map(|it| it.1));
         for mvgs in all_groups {
             if remaining_els.is_empty() {
                 break;
@@ -1088,13 +1086,13 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
                 b.len().cmp(&a.len()).then_with(|| a.cmp(&b))
             });
             for mvg in mvgs.into_iter() {
-                let can_use = mvg.clone().into_iter().all(|el| !used_sigs.contains(&el.signature()));
+                let can_use = (**mvg).clone().into_iter().all(|el| !used_sigs.contains(&el.signature()));
                 if can_use {
-                    for el in mvg.clone().into_iter() {
+                    for el in (*mvg).clone().into_iter() {
                         remaining_els.remove(&el.signature());
                         used_sigs.insert(el.signature());
                     }
-                    cv.push(*mvg.clone());
+                    cv.push((**mvg).clone());
                 }
             }
         }
@@ -1230,7 +1228,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
         let thing = self
             .declarations
             .declared
-            .binary_search_by(|(gr, sig, mv)| gr.cmp(&grades).then_with(|| sig.len().cmp(&signature.len()).then_with(|| sig.cmp(signature))))
+            .binary_search_by(|(gr, sig, _mv)| gr.cmp(&grades).then_with(|| sig.len().cmp(&signature.len()).then_with(|| sig.cmp(signature))))
             .ok()?;
         let mv = self.declarations.declared.get(thing)?.2;
         Some(mv)
@@ -1288,7 +1286,7 @@ impl DynamicMultiVector {
     }
 
     // noinspection DuplicatedCode
-    pub fn construct<const AntiScalar: BasisElement>(mut self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>) -> Option<MultiVectorExpr> {
+    pub fn construct<const AntiScalar: BasisElement>(self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>) -> Option<MultiVectorExpr> {
         if self.vals.is_empty() {
             return None;
         }
@@ -1341,13 +1339,13 @@ impl DynamicMultiVector {
     }
 
     // noinspection DuplicatedCode
-    pub fn construct_exact<const AntiScalar: BasisElement>(mut self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>) -> Option<MultiVectorExpr> {
+    pub fn construct_exact<const AntiScalar: BasisElement>(self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>) -> Option<MultiVectorExpr> {
         if self.vals.is_empty() {
             return None;
         }
         let repo = b.mvs.clone();
         let mut vals = BTreeMap::new();
-        for (mut el, mut f) in self.vals.into_iter() {
+        for (el, mut f) in self.vals.into_iter() {
             // Some calculations are less efficient without variables.
             // But some expressions can't be simplified down to 0 without variable inlining.
             // So we explore what happens with deep inlining,
@@ -1401,7 +1399,7 @@ impl<FE: Into<FloatExpr>> AddAssign<(FE, BasisElement)> for DynamicMultiVector {
             return;
         }
         let signature = rhs.1.signature();
-        let mut thing = self.vals.entry(signature).or_insert(FloatExpr::Literal(0.0));
+        let thing = self.vals.entry(signature).or_insert(FloatExpr::Literal(0.0));
         *thing += rhs.0.into() * sign;
         if let FloatExpr::Literal(0.0) = thing {
             self.vals.remove(&signature);
@@ -1412,7 +1410,7 @@ impl<FE: Into<FloatExpr>> AddAssign<(FE, BasisElement)> for DynamicMultiVector {
 impl Display for DynamicMultiVector {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let mut els: Vec<_> = self.vals.iter().collect();
-        els.sort_by_key(|(el, _)| el.clone());
+        els.sort_by_key(|(el, _)| (*el).clone());
         write!(f, "DynamicMultiVector(")?;
         for (i, (el, e)) in els.into_iter().enumerate() {
             if i > 0 {

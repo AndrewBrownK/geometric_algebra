@@ -98,7 +98,7 @@ pub fn plane_based_k_reflections() -> [Grades; 17] {
 pub fn point_based_k_reflections<const AntiScalar: BasisElement>() -> [Grades; 17] {
     let mut grades = AntiScalar.grades();
     let mut result = [grades; 17];
-    for mut k in 0..17 {
+    for k in 0..17 {
         if k > 0 {
             grades.0 = grades.0 >> 1;
             if k % 2 == 0 {
